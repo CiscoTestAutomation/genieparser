@@ -17,43 +17,65 @@ class ShowBgpGroupBriefSchema(MetaParser):
             * show bgp group brief | no-more
     """
     """
-    schema = {'bgp-group-information': {'bgp-group': [{'bgp-option-information': {'bgp-options': str,
-                                                                     'bgp-options-extended': str,
-                                                                     'export-policy': str,
-                                                                     'gshut-recv-local-preference': str,
-                                                                     'holdtime': str},
-                                          'bgp-rib': [{'accepted-prefix-count': str,
-                                                      'active-prefix-count': str,
-                                                      'advertised-prefix-count': str,
-                                                      'name': str,
-                                                      'received-prefix-count': str,
-                                                      'suppressed-prefix-count': str}],
-                                          'established-count': str,
-                                          'flap-count': str,
-                                          'group-flags': str,
-                                          'group-index': str,
-                                          'local-as': str,
-                                          'peer-address': str,
-                                          'peer-as': str,
-                                          'peer-count': str,
-                                          'type': str}],
-                           'bgp-information': {'bgp-rib': [{'accepted-external-prefix-count': str,
-                                                            'accepted-internal-prefix-count': str,
-                                                            'active-external-prefix-count': str,
-                                                            'active-internal-prefix-count': str,
-                                                            'bgp-rib-state': str,
-                                                            'damped-prefix-count': str,
-                                                            'history-prefix-count': str,
-                                                            'pending-prefix-count': str,
-                                                            'suppressed-external-prefix-count': str,
-                                                            'suppressed-internal-prefix-count': str,
-                                                            'total-external-prefix-count': str,
-                                                            'total-internal-prefix-count': str,
-                                                            'total-prefix-count': str}],
-                                               'down-peer-count': str,
-                                               'external-peer-count': str,
-                                               'group-count': str,
-                                               'internal-peer-count': str}}}
+        schema = {
+            "bgp-group-information": {
+                "bgp-group": [
+                    {
+                        "bgp-option-information": {
+                            "bgp-options": "str",
+                            "bgp-options-extended": "str",
+                            "export-policy": "str",
+                            "gshut-recv-local-preference": "str",
+                            "holdtime": "str"
+                        },
+                        "bgp-rib": {
+                            "accepted-prefix-count": "str",
+                            "active-prefix-count": "str",
+                            "advertised-prefix-count": "str",
+                            "name": "str",
+                            "received-prefix-count": "str",
+                            "suppressed-prefix-count": "str"
+                        },
+                        "established-count": "str",
+                        "flap-count": "str",
+                        "group-flags": "str",
+                        "group-index": "str",
+                        "local-as": "str",
+                        "peer-address": "str",
+                        "peer-as": "str",
+                        "peer-count": "str",
+                        "route-queue": {
+                            "state": "str",
+                            "timer": "str"
+                        },
+                        "type": "str"
+                    }
+                ],
+                "bgp-information": {
+                    "bgp-rib": [
+                        {
+                            "accepted-external-prefix-count": "str",
+                            "accepted-internal-prefix-count": "str",
+                            "active-external-prefix-count": "str",
+                            "active-internal-prefix-count": "str",
+                            "bgp-rib-state": "str",
+                            "damped-prefix-count": "str",
+                            "history-prefix-count": "str",
+                            "pending-prefix-count": "str",
+                            "suppressed-external-prefix-count": "str",
+                            "suppressed-internal-prefix-count": "str",
+                            "total-external-prefix-count": "str",
+                            "total-internal-prefix-count": "str",
+                            "total-prefix-count": "str"
+                        }
+                    ],
+                    "down-peer-count": "str",
+                    "external-peer-count": "str",
+                    "group-count": "str",
+                    "internal-peer-count": "str"
+                }
+            }
+        }
     """
     def validate_bgp_group_list(value):
         if not isinstance(value, list):
@@ -86,7 +108,11 @@ class ShowBgpGroupBriefSchema(MetaParser):
                                             'peer-address': list,
                                             Optional('peer-as'): str,
                                             'peer-count': str,
-                                            'type': str}
+                                            'type': str,
+                                            Optional('route-queue'): {
+                                                'state': str,
+                                                'timer': str,
+                                            }}
         )
         for item in value:
             bgp_group_list_schema.validate(item)
@@ -96,12 +122,22 @@ class ShowBgpGroupBriefSchema(MetaParser):
         if not isinstance(value, list):
             raise SchemaTypeError('bgp-information bgp-rib is not a list')
         bgp_rib_list_schema = Schema({'active-prefix-count': str,
-                                                                'damped-prefix-count': str,
-                                                                'history-prefix-count': str,
+                                                                Optional('damped-prefix-count'): str,
+                                                                Optional('history-prefix-count'): str,
                                                                 'name': str,
-                                                                'pending-prefix-count': str,
+                                                                Optional('pending-prefix-count'): str,
                                                                 'suppressed-prefix-count': str,
-                                                                'total-prefix-count': str})
+                                                                Optional('total-prefix-count'): str,
+                                                                Optional('active-external-prefix-count'): str,
+                                                                Optional('active-internal-prefix-count'): str,
+                                                                Optional('suppressed-external-prefix-count'): str,
+                                                                Optional('accepted-prefix-count'): str,
+                                                                Optional('total-internal-prefix-count'): str,
+                                                                Optional('received-prefix-count'): str,
+                                                                Optional('total-external-prefix-count'): str,
+                                                                Optional('suppressed-internal-prefix-count'): str,
+                                                                Optional('bgp-rib-state'): str,
+                                                                })
         for item in value:
             bgp_rib_list_schema.validate(item)
         return value
@@ -177,6 +213,48 @@ class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
         p11 = re.compile(r'^(?P<tot_paths>\d+) +(?P<act_paths>\d+) +'
                 r'(?P<suppressed>\d+) +(?P<history>\d+) +(?P<damp_state>\d+) +'
                 r'(?P<pending>\d+)$')
+        
+        # Table inet.0
+        p12 = re.compile(r'^Table +(?P<table_name>\S+)$')
+
+        # Active prefixes:              0
+        p13 = re.compile(r'^Active +prefixes: +(?P<active_prefix_count>\d+)$')
+
+        # Received prefixes:            682
+        p14 = re.compile(r'^Received +prefixes: +(?P<received_prefix_count>\d+)$')
+
+        # Accepted prefixes:            682
+        p15 = re.compile(r'^Accepted +prefixes: +(?P<accepted_prefix_count>\d+)$')
+
+        # Suppressed due to damping:    0
+        p16 = re.compile(r'^Suppressed +due +to +damping: +(?P<suppressed_prefix_count>\d+)$')
+
+        # Advertised prefixes:          682
+        p17 = re.compile(r'^Advertised +prefixes: +(?P<advertised_prefix_count>\d+)$')
+
+        # Received external prefixes:   684
+        p18 = re.compile(r'^Received +external +prefixes: +(?P<received_external_prefixes>\d+)$')
+
+        # Active external prefixes:     682
+        p19 = re.compile(r'^Active +external +prefixes: +(?P<active_external_prefixes>\d+)$')
+
+        # Externals suppressed:         0
+        p20 = re.compile(r'^Externals +suppressed: +(?P<externals_suppressed>\d+)$')
+
+        # Received internal prefixes:   682
+        p21 = re.compile(r'^Received +internal +prefixes: +(?P<received_internal_prefixes>\d+)$')
+
+        # Active internal prefixes:     0
+        p22 = re.compile(r'^Active +internal +prefixes: +(?P<active_internal_prefixes>\d+)$')
+
+        # Internals suppressed:         0
+        p23 = re.compile(r'^Internals +suppressed: +(?P<internal_suppressed>\d+)$')
+
+        # RIB State: BGP restart is complete
+        p24 = re.compile(r'^RIB +State: +(?P<rib_state>[\S\s]+)$')
+
+        # Route Queue Timer: unset Route Queue: empty
+        p25 = re.compile(r'^Route +Queue +Timer: +(?P<timer>\w+) +Route +Queue: +(?P<state>\w+)$')
 
         # 111.87.5.253+179
         pIp = re.compile(r'^(?P<peer_address>\S+)$')
@@ -292,7 +370,120 @@ class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
                 bgp_info_rib_dict.update({'damped-prefix-count': group['damp_state']})
                 bgp_info_rib_dict.update({'pending-prefix-count': group['pending']})
                 continue
+            
+            # Table inet.0
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                bgp_rib_dict = {}
+                bgp_info_rib_dict = {}
+                sub_dict = {}
+                if not table_found:
+                    bgp_rib_dict_list = bgp_group_dict.setdefault('bgp-rib', [])
+                    bgp_rib_dict.update({'name': group['table_name']})
+                    pevious_table_dict.update({group['table_name'] : bgp_rib_dict})
+                    bgp_rib_dict_list.append(bgp_rib_dict)
+                    sub_dict = bgp_rib_dict
+                else:
+                    bgp_info_rib_list =  bgp_information_dict.setdefault('bgp-rib', [])
+                    bgp_info_rib_dict.update({'name': group['table_name']})
+                    bgp_info_rib_list.append(bgp_info_rib_dict)
+                    sub_dict = bgp_info_rib_dict
+                continue
 
+            # Active prefixes:              0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.update({'active-prefix-count': group['active_prefix_count']})
+                continue
+
+            # Received prefixes:            682
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.update({'received-prefix-count': group['received_prefix_count']})
+                continue
+
+            # Accepted prefixes:            682
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.update({'accepted-prefix-count': group['accepted_prefix_count']})
+                continue
+
+            # Suppressed due to damping:    0
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.update({'suppressed-prefix-count': group['suppressed_prefix_count']})
+                continue
+
+            # Advertised prefixes:          682
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.update({'advertised-prefix-count': group['advertised_prefix_count']})
+                continue
+            
+            # Received external prefixes:   684
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.update({'total-external-prefix-count': group['received_external_prefixes']})
+                continue
+
+            # Active external prefixes:     682
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.update({'active-external-prefix-count': group['active_external_prefixes']})
+                continue
+
+            # Externals suppressed:         0
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.update({'suppressed-external-prefix-count': group['externals_suppressed']})
+                continue
+
+            # Received internal prefixes:   682
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.update({'total-internal-prefix-count': group['received_internal_prefixes']})
+                continue
+
+            # Active internal prefixes:     0
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.update({'active-internal-prefix-count': group['active_internal_prefixes']})
+                continue
+
+            # Internals suppressed:         0
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.update({'suppressed-internal-prefix-count': group['internal_suppressed']})
+                continue
+
+            # RIB State: BGP restart is complete
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.update({'bgp-rib-state': group['rib_state']})
+                continue
+            
+            # Route Queue Timer: unset Route Queue: empty
+            p25 = re.compile(r'^Route +Queue +Timer: +(?P<timer>\w+) +Route +Queue: +(?P<state>\w+)$')
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                route_queue_dict = bgp_group_dict.setdefault('route-queue', {})
+                route_queue_dict.update({'state': group['state']})
+                route_queue_dict.update({'timer': group['timer']})
+                continue
             # 111.87.5.253+179
             m = pIp.match(line)
             if m:
@@ -309,3 +500,18 @@ class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
                     bgp_info_rib_list.append(bgp_info_rib_dict)
                 continue
         return ret_dict
+
+class ShowBgpGroupDetail(ShowBgpGroupBrief):
+    
+    cli_command = ['show bgp group detail',
+        'show bgp group detail | no-more']
+    
+    def cli(self, no_more=False, output=None):
+
+        if not output:
+            cmd = self.cli_command[1] if no_more else self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        return super().cli(output=out)
