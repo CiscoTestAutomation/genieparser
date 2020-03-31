@@ -16,8 +16,7 @@ from genie.libs.parser.junos.show_bgp import (ShowBgpGroupBrief)
 
 class TestShowBgpGroupBrief(unittest.TestCase):
     """ Unit tests for:
-            * show ospf interface
-            * show ospf interface {interface}
+            * show bgp group brief | no-more
     """
     maxDiff = None
     device = Device(name='aDevice')
@@ -556,7 +555,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             obj.parse()
 
-    def test_show_ospf_interface_detail(self):
+    def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowBgpGroupBrief(device=self.device)
         parsed_output = obj.parse()
