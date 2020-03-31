@@ -53,6 +53,9 @@
         * show resource usage
     * Added ShowAspDrop for
         * show asp drop
+* JUNOS
+    * Added ShowBgpGroupBrief for:
+        * show bgp group brief | no-more
 
 
 --------------------------------------------------------------------------------
