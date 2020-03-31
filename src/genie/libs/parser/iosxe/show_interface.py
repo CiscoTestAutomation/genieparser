@@ -249,6 +249,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                         r'\/(?P<prefix_length>[0-9]+))$')
 
         # Internet address is 10.4.4.4/24
+        # Internet address is xxx.xxx.151.3/24
         p5 = re.compile(r'^Internet +[A|a]ddress +is +(?P<ipv4>(?P<ip>[0-9\.x]+)'
                         r'\/(?P<prefix_length>[0-9]+))$')
 
@@ -433,7 +434,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         
         # 8 maximum active VCs, 1024 VCs per VP, 1 current VCCs
         p36 = re.compile(r'^(?P<maximum_active_vcs>\d+) +maximum +active +VCs, +'
-                r'(?P<vcs_per_vp>\d+) +VCs +per +VP, +(?P<current_vccs>\d+) current VCCs$')
+                r'(?P<vcs_per_vp>\d+) +VCs +per +VP, +(?P<current_vccs>\d+) +current +VCCs$')
         
         # VC Auto Creation Disabled.
         p37 = re.compile(r'^VC +Auto +Creation +(?P<vc_auto_creation>\S+)\.$')
@@ -453,14 +454,14 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # LCP Closed
         # LCP Closed, loopback not set
-        p42 = re.compile(r'^LCP +(?P<state>\S+)(, +loopback +(?P<loopback>[\S ]+))?$')
+        p42 = re.compile(r'^LCP\s+(?P<state>\S+)(,\s+loopback\s+(?P<loopback>[\S\s]+))?$')
 
         # Base PPPoATM vaccess
         p43 = re.compile(r'^Base PPPoATM +(?P<base_pppoatm>\S+)$')
 
         # Vaccess status 0x44, loopback not set
-        p44 = re.compile(r'^Vaccess +status +(?P<status>\S+), +'
-                r'loopback +(?P<loopback>[\S ]+)$')
+        p44 = re.compile(r'^Vaccess\s+status\s+(?P<status>\S+),\s+'
+                r'loopback\s+(?P<loopback>[\S\s]+)$')
 
         # DTR is pulsed for 5 seconds on reset
         p45 = re.compile(r'^DTR +is +pulsed +for +(?P<dtr_pulsed>\d+) +'
