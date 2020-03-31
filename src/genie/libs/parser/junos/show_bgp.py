@@ -16,7 +16,45 @@ class ShowBgpGroupBriefSchema(MetaParser):
     """ Schema for:
             * show bgp group brief | no-more
     """
-
+    """
+    schema = {'bgp-group-information': {'bgp-group': [{'bgp-option-information': {'bgp-options': str,
+                                                                     'bgp-options-extended': str,
+                                                                     'export-policy': str,
+                                                                     'gshut-recv-local-preference': str,
+                                                                     'holdtime': str},
+                                          'bgp-rib': [{'accepted-prefix-count': str,
+                                                      'active-prefix-count': str,
+                                                      'advertised-prefix-count': str,
+                                                      'name': str,
+                                                      'received-prefix-count': str,
+                                                      'suppressed-prefix-count': str}],
+                                          'established-count': str,
+                                          'flap-count': str,
+                                          'group-flags': str,
+                                          'group-index': str,
+                                          'local-as': str,
+                                          'peer-address': str,
+                                          'peer-as': str,
+                                          'peer-count': str,
+                                          'type': str}],
+                           'bgp-information': {'bgp-rib': [{'accepted-external-prefix-count': str,
+                                                            'accepted-internal-prefix-count': str,
+                                                            'active-external-prefix-count': str,
+                                                            'active-internal-prefix-count': str,
+                                                            'bgp-rib-state': str,
+                                                            'damped-prefix-count': str,
+                                                            'history-prefix-count': str,
+                                                            'pending-prefix-count': str,
+                                                            'suppressed-external-prefix-count': str,
+                                                            'suppressed-internal-prefix-count': str,
+                                                            'total-external-prefix-count': str,
+                                                            'total-internal-prefix-count': str,
+                                                            'total-prefix-count': str}],
+                                               'down-peer-count': str,
+                                               'external-peer-count': str,
+                                               'group-count': str,
+                                               'internal-peer-count': str}}}
+    """
     def validate_bgp_group_list(value):
         if not isinstance(value, list):
             raise SchemaTypeError('bgp-rib is not a list')
