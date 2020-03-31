@@ -129,6 +129,10 @@
     * Update ShowBgpInstanceSummary
         * Update regex to support various output
 
+* IOS 
+    * Update ShowInterfaces
+        * Update regex to support various output
+
 --------------------------------------------------------------------------------
                                 common.py
 --------------------------------------------------------------------------------

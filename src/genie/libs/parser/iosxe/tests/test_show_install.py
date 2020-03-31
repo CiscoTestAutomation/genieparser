@@ -24,7 +24,7 @@ class TestShowInstallSummary(unittest.TestCase):
                         'type': 'SMU',
                     },
                     2: {
-                        'filename_version': '17.1.1.0.66982',
+                        'filename_version': '10.69.1.0.66982',
                         'state': 'C',
                         'type': 'IMG',
                     },
@@ -43,7 +43,7 @@ class TestShowInstallSummary(unittest.TestCase):
         Type  St   Filename/Version
         --------------------------------------------------------------------------------
         SMU   U    bootflash:utah.bm.smu.may15.bin
-        IMG   C    17.1.1.0.66982
+        IMG   C    10.69.1.0.66982
 
         --------------------------------------------------------------------------------
         Auto abort timer: active on install_activate, time before rollback - 01:49:42
@@ -57,12 +57,12 @@ class TestShowInstallSummary(unittest.TestCase):
                 'auto_abort_timer': 'inactive',
                 'pkg_state': {
                     1: {
-                        'filename_version': '17.2.01.0.277',
+                        'filename_version': '10.106.1.0.277',
                         'state': 'I',
                         'type': 'IMG',
                     },
                     2: {
-                        'filename_version': '17.2.01.0.277',
+                        'filename_version': '10.106.1.0.277',
                         'state': 'C',
                         'type': 'IMG',
                     },
@@ -79,8 +79,8 @@ class TestShowInstallSummary(unittest.TestCase):
         --------------------------------------------------------------------------------
         Type  St   Filename/Version                                                     
         --------------------------------------------------------------------------------
-        IMG   I    17.2.01.0.277
-        IMG   C    17.2.01.0.277
+        IMG   I    10.106.1.0.277
+        IMG   C    10.106.1.0.277
 
         --------------------------------------------------------------------------------
         Auto abort timer: inactive

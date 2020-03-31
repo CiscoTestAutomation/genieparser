@@ -102,7 +102,7 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
             out = output
 
         # MSDP Peer 10.1.100.4 (?), AS 1
-        # MSDP Peer 1.1.1.2 (?), AS ?
+        # MSDP Peer 10.4.1.2 (?), AS ?
         r1 = re.compile(r'^MSDP\sPeer\s+(?P<peer>\S+)\s*\(\?\)\,\s*'
                         'AS\s*(?P<peer_as>(\d+|\?))')
 
@@ -186,7 +186,7 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
             line = line.strip()
 
             # MSDP Peer 10.1.100.4 (?), AS 1
-            # MSDP Peer 1.1.1.2 (?), AS ?
+            # MSDP Peer 10.4.1.2 (?), AS ?
             result = r1.match(line)
             if result:
                 group = result.groupdict()
