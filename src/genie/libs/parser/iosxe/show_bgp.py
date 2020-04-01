@@ -1183,10 +1183,8 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             if m:
                 route_distinguisher = str(m.groupdict()['route_distinguisher'])
                 default_vrf = str(m.groupdict()['vrf_id'])
-                if address_family == 'vpnv4 unicast' or\
-                    address_family == 'vpnv6 unicast':
-                    new_address_family = \
-                        original_address_family + ' RD ' + route_distinguisher
+                if address_family == 'vpnv4 unicast' or address_family == 'vpnv6 unicast':
+                    new_address_family = original_address_family + ' RD ' + route_distinguisher
                 # Init dict
                 if 'instance' not in ret_dict:
                     ret_dict['instance'] = {}
@@ -1235,35 +1233,24 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 gateway = group['gateway']
                 originator = group['originator']
                 if new_address_family:
-                    if 'index' not in ret_dict['instance']['default']['vrf']\
-                        [vrf]['address_family'][new_address_family]['prefixes']\
-                        [prefixes]:
-                        ret_dict['instance']['default']['vrf'][vrf]\
-                            ['address_family'][new_address_family]['prefixes']\
-                            [prefixes]['index'] = {}
-                    if index not in ret_dict['instance']['default']['vrf'][vrf]\
-                        ['address_family'][new_address_family]['prefixes']\
-                        [prefixes]['index']:
-                        ret_dict['instance']['default']['vrf'][vrf]\
-                        ['address_family'][new_address_family]['prefixes']\
-                                [prefixes]['index'][index] = {}
-                        subdict = ret_dict['instance']['default']['vrf'][vrf]\
-                            ['address_family'][new_address_family]['prefixes']\
-                            [prefixes]['index'][index]
+                    if 'index' not in new_addr_family_dict['prefixes'][prefixes]:
+                        new_addr_family_dict['prefixes'][prefixes]['index'] = {}
+                    if index not in new_addr_family_dict['prefixes'][prefixes]['index']:
+                        new_addr_family_dict['prefixes'][prefixes]['index'][index] = {}
+                        subdict = new_addr_family_dict['prefixes'][prefixes]['index'][index]
 
                     subdict['next_hop'] = nexthop
                     subdict['gateway'] = gateway
                     subdict['originator'] = originator
+
                     if group['next_hop_igp_metric']:
-                        subdict['next_hop_igp_metric'] = \
-                            group['next_hop_igp_metric']
+                        subdict['next_hop_igp_metric'] = group['next_hop_igp_metric']
                     if group['inaccessible']:
                         subdict['inaccessible'] = True
                     else:
                         subdict['inaccessible'] = False
                     if group['next_hop_via']:
-                        subdict['next_hop_via'] = \
-                            group['next_hop_via']
+                        subdict['next_hop_via'] = group['next_hop_via']
                     # Adding update_group to each index
                     if update_group:
                         subdict['update_group'] = update_group
