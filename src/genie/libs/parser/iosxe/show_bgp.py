@@ -1903,14 +1903,15 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
         if not vrf:
             vrf ='default'
 
-        show_vrf_output=None
+        show_vrf_output = None
         if ('rd' in cmd and 'summary' in cmd and
             output != '% RD does not match the default RD of any VRF'):
             obj = ShowVrf(device=self.device)
-            try:
-                show_vrf_output = obj.parse()
-            except:
-                pass
+            show_vrf_output = obj.parse()
+            # try:
+            #     show_vrf_output = obj.parse()
+            # except Exception:
+            #     pass
 
         if address_family.lower() not in ['ipv4 unicast', 'ipv6 unicast']:
            

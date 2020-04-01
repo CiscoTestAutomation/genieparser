@@ -7136,6 +7136,7 @@ class TestShowBgpSummary(unittest.TestCase):
         self.device = Mock(**self.golden_output1)
         obj = ShowBgpSummary(device=self.device)
         parsed_output = obj.parse(address_family='vpnv4 unicast', rd='5918:51')
+        import pdb
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_show_bgp_summary_golden2(self):
@@ -7633,7 +7634,7 @@ class TestShowIpBgpAllSummary(unittest.TestCase):
               neighbor 10.36.3.3 activate
         '''
 
-        raw3='''
+        raw3 = '''
             [2019-06-05 09:47:19,474] +++ R1_xe: executing command 'show run | sec address-family ipv6 vrf' +++
             show run | sec address-family ipv6 vrf
              address-family ipv6 vrf VRF1
