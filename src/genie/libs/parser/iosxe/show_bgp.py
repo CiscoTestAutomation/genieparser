@@ -970,7 +970,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # :: (via vrf VRF1) from 0.0.0.0 (10.1.1.1)
         # 192.168.0.1 (inaccessible) from 192.168.0.9 (192.168.0.9)
         # 172.17.111.1 (via vrf SH_BGP_VRF100) from 172.17.111.1 (10.5.5.5)
-        p4 = re.compile(r'^((?P<nexthop>[a-zA-Z0-9\.\:]+)'
+        p4 = re.compile(r'^((?P<next_hop>[a-zA-Z0-9\.\:]+)'
                         r'(( +\(metric +(?P<next_hop_igp_metric>[0-9]+)\))|'
                         r'( +\((?P<inaccessible>inaccessible)\)))?'
                         r'( +\(via +(?P<next_hop_via>[\S\s]+)\))? +'
@@ -1237,9 +1237,6 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             if m:
                 index += 1
                 group = m.groupdict()
-                nexthop = group['nexthop']
-                gateway = group['gateway']
-                originator = group['originator']
 
                 if new_address_family:
                     if 'index' not in new_addr_family_dict['prefixes'][prefixes]:
@@ -1248,9 +1245,8 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                         new_addr_family_dict['prefixes'][prefixes]['index'][index] = {}
                         subdict = new_addr_family_dict['prefixes'][prefixes]['index'][index]
 
-                    subdict['next_hop'] = nexthop
-                    subdict['gateway'] = gateway
-                    subdict['originator'] = originator
+                    for i in ['next_hop', 'gateway', 'originator']:
+                        subdict[i] = group[i]
 
                     if group['next_hop_igp_metric']:
                         subdict['next_hop_igp_metric'] = group['next_hop_igp_metric']
@@ -1273,9 +1269,8 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                         address_family_dict[address_family]['prefixes'][prefixes]['index'][index] = {}
                         subdict = address_family_dict[address_family]['prefixes'][prefixes]['index'][index]
 
-                    subdict['next_hop'] = nexthop
-                    subdict['gateway'] = gateway
-                    subdict['originator'] = originator
+                    for i in ['next_hop', 'gateway', 'originator']:
+                        subdict[i] = group[i]
 
                     if group['next_hop_igp_metric']:
                         subdict['next_hop_igp_metric'] = group['next_hop_igp_metric']
