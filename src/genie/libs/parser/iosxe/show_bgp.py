@@ -1130,90 +1130,52 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 else:
                     vrf = 'default'
                 if vrf not in ret_dict['instance']['default']['vrf']:
-                    ret_dict['instance']['default']['vrf'][vrf] = {}
-                    vrf_dict = ret_dict['instance']['default']['vrf'][vrf]
-                if 'address_family' not in ret_dict['instance']['default']['vrf'][vrf]:
-                    ret_dict['instance']['default']['vrf'][vrf]\
-                        ['address_family'] = {}
+                    vrf_dict = ret_dict.setdefault('instance', {}).setdefault('default', {}).\
+                                        setdefault('vrf', {}).setdefault(vrf, {})
+                if 'address_family' not in vrf_dict:
+                    address_family_dict = vrf_dict.setdefault('address_family', {})
 
                 # Adding the new_address_family that contains the RD info
                 if new_address_family:
-                    if new_address_family not in ret_dict['instance']\
-                        ['default']['vrf'][vrf]['address_family']:
-                        ret_dict['instance']['default']['vrf'][vrf]\
-                            ['address_family'][new_address_family] = {}
-                    if 'prefixes' not in ret_dict['instance']['default']['vrf']\
-                        [vrf]['address_family'][new_address_family]:
-                        ret_dict['instance']['default']['vrf'][vrf]\
-                            ['address_family'][new_address_family]\
-                            ['prefixes'] = {}
-                    if prefixes not in ret_dict['instance']['default']['vrf']\
-                        [vrf]['address_family'][new_address_family]['prefixes']:
-                        ret_dict['instance']['default']['vrf'][vrf]\
-                            ['address_family'][new_address_family]\
-                            ['prefixes'][prefixes] = {}
+                    if new_address_family not in address_family_dict:
+                        new_addr_family_dict = address_family_dict.setdefault(new_address_family, {})
+                    if 'prefixes' not in new_addr_family_dict:
+                        new_addr_family_dict['prefixes'] = {}
+                    if prefixes not in new_addr_family_dict['prefixes']:
+                        new_addr_family_dict['prefixes'][prefixes] = {}
 
                     # Adding the keys we got from 'BGP routing table' line
-                    ret_dict['instance']['default']['vrf'][vrf]\
-                        ['address_family'][new_address_family]['prefixes']\
-                        [prefixes]['table_version'] = prefix_table_version
+                    new_addr_family_dict['prefixes'][prefixes]['table_version'] = prefix_table_version
 
                     # Adding the keys we got from 'Route Distinguisher' line
                     if route_distinguisher:
-                        ret_dict['instance']['default']['vrf'][vrf]\
-                            ['address_family'][new_address_family]\
-                            ['route_distinguisher'] = route_distinguisher
-                        ret_dict['instance']['default']['vrf'][vrf]\
-                            ['address_family'][new_address_family]\
-                            ['default_vrf'] = default_vrf
+                        new_addr_family_dict['route_distinguisher'] = route_distinguisher
+                        new_addr_family_dict['default_vrf'] = default_vrf
 
-                    ret_dict['instance']['default']['vrf'][vrf]\
-                        ['address_family'][new_address_family]['prefixes']\
-                        [prefixes]['available_path'] = available_path
-                    ret_dict['instance']['default']['vrf'][vrf]\
-                        ['address_family'][new_address_family]['prefixes']\
-                        [prefixes]['best_path'] = best_path
-                    ret_dict['instance']['default']['vrf'][vrf]\
-                        ['address_family'][new_address_family]['prefixes']\
-                        [prefixes]['paths'] = paths
+                    new_addr_family_dict['prefixes'][prefixes]['available_path'] = available_path
+                    new_addr_family_dict['prefixes'][prefixes]['best_path'] = best_path
+                    new_addr_family_dict['prefixes'][prefixes]['paths'] = paths
                 else:
-                    if address_family not in ret_dict['instance']\
-                        ['default']['vrf'][vrf]['address_family']:
-                        ret_dict['instance']['default']['vrf'][vrf]\
-                            ['address_family'][address_family] = {}
-                    if 'prefixes' not in ret_dict['instance']['default']['vrf']\
-                        [vrf]['address_family'][address_family]:
-                        ret_dict['instance']['default']['vrf'][vrf]\
-                            ['address_family'][address_family]['prefixes'] = {}
-                    if prefixes not in ret_dict['instance']['default']['vrf']\
-                        [vrf]['address_family'][address_family]['prefixes']:
-                        ret_dict['instance']['default']['vrf'][vrf]\
-                            ['address_family'][address_family]['prefixes']\
-                                [prefixes] = {}
+                    if address_family not in address_family_dict:
+                        address_family_dict[address_family] = {}
+                    if 'prefixes' not in address_family_dict[address_family]:
+                        address_family_dict[address_family]['prefixes'] = {}
+                    if prefixes not in address_family_dict[address_family]['prefixes']:
+                        address_family_dict[address_family]['prefixes'][prefixes] = {}
 
                     # Adding the keys we got from 'BGP routing table' line
-                    ret_dict['instance']['default']['vrf'][vrf]\
-                        ['address_family'][address_family]['prefixes']\
+                    address_family_dict[address_family]['prefixes']\
                         [prefixes]['table_version'] = prefix_table_version
 
                     # Adding the keys we got from 'Route Distinguisher' line
                     if route_distinguisher:
-                        ret_dict['instance']['default']['vrf'][vrf]\
-                            ['address_family'][address_family]\
-                            ['route_distinguisher'] = route_distinguisher
-                        ret_dict['instance']['default']['vrf'][vrf]\
-                            ['address_family'][address_family]\
-                            ['default_vrf'] = default_vrf
+                        address_family_dict[address_family]['route_distinguisher'] = route_distinguisher
+                        address_family_dict[address_family]['default_vrf'] = default_vrf
 
-                    ret_dict['instance']['default']['vrf'][vrf]\
-                        ['address_family'][address_family]['prefixes']\
+                    address_family_dict[address_family]['prefixes']\
                         [prefixes]['available_path'] = available_path
-                    ret_dict['instance']['default']['vrf'][vrf]\
-                        ['address_family'][address_family]['prefixes']\
-                        [prefixes]['best_path'] = best_path
-                    ret_dict['instance']['default']['vrf'][vrf]\
-                        ['address_family'][address_family]['prefixes']\
-                        [prefixes]['paths'] = paths
+                    address_family_dict[address_family]['prefixes'][prefixes]['best_path'] = best_path
+                    address_family_dict[address_family]['prefixes'][prefixes]['paths'] = paths
 
             # Route Distinguisher: 100:100 (default for vrf VRF1)
             # Route Distinguisher: 65535:1 (default for vrf evpn1)
