@@ -2,7 +2,12 @@
 
 JunOS parsers for the following show commands:
     * show interfaces terse
+    * show interfaces terse | no-more
     * show interfaces terse | match <interface>
+    * show interfaces terse {interface}
+    * show interfaces terse {interface} | no-more
+    * show interfaces {interface} terse
+    * show interfaces {interface} terse | no-more
 """
 
 # python
@@ -47,23 +52,32 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
     """ Parser for:
             - show interfaces terse
             - show interfaces {interface} terse
+            - show interfaces terse {interface}
+            - show interfaces terse | no-more
+            - show interfaces terse {interface} | no-more
+            - show interfaces {interface} terse | no-more
     """
 
     cli_command = [
         'show interfaces terse',
-        'show interfaces {interface} terse'
+        'show interfaces {interface} terse',
+        'show interfaces terse {interface}',
+        'show interfaces terse | no-more',
+        'show interfaces terse {interface} | no-more',
+        'show interfaces {interface} terse | no-more',
     ]
     exclude = [
         'duration'
     ]
 
-    def cli(self, interface=None, output=None):
+    def cli(self, interface=None, no_more=False, output=None):
         # execute the command
         if output is None:
             if interface:
-                cmd = self.cli_command[1].format(interface=interface)
+                cmd = self.cli_command[5] if no_more else self.cli_command[1]
+                cmd = cmd.format(interface=interface)
             else:
-                cmd = self.cli_command[0]
+                cmd = self.cli_command[3] if no_more else self.cli_command[0]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -153,15 +167,18 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
 class ShowInterfacesTerseMatch(ShowInterfacesTerse):
     """ Parser for:
             - show interfaces terse | match {interface}
+            - show interfaces terse | match {interface} | no-more
     """
 
     cli_command = [
-        'show interfaces terse | match {interface}'
+        'show interfaces terse | match {interface}',
+        'show interfaces terse | match {interface} | no-more',
     ]
 
-    def cli(self, interface=None, output=None):
+    def cli(self, interface=None, no_more=False, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command[0].format(interface=interface))
+            cmd = self.cli_command[1] if no_more else self.cli_command[0] 
+            out = self.device.execute(cmd.format(interface=interface))
         else:
             out = output
 
