@@ -1106,6 +1106,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             # Paths: (1 available, best #1, table default, RIB-failure(17))
             m = p2.match(line)
             if m:
+                group = m.groupdict()
                 original_address_family = address_family.lower()
                 if 'instance' not in ret_dict:
                     ret_dict['instance'] = {}
@@ -1113,24 +1114,25 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                     ret_dict['instance']['default'] = {}
                 if 'vrf' not in ret_dict['instance']['default']:
                     ret_dict['instance']['default']['vrf'] = {}
-                paths = m.groupdict()['paths']
-                available_path = m.groupdict()['available_path']
-                if m.groupdict()['best_path']:
-                    best_path = m.groupdict()['best_path']
+
+                paths = group['paths']
+                available_path = group['available_path']
+                if group['best_path']:
+                    best_path = group['best_path']
                 else:
                     best_path = ''
-                if m.groupdict()['vrf_id']:
-                    vrf = m.groupdict()['vrf_id']
+                if group['vrf_id']:
+                    vrf = group['vrf_id']
                 elif cmd_vrf:
                     vrf = cmd_vrf
-                elif default_vrf != 'None':
+                elif default_vrf and default_vrf != 'None':
                     vrf = default_vrf
                 else:
                     vrf = 'default'
                 if vrf not in ret_dict['instance']['default']['vrf']:
                     ret_dict['instance']['default']['vrf'][vrf] = {}
-                if 'address_family' not in ret_dict['instance']\
-                    ['default']['vrf'][vrf]:
+                    vrf_dict = ret_dict['instance']['default']['vrf'][vrf]
+                if 'address_family' not in ret_dict['instance']['default']['vrf'][vrf]:
                     ret_dict['instance']['default']['vrf'][vrf]\
                         ['address_family'] = {}
 
@@ -1266,9 +1268,10 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             m = p4.match(line)
             if m:
                 index += 1
-                nexthop = m.groupdict()['nexthop']
-                gateway = m.groupdict()['gateway']
-                originator = m.groupdict()['originator']
+                group = m.groupdict()
+                nexthop = group['nexthop']
+                gateway = group['gateway']
+                originator = group['originator']
                 if new_address_family:
                     if 'index' not in ret_dict['instance']['default']['vrf']\
                         [vrf]['address_family'][new_address_family]['prefixes']\
@@ -1289,16 +1292,16 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                     subdict['next_hop'] = nexthop
                     subdict['gateway'] = gateway
                     subdict['originator'] = originator
-                    if m.groupdict()['next_hop_igp_metric']:
+                    if group['next_hop_igp_metric']:
                         subdict['next_hop_igp_metric'] = \
-                            m.groupdict()['next_hop_igp_metric']
-                    if m.groupdict()['inaccessible']:
+                            group['next_hop_igp_metric']
+                    if group['inaccessible']:
                         subdict['inaccessible'] = True
                     else:
                         subdict['inaccessible'] = False
-                    if m.groupdict()['next_hop_via']:
+                    if group['next_hop_via']:
                         subdict['next_hop_via'] = \
-                            m.groupdict()['next_hop_via']
+                            group['next_hop_via']
                     # Adding update_group to each index
                     if update_group:
                         subdict['update_group'] = update_group
@@ -1322,12 +1325,12 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                     subdict['next_hop'] = nexthop
                     subdict['gateway'] = gateway
                     subdict['originator'] = originator
-                    if m.groupdict()['next_hop_igp_metric']:
+                    if group['next_hop_igp_metric']:
                         subdict['next_hop_igp_metric'] = \
-                            m.groupdict()['next_hop_igp_metric']
-                    if m.groupdict()['next_hop_via']:
+                            group['next_hop_igp_metric']
+                    if group['next_hop_via']:
                         subdict['next_hop_via'] = \
-                            m.groupdict()['next_hop_via']
+                            group['next_hop_via']
                     # Adding update_group to each index
                     if update_group:
                         subdict['update_group'] = update_group
@@ -1340,17 +1343,18 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             # Origin IGP, localpref 100, valid, external, atomic-aggregate, best
             m = p5.match(line)
             if m:
+                group = m.groupdict()
                 status_codes = ''
-                if m.groupdict()['aggregate']:
+                if group['aggregate']:
                     subdict['atomic_aggregate'] = True
-                if m.groupdict()['locprf']:
-                     subdict['localpref'] = int(m.groupdict()['locprf'])
-                if m.groupdict()['metric']:
-                     subdict['metric'] = int(m.groupdict()['metric'])
-                if m.groupdict()['weight']:
-                    subdict['weight'] = str(m.groupdict()['weight'])
-                if m.groupdict()['origin']:
-                    origin = str(m.groupdict()['origin'])
+                if group['locprf']:
+                     subdict['localpref'] = int(group['locprf'])
+                if group['metric']:
+                     subdict['metric'] = int(group['metric'])
+                if group['weight']:
+                    subdict['weight'] = str(group['weight'])
+                if group['origin']:
+                    origin = str(group['origin'])
                     if origin == 'incomplete':
                         subdict['origin_codes'] = '?'
                     elif origin == 'EGP':
@@ -1358,13 +1362,13 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                     else:
                         subdict['origin_codes'] = 'i'
 
-                if m.groupdict()['valid']:
+                if group['valid']:
                     status_codes += '* '
-                if m.groupdict()['best']:
+                if group['best']:
                     status_codes = status_codes.rstrip()
                     status_codes += '>'
-                if m.groupdict()['state']:
-                    state = str(m.groupdict()['state'])
+                if group['state']:
+                    state = str(group['state'])
                     if state == 'internal':
                         status_codes += 'i'
                 subdict['status_codes'] = status_codes
@@ -1436,14 +1440,15 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             # Extended Community: RT:65535:1 ENCAP:8 Router MAC:001E.7AFF.FCD2
             m = p8.match(line)
             if m:
+                group = m.groupdict()
                 if 'evpn' not in subdict:
                     subdict['evpn'] = {}
-                ext_community = m.groupdict()['ext_community']
+                ext_community = group['ext_community']
                 subdict['evpn']['ext_community'] = ext_community
-                if m.groupdict()['encap']:
-                    subdict['evpn']['encap'] = m.groupdict()['encap']
-                if m.groupdict()['router_mac']:
-                    subdict['evpn']['router_mac'] = m.groupdict()['router_mac']
+                if group['encap']:
+                    subdict['evpn']['encap'] = group['encap']
+                if group['router_mac']:
+                    subdict['evpn']['router_mac'] = group['router_mac']
                 continue
 
             # Extended Community: SoO:65109:999 RT:65109:50
@@ -1451,14 +1456,15 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             # Extended Community: RT:65109:50 RT:65109:51 , recursive-via-connected
             m = p8_2.match(line)
             if m:
-                ext_community = m.groupdict()['ext_community']
+                group = m.groupdict()
+                ext_community = group['ext_community']
                 if 'evpn' in subdict:
                     subdict['evpn']['ext_community'] = ext_community
-                    if m.groupdict()['recursive']:
+                    if group['recursive']:
                         subdict['evpn']['recursive_via_connected'] = True
                 else:
                     subdict['ext_community'] = ext_community
-                    if m.groupdict()['recursive']:
+                    if group['recursive']:
                         subdict['recursive_via_connected'] = True
                 continue
 
@@ -1509,13 +1515,14 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             # EVPN ESI: 00000000000000000000, Gateway Address: 0.0.0.0, local vtep: 10.21.33.33, Label 30000
             m = p10.match(line)
             if m:
+                group = m.groupdict()
                 if 'evpn' not in subdict:
                     subdict['evpn'] = {}
-                subdict['evpn']['evpn_esi'] = str(m.groupdict()['evpn_esi'])
-                subdict['evpn']['local_vtep'] = str(m.groupdict()['local_vtep'])
+                subdict['evpn']['evpn_esi'] = str(group['evpn_esi'])
+                subdict['evpn']['local_vtep'] = str(group['local_vtep'])
                 subdict['evpn']['gateway_address'] = \
-                    str(m.groupdict()['gateway_address'])
-                subdict['evpn']['label'] = int(m.groupdict()['label'])
+                    str(group['gateway_address'])
+                subdict['evpn']['label'] = int(group['label'])
                 continue
 
             # Local vxlan vtep:
