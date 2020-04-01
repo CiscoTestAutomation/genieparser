@@ -1320,6 +1320,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                     state = group['state']
                     if state == 'internal':
                         status_codes += 'i'
+
                 subdict['status_codes'] = status_codes
 
                 # Adding the keys we got from 'Refresh Epoch' line
@@ -1441,18 +1442,14 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             # Originator: 192.168.165.220, Cluster list: 0.0.0.61
             m = p8_5.match(line)
             if m:
-                group = m.groupdict()
-                subdict['cluster_list'] = group['cluster_list']
+                subdict['cluster_list'] = m.groupdict()['cluster_list']
                 continue
 
             # rx pathid: 0, tx pathid: 0
             m = p9.match(line)
             if m:
-                recipient_pathid = m.groupdict()['recipient_pathid']
-                transfer_pathid = m.groupdict()['transfer_pathid']
-
-                subdict['recipient_pathid'] = recipient_pathid
-                subdict['transfer_pathid'] = transfer_pathid
+                subdict['recipient_pathid'] = m.groupdict()['recipient_pathid']
+                subdict['transfer_pathid'] = m.groupdict()['transfer_pathid']
                 continue
             
             # mpls labels in/out nolabel/64402
@@ -1460,12 +1457,9 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             if m:
                 group = m.groupdict()
 
-                label_in = group['in']
-                label_out = group['out']
-
                 mpls_labels_dict = subdict.setdefault('mpls_labels', {})
-                mpls_labels_dict.update({'in': label_in})
-                mpls_labels_dict.update({'out': label_out})
+                mpls_labels_dict.update({'in': group['in']})
+                mpls_labels_dict.update({'out': group['out']})
                 continue
 
             # EVPN ESI: 00000000000000000000, Gateway Address: 0.0.0.0, local vtep: 10.21.33.33, Label 30000
@@ -1491,9 +1485,15 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 continue
 
             # bdi:BDI200
-            m = p12.match(line)
+            # local router mac:001E.7AFF.FCD2
+            # encap:8
+            # vtep-ip:10.21.33.33
+            m = p12.match(line) or p14.match(line)\
+                or p15.match(line) or p16.match(line)
             if m and local_vxlan_vtep:
-                subdict['local_vxlan_vtep']['bdi'] = m.groupdict()['bdi']
+                group = m.groupdict()
+                k = list(group)[0]
+                subdict['local_vxlan_vtep'][k] = group[k]
                 continue
 
             # vrf:evpn1, vni:30000
@@ -1501,24 +1501,6 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             if m and local_vxlan_vtep:
                 subdict['local_vxlan_vtep']['vrf'] = m.groupdict()['vrf']
                 subdict['local_vxlan_vtep']['vni'] = m.groupdict()['vni']
-                continue
-
-            # local router mac:001E.7AFF.FCD2
-            m = p14.match(line)
-            if m and local_vxlan_vtep:
-                subdict['local_vxlan_vtep']['local_router_mac'] = m.groupdict()['local_router_mac']
-                continue
-
-            # encap:8
-            m = p15.match(line)
-            if m and local_vxlan_vtep:
-                subdict['local_vxlan_vtep']['encap'] = m.groupdict()['encap']
-                continue
-
-            # vtep-ip:10.21.33.33
-            m = p16.match(line)
-            if m and local_vxlan_vtep:
-                subdict['local_vxlan_vtep']['vtep_ip'] = m.groupdict()['vtep_ip']
                 continue
 
             # Local
