@@ -1255,25 +1255,16 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                     if update_group:
                         subdict['update_group'] = update_group
                 else:
-                    if 'index' not in ret_dict['instance']['default']['vrf']\
-                        [vrf]['address_family'][address_family]['prefixes']\
-                        [prefixes]:
-                        ret_dict['instance']['default']['vrf'][vrf]\
-                            ['address_family'][address_family]['prefixes']\
-                            [prefixes]['index'] = {}
-                    if index not in ret_dict['instance']['default']['vrf']\
-                        [vrf]['address_family'][address_family]['prefixes']\
-                        [prefixes]['index']:
-                        ret_dict['instance']['default']['vrf'][vrf]\
-                        ['address_family'][address_family]['prefixes']\
-                                [prefixes]['index'][index] = {}
-                        subdict = ret_dict['instance']['default']['vrf'][vrf]\
-                            ['address_family'][address_family]['prefixes']\
-                            [prefixes]['index'][index]
+                    if 'index' not in address_family_dict[address_family]['prefixes'][prefixes]:
+                        address_family_dict[address_family]['prefixes'][prefixes]['index'] = {}
+                    if index not in address_family_dict[address_family]['prefixes'][prefixes]['index']:
+                        address_family_dict[address_family]['prefixes'][prefixes]['index'][index] = {}
+                        subdict = address_family_dict[address_family]['prefixes'][prefixes]['index'][index]
 
                     subdict['next_hop'] = nexthop
                     subdict['gateway'] = gateway
                     subdict['originator'] = originator
+
                     if group['next_hop_igp_metric']:
                         subdict['next_hop_igp_metric'] = \
                             group['next_hop_igp_metric']
