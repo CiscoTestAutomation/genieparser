@@ -918,6 +918,8 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         imported_safety_path = False
         refresh_epoch = None
         cmd_vrf = vrf if vrf else None
+        default_vrf = None
+
         # For address family: IPv4 Unicast
         # For address family: L2VPN E-VPN
         p1 = re.compile(r'^For +address +family:'
@@ -1121,6 +1123,8 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                     vrf = m.groupdict()['vrf_id']
                 elif cmd_vrf:
                     vrf = cmd_vrf
+                elif default_vrf != 'None':
+                    vrf = default_vrf
                 else:
                     vrf = 'default'
                 if vrf not in ret_dict['instance']['default']['vrf']:

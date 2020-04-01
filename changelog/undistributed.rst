@@ -112,6 +112,8 @@
         * Change key 'peer_as' into Optional to support various outputs
     * Update ShowBgpAllNeighbors:
         * Update regex to support various outputs.
+    * Update ShowIpBgpAllDetail:
+        * Fix the way that assigns value to key 'vrf'
 
 * NXOS
     * Updated ShowInterface
