@@ -2907,7 +2907,7 @@ class TestShowBgpDetail(unittest.TestCase):
                     {'L2VPN-VPLS-BGP-Table': 
                         {'address_family': 
                             {'l2vpn vpls': 
-                                {'default_vrf': 'None',
+                                {
                                 'prefixes': 
                                     {'VEID-1:Blk-1/136,': 
                                         {'available_path': '2',
@@ -3060,7 +3060,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                     {'default': 
                         {'address_family': 
                             {'vpnv4': 
-                                {'default_vrf': 'None',
+                                {
                                 'prefixes': 
                                     {'10.4.1.0/24': {'available_path': '1',
                                                    'best_path': '1',
