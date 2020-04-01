@@ -5942,10 +5942,10 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
     
     def yang(self, output=None):
         if not output:
-            out = self.device.netconf.get(self.cli_command)
+            out = self.device.get(filter=('xpath', '/boot-integrity-oper-data')).data_xml
         else:
             out = output
-        out = out.replace("]]>]]>", "")
+
         root = ET.fromstring(out)
         boot_integrity_oper_data = Common.retrieve_xml_child(root=root, key='boot-integrity-oper-data')
         boot_integrity = Common.retrieve_xml_child(root=boot_integrity_oper_data, key='boot-integrity')
