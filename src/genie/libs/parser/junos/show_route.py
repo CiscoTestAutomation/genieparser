@@ -325,7 +325,7 @@ class ShowRouteProtocolStatic(ShowRouteProtocolStaticSchema):
                 continue
         return ret_dict
 
-class ShowRouteProtocolStaticNoMore(ShowRouteProtocolStaticSchema):
+class ShowRouteProtocolStaticNoMore(ShowRouteProtocolStatic):
     """ Parser for:
             * show route protocol static {ip_address} | no-more
     """
