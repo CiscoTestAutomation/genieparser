@@ -85,13 +85,12 @@ class ShowOspf3Interface(ShowOspf3InterfaceSchema):
                 entry_list.append(interface_entry)
                 continue
 
+        ret_dict = {}
         if entry_list:
-            data = {
+            ret_dict = {
                 "ospf3-interface-information": {
                     "ospf3-interface": entry_list
                 }
             }
-            return data
-        else:
-            return None
+        return ret_dict
 
