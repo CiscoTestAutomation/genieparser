@@ -17,7 +17,7 @@ class TestShowOspf3Interface(unittest.TestCase):
         Interface           State   Area            DR ID           BDR ID          Nbrs
         ge-0/0/0.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
         ge-0/0/1.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
-        lo0.0               DR      0.0.0.8         111.87.5.252    0.0.0.0            0
+        lo0.0               DR      0.0.0.8         10.189.5.252    0.0.0.0            0
     '''}
 
     golden_parsed_output = {
@@ -41,7 +41,7 @@ class TestShowOspf3Interface(unittest.TestCase):
                     },
                     {
                         "bdr-id": "0.0.0.0",
-                        "dr-id": "111.87.5.252",
+                        "dr-id": "10.189.5.252",
                         "interface-name": "lo0.0",
                         "neighbor-count": "0",
                         "ospf-area": "0.0.0.8",
