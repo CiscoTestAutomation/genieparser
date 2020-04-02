@@ -7,7 +7,10 @@ from genie.metaparser.util.schemaengine import (Any,
         Optional, Use, SchemaTypeError, Schema)
 
 class ShowArpSchema(MetaParser):
-
+    """ Parser for:
+            * show arp
+            * show arp | no-more
+    """
     """schema = {
         "arp-table-information": {
             "arp-entry-count": str,
@@ -49,9 +52,10 @@ class ShowArpSchema(MetaParser):
     }
 
 class ShowArp(ShowArpSchema):
-
-    cli_command = ['show arp',
-        'show arp | no-more']
+    """ Parser for:
+            * show arp
+    """
+    cli_command = 'show arp'
     
     def cli(self, no_more=False, output=None):
 
@@ -100,5 +104,18 @@ class ShowArp(ShowArpSchema):
                 ret_dict.setdefault('arp-table-information', {}).\
                     setdefault('arp-entry-count', total_entries)
                 continue
-
         return ret_dict
+
+class ShowArpNoMore(ShowArp):
+    """ Parser for:
+            * show arp | no-more
+    """
+    cli_command = 'show arp | no-more'
+    def cli(self, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        return super().cli(output=out)
