@@ -6,12 +6,26 @@ from genie.metaparser.util.schemaengine import (Any,
 
 class ShowOspf3InterfaceSchema(MetaParser):
 
+    '''schema = {
+    "ospf3-interface-information": {
+        "ospf3-interface": [
+            {
+                "bdr-id": str,
+                "dr-id": str,
+                "interface-name": str,
+                "neighbor-count": str,
+                "ospf-area": str,
+                "ospf-interface-state": str
+            }
+        ]
+    }'''
+
     # Sub Schema
-    def validate_ospf_interface_list(value):
+    def validate_ospf3_interface_list(value):
         # Pass ospf3-interface list as value
         if not isinstance(value, list):
             raise SchemaTypeError('ospf-interface is not a list')
-        entry_schema = Schema({
+        ospf3_interface_schema = Schema({
                 "bdr-id": str,
                 "dr-id": str,
                 "interface-name": str,
@@ -21,21 +35,21 @@ class ShowOspf3InterfaceSchema(MetaParser):
             })
         # Validate each dictionary in list
         for item in value:
-            entry_schema.validate(item)
+            ospf3_interface_schema.validate(item)
         return value
 
     # Main Schema
     schema = {
         "ospf3-interface-information": {
-            "ospf3-interface": Use(validate_ospf_interface_list)
+            "ospf3-interface": Use(validate_ospf3_interface_list)
         }
     }
 
 class ShowOspf3Interface(ShowOspf3InterfaceSchema):
     """ Parser for:
-    * show ospf interface
+    * show ospf3 interface
     """
-    cli_command = 'show ospf interface'
+    cli_command = 'show ospf3 interface'
 
     def cli(self, output=None):
         if not output:
@@ -45,6 +59,8 @@ class ShowOspf3Interface(ShowOspf3InterfaceSchema):
 
         # use the pattern r'[0-9]{1,3}(\.[0-9]{1,3}){3}' to pick up on ip addresses
         # in 'area', 'dr_id' and 'bdr_id'
+
+        # ge-0/0/0.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
         p1 = re.compile(r'^(?P<interface>\S+) +(?P<state>\S+) +(?P<area>[0-9]{1,3}(\.[0-9]{1,3}){3})'
             r' +(?P<dr_id>[0-9]{1,3}(\.[0-9]{1,3}){3}) +(?P<bdr_id>[0-9]{1,3}(\.[0-9]{1,3}){3}) +(?P<nbrs>\S+)$')
 
@@ -53,6 +69,7 @@ class ShowOspf3Interface(ShowOspf3InterfaceSchema):
         for line in out.splitlines():
             line = line.strip()
 
+            # ge-0/0/0.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -66,6 +83,7 @@ class ShowOspf3Interface(ShowOspf3InterfaceSchema):
                 interface_entry['neighbor-count'] = group['nbrs']
 
                 entry_list.append(interface_entry)
+                continue
 
         if entry_list:
             data = {
