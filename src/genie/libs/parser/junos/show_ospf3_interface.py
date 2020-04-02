@@ -47,9 +47,9 @@ class ShowOspf3InterfaceSchema(MetaParser):
 
 class ShowOspf3Interface(ShowOspf3InterfaceSchema):
     """ Parser for:
-    * show ospf3 interface
+    * show ospf3 interface | no-more
     """
-    cli_command = 'show ospf3 interface'
+    cli_command = 'show ospf3 interface | no-more'
 
     def cli(self, output=None):
         if not output:
