@@ -106,6 +106,8 @@
         * Update regex to support various output
     * Update ShowLldpEntry
         * Fix typo in the code
+    * Update ShowBgpSummarySuperParser
+        * Add try and except block in parser class to handle error
 
 * NXOS
     * Updated ShowInterface
