@@ -4,7 +4,7 @@ from unittest.mock import Mock
 from pyats.topology import Device
 from pyats.topology import loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
-from genie.libs.parser.junos.show_ospf3 import (ShowOspf3Interface)
+from genie.libs.parser.junos.show_ospf3 import ShowOspf3Interface
 
 class TestShowOspf3Interface(unittest.TestCase):
 
