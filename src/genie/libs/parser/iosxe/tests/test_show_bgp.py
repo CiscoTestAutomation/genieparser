@@ -5924,23 +5924,23 @@ class TestShowIpBgpDetail(unittest.TestCase):
     # show ip bgp vpnv4 all detail
     golden_output8 = {'execute.return_value': '''
       Route Distinguisher: 101:101 (default for vrf vrf_1)
-      BGP routing table entry for 101:101:4.4.4.0/22, version 0
+      BGP routing table entry for 101:101:10.64.4.0/22, version 0
         Paths: (1 available, no best path)
         Not advertised to any peer
         Refresh Epoch 1
         65000 65201 4400004007 4400004507 4400004001 4400004505 4400004005 4400004504 1234 5678, (received-only)
-          1.2.3.4 (via vrf vrf_1) from 1.2.3.4 (1.2.3.4)
+          10.9.3.4 (via vrf vrf_1) from 10.9.3.4 (10.9.3.4)
             Origin IGP, localpref 100, valid, external
             Community: 65100:106 65100:500 65100:601 65361:3
             Extended Community: RT:65000:31838
             rx pathid: 0, tx pathid: 0
-      BGP routing table entry for 101:101:4.4.4.0/24, version 1863365
+      BGP routing table entry for 101:101:10.64.4.0/24, version 1863365
         Paths: (4 available, best #3, table vrf_1)
         Advertised to update-groups:
            2          3          47
         Refresh Epoch 1
         65000 65211 4400002007 4400002507 4400002001 4400002505 4400002005 4400002504 3456 5678 2345, (received-only)
-          1.2.3.4 (via vrf vrf_1) from 1.2.3.4 (1.2.3.4)
+          10.9.3.4 (via vrf vrf_1) from 10.9.3.4 (10.9.3.4)
             Origin IGP, localpref 100, valid, external
             Community: 9:9 65100:106 65100:508 65100:704 65371:2
             Extended Community: RT:65000:31838
@@ -5998,19 +5998,19 @@ class TestShowIpBgpDetail(unittest.TestCase):
                             'vpnv4': {
                                 'default_vrf': 'vrf_1',
                                 'prefixes': {
-                                    '4.4.4.0/22': {
+                                    '10.64.4.0/22': {
                                         'available_path': '1',
                                         'best_path': '',
                                         'index': {
                                             1: {
                                                 'community': '65100:106 65100:500 65100:601 65361:3',
                                                 'ext_community': 'RT:65000:31838',
-                                                'gateway': '1.2.3.4',
+                                                'gateway': '10.9.3.4',
                                                 'localpref': 100,
-                                                'next_hop': '1.2.3.4',
+                                                'next_hop': '10.9.3.4',
                                                 'next_hop_via': 'vrf vrf_1',
                                                 'origin_codes': 'i',
-                                                'originator': '1.2.3.4',
+                                                'originator': '10.9.3.4',
                                                 'recipient_pathid': '0',
                                                 'refresh_epoch': 1,
                                                 'route_info': '65000 65201 4400004007 4400004507 4400004001 4400004505 4400004005 4400004504 1234 5678',
@@ -6022,19 +6022,19 @@ class TestShowIpBgpDetail(unittest.TestCase):
                                         'paths': '1 available, no best path',
                                         'table_version': '0',
                                     },
-                                    '4.4.4.0/24': {
+                                    '10.64.4.0/24': {
                                         'available_path': '4',
                                         'best_path': '3',
                                         'index': {
                                             1: {
                                                 'community': '9:9 65100:106 65100:508 65100:704 65371:2',
                                                 'ext_community': 'RT:65000:31838',
-                                                'gateway': '1.2.3.4',
+                                                'gateway': '10.9.3.4',
                                                 'localpref': 100,
-                                                'next_hop': '1.2.3.4',
+                                                'next_hop': '10.9.3.4',
                                                 'next_hop_via': 'vrf vrf_1',
                                                 'origin_codes': 'i',
-                                                'originator': '1.2.3.4',
+                                                'originator': '10.9.3.4',
                                                 'recipient_pathid': '0',
                                                 'refresh_epoch': 1,
                                                 'route_info': '65000 65211 4400002007 4400002507 4400002001 4400002505 4400002005 4400002504 3456 5678 2345',
