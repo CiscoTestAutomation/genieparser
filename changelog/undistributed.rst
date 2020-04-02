@@ -56,9 +56,11 @@
 * JUNOS
     * Added ShowBgpGroupBrief for:
         * show bgp group brief
+    * Added ShowBgpGroupBriefNoMore for:
         * show bgp group brief | no-more
     * Added ShowBgpGroupDetail for:
         * show bgp group detail
+    * Added ShowBgpGroupDetailNoMore for:
         * show bgp group detail | no-more
 
 * JUNOS
