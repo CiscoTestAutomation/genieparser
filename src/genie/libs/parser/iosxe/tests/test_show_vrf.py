@@ -118,6 +118,39 @@ class TestShowVrf(unittest.TestCase):
         }
     }
 
+    golden_output_2 = {'execute.return_value': '''
+      Name                             Default RD            Protocols   Interfaces
+      BT-RBG-LAB                       10.116.83.34:99       ipv4        Gi0/0/0
+      Mgmt-intf                        <not set>             ipv4,ipv6   Gi0
+      rb-bcn-lab                       10.116.83.34:1        ipv4,ipv6   Lo9
+                                                                         Te0/0/1
+      test                             10.116.83.34:100      ipv4,ipv6   Lo100
+    '''}
+
+    golden_parsed_output_2 = {
+        'vrf': {
+            'BT-RBG-LAB': {
+                'interfaces': ['GigabitEthernet0/0/0'],
+                'protocols': ['ipv4'],
+                'route_distinguisher': '10.116.83.34:99',
+            },
+            'Mgmt-intf': {
+                'interfaces': ['GigabitEthernet0'],
+                'protocols': ['ipv4', 'ipv6'],
+            },
+            'rb-bcn-lab': {
+                'interfaces': ['Loopback9', 'TenGigabitEthernet0/0/1'],
+                'protocols': ['ipv4', 'ipv6'],
+                'route_distinguisher': '10.116.83.34:1',
+            },
+            'test': {
+                'interfaces': ['Loopback100'],
+                'protocols': ['ipv4', 'ipv6'],
+                'route_distinguisher': '10.116.83.34:100',
+            },
+        },
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowVrf(device=self.device)
@@ -135,6 +168,12 @@ class TestShowVrf(unittest.TestCase):
         obj = ShowVrf(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_output_vrf)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowVrf(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 class TestShowVrfDetail(unittest.TestCase):
