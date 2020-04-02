@@ -57,11 +57,10 @@ class ShowArp(ShowArpSchema):
     """
     cli_command = 'show arp'
     
-    def cli(self, no_more=False, output=None):
+    def cli(self, output=None):
 
         if not output:
-            cmd = self.cli_command[1] if no_more else self.cli_command[0]
-            out = self.device.execute(cmd)
+            out = self.device.execute(cli_command)
         else:
             out = output
 
