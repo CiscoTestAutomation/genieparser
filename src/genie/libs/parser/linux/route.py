@@ -48,8 +48,6 @@ class Route(RouteSchema):
         else:
             out = output
 
-        result_dict = {}
-
         # Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
         # 192.168.1.0     0.0.0.0         255.255.255.0   U     600    0        0 wlo1
 
