@@ -541,7 +541,7 @@ class ShowBgpGroupDetail(ShowBgpGroupBrief):
     """
     cli_command = 'show bgp group detail'
     
-    def cli(self, no_more=False, output=None):
+    def cli(self, output=None):
 
         if not output:
             out = self.device.execute(self.cli_command)
