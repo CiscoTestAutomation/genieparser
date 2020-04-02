@@ -1852,11 +1852,15 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
         if not vrf:
             vrf ='default'
 
-        if ('rd' in cmd and 'summary' in cmd and 
+        show_vrf_output = None
+        if ('rd' in cmd and 'summary' in cmd and
             output != '% RD does not match the default RD of any VRF'):
             obj = ShowVrf(device=self.device)
             show_vrf_output = obj.parse()
-
+            # try:
+            #     show_vrf_output = obj.parse()
+            # except Exception:
+            #     pass
 
         if address_family.lower() not in ['ipv4 unicast', 'ipv6 unicast']:
            
@@ -1970,7 +1974,6 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
         #  2001:DB8:20:4:6::6
         #           4          400      67      73       66    0    0 01:03:11        5
         p10 = re.compile(r'^(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
-
 
         p11 = re.compile(r'^(?P<version>[0-9]+)'
                           ' +(?P<as>[0-9]+) +(?P<msg_rcvd>[0-9]+)'
@@ -2117,20 +2120,19 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
                         vrf = 'default'
 
                     if 'rd' in cmd and 'summary' in cmd:
-                        for vrf_value, vrf_dict in show_vrf_output['vrf'].items():
-                            if vrf_dict.get('route_distinguisher', '') == rd:
-                                vrf = vrf_value
-                                break
+                        if show_vrf_output:
+                            for vrf_value, vrf_dict in show_vrf_output['vrf'].items():
+                                if vrf_dict.get('route_distinguisher', '') == rd:
+                                    vrf = vrf_value
+                                    break
                         else:
-                            vrf='default'
+                            vrf = 'default'
 
                 nbr_dict = sum_dict.setdefault('vrf', {}).setdefault(vrf, {})\
                            .setdefault('neighbor', {}).setdefault(neighbor, {})
 
                 nbr_af_dict = nbr_dict.setdefault('address_family', {})\
                                       .setdefault(address_family, {})
-
-                nbr_af_dict = nbr_dict['address_family'][address_family]
 
                 # Add keys for this address_family
                 nbr_af_dict['version'] = int(m.groupdict()['version'])
