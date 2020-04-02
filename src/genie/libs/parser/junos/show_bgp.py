@@ -170,16 +170,13 @@ class ShowBgpGroupBriefSchema(MetaParser):
 class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
     """ Parser for:
             * show bgp group brief
-            * show bgp group brief | no-more
     """
-    cli_command = ['show bgp group brief',
-        'show bgp group brief | no-more']
+    cli_command = 'show bgp group brief'
     
-    def cli(self, no_more=False, output=None):
+    def cli(self, output=None):
 
         if not output:
-            cmd = self.cli_command[1] if no_more else self.cli_command[0]
-            out = self.device.execute(cmd)
+            out = self.device.execute(self.cli_command)
         else:
             out = output
 
@@ -519,20 +516,46 @@ class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
                 continue
         return ret_dict
 
+class ShowBgpGroupBriefNoMore(ShowBgpGroupBrief):
+    """ Parser for:
+            * show bgp group brief | no-more
+    """
+    cli_command = 'show bgp group brief | no-more'
+    def cli(self, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        return super().cli(output=output)
+
 class ShowBgpGroupDetail(ShowBgpGroupBrief):
     """ Parser for:
             * show bgp group detail
             * show bgp group detail | no-more
     """
-    cli_command = ['show bgp group detail',
-        'show bgp group detail | no-more']
+    cli_command = 'show bgp group detail'
     
     def cli(self, no_more=False, output=None):
 
         if not output:
-            cmd = self.cli_command[1] if no_more else self.cli_command[0]
-            out = self.device.execute(cmd)
+            out = self.device.execute(self.cli_command)
         else:
             out = output
         
         return super().cli(output=out)
+    
+class ShowBgpGroupDetailNoMore(ShowBgpGroupDetail):
+    """ Parser for:
+            * show bgp group detail | no-more
+    """
+    cli_command = 'show bgp group detail | no-more'
+    def cli(self, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        return super().cli(output=output)
