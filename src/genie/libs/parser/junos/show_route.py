@@ -12,7 +12,7 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema
-
+from genie.metaparser.util.exceptions import SchemaTypeError
 '''
 Schema for:
     * show route table {table}
