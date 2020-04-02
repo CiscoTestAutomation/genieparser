@@ -8,7 +8,8 @@ from pyats.topology import Device, loader
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from genie.libs.parser.junos.show_route import ShowRouteTable
+from genie.libs.parser.junos.show_route import (ShowRouteTable,
+                                                ShowRouteProtocolStatic)
 
 '''
 Unit test for:
@@ -224,6 +225,80 @@ class test_show_route_table(unittest.TestCase):
         obj = ShowRouteTable(device=self.device)
         parsed_output = obj.parse(table='inet.3')
         self.assertEqual(parsed_output, self.parsed_output_4)
+
+'''
+Unit test for:
+    * show route protocol static {ip_address}
+'''
+class TestShowRouteProtocolStatic(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show route protocol static 106.187.14.240/32
+
+        inet.0: 932 destinations, 1618 routes (932 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
+
+        106.187.14.240/32  *[Static/5] 5w2d 15:42:25
+                            >  to 106.187.14.121 via ge-0/0/1.0
+
+        inet.3: 12 destinations, 12 routes (12 active, 0 holddown, 0 hidden)
+    '''}
+
+    golden_parsed_output = {
+        "route-information": {
+            "route-table": [
+                {
+                    "active-route-count": "932",
+                    "destination-count": "932",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": {
+                        "rt-destination": "106.187.14.240/32",
+                        "rt-entry": {
+                            "active-tag": "*",
+                            "age": {
+                                "#text": "5w2d 15:42:25"
+                            },
+                            "nh": {
+                                "to": "106.187.14.121",
+                                "via": "ge-0/0/1.0"
+                            },
+                            "preference": "5",
+                            "protocol-name": "Static"
+                        }
+                    },
+                    "table-name": "inet.0",
+                    "total-route-count": "1618"
+                },
+                {
+                    "active-route-count": "12",
+                    "destination-count": "12",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "table-name": "inet.3",
+                    "total-route-count": "12"
+                }
+            ]
+        }
+    }
+
+    def test_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowRouteProtocolStatic(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(ip_address='106.187.14.240/32')
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowRouteProtocolStatic(device=self.device)
+        parsed_output = obj.parse(ip_address='106.187.14.240/32')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()
