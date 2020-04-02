@@ -58,11 +58,9 @@ class TestShowOspf3Interface(unittest.TestCase):
             obj.parse()
 
     def test_golden(self):
-        import pprint
         self.device = Mock(**self.golden_output)
         obj = ShowOspf3Interface(device=self.device)
         parsed_output = obj.parse()
-        self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
