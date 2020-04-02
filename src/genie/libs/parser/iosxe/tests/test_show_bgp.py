@@ -2882,7 +2882,7 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output1)
 
-    def test_show_ip_bgp_vrf_route_golden(self):
+    def test_show_ip_bgp_vrf_route_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowIpBgpAllDetail(device=self.device)
@@ -2907,7 +2907,7 @@ class TestShowBgpDetail(unittest.TestCase):
                     {'L2VPN-VPLS-BGP-Table': 
                         {'address_family': 
                             {'l2vpn vpls': 
-                                {'default_vrf': 'None',
+                                {
                                 'prefixes': 
                                     {'VEID-1:Blk-1/136,': 
                                         {'available_path': '2',
@@ -3060,7 +3060,7 @@ class TestShowIpBgpDetail(unittest.TestCase):
                     {'default': 
                         {'address_family': 
                             {'vpnv4': 
-                                {'default_vrf': 'None',
+                                {
                                 'prefixes': 
                                     {'10.4.1.0/24': {'available_path': '1',
                                                    'best_path': '1',
@@ -5920,7 +5920,261 @@ class TestShowIpBgpDetail(unittest.TestCase):
             }
         }
     }
-    
+
+    # show ip bgp vpnv4 all detail
+    golden_output8 = {'execute.return_value': '''
+      Route Distinguisher: 101:101 (default for vrf vrf_1)
+      BGP routing table entry for 101:101:10.64.4.0/22, version 0
+        Paths: (1 available, no best path)
+        Not advertised to any peer
+        Refresh Epoch 1
+        65000 65201 4400004007 4400004507 4400004001 4400004505 4400004005 4400004504 1234 5678, (received-only)
+          10.9.3.4 (via vrf vrf_1) from 10.9.3.4 (10.9.3.4)
+            Origin IGP, localpref 100, valid, external
+            Community: 65100:106 65100:500 65100:601 65361:3
+            Extended Community: RT:65000:31838
+            rx pathid: 0, tx pathid: 0
+      BGP routing table entry for 101:101:10.64.4.0/24, version 1863365
+        Paths: (4 available, best #3, table vrf_1)
+        Advertised to update-groups:
+           2          3          47
+        Refresh Epoch 1
+        65000 65211 4400002007 4400002507 4400002001 4400002505 4400002005 4400002504 3456 5678 2345, (received-only)
+          10.9.3.4 (via vrf vrf_1) from 10.9.3.4 (10.9.3.4)
+            Origin IGP, localpref 100, valid, external
+            Community: 9:9 65100:106 65100:508 65100:704 65371:2
+            Extended Community: RT:65000:31838
+            rx pathid: 0, tx pathid: 0
+        Refresh Epoch 1
+        4400005007 4400005507 4400005001 4400065100 4400002001 4400002505 4400002005 4400002504 3456 5678 2345, (received & used)
+          10.105.3.84 (via vrf vrf_1) from 10.105.3.84 (10.105.2.27)
+            Origin IGP, localpref 100, valid, external
+            Community: 9:9 65100:106 65100:508 65100:700 65100:704 65371:2
+            rx pathid: 0, tx pathid: 0
+        Refresh Epoch 1
+        4400005007 4400005507 4400005001 4400065100 4400002001 4400002505 4400002005 4400002504 3456 5678 2345, (received & used)
+          10.105.3.80 (via vrf vrf_1) from 10.105.3.80 (10.105.2.26)
+            Origin IGP, localpref 100, valid, external, best
+            Community: 9:9 65100:106 65100:508 65100:700 65100:704 65371:2
+            rx pathid: 0, tx pathid: 0x0
+        Refresh Epoch 2
+        4400005007 4400005507 4400005001 4400065100 4400002001 4400002505 4400002005 4400002504 3456 5678 2345, (received & used)
+          10.105.2.1 (metric 2) (via vrf vrf_1) from 10.105.2.1 (10.105.2.1)
+            Origin IGP, metric 0, localpref 100, valid, internal
+            Community: 9:9 65100:106 65100:508 65100:700 65100:704 65371:2
+            rx pathid: 0, tx pathid: 0  
+      Route Distinguisher: 102:102 (default for vrf vrf_2)
+      BGP routing table entry for 102:102:0.0.0.0/0, version 1814679
+        Paths: (3 available, best #2, table vrf_2)
+        Advertised to update-groups:
+           1          29         54
+        Refresh Epoch 1
+        4400005002 4400005502 4400005001 4400005505 4400005005 4400005504 6789 5678, (received & used)
+          10.105.6.84 (via vrf vrf_2) from 10.105.6.84 (10.105.5.17)
+            Origin IGP, localpref 100, valid, external
+            Community: 65100:106 65100:500 65100:601 65351:1
+            rx pathid: 0, tx pathid: 0
+        Refresh Epoch 1
+        4400005002 4400005502 4400005001 4400005505 4400005005 4400005504 6789 5678, (received & used)
+          10.105.6.80 (via vrf vrf_2) from 10.105.6.80 (10.105.5.16)
+            Origin IGP, localpref 100, valid, external, best
+            Community: 65100:106 65100:500 65100:601 65351:1
+            rx pathid: 0, tx pathid: 0x0
+        Refresh Epoch 3
+        4400005002 4400005502 4400005001 4400005505 4400005005 4400005504 6789 5678, (received & used)
+          10.105.5.1 (metric 2) (via vrf vrf_2) from 10.105.5.1 (10.105.5.1)
+            Origin IGP, metric 0, localpref 100, valid, internal
+            Community: 65100:106 65100:500 65100:601 65351:1
+            rx pathid: 0, tx pathid: 0
+
+      '''}
+
+    golden_parsed_output8 = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'vrf_1': {
+                        'address_family': {
+                            'vpnv4': {
+                                'default_vrf': 'vrf_1',
+                                'prefixes': {
+                                    '10.64.4.0/22': {
+                                        'available_path': '1',
+                                        'best_path': '',
+                                        'index': {
+                                            1: {
+                                                'community': '65100:106 65100:500 65100:601 65361:3',
+                                                'ext_community': 'RT:65000:31838',
+                                                'gateway': '10.9.3.4',
+                                                'localpref': 100,
+                                                'next_hop': '10.9.3.4',
+                                                'next_hop_via': 'vrf vrf_1',
+                                                'origin_codes': 'i',
+                                                'originator': '10.9.3.4',
+                                                'recipient_pathid': '0',
+                                                'refresh_epoch': 1,
+                                                'route_info': '65000 65201 4400004007 4400004507 4400004001 4400004505 4400004005 4400004504 1234 5678',
+                                                'route_status': 'received-only',
+                                                'status_codes': '* ',
+                                                'transfer_pathid': '0',
+                                            },
+                                        },
+                                        'paths': '1 available, no best path',
+                                        'table_version': '0',
+                                    },
+                                    '10.64.4.0/24': {
+                                        'available_path': '4',
+                                        'best_path': '3',
+                                        'index': {
+                                            1: {
+                                                'community': '9:9 65100:106 65100:508 65100:704 65371:2',
+                                                'ext_community': 'RT:65000:31838',
+                                                'gateway': '10.9.3.4',
+                                                'localpref': 100,
+                                                'next_hop': '10.9.3.4',
+                                                'next_hop_via': 'vrf vrf_1',
+                                                'origin_codes': 'i',
+                                                'originator': '10.9.3.4',
+                                                'recipient_pathid': '0',
+                                                'refresh_epoch': 1,
+                                                'route_info': '65000 65211 4400002007 4400002507 4400002001 4400002505 4400002005 4400002504 3456 5678 2345',
+                                                'route_status': 'received-only',
+                                                'status_codes': '* ',
+                                                'transfer_pathid': '0',
+                                                'update_group': [2, 3, 47],
+                                            },
+                                            2: {
+                                                'community': '9:9 65100:106 65100:508 65100:700 65100:704 65371:2',
+                                                'gateway': '10.105.3.84',
+                                                'localpref': 100,
+                                                'next_hop': '10.105.3.84',
+                                                'next_hop_via': 'vrf vrf_1',
+                                                'origin_codes': 'i',
+                                                'originator': '10.105.2.27',
+                                                'recipient_pathid': '0',
+                                                'refresh_epoch': 1,
+                                                'route_info': '4400005007 4400005507 4400005001 4400065100 4400002001 4400002505 4400002005 4400002504 3456 5678 2345',
+                                                'route_status': 'received & used',
+                                                'status_codes': '* ',
+                                                'transfer_pathid': '0',
+                                                'update_group': [2, 3, 47],
+                                            },
+                                            3: {
+                                                'community': '9:9 65100:106 65100:508 65100:700 65100:704 65371:2',
+                                                'gateway': '10.105.3.80',
+                                                'localpref': 100,
+                                                'next_hop': '10.105.3.80',
+                                                'next_hop_via': 'vrf vrf_1',
+                                                'origin_codes': 'i',
+                                                'originator': '10.105.2.26',
+                                                'recipient_pathid': '0',
+                                                'refresh_epoch': 1,
+                                                'route_info': '4400005007 4400005507 4400005001 4400065100 4400002001 4400002505 4400002005 4400002504 3456 5678 2345',
+                                                'route_status': 'received & used',
+                                                'status_codes': '*>',
+                                                'transfer_pathid': '0x0',
+                                                'update_group': [2, 3, 47],
+                                            },
+                                            4: {
+                                                'community': '9:9 65100:106 65100:508 65100:700 65100:704 65371:2',
+                                                'gateway': '10.105.2.1',
+                                                'localpref': 100,
+                                                'metric': 0,
+                                                'next_hop': '10.105.2.1',
+                                                'next_hop_igp_metric': '2',
+                                                'next_hop_via': 'vrf vrf_1',
+                                                'origin_codes': 'i',
+                                                'originator': '10.105.2.1',
+                                                'recipient_pathid': '0',
+                                                'refresh_epoch': 2,
+                                                'route_info': '4400005007 4400005507 4400005001 4400065100 4400002001 4400002505 4400002005 4400002504 3456 5678 2345',
+                                                'route_status': 'received & used',
+                                                'status_codes': '* i',
+                                                'transfer_pathid': '0',
+                                                'update_group': [2, 3, 47],
+                                            },
+                                        },
+                                        'paths': '4 available, best #3, table vrf_1',
+                                        'table_version': '1863365',
+                                    },
+                                },
+                                'route_distinguisher': '101:101',
+                            },
+                        },
+                    },
+                    'vrf_2': {
+                        'address_family': {
+                            'vpnv4': {
+                                'default_vrf': 'vrf_2',
+                                'prefixes': {
+                                    '0.0.0.0/0': {
+                                        'available_path': '3',
+                                        'best_path': '2',
+                                        'index': {
+                                            1: {
+                                                'community': '65100:106 65100:500 65100:601 65351:1',
+                                                'gateway': '10.105.6.84',
+                                                'localpref': 100,
+                                                'next_hop': '10.105.6.84',
+                                                'next_hop_via': 'vrf vrf_2',
+                                                'origin_codes': 'i',
+                                                'originator': '10.105.5.17',
+                                                'recipient_pathid': '0',
+                                                'refresh_epoch': 1,
+                                                'route_info': '4400005002 4400005502 4400005001 4400005505 4400005005 4400005504 6789 5678',
+                                                'route_status': 'received & used',
+                                                'status_codes': '* ',
+                                                'transfer_pathid': '0',
+                                                'update_group': [1, 29, 54],
+                                            },
+                                            2: {
+                                                'community': '65100:106 65100:500 65100:601 65351:1',
+                                                'gateway': '10.105.6.80',
+                                                'localpref': 100,
+                                                'next_hop': '10.105.6.80',
+                                                'next_hop_via': 'vrf vrf_2',
+                                                'origin_codes': 'i',
+                                                'originator': '10.105.5.16',
+                                                'recipient_pathid': '0',
+                                                'refresh_epoch': 1,
+                                                'route_info': '4400005002 4400005502 4400005001 4400005505 4400005005 4400005504 6789 5678',
+                                                'route_status': 'received & used',
+                                                'status_codes': '*>',
+                                                'transfer_pathid': '0x0',
+                                                'update_group': [1, 29, 54],
+                                            },
+                                            3: {
+                                                'community': '65100:106 65100:500 65100:601 65351:1',
+                                                'gateway': '10.105.5.1',
+                                                'localpref': 100,
+                                                'metric': 0,
+                                                'next_hop': '10.105.5.1',
+                                                'next_hop_igp_metric': '2',
+                                                'next_hop_via': 'vrf vrf_2',
+                                                'origin_codes': 'i',
+                                                'originator': '10.105.5.1',
+                                                'recipient_pathid': '0',
+                                                'refresh_epoch': 3,
+                                                'route_info': '4400005002 4400005502 4400005001 4400005505 4400005005 4400005504 6789 5678',
+                                                'route_status': 'received & used',
+                                                'status_codes': '* i',
+                                                'transfer_pathid': '0',
+                                                'update_group': [1, 29, 54],
+                                            },
+                                        },
+                                        'paths': '3 available, best #2, table vrf_2',
+                                        'table_version': '1814679',
+                                    },
+                                },
+                                'route_distinguisher': '102:102',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
     def test_show_bgp_detail_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpBgpDetail(device=self.device)
@@ -5976,6 +6230,13 @@ class TestShowIpBgpDetail(unittest.TestCase):
         obj = ShowIpBgpDetail(device=self.device)
         parsed_output = obj.parse(address_family='vpnv4')
         self.assertEqual(parsed_output,self.golden_parsed_output7)
+
+    def test_show_ip_bgp_all_detail_golden8(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output8)
+        obj = ShowIpBgpAllDetail(device=self.device)
+        parsed_output = obj.parse(address_family='vpnv4')
+        self.assertEqual(parsed_output, self.golden_parsed_output8)
         
 #-------------------------------------------------------------------------------
 
@@ -6944,6 +7205,7 @@ class TestShowBgpAllSummary(unittest.TestCase):
             },
         },
     }
+
     def test_show_bgp_all_summary_empty(self):
         self.device1 = Mock(**self.empty_output)
         bgp_summary_obj = ShowBgpAllSummary(device=self.device1)
@@ -7136,6 +7398,7 @@ class TestShowBgpSummary(unittest.TestCase):
         self.device = Mock(**self.golden_output1)
         obj = ShowBgpSummary(device=self.device)
         parsed_output = obj.parse(address_family='vpnv4 unicast', rd='5918:51')
+        import pdb
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_show_bgp_summary_golden2(self):
@@ -7633,7 +7896,7 @@ class TestShowIpBgpAllSummary(unittest.TestCase):
               neighbor 10.36.3.3 activate
         '''
 
-        raw3='''
+        raw3 = '''
             [2019-06-05 09:47:19,474] +++ R1_xe: executing command 'show run | sec address-family ipv6 vrf' +++
             show run | sec address-family ipv6 vrf
              address-family ipv6 vrf VRF1
@@ -8171,7 +8434,6 @@ class TestShowIpBgpSummary(unittest.TestCase):
                                     'community_entries': {
                                         'total_entries': 102, 
                                         'memory_usage': 3248}}}}}}}}
-
 
     golden_parsed_output3 = {
         'bgp_id': 65109,
@@ -13332,6 +13594,7 @@ class TestShowBgpAllNeighbors(unittest.TestCase):
         For address family: VPNv6 Multicast
         '''}
 
+
     golden_output5 = {'execute.return_value': '''
             For address family: IPv4 Unicast
             BGP neighbor is 10.136.199.57,  remote AS 209, external link
@@ -13624,7 +13887,7 @@ class TestShowBgpAllNeighbors(unittest.TestCase):
             },
         },
     }
-
+        
     def test_show_bgp_all_neighbors_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpAllNeighbors(device=self.device)
@@ -13659,14 +13922,13 @@ class TestShowBgpAllNeighbors(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
 
+
     def test_show_bgp_all_neighbors_golden5(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output5)
         obj = ShowBgpAllNeighbors(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output5)
-
-
 
 # =================================================================
 # Unit test for:
