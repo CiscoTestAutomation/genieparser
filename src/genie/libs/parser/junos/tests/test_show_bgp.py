@@ -33,7 +33,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 1        Established: 1
-        111.87.5.253+179
+        10.189.5.253+179
         inet.0: 0/682/682/0
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
@@ -44,7 +44,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 1        Established: 1
-        2001:268:fb90::c+60268
+        2001:db8:223c:ca45::c+60268
         inet6.0: 0/0/0/0
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
@@ -55,9 +55,9 @@ class TestShowBgpGroupBrief(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 3        Established: 0
-        111.87.5.245+179
-        111.87.5.243+179
-        111.87.5.242+179
+        10.189.5.245+179
+        10.189.5.243+179
+        10.189.5.242+179
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
         Name: v6_RRC_72_TRIANGLE Index: 3                Flags: <Export Eval>
@@ -67,8 +67,8 @@ class TestShowBgpGroupBrief(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 2        Established: 0  
-        2001:268:fb90::7+179
-        2001:268:fb90::8
+        2001:db8:223c:ca45::7+179
+        2001:db8:223c:ca45::8
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
         Name: v6_RRC_72_SQUARE Index: 4                  Flags: <Export Eval>
@@ -78,8 +78,8 @@ class TestShowBgpGroupBrief(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 2        Established: 0
-        2001:268:fb90::9
-        2001:268:fb90::a
+        2001:db8:223c:ca45::9
+        2001:db8:223c:ca45::a
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
         Name: v4_RRC_72_SQUARE Index: 5                  Flags: <Export Eval>
@@ -89,8 +89,8 @@ class TestShowBgpGroupBrief(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 2        Established: 0
-        111.87.5.241+179
-        111.87.5.240
+        10.189.5.241+179
+        10.189.5.240
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
         Name: v4_Kentik       Index: 6                   Flags: <Export Eval>
@@ -100,7 +100,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 1        Established: 0
-        27.85.216.179
+        10.49.216.179
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
         Name: v6_Kentik       Index: 7                   Flags: <Export Eval>
@@ -110,7 +110,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
         Holdtime: 0                           
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 1        Established: 0
-        2001:268:fa03:272::1:140
+        2001:db8:6be:89bb::1:140
 
         Group Type: External                               Local AS: 65171
         Name: sggjbb001       Index: 8                   Flags: <Export Eval>
@@ -120,7 +120,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 1        Established: 0
-        111.87.6.250
+        10.189.6.250
 
         Group Type: External                               Local AS: 65171
         Name: v6_sggjbb001    Index: 9                   Flags: <Export Eval>
@@ -130,7 +130,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 1        Established: 0
-        2001:268:fb91::1
+        2001:db8:5961:ca45::1
 
         Group Type: External                               Local AS: 65171
         Name: sjkGCS001-EC11  Index: 10                  Flags: <Export Eval>
@@ -140,7 +140,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 1        Established: 1
-        106.187.14.240+60606
+        10.169.14.240+60606
         inet.0: 682/684/684/0
         inet.3: 2/2/2/0
 
@@ -152,7 +152,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 1        Established: 1
-        2001:268:fb8f::1+179
+        2001:db8:eb18:ca45::1+179
         inet6.0: 0/0/0/0
 
         Group Type: External                               Local AS: 65171
@@ -163,7 +163,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 1        Established: 0
-        106.187.14.249
+        10.169.14.249
 
         Group Type: External                               Local AS: 65171
         Name: v6_obpGCS001-WC11 Index: 13                Flags: <Export Eval>
@@ -173,7 +173,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 1        Established: 0
-        2001:268:fb8f::11
+        2001:db8:eb18:ca45::11
 
         Groups: 14 Peers: 19   External: 6    Internal: 13   Down peers: 15  Flaps: 359
         Table          Tot Paths  Act Paths Suppressed    History Damp State    Pending
@@ -211,7 +211,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "local-as": "65171",
                     "name": "hktGCS002",
                     "peer-address": [
-                        "111.87.5.253+179"
+                        "10.189.5.253+179"
                     ],
                     "peer-as": "65171",
                     "peer-count": "1",
@@ -240,7 +240,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "local-as": "65171",
                     "name": "v6_hktGCS002",
                     "peer-address": [
-                        "2001:268:fb90::c+60268"
+                        "2001:db8:223c:ca45::c+60268"
                     ],
                     "peer-as": "65171",
                     "peer-count": "1",
@@ -260,9 +260,9 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "local-as": "65171",
                     "name": "v4_RRC_72_TRIANGLE",
                     "peer-address": [
-                        "111.87.5.245+179",
-                        "111.87.5.243+179",
-                        "111.87.5.242+179"
+                        "10.189.5.245+179",
+                        "10.189.5.243+179",
+                        "10.189.5.242+179"
                     ],
                     "peer-as": "65171",
                     "peer-count": "3",
@@ -282,8 +282,8 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "local-as": "65171",
                     "name": "v6_RRC_72_TRIANGLE",
                     "peer-address": [
-                        "2001:268:fb90::7+179",
-                        "2001:268:fb90::8"
+                        "2001:db8:223c:ca45::7+179",
+                        "2001:db8:223c:ca45::8"
                     ],
                     "peer-as": "65171",
                     "peer-count": "2",
@@ -303,8 +303,8 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "local-as": "65171",
                     "name": "v6_RRC_72_SQUARE",
                     "peer-address": [
-                        "2001:268:fb90::9",
-                        "2001:268:fb90::a"
+                        "2001:db8:223c:ca45::9",
+                        "2001:db8:223c:ca45::a"
                     ],
                     "peer-as": "65171",
                     "peer-count": "2",
@@ -324,8 +324,8 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "local-as": "65171",
                     "name": "v4_RRC_72_SQUARE",
                     "peer-address": [
-                        "111.87.5.241+179",
-                        "111.87.5.240"
+                        "10.189.5.241+179",
+                        "10.189.5.240"
                     ],
                     "peer-as": "65171",
                     "peer-count": "2",
@@ -345,7 +345,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "local-as": "65171",
                     "name": "v4_Kentik",
                     "peer-address": [
-                        "27.85.216.179"
+                        "10.49.216.179"
                     ],
                     "peer-as": "65171",
                     "peer-count": "1",
@@ -365,7 +365,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "local-as": "65171",
                     "name": "v6_Kentik",
                     "peer-address": [
-                        "2001:268:fa03:272::1:140"
+                        "2001:db8:6be:89bb::1:140"
                     ],
                     "peer-as": "65171",
                     "peer-count": "1",
@@ -385,7 +385,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "local-as": "65171",
                     "name": "sggjbb001",
                     "peer-address": [
-                        "111.87.6.250"
+                        "10.189.6.250"
                     ],
                     "peer-count": "1",
                     "type": "External"
@@ -404,7 +404,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "local-as": "65171",
                     "name": "v6_sggjbb001",
                     "peer-address": [
-                        "2001:268:fb91::1"
+                        "2001:db8:5961:ca45::1"
                     ],
                     "peer-count": "1",
                     "type": "External"
@@ -439,7 +439,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "local-as": "65171",
                     "name": "sjkGCS001-EC11",
                     "peer-address": [
-                        "106.187.14.240+60606"
+                        "10.169.14.240+60606"
                     ],
                     "peer-count": "1",
                     "type": "External"
@@ -467,7 +467,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "local-as": "65171",
                     "name": "v6_sjkGCS001-EC11",
                     "peer-address": [
-                        "2001:268:fb8f::1+179"
+                        "2001:db8:eb18:ca45::1+179"
                     ],
                     "peer-count": "1",
                     "type": "External"
@@ -486,7 +486,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "local-as": "65171",
                     "name": "obpGCS001-WC11",
                     "peer-address": [
-                        "106.187.14.249"
+                        "10.169.14.249"
                     ],
                     "peer-count": "1",
                     "type": "External"
@@ -505,7 +505,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "local-as": "65171",
                     "name": "v6_obpGCS001-WC11",
                     "peer-address": [
-                        "2001:268:fb8f::11"
+                        "2001:db8:eb18:ca45::11"
                     ],
                     "peer-count": "1",
                     "type": "External"
@@ -580,7 +580,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 1        Established: 1
-        111.87.5.253+179
+        10.189.5.253+179
         Route Queue Timer: unset Route Queue: empty
         Table inet.0
             Active prefixes:              0
@@ -597,7 +597,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 1        Established: 1
-        2001:268:fb90::c+60268
+        2001:db8:223c:ca45::c+60268
         Route Queue Timer: unset Route Queue: empty
         Table inet6.0
             Active prefixes:              0
@@ -614,9 +614,9 @@ class TestShowBgpGroupDetail(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 3        Established: 0  
-        111.87.5.245
-        111.87.5.243
-        111.87.5.242+179
+        10.189.5.245
+        10.189.5.243
+        10.189.5.242+179
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
         Name: v6_RRC_72_TRIANGLE Index: 3                Flags: <Export Eval>
@@ -626,8 +626,8 @@ class TestShowBgpGroupDetail(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 2        Established: 0
-        2001:268:fb90::7+179
-        2001:268:fb90::8+179
+        2001:db8:223c:ca45::7+179
+        2001:db8:223c:ca45::8+179
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
         Name: v6_RRC_72_SQUARE Index: 4                  Flags: <Export Eval>
@@ -637,8 +637,8 @@ class TestShowBgpGroupDetail(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 2        Established: 0
-        2001:268:fb90::9
-        2001:268:fb90::a+179
+        2001:db8:223c:ca45::9
+        2001:db8:223c:ca45::a+179
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
         Name: v4_RRC_72_SQUARE Index: 5                  Flags: <Export Eval>
@@ -648,8 +648,8 @@ class TestShowBgpGroupDetail(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 2        Established: 0
-        111.87.5.241+179
-        111.87.5.240
+        10.189.5.241+179
+        10.189.5.240
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
         Name: v4_Kentik       Index: 6                   Flags: <Export Eval>
@@ -659,7 +659,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 1        Established: 0
-        27.85.216.179
+        10.49.216.179
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
         Name: v6_Kentik       Index: 7                   Flags: <Export Eval>
@@ -669,7 +669,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 1        Established: 0
-        2001:268:fa03:272::1:140
+        2001:db8:6be:89bb::1:140
 
         Group Type: External                               Local AS: 65171
         Name: sggjbb001       Index: 8                   Flags: <Export Eval>
@@ -679,7 +679,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 1        Established: 0
-        111.87.6.250
+        10.189.6.250
 
         Group Type: External                               Local AS: 65171
         Name: v6_sggjbb001    Index: 9                   Flags: <Export Eval>
@@ -689,7 +689,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 1        Established: 0
-        2001:268:fb91::1
+        2001:db8:5961:ca45::1
 
         Group Type: External                               Local AS: 65171
         Name: sjkGCS001-EC11  Index: 10                  Flags: <Export Eval>
@@ -699,7 +699,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 1        Established: 1
-        106.187.14.240+60606
+        10.169.14.240+60606
         Route Queue Timer: unset Route Queue: empty
         Table inet.0
             Active prefixes:              682
@@ -722,7 +722,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 1        Established: 1
-        2001:268:fb8f::1+179
+        2001:db8:eb18:ca45::1+179
         Route Queue Timer: unset Route Queue: empty
         Table inet6.0
             Active prefixes:              0
@@ -739,7 +739,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
         Holdtime: 0                           
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 1        Established: 0
-        106.187.14.249
+        10.169.14.249
 
         Group Type: External                               Local AS: 65171
         Name: v6_obpGCS001-WC11 Index: 13                Flags: <Export Eval>
@@ -749,7 +749,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
         Holdtime: 0
         Graceful Shutdown Receiver local-preference: 0
         Total peers: 1        Established: 0
-        2001:268:fb8f::11
+        2001:db8:eb18:ca45::11
 
         Groups: 14 Peers: 19   External: 6    Internal: 13   Down peers: 15  Flaps: 359
         Table inet.0
@@ -817,7 +817,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "local-as": "65171",
                     "name": "hktGCS002",
                     "peer-address": [
-                        "111.87.5.253+179"
+                        "10.189.5.253+179"
                     ],
                     "peer-as": "65171",
                     "peer-count": "1",
@@ -851,7 +851,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "local-as": "65171",
                     "name": "v6_hktGCS002",
                     "peer-address": [
-                        "2001:268:fb90::c+60268"
+                        "2001:db8:223c:ca45::c+60268"
                     ],
                     "peer-as": "65171",
                     "peer-count": "1",
@@ -875,9 +875,9 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "local-as": "65171",
                     "name": "v4_RRC_72_TRIANGLE",
                     "peer-address": [
-                        "111.87.5.245",
-                        "111.87.5.243",
-                        "111.87.5.242+179"
+                        "10.189.5.245",
+                        "10.189.5.243",
+                        "10.189.5.242+179"
                     ],
                     "peer-as": "65171",
                     "peer-count": "3",
@@ -897,8 +897,8 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "local-as": "65171",
                     "name": "v6_RRC_72_TRIANGLE",
                     "peer-address": [
-                        "2001:268:fb90::7+179",
-                        "2001:268:fb90::8+179"
+                        "2001:db8:223c:ca45::7+179",
+                        "2001:db8:223c:ca45::8+179"
                     ],
                     "peer-as": "65171",
                     "peer-count": "2",
@@ -918,8 +918,8 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "local-as": "65171",
                     "name": "v6_RRC_72_SQUARE",
                     "peer-address": [
-                        "2001:268:fb90::9",
-                        "2001:268:fb90::a+179"
+                        "2001:db8:223c:ca45::9",
+                        "2001:db8:223c:ca45::a+179"
                     ],
                     "peer-as": "65171",
                     "peer-count": "2",
@@ -939,8 +939,8 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "local-as": "65171",
                     "name": "v4_RRC_72_SQUARE",
                     "peer-address": [
-                        "111.87.5.241+179",
-                        "111.87.5.240"
+                        "10.189.5.241+179",
+                        "10.189.5.240"
                     ],
                     "peer-as": "65171",
                     "peer-count": "2",
@@ -960,7 +960,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "local-as": "65171",
                     "name": "v4_Kentik",
                     "peer-address": [
-                        "27.85.216.179"
+                        "10.49.216.179"
                     ],
                     "peer-as": "65171",
                     "peer-count": "1",
@@ -980,7 +980,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "local-as": "65171",
                     "name": "v6_Kentik",
                     "peer-address": [
-                        "2001:268:fa03:272::1:140"
+                        "2001:db8:6be:89bb::1:140"
                     ],
                     "peer-as": "65171",
                     "peer-count": "1",
@@ -1000,7 +1000,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "local-as": "65171",
                     "name": "sggjbb001",
                     "peer-address": [
-                        "111.87.6.250"
+                        "10.189.6.250"
                     ],
                     "peer-count": "1",
                     "type": "External"
@@ -1019,7 +1019,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "local-as": "65171",
                     "name": "v6_sggjbb001",
                     "peer-address": [
-                        "2001:268:fb91::1"
+                        "2001:db8:5961:ca45::1"
                     ],
                     "peer-count": "1",
                     "type": "External"
@@ -1056,7 +1056,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "local-as": "65171",
                     "name": "sjkGCS001-EC11",
                     "peer-address": [
-                        "106.187.14.240+60606"
+                        "10.169.14.240+60606"
                     ],
                     "peer-count": "1",
                     "route-queue": {
@@ -1089,7 +1089,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "local-as": "65171",
                     "name": "v6_sjkGCS001-EC11",
                     "peer-address": [
-                        "2001:268:fb8f::1+179"
+                        "2001:db8:eb18:ca45::1+179"
                     ],
                     "peer-count": "1",
                     "route-queue": {
@@ -1112,7 +1112,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "local-as": "65171",
                     "name": "obpGCS001-WC11",
                     "peer-address": [
-                        "106.187.14.249"
+                        "10.169.14.249"
                     ],
                     "peer-count": "1",
                     "type": "External"
@@ -1131,7 +1131,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "local-as": "65171",
                     "name": "v6_obpGCS001-WC11",
                     "peer-address": [
-                        "2001:268:fb8f::11"
+                        "2001:db8:eb18:ca45::11"
                     ],
                     "peer-count": "1",
                     "type": "External"

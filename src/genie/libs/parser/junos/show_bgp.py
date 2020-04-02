@@ -275,7 +275,7 @@ class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
         # Route Queue Timer: unset Route Queue: empty
         p25 = re.compile(r'^Route +Queue +Timer: +(?P<timer>\w+) +Route +Queue: +(?P<state>\w+)$')
 
-        # 111.87.5.253+179
+        # 10.189.5.253+179
         pIp = re.compile(r'^(?P<peer_address>\S+)$')
 
         for line in out.splitlines():
@@ -503,7 +503,7 @@ class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
                 route_queue_dict.update({'state': group['state']})
                 route_queue_dict.update({'timer': group['timer']})
                 continue
-            # 111.87.5.253+179
+            # 10.189.5.253+179
             m = pIp.match(line)
             if m:
                 group = m.groupdict()
