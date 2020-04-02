@@ -9,7 +9,7 @@ from pyats.topology import Device, loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 from genie.libs.parser.junos.show_route import (ShowRouteTable,
-                                                ShowRouteProtocolStatic)
+                                                ShowRouteProtocol)
 
 '''
 Unit test for:
@@ -228,9 +228,9 @@ class test_show_route_table(unittest.TestCase):
 
 '''
 Unit test for:
-    * show route protocol static {ip_address}
+    * show route protocol {protocol} {ip_address}
 '''
-class TestShowRouteProtocolStatic(unittest.TestCase):
+class TestShowRouteProtocol(unittest.TestCase):
 
     device = Device(name='aDevice')
     maxDiff = None
@@ -289,14 +289,18 @@ class TestShowRouteProtocolStatic(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowRouteProtocolStatic(device=self.device)
+        obj = ShowRouteProtocol(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(ip_address='106.187.14.240/32')
+            parsed_output = obj.parse(
+                protocol='static',
+                ip_address='106.187.14.240/32')
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        obj = ShowRouteProtocolStatic(device=self.device)
-        parsed_output = obj.parse(ip_address='106.187.14.240/32')
+        obj = ShowRouteProtocol(device=self.device)
+        parsed_output = obj.parse(
+            protocol='static',
+            ip_address='106.187.14.240/32')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':

@@ -57,8 +57,10 @@
 * JUNOS
     * Added ShowOspfNeighbor for:
         * show ospf neighbor
-    * Added ShowRouteProtocolStatic for:
-        * show route protocol static {ip_address}
+    * Added ShowRouteProtocol for:
+        * show route protocol {protocol} {ip_address}
+    * Added ShowRouteProtocolNoMore for:
+        * show route protocol {protocol} {ip_address}
 
 
 --------------------------------------------------------------------------------

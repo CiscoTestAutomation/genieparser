@@ -165,7 +165,7 @@ class ShowRouteTable(ShowRouteTableSchema):
         
         return parsed_output
 
-class ShowRouteProtocolStaticSchema(MetaParser):
+class ShowRouteProtocolSchema(MetaParser):
     """ Schema for:
             * show route protocol static {ip_address}
     """
@@ -240,14 +240,16 @@ class ShowRouteProtocolStaticSchema(MetaParser):
         }
     }
 
-class ShowRouteProtocolStatic(ShowRouteProtocolStaticSchema):
+class ShowRouteProtocol(ShowRouteProtocolSchema):
     """ Parser for:
-            * show route protocol static {ip_address}
+            * show route protocol {protocol} {ip_address}
     """
-    cli_command = 'show route protocol static {ip_address}'
-    def cli(self, ip_address, output=None):
+    cli_command = 'show route protocol {protocol} {ip_address}'
+    def cli(self, protocol, ip_address, output=None):
         if not output:
-            cmd = self.cli_command.format(ip_address=ip_address)
+            cmd = self.cli_command.format(
+                protocol=protocol,
+                ip_address=ip_address)
             out = self.device.execute(cmd)
         else:
             out = output
@@ -325,14 +327,16 @@ class ShowRouteProtocolStatic(ShowRouteProtocolStaticSchema):
                 continue
         return ret_dict
 
-class ShowRouteProtocolStaticNoMore(ShowRouteProtocolStatic):
+class ShowRouteProtocolNoMore(ShowRouteProtocol):
     """ Parser for:
             * show route protocol static {ip_address} | no-more
     """
-    cli_command = 'show route protocol static {ip_address} | no-more'
-    def cli(self, ip_address, output=None):
+    cli_command = 'show route protocol {protocol} {ip_address} | no-more'
+    def cli(self, protocol, ip_address, output=None):
         if not output:
-            cmd = self.cli_command.format(ip_address=ip_address)
+            cmd = self.cli_command.format(
+                    protocol=protocol,
+                    ip_address=ip_address)
             out = self.device.execute(cmd)
         else:
             out = output
