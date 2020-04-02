@@ -261,9 +261,7 @@ class TestShowRouteProtocol(unittest.TestCase):
                         "rt-destination": "106.187.14.240/32",
                         "rt-entry": {
                             "active-tag": "*",
-                            "age": {
-                                "#text": "5w2d 15:42:25"
-                            },
+                            "age": "5w2d 15:42:25",
                             "nh": {
                                 "to": "106.187.14.121",
                                 "via": "ge-0/0/1.0"
@@ -287,6 +285,45 @@ class TestShowRouteProtocol(unittest.TestCase):
         }
     }
 
+    golden_output_2 = {'execute.return_value': '''
+        show route protocol static 2001:268:fb8f::1
+
+        inet6.0: 23 destinations, 24 routes (23 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
+
+        2001:268:fb8f::1/128
+                        *[Static/5] 3w5d 18:30:36
+                            >  to 2001:268:fb8f:1f::1 via ge-0/0/1.0
+    '''}
+
+    golden_parsed_output_2 = {
+        "route-information": {
+            "route-table": [
+                {
+                    "active-route-count": "23",
+                    "destination-count": "23",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": {
+                        "rt-destination": "2001:268:fb8f::1/128",
+                        "rt-entry": {
+                            "active-tag": "*",
+                            "age": "3w5d 18:30:36",
+                            "nh": {
+                                "to": "2001:268:fb8f:1f::1",
+                                "via": "ge-0/0/1.0"
+                            },
+                            "preference": "5",
+                            "protocol-name": "Static"
+                        }
+                    },
+                    "table-name": "inet6.0",
+                    "total-route-count": "24"
+                }
+            ]
+        }
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteProtocol(device=self.device)
@@ -302,6 +339,14 @@ class TestShowRouteProtocol(unittest.TestCase):
             protocol='static',
             ip_address='106.187.14.240/32')
         self.assertEqual(parsed_output, self.golden_parsed_output)
+    
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowRouteProtocol(device=self.device)
+        parsed_output = obj.parse(
+            protocol='static',
+            ip_address='2001:268:fb8f::1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 if __name__ == '__main__':
     unittest.main()

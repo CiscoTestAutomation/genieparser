@@ -182,9 +182,7 @@ class ShowRouteProtocolSchema(MetaParser):
                             "rt-destination": str,
                             "rt-entry": {
                                 "active-tag": str,
-                                "age": {
-                                    "#text": str
-                                },
+                                "age": str,
                                 "nh": {
                                     "to": str,
                                     "via": str
@@ -214,9 +212,7 @@ class ShowRouteProtocolSchema(MetaParser):
                     "rt-destination": str,
                     "rt-entry": {
                         "active-tag": str,
-                        "age": {
-                            "#text": str
-                        },
+                        "age": str,
                         "nh": {
                             "to": str,
                             "via": str
@@ -263,12 +259,15 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
                 r'holddown, +(?P<hidden>\d+) +hidden\)$')
         
         # 106.187.14.240/32  *[Static/5] 5w2d 15:42:25
-        p2 = re.compile(r'^(?P<rt_destination>\S+) +(?P<active_tag>[\*\+\-])'
+        p2 = re.compile(r'^((?P<rt_destination>\S+) +)?(?P<active_tag>[\*\+\-])'
                 r'\[(?P<protocol>Static)\/(?P<preference>\d+)\] +'
                 r'(?P<text>[\S ]+)$')
         
         # >  to 106.187.14.121 via ge-0/0/1.0
         p3 = re.compile(r'^\> +to +(?P<to>\S+) +via +(?P<via>\S+)$')
+
+        # 2001:268:fb8f::1/128
+        p4 = re.compile(r'^(?P<rt_destination>[\w:\/]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -305,13 +304,13 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
                 preference = group['preference']
                 text = group['text']
                 rt_dict = route_table_dict.setdefault('rt', {})
-                rt_dict.update({'rt-destination': rt_destination})
+                if rt_destination:
+                    rt_dict.update({'rt-destination': rt_destination})
                 rt_entry_dict = {}
                 rt_entry_dict.update({'active-tag': active_tag})
                 rt_entry_dict.update({'protocol-name': protocol})
                 rt_entry_dict.update({'preference': preference})
-                age_dict = rt_entry_dict.setdefault('age', {})
-                age_dict.update({'#text': text})
+                age_dict = rt_entry_dict.setdefault('age', text)
                 rt_dict.update({'rt-entry': rt_entry_dict})
                 continue
 
@@ -325,6 +324,16 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
                 nh_dict.update({'to': _to})
                 nh_dict.update({'via': via})
                 continue
+            
+            # 2001:268:fb8f::1/128
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                rt_destination = group['rt_destination']
+                rt_dict = route_table_dict.setdefault('rt', {})
+                rt_dict.update({'rt-destination': rt_destination})
+                continue
+            
         return ret_dict
 
 class ShowRouteProtocolNoMore(ShowRouteProtocol):
@@ -341,4 +350,5 @@ class ShowRouteProtocolNoMore(ShowRouteProtocol):
         else:
             out = output
         
-        return super().cli(ip_address=ip_address, output=out)
+        return super().cli(protocol=protocol,
+            ip_address=ip_address, output=out)
