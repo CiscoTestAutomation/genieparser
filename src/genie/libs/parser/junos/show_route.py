@@ -324,3 +324,17 @@ class ShowRouteProtocolStatic(ShowRouteProtocolStaticSchema):
                 nh_dict.update({'via': via})
                 continue
         return ret_dict
+
+class ShowRouteProtocolStaticNoMore(ShowRouteProtocolStaticSchema):
+    """ Parser for:
+            * show route protocol static {ip_address} | no-more
+    """
+    cli_command = 'show route protocol static {ip_address} | no-more'
+    def cli(self, ip_address, output=None):
+        if not output:
+            cmd = self.cli_command.format(ip_address=ip_address)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        return super().cli(ip_address=ip_address, output=out)
