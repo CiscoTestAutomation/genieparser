@@ -238,13 +238,13 @@ class TestShowRouteProtocol(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
-        show route protocol static 106.187.14.240/32
+        show route protocol static 10.169.14.240/32
 
         inet.0: 932 destinations, 1618 routes (932 active, 0 holddown, 0 hidden)
         + = Active Route, - = Last Active, * = Both
 
-        106.187.14.240/32  *[Static/5] 5w2d 15:42:25
-                            >  to 106.187.14.121 via ge-0/0/1.0
+        10.169.14.240/32  *[Static/5] 5w2d 15:42:25
+                            >  to 10.169.14.121 via ge-0/0/1.0
 
         inet.3: 12 destinations, 12 routes (12 active, 0 holddown, 0 hidden)
     '''}
@@ -258,12 +258,12 @@ class TestShowRouteProtocol(unittest.TestCase):
                     "hidden-route-count": "0",
                     "holddown-route-count": "0",
                     "rt": {
-                        "rt-destination": "106.187.14.240/32",
+                        "rt-destination": "10.169.14.240/32",
                         "rt-entry": {
                             "active-tag": "*",
                             "age": "5w2d 15:42:25",
                             "nh": {
-                                "to": "106.187.14.121",
+                                "to": "10.169.14.121",
                                 "via": "ge-0/0/1.0"
                             },
                             "preference": "5",
@@ -286,14 +286,14 @@ class TestShowRouteProtocol(unittest.TestCase):
     }
 
     golden_output_2 = {'execute.return_value': '''
-        show route protocol static 2001:268:fb8f::1
+        show route protocol static 2001:db8:eb18:ca45::1
 
         inet6.0: 23 destinations, 24 routes (23 active, 0 holddown, 0 hidden)
         + = Active Route, - = Last Active, * = Both
 
-        2001:268:fb8f::1/128
+        2001:db8:eb18:ca45::1/128
                         *[Static/5] 3w5d 18:30:36
-                            >  to 2001:268:fb8f:1f::1 via ge-0/0/1.0
+                            >  to 2001:db8:eb18:6337::1 via ge-0/0/1.0
     '''}
 
     golden_parsed_output_2 = {
@@ -305,12 +305,12 @@ class TestShowRouteProtocol(unittest.TestCase):
                     "hidden-route-count": "0",
                     "holddown-route-count": "0",
                     "rt": {
-                        "rt-destination": "2001:268:fb8f::1/128",
+                        "rt-destination": "2001:db8:eb18:ca45::1/128",
                         "rt-entry": {
                             "active-tag": "*",
                             "age": "3w5d 18:30:36",
                             "nh": {
-                                "to": "2001:268:fb8f:1f::1",
+                                "to": "2001:db8:eb18:6337::1",
                                 "via": "ge-0/0/1.0"
                             },
                             "preference": "5",
@@ -330,14 +330,14 @@ class TestShowRouteProtocol(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(
                 protocol='static',
-                ip_address='106.187.14.240/32')
+                ip_address='10.169.14.240/32')
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowRouteProtocol(device=self.device)
         parsed_output = obj.parse(
             protocol='static',
-            ip_address='106.187.14.240/32')
+            ip_address='10.169.14.240/32')
         self.assertEqual(parsed_output, self.golden_parsed_output)
     
     def test_golden_2(self):
@@ -345,7 +345,7 @@ class TestShowRouteProtocol(unittest.TestCase):
         obj = ShowRouteProtocol(device=self.device)
         parsed_output = obj.parse(
             protocol='static',
-            ip_address='2001:268:fb8f::1')
+            ip_address='2001:db8:eb18:ca45::1')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 if __name__ == '__main__':

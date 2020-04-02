@@ -60,7 +60,7 @@
     * Added ShowRouteProtocol for:
         * show route protocol {protocol} {ip_address}
     * Added ShowRouteProtocolNoMore for:
-        * show route protocol {protocol} {ip_address}
+        * show route protocol {protocol} {ip_address} | no-more
     * Added ShowOspf3Interface for:
         * show ospf3 interface
 

@@ -17,6 +17,8 @@ from genie.metaparser.util.exceptions import SchemaTypeError
 Schema for:
     * show route table {table}
     * show route table {table} {prefix}
+    * show route protocol {protocol} {ip_address}
+    * show route protocol {protocol} {ip_address} | no-more
 '''
 class ShowRouteTableSchema(MetaParser):
 
@@ -167,7 +169,7 @@ class ShowRouteTable(ShowRouteTableSchema):
 
 class ShowRouteProtocolSchema(MetaParser):
     """ Schema for:
-            * show route protocol static {ip_address}
+            * show route protocol {protocol} {ip_address}
     """
     """
         schema = {
@@ -258,21 +260,21 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
                 r'\((?P<active_route_count>\d+) +active, +(?P<holddown>\d+) +'
                 r'holddown, +(?P<hidden>\d+) +hidden\)$')
         
-        # 106.187.14.240/32  *[Static/5] 5w2d 15:42:25
+        # 10.169.14.240/32  *[Static/5] 5w2d 15:42:25
         p2 = re.compile(r'^((?P<rt_destination>\S+) +)?(?P<active_tag>[\*\+\-])'
                 r'\[(?P<protocol>Static)\/(?P<preference>\d+)\] +'
                 r'(?P<text>[\S ]+)$')
         
-        # >  to 106.187.14.121 via ge-0/0/1.0
+        # >  to 10.169.14.121 via ge-0/0/1.0
         p3 = re.compile(r'^\> +to +(?P<to>\S+) +via +(?P<via>\S+)$')
 
-        # 2001:268:fb8f::1/128
+        # 2001:db8:eb18:ca45::1/128
         p4 = re.compile(r'^(?P<rt_destination>[\w:\/]+)$')
 
         for line in out.splitlines():
             line = line.strip()
 
-            # 106.187.14.240/32  *[Static/5] 5w2d 15:42:25
+            # 10.169.14.240/32  *[Static/5] 5w2d 15:42:25
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -294,7 +296,7 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
                 route_table_list.append(route_table_dict)
                 continue
             
-            # 106.187.14.240/32  *[Static/5] 5w2d 15:42:25
+            # 10.169.14.240/32  *[Static/5] 5w2d 15:42:25
             m = p2.match(line) 
             if m:
                 group = m.groupdict()
@@ -314,7 +316,7 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
                 rt_dict.update({'rt-entry': rt_entry_dict})
                 continue
 
-            # >  to 106.187.14.121 via ge-0/0/1.0
+            # >  to 10.169.14.121 via ge-0/0/1.0
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -325,7 +327,7 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
                 nh_dict.update({'via': via})
                 continue
             
-            # 2001:268:fb8f::1/128
+            # 2001:db8:eb18:ca45::1/128
             m = p4.match(line)
             if m:
                 group = m.groupdict()
