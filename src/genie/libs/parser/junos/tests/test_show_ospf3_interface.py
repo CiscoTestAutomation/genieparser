@@ -1,18 +1,12 @@
-# Python
 import unittest
 from unittest.mock import Mock
 
-# ATS
 from pyats.topology import Device
 from pyats.topology import loader
-
-# Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
+from genie.libs.parser.junos.show_ospf3_interface import (ShowOspf3Interface)
 
-# junos show_arp
-from genie.libs.parser.junos.show_ospf3_interface import (ShowOspf3)
-
-class TestShowOspf3(unittest.TestCase):
+class TestShowOspf3Interface(unittest.TestCase):
 
     device = Device(name='aDevice')
 
@@ -59,14 +53,14 @@ class TestShowOspf3(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowOspf3(device=self.device)
+        obj = ShowOspf3Interface(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             obj.parse()
 
     def test_golden(self):
         import pprint
         self.device = Mock(**self.golden_output)
-        obj = ShowOspf3(device=self.device)
+        obj = ShowOspf3Interface(device=self.device)
         parsed_output = obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output)

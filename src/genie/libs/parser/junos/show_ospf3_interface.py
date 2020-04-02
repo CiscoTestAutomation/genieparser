@@ -1,12 +1,10 @@
-# Python
 import re
 
-# Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import (Any,
         Optional, Use, SchemaTypeError, Schema)
 
-class ShowOspf3Schema(MetaParser):
+class ShowOspf3InterfaceSchema(MetaParser):
 
     # Sub Schema
     def validate_ospf_interface_list(value):
@@ -33,7 +31,7 @@ class ShowOspf3Schema(MetaParser):
         }
     }
 
-class ShowOspf3(ShowOspf3Schema):
+class ShowOspf3Interface(ShowOspf3InterfaceSchema):
     """ Parser for:
     * show ospf interface
     """
@@ -45,8 +43,8 @@ class ShowOspf3(ShowOspf3Schema):
         else:
             out = output
 
-        # use the pattern [0-9]{1,3}(\.[0-9]{1,3}){3} to pick up on ip addresses
-        # in area, dr_id and bdr_id
+        # use the pattern r'[0-9]{1,3}(\.[0-9]{1,3}){3}' to pick up on ip addresses
+        # in 'area', 'dr_id' and 'bdr_id'
         p1 = re.compile(r'^(?P<interface>\S+) +(?P<state>\S+) +(?P<area>[0-9]{1,3}(\.[0-9]{1,3}){3})'
             r' +(?P<dr_id>[0-9]{1,3}(\.[0-9]{1,3}){3}) +(?P<bdr_id>[0-9]{1,3}(\.[0-9]{1,3}){3}) +(?P<nbrs>\S+)$')
 
