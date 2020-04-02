@@ -26,7 +26,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
         Group Type: Internal    AS: 65171                  Local AS: 65171
-        Name: hktGCS002       Index: 0                   Flags: <Export Eval>
+        Name: Genie       Index: 0                   Flags: <Export Eval>
         Export: [ (v4_WATARI && NEXT-HOP-SELF) ] 
         Options: <Confed>
         Options: <GracefulShutdownRcv>
@@ -37,7 +37,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
         inet.0: 0/682/682/0
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
-        Name: v6_hktGCS002    Index: 1                   Flags: <Export Eval>
+        Name: v6_Genie    Index: 1                   Flags: <Export Eval>
         Export: [ (v6_WATARI && NEXT-HOP-SELF) ] 
         Options: <Confed>
         Options: <GracefulShutdownRcv>
@@ -209,7 +209,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "group-flags": "Export Eval",
                     "group-index": "0",
                     "local-as": "65171",
-                    "name": "hktGCS002",
+                    "name": "Genie",
                     "peer-address": [
                         "10.189.5.253+179"
                     ],
@@ -238,7 +238,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "group-flags": "Export Eval",
                     "group-index": "1",
                     "local-as": "65171",
-                    "name": "v6_hktGCS002",
+                    "name": "v6_Genie",
                     "peer-address": [
                         "2001:db8:223c:ca45::c+60268"
                     ],
@@ -573,7 +573,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
         Group Type: Internal    AS: 65171                  Local AS: 65171
-        Name: hktGCS002       Index: 0                   Flags: <Export Eval>
+        Name: Genie       Index: 0                   Flags: <Export Eval>
         Export: [ (v4_WATARI && NEXT-HOP-SELF) ] 
         Options: <Confed>
         Options: <GracefulShutdownRcv>
@@ -590,7 +590,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
             Advertised prefixes:          682
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
-        Name: v6_hktGCS002    Index: 1                   Flags: <Export Eval>
+        Name: v6_Genie    Index: 1                   Flags: <Export Eval>
         Export: [ (v6_WATARI && NEXT-HOP-SELF) ] 
         Options: <Confed>
         Options: <GracefulShutdownRcv>
@@ -815,7 +815,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "group-flags": "Export Eval",
                     "group-index": "0",
                     "local-as": "65171",
-                    "name": "hktGCS002",
+                    "name": "Genie",
                     "peer-address": [
                         "10.189.5.253+179"
                     ],
@@ -849,7 +849,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "group-flags": "Export Eval",
                     "group-index": "1",
                     "local-as": "65171",
-                    "name": "v6_hktGCS002",
+                    "name": "v6_Genie",
                     "peer-address": [
                         "2001:db8:223c:ca45::c+60268"
                     ],
