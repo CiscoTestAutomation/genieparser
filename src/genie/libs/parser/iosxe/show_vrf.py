@@ -59,13 +59,17 @@ class ShowVrf(ShowVrfSchema):
         # Mgmt-intf                        <not set>             ipv4,ipv6   Gi1
         # VRF1                             65000:1               ipv4,ipv6   Tu1
         # vpn4                           100:2          ipv4,ipv6
-        p1 = re.compile(r'^(?P<vrf>\S+)\s+(?P<rd>\<not +set\>|[\d\:]+)\s+'
+        # vpn4                             100:2                 ipv4,ipv6
+        # rb-bcn-lab                       10.116.83.34:1        ipv4,ipv6   Lo9
+        # test                             10.116.83.34:100      ipv4,ipv6   Lo100
+        p1 = re.compile(r'^(?P<vrf>[\w\d\-\.]+)\s+(?P<rd>\<not +set\>|[\.\d\:]+)\s+'
                         r'(?P<protocols>[(?:ipv\d)\,]+)(?:\s+(?P<intf>[\S\s]+))?$')
-                                                                    
+
         # Lo300
         # Gi2.390
         # Gi2.410
-        p2 = re.compile(r'^(?P<intf>[\w\.]+)$')
+        # Te0/0/1
+        p2 = re.compile(r'^(?P<intf>[\w\.\/]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -73,6 +77,10 @@ class ShowVrf(ShowVrfSchema):
             # Mgmt-intf                        <not set>             ipv4,ipv6   Gi1
             # VRF1                             65000:1               ipv4,ipv6   Tu1
             # vpn2                           100:3          ipv4              Lo23  AT3/0/0.1
+            # vpn4                             100:2                 ipv4,ipv6
+            # rb-bcn-lab                       10.116.83.34:1        ipv4,ipv6   Lo9
+            #                                                                    Te0/0/1
+            # test                             10.116.83.34:100      ipv4,ipv6   Lo100
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -96,6 +104,7 @@ class ShowVrf(ShowVrfSchema):
             # Lo300
             # Gi2.390
             # Gi2.410
+            # Te0/0/1
             m = p2.match(line)
             if m:
                 groups = m.groupdict()

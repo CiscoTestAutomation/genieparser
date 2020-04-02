@@ -13,7 +13,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 # junos show_ospf
 from genie.libs.parser.junos.show_ospf import (ShowOspfInterface,
                                                ShowOspfInterfaceBrief,
-                                               ShowOspfInterfaceDetail)
+                                               ShowOspfInterfaceDetail,
+                                               ShowOspfNeighbor)
 
 
 class test_show_ospf_interface(unittest.TestCase):
@@ -624,6 +625,60 @@ class test_show_ospf_interface_detail(unittest.TestCase):
         parsed_output = obj.parse(interface='ge-0/0/1.0', instance='master')
         self.assertEqual(parsed_output, self.golden_parsed_output_interface_instance)
 
+class TestShowOspfNeighbor(unittest.TestCase):
+    """ Unit tests for:
+            * show ospf neighbor
+    """
 
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show ospf neighbor
+        Address          Interface              State     ID               Pri  Dead
+        10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    32
+        10.169.14.121   ge-0/0/1.0             Full      10.169.14.240   128    33
+        10.19.198.26     ge-0/0/2.0             Full      10.19.198.239      1    33
+        '''}
+    
+    golden_parsed_output = {
+        'ospf-neighbor-information': {
+            'ospf-neighbor': [
+                {
+                    'neighbor-address': '10.189.5.94', 
+                    'interface-name': 'ge-0/0/0.0', 
+                    'ospf-neighbor-state': 'Full', 
+                    'neighbor-id': '10.189.5.253', 
+                    'neighbor-priority': '128', 
+                    'activity-timer': '32'}, 
+                {
+                    'neighbor-address': '10.169.14.121', 
+                    'interface-name': 'ge-0/0/1.0', 
+                    'ospf-neighbor-state': 'Full', 
+                    'neighbor-id': '10.169.14.240', 
+                    'neighbor-priority': '128', 
+                    'activity-timer': '33'}, 
+                {
+                    'neighbor-address': '10.19.198.26', 
+                    'interface-name': 'ge-0/0/2.0', 
+                    'ospf-neighbor-state': 'Full', 
+                    'neighbor-id': '10.19.198.239', 
+                    'neighbor-priority': '1', 'activity-timer': '33'
+                }],
+        },
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfNeighbor(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspfNeighbor(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 if __name__ == '__main__':
     unittest.main()

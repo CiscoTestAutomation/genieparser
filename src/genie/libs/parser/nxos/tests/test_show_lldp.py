@@ -604,7 +604,7 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
               (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
               (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
               Device ID            Local Intf      Hold-time  Capability  Port ID  
-              Chassis id: 547f.ee44.51e1
+              Chassis id: 547f.eeff.9526
               Port id: mgmt:0
               Local Port id: mgmt0
               Port Description: mgmt0
@@ -625,7 +625,7 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
                     'mgmt0': {
                         'neighbors': {
                             'System1': {
-                                'chassis_id': '547f.ee44.51e1',
+                                'chassis_id': '547f.eeff.9526',
                                 'port_description': 'mgmt0',
                                 'system_name': 'System1',
                                 'system_description': 'Cisco NX-OS n5000, Software (n5000-uk9), Version 7.3(2)N1(1), RELEASE SOFTWARE Copyright (c) 2002-2012, 2016-2017 by Cisco Systems, Inc. Compiled 5/12/2017 23:00:00',

@@ -15806,6 +15806,7 @@ Tunnel10 is up, line protocol is up
                 'encapsulation': 'hdlc'
             },
             'keepalive': 10,
+            'dtr_pulsed': '1',
             'last_input': 'never',
             'last_output': 'never',
             'line_protocol': 'up',

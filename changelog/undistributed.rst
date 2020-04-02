@@ -61,6 +61,10 @@
         * show bgp group detail
         * show bgp group detail | no-more
 
+* JUNOS
+    * Added ShowOspfNeighbor for:
+        * show ospf neighbor
+
 
 --------------------------------------------------------------------------------
                                 Fix
@@ -109,8 +113,16 @@
         * Update regex to support various output
     * Update ShowAccessLists
         * Update regex to support various output
+    * Update ShowVrf
+        * Update regex to support various output
     * Update ShowLldpEntry
         * Fix typo in the code
+    * Update ShowIpMsdpPeer
+        * Change key 'peer_as' into Optional to support various outputs
+    * Update ShowBgpAllNeighbors:
+        * Update regex to support various outputs.
+    * Update ShowIpBgpAllDetail:
+        * Fix the way that assigns value to key 'vrf'
 
 * NXOS
     * Updated ShowInterface
@@ -130,6 +142,10 @@
 
 * IOSXR
     * Update ShowBgpInstanceSummary
+        * Update regex to support various output
+
+* IOS 
+    * Update ShowInterfaces
         * Update regex to support various output
 
 --------------------------------------------------------------------------------

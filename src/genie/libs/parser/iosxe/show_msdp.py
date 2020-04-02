@@ -27,7 +27,7 @@ class ShowIpMsdpPeerSchema(MetaParser):
                 'peer': {
                     Any(): {
                         'elapsed_time': str,
-                        'peer_as': int,
+                        Optional('peer_as'): int,
                         'connect_source_address': str,
                         'connect_source': str,
                         'session_state': str,
@@ -102,8 +102,9 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
             out = output
 
         # MSDP Peer 10.1.100.4 (?), AS 1
+        # MSDP Peer 10.4.1.2 (?), AS ?
         r1 = re.compile(r'^MSDP\sPeer\s+(?P<peer>\S+)\s*\(\?\)\,\s*'
-                        'AS\s*(?P<peer_as>\d+)')
+                        'AS\s*(?P<peer_as>(\d+|\?))')
 
         # State: Up, Resets: 0, Connection source: Loopback0 (10.1.100.2)
         r2 = re.compile(r'State:\s*(?P<session_state>(Up|Down))\,\s*Resets:'
@@ -185,16 +186,18 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
             line = line.strip()
 
             # MSDP Peer 10.1.100.4 (?), AS 1
+            # MSDP Peer 10.4.1.2 (?), AS ?
             result = r1.match(line)
             if result:
-
                 group = result.groupdict()
                 if not vrf:
                     vrf = 'default'
                 peer_dict = parsed_dict.setdefault('vrf', {})\
                     .setdefault(vrf, {}).setdefault('peer', {})\
                     .setdefault(group['peer'], {})
-                peer_dict['peer_as'] = int(group['peer_as'])
+                peer_as_val = group['peer_as']
+                if peer_as_val != '?':
+                    peer_dict['peer_as'] = int(peer_as_val)
 
                 continue
 
