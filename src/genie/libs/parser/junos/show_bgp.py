@@ -173,6 +173,10 @@ class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
     """
     cli_command = 'show bgp group brief'
     
+    exclude = [
+        'peer-address'
+    ]
+    
     def cli(self, output=None):
 
         if not output:
