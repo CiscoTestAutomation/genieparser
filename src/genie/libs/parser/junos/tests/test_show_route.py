@@ -233,6 +233,7 @@ Unit test for:
 class TestShowRouteProtocolStatic(unittest.TestCase):
 
     device = Device(name='aDevice')
+    maxDiff = None
 
     empty_output = {'execute.return_value': ''}
 
@@ -287,14 +288,12 @@ class TestShowRouteProtocolStatic(unittest.TestCase):
     }
 
     def test_empty(self):
-        self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = ShowRouteProtocolStatic(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(ip_address='106.187.14.240/32')
 
     def test_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowRouteProtocolStatic(device=self.device)
         parsed_output = obj.parse(ip_address='106.187.14.240/32')
