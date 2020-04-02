@@ -20,6 +20,16 @@ class test_route(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
+        '10.10.0.0': {
+            'destination': '10.10.0.0',
+                'flags': 'U',
+                'gateway': '0.0.0.0',
+                'interface': 'eth1-05',
+                'mask': '255.255.255.0',
+                'metric': 0,
+                'ref': 0,
+                'use': 0
+                },
         '172.17.0.0': {
             'destination': '172.17.0.0',
             'flags': 'U',
@@ -69,6 +79,7 @@ class test_route(unittest.TestCase):
         172.17.0.0      0.0.0.0         255.255.0.0     U     0      0        0 docker0
         192.168.1.0     0.0.0.0         255.255.255.0   U     600    0        0 wlo1
         192.168.122.0   0.0.0.0         255.255.255.0   U     0      0        0 virbr0
+        10.10.0.0       0.0.0.0         255.255.255.0   U     0      0        0 eth1-05
     '''}
 
 

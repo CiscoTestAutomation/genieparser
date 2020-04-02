@@ -58,7 +58,7 @@ class Route(RouteSchema):
                         ' +(?P<metric>(\d+))'
                         ' +(?P<ref>(\d+))'
                         ' +(?P<use>(\d+))'
-                        ' +(?P<interface>[a-zA-Z0-9]+)'
+                        ' +(?P<interface>\S+)'
                         )
         
         # Initializes the Python dictionary variable
