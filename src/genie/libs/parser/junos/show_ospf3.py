@@ -64,7 +64,9 @@ class ShowOspf3Interface(ShowOspf3InterfaceSchema):
         p1 = re.compile(r'^(?P<interface>\S+) +(?P<state>\S+) +(?P<area>[0-9]{1,3}(\.[0-9]{1,3}){3})'
             r' +(?P<dr_id>[0-9]{1,3}(\.[0-9]{1,3}){3}) +(?P<bdr_id>[0-9]{1,3}(\.[0-9]{1,3}){3}) +(?P<nbrs>\S+)$')
 
-        entry_list = []
+        ret_dict = {}
+
+        entry_list = ret_dict.setdefault("ospf3-interface-information", {}).setdefault("ospf3-interface", [])
 
         for line in out.splitlines():
             line = line.strip()
@@ -85,12 +87,8 @@ class ShowOspf3Interface(ShowOspf3InterfaceSchema):
                 entry_list.append(interface_entry)
                 continue
 
-        ret_dict = {}
-        if entry_list:
-            ret_dict = {
-                "ospf3-interface-information": {
-                    "ospf3-interface": entry_list
-                }
-            }
+        if not entry_list:
+            return None
+
         return ret_dict
 
