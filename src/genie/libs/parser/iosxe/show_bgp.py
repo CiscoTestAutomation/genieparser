@@ -2953,7 +2953,9 @@ class ShowBgpNeighborSuperParser(MetaParser):
 
         # Message statistics:
         # Message statistics for 192.168.10.253 active:
-        p19 = re.compile(r'^Message +statistics( +for +(?P<state>[\w. ]+))?:$')
+        # Message statistics, state Established:
+        p19 = re.compile(r'^Message +statistics(( +for +(?P<state>[\w. ]+))|'
+                         r'(, +state +Established))?:$')
 
         #  InQ depth is 0
         #  OutQ depth is 0
@@ -3470,6 +3472,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
 
             # Message statistics:
             # Message statistics for 192.168.10.253 active:
+            # Message statistics, state Established:
             m = p19.match(line)
             if m:
                 message_statistics = True
