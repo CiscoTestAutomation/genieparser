@@ -66,14 +66,15 @@ class ShowOspf3Interface(ShowOspf3InterfaceSchema):
 
         ret_dict = {}
 
-        entry_list = ret_dict.setdefault("ospf3-interface-information", {}).setdefault("ospf3-interface", [])
-
         for line in out.splitlines():
             line = line.strip()
 
             # ge-0/0/0.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
             m = p1.match(line)
             if m:
+
+                entry_list = ret_dict.setdefault("ospf3-interface-information", {}).setdefault("ospf3-interface", [])
+
                 group = m.groupdict()
 
                 interface_entry = {}
@@ -86,9 +87,6 @@ class ShowOspf3Interface(ShowOspf3InterfaceSchema):
 
                 entry_list.append(interface_entry)
                 continue
-
-        if not entry_list:
-            return None
 
         return ret_dict
 
