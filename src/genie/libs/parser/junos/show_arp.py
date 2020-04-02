@@ -60,7 +60,7 @@ class ShowArp(ShowArpSchema):
     def cli(self, output=None):
 
         if not output:
-            out = self.device.execute(cli_command)
+            out = self.device.execute(self.cli_command)
         else:
             out = output
 
