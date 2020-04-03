@@ -1,8 +1,7 @@
 import unittest
 from unittest.mock import Mock
 
-from pyats.topology import Device
-from pyats.topology import loader
+from pyats.topology import loader, Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.junos.show_ospf3 import ShowOspf3Interface, \
                                                ShowOspf3NeighborExtensive, \
