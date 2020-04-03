@@ -107,7 +107,8 @@ class ShowOspf3DatabaseSchema(MetaParser):
                     "lsa-id": str,
                     "lsa-length": str,
                     "lsa-type": str,
-                    "sequence-number": str
+                    "sequence-number": str,
+                    Optional('our-entry'): None
                 }
             ],
             "ospf3-intf-header": [
