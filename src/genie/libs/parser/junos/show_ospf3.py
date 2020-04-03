@@ -402,7 +402,8 @@ class ShowOspf3DatabaseSchema(MetaParser):
                 "lsa-id": str,
                 "lsa-length": str,
                 "lsa-type": str,
-                "sequence-number": str
+                "sequence-number": str,
+                Optional('our-entry'): None
             })
         # Validate each dictionary in list
         for item in value:
@@ -452,7 +453,7 @@ class ShowOspf3Database(ShowOspf3DatabaseSchema):
 
         # Type       ID               Adv Rtr           Seq         Age  Cksum  Len
         # Router      0.0.0.0          10.34.2.250     0x800018ed  2407  0xaf2d  56
-        p2 = re.compile(r'^( *)(?P<lsa_type>\S+) +(\*{0,1})(?P<lsa_id>[0-9]{1,3}'
+        p2 = re.compile(r'^( *)(?P<lsa_type>\S+) +(?P<lsa_id>(\*{0,1})[0-9]{1,3}'
             r'(\.[0-9]{1,3}){3}) +(?P<advertising_router>[0-9]{1,3}(\.[0-9]{1,3})'
             r'{3}) +(?P<sequence_number>\S+) +(?P<age>\d+) +(?P<checksum>\S+) +(?P<lsa_length>\d+)$')
 
@@ -489,6 +490,11 @@ class ShowOspf3Database(ShowOspf3DatabaseSchema):
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_','-')
                     entry[entry_key] = group_value
+
+                lsa_id = entry['lsa-id']
+                if lsa_id[0] == '*':
+                    entry['lsa-id'] = lsa_id[1:]
+                    entry['our-entry'] = None
 
                 entry_list.append(entry)
                 continue
