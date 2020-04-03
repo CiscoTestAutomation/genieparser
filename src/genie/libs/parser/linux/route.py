@@ -37,13 +37,21 @@ class RouteSchema(MetaParser):
 # Parser for 'route'
 # =======================================================
 class Route(RouteSchema):
-    """Parser for route"""
+    """Parser for 
+        * route
+        * route -4 -n 
+        * route -4n
+        * route -n4
+        * route -n -4
+        """
 
-    cli_command = ['route', 'route -4 -n', 'route -4n', 'route -n4' ]
+    cli_command = ['route', 'route {flag}']
 
-    def cli(self, output=None):
+    def cli(self, flag=None, output=None):
         if output is None:    
             cmd = self.cli_command[0]
+            if flag in ['-4 -n', '-4n', '-n4']:
+                command = self.cli_command[1].replace('{flag}', flag)
             out = self.device.execute(cmd)
         else:
             out = output
