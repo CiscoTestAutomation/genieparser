@@ -59,6 +59,10 @@
         * show ospf neighbor
     * Added ShowOspf3Interface for:
         * show ospf3 interface
+    * Added ShowOspf3Neighbor for:
+        * show ospf3 neighbor | no more
+    * Added ShowOspf3NeighborExtensive for:
+        * show ospf3 neighbor extensive
 
 
 --------------------------------------------------------------------------------
