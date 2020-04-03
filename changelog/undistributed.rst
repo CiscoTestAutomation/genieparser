@@ -18,6 +18,8 @@
     * Added ShowInstallSummary for 
         * show install summary
     * Added route
+    * Added netstat -rn
+
 
 * IOSXE
     * Added ShowIpBgpRouteDistributer for:
