@@ -7,6 +7,8 @@ from genie.libs.parser.junos.show_ospf3 import ShowOspf3Interface, ShowOspf3Data
 
 class TestShowOspf3Interface(unittest.TestCase):
 
+    maxDiff = None
+
     device = Device(name='test-device')
 
     empty_output = {'execute.return_value': ''}
@@ -63,6 +65,8 @@ class TestShowOspf3Interface(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 class TestShowOspf3Database(unittest.TestCase):
+
+    maxDiff = None
 
     device = Device(name='test-device')
 
