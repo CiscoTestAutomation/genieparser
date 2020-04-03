@@ -28,6 +28,9 @@
         * show install summary
     * Added ShowPlatformIntegrity for
         * show platform integrity
+    * Added ShowDmvpn for:
+        * show dmvpn 
+        * show dmvpn interface {interface}
 * NXOS
     * Added ShowIpRouteSummary for:
         * show ip route summary
@@ -116,7 +119,8 @@
         * Update regex to support various outputs.
     * Update ShowIpBgpAllDetail:
         * Fix the way that assigns value to key 'vrf'
-
+    * Update ShowStandbyAll:
+        * Update regex to support various outputs.
 * NXOS
     * Updated ShowInterface
         * Update regex to cover both 'IP' and 'ip', both 'Rx' and 'RX'

@@ -72,7 +72,7 @@ class TestShowDmvpn(unittest.TestCase):
     }
 
 
-    # Specify the expected unparsed output
+    # show dmvpn
     golden_output1 = {'execute.return_value': '''
         Legend: Attrb --> S - Static, D - Dynamic, I - Incomplete
                 N - NATed, L - Local, X - No Socket
