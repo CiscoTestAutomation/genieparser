@@ -22,7 +22,7 @@ class TestShowArp(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
-        show arp | no-more
+        show arp
         MAC Address       Address         Name                      Interface               Flags
         00:50:56:8d:2d:e1 1.0.0.1         1.0.0.1                   fxp0.0                  none
         00:50:56:8d:fd:53 1.0.0.201       1.0.0.201                 fxp0.0                  none
