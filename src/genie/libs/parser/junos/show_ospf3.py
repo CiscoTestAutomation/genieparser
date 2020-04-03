@@ -1,3 +1,10 @@
+
+''' show_ospf3.py
+
+Parser for the following show commands:
+    * show ospf3 interface
+    * show ospf3 database
+'''
 import re
 
 from genie.metaparser import MetaParser
