@@ -686,6 +686,8 @@ class TestShowOspf3Neighbor(unittest.TestCase):
 
 class TestShowOspf3Database(unittest.TestCase):
 
+    maxDiff = None
+
     device = Device(name='test-device')
 
     empty_output = {'execute.return_value': ''}
