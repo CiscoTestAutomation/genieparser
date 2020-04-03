@@ -14,7 +14,7 @@ from genie.libs.parser.linux.route import Route
 # unitest For route
 #############################################################################
 
-class test_route(unittest.TestCase):
+class TestRoute(unittest.TestCase):
     device = Device(name='aDevice')
 
     empty_output = {'execute.return_value': ''}
