@@ -22,35 +22,35 @@ class TestShowOspf3Interface(unittest.TestCase):
     '''}
 
     golden_parsed_output = {
-            "ospf3-interface-information": {
-                "ospf3-interface": [
-                    {
-                        "bdr-id": "0.0.0.0",
-                        "dr-id": "0.0.0.0",
-                        "interface-name": "ge-0/0/0.0",
-                        "neighbor-count": "1",
-                        "ospf-area": "0.0.0.8",
-                        "ospf-interface-state": "PtToPt"
-                    },
-                    {
-                        "bdr-id": "0.0.0.0",
-                        "dr-id": "0.0.0.0",
-                        "interface-name": "ge-0/0/1.0",
-                        "neighbor-count": "1",
-                        "ospf-area": "0.0.0.8",
-                        "ospf-interface-state": "PtToPt"
-                    },
-                    {
-                        "bdr-id": "0.0.0.0",
-                        "dr-id": "10.189.5.252",
-                        "interface-name": "lo0.0",
-                        "neighbor-count": "0",
-                        "ospf-area": "0.0.0.8",
-                        "ospf-interface-state": "DR"
-                    }
-                ]
-            }
+        "ospf3-interface-information": {
+            "ospf3-interface": [
+                {
+                    "bdr-id": "0.0.0.0",
+                    "dr-id": "0.0.0.0",
+                    "interface-name": "ge-0/0/0.0",
+                    "neighbor-count": "1",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-interface-state": "PtToPt"
+                },
+                {
+                    "bdr-id": "0.0.0.0",
+                    "dr-id": "0.0.0.0",
+                    "interface-name": "ge-0/0/1.0",
+                    "neighbor-count": "1",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-interface-state": "PtToPt"
+                },
+                {
+                    "bdr-id": "0.0.0.0",
+                    "dr-id": "10.189.5.252",
+                    "interface-name": "lo0.0",
+                    "neighbor-count": "0",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-interface-state": "DR"
+                }
+            ]
         }
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -173,6 +173,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "lsa-id": "0.0.0.0",
                     "lsa-length": "56",
                     "lsa-type": "Router",
+                    "our-entry": None,
                     "sequence-number": "0x80001890"
                 },
                 {
@@ -227,6 +228,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "lsa-id": "0.0.0.1",
                     "lsa-length": "76",
                     "lsa-type": "IntraArPfx",
+                    "our-entry": None,
                     "sequence-number": "0x8000178a"
                 },
                 {
@@ -371,6 +373,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "lsa-id": "0.0.0.1",
                     "lsa-length": "44",
                     "lsa-type": "Extern",
+                    "our-entry": None,
                     "sequence-number": "0x8000063f"
                 },
                 {
@@ -389,6 +392,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "lsa-id": "0.0.0.2",
                     "lsa-length": "56",
                     "lsa-type": "Link",
+                    "our-entry": None,
                     "sequence-number": "0x8000178a"
                 },
                 {
@@ -416,6 +420,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "lsa-id": "0.0.0.3",
                     "lsa-length": "56",
                     "lsa-type": "Link",
+                    "our-entry": None,
                     "sequence-number": "0x80001789"
                 },
                 {
@@ -425,6 +430,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "lsa-id": "0.0.0.1",
                     "lsa-length": "44",
                     "lsa-type": "Link",
+                    "our-entry": None,
                     "sequence-number": "0x8000178b"
                 }
             ],
