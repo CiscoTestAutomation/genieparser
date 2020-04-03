@@ -28,9 +28,7 @@
         * show install summary
     * Added ShowPlatformIntegrity for
         * show platform integrity
-    * Added ShowDmvpn for:
-        * show dmvpn 
-        * show dmvpn interface {interface}
+
 * NXOS
     * Added ShowIpRouteSummary for:
         * show ip route summary
