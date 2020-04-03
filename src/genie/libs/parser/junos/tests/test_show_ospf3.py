@@ -74,50 +74,50 @@ class TestShowOspf3Database(unittest.TestCase):
 
         OSPF3 database, Area 0.0.0.8
         Type       ID               Adv Rtr           Seq         Age  Cksum  Len
-        Router      0.0.0.0          59.128.2.250     0x800018ed  2407  0xaf2d  56
-        Router      0.0.0.0          59.128.2.251     0x80001841   532  0x1d57  56
-        Router      0.0.0.0          106.187.14.240   0x80001a0b  2956  0x52ba  72
-        Router      0.0.0.0          106.187.14.241   0x800018b7  1259  0x94a3  72
-        Router     *0.0.0.0          111.87.5.252     0x80001890   913  0xae6c  56
-        Router      0.0.0.0          111.87.5.253     0x8000182a   915  0x8fdc  56
-        IntraArPfx  0.0.0.1          59.128.2.250     0x8000178c  1657  0xc4fc  76
-        IntraArPfx  0.0.0.1          59.128.2.251     0x8000178b   907  0x9e2d  76
-        IntraArPfx  0.0.0.1          106.187.14.240   0x80001808  2683  0x6948  88
-        IntraArPfx  0.0.0.1          106.187.14.241   0x800017e6   926  0xa81e  88
-        IntraArPfx *0.0.0.1          111.87.5.252     0x8000178a  1413  0x9b24  76
-        IntraArPfx  0.0.0.1          111.87.5.253     0x80001788   415  0x8820  76
+        Router      0.0.0.0          10.34.2.250     0x800018ed  2407  0xaf2d  56
+        Router      0.0.0.0          10.34.2.251     0x80001841   532  0x1d57  56
+        Router      0.0.0.0          10.169.14.240   0x80001a0b  2956  0x52ba  72
+        Router      0.0.0.0          10.169.14.241   0x800018b7  1259  0x94a3  72
+        Router     *0.0.0.0          10.189.5.252     0x80001890   913  0xae6c  56
+        Router      0.0.0.0          10.189.5.253     0x8000182a   915  0x8fdc  56
+        IntraArPfx  0.0.0.1          10.34.2.250     0x8000178c  1657  0xc4fc  76
+        IntraArPfx  0.0.0.1          10.34.2.251     0x8000178b   907  0x9e2d  76
+        IntraArPfx  0.0.0.1          10.169.14.240   0x80001808  2683  0x6948  88
+        IntraArPfx  0.0.0.1          10.169.14.241   0x800017e6   926  0xa81e  88
+        IntraArPfx *0.0.0.1          10.189.5.252     0x8000178a  1413  0x9b24  76
+        IntraArPfx  0.0.0.1          10.189.5.253     0x80001788   415  0x8820  76
             OSPF3 AS SCOPE link state database
         Type       ID               Adv Rtr           Seq         Age  Cksum  Len
-        Extern      0.0.0.1          59.128.2.250     0x8000178e  1282  0x3c81  28
-        Extern      0.0.0.3          59.128.2.250     0x8000178e   907  0x21bf  44
-        Extern      0.0.0.4          59.128.2.250     0x80000246  2783  0xcc71  44
-        Extern      0.0.0.1          59.128.2.251     0x80001789  1282  0x4081  28
-        Extern      0.0.0.2          59.128.2.251     0x80001788  2782  0x17d0  44
-        Extern      0.0.0.3          59.128.2.251     0x80000246   157  0xea52  44
-        Extern      0.0.0.18         106.187.14.240   0x80000349  1592  0xbddb  28
-        Extern      0.0.0.19         106.187.14.240   0x8000034d   774  0x3603  44
-        Extern      0.0.0.22         106.187.14.240   0x800002b9  2138  0xab95  44
-        Extern      0.0.0.23         106.187.14.240   0x80000247   501  0x7049  44
-        Extern      0.0.0.24         106.187.14.240   0x80000246  2410  0x4e6c  44
-        Extern      0.0.0.9          106.187.14.241   0x800002f0  2593  0xd341  44
-        Extern      0.0.0.10         106.187.14.241   0x80000246   593  0xd4f2  44
-        Extern      0.0.0.11         106.187.14.241   0x80000245  2926  0xe6df  44
-        Extern     *0.0.0.1          111.87.5.252     0x8000063f  1913  0x3ff4  44
-        Extern      0.0.0.1          111.87.5.253     0x80000e1e  1915  0x7dcd  44
+        Extern      0.0.0.1          10.34.2.250     0x8000178e  1282  0x3c81  28
+        Extern      0.0.0.3          10.34.2.250     0x8000178e   907  0x21bf  44
+        Extern      0.0.0.4          10.34.2.250     0x80000246  2783  0xcc71  44
+        Extern      0.0.0.1          10.34.2.251     0x80001789  1282  0x4081  28
+        Extern      0.0.0.2          10.34.2.251     0x80001788  2782  0x17d0  44
+        Extern      0.0.0.3          10.34.2.251     0x80000246   157  0xea52  44
+        Extern      0.0.0.18         10.169.14.240   0x80000349  1592  0xbddb  28
+        Extern      0.0.0.19         10.169.14.240   0x8000034d   774  0x3603  44
+        Extern      0.0.0.22         10.169.14.240   0x800002b9  2138  0xab95  44
+        Extern      0.0.0.23         10.169.14.240   0x80000247   501  0x7049  44
+        Extern      0.0.0.24         10.169.14.240   0x80000246  2410  0x4e6c  44
+        Extern      0.0.0.9          10.169.14.241   0x800002f0  2593  0xd341  44
+        Extern      0.0.0.10         10.169.14.241   0x80000246   593  0xd4f2  44
+        Extern      0.0.0.11         10.169.14.241   0x80000245  2926  0xe6df  44
+        Extern     *0.0.0.1          10.189.5.252     0x8000063f  1913  0x3ff4  44
+        Extern      0.0.0.1          10.189.5.253     0x80000e1e  1915  0x7dcd  44
 
             OSPF3 Link-Local database, interface ge-0/0/0.0 Area 0.0.0.8
         Type       ID               Adv Rtr           Seq         Age  Cksum  Len
-        Link       *0.0.0.2          111.87.5.252     0x8000178a   413  0xae5c  56
-        Link        0.0.0.2          111.87.5.253     0x80001787  2415  0x13d7  56
+        Link       *0.0.0.2          10.189.5.252     0x8000178a   413  0xae5c  56
+        Link        0.0.0.2          10.189.5.253     0x80001787  2415  0x13d7  56
 
             OSPF3 Link-Local database, interface ge-0/0/1.0 Area 0.0.0.8
         Type       ID               Adv Rtr           Seq         Age  Cksum  Len
-        Link        0.0.0.3          106.187.14.240   0x8000179e  1047  0xbe92  56
-        Link       *0.0.0.3          111.87.5.252     0x80001789  2913  0x607c  56
+        Link        0.0.0.3          10.169.14.240   0x8000179e  1047  0xbe92  56
+        Link       *0.0.0.3          10.189.5.252     0x80001789  2913  0x607c  56
 
             OSPF3 Link-Local database, interface lo0.0 Area 0.0.0.8
         Type       ID               Adv Rtr           Seq         Age  Cksum  Len
-        Link       *0.0.0.1          111.87.5.252     0x8000178b  2413  0xa440  44
+        Link       *0.0.0.1          10.189.5.252     0x8000178b  2413  0xa440  44
 
     '''}
 
@@ -128,7 +128,7 @@ class TestShowOspf3Database(unittest.TestCase):
             },
             "ospf3-database": [
                 {
-                    "advertising-router": "59.128.2.250",
+                    "advertising-router": "10.34.2.250",
                     "age": "2407",
                     "checksum": "0xaf2d",
                     "lsa-id": "0.0.0.0",
@@ -137,7 +137,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x800018ed"
                 },
                 {
-                    "advertising-router": "59.128.2.251",
+                    "advertising-router": "10.34.2.251",
                     "age": "532",
                     "checksum": "0x1d57",
                     "lsa-id": "0.0.0.0",
@@ -146,7 +146,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x80001841"
                 },
                 {
-                    "advertising-router": "106.187.14.240",
+                    "advertising-router": "10.169.14.240",
                     "age": "2956",
                     "checksum": "0x52ba",
                     "lsa-id": "0.0.0.0",
@@ -155,7 +155,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x80001a0b"
                 },
                 {
-                    "advertising-router": "106.187.14.241",
+                    "advertising-router": "10.169.14.241",
                     "age": "1259",
                     "checksum": "0x94a3",
                     "lsa-id": "0.0.0.0",
@@ -164,7 +164,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x800018b7"
                 },
                 {
-                    "advertising-router": "111.87.5.252",
+                    "advertising-router": "10.189.5.252",
                     "age": "913",
                     "checksum": "0xae6c",
                     "lsa-id": "0.0.0.0",
@@ -173,7 +173,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x80001890"
                 },
                 {
-                    "advertising-router": "111.87.5.253",
+                    "advertising-router": "10.189.5.253",
                     "age": "915",
                     "checksum": "0x8fdc",
                     "lsa-id": "0.0.0.0",
@@ -182,7 +182,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x8000182a"
                 },
                 {
-                    "advertising-router": "59.128.2.250",
+                    "advertising-router": "10.34.2.250",
                     "age": "1657",
                     "checksum": "0xc4fc",
                     "lsa-id": "0.0.0.1",
@@ -191,7 +191,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x8000178c"
                 },
                 {
-                    "advertising-router": "59.128.2.251",
+                    "advertising-router": "10.34.2.251",
                     "age": "907",
                     "checksum": "0x9e2d",
                     "lsa-id": "0.0.0.1",
@@ -200,7 +200,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x8000178b"
                 },
                 {
-                    "advertising-router": "106.187.14.240",
+                    "advertising-router": "10.169.14.240",
                     "age": "2683",
                     "checksum": "0x6948",
                     "lsa-id": "0.0.0.1",
@@ -209,7 +209,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x80001808"
                 },
                 {
-                    "advertising-router": "106.187.14.241",
+                    "advertising-router": "10.169.14.241",
                     "age": "926",
                     "checksum": "0xa81e",
                     "lsa-id": "0.0.0.1",
@@ -218,7 +218,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x800017e6"
                 },
                 {
-                    "advertising-router": "111.87.5.252",
+                    "advertising-router": "10.189.5.252",
                     "age": "1413",
                     "checksum": "0x9b24",
                     "lsa-id": "0.0.0.1",
@@ -227,7 +227,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x8000178a"
                 },
                 {
-                    "advertising-router": "111.87.5.253",
+                    "advertising-router": "10.189.5.253",
                     "age": "415",
                     "checksum": "0x8820",
                     "lsa-id": "0.0.0.1",
@@ -236,7 +236,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x80001788"
                 },
                 {
-                    "advertising-router": "59.128.2.250",
+                    "advertising-router": "10.34.2.250",
                     "age": "1282",
                     "checksum": "0x3c81",
                     "lsa-id": "0.0.0.1",
@@ -245,7 +245,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x8000178e"
                 },
                 {
-                    "advertising-router": "59.128.2.250",
+                    "advertising-router": "10.34.2.250",
                     "age": "907",
                     "checksum": "0x21bf",
                     "lsa-id": "0.0.0.3",
@@ -254,7 +254,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x8000178e"
                 },
                 {
-                    "advertising-router": "59.128.2.250",
+                    "advertising-router": "10.34.2.250",
                     "age": "2783",
                     "checksum": "0xcc71",
                     "lsa-id": "0.0.0.4",
@@ -263,7 +263,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x80000246"
                 },
                 {
-                    "advertising-router": "59.128.2.251",
+                    "advertising-router": "10.34.2.251",
                     "age": "1282",
                     "checksum": "0x4081",
                     "lsa-id": "0.0.0.1",
@@ -272,7 +272,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x80001789"
                 },
                 {
-                    "advertising-router": "59.128.2.251",
+                    "advertising-router": "10.34.2.251",
                     "age": "2782",
                     "checksum": "0x17d0",
                     "lsa-id": "0.0.0.2",
@@ -281,7 +281,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x80001788"
                 },
                 {
-                    "advertising-router": "59.128.2.251",
+                    "advertising-router": "10.34.2.251",
                     "age": "157",
                     "checksum": "0xea52",
                     "lsa-id": "0.0.0.3",
@@ -290,7 +290,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x80000246"
                 },
                 {
-                    "advertising-router": "106.187.14.240",
+                    "advertising-router": "10.169.14.240",
                     "age": "1592",
                     "checksum": "0xbddb",
                     "lsa-id": "0.0.0.18",
@@ -299,7 +299,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x80000349"
                 },
                 {
-                    "advertising-router": "106.187.14.240",
+                    "advertising-router": "10.169.14.240",
                     "age": "774",
                     "checksum": "0x3603",
                     "lsa-id": "0.0.0.19",
@@ -308,7 +308,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x8000034d"
                 },
                 {
-                    "advertising-router": "106.187.14.240",
+                    "advertising-router": "10.169.14.240",
                     "age": "2138",
                     "checksum": "0xab95",
                     "lsa-id": "0.0.0.22",
@@ -317,7 +317,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x800002b9"
                 },
                 {
-                    "advertising-router": "106.187.14.240",
+                    "advertising-router": "10.169.14.240",
                     "age": "501",
                     "checksum": "0x7049",
                     "lsa-id": "0.0.0.23",
@@ -326,7 +326,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x80000247"
                 },
                 {
-                    "advertising-router": "106.187.14.240",
+                    "advertising-router": "10.169.14.240",
                     "age": "2410",
                     "checksum": "0x4e6c",
                     "lsa-id": "0.0.0.24",
@@ -335,7 +335,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x80000246"
                 },
                 {
-                    "advertising-router": "106.187.14.241",
+                    "advertising-router": "10.169.14.241",
                     "age": "2593",
                     "checksum": "0xd341",
                     "lsa-id": "0.0.0.9",
@@ -344,7 +344,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x800002f0"
                 },
                 {
-                    "advertising-router": "106.187.14.241",
+                    "advertising-router": "10.169.14.241",
                     "age": "593",
                     "checksum": "0xd4f2",
                     "lsa-id": "0.0.0.10",
@@ -353,7 +353,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x80000246"
                 },
                 {
-                    "advertising-router": "106.187.14.241",
+                    "advertising-router": "10.169.14.241",
                     "age": "2926",
                     "checksum": "0xe6df",
                     "lsa-id": "0.0.0.11",
@@ -362,7 +362,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x80000245"
                 },
                 {
-                    "advertising-router": "111.87.5.252",
+                    "advertising-router": "10.189.5.252",
                     "age": "1913",
                     "checksum": "0x3ff4",
                     "lsa-id": "0.0.0.1",
@@ -371,7 +371,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x8000063f"
                 },
                 {
-                    "advertising-router": "111.87.5.253",
+                    "advertising-router": "10.189.5.253",
                     "age": "1915",
                     "checksum": "0x7dcd",
                     "lsa-id": "0.0.0.1",
@@ -380,7 +380,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x80000e1e"
                 },
                 {
-                    "advertising-router": "111.87.5.252",
+                    "advertising-router": "10.189.5.252",
                     "age": "413",
                     "checksum": "0xae5c",
                     "lsa-id": "0.0.0.2",
@@ -389,7 +389,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x8000178a"
                 },
                 {
-                    "advertising-router": "111.87.5.253",
+                    "advertising-router": "10.189.5.253",
                     "age": "2415",
                     "checksum": "0x13d7",
                     "lsa-id": "0.0.0.2",
@@ -398,7 +398,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x80001787"
                 },
                 {
-                    "advertising-router": "106.187.14.240",
+                    "advertising-router": "10.169.14.240",
                     "age": "1047",
                     "checksum": "0xbe92",
                     "lsa-id": "0.0.0.3",
@@ -407,7 +407,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x8000179e"
                 },
                 {
-                    "advertising-router": "111.87.5.252",
+                    "advertising-router": "10.189.5.252",
                     "age": "2913",
                     "checksum": "0x607c",
                     "lsa-id": "0.0.0.3",
@@ -416,7 +416,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "sequence-number": "0x80001789"
                 },
                 {
-                    "advertising-router": "111.87.5.252",
+                    "advertising-router": "10.189.5.252",
                     "age": "2413",
                     "checksum": "0xa440",
                     "lsa-id": "0.0.0.1",
