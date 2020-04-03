@@ -2,9 +2,8 @@
 import unittest
 from unittest.mock import Mock
 
-# ATS
-from pyats.topology import Device
-from pyats.topology import loader
+# PyATS
+from pyats.topology import (Device, loader)
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
@@ -19,7 +18,7 @@ class TestShowArp(unittest.TestCase):
     """
 
     device = Device(name='aDevice')
-
+    maxDiff = None
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''

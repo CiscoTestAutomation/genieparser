@@ -1,3 +1,9 @@
+"""show_arp.py
+
+JunOS parsers for the following show commands:
+    * show arp
+    * show arp | no-more
+"""
 # Python
 import re
 
@@ -7,7 +13,7 @@ from genie.metaparser.util.schemaengine import (Any,
         Optional, Use, SchemaTypeError, Schema)
 
 class ShowArpSchema(MetaParser):
-    """ Parser for:
+    """ Schema for:
             * show arp
             * show arp | no-more
     """
@@ -67,8 +73,8 @@ class ShowArp(ShowArpSchema):
         ret_dict = {}
 
         # 00:50:56:8d:2d:e1 1.0.0.1         1.0.0.1                   fxp0.0                  none
-        p1 = re.compile(r'^(?P<mac_address>[\w:]+) +(?P<address>\S+) +(?P<name>\S+) +'
-                r'(?P<interface>\S+) +(?P<flags>\S+)$')
+        p1 = re.compile(r'^(?P<mac_address>[\w:]+) +(?P<ip_address>\S+) +(?P<hostname>\S+) +'
+                r'(?P<interface_name>\S+) +(?P<arp_table_entry_flags>\S+)$')
         
         # Total entries: 7
         p2 = re.compile(r'^Total +entries: +(?P<total_entries>\d+)$')
@@ -80,19 +86,11 @@ class ShowArp(ShowArpSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                mac_address = group['mac_address']
-                address = group['address']
-                name = group['name']
-                interface = group['interface']
-                flags = group['flags']
                 arp_table_entry_list = ret_dict.setdefault('arp-table-information', {}). \
                     setdefault('arp-table-entry', [])
                 arp_table_entry_dict = {}
-                arp_table_entry_dict['interface-name'] = interface
-                arp_table_entry_dict['mac-address'] = mac_address
-                arp_table_entry_dict['ip-address'] = address
-                arp_table_entry_dict['hostname'] = name
-                arp_table_entry_dict['arp-table-entry-flags'] = flags
+                arp_table_entry_dict.update({k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None})
                 arp_table_entry_list.append(arp_table_entry_dict)
                 continue
         
