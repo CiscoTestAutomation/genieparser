@@ -60,6 +60,10 @@
         * show ospf neighbor
     * Added ShowOspf3Interface for:
         * show ospf3 interface
+    * Added ShowArp for:
+        * show arp
+    * Added ShowArpNoMore for:
+        * show arp | no-more
 
 
 --------------------------------------------------------------------------------
