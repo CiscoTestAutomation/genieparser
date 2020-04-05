@@ -258,6 +258,103 @@ class test_show_standby_all(unittest.TestCase):
       }
     }
 
+    golden_parsed_output2 = \
+    {
+    'GigabitEthernet1/0/1.100': {
+      'address_family': {
+        'ipv4': {
+          'version': {
+            2: {
+              'groups': {
+                0: {
+                  'active_router': 'local',
+                  'authentication': '5',
+                  'authentication_type': 'MD5',
+                  'default_priority': 100,
+                  'group_number': 0,
+                  'hsrp_router_state': 'active',
+                  'last_state_change': '1w0d',
+                  'local_virtual_mac_address': '0000.0cff.909f',
+                  'local_virtual_mac_address_conf': 'v2 '
+                  'default',
+                  'preempt': True,
+                  'preempt_min_delay': 5,
+                  'preempt_reload_delay': 10,
+                  'preempt_sync_delay': 20,
+                  'primary_ipv4_address': {
+                    'address': '192.168.1.254'
+                  },
+                  'priority': 100,
+                  'session_name': 'hsrp-Gi1/0/1-0',
+                  'standby_ip_address': '192.168.1.2',
+                  'standby_router': '192.168.1.2',
+                  'standby_priority': 100,
+                  'standby_expires_in': 10.624,
+                  'statistics': {
+                    'num_state_changes': 8
+                  },
+                  'timers': {
+                    'hello_msec_flag': False,
+                    'hello_sec': 5,
+                    'hold_msec_flag': False,
+                    'hold_sec': 20,
+                    'next_hello_sent': 2.848
+                  },
+                  'virtual_mac_address': '0000.0cff.909f',
+                  'virtual_mac_address_mac_in_use': True
+                  }
+                }
+              }
+            }
+          }
+      },
+      'interface': 'GigabitEthernet1/0/1.100',
+      'redirects_disable': False,
+      'use_bia': False
+    },
+    'GigabitEthernet1/0/1.200': {
+      'address_family': {
+        'ipv4': {
+          'version': {
+            1: {
+              'groups': {
+                10: {
+                  'active_router': 'unknown',
+                  'authentication': 'cisco123',
+                  'authentication_type': 'MD5',
+                  'configured_priority': 110,
+                  'group_number': 10,
+                  'hsrp_router_state': 'disabled',
+                  'local_virtual_mac_address': '0000.0cff.b311',
+                  'local_virtual_mac_address_conf': 'v1 '
+                  'default',
+                  'preempt': True,
+                  'primary_ipv4_address': {
+                    'address': 'unknown'
+                  },
+                  'priority': 110,
+                  'session_name': 'hsrp-Gi1/0/2-10',
+                  'standby_ip_address': 'unknown',
+                  'standby_router': 'unknown',
+                  'timers': {
+                    'hello_msec_flag': False,
+                    'hello_sec': 3,
+                    'hold_msec_flag': False,
+                    'hold_sec': 10
+                  },
+                  'virtual_mac_address': 'unknown',
+                  'virtual_mac_address_mac_in_use': False
+                  }
+                }
+              }
+            }
+          }
+      },
+      'interface': 'GigabitEthernet1/0/1.200',
+      'redirects_disable': False,
+      'use_bia': False
+    }
+    }
 
 
     golden_output = {'execute.return_value': '''
@@ -303,6 +400,37 @@ class test_show_standby_all(unittest.TestCase):
           Group name is "hsrp-Gi3-10" (default)
         '''}
 
+    golden_output2 = {'execute.return_value': '''
+        GigabitEthernet1/0/1.100 - Group 0 (version 2)
+          State is Active
+            8 state changes, last state change 1w0d
+            Track object 1 (unknown)
+          Virtual IP address is 192.168.1.254
+          Active virtual MAC address is 0000.0cff.909f (MAC In Use)
+            Local virtual MAC address is 0000.0cff.909f (v2 default)
+          Hello time 5 sec, hold time 20 sec
+            Next hello sent in 2.848 secs
+          Authentication MD5, key-chain "5"
+          Preemption enabled, delay min 5 secs, reload 10 secs, sync 20 secs
+          Active router is local
+          Standby router is 192.168.1.2, priority 100 (expires in 10.624 sec)
+          Priority 100 (default 100)
+          Group name is "hsrp-Gi1/0/1-0" (default)
+        GigabitEthernet1/0/1.200 - Group 10
+          State is Disabled
+          Virtual IP address is unknown
+          Active virtual MAC address is unknown (MAC Not In Use)
+            Local virtual MAC address is 0000.0cff.b311 (v1 default)
+          Hello time 3 sec, hold time 10 sec
+          Authentication MD5, key-chain "cisco123"
+          Preemption enabled
+          Active router is unknown
+          Standby router is unknown
+          Priority 110 (configured 110)
+          Group name is "hsrp-Gi1/0/2-10" (default)
+        '''}
+    
+
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -310,13 +438,21 @@ class test_show_standby_all(unittest.TestCase):
         parsed_output = standby_all_obj.parse()
         #import pprint ; pprint.pprint(parsed_output)
         self.assertEqual(parsed_output,self.golden_parsed_output)
+    
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        standby_all_obj2 = ShowStandbyAll(device=self.device)
+        parsed_output2 = standby_all_obj2.parse()
+        #import pprint ; pprint.pprint(parsed_output)
+        self.assertEqual(parsed_output2,self.golden_parsed_output2)
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         standby_all_obj = ShowStandbyAll(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = standby_all_obj.parse()
-
+    
 # =========================================
 #   Unit test for 'show standby delay'
 # =========================================
