@@ -102,12 +102,12 @@ class TestShowOspf3NeighborExtensive(unittest.TestCase):
                     "interface-name": "ge-0/0/0.0",
                     "neighbor-address": "fe80::250:56ff:fe8d:53c0",
                     "neighbor-adjacency-time": {
-                        "text": "3w0d 17:07:00"
+                        "#text": "3w0d 17:07:00"
                     },
                     "neighbor-id": "111.87.5.253",
                     "neighbor-priority": "128",
                     "neighbor-up-time": {
-                        "text": "3w0d 17:07:00"
+                        "#text": "3w0d 17:07:00"
                     },
                     "options": "0x13",
                     "ospf-area": "0.0.0.8",
@@ -121,12 +121,12 @@ class TestShowOspf3NeighborExtensive(unittest.TestCase):
                     "interface-name": "ge-0/0/1.0",
                     "neighbor-address": "fe80::250:56ff:fe8d:72bd",
                     "neighbor-adjacency-time": {
-                        "text": "3w0d 17:06:55"
+                        "#text": "3w0d 17:06:55"
                     },
                     "neighbor-id": "106.187.14.240",
                     "neighbor-priority": "128",
                     "neighbor-up-time": {
-                        "text": "3w0d 17:06:59"
+                        "#text": "3w0d 17:06:59"
                     },
                     "options": "0x13",
                     "ospf-area": "0.0.0.8",
@@ -185,12 +185,12 @@ class TestShowOspf3NeighborDetail(unittest.TestCase):
                     "interface-name": "ge-0/0/0.0",
                     "neighbor-address": "fe80::250:56ff:fe8d:53c0",
                     "neighbor-adjacency-time": {
-                        "text": "3w0d 17:06:45"
+                        "#text": "3w0d 17:06:45"
                     },
                     "neighbor-id": "111.87.5.253",
                     "neighbor-priority": "128",
                     "neighbor-up-time": {
-                        "text": "3w0d 17:06:45"
+                        "#text": "3w0d 17:06:45"
                     },
                     "options": "0x13",
                     "ospf-area": "0.0.0.8",
@@ -204,12 +204,12 @@ class TestShowOspf3NeighborDetail(unittest.TestCase):
                     "interface-name": "ge-0/0/1.0",
                     "neighbor-address": "fe80::250:56ff:fe8d:72bd",
                     "neighbor-adjacency-time": {
-                        "text": "3w0d 17:06:40"
+                        "#text": "3w0d 17:06:40"
                     },
                     "neighbor-id": "106.187.14.240",
                     "neighbor-priority": "128",
                     "neighbor-up-time": {
-                        "text": "3w0d 17:06:44"
+                        "#text": "3w0d 17:06:44"
                     },
                     "options": "0x13",
                     "ospf-area": "0.0.0.8",

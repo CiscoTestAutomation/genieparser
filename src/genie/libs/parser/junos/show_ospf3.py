@@ -131,12 +131,12 @@ class ShowOspf3NeighborExtensiveSchema(MetaParser):
             "interface-name": str,
             "neighbor-address": str,
             "neighbor-adjacency-time": {
-                "text": str
+                "#text": str
             },
             "neighbor-id": str,
             "neighbor-priority": str,
             "neighbor-up-time": {
-                "text": str
+                "#text": str
             },
             "options": str,
             "ospf-area": str,
@@ -237,8 +237,8 @@ class ShowOspf3NeighborExtensive(ShowOspf3NeighborExtensiveSchema):
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                ospf3_entry_dict['neighbor-adjacency-time'] = {'text': group['adjacent']}
-                ospf3_entry_dict['neighbor-up-time'] = {'text': group['up']}
+                ospf3_entry_dict['neighbor-adjacency-time'] = {'#text': group['adjacent']}
+                ospf3_entry_dict['neighbor-up-time'] = {'#text': group['up']}
                 ospf3_entry_list.append(ospf3_entry_dict)
                 continue
         
