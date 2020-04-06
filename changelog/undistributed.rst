@@ -73,6 +73,8 @@
         * show arp
     * Added ShowArpNoMore for:
         * show arp | no-more
+    * Added ShowOspf3Database for:
+        * show ospf3 database
 
 
 --------------------------------------------------------------------------------
