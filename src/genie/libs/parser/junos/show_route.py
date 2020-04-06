@@ -4,6 +4,9 @@ JUNOS parsers for the following commands:
 
     * show route table {table}
     * show route table {table} {prefix}
+    * show route protocol {protocol} table {table}
+    * show route protocol {protocol}
+    * show route protocol {protocol} {ip_address}
 
 '''
 
