@@ -450,6 +450,48 @@ class ShowRouteProtocolTable(ShowRouteProtocol):
     """ Parser for:
             * show route protocol {protocol} table {table}
     """
+    """
+        schema = {
+            Optional("@xmlns:junos"): str,
+            "route-information": {
+                Optional("@xmlns"): str,
+                "route-table": {
+                    "active-route-count": str,
+                    "destination-count": str,
+                    "hidden-route-count": str,
+                    "holddown-route-count": str,
+                    "rt": [
+                        {
+                            Optional("@junos:style"): str,
+                            "rt-destination": str,
+                            "rt-entry": {
+                                "active-tag": str,
+                                "age": {
+                                    "#text": str,
+                                    Optional("@junos:seconds"): str
+                                },
+                                "current-active": str,
+                                "last-active": str,
+                                "metric": str,
+                                "nh": {
+                                    "selected-next-hop": str,
+                                    "to": str,
+                                    "via": str
+                                },
+                                "nh-type": str,
+                                "preference": str,
+                                "preference2": str,
+                                "protocol-name": str,
+                                "rt-tag": str
+                            }
+                        }
+                    ],
+                    "table-name": str,
+                    "total-route-count": str
+                }
+            }
+        }
+    """
     cli_command = 'show route protocol {protocol} table {table}'
     def cli(self, protocol, table, output=None):
         if not output:
