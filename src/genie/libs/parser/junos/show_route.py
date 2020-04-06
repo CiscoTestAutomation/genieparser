@@ -11,12 +11,14 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
-
+from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema
+from genie.metaparser.util.exceptions import SchemaTypeError
 '''
 Schema for:
     * show route table {table}
     * show route table {table} {prefix}
+    * show route protocol {protocol} {ip_address}
+    * show route protocol {protocol} {ip_address} | no-more
 '''
 class ShowRouteTableSchema(MetaParser):
 
@@ -164,3 +166,191 @@ class ShowRouteTable(ShowRouteTableSchema):
                 continue
         
         return parsed_output
+
+class ShowRouteProtocolSchema(MetaParser):
+    """ Schema for:
+            * show route protocol {protocol} {ip_address}
+    """
+    """
+        schema = {
+            "route-information": {
+                "route-table": [
+                    {
+                        "active-route-count": str,
+                        "destination-count": str,
+                        "hidden-route-count": str,
+                        "holddown-route-count": str,
+                        "rt": {
+                            "rt-destination": str,
+                            "rt-entry": {
+                                "active-tag": str,
+                                "age": str,
+                                "nh": {
+                                    "to": str,
+                                    "via": str
+                                },
+                                "preference": str,
+                                "protocol-name": str
+                            }
+                        },
+                        "table-name": str,
+                        "total-route-count": str
+                    }
+                ]
+            }
+        }
+    """
+    def validate_route_table_list(value):
+        # Pass route-table list of dict in value
+        if not isinstance(value, list):
+            raise SchemaTypeError('route-table is not a list')
+        # Create RouteEntry Schema
+        route_entry_schema = Schema({
+                "active-route-count": str,
+                "destination-count": str,
+                "hidden-route-count": str,
+                "holddown-route-count": str,
+                Optional("rt"): {
+                    "rt-destination": str,
+                    "rt-entry": {
+                        "active-tag": str,
+                        "age": str,
+                        "nh": {
+                            "to": str,
+                            "via": str
+                        },
+                        "preference": str,
+                        "protocol-name": str
+                    }
+                },
+                "table-name": str,
+                "total-route-count": str
+            })
+        # Validate each dictionary in list
+        for item in value:
+            route_entry_schema.validate(item)
+        return value
+
+    # Main Schema
+    schema = {
+        'route-information': {
+            'route-table': Use(validate_route_table_list)
+        }
+    }
+
+class ShowRouteProtocol(ShowRouteProtocolSchema):
+    """ Parser for:
+            * show route protocol {protocol} {ip_address}
+    """
+    cli_command = 'show route protocol {protocol} {ip_address}'
+    def cli(self, protocol, ip_address, output=None):
+        if not output:
+            cmd = self.cli_command.format(
+                protocol=protocol,
+                ip_address=ip_address)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # inet.0: 932 destinations, 1618 routes (932 active, 0 holddown, 0 hidden)
+        p1 = re.compile(r'^(?P<table_name>\S+): +(?P<destination_count>\d+) +'
+                r'destinations, +(?P<total_route_count>\d+) +routes +'
+                r'\((?P<active_route_count>\d+) +active, +(?P<holddown>\d+) +'
+                r'holddown, +(?P<hidden>\d+) +hidden\)$')
+        
+        # 10.169.14.240/32  *[Static/5] 5w2d 15:42:25
+        p2 = re.compile(r'^((?P<rt_destination>\S+) +)?(?P<active_tag>[\*\+\-])'
+                r'\[(?P<protocol>Static)\/(?P<preference>\d+)\] +'
+                r'(?P<text>[\S ]+)$')
+        
+        # >  to 10.169.14.121 via ge-0/0/1.0
+        p3 = re.compile(r'^\> +to +(?P<to>\S+) +via +(?P<via>\S+)$')
+
+        # 2001:db8:eb18:ca45::1/128
+        p4 = re.compile(r'^(?P<rt_destination>[\w:\/]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 10.169.14.240/32  *[Static/5] 5w2d 15:42:25
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                table_name = group['table_name']
+                destination_count = group['destination_count']
+                total_route_count = group['total_route_count']
+                active_route_count = group['active_route_count']
+                holddown = group['holddown']
+                hidden = group['hidden']
+                route_information_dict = ret_dict.setdefault('route-information', {})
+                route_table_list = route_information_dict.setdefault('route-table', [])
+                route_table_dict = {}
+                route_table_dict.update({'active-route-count': active_route_count})
+                route_table_dict.update({'destination-count': destination_count})
+                route_table_dict.update({'hidden-route-count': hidden})
+                route_table_dict.update({'holddown-route-count': holddown})
+                route_table_dict.update({'table-name': table_name})
+                route_table_dict.update({'total-route-count': total_route_count})
+                route_table_list.append(route_table_dict)
+                continue
+            
+            # 10.169.14.240/32  *[Static/5] 5w2d 15:42:25
+            m = p2.match(line) 
+            if m:
+                group = m.groupdict()
+                rt_destination = group['rt_destination']
+                active_tag = group['active_tag']
+                protocol = group['protocol']
+                preference = group['preference']
+                text = group['text']
+                rt_dict = route_table_dict.setdefault('rt', {})
+                if rt_destination:
+                    rt_dict.update({'rt-destination': rt_destination})
+                rt_entry_dict = {}
+                rt_entry_dict.update({'active-tag': active_tag})
+                rt_entry_dict.update({'protocol-name': protocol})
+                rt_entry_dict.update({'preference': preference})
+                age_dict = rt_entry_dict.setdefault('age', text)
+                rt_dict.update({'rt-entry': rt_entry_dict})
+                continue
+
+            # >  to 10.169.14.121 via ge-0/0/1.0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                _to = group['to']
+                via = group['via']
+                nh_dict = rt_entry_dict.setdefault('nh', {})
+                nh_dict.update({'to': _to})
+                nh_dict.update({'via': via})
+                continue
+            
+            # 2001:db8:eb18:ca45::1/128
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                rt_destination = group['rt_destination']
+                rt_dict = route_table_dict.setdefault('rt', {})
+                rt_dict.update({'rt-destination': rt_destination})
+                continue
+            
+        return ret_dict
+
+class ShowRouteProtocolNoMore(ShowRouteProtocol):
+    """ Parser for:
+            * show route protocol static {ip_address} | no-more
+    """
+    cli_command = 'show route protocol {protocol} {ip_address} | no-more'
+    def cli(self, protocol, ip_address, output=None):
+        if not output:
+            cmd = self.cli_command.format(
+                    protocol=protocol,
+                    ip_address=ip_address)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        return super().cli(protocol=protocol,
+            ip_address=ip_address, output=out)
