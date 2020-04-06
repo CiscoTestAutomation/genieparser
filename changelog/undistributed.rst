@@ -12,10 +12,10 @@
     * Added ShowControllersNpuInterfaceInstanceLocation for:
         * show controllers npu {npu} interface {interface} instance {instance} location {location}
     * Added ShowControllersFiaDiagshellDiagEgrCalendarsLocation for:
-        * show controllers fia diagshell {diagshell} "diag egr_calendars" location {location} 
+        * show controllers fia diagshell {diagshell} "diag egr_calendars" location {location}
     * Added ShowControllersFiaDiagshellDiagCosqQpairEgpMap for:
         * show controllers fia diagshell 0 "diag cosq qpair egq map" location all
-    * Added ShowInstallSummary for 
+    * Added ShowInstallSummary for
         * show install summary
 
 * IOSXE
@@ -28,6 +28,7 @@
         * show install summary
     * Added ShowPlatformIntegrity for
         * show platform integrity
+
 * NXOS
     * Added ShowIpRouteSummary for:
         * show ip route summary
@@ -35,7 +36,7 @@
     * Added ShowInterfaceStatus for:
         * show interface status
         * show interface {interface} status
-* ASA 
+* ASA
     * Added ShowVPNSessionDBSummary for:
         * show vpn-sessiondb summary
     * Added ShowVPNLoadBalancing for:
@@ -53,10 +54,25 @@
         * show resource usage
     * Added ShowAspDrop for
         * show asp drop
+* JUNOS
+    * Added ShowBgpGroupBrief for:
+        * show bgp group brief
+    * Added ShowBgpGroupBriefNoMore for:
+        * show bgp group brief | no-more
+    * Added ShowBgpGroupDetail for:
+        * show bgp group detail
+    * Added ShowBgpGroupDetailNoMore for:
+        * show bgp group detail | no-more
 
 * JUNOS
     * Added ShowOspfNeighbor for:
         * show ospf neighbor
+    * Added ShowOspf3Interface for:
+        * show ospf3 interface
+    * Added ShowArp for:
+        * show arp
+    * Added ShowArpNoMore for:
+        * show arp | no-more
 
 
 --------------------------------------------------------------------------------
@@ -106,13 +122,18 @@
         * Update regex to support various output
     * Update ShowAccessLists
         * Update regex to support various output
+    * Update ShowVrf
+        * Update regex to support various output
     * Update ShowLldpEntry
         * Fix typo in the code
     * Update ShowIpMsdpPeer
         * Change key 'peer_as' into Optional to support various outputs
     * Update ShowBgpAllNeighbors:
         * Update regex to support various outputs.
-
+    * Update ShowIpBgpAllDetail:
+        * Fix the way that assigns value to key 'vrf'
+    * Update ShowStandbyAll:
+        * Update regex to support various outputs.
 * NXOS
     * Updated ShowInterface
         * Update regex to cover both 'IP' and 'ip', both 'Rx' and 'RX'
@@ -124,7 +145,7 @@
     * Update ShowIpInterfaceVrfAll
         * Changed wccp_* keys to be optional from mandatory to support new output
     * Update ShowPlatformInternalHalPolicyRedirdst:
-        * Changed keys rewrite_mac, rewrite_vnid, outgoing_l2_ifindex, 
+        * Changed keys rewrite_mac, rewrite_vnid, outgoing_l2_ifindex,
             outgoing_ifname, packets_hash as optional
     * Update ShowSystemInternalSysmgrServiceName:
         * Enhanced 'tag' key to support more output
@@ -133,7 +154,7 @@
     * Update ShowBgpInstanceSummary
         * Update regex to support various output
 
-* IOS 
+* IOS
     * Update ShowInterfaces
         * Update regex to support various output
 
