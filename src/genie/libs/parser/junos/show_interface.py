@@ -54,9 +54,9 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
 
     cli_command = [
         'show interfaces terse',
-        'show interfaces {interface} terse',
-        'show interfaces terse {interface}'
+        'show interfaces {interface} terse'
     ]
+
     exclude = [
         'duration'
     ]
@@ -154,13 +154,27 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
                 continue
         return ret_dict
 
-
 class ShowInterfacesTerseMatch(ShowInterfacesTerse):
     """ Parser for:
             - show interfaces terse | match {interface}
     """
 
     cli_command = 'show interfaces terse | match {interface}'
+
+    def cli(self, interface, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(interface=interface))
+        else:
+            out = output
+
+        return super().cli(output=out)
+
+class ShowInterfacesTerseInterface(ShowInterfacesTerse):
+    """ Parser for:
+            - 'show interfaces terse {interface}'
+    """
+
+    cli_command = 'show interfaces terse {interface}'
 
     def cli(self, interface, output=None):
         if output is None:
