@@ -8,7 +8,8 @@ from pyats.topology import Device, loader
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from genie.libs.parser.junos.show_route import ShowRouteTable
+from genie.libs.parser.junos.show_route import (ShowRouteTable,
+                                                ShowRouteProtocol)
 
 '''
 Unit test for:
@@ -224,6 +225,128 @@ class test_show_route_table(unittest.TestCase):
         obj = ShowRouteTable(device=self.device)
         parsed_output = obj.parse(table='inet.3')
         self.assertEqual(parsed_output, self.parsed_output_4)
+
+'''
+Unit test for:
+    * show route protocol {protocol} {ip_address}
+'''
+class TestShowRouteProtocol(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show route protocol static 10.169.14.240/32
+
+        inet.0: 932 destinations, 1618 routes (932 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
+
+        10.169.14.240/32  *[Static/5] 5w2d 15:42:25
+                            >  to 10.169.14.121 via ge-0/0/1.0
+
+        inet.3: 12 destinations, 12 routes (12 active, 0 holddown, 0 hidden)
+    '''}
+
+    golden_parsed_output = {
+        "route-information": {
+            "route-table": [
+                {
+                    "active-route-count": "932",
+                    "destination-count": "932",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": {
+                        "rt-destination": "10.169.14.240/32",
+                        "rt-entry": {
+                            "active-tag": "*",
+                            "age": "5w2d 15:42:25",
+                            "nh": {
+                                "to": "10.169.14.121",
+                                "via": "ge-0/0/1.0"
+                            },
+                            "preference": "5",
+                            "protocol-name": "Static"
+                        }
+                    },
+                    "table-name": "inet.0",
+                    "total-route-count": "1618"
+                },
+                {
+                    "active-route-count": "12",
+                    "destination-count": "12",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "table-name": "inet.3",
+                    "total-route-count": "12"
+                }
+            ]
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+        show route protocol static 2001:db8:eb18:ca45::1
+
+        inet6.0: 23 destinations, 24 routes (23 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
+
+        2001:db8:eb18:ca45::1/128
+                        *[Static/5] 3w5d 18:30:36
+                            >  to 2001:db8:eb18:6337::1 via ge-0/0/1.0
+    '''}
+
+    golden_parsed_output_2 = {
+        "route-information": {
+            "route-table": [
+                {
+                    "active-route-count": "23",
+                    "destination-count": "23",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": {
+                        "rt-destination": "2001:db8:eb18:ca45::1/128",
+                        "rt-entry": {
+                            "active-tag": "*",
+                            "age": "3w5d 18:30:36",
+                            "nh": {
+                                "to": "2001:db8:eb18:6337::1",
+                                "via": "ge-0/0/1.0"
+                            },
+                            "preference": "5",
+                            "protocol-name": "Static"
+                        }
+                    },
+                    "table-name": "inet6.0",
+                    "total-route-count": "24"
+                }
+            ]
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRouteProtocol(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(
+                protocol='static',
+                ip_address='10.169.14.240/32')
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowRouteProtocol(device=self.device)
+        parsed_output = obj.parse(
+            protocol='static',
+            ip_address='10.169.14.240/32')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+    
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowRouteProtocol(device=self.device)
+        parsed_output = obj.parse(
+            protocol='static',
+            ip_address='2001:db8:eb18:ca45::1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 if __name__ == '__main__':
     unittest.main()

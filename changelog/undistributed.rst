@@ -61,6 +61,16 @@
 * JUNOS
     * Added ShowOspfNeighbor for:
         * show ospf neighbor
+    * Added ShowRouteProtocol for:
+        * show route protocol {protocol} {ip_address}
+    * Added ShowRouteProtocolNoMore for:
+        * show route protocol {protocol} {ip_address} | no-more
+    * Added ShowOspf3Interface for:
+        * show ospf3 interface
+    * Added ShowArp for:
+        * show arp
+    * Added ShowArpNoMore for:
+        * show arp | no-more
 
 
 --------------------------------------------------------------------------------
