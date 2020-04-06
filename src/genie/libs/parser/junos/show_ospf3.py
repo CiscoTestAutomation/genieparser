@@ -178,17 +178,17 @@ class ShowOspf3Database(ShowOspf3DatabaseSchema):
             out = output
 
         #    OSPF3 database, Area 0.0.0.8
-        p1 = re.compile(r'^( *)OSPF3( +)database,( +)Area( +)'
+        p1 = re.compile(r'^OSPF3( +)database,( +)Area( +)'
             r'(?P<ospf_area>(\*{0,1})[0-9]{1,3}(\.[0-9]{1,3}){3})$')
 
         # Type       ID               Adv Rtr           Seq         Age  Cksum  Len
         # Router      0.0.0.0          10.34.2.250     0x800018ed  2407  0xaf2d  56
-        p2 = re.compile(r'^( *)(?P<lsa_type>\S+) +(?P<lsa_id>(\*{0,1})[0-9]{1,3}'
+        p2 = re.compile(r'^(?P<lsa_type>\S+) +(?P<lsa_id>(\*{0,1})[0-9]{1,3}'
             r'(\.[0-9]{1,3}){3}) +(?P<advertising_router>[0-9]{1,3}(\.[0-9]{1,3})'
             r'{3}) +(?P<sequence_number>\S+) +(?P<age>\d+) +(?P<checksum>\S+) +(?P<lsa_length>\d+)$')
 
         # OSPF3 Link-Local database, interface ge-0/0/0.0 Area 0.0.0.8
-        p3 = re.compile(r'^( *)OSPF3( +)Link-Local( +)database,( +)interface( +)'
+        p3 = re.compile(r'^OSPF3( +)Link-Local( +)database,( +)interface( +)'
             r'(?P<ospf_intf>\S+)( +)Area( +)(?P<ospf_area>[0-9]{1,3}(\.[0-9]{1,3}){3})$')
 
         ret_dict = {}
