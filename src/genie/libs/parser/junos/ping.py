@@ -1,6 +1,7 @@
 """ping.py
 
 JunOS parsers for the following show commands:
+    * ping {addr}
     * ping {addr} count {count} 
 """
 # Python
