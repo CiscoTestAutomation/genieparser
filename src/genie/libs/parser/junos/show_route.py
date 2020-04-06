@@ -422,11 +422,6 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
                 group = m.groupdict()
                 rt_destination = group['rt_destination']
                 continue
-        import json
-        json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
-        f = open("dict.txt","w")
-        f.write(json_data)
-        f.close()
         return ret_dict
 
 class ShowRouteProtocolNoMore(ShowRouteProtocol):
