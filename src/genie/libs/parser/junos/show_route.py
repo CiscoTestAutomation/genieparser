@@ -173,27 +173,42 @@ class ShowRouteProtocolSchema(MetaParser):
     """
     """
         schema = {
+            Optional("@xmlns:junos"): str,
             "route-information": {
+                Optional("@xmlns"): str,
                 "route-table": [
                     {
                         "active-route-count": str,
                         "destination-count": str,
                         "hidden-route-count": str,
                         "holddown-route-count": str,
-                        "rt": [{
-                            "rt-destination": str,
-                            "rt-entry": {
-                                "active-tag": str,
-                                "age": str,
-                                "nh": [{
-                                    "to": str,
-                                    "via": str,
-                                    "mpls-label": str,
-                                }],
-                                "preference": str,
-                                "protocol-name": str
+                        "rt": [
+                            {
+                                Optional("@junos:style"): str,
+                                "rt-destination": str,
+                                "rt-entry": {
+                                    "active-tag": str,
+                                    "age": {
+                                        "#text": str,
+                                        Optional("@junos:seconds"): str
+                                    },
+                                    "current-active": str,
+                                    "last-active": str,
+                                    "metric": str,
+                                    "nh": {
+                                        "mpls-label": str,
+                                        "selected-next-hop": str,
+                                        "to": str,
+                                        "via": str
+                                    },
+                                    "nh-type": str,
+                                    "preference": str,
+                                    "preference2": str,
+                                    "protocol-name": str,
+                                    "rt-tag": str
+                                }
                             }
-                        }],
+                        ],
                         "table-name": str,
                         "total-route-count": str
                     }
@@ -229,10 +244,14 @@ class ShowRouteProtocolSchema(MetaParser):
 
             # Create rt-list Entry Schema
             rt_schema = Schema({
+                    Optional("@junos:style"): str,
                     "rt-destination": str,
                     "rt-entry": {
                         Optional("active-tag"): str,
-                        "age": str,
+                        "age": {
+                            "#text": str,
+                            Optional("@junos:seconds"): str
+                        },
                         Optional("nh"): Use(validate_nh_list),
                         "preference": str,
                         "protocol-name": str,
@@ -266,7 +285,9 @@ class ShowRouteProtocolSchema(MetaParser):
 
     # Main Schema
     schema = {
+        Optional("@xmlns:junos"): str,
         'route-information': {
+            Optional("@xmlns"): str,
             'route-table': Use(validate_route_table_list)
         }
     }
@@ -370,7 +391,8 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
                     rt_entry_dict.update({'metric': metric})
                 if rt_tag:
                     rt_entry_dict.update({'rt-tag': rt_tag})
-                age_dict = rt_entry_dict.setdefault('age', text)
+                age_dict = rt_entry_dict.setdefault('age', {})
+                age_dict.update({'#text': text})
                 rt_dict.update({'rt-entry': rt_entry_dict})
                 if rt_destination:
                     rt_dict.update({'rt-destination': rt_destination})
@@ -426,7 +448,7 @@ class ShowRouteProtocolNoMore(ShowRouteProtocol):
 
 class ShowRouteProtocolTable(ShowRouteProtocol):
     """ Parser for:
-            * show route protocol {protocol} table {table} | no-more
+            * show route protocol {protocol} table {table}
     """
     cli_command = 'show route protocol {protocol} table {table}'
     def cli(self, protocol, table, output=None):
