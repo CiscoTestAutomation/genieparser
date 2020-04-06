@@ -423,3 +423,19 @@ class ShowRouteProtocolNoMore(ShowRouteProtocol):
         
         return super().cli(protocol=protocol,
             ip_address=ip_address, output=out)
+
+class ShowRouteProtocolTable(ShowRouteProtocol):
+    """ Parser for:
+            * show route protocol {protocol} table {table} | no-more
+    """
+    cli_command = 'show route protocol {protocol} table {table}'
+    def cli(self, protocol, table, output=None):
+        if not output:
+            cmd = self.cli_command.format(
+                    protocol=protocol,
+                    table=table)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        return super().cli(protocol=protocol, output=out)
