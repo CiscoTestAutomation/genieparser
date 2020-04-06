@@ -246,3 +246,68 @@ class ShowOspf3Database(ShowOspf3DatabaseSchema):
                 continue
 
         return ret_dict
+
+class ShowOspf3DatabaseExtensiveSchema(MetaParser):
+    '''
+    schema = {
+        "ospf3-database-information": {
+            "ospf3-area-header": {
+                "ospf-area": str
+            },
+            "ospf3-database": [
+                {
+                    "advertising-router": str,
+                    "age": str,
+                    "checksum": str,
+                    "lsa-id": str,
+                    "lsa-length": str,
+                    "lsa-type": str,
+                    "ospf-database-extensive": {
+                        "aging-timer": {
+                            "#text": str
+                        },
+                        "expiration-time": {},
+                        "installation-time": {},
+                        "lsa-change-count": str,
+                        "lsa-changed-time": {},
+                        "send-time": {}
+                    },
+                    "ospf3-router-lsa": {
+                        "bits": str,
+                        "ospf3-link": [
+                            {
+                                "link-intf-id": str,
+                                "link-metric": str,
+                                "link-type-name": str,
+                                "link-type-value": str,
+                                "nbr-intf-id": str,
+                                "nbr-rtr-id": str
+                            }
+                        ],
+                        "ospf3-lsa-topology": {
+                            "ospf-topology-id": str,
+                            "ospf-topology-name": str,
+                            "ospf3-lsa-topology-link": [
+                                {
+                                    "ospf-lsa-topology-link-metric": str,
+                                    "ospf-lsa-topology-link-node-id": str,
+                                    "ospf-lsa-topology-link-state": str
+                                }
+                            ]
+                        },
+                        "ospf3-options": str
+                    },
+                    "sequence-number": str
+                }
+            ],
+            "ospf3-intf-header": [
+                {
+                    "ospf-intf": str
+                }
+            ]
+        }
+    }
+    '''
+
+class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
+    pass
