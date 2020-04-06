@@ -28,6 +28,7 @@
         * show install summary
     * Added ShowPlatformIntegrity for
         * show platform integrity
+
 * NXOS
     * Added ShowIpRouteSummary for:
         * show ip route summary
@@ -53,6 +54,15 @@
         * show resource usage
     * Added ShowAspDrop for
         * show asp drop
+* JUNOS
+    * Added ShowBgpGroupBrief for:
+        * show bgp group brief
+    * Added ShowBgpGroupBriefNoMore for:
+        * show bgp group brief | no-more
+    * Added ShowBgpGroupDetail for:
+        * show bgp group detail
+    * Added ShowBgpGroupDetailNoMore for:
+        * show bgp group detail | no-more
 
 * JUNOS
     * Added ShowOspfNeighbor for:
@@ -63,6 +73,10 @@
         * show route protocol {protocol} {ip_address} | no-more
     * Added ShowOspf3Interface for:
         * show ospf3 interface
+    * Added ShowArp for:
+        * show arp
+    * Added ShowArpNoMore for:
+        * show arp | no-more
 
 
 --------------------------------------------------------------------------------
@@ -122,7 +136,8 @@
         * Update regex to support various outputs.
     * Update ShowIpBgpAllDetail:
         * Fix the way that assigns value to key 'vrf'
-
+    * Update ShowStandbyAll:
+        * Update regex to support various outputs.
 * NXOS
     * Updated ShowInterface
         * Update regex to cover both 'IP' and 'ip', both 'Rx' and 'RX'
