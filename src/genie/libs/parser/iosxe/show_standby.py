@@ -399,7 +399,7 @@ class ShowStandbyAll(ShowStandbyAllSchema):
             line = line.rstrip()
 
             # Ethernet4/1 - Group 0 (version 2)
-            p1 = re.compile(r'\s*(?P<intf>[a-zA-Z0-9\/]+) +\- +Group'
+            p1 = re.compile(r'\s*(?P<intf>[a-zA-Z0-9\/\.]+) +\- +Group'
                              ' +(?P<group>[0-9]+)'
                              ' *(?:\(version +(?P<version>[0-9]+)\))?$')
             m = p1.match(line)

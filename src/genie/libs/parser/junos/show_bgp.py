@@ -532,7 +532,7 @@ class ShowBgpGroupBriefNoMore(ShowBgpGroupBrief):
         else:
             out = output
         
-        return super().cli(output=output)
+        return super().cli(output=out)
 
 class ShowBgpGroupDetail(ShowBgpGroupBrief):
     """ Parser for:
@@ -562,4 +562,4 @@ class ShowBgpGroupDetailNoMore(ShowBgpGroupDetail):
         else:
             out = output
         
-        return super().cli(output=output)
+        return super().cli(output=out)
