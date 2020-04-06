@@ -72,7 +72,7 @@ class ShowArp(ShowArpSchema):
 
         ret_dict = {}
 
-        # 00:50:56:8d:2d:e1 1.0.0.1         1.0.0.1                   fxp0.0                  none
+        # 00:50:56:ff:ba:6f 10.1.0.1         10.1.0.1                   fxp0.0                  none
         p1 = re.compile(r'^(?P<mac_address>[\w:]+) +(?P<ip_address>\S+) +(?P<hostname>\S+) +'
                 r'(?P<interface_name>\S+) +(?P<arp_table_entry_flags>\S+)$')
         
@@ -82,7 +82,7 @@ class ShowArp(ShowArpSchema):
         for line in out.splitlines():
             line = line.strip()
             
-            # 00:50:56:8d:2d:e1 1.0.0.1         1.0.0.1                   fxp0.0                  none
+            # 00:50:56:ff:ba:6f 10.1.0.1         10.1.0.1                   fxp0.0                  none
             m = p1.match(line)
             if m:
                 group = m.groupdict()

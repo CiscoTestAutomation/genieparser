@@ -94,11 +94,11 @@ class Ping(PingSchema):
         
         ret_dict = {}
 
-        # PING 111.87.5.94 (111.87.5.94): 56 data bytes
+        # PING 10.189.5.94 (10.189.5.94): 56 data bytes
         p1 = re.compile(r'^PING +(?P<addr>\S+) +\(\S+\): +'
                 r'(?P<data_bytes>\d+) +data +bytes$')
 
-        # 64 bytes from 111.87.5.94: icmp_seq=0 ttl=62 time=2.261 ms
+        # 64 bytes from 10.189.5.94: icmp_seq=0 ttl=62 time=2.261 ms
         p2 = re.compile(r'^(?P<bytes>\d+) +bytes +from +(?P<from>\S+): +'
                 r'icmp_seq=(?P<icmp_seq>\d+) +ttl=(?P<ttl>\d+) +'
                 r'time=(?P<time>\S+) +ms$')
@@ -116,7 +116,7 @@ class Ping(PingSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # PING 111.87.5.94 (111.87.5.94): 56 data bytes
+            # PING 10.189.5.94 (10.189.5.94): 56 data bytes
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -124,7 +124,7 @@ class Ping(PingSchema):
                 ping_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
             
-            # 64 bytes from 111.87.5.94: icmp_seq=0 ttl=62 time=2.261 ms
+            # 64 bytes from 10.189.5.94: icmp_seq=0 ttl=62 time=2.261 ms
             m = p2.match(line)
             if m:
                 group = m.groupdict()

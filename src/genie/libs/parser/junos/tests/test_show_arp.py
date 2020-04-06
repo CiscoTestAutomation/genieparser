@@ -24,13 +24,13 @@ class TestShowArp(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         show arp
         MAC Address       Address         Name                      Interface               Flags
-        00:50:56:8d:2d:e1 1.0.0.1         1.0.0.1                   fxp0.0                  none
-        00:50:56:8d:fd:53 1.0.0.201       1.0.0.201                 fxp0.0                  none
-        50:3d:e5:cf:5f:36 27.86.198.26    27.86.198.26              ge-0/0/2.0              none
-        00:50:56:8d:05:76 100.0.0.1       100.0.0.1                 ge-0/0/3.0              none
-        00:50:56:8d:72:bd 106.187.14.121  106.187.14.121            ge-0/0/1.0              none
-        00:50:56:8d:53:c0 111.87.5.94     111.87.5.94               ge-0/0/0.0              none
-        00:50:56:8d:38:36 128.0.0.16      fpc0                      em1.0                   none
+        00:50:56:ff:ba:6f 10.1.0.1         10.1.0.1                   fxp0.0                  none
+        00:50:56:ff:8b:e0 10.1.0.201       10.1.0.201                 fxp0.0                  none
+        50:3d:e5:ff:2f:06 10.19.198.26    10.19.198.26              ge-0/0/2.0              none
+        00:50:56:ff:92:04 10.55.0.1       10.55.0.1                 ge-0/0/3.0              none
+        00:50:56:ff:00:4b 10.169.14.121  10.169.14.121            ge-0/0/1.0              none
+        00:50:56:ff:e0:4e 10.189.5.94     10.189.5.94               ge-0/0/0.0              none
+        00:50:56:ff:c5:c3 172.16.64.16      fpc0                      em1.0                   none
         Total entries: 7
     '''}
     
@@ -40,52 +40,52 @@ class TestShowArp(unittest.TestCase):
             "arp-table-entry": [
                 {
                     "arp-table-entry-flags": "none",
-                    "hostname": "1.0.0.1",
+                    "hostname": "10.1.0.1",
                     "interface-name": "fxp0.0",
-                    "ip-address": "1.0.0.1",
-                    "mac-address": "00:50:56:8d:2d:e1"
+                    "ip-address": "10.1.0.1",
+                    "mac-address": "00:50:56:ff:ba:6f"
                 },
                 {
                     "arp-table-entry-flags": "none",
-                    "hostname": "1.0.0.201",
+                    "hostname": "10.1.0.201",
                     "interface-name": "fxp0.0",
-                    "ip-address": "1.0.0.201",
-                    "mac-address": "00:50:56:8d:fd:53"
+                    "ip-address": "10.1.0.201",
+                    "mac-address": "00:50:56:ff:8b:e0"
                 },
                 {
                     "arp-table-entry-flags": "none",
-                    "hostname": "27.86.198.26",
+                    "hostname": "10.19.198.26",
                     "interface-name": "ge-0/0/2.0",
-                    "ip-address": "27.86.198.26",
-                    "mac-address": "50:3d:e5:cf:5f:36"
+                    "ip-address": "10.19.198.26",
+                    "mac-address": "50:3d:e5:ff:2f:06"
                 },
                 {
                     "arp-table-entry-flags": "none",
-                    "hostname": "100.0.0.1",
+                    "hostname": "10.55.0.1",
                     "interface-name": "ge-0/0/3.0",
-                    "ip-address": "100.0.0.1",
-                    "mac-address": "00:50:56:8d:05:76"
+                    "ip-address": "10.55.0.1",
+                    "mac-address": "00:50:56:ff:92:04"
                 },
                 {
                     "arp-table-entry-flags": "none",
-                    "hostname": "106.187.14.121",
+                    "hostname": "10.169.14.121",
                     "interface-name": "ge-0/0/1.0",
-                    "ip-address": "106.187.14.121",
-                    "mac-address": "00:50:56:8d:72:bd"
+                    "ip-address": "10.169.14.121",
+                    "mac-address": "00:50:56:ff:00:4b"
                 },
                 {
                     "arp-table-entry-flags": "none",
-                    "hostname": "111.87.5.94",
+                    "hostname": "10.189.5.94",
                     "interface-name": "ge-0/0/0.0",
-                    "ip-address": "111.87.5.94",
-                    "mac-address": "00:50:56:8d:53:c0"
+                    "ip-address": "10.189.5.94",
+                    "mac-address": "00:50:56:ff:e0:4e"
                 },
                 {
                     "arp-table-entry-flags": "none",
                     "hostname": "fpc0",
                     "interface-name": "em1.0",
-                    "ip-address": "128.0.0.16",
-                    "mac-address": "00:50:56:8d:38:36"
+                    "ip-address": "172.16.64.16",
+                    "mac-address": "00:50:56:ff:c5:c3"
                 }
             ]
         }
