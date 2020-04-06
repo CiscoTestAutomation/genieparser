@@ -4,7 +4,9 @@ from unittest.mock import Mock
 from pyats.topology import Device
 from pyats.topology import loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
-from genie.libs.parser.junos.show_ospf3 import ShowOspf3Interface
+from genie.libs.parser.junos.show_ospf3 import ShowOspf3Interface, \
+                                               ShowOspf3Overview, \
+                                               ShowOspf3OverviewExtensive
 
 class TestShowOspf3Interface(unittest.TestCase):
 
@@ -60,6 +62,148 @@ class TestShowOspf3Interface(unittest.TestCase):
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowOspf3Interface(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class TestShowOspf3Overview(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        Instance: master
+          Router ID: 111.87.5.252
+          Route table index: 0
+          AS boundary router
+          LSA refresh time: 50 minutes
+          Post Convergence Backup: Disabled
+          Area: 0.0.0.8
+            Stub type: Not Stub
+            Area border routers: 0, AS boundary routers: 5
+            Neighbors
+              Up (in full state): 2
+            Topology: default (ID 0)
+              Prefix export count: 1
+              Full SPF runs: 1934
+              SPF delay: 0.200000 sec, SPF holddown: 2 sec, SPF rapid runs: 3
+              Backup SPF: Not Needed
+    '''}
+
+    golden_parsed_output = {
+            "ospf3-overview-information": {
+                "ospf-overview": {
+                    "instance-name": "master",
+                    "ospf-area-overview": {
+                        "ospf-abr-count": "0",
+                        "ospf-area": "0.0.0.8",
+                        "ospf-asbr-count": "5",
+                        "ospf-nbr-overview": {
+                            "ospf-nbr-up-count": "2"
+                        },
+                        "ospf-stub-type": "Not Stub"
+                    },
+                    "ospf-lsa-refresh-time": "50",
+                    "ospf-route-table-index": "0",
+                    "ospf-router-id": "111.87.5.252",
+                    "ospf-tilfa-overview": {
+                        "ospf-tilfa-enabled": "Disabled"
+                    },
+                    "ospf-topology-overview": {
+                        "ospf-backup-spf-status": "Not Needed",
+                        "ospf-full-spf-count": "1934",
+                        "ospf-prefix-export-count": "1",
+                        "ospf-spf-delay": "0.200000",
+                        "ospf-spf-holddown": "2",
+                        "ospf-spf-rapid-runs": "3",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-name": "default"
+                    }
+            }
+        }
+        }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspf3Overview(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspf3Overview(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class TestShowOspf3OverviewExtensive(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        Instance: master
+          Router ID: 111.87.5.252
+          Route table index: 0
+          AS boundary router
+          LSA refresh time: 50 minutes
+          Post Convergence Backup: Disabled
+          Area: 0.0.0.8
+            Stub type: Not Stub
+            Area border routers: 0, AS boundary routers: 5
+            Neighbors
+              Up (in full state): 2
+          Topology: default (ID 0)
+            Prefix export count: 1
+            Full SPF runs: 1934
+            SPF delay: 0.200000 sec, SPF holddown: 2 sec, SPF rapid runs: 3
+            Backup SPF: Not Needed
+    '''}
+
+    golden_parsed_output = {
+            "ospf3-overview-information": {
+            "ospf-overview": {
+                "instance-name": "master",
+                "ospf-area-overview": {
+                    "ospf-abr-count": "0",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-asbr-count": "5",
+                    "ospf-nbr-overview": {
+                        "ospf-nbr-up-count": "2"
+                    },
+                    "ospf-stub-type": "Not Stub"
+                },
+                "ospf-lsa-refresh-time": "50",
+                "ospf-route-table-index": "0",
+                "ospf-router-id": "111.87.5.252",
+                "ospf-tilfa-overview": {
+                    "ospf-tilfa-enabled": "Disabled"
+                },
+                "ospf-topology-overview": {
+                    "ospf-backup-spf-status": "Not Needed",
+                    "ospf-full-spf-count": "1934",
+                    "ospf-prefix-export-count": "1",
+                    "ospf-spf-delay": "0.200000",
+                    "ospf-spf-holddown": "2",
+                    "ospf-spf-rapid-runs": "3",
+                    "ospf-topology-id": "0",
+                    "ospf-topology-name": "default"
+                }
+            }
+        }
+        }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspf3OverviewExtensive(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspf3OverviewExtensive(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
