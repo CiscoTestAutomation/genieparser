@@ -305,12 +305,9 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
                 protocol = group['protocol']
                 preference = group['preference']
                 text = group['text']
-                try:
-                    rt_dict = route_table_dict.setdefault('rt', )
-                    if rt_destination:
-                        rt_dict.update({'rt-destination': rt_destination})
-                except Exception:
-                    print(line)
+                rt_dict = route_table_dict.setdefault('rt', {})
+                if rt_destination:
+                    rt_dict.update({'rt-destination': rt_destination})
                 rt_entry_dict = {}
                 rt_entry_dict.update({'active-tag': active_tag})
                 rt_entry_dict.update({'protocol-name': protocol})
