@@ -5,6 +5,7 @@ JUNOS parsers for the following commands:
     * show route table {table}
     * show route table {table} {prefix}
     * show route protocol {protocol} extensive
+    * show route protocol {protocol} table {table} extensive
 '''
 
 import re
@@ -487,7 +488,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                 "rt-destination": str,
                 Optional("rt-entry"): {
                     Optional("active-tag"): str,
-                    "age": {
+                    Optional("age"): {
                         "#text": str,
                         Optional("@junos:seconds"): str
                     },
@@ -504,7 +505,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                     Optional("inactive-reason"): str,
                     Optional("last-active"): str,
                     "local-as": str,
-                    "metric": str,
+                    Optional("metric"): str,
                     Optional("nh"): Use(validate_nh_list),
                     "nh-address": str,
                     "nh-index": str,
@@ -613,7 +614,8 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         p10 = re.compile(r'^Local +AS: (?P<local_as>\d+)$')
 
         # Age: 3w2d 4:43:35   Metric: 101 
-        p11 = re.compile(r'^Age:\s+(?P<age>\w+\s+\S+)\s+Metric:\s+(?P<metric>\d+)$')
+        # Age: 3:07:25    Metric: 200
+        p11 = re.compile(r'^Age:\s+(?P<age>\w+(\s+\S+)?)\s+Metric:\s+(?P<metric>\d+)$')
 
         # Validation State: unverified 
         p12 = re.compile(r'^Validation +State: +(?P<validation_state>\S+)$')
@@ -934,3 +936,20 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 continue
 
         return ret_dict
+
+class ShowRouteProtocolTableExtensive(ShowRouteProtocolExtensive):
+    """ Parser for:
+            * show route protocol {protocol} table {table} extensive
+    """
+    
+    cli_command = 'show route protocol {protocol} table {table} extensive'
+    def cli(self, protocol, table, output=None):
+        if not output:
+            cmd = self.cli_command.format(
+                protocol=protocol,
+                table=table)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        return super().cli(protocol=protocol, output=out)
