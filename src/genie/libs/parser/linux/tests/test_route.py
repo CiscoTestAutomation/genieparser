@@ -16,8 +16,13 @@ from genie.libs.parser.linux.route import Route,\
 #############################################################################
 
 class TestRoute(unittest.TestCase):
+    '''
+    Unit test for
+        * route
+    '''
+    
     device = Device(name='aDevice')
-
+    maxDiff = None
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
@@ -94,7 +99,6 @@ class TestRoute(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = Route(device=self.device)
         parsed_output = obj.parse()
-        self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
@@ -103,8 +107,13 @@ class TestRoute(unittest.TestCase):
 #############################################################################
 
 class TestNetstatRn(unittest.TestCase):
+    '''
+    Unit test for
+        * netstat -rn
+    '''
+    
     device = Device(name='aDevice')
-
+    maxDiff = None
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
@@ -181,7 +190,6 @@ class TestNetstatRn(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = NetstatRn(device=self.device)
         parsed_output = obj.parse()
-        self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
