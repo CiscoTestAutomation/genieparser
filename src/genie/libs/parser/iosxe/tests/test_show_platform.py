@@ -39,7 +39,7 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowProcessesMemory, \
                                                   ShowProcessesMemorySorted, \
                                                   ShowPlatformIntegrity
-
+import genie.gre
 # ============================
 # Unit test for 'show bootvar'
 # ============================
@@ -2565,7 +2565,6 @@ class TestShowInventory(unittest.TestCase):
         PID: ASR-920-FAN-M     , VID: V01  , SN: CAT1903V028
         '''}
 
-
     golden_parsed_output_asr1002 = {
         'main': {
             'chassis': {
@@ -3250,6 +3249,166 @@ class TestShowInventory(unittest.TestCase):
     PID: ISR4451-X/K9 , VID: , SN:
     '''}
 
+    golden_output_2 = {'execute.return_value': '''
+        +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        
+        INFO: Please use "show license UDI" to get serial number for licensing.
+        
+        +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        
+         
+        
+        NAME: "Chassis", DESCR: "Cisco C1111-8PLTELA Chassis"
+        
+        PID: C1111-8PLTELA     , VID: V01  , SN: FGL221190VF
+        
+         
+        
+        NAME: "Power Supply Module 0", DESCR: "External Power Supply Module"
+        
+        PID: PWR-12V           , VID: V01  , SN: JAB0929092D
+        
+         
+        
+        NAME: "module 0", DESCR: "Cisco C1111-8PLTELA Built-In NIM controller"
+        
+        PID: C1111-8PLTELA     , VID:      , SN:
+        
+         
+        
+        NAME: "NIM subslot 0/0", DESCR: "Front Panel 2 port Gigabitethernet Module"
+        
+        PID: C1111-2x1GE       , VID: V01  , SN:
+        
+         
+        
+        NAME: "NIM subslot 0/1", DESCR: "C1111-ES-8"
+        
+        PID: C1111-ES-8        , VID: V01  , SN:
+        
+         
+        
+        NAME: "NIM subslot 0/2", DESCR: "C1111-LTE Module"
+        
+        PID: C1111-LTE         , VID: V01  , SN:
+        
+         
+        
+        NAME: "Modem 0 on Cellular0/2/0", DESCR: "Sierra Wireless EM7455/EM7430"
+        
+        PID: EM7455/EM7430     , VID: 1.0  , SN: 355813070074072
+        
+         
+        
+        NAME: "module R0", DESCR: "Cisco C1111-8PLTELA Route Processor"
+        
+        PID: C1111-8PLTELA     , VID: V01  , SN: FOC21520MF1
+        
+         
+        
+        NAME: "module F0", DESCR: "Cisco C1111-8PLTELA Forwarding Processor"
+        
+        PID: C1111-8PLTELA     , VID:      , SN:
+    '''}
+
+    golden_parsed_output_2 = {
+        'main': {
+            'chassis': {
+                'C1111-8PLTELA': {
+                    'descr': 'Cisco C1111-8PLTELA Chassis',
+                    'name': 'Chassis',
+                    'pid': 'C1111-8PLTELA',
+                    'sn': 'FGL221190VF',
+                    'vid': 'V01',
+                },
+            },
+        },
+        'slot': {
+            '0': {
+                'lc': {
+                    'C1111-8PLTELA': {
+                        'descr': 'Cisco C1111-8PLTELA Built-In NIM controller',
+                        'name': 'module 0',
+                        'pid': 'C1111-8PLTELA',
+                        'sn': '',
+                        'subslot': {
+                            '0': {
+                                'C1111-2x1GE': {
+                                    'descr': 'Front Panel 2 port Gigabitethernet Module',
+                                    'name': 'NIM subslot 0/0',
+                                    'pid': 'C1111-2x1GE',
+                                    'sn': '',
+                                    'vid': 'V01',
+                                },
+                            },
+                            '1': {
+                                'C1111-ES-8': {
+                                    'descr': 'C1111-ES-8',
+                                    'name': 'NIM subslot 0/1',
+                                    'pid': 'C1111-ES-8',
+                                    'sn': '',
+                                    'vid': 'V01',
+                                },
+                            },
+                            '2': {
+                                'C1111-LTE': {
+                                    'descr': 'C1111-LTE Module',
+                                    'name': 'NIM subslot 0/2',
+                                    'pid': 'C1111-LTE',
+                                    'sn': '',
+                                    'vid': 'V01',
+                                },
+                            },
+                            '2/0': {
+                                'EM7455/EM7430': {
+                                    'descr': 'Sierra Wireless EM7455/EM7430',
+                                    'name': 'Modem 0 on Cellular0/2/0',
+                                    'pid': 'EM7455/EM7430',
+                                    'sn': '355813070074072',
+                                    'vid': '1.0',
+                                },
+                            },
+                        },
+                        'vid': '',
+                    },
+                },
+            },
+            'F0': {
+                'other': {
+                    'C1111-8PLTELA': {
+                        'descr': 'Cisco C1111-8PLTELA Forwarding Processor',
+                        'name': 'module F0',
+                        'pid': 'C1111-8PLTELA',
+                        'sn': '',
+                        'vid': '',
+                    },
+                },
+            },
+            'P0': {
+                'other': {
+                    'PWR-12V': {
+                        'descr': 'External Power Supply Module',
+                        'name': 'Power Supply Module 0',
+                        'pid': 'PWR-12V',
+                        'sn': 'JAB0929092D',
+                        'vid': 'V01',
+                    },
+                },
+            },
+            'R0': {
+                'rp': {
+                    'C1111-8PLTELA': {
+                        'descr': 'Cisco C1111-8PLTELA Route Processor',
+                        'name': 'module R0',
+                        'pid': 'C1111-8PLTELA',
+                        'sn': 'FOC21520MF1',
+                        'vid': 'V01',
+                    },
+                },
+            },
+        },
+    }
+
     def test_show_inventory_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -3312,6 +3471,13 @@ class TestShowInventory(unittest.TestCase):
         inventory_obj = ShowInventory(device=self.device)
         parsed_output = inventory_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        inventory_obj = ShowInventory(device=self.device)
+        parsed_output = inventory_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 class TestShowPlatform(unittest.TestCase):
     dev1 = Device(name='empty')
