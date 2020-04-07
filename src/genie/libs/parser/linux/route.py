@@ -96,7 +96,7 @@ class Route(RouteSchema):
 # =======================================================
 # Parser for 'netstat -rn'
 # =======================================================
-class NetstatRn(RouteSchema):
+class ShowNetworkStatusRoute(RouteSchema):
     """Parser for 
         * netstat -rn 
         """

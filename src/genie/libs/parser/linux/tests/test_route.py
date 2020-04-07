@@ -8,7 +8,7 @@ from genie.metaparser.util.exceptions import (SchemaMissingKeyError,
                                               SchemaEmptyParserError)
 
 from genie.libs.parser.linux.route import Route,\
-                                          NetstatRn
+                                          ShowNetworkStatusRoute
 
 
 #############################################################################
@@ -182,13 +182,13 @@ class TestNetstatRn(unittest.TestCase):
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
-        obj = NetstatRn(device=self.device1)
+        obj = ShowNetworkStatusRoute(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        obj = NetstatRn(device=self.device)
+        obj = ShowNetworkStatusRoute(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
