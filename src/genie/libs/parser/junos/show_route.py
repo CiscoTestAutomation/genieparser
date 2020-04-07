@@ -584,7 +584,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 r'holddown, +(?P<hidden_route_count>\d+) hidden\)$')
 
         # 0.0.0.0/0 (1 entry, 1 announced)
-        # 1.0.0.0/24 (2 entries, 1 announced)
+        # 10.1.0.0/24 (2 entries, 1 announced)
         p2 = re.compile(r'^(?P<rt_destination>\S+)(\/(?P<rt_prefix_length>\d+))? +\((?P<format>(?P<text>\d+) +(entry|entries)), +(?P<announced>\d+) +announced\)$')
 
         # State: <FlashAll>
@@ -603,7 +603,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         # Next-hop reference count: 458
         p7 = re.compile(r'^Next-hop +reference +count: +(?P<nh_reference_count>\d+)$')
 
-        # Next hop: 106.187.14.121 via ge-0/0/1.0 weight 0x1, selected
+        # Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
         p8 = re.compile(r'^(?P<nh_string>Next +hop): +(?P<to>\S+) +via +(?P<via>\S+)( +weight +(?P<weight>\w+))?(, +(?P<selected_next_hop>\w+))?$')
 
         # Session Id: 0x141
@@ -630,7 +630,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         # AS path: I 
         p16 = re.compile(r'^(?P<aspath_effective_string>AS +path:) +(?P<attr_value>\S+)$')
 
-        # KRT in-kernel 0.0.0.0/0 -> {106.187.14.121}
+        # KRT in-kernel 0.0.0.0/0 -> {10.169.14.121}
         p17 = re.compile(r'^(?P<text>KRT +in-kernel+[\S\s]+)$')
 
         # Inactive reason: Route Preference
@@ -685,7 +685,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 continue
 
             # 0.0.0.0/0 (1 entry, 1 announced)
-            # 1.0.0.0/24 (2 entries, 1 announced)
+            # 10.1.0.0/24 (2 entries, 1 announced)
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -760,7 +760,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 rt_entry_dict.update({'nh-reference-count': group['nh_reference_count']})
                 continue
 
-            # Next hop: 106.187.14.121 via ge-0/0/1.0 weight 0x1, selected
+            # Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
             m = p8.match(line)
             if m:
                 group = m.groupdict()
@@ -838,7 +838,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 attr_as_path_dict.update({'attr-value': group['attr_value']})
                 continue
 
-            # KRT in-kernel 0.0.0.0/0 -> {106.187.14.121}
+            # KRT in-kernel 0.0.0.0/0 -> {10.169.14.121}
             m = p17.match(line)
             if m:
                 group = m.groupdict()
