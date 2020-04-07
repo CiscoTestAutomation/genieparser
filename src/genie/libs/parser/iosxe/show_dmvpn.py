@@ -27,23 +27,24 @@ class ShowDmvpnSchema(MetaParser):
             Any(): {
                 'nhrp_peers': int,
                 'type': str,
-                'peers': {
-                    Any(): { # ipv4 or ipv6
-                        Any(): { # Peer NBMA Addr
-                            'ent': int,
-                            'tunnel_addr': {
-                                Any(): {
-                                    'attrb': {
-                                        Any(): {
-                                            'state': str,
-                                            'time': str,
+                'ent': {
+                    Any(): {
+                        'peers': {
+                            Any(): {
+                                'tunnel_addr': {
+                                    Any(): {
+                                        'attrb': {
+                                            Any(): {
+                                                'state': str,
+                                                'time': str,
+                                            }
                                         }
                                     }
                                 }
                             }
-                        },
-                    },
-                }
+                        }
+                    }
+                },
             },
         },
     }
@@ -82,7 +83,7 @@ class ShowDmvpn(ShowDmvpnSchema):
         parsed_dict = {}
 
         # Interface: Tunnel84, IPv4 NHRP Details
-        p1 = re.compile(r'Interface: +(?P<interface>\S+),')
+        p1 = re.compile(r'Interface: +(?P<interfaces>\S+),')
 
         # Type:Spoke, NHRP Peers:1,
         p2 = re.compile(r'Type:(?P<type>\S+),'
@@ -95,9 +96,8 @@ class ShowDmvpn(ShowDmvpnSchema):
         #                           172.30.90.25   UP    6d12h     S
         #     2 172.29.134.1       172.30.72.72    UP 00:29:40   DT2
         #                          172.30.72.72    UP 00:29:40   DT1
-
         p3 = re.compile(r'((?P<ent>(\d+))'
-                        r' +(?P<nbma_addr>[a-z0-9\.\:]+)'
+                        r' +(?P<peers>[a-z0-9\.\:]+)'
                         r' +)?(?P<tunnel_addr>[a-z0-9\.\:]+)'
                         r' +(?P<state>[a-zA-Z]+)'
                         r' +(?P<time>(\d+\w)+|never|[0-9\:]+)'
@@ -112,9 +112,9 @@ class ShowDmvpn(ShowDmvpnSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                interface = (group['interfaces'])
-                parsed_dict.setdefault('interfaces', {}).setdefault(
-                    interface, {}).setdefault('peers', {})
+                interface = group['interfaces']
+                interface_dict = parsed_dict.setdefault('interfaces', {}).\
+                                             setdefault(interface, {})
                 continue
 
             # Processes the matched line | Type:Spoke, NHRP Peers:1,
@@ -122,8 +122,8 @@ class ShowDmvpn(ShowDmvpnSchema):
 
             if m:
                 group = m.groupdict()
-                parsed_dict['interfaces'][interface]['type'] = group['type']
-                parsed_dict['interfaces'][interface]['nhrp_peers'] = int(group['nhrp_peers'])
+                interface_dict['type'] = group['type']
+                interface_dict['nhrp_peers'] = int(group['nhrp_peers'])
                 continue
 
             #   Ent  Peer NBMA Addr Peer Tunnel Add State  UpDn Tm Attrb
@@ -138,17 +138,17 @@ class ShowDmvpn(ShowDmvpnSchema):
                 group = m.groupdict()
 
                 # 1 172.29.0.1          172.30.90.1   IKE     3w5d     S
-                if group['ent'] and group['nbma_addr']:
-                    nbma_addr = group['nbma_addr']
+                if group['ent'] and group['peers']:
+
+                    ent = int(group['ent'])
+                    peers = group['peers']
                     tunnel_addr = group['tunnel_addr']
                     attrb = group['attrb']
 
-                    protocol = "ipv4" if re.match(r'\d+\.\d+\.\d+\.\d+', nbma_addr) else "ipv6"
-
-                    tunnel_addr_dict = parsed_dict['interfaces'][interface].setdefault('peers', {}).\
-                                                    setdefault(protocol, {}).\
-                                                    setdefault(nbma_addr, {}).\
-                                                    setdefault('tunnel_addr', {})
+                    interface_dict.setdefault('ent', {}).setdefault(ent, {})
+                    tunnel_addr_dict = interface_dict['ent'][ent].setdefault('peers', {}).\
+                                                                  setdefault(peers, {}).\
+                                                                  setdefault('tunnel_addr', {})
 
                     attrb_dict = tunnel_addr_dict.setdefault(tunnel_addr, {}).\
                                                     setdefault('attrb', {}).\
@@ -156,9 +156,6 @@ class ShowDmvpn(ShowDmvpnSchema):
 
                     attrb_dict['time'] = group['time']
                     attrb_dict['state'] = group['state']
-
-                    parsed_dict['interfaces'][interface]['peers']\
-                               [protocol][nbma_addr]['ent'] = int(group['ent'])
 
                 # 172.30.90.25   UP    6d12h     S
                 else:

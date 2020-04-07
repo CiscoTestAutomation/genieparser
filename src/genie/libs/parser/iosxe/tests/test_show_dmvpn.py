@@ -17,7 +17,9 @@ from genie.libs.parser.iosxe.show_dmvpn import ShowDmvpn
 # Unit test for 'show dmvpn'
 # =================================
 class TestShowDmvpn(unittest.TestCase):
-    """Unit test for "show dmvpn""""
+    """Unit test for
+        *show dmvpn
+    """
 
     maxDiff = None
 
@@ -25,89 +27,93 @@ class TestShowDmvpn(unittest.TestCase):
 
     # Specify the expected result for the parsed output
     golden_parsed_output1 = {
-        'interfaces': {
-            'Tunnel84': {
-                'peers': {
-                    'ipv4': {
-                        '172.30.84.1': {
-                            'ent': 1,
-                            'tunnel_addr': {
+            'interfaces': {
+                'Tunnel84': {
+                    'ent': {
+                        1: {
+                            'peers': {
+                                '172.30.84.1': {
+                                    'tunnel_addr': {
+                                        '172.29.0.1': {
+                                            'attrb': {
+                                                'SC': {
+                                                    'state': 'NHRP',
+                                                    'time': 'never',
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'nhrp_peers': 1,
+                    'type': 'Spoke',
+                },
+                'Tunnel90': {
+                    'ent': {
+                        1: {
+                            'peers': {
                                 '172.29.0.1': {
-                                    'attrb': {
-                                        'SC': {
-                                            'state': 'NHRP',
-                                            'time': 'never',
+                                    'tunnel_addr': {
+                                        '172.30.90.1': {
+                                            'attrb': {
+                                                'S': {
+                                                    'state': 'IKE',
+                                                    'time': '3w5d',
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        2: {
+                            'peers': {
+                                '172.29.0.2': {
+                                    'tunnel_addr': {
+                                        '172.30.90.2': {
+                                            'attrb': {
+                                                'S': {
+                                                    'state': 'UP',
+                                                    'time': '6d12h',
+                                                },
+                                            },
+                                        },
+                                        '172.30.90.25': {
+                                            'attrb': {
+                                                'S': {
+                                                    'state': 'UP',
+                                                    'time': '6d12h',
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                                '172.29.134.1': {
+                                    'tunnel_addr': {
+                                        '172.30.72.72': {
+                                            'attrb': {
+                                                'DT1': {
+                                                    'state': 'UP',
+                                                    'time': '00:29:40',
+                                                },
+                                                'DT2': {
+                                                    'state': 'UP',
+                                                    'time': '00:29:40',
+                                                },
+                                            },
                                         },
                                     },
                                 },
                             },
                         },
                     },
+                    'nhrp_peers': 3,
+                    'type': 'Spoke',
                 },
-                'nhrp_peers': 1,
-                'type': 'Spoke',
             },
-            'Tunnel90': {
-                'peers': {
-                    'ipv4': {
-                        '172.29.0.1': {
-                            'ent': 1,
-                            'tunnel_addr': {
-                                '172.30.90.1': {
-                                    'attrb': {
-                                        'S': {
-                                            'state': 'IKE',
-                                            'time': '3w5d',
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                        '172.29.0.2': {
-                            'ent': 1,
-                            'tunnel_addr': {
-                                '172.30.90.2': {
-                                    'attrb': {
-                                        'S': {
-                                            'state': 'UP',
-                                            'time': '6d12h',
-                                        },
-                                    },
-                                },
-                                '172.30.90.25': {
-                                    'attrb': {
-                                        'S': {
-                                            'state': 'UP',
-                                            'time': '6d12h',
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                        '172.29.134.1': {
-                            'ent': 2,
-                            'tunnel_addr': {
-                                '172.30.72.72': {
-                                    'attrb': {
-                                        'DT1': {
-                                            'state': 'UP',
-                                            'time': '00:29:40',
-                                        },
-                                        'DT2': {
-                                            'state': 'UP',
-                                            'time': '00:29:40',
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-                'nhrp_peers': 3,
-                'type': 'Spoke',
-            },
-        },
-    }
+        }
 
     # show dmvpn
     golden_output1 = {'execute.return_value': '''
@@ -133,7 +139,7 @@ class TestShowDmvpn(unittest.TestCase):
          # Ent  Peer NBMA Addr Peer Tunnel Add State  UpDn Tm Attrb
          ----- --------------- --------------- ----- -------- -----
              1 172.29.0.1          172.30.90.1   IKE     3w5d     S
-             1 172.29.0.2          172.30.90.2    UP    6d12h     S
+             2 172.29.0.2          172.30.90.2    UP    6d12h     S
                                    172.30.90.25   UP    6d12h     S
              2 172.29.134.1       172.30.72.72    UP 00:29:40   DT2
                                   172.30.72.72    UP 00:29:40   DT1
@@ -149,6 +155,11 @@ class TestShowDmvpn(unittest.TestCase):
         self.device = Mock(**self.golden_output1)
         obj = ShowDmvpn(device=self.device)
         parsed_output = obj.parse()
+        import pprint
+        pprint.pprint(parsed_output)
+        import pdb
+        pdb.set_trace()
+
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
