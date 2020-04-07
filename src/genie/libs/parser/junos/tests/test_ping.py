@@ -47,11 +47,6 @@ class TestShowArp(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = Ping(device=self.device)
         parsed_output = obj.parse(addr='10.189.5.94', count='5')
-        import json
-        json_data = json.dumps(parsed_output, indent=4, sort_keys=True)
-        f = open("dict.txt","w")
-        f.write(json_data)
-        f.close()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
