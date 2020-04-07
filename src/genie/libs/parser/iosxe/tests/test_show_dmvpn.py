@@ -25,7 +25,7 @@ class TestShowDmvpn(unittest.TestCase):
 
     # Specify the expected result for the parsed output
     golden_parsed_output1 = {
-        'dmvpn': {
+        'interfaces': {
             'Tunnel84': {
                 'peers': {
                     'ipv4': {

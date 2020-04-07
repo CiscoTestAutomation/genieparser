@@ -23,7 +23,7 @@ class ShowDmvpnSchema(MetaParser):
 
     # These are the key-value pairs to add to the parsed dictionary
     schema = {
-        'dmvpn': {
+        'interfaces': {
             Any(): {
                 'nhrp_peers': int,
                 'type': str,
@@ -112,8 +112,8 @@ class ShowDmvpn(ShowDmvpnSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                interface = (group['interface'])
-                parsed_dict.setdefault('dmvpn', {}).setdefault(
+                interface = (group['interfaces'])
+                parsed_dict.setdefault('interfaces', {}).setdefault(
                     interface, {}).setdefault('peers', {})
                 continue
 
@@ -122,8 +122,8 @@ class ShowDmvpn(ShowDmvpnSchema):
 
             if m:
                 group = m.groupdict()
-                parsed_dict['dmvpn'][interface]['type'] = group['type']
-                parsed_dict['dmvpn'][interface]['nhrp_peers'] = int(group['nhrp_peers'])
+                parsed_dict['interfaces'][interface]['type'] = group['type']
+                parsed_dict['interfaces'][interface]['nhrp_peers'] = int(group['nhrp_peers'])
                 continue
 
             #   Ent  Peer NBMA Addr Peer Tunnel Add State  UpDn Tm Attrb
@@ -145,7 +145,7 @@ class ShowDmvpn(ShowDmvpnSchema):
 
                     protocol = "ipv4" if re.match(r'\d+\.\d+\.\d+\.\d+', nbma_addr) else "ipv6"
 
-                    tunnel_addr_dict = parsed_dict['dmvpn'][interface].setdefault('peers', {}).\
+                    tunnel_addr_dict = parsed_dict['interfaces'][interface].setdefault('peers', {}).\
                                                     setdefault(protocol, {}).\
                                                     setdefault(nbma_addr, {}).\
                                                     setdefault('tunnel_addr', {})
@@ -157,7 +157,7 @@ class ShowDmvpn(ShowDmvpnSchema):
                     attrb_dict['time'] = group['time']
                     attrb_dict['state'] = group['state']
 
-                    parsed_dict['dmvpn'][interface]['peers']\
+                    parsed_dict['interfaces'][interface]['peers']\
                                [protocol][nbma_addr]['ent'] = int(group['ent'])
 
                 # 172.30.90.25   UP    6d12h     S
