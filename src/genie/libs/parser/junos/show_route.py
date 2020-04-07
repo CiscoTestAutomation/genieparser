@@ -942,14 +942,13 @@ class ShowRouteProtocolTableExtensive(ShowRouteProtocolExtensive):
             * show route protocol {protocol} table {table} extensive
     """
     
-    cli_command = 'show route protocol {protocol} table {table} extensive'
-    def cli(self, protocol, table, output=None):
+    cli_command = 'show route protocol {protocol} table {table_name} extensive'
+    def cli(self, protocol, table_name, output=None):
         if not output:
             cmd = self.cli_command.format(
                 protocol=protocol,
-                table=table)
+                table_name=table_name)
             out = self.device.execute(cmd)
         else:
             out = output
-        
         return super().cli(protocol=protocol, output=out)
