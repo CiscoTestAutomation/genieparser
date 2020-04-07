@@ -35,60 +35,7 @@ class TestShowArp(unittest.TestCase):
         round-trip min/avg/max/stddev = 1.823/2.175/2.399/0.191 ms
     '''}
     
-    golden_parsed_output = {
-        "ping": {
-            "addr": "10.189.5.94",
-            "data-bytes": "56",
-            "ping-statistics": {
-                "packet-loss": "0",
-                "packets-received": "5",
-                "packets-transmitted": "5",
-                "round-trip": {
-                    "avg": "2.175",
-                    "max": "2.399",
-                    "min": "1.823",
-                    "stddev": "0.191"
-                }
-            },
-            "result": [
-                {
-                    "bytes": "64",
-                    "from": "10.189.5.94",
-                    "icmp-seq": "0",
-                    "time": "2.261",
-                    "ttl": "62"
-                },
-                {
-                    "bytes": "64",
-                    "from": "10.189.5.94",
-                    "icmp-seq": "1",
-                    "time": "1.823",
-                    "ttl": "62"
-                },
-                {
-                    "bytes": "64",
-                    "from": "10.189.5.94",
-                    "icmp-seq": "2",
-                    "time": "2.399",
-                    "ttl": "62"
-                },
-                {
-                    "bytes": "64",
-                    "from": "10.189.5.94",
-                    "icmp-seq": "3",
-                    "time": "2.218",
-                    "ttl": "62"
-                },
-                {
-                    "bytes": "64",
-                    "from": "10.189.5.94",
-                    "icmp-seq": "4",
-                    "time": "2.173",
-                    "ttl": "62"
-                }
-            ]
-        }
-    }
+    golden_parsed_output = {}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -100,6 +47,11 @@ class TestShowArp(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = Ping(device=self.device)
         parsed_output = obj.parse(addr='10.189.5.94', count='5')
+        import json
+        json_data = json.dumps(parsed_output, indent=4, sort_keys=True)
+        f = open("dict.txt","w")
+        f.write(json_data)
+        f.close()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':

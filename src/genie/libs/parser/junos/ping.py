@@ -19,17 +19,17 @@ class PingSchema(MetaParser):
     #         'data-bytes': str,
     #         'result': [
     #             {
-    #                 'bytes': str,
+    #                 'bytes': int,
     #                 'from': str,
-    #                 'icmp-seq': str,
-    #                 'ttl': str,
+    #                 'icmp-seq': int,
+    #                 'ttl': int,
     #                 'time': str,
     #             }
     #         ],
     #         'ping-statistics': {
-    #             'packets-transmitted': str,
-    #             'packets-received': str,
-    #             'packet-loss': str,
+    #             'send': str,
+    #             'received': str,
+    #             'loss-rate': str,
     #             'round-trip': {
     #                 'min': str,
     #                 'avg': str,
@@ -45,10 +45,10 @@ class PingSchema(MetaParser):
             raise SchemaTypeError('ping result is not a list')
         # Create Arp Entry Schema
         ping_result_schema = Schema({
-                    'bytes': str,
+                    'bytes': int,
                     'from': str,
-                    'icmp-seq': str,
-                    'ttl': str,
+                    'icmp-seq': int,
+                    'ttl': int,
                     'time': str,
                 })
         # Validate each dictionary in list
@@ -59,13 +59,13 @@ class PingSchema(MetaParser):
     # Main Schema
     schema = {
         'ping': {
-            'addr': str,
+            'address': str,
             'data-bytes': str,
             'result': Use(validate_ping_result_list),
-            'ping-statistics': {
-                'packets-transmitted': str,
-                'packets-received': str,
-                'packet-loss': str,
+            'statistics': {
+                'send': int,
+                'received': int,
+                'loss-rate': int,
                 'round-trip': {
                     'min': str,
                     'avg': str,
@@ -95,7 +95,7 @@ class Ping(PingSchema):
         ret_dict = {}
 
         # PING 10.189.5.94 (10.189.5.94): 56 data bytes
-        p1 = re.compile(r'^PING +(?P<addr>\S+) +\(\S+\): +'
+        p1 = re.compile(r'^PING +(?P<address>\S+) +\(\S+\): +'
                 r'(?P<data_bytes>\d+) +data +bytes$')
 
         # 64 bytes from 10.189.5.94: icmp_seq=0 ttl=62 time=2.261 ms
@@ -104,9 +104,9 @@ class Ping(PingSchema):
                 r'time=(?P<time>\S+) +ms$')
 
         # 5 packets transmitted, 5 packets received, 0% packet loss
-        p3 = re.compile(r'^(?P<packets_transmitted>\d+) +packets +transmitted, +'
-                r'(?P<packets_received>\d+) packets +received, +'
-                r'(?P<packet_loss>\d+)\% +packet +loss$')
+        p3 = re.compile(r'^(?P<send>\d+) +packets +transmitted, +'
+                r'(?P<received>\d+) packets +received, +'
+                r'(?P<loss_rate>\d+)\% +packet +loss$')
         
         # round-trip min/avg/max/stddev = 1.823/2.175/2.399/0.191 ms
         p4 = re.compile(r'^round-trip +min\/avg\/max\/stddev +\= +'
@@ -130,7 +130,8 @@ class Ping(PingSchema):
                 group = m.groupdict()
                 result_list = ping_dict.setdefault('result', [])
                 result_dict = {}
-                result_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                result_dict.update({k.replace('_', '-'): (int(v) 
+                    if v.isdigit() else v) for k, v in group.items() if v is not None})
                 result_list.append(result_dict)
                 continue
             
@@ -138,8 +139,8 @@ class Ping(PingSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                ping_statistics_dict = ping_dict.setdefault('ping-statistics', {})
-                ping_statistics_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                ping_statistics_dict = ping_dict.setdefault('statistics', {})
+                ping_statistics_dict.update({k.replace('_', '-'): (int(v) if v.isdigit() else v) for k, v in group.items() if v is not None})
                 continue
             
             # round-trip min/avg/max/stddev = 1.823/2.175/2.399/0.191 ms
