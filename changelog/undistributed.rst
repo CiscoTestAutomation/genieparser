@@ -163,6 +163,12 @@
 * IOS 
     * Update ShowInterfaces
         * Update regex to support various output
+* JUNOS
+    * Update ShowInterfacesTerse
+        * show interfaces terse {interface}
+        * show interfaces {interface} terse
+    * Update ShowInterfacesTerseInterface
+        * show interfaces terse {interface}
 
 --------------------------------------------------------------------------------
                                 common.py

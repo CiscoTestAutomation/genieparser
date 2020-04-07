@@ -155,11 +155,6 @@ class TestShowDmvpn(unittest.TestCase):
         self.device = Mock(**self.golden_output1)
         obj = ShowDmvpn(device=self.device)
         parsed_output = obj.parse()
-        import pprint
-        pprint.pprint(parsed_output)
-        import pdb
-        pdb.set_trace()
-
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
