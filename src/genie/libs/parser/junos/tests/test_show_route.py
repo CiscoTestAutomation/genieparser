@@ -36142,14 +36142,14 @@ class TestShowRouteProtocolTableExtensive(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(
                 protocol='ospf',
-                table_name='inet.0')
+                table='inet.0')
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowRouteProtocolTableExtensive(device=self.device)
         parsed_output = obj.parse(
             protocol='ospf',
-            table_name='inet.0')
+            table='inet.0')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
