@@ -16,7 +16,7 @@ class PingSchema(MetaParser):
     # schema = {
     #     'ping': {
     #         'addr': str,
-    #         'data-bytes': str,
+    #         'data-bytes': int,
     #         'result': [
     #             {
     #                 'bytes': int,
@@ -60,7 +60,7 @@ class PingSchema(MetaParser):
     schema = {
         'ping': {
             'address': str,
-            'data-bytes': str,
+            'data-bytes': int,
             'result': Use(validate_ping_result_list),
             'statistics': {
                 'send': int,
@@ -121,7 +121,8 @@ class Ping(PingSchema):
             if m:
                 group = m.groupdict()
                 ping_dict = ret_dict.setdefault('ping', {})
-                ping_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                ping_dict.update({k.replace('_', '-'): (int(v) 
+                    if v.isdigit() else v) for k, v in group.items() if v is not None})
                 continue
             
             # 64 bytes from 10.189.5.94: icmp_seq=0 ttl=62 time=2.261 ms
