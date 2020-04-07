@@ -39,7 +39,7 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowProcessesMemory, \
                                                   ShowProcessesMemorySorted, \
                                                   ShowPlatformIntegrity
-import genie.gre
+
 # ============================
 # Unit test for 'show bootvar'
 # ============================
@@ -3005,6 +3005,7 @@ class TestShowInventory(unittest.TestCase):
             },
         },
     }
+
     golden_output = {'execute.return_value': '''
         show inventory
         NAME: "Chassis", DESCR: "Cisco ASR1002-HX Chassis"
