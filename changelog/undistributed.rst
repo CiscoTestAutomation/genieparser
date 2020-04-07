@@ -77,6 +77,10 @@
         * show arp
     * Added ShowArpNoMore for:
         * show arp | no-more
+    * Added ShowKrtState for:
+        * show krt state
+    * Added ShowKrtQueue for:
+        * show krt queue
 
 
 --------------------------------------------------------------------------------
