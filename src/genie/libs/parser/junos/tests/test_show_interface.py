@@ -245,7 +245,7 @@ class test_show_interfaces_terse_match(unittest.TestCase):
         self.device1 = Mock(**self.empty_output)
         interface_obj = ShowInterfacesTerseMatch(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            interface_obj.parse()
+            interface_obj.parse(interface='fxp0')
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)

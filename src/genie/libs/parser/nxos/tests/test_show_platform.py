@@ -287,7 +287,7 @@ Active Package(s):
           BIOS compile time:       12/09/2013
           kickstart image file is: bootflash:///n3000-uk9-kickstart.6.0.2.U6.10.bin
           kickstart compile time:  3/30/2017 9:00:00 [03/30/2017 19:37:34]
-          system image file is:    bootflash:///n3000-uk9.6.0.2.U6.10.bin
+          system image file is:    bootflash:///n3000-uk10.225.0.2.U6.10.bin
           system compile time:     3/30/2017 9:00:00 [03/30/2017 20:04:06]
 
 
@@ -339,7 +339,7 @@ Active Package(s):
                                  'bios_compile_time': '12/09/2013',
                                  'kickstart_image_file': 'bootflash:///n3000-uk9-kickstart.6.0.2.U6.10.bin',
                                  'kickstart_compile_time': '3/30/2017 9:00:00 [03/30/2017 19:37:34]',
-                                 'system_image_file': 'bootflash:///n3000-uk9.6.0.2.U6.10.bin',
+                                 'system_image_file': 'bootflash:///n3000-uk10.225.0.2.U6.10.bin',
                                  'system_compile_time': '3/30/2017 9:00:00 [03/30/2017 20:04:06]'}
                               }
                             }
