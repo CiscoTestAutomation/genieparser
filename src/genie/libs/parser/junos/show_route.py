@@ -4,7 +4,7 @@ JUNOS parsers for the following commands:
 
     * show route table {table}
     * show route table {table} {prefix}
-
+    * show route protocol {protocol} extensive
 '''
 
 import re
