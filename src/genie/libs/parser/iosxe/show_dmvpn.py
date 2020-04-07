@@ -25,7 +25,7 @@ class ShowDmvpnSchema(MetaParser):
     schema = {
         'dmvpn': {
             Any(): {
-                'total_peers': int,
+                'nhrp_peers': int,
                 'type': str,
                 'peers': {
                     Any(): { # ipv4 or ipv6
@@ -82,11 +82,11 @@ class ShowDmvpn(ShowDmvpnSchema):
         parsed_dict = {}
 
         # Interface: Tunnel84, IPv4 NHRP Details
-        # Type:Spoke, NHRP Peers:1,
+        p1 = re.compile(r'Interface: +(?P<interface>\S+),')
 
-        p1 = re.compile(r'Interface: +(?P<interface>(\S+)),')
-        p2 = re.compile(r'Type:(?P<type>(\S+)),'
-                        r' +NHRP Peers:(?P<total_peers>(\d+)),$')
+        # Type:Spoke, NHRP Peers:1,
+        p2 = re.compile(r'Type:(?P<type>\S+),'
+                        r' +NHRP Peers:(?P<nhrp_peers>(\d+)),$')
 
         # # Ent  Peer NBMA Addr Peer Tunnel Add State  UpDn Tm Attrb
         # ----- --------------- --------------- ----- -------- -----
@@ -123,7 +123,7 @@ class ShowDmvpn(ShowDmvpnSchema):
             if m:
                 group = m.groupdict()
                 parsed_dict['dmvpn'][interface]['type'] = group['type']
-                parsed_dict['dmvpn'][interface]['total_peers'] = int(group['total_peers'])
+                parsed_dict['dmvpn'][interface]['nhrp_peers'] = int(group['nhrp_peers'])
                 continue
 
             #   Ent  Peer NBMA Addr Peer Tunnel Add State  UpDn Tm Attrb

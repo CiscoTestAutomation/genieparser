@@ -17,7 +17,9 @@ from genie.libs.parser.iosxe.show_dmvpn import ShowDmvpn
 # Unit test for 'show dmvpn'
 # =================================
 class TestShowDmvpn(unittest.TestCase):
-    '''Unit test for "show dmvpn"'''
+    """Unit test for "show dmvpn""""
+
+    maxDiff = None
 
     empty_output = {'execute.return_value': ''}
 
@@ -42,7 +44,7 @@ class TestShowDmvpn(unittest.TestCase):
                         },
                     },
                 },
-                'total_peers': 1,
+                'nhrp_peers': 1,
                 'type': 'Spoke',
             },
             'Tunnel90': {
@@ -101,7 +103,7 @@ class TestShowDmvpn(unittest.TestCase):
                         },
                     },
                 },
-                'total_peers': 3,
+                'nhrp_peers': 3,
                 'type': 'Spoke',
             },
         },
@@ -138,14 +140,12 @@ class TestShowDmvpn(unittest.TestCase):
 '''}
 
     def test_show_dmvpn_empty(self):
-        self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = ShowDmvpn(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_show_dmvpn_full1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowDmvpn(device=self.device)
         parsed_output = obj.parse()
