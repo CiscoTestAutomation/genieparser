@@ -134,6 +134,8 @@
         * Fix the way that assigns value to key 'vrf'
     * Update ShowStandbyAll:
         * Update regex to support various outputs.
+    * Update ShowInventory:
+        * Added regex to support various outputs.
 * NXOS
     * Updated ShowInterface
         * Update regex to cover both 'IP' and 'ip', both 'Rx' and 'RX'
