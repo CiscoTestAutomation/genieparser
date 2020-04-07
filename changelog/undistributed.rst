@@ -77,6 +77,8 @@
         * show arp
     * Added ShowArpNoMore for:
         * show arp | no-more
+    * Added ShowRouteProtocolExtensive for:
+        * show route protocol {protocol} extensive
 
 
 --------------------------------------------------------------------------------
