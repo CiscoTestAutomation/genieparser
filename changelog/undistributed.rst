@@ -85,6 +85,9 @@
         * show arp | no-more
     * Added ShowOspf3Database for:
         * show ospf3 database
+    * Added Ping for:
+        * ping {addr}
+        * ping {addr} count {count}
 
 
 --------------------------------------------------------------------------------
