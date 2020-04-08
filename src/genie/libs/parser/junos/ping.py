@@ -104,7 +104,7 @@ class Ping(PingSchema):
         p1 = re.compile(r'^PING +(?P<address>\S+) +\((?P<source>\S+)\): +'
                 r'(?P<data_bytes>\d+) +data +bytes$')
         
-        # PING6(56=40+8+8 bytes) 2001:268:fb90:14::1 --> 2001:268:fb90:14::2
+        # PING6(56=40+8+8 bytes) 2001:db8:223c:2c16::1 --> 2001:db8:223c:2c16::2
         p1_1 = re.compile(r'^PING6\((?P<data_bytes>\d+)=\S+ +bytes\) +'
                 r'(?P<source>\S+) --> +(?P<address>\S+)$')
 
