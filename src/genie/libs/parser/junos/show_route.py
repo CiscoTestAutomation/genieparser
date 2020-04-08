@@ -582,7 +582,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         p1 = re.compile(r'^(?P<table_name>\S+): +(?P<destination_count>\d+) +'
                 r'destinations, +(?P<total_route_count>\d+) +routes +'
                 r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
-                r'holddown, +(?P<hidden_route_count>\d+) hidden\)$')
+                r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
 
         # 0.0.0.0/0 (1 entry, 1 announced)
         # 10.1.0.0/24 (2 entries, 1 announced)
