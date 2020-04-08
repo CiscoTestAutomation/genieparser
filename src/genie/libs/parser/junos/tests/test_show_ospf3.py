@@ -6,7 +6,9 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.junos.show_ospf3 import ShowOspf3Interface, \
                                                ShowOspf3NeighborExtensive, \
                                                ShowOspf3NeighborDetail, \
-                                               ShowOspf3Neighbor, ShowOspf3Database
+                                               ShowOspf3Neighbor,\
+                                               ShowOspf3Database, \
+                                               ShowOspf3DatabaseExternalExtensive
 
 class TestShowOspf3Interface(unittest.TestCase):
 
@@ -681,6 +683,421 @@ class TestShowOspf3Database(unittest.TestCase):
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowOspf3Database(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+class TestShowOspf3DatabaseExternalExtensive(unittest.TestCase):
+
+    maxDiff = None
+
+    device = Device(name='test-device')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+                show ospf3 database external extensive | no-more
+            OSPF3 AS SCOPE link state database
+        Type       ID               Adv Rtr           Seq         Age  Cksum  Len
+        Extern      0.0.0.1          59.128.2.250     0x8000178e  1412  0x3c81  28
+        Prefix ::/0
+        Prefix-options 0x0, Metric 1, Type 1,
+        Aging timer 00:36:27
+        Installed 00:23:26 ago, expires in 00:36:28, sent 00:23:24 ago
+        Last changed 29w5d 21:04:29 ago, Change count: 1
+        Extern      0.0.0.3          59.128.2.250     0x8000178e  1037  0x21bf  44
+        Prefix 2001:268:fb8f::2/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:42:42
+        Installed 00:17:11 ago, expires in 00:42:43, sent 00:17:09 ago
+        Last changed 29w5d 21:04:29 ago, Change count: 1
+        Extern      0.0.0.4          59.128.2.250     0x80000246  2913  0xcc71  44
+        Prefix 2001:268:fb8f::1/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:11:26
+        Installed 00:48:26 ago, expires in 00:11:27, sent 00:48:24 ago
+        Last changed 2w6d 04:51:00 ago, Change count: 1
+        Extern      0.0.0.1          59.128.2.251     0x80001789  1412  0x4081  28
+        Prefix ::/0
+        Prefix-options 0x0, Metric 1, Type 1,
+        Aging timer 00:36:27
+        Installed 00:23:23 ago, expires in 00:36:28, sent 00:23:21 ago
+        Last changed 29w5d 21:04:28 ago, Change count: 1
+        Extern      0.0.0.2          59.128.2.251     0x80001788  2912  0x17d0  44
+        Prefix 2001:268:fb8f::1/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:11:27
+        Installed 00:48:23 ago, expires in 00:11:28, sent 00:48:21 ago
+        Last changed 29w5d 21:04:28 ago, Change count: 1
+        Extern      0.0.0.3          59.128.2.251     0x80000246   287  0xea52  44
+        Prefix 2001:268:fb8f::2/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:55:12
+        Installed 00:04:38 ago, expires in 00:55:13, sent 00:04:36 ago
+        Last changed 2w6d 04:10:55 ago, Change count: 1
+        Extern      0.0.0.18         106.187.14.240   0x80000349  1722  0xbddb  28
+        Prefix ::/0
+        Prefix-options 0x0, Metric 1, Type 1,
+        Aging timer 00:31:17
+        Installed 00:28:39 ago, expires in 00:31:18, sent 00:28:37 ago
+        Last changed 4w1d 01:48:00 ago, Change count: 1
+        Extern      0.0.0.19         106.187.14.240   0x8000034d   904  0x3603  44
+        Prefix 2001:268:fa00:200::1001/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:44:55
+        Installed 00:15:01 ago, expires in 00:44:56, sent 00:14:59 ago
+        Last changed 3w3d 02:05:47 ago, Change count: 3
+        Extern      0.0.0.22         106.187.14.240   0x800002b9  2268  0xab95  44
+        Prefix 2001:268:fb90::b/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:22:11
+        Installed 00:37:45 ago, expires in 00:22:12, sent 00:37:43 ago
+        Last changed 3w0d 17:02:47 ago, Change count: 1
+        Extern      0.0.0.23         106.187.14.240   0x80000247   631  0x7049  44
+        Prefix 2001:268:fb80::14/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:49:28
+        Installed 00:10:28 ago, expires in 00:49:29, sent 00:10:26 ago
+        Last changed 2w6d 04:51:04 ago, Change count: 1
+        Extern      0.0.0.24         106.187.14.240   0x80000246  2540  0x4e6c  44
+        Prefix 2001:268:fb80::13/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:17:39
+        Installed 00:42:17 ago, expires in 00:17:40, sent 00:42:15 ago
+        Last changed 2w6d 04:50:58 ago, Change count: 1
+        Extern      0.0.0.9          106.187.14.241   0x800002f0  2723  0xd341  44
+        Prefix 2001:268:fb90::c/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:14:36
+        Installed 00:45:17 ago, expires in 00:14:37, sent 00:45:15 ago
+        Last changed 3w2d 03:24:20 ago, Change count: 11
+        Extern      0.0.0.10         106.187.14.241   0x80000246   723  0xd4f2  44
+        Prefix 2001:268:fb80::13/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:47:56
+        Installed 00:11:57 ago, expires in 00:47:57, sent 00:11:55 ago
+        Last changed 2w6d 04:10:59 ago, Change count: 1
+        Extern      0.0.0.11         106.187.14.241   0x80000246    56  0xe4e0  44
+        Prefix 2001:268:fb80::14/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:59:03
+        Installed 00:00:50 ago, expires in 00:59:04, sent 00:00:48 ago
+        Last changed 2w6d 04:10:53 ago, Change count: 1
+        Extern     *0.0.0.1          111.87.5.252     0x8000063f  2043  0x3ff4  44
+        Prefix 2001:268:fb8f::1/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Gen timer 00:15:56
+        Aging timer 00:25:56
+        Installed 00:34:03 ago, expires in 00:25:57, sent 00:34:01 ago
+        Last changed 3w0d 17:02:47 ago, Change count: 2, Ours
+        Extern      0.0.0.1          111.87.5.253     0x80000e1e  2045  0x7dcd  44
+        Prefix 2001:268:fb8f::2/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:25:54
+        Installed 00:34:02 ago, expires in 00:25:55, sent 00:34:01 ago
+        Last changed 3w3d 00:31:46 ago, Change count: 15
+    '''}
+
+    golden_parsed_output = {'ospf3-database-information': {'ospf3-database': [{'advertising-router': '59.128.2.250',
+                                                    'age': '1412',
+                                                    'checksum': '0x3c81',
+                                                    'lsa-id': '0.0.0.1',
+                                                    'lsa-length': '28',
+                                                    'lsa-type': 'Extern',
+                                                    'ospf-database-extensive': {'aging-timer': {'#text': '00:36:27'},
+                                                                                'expiration-time': {'#text': '00:36:28'},
+                                                                                'installation-time': {'#text': '00:23:26'},
+                                                                                'lsa-change-count': '1',
+                                                                                'lsa-changed-time': {'#text': '29w5d '
+                                                                                                              '21:04:29'},
+                                                                                'send-time': {'#text': '00:23:24'}},
+                                                    'ospf3-external-lsa': {'metric': '1',
+                                                                           'ospf3-prefix': '::/0',
+                                                                           'ospf3-prefix-options': '0x0',
+                                                                           'type-value': '1'},
+                                                    'sequence-number': '0x8000178e'},
+                                                   {'advertising-router': '59.128.2.250',
+                                                    'age': '1037',
+                                                    'checksum': '0x21bf',
+                                                    'lsa-id': '0.0.0.3',
+                                                    'lsa-length': '44',
+                                                    'lsa-type': 'Extern',
+                                                    'ospf-database-extensive': {'aging-timer': {'#text': '00:42:42'},
+                                                                                'expiration-time': {'#text': '00:42:43'},
+                                                                                'installation-time': {'#text': '00:17:11'},
+                                                                                'lsa-change-count': '1',
+                                                                                'lsa-changed-time': {'#text': '29w5d '
+                                                                                                              '21:04:29'},
+                                                                                'send-time': {'#text': '00:17:09'}},
+                                                    'ospf3-external-lsa': {'metric': '50',
+                                                                           'ospf3-prefix': '2001:268:fb8f::2/128',
+                                                                           'ospf3-prefix-options': '0x0',
+                                                                           'type-value': '1'},
+                                                    'sequence-number': '0x8000178e'},
+                                                   {'advertising-router': '59.128.2.250',
+                                                    'age': '2913',
+                                                    'checksum': '0xcc71',
+                                                    'lsa-id': '0.0.0.4',
+                                                    'lsa-length': '44',
+                                                    'lsa-type': 'Extern',
+                                                    'ospf-database-extensive': {'aging-timer': {'#text': '00:11:26'},
+                                                                                'expiration-time': {'#text': '00:11:27'},
+                                                                                'installation-time': {'#text': '00:48:26'},
+                                                                                'lsa-change-count': '1',
+                                                                                'lsa-changed-time': {'#text': '2w6d '
+                                                                                                              '04:51:00'},
+                                                                                'send-time': {'#text': '00:48:24'}},
+                                                    'ospf3-external-lsa': {'metric': '50',
+                                                                           'ospf3-prefix': '2001:268:fb8f::1/128',
+                                                                           'ospf3-prefix-options': '0x0',
+                                                                           'type-value': '1'},
+                                                    'sequence-number': '0x80000246'},
+                                                   {'advertising-router': '59.128.2.251',
+                                                    'age': '1412',
+                                                    'checksum': '0x4081',
+                                                    'lsa-id': '0.0.0.1',
+                                                    'lsa-length': '28',
+                                                    'lsa-type': 'Extern',
+                                                    'ospf-database-extensive': {'aging-timer': {'#text': '00:36:27'},
+                                                                                'expiration-time': {'#text': '00:36:28'},
+                                                                                'installation-time': {'#text': '00:23:23'},
+                                                                                'lsa-change-count': '1',
+                                                                                'lsa-changed-time': {'#text': '29w5d '
+                                                                                                              '21:04:28'},
+                                                                                'send-time': {'#text': '00:23:21'}},
+                                                    'ospf3-external-lsa': {'metric': '1',
+                                                                           'ospf3-prefix': '::/0',
+                                                                           'ospf3-prefix-options': '0x0',
+                                                                           'type-value': '1'},
+                                                    'sequence-number': '0x80001789'},
+                                                   {'advertising-router': '59.128.2.251',
+                                                    'age': '2912',
+                                                    'checksum': '0x17d0',
+                                                    'lsa-id': '0.0.0.2',
+                                                    'lsa-length': '44',
+                                                    'lsa-type': 'Extern',
+                                                    'ospf-database-extensive': {'aging-timer': {'#text': '00:11:27'},
+                                                                                'expiration-time': {'#text': '00:11:28'},
+                                                                                'installation-time': {'#text': '00:48:23'},
+                                                                                'lsa-change-count': '1',
+                                                                                'lsa-changed-time': {'#text': '29w5d '
+                                                                                                              '21:04:28'},
+                                                                                'send-time': {'#text': '00:48:21'}},
+                                                    'ospf3-external-lsa': {'metric': '50',
+                                                                           'ospf3-prefix': '2001:268:fb8f::1/128',
+                                                                           'ospf3-prefix-options': '0x0',
+                                                                           'type-value': '1'},
+                                                    'sequence-number': '0x80001788'},
+                                                   {'advertising-router': '59.128.2.251',
+                                                    'age': '287',
+                                                    'checksum': '0xea52',
+                                                    'lsa-id': '0.0.0.3',
+                                                    'lsa-length': '44',
+                                                    'lsa-type': 'Extern',
+                                                    'ospf-database-extensive': {'aging-timer': {'#text': '00:55:12'},
+                                                                                'expiration-time': {'#text': '00:55:13'},
+                                                                                'installation-time': {'#text': '00:04:38'},
+                                                                                'lsa-change-count': '1',
+                                                                                'lsa-changed-time': {'#text': '2w6d '
+                                                                                                              '04:10:55'},
+                                                                                'send-time': {'#text': '00:04:36'}},
+                                                    'ospf3-external-lsa': {'metric': '50',
+                                                                           'ospf3-prefix': '2001:268:fb8f::2/128',
+                                                                           'ospf3-prefix-options': '0x0',
+                                                                           'type-value': '1'},
+                                                    'sequence-number': '0x80000246'},
+                                                   {'advertising-router': '106.187.14.240',
+                                                    'age': '1722',
+                                                    'checksum': '0xbddb',
+                                                    'lsa-id': '0.0.0.18',
+                                                    'lsa-length': '28',
+                                                    'lsa-type': 'Extern',
+                                                    'ospf-database-extensive': {'aging-timer': {'#text': '00:31:17'},
+                                                                                'expiration-time': {'#text': '00:31:18'},
+                                                                                'installation-time': {'#text': '00:28:39'},
+                                                                                'lsa-change-count': '1',
+                                                                                'lsa-changed-time': {'#text': '4w1d '
+                                                                                                              '01:48:00'},
+                                                                                'send-time': {'#text': '00:28:37'}},
+                                                    'ospf3-external-lsa': {'metric': '1',
+                                                                           'ospf3-prefix': '::/0',
+                                                                           'ospf3-prefix-options': '0x0',
+                                                                           'type-value': '1'},
+                                                    'sequence-number': '0x80000349'},
+                                                   {'advertising-router': '106.187.14.240',
+                                                    'age': '904',
+                                                    'checksum': '0x3603',
+                                                    'lsa-id': '0.0.0.19',
+                                                    'lsa-length': '44',
+                                                    'lsa-type': 'Extern',
+                                                    'ospf-database-extensive': {'aging-timer': {'#text': '00:44:55'},
+                                                                                'expiration-time': {'#text': '00:44:56'},
+                                                                                'installation-time': {'#text': '00:15:01'},
+                                                                                'lsa-change-count': '3',
+                                                                                'lsa-changed-time': {'#text': '3w3d '
+                                                                                                              '02:05:47'},
+                                                                                'send-time': {'#text': '00:14:59'}},
+                                                    'ospf3-external-lsa': {'metric': '50',
+                                                                           'ospf3-prefix': '2001:268:fa00:200::1001/128',
+                                                                           'ospf3-prefix-options': '0x0',
+                                                                           'type-value': '1'},
+                                                    'sequence-number': '0x8000034d'},
+                                                   {'advertising-router': '106.187.14.240',
+                                                    'age': '2268',
+                                                    'checksum': '0xab95',
+                                                    'lsa-id': '0.0.0.22',
+                                                    'lsa-length': '44',
+                                                    'lsa-type': 'Extern',
+                                                    'ospf-database-extensive': {'aging-timer': {'#text': '00:22:11'},
+                                                                                'expiration-time': {'#text': '00:22:12'},
+                                                                                'installation-time': {'#text': '00:37:45'},
+                                                                                'lsa-change-count': '1',
+                                                                                'lsa-changed-time': {'#text': '3w0d '
+                                                                                                              '17:02:47'},
+                                                                                'send-time': {'#text': '00:37:43'}},
+                                                    'ospf3-external-lsa': {'metric': '50',
+                                                                           'ospf3-prefix': '2001:268:fb90::b/128',
+                                                                           'ospf3-prefix-options': '0x0',
+                                                                           'type-value': '1'},
+                                                    'sequence-number': '0x800002b9'},
+                                                   {'advertising-router': '106.187.14.240',
+                                                    'age': '631',
+                                                    'checksum': '0x7049',
+                                                    'lsa-id': '0.0.0.23',
+                                                    'lsa-length': '44',
+                                                    'lsa-type': 'Extern',
+                                                    'ospf-database-extensive': {'aging-timer': {'#text': '00:49:28'},
+                                                                                'expiration-time': {'#text': '00:49:29'},
+                                                                                'installation-time': {'#text': '00:10:28'},
+                                                                                'lsa-change-count': '1',
+                                                                                'lsa-changed-time': {'#text': '2w6d '
+                                                                                                              '04:51:04'},
+                                                                                'send-time': {'#text': '00:10:26'}},
+                                                    'ospf3-external-lsa': {'metric': '50',
+                                                                           'ospf3-prefix': '2001:268:fb80::14/128',
+                                                                           'ospf3-prefix-options': '0x0',
+                                                                           'type-value': '1'},
+                                                    'sequence-number': '0x80000247'},
+                                                   {'advertising-router': '106.187.14.240',
+                                                    'age': '2540',
+                                                    'checksum': '0x4e6c',
+                                                    'lsa-id': '0.0.0.24',
+                                                    'lsa-length': '44',
+                                                    'lsa-type': 'Extern',
+                                                    'ospf-database-extensive': {'aging-timer': {'#text': '00:17:39'},
+                                                                                'expiration-time': {'#text': '00:17:40'},
+                                                                                'installation-time': {'#text': '00:42:17'},
+                                                                                'lsa-change-count': '1',
+                                                                                'lsa-changed-time': {'#text': '2w6d '
+                                                                                                              '04:50:58'},
+                                                                                'send-time': {'#text': '00:42:15'}},
+                                                    'ospf3-external-lsa': {'metric': '50',
+                                                                           'ospf3-prefix': '2001:268:fb80::13/128',
+                                                                           'ospf3-prefix-options': '0x0',
+                                                                           'type-value': '1'},
+                                                    'sequence-number': '0x80000246'},
+                                                   {'advertising-router': '106.187.14.241',
+                                                    'age': '2723',
+                                                    'checksum': '0xd341',
+                                                    'lsa-id': '0.0.0.9',
+                                                    'lsa-length': '44',
+                                                    'lsa-type': 'Extern',
+                                                    'ospf-database-extensive': {'aging-timer': {'#text': '00:14:36'},
+                                                                                'expiration-time': {'#text': '00:14:37'},
+                                                                                'installation-time': {'#text': '00:45:17'},
+                                                                                'lsa-change-count': '11',
+                                                                                'lsa-changed-time': {'#text': '3w2d '
+                                                                                                              '03:24:20'},
+                                                                                'send-time': {'#text': '00:45:15'}},
+                                                    'ospf3-external-lsa': {'metric': '50',
+                                                                           'ospf3-prefix': '2001:268:fb90::c/128',
+                                                                           'ospf3-prefix-options': '0x0',
+                                                                           'type-value': '1'},
+                                                    'sequence-number': '0x800002f0'},
+                                                   {'advertising-router': '106.187.14.241',
+                                                    'age': '723',
+                                                    'checksum': '0xd4f2',
+                                                    'lsa-id': '0.0.0.10',
+                                                    'lsa-length': '44',
+                                                    'lsa-type': 'Extern',
+                                                    'ospf-database-extensive': {'aging-timer': {'#text': '00:47:56'},
+                                                                                'expiration-time': {'#text': '00:47:57'},
+                                                                                'installation-time': {'#text': '00:11:57'},
+                                                                                'lsa-change-count': '1',
+                                                                                'lsa-changed-time': {'#text': '2w6d '
+                                                                                                              '04:10:59'},
+                                                                                'send-time': {'#text': '00:11:55'}},
+                                                    'ospf3-external-lsa': {'metric': '50',
+                                                                           'ospf3-prefix': '2001:268:fb80::13/128',
+                                                                           'ospf3-prefix-options': '0x0',
+                                                                           'type-value': '1'},
+                                                    'sequence-number': '0x80000246'},
+                                                   {'advertising-router': '106.187.14.241',
+                                                    'age': '56',
+                                                    'checksum': '0xe4e0',
+                                                    'lsa-id': '0.0.0.11',
+                                                    'lsa-length': '44',
+                                                    'lsa-type': 'Extern',
+                                                    'ospf-database-extensive': {'aging-timer': {'#text': '00:59:03'},
+                                                                                'expiration-time': {'#text': '00:59:04'},
+                                                                                'installation-time': {'#text': '00:00:50'},
+                                                                                'lsa-change-count': '1',
+                                                                                'lsa-changed-time': {'#text': '2w6d '
+                                                                                                              '04:10:53'},
+                                                                                'send-time': {'#text': '00:00:48'}},
+                                                    'ospf3-external-lsa': {'metric': '50',
+                                                                           'ospf3-prefix': '2001:268:fb80::14/128',
+                                                                           'ospf3-prefix-options': '0x0',
+                                                                           'type-value': '1'},
+                                                    'sequence-number': '0x80000246'},
+                                                   {'advertising-router': '111.87.5.252',
+                                                    'age': '2043',
+                                                    'checksum': '0x3ff4',
+                                                    'lsa-id': '0.0.0.1',
+                                                    'lsa-length': '44',
+                                                    'lsa-type': 'Extern',
+                                                    'ospf-database-extensive': {'aging-timer': {'#text': '00:25:56'},
+                                                                                'database-entry-state': 'Ours',
+                                                                                'expiration-time': {'#text': '00:25:57'},
+                                                                                'generation-timer': {'#text': '00:15:56'},
+                                                                                'installation-time': {'#text': '00:34:03'},
+                                                                                'lsa-change-count': '2',
+                                                                                'lsa-changed-time': {'#text': '3w0d '
+                                                                                                              '17:02:47'},
+                                                                                'send-time': {'#text': '00:34:01'}},
+                                                    'ospf3-external-lsa': {'metric': '50',
+                                                                           'ospf3-prefix': '2001:268:fb8f::1/128',
+                                                                           'ospf3-prefix-options': '0x0',
+                                                                           'type-value': '1'},
+                                                    'our-entry': True,
+                                                    'sequence-number': '0x8000063f'},
+                                                   {'advertising-router': '111.87.5.253',
+                                                    'age': '2045',
+                                                    'checksum': '0x7dcd',
+                                                    'lsa-id': '0.0.0.1',
+                                                    'lsa-length': '44',
+                                                    'lsa-type': 'Extern',
+                                                    'ospf-database-extensive': {'aging-timer': {'#text': '00:25:54'},
+                                                                                'expiration-time': {'#text': '00:25:55'},
+                                                                                'installation-time': {'#text': '00:34:02'},
+                                                                                'lsa-change-count': '15',
+                                                                                'lsa-changed-time': {'#text': '3w3d '
+                                                                                                              '00:31:46'},
+                                                                                'send-time': {'#text': '00:34:01'}},
+                                                    'ospf3-external-lsa': {'metric': '50',
+                                                                           'ospf3-prefix': '2001:268:fb8f::2/128',
+                                                                           'ospf3-prefix-options': '0x0',
+                                                                           'type-value': '1'},
+                                                    'sequence-number': '0x80000e1e'}]}}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspf3DatabaseExternalExtensive(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspf3DatabaseExternalExtensive(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
