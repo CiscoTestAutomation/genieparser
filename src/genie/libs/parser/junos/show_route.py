@@ -6,6 +6,9 @@ JUNOS parsers for the following commands:
     * show route table {table} {prefix}
     * show route protocol {protocol} extensive
     * show route protocol {protocol} table {table} extensive
+    * show route protocol {protocol} table {table}
+    * show route protocol {protocol}
+    * show route protocol {protocol} {ip_address}
 '''
 
 import re
@@ -174,26 +177,42 @@ class ShowRouteProtocolSchema(MetaParser):
     """
     """
         schema = {
+            Optional("@xmlns:junos"): str,
             "route-information": {
+                Optional("@xmlns"): str,
                 "route-table": [
                     {
                         "active-route-count": str,
                         "destination-count": str,
                         "hidden-route-count": str,
                         "holddown-route-count": str,
-                        "rt": {
-                            "rt-destination": str,
-                            "rt-entry": {
-                                "active-tag": str,
-                                "age": str,
-                                "nh": {
-                                    "to": str,
-                                    "via": str
-                                },
-                                "preference": str,
-                                "protocol-name": str
+                        "rt": [
+                            {
+                                Optional("@junos:style"): str,
+                                "rt-destination": str,
+                                "rt-entry": {
+                                    "active-tag": str,
+                                    "age": {
+                                        "#text": str,
+                                        Optional("@junos:seconds"): str
+                                    },
+                                    "current-active": str,
+                                    "last-active": str,
+                                    "metric": str,
+                                    "nh": {
+                                        "mpls-label": str,
+                                        "selected-next-hop": str,
+                                        "to": str,
+                                        "via": str
+                                    },
+                                    "nh-type": str,
+                                    "preference": str,
+                                    "preference2": str,
+                                    "protocol-name": str,
+                                    "rt-tag": str
+                                }
                             }
-                        },
+                        ],
                         "table-name": str,
                         "total-route-count": str
                     }
@@ -205,25 +224,61 @@ class ShowRouteProtocolSchema(MetaParser):
         # Pass route-table list of dict in value
         if not isinstance(value, list):
             raise SchemaTypeError('route-table is not a list')
+        
+        def validate_rt_list(value):
+            # Pass rt list of dict in value
+            if not isinstance(value, list):
+                raise SchemaTypeError('rt list is not a list')
+            
+            def validate_nh_list(value):
+                # Pass nh list of dict in value
+                if not isinstance(value, list):
+                    raise SchemaTypeError('nh list is not a list')
+                # Create nh-list Entry Schema
+                nh_schema = Schema({
+                            Optional("mpls-label"): str,
+                            Optional("selected-next-hop"): str,
+                            "to": str,
+                            "via": str
+                        })
+                # Validate each dictionary in list
+                for item in value:
+                    nh_schema.validate(item)
+                return value
+
+            # Create rt-list Entry Schema
+            rt_schema = Schema({
+                    Optional("@junos:style"): str,
+                    "rt-destination": str,
+                    "rt-entry": {
+                        Optional("active-tag"): str,
+                        "age": {
+                            "#text": str,
+                            Optional("@junos:seconds"): str
+                        },
+                        Optional("nh"): Use(validate_nh_list),
+                        "preference": str,
+                        "protocol-name": str,
+                        Optional("metric"): str,
+                        Optional('nh-type'): str,
+                        Optional('rt-tag'): str,
+                        Optional("current-active"): str,
+                        Optional("last-active"): str,
+                        Optional("preference2"): str,
+                    }
+                })
+            # Validate each dictionary in list
+            for item in value:
+                rt_schema.validate(item)
+            return value
+
         # Create RouteEntry Schema
         route_entry_schema = Schema({
                 "active-route-count": str,
                 "destination-count": str,
                 "hidden-route-count": str,
                 "holddown-route-count": str,
-                Optional("rt"): {
-                    "rt-destination": str,
-                    "rt-entry": {
-                        "active-tag": str,
-                        "age": str,
-                        "nh": {
-                            "to": str,
-                            "via": str
-                        },
-                        "preference": str,
-                        "protocol-name": str
-                    }
-                },
+                Optional("rt"): Use(validate_rt_list),
                 "table-name": str,
                 "total-route-count": str
             })
@@ -234,7 +289,9 @@ class ShowRouteProtocolSchema(MetaParser):
 
     # Main Schema
     schema = {
+        Optional("@xmlns:junos"): str,
         'route-information': {
+            Optional("@xmlns"): str,
             'route-table': Use(validate_route_table_list)
         }
     }
@@ -242,18 +299,32 @@ class ShowRouteProtocolSchema(MetaParser):
 class ShowRouteProtocol(ShowRouteProtocolSchema):
     """ Parser for:
             * show route protocol {protocol} {ip_address}
+            * show route protocol {protocol}
+            * show route protocol {protocol} table {table}
     """
-    cli_command = 'show route protocol {protocol} {ip_address}'
-    def cli(self, protocol, ip_address, output=None):
+    cli_command = ['show route protocol {protocol}',
+                    'show route protocol {protocol} {ip_address}',
+                    'show route protocol {protocol} table {table}']
+
+    def cli(self, protocol, ip_address=None, table=None, output=None):
         if not output:
-            cmd = self.cli_command.format(
-                protocol=protocol,
-                ip_address=ip_address)
+            if ip_address:
+                cmd = self.cli_command[1].format(
+                    protocol=protocol,
+                    ip_address=ip_address)
+            elif table:
+                cmd = self.cli_command[2].format(
+                    protocol=protocol,
+                    table=table)
+            else:
+                cmd = self.cli_command[0].format(
+                    protocol=protocol)
             out = self.device.execute(cmd)
         else:
             out = output
 
         ret_dict = {}
+        rt_destination = None
 
         # inet.0: 932 destinations, 1618 routes (932 active, 0 holddown, 0 hidden)
         p1 = re.compile(r'^(?P<table_name>\S+): +(?P<destination_count>\d+) +'
@@ -262,12 +333,18 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
                 r'holddown, +(?P<hidden>\d+) +hidden\)$')
         
         # 10.169.14.240/32  *[Static/5] 5w2d 15:42:25
-        p2 = re.compile(r'^((?P<rt_destination>\S+) +)?(?P<active_tag>[\*\+\-])'
-                r'\[(?P<protocol>Static)\/(?P<preference>\d+)\] +'
-                r'(?P<text>[\S ]+)$')
+        # *[OSPF3/10] 3w1d 17:03:23, metric 5
+        # 0.0.0.0/0          *[OSPF/150/10] 3w3d 03:24:58, metric 101, tag 0
+        p2 = re.compile(r'^((?P<rt_destination>\S+) +)?(?P<active_tag>[\*\+\-])?'
+                r'\[(?P<protocol>[\w\-]+)\/(?P<preference>\d+)'
+                r'(\/(?P<preference2>\d+))?\] +(?P<text>\S+ +\S+)'
+                r'(, +metric +(?P<metric>\d+))?(, +tag +(?P<rt_tag>\d+))?$')
+
+        # MultiRecv
+        p2_1 = re.compile(r'^(?P<nh_type>MultiRecv)$')
         
         # >  to 10.169.14.121 via ge-0/0/1.0
-        p3 = re.compile(r'^\> +to +(?P<to>\S+) +via +(?P<via>\S+)$')
+        p3 = re.compile(r'^(\> +)?to +(?P<to>\S+) +via +(?P<via>\S+)(, +(?P<mpls_label>[\S\s]+))?$')
 
         # 2001:db8:eb18:ca45::1/128
         p4 = re.compile(r'^(?P<rt_destination>[\w:\/]+)$')
@@ -275,7 +352,7 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 10.169.14.240/32  *[Static/5] 5w2d 15:42:25
+            # inet.0: 932 destinations, 1618 routes (932 active, 0 holddown, 0 hidden)
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -298,34 +375,55 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
                 continue
             
             # 10.169.14.240/32  *[Static/5] 5w2d 15:42:25
+            # *[OSPF3/10] 3w1d 17:03:23, metric 5
             m = p2.match(line) 
             if m:
                 group = m.groupdict()
-                rt_destination = group['rt_destination']
+                if not rt_destination:
+                    rt_destination = group['rt_destination']
                 active_tag = group['active_tag']
                 protocol = group['protocol']
                 preference = group['preference']
+                preference2 = group['preference2']
                 text = group['text']
-                rt_dict = route_table_dict.setdefault('rt', {})
-                if rt_destination:
-                    rt_dict.update({'rt-destination': rt_destination})
+                metric = group['metric']
+                rt_tag = group['rt_tag']
+                rt_list = route_table_dict.setdefault('rt', [])
+                rt_dict = {}
+                rt_list.append(rt_dict)
                 rt_entry_dict = {}
-                rt_entry_dict.update({'active-tag': active_tag})
+                if active_tag:
+                    rt_entry_dict.update({'active-tag': active_tag})
                 rt_entry_dict.update({'protocol-name': protocol})
                 rt_entry_dict.update({'preference': preference})
-                age_dict = rt_entry_dict.setdefault('age', text)
+                if preference2:
+                    rt_entry_dict.update({'preference2': preference2})
+                if metric:
+                    rt_entry_dict.update({'metric': metric})
+                if rt_tag:
+                    rt_entry_dict.update({'rt-tag': rt_tag})
+                age_dict = rt_entry_dict.setdefault('age', {})
+                age_dict.update({'#text': text})
                 rt_dict.update({'rt-entry': rt_entry_dict})
+                if rt_destination:
+                    rt_dict.update({'rt-destination': rt_destination})
+                rt_destination = None
+                continue
+            
+            m = p2_1.match(line)
+            if m:
+                group = m.groupdict()
+                rt_entry_dict.update({'nh-type': group['nh_type']})
                 continue
 
             # >  to 10.169.14.121 via ge-0/0/1.0
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                _to = group['to']
-                via = group['via']
-                nh_dict = rt_entry_dict.setdefault('nh', {})
-                nh_dict.update({'to': _to})
-                nh_dict.update({'via': via})
+                nh_list = rt_entry_dict.setdefault('nh', [])
+                nh_dict = {}
+                nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                nh_list.append(nh_dict)
                 continue
             
             # 2001:db8:eb18:ca45::1/128
@@ -333,10 +431,7 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
             if m:
                 group = m.groupdict()
                 rt_destination = group['rt_destination']
-                rt_dict = route_table_dict.setdefault('rt', {})
-                rt_dict.update({'rt-destination': rt_destination})
                 continue
-            
         return ret_dict
 
 class ShowRouteProtocolNoMore(ShowRouteProtocol):
