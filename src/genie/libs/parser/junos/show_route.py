@@ -564,13 +564,20 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
 class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
     """ Parser for:
             * show route protocol {protocol} extensive
+            * show route protocol {protocol} table {table} extensive
     """
 
-    cli_command = 'show route protocol {protocol} extensive'
-    def cli(self, protocol, output=None):
+    cli_command = ['show route protocol {protocol} extensive',
+                    'show route protocol {protocol} table {table} extensive']
+    def cli(self, protocol, table=None, output=None):
         if not output:
-            cmd = self.cli_command.format(
-                protocol=protocol)
+            if table:
+                cmd = self.cli_command[1].format(
+                    protocol=protocol,
+                    table=table)
+            else:
+                cmd = self.cli_command[0].format(
+                    protocol=protocol)
             out = self.device.execute(cmd)
         else:
             out = output
@@ -681,8 +688,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 group = m.groupdict()
                 route_table = ret_dict.setdefault('route-information', {}). \
                     setdefault('route-table', [])
-                route_table_dict = {}
-                route_table_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                route_table_dict = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
                 route_table.append(route_table_dict)
                 continue
 
@@ -936,19 +942,3 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 continue
 
         return ret_dict
-
-class ShowRouteProtocolTableExtensive(ShowRouteProtocolExtensive):
-    """ Parser for:
-            * show route protocol {protocol} table {table} extensive
-    """
-    
-    cli_command = 'show route protocol {protocol} table {table} extensive'
-    def cli(self, protocol, table, output=None):
-        if not output:
-            cmd = self.cli_command.format(
-                protocol=protocol,
-                table=table)
-            out = self.device.execute(cmd)
-        else:
-            out = output
-        return super().cli(protocol=protocol, output=out)

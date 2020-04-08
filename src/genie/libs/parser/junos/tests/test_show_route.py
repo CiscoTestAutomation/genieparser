@@ -10,8 +10,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 from genie.libs.parser.junos.show_route import (ShowRouteTable,
                                                 ShowRouteProtocol,
-                                                ShowRouteProtocolExtensive,
-                                                ShowRouteProtocolTableExtensive)
+                                                ShowRouteProtocolExtensive)
 
 '''
 Unit test for:
@@ -56,8 +55,6 @@ class test_show_route_table(unittest.TestCase):
                         'preference': '9',
                         'protocol_name': 'LDP'}},
                 'total_route_count': 3}}}
-
-
 
     golden_output_2 = {'execute.return_value': '''
         #show route table inet.3 192.168.36.220
@@ -353,6 +350,7 @@ class TestShowRouteProtocol(unittest.TestCase):
 '''
 Unit test for:
     * show route protocol {protocol} extensive
+    * show route protocol {protocol} table {table} extensive
 '''
 class TestShowRouteProtocolExtensive(unittest.TestCase):
 
@@ -20066,33 +20064,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
         }
     }
 
-    def test_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowRouteProtocolExtensive(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(
-                protocol='ospf')
-
-    def test_golden(self):
-        self.device = Mock(**self.golden_output)
-        obj = ShowRouteProtocolExtensive(device=self.device)
-        parsed_output = obj.parse(
-            protocol='ospf')
-        self.assertEqual(parsed_output, self.golden_parsed_output)
-
-'''
-Unit test for:
-    * show route protocol {protocol} table {table} extensive
-'''
-class TestShowRouteProtocolTableExtensive(unittest.TestCase):
-
-    device = Device(name='aDevice')
-    maxDiff = None
-
-    empty_output = {'execute.return_value': '''
-    '''}
-
-    golden_output = {'execute.return_value': '''
+    golden_output_2 = {'execute.return_value': '''
         show route protocol ospf table inet.0 extensive
 
         inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
@@ -24575,7 +24547,7 @@ class TestShowRouteProtocolTableExtensive(unittest.TestCase):
                         AS path: I 
     '''}
 
-    golden_parsed_output = {
+    golden_parsed_output_2 = {
         "route-information": {
             "route-table": [
                 {
@@ -36138,19 +36110,25 @@ class TestShowRouteProtocolTableExtensive(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowRouteProtocolTableExtensive(device=self.device)
+        obj = ShowRouteProtocolExtensive(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(
-                protocol='ospf',
-                table='inet.0')
+                protocol='ospf')
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        obj = ShowRouteProtocolTableExtensive(device=self.device)
+        obj = ShowRouteProtocolExtensive(device=self.device)
+        parsed_output = obj.parse(
+            protocol='ospf')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowRouteProtocolExtensive(device=self.device)
         parsed_output = obj.parse(
             protocol='ospf',
             table='inet.0')
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 if __name__ == '__main__':
     unittest.main()
