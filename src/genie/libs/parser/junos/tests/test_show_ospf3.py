@@ -393,7 +393,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "lsa-id": "0.0.0.0",
                     "lsa-length": "56",
                     "lsa-type": "Router",
-                    "our-entry": None,
+                    "our-entry": True,
                     "sequence-number": "0x80001890"
                 },
                 {
@@ -448,7 +448,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "lsa-id": "0.0.0.1",
                     "lsa-length": "76",
                     "lsa-type": "IntraArPfx",
-                    "our-entry": None,
+                    "our-entry": True,
                     "sequence-number": "0x8000178a"
                 },
                 {
@@ -593,7 +593,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "lsa-id": "0.0.0.1",
                     "lsa-length": "44",
                     "lsa-type": "Extern",
-                    "our-entry": None,
+                    "our-entry": True,
                     "sequence-number": "0x8000063f"
                 },
                 {
@@ -612,7 +612,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "lsa-id": "0.0.0.2",
                     "lsa-length": "56",
                     "lsa-type": "Link",
-                    "our-entry": None,
+                    "our-entry": True,
                     "sequence-number": "0x8000178a"
                 },
                 {
@@ -640,7 +640,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "lsa-id": "0.0.0.3",
                     "lsa-length": "56",
                     "lsa-type": "Link",
-                    "our-entry": None,
+                    "our-entry": True,
                     "sequence-number": "0x80001789"
                 },
                 {
@@ -650,7 +650,7 @@ class TestShowOspf3Database(unittest.TestCase):
                     "lsa-id": "0.0.0.1",
                     "lsa-length": "44",
                     "lsa-type": "Link",
-                    "our-entry": None,
+                    "our-entry": True,
                     "sequence-number": "0x8000178b"
                 }
             ],

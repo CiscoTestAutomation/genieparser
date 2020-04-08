@@ -404,7 +404,7 @@ class ShowOspf3DatabaseSchema(MetaParser):
                 "lsa-length": str,
                 "lsa-type": str,
                 "sequence-number": str,
-                Optional('our-entry'): None
+                Optional('our-entry'): bool
             })
         # Validate each dictionary in list
         for item in value:
@@ -495,7 +495,7 @@ class ShowOspf3Database(ShowOspf3DatabaseSchema):
                 lsa_id = entry['lsa-id']
                 if lsa_id[0] == '*':
                     entry['lsa-id'] = lsa_id[1:]
-                    entry['our-entry'] = None
+                    entry['our-entry'] = True
 
                 entry_list.append(entry)
                 continue
