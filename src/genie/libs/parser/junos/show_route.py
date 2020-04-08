@@ -299,15 +299,22 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
     """ Parser for:
             * show route protocol {protocol} {ip_address}
             * show route protocol {protocol}
+            * show route protocol {protocol} table {table}
     """
     cli_command = ['show route protocol {protocol}',
-                    'show route protocol {protocol} {ip_address}']
-    def cli(self, protocol, ip_address=None, output=None):
+                    'show route protocol {protocol} {ip_address}',
+                    'show route protocol {protocol} table {table}']
+
+    def cli(self, protocol, ip_address=None, table=None, output=None):
         if not output:
             if ip_address:
                 cmd = self.cli_command[1].format(
                     protocol=protocol,
                     ip_address=ip_address)
+            elif table:
+                cmd = self.cli_command[2].format(
+                    protocol=protocol,
+                    table=table)
             else:
                 cmd = self.cli_command[0].format(
                     protocol=protocol)
@@ -442,61 +449,3 @@ class ShowRouteProtocolNoMore(ShowRouteProtocol):
         
         return super().cli(protocol=protocol,
             ip_address=ip_address, output=out)
-
-class ShowRouteProtocolTable(ShowRouteProtocol):
-    """ Parser for:
-            * show route protocol {protocol} table {table}
-    """
-    """
-        schema = {
-            Optional("@xmlns:junos"): str,
-            "route-information": {
-                Optional("@xmlns"): str,
-                "route-table": {
-                    "active-route-count": str,
-                    "destination-count": str,
-                    "hidden-route-count": str,
-                    "holddown-route-count": str,
-                    "rt": [
-                        {
-                            Optional("@junos:style"): str,
-                            "rt-destination": str,
-                            "rt-entry": {
-                                "active-tag": str,
-                                "age": {
-                                    "#text": str,
-                                    Optional("@junos:seconds"): str
-                                },
-                                "current-active": str,
-                                "last-active": str,
-                                "metric": str,
-                                "nh": {
-                                    "selected-next-hop": str,
-                                    "to": str,
-                                    "via": str
-                                },
-                                "nh-type": str,
-                                "preference": str,
-                                "preference2": str,
-                                "protocol-name": str,
-                                "rt-tag": str
-                            }
-                        }
-                    ],
-                    "table-name": str,
-                    "total-route-count": str
-                }
-            }
-        }
-    """
-    cli_command = 'show route protocol {protocol} table {table}'
-    def cli(self, protocol, table, output=None):
-        if not output:
-            cmd = self.cli_command.format(
-                    protocol=protocol,
-                    table=table)
-            out = self.device.execute(cmd)
-        else:
-            out = output
-        
-        return super().cli(protocol=protocol, output=out)

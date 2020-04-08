@@ -9,8 +9,7 @@ from pyats.topology import Device, loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 from genie.libs.parser.junos.show_route import (ShowRouteTable,
-                                                ShowRouteProtocol,
-                                                ShowRouteProtocolTable)
+                                                ShowRouteProtocol)
 
 '''
 Unit test for:
@@ -229,7 +228,9 @@ class test_show_route_table(unittest.TestCase):
 
 '''
 Unit test for:
+    * show route protocol {protocol}
     * show route protocol {protocol} {ip_address}
+    * show route protocol {protocol} table {table}
 '''
 class TestShowRouteProtocol(unittest.TestCase):
 
@@ -6379,49 +6380,7 @@ class TestShowRouteProtocol(unittest.TestCase):
         }
     }
 
-    def test_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowRouteProtocol(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(
-                protocol='static',
-                ip_address='10.169.14.240/32')
-
-    def test_golden(self):
-        self.device = Mock(**self.golden_output)
-        obj = ShowRouteProtocol(device=self.device)
-        parsed_output = obj.parse(
-            protocol='static',
-            ip_address='10.169.14.240/32')
-        self.assertEqual(parsed_output, self.golden_parsed_output)
-    
-    def test_golden_2(self):
-        self.device = Mock(**self.golden_output_2)
-        obj = ShowRouteProtocol(device=self.device)
-        parsed_output = obj.parse(
-            protocol='static',
-            ip_address='2001:db8:eb18:ca45::1')
-        self.assertEqual(parsed_output, self.golden_parsed_output_2)
-    
-    def test_golden_3(self):
-        self.device = Mock(**self.golden_output_3)
-        obj = ShowRouteProtocol(device=self.device)
-        parsed_output = obj.parse(
-            protocol='ospf')
-        self.assertEqual(parsed_output, self.golden_parsed_output_3)
-    
-
-'''Unit test for:
-    * show route protocol {protocol} table {table}
-'''
-class TestShowRouteProtocolTable(unittest.TestCase):
-
-    device = Device(name='aDevice')
-    maxDiff = None
-
-    empty_output = {'execute.return_value': ''}
-
-    golden_output = {'execute.return_value': '''
+    golden_output_4 = {'execute.return_value': '''
         show route protocol ospf table inet.0
 
         inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
@@ -6901,7 +6860,7 @@ class TestShowRouteProtocolTable(unittest.TestCase):
                             MultiRecv
     '''}
 
-    golden_parsed_output = {
+    golden_parsed_output_4 = {
         "route-information": {
             "route-table": [
                 {
@@ -11401,19 +11360,42 @@ class TestShowRouteProtocolTable(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowRouteProtocolTable(device=self.device)
+        obj = ShowRouteProtocol(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(
-                protocol='ospf',
-                table='inet.0')
+                protocol='static',
+                ip_address='10.169.14.240/32')
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        obj = ShowRouteProtocolTable(device=self.device)
+        obj = ShowRouteProtocol(device=self.device)
+        parsed_output = obj.parse(
+            protocol='static',
+            ip_address='10.169.14.240/32')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+    
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowRouteProtocol(device=self.device)
+        parsed_output = obj.parse(
+            protocol='static',
+            ip_address='2001:db8:eb18:ca45::1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+    
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowRouteProtocol(device=self.device)
+        parsed_output = obj.parse(
+            protocol='ospf')
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+    def test_golden_4(self):
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowRouteProtocol(device=self.device)
         parsed_output = obj.parse(
             protocol='ospf',
             table='inet.0')
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 if __name__ == '__main__':
     unittest.main()
