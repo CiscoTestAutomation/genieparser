@@ -727,7 +727,7 @@ class ShowOspf3DatabaseExternalExtensive(ShowOspf3DatabaseExternalExtensiveSchem
 
                 last_database.setdefault("ospf-database-extensive", {}).setdefault("lsa-changed-time", {})
 
-                group = m.groupdict() # database_entry_state
+                group = m.groupdict()
                 last_database["ospf-database-extensive"]["lsa-changed-time"]["#text"] = group['lsa_changed_time']
                 last_database["ospf-database-extensive"]["lsa-change-count"] = group['lsa_change_count']
                 last_database["ospf-database-extensive"]["database-entry-state"] = group['database_entry_state']
