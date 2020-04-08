@@ -433,3 +433,117 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
                 continue
         return ret_dict
 
+
+class ShowOspfDatabaseSchema(MetaParser):
+    '''
+    schema = {
+    "ospf-database-information": {
+        "ospf-area-header": {
+            "ospf-area": str
+        },
+        "ospf-database": [
+            {
+                "advertising-router": str,
+                "age": str,
+                "checksum": str,
+                "lsa-id": str,
+                "lsa-length": str,
+                "lsa-type": str,
+                "options": str,
+                Optional('our-entry'): bool
+                "sequence-number": str
+            }
+        ]
+    }
+}
+    '''
+    def validate_neighbor_database_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-neighbor is not a list')
+        neighbor_schema = Schema({
+            "advertising-router": str,
+                "age": str,
+                "checksum": str,
+                "lsa-id": str,
+                "lsa-length": str,
+                "lsa-type": str,
+                "options": str,
+                Optional('our-entry'): bool,
+                "sequence-number": str
+        })
+        for item in value:
+            neighbor_schema.validate(item)
+        return value
+    schema = {
+        'ospf-database-information': {
+            "ospf-area-header": {
+            "ospf-area": str
+        },
+            'ospf-database': Use(validate_neighbor_database_list)
+        }
+    }
+
+'''
+Parser for:
+    * show ospf database
+'''
+class ShowOspfDatabase(ShowOspfDatabaseSchema):
+    cli_command = 'show ospf database'
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        ret_dict = {}
+
+        
+
+        #OSPF database, Area 0.0.0.8
+        p1 = re.compile(r'^OSPF database, Area +(?P<ospf_area>[\w\.\:\/]+)$')
+
+        #Router   3.3.3.3          3.3.3.3          0x80004d2d    61  0x22 0xa127 2496
+        p2 = re.compile(r'^(?P<lsa_type>[a-zA-Z]+)+(\*+|\s+)(?P<lsa_id>[\d\.\*]+)+(\s+)(?P<advertising_router>[\d\.]+)+'
+                r'(\s+)(?P<sequence_number>\S+)(\s+)+(?P<age>\d+)(\s+)+(?P<options>\S+)(\s+)+(?P<checksum>\S+)(\s+)+(?P<lsa_length>\d+)$')
+
+        #(?P<lsa_type>[a-zA-Z]+)+(\*+|\s+)(?P<aa>[\d\.\*]+)+(\s+)(?P<a>[\d\.]+)+(\s+)(?P<b>\S+)(\s+)+(?P<c>\d+)(\s+)+(?P<v>\S+)(\s+)+(?P<wewe>\S+)(\s+)+(?P<asdf>\d+)
+
+        #(?P<lsa_type>[a-zA-Z]+)+(\*+|\s+)(?P<aa>[\d\.\*]+)+(\s+)(?P<a>[\d\.]+)+(\s+)(?P<b>\S+)(\s+)+(?P<c>\d+)(\s+)+(?P<v>\S+)(\s+)+(?P<wewe>\S+)(\s+)+(?P<asdf>\d+)
+        
+        for line in out.splitlines():
+            line = line.strip()
+
+            #OSPF database, Area 0.0.0.8
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_database_info_dict = ret_dict.setdefault('ospf-database-information', {})
+
+                ospf_database_info_list = ospf_database_info_dict.setdefault('ospf-database', [])
+                ospf_database_info_dict2 = ospf_database_info_dict.setdefault('ospf-area-header', {})
+                ospf_database_info_dict2['ospf-area'] = group['ospf_area']
+                continue
+            
+            #Router   3.3.3.3          3.3.3.3          0x80004d2d    61  0x22 0xa127 2496
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_entry_dict = {}
+                ospf_entry_dict['lsa-type'] = group['lsa_type']
+                if group['lsa_id'][0] == '*':
+                    ospf_entry_dict['lsa-id'] = group['lsa_id'][1:]
+                    ospf_entry_dict['our-entry'] = True
+                else:
+                    ospf_entry_dict['lsa-id'] = group['lsa_id']
+                #ospf_entry_dict['lsa-id'] = group['lsa_id']
+                ospf_entry_dict['advertising-router'] = group['advertising_router']
+                ospf_entry_dict['sequence-number'] = group['sequence_number']
+                ospf_entry_dict['age'] = group['age']
+                ospf_entry_dict['options'] = group['options']
+                ospf_entry_dict['checksum'] = group['checksum']
+                ospf_entry_dict['lsa-length'] = group['lsa_length']
+                ospf_database_info_list.append(ospf_entry_dict)
+                continue
+
+        return ret_dict
+
