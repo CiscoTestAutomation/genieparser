@@ -85,7 +85,6 @@
         * show arp | no-more
     * Added ShowRouteProtocolExtensive for:
         * show route protocol {protocol} extensive
-    * Added ShowRouteProtocolTableExtensive for:
         * show route protocol {protocol} table {table} extensive
     * Added ShowOspf3Database for:
         * show ospf3 database
