@@ -109,7 +109,10 @@ class Ping(PingSchema):
                 r'(?P<source>\S+) --> +(?P<address>\S+)$')
 
         # 64 bytes from 10.189.5.94: icmp_seq=0 ttl=62 time=2.261 ms
-        p2 = re.compile(r'^(?P<bytes>\d+)\s+bytes\s+from\s+(?P<from>\S+)(:|,)\s+icmp_seq=(?P<icmp_seq>\d+)\s+(ttl=(?P<ttl>\d+)|hlim=(?P<hlim>\d+)) +time=(?P<time>\S+) +ms$')
+        p2 = re.compile(r'^(?P<bytes>\d+)\s+bytes\s+from\s+(?P<from>\S+)'
+                r'(:|,)\s+icmp_seq=(?P<icmp_seq>\d+)\s+'
+                r'(ttl=(?P<ttl>\d+)|hlim=(?P<hlim>\d+)) +'
+                r'time=(?P<time>\S+) +ms$')
 
         # 5 packets transmitted, 5 packets received, 0% packet loss
         p3 = re.compile(r'^(?P<send>\d+) +packets +transmitted, +'
@@ -118,7 +121,9 @@ class Ping(PingSchema):
         
         # round-trip min/avg/max/stddev = 1.823/2.175/2.399/0.191 ms
         # round-trip min/avg/max/std-dev = 0.677/98.186/973.514/291.776 ms
-        p4 = re.compile(r'^round-trip +min\/avg\/max\/std(\-)?dev +\= +(?P<min>[\d\.]+)\/(?P<avg>[\d\.]+)\/(?P<max>[\d\.]+)\/(?P<stddev>[\d\.]+) +ms$')
+        p4 = re.compile(r'^round-trip +min\/avg\/max\/std(\-)?'
+                r'dev +\= +(?P<min>[\d\.]+)\/(?P<avg>[\d\.]+)\/'
+                r'(?P<max>[\d\.]+)\/(?P<stddev>[\d\.]+) +ms$')
         
         for line in out.splitlines():
             line = line.strip()
@@ -156,7 +161,8 @@ class Ping(PingSchema):
             if m:
                 group = m.groupdict()
                 ping_statistics_dict = ping_dict.setdefault('statistics', {})
-                ping_statistics_dict.update({k.replace('_', '-'): (int(v) if v.isdigit() else v) for k, v in group.items() if v is not None})
+                ping_statistics_dict.update({k.replace('_', '-'): (
+                    int(v) if v.isdigit() else v) for k, v in group.items() if v is not None})
                 continue
             
             # round-trip min/avg/max/stddev = 1.823/2.175/2.399/0.191 ms
