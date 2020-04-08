@@ -412,7 +412,6 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                # nh_dict = rt_entry_dict.setdefault('nh', {})
                 nh_list = rt_entry_dict.setdefault('nh', [])
                 nh_dict = {}
                 nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
