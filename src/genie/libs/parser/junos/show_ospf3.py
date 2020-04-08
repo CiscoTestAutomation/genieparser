@@ -604,7 +604,8 @@ class ShowOspf3DatabaseExternalExtensive(ShowOspf3DatabaseExternalExtensiveSchem
         p2 = re.compile(r'^Prefix (?P<ospf3_prefix>\S+)$')
 
         # Prefix-options 0x0, Metric 1, Type 1,
-        p3 = re.compile(r'^Prefix-options (?P<ospf3_prefix_options>\S+), Metric (?P<metric>\S+), Type (?P<type_value>\S+),$')
+        p3 = re.compile(r'^Prefix-options (?P<ospf3_prefix_options>\S+),'
+            r' Metric (?P<metric>\S+), Type (?P<type_value>\S+),$')
 
         # Aging timer 00:36:27
         p4 = re.compile(r'^Aging timer +(?P<aging_timer>(\S+ ){0,1}\d\d:\d\d:\d\d)$')
@@ -613,13 +614,17 @@ class ShowOspf3DatabaseExternalExtensive(ShowOspf3DatabaseExternalExtensiveSchem
         p5 = re.compile(r'^Gen timer (?P<generation_timer>\S+)$')
 
         # Installed 00:23:26 ago, expires in 00:36:28, sent 00:23:24 ago
-        p6 = re.compile(r'^Installed (?P<installation_time>(\S+ ){0,1}\d\d:\d\d:\d\d) ago, expires in (?P<expiration_time>(\S+ ){0,1}\d\d:\d\d:\d\d), sent (?P<send_time>(\S+ ){0,1}\d\d:\d\d:\d\d) ago$')
+        p6 = re.compile(r'^Installed (?P<installation_time>(\S+ ){0,1}\d\d:\d\d:\d\d)'
+            r' ago, expires in (?P<expiration_time>(\S+ ){0,1}\d\d:\d\d:\d\d),'
+            r' sent (?P<send_time>(\S+ ){0,1}\d\d:\d\d:\d\d) ago$')
 
         # Last changed 29w5d 21:04:29 ago, Change count: 1
-        p7 =re.compile(r'^Last changed (?P<lsa_changed_time>(\S+ ){0,1}\d\d:\d\d:\d\d) ago, Change count: (?P<lsa_change_count>\d+)$')
+        p7 =re.compile(r'^Last changed (?P<lsa_changed_time>(\S+ ){0,1}\d\d:\d\d:\d\d)'
+            r' ago, Change count: (?P<lsa_change_count>\d+)$')
 
         # Last changed 3w0d 17:02:47 ago, Change count: 2, Ours
-        p8 = re.compile(r'^Last changed (?P<lsa_changed_time>(\S+ ){0,1}\d\d:\d\d:\d\d) ago, Change count: (?P<lsa_change_count>\d+), (?P<database_entry_state>\S+)$')
+        p8 = re.compile(r'^Last changed (?P<lsa_changed_time>(\S+ ){0,1}\d\d:\d\d:\d\d)'
+            r' ago, Change count: (?P<lsa_change_count>\d+), (?P<database_entry_state>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -684,10 +689,12 @@ class ShowOspf3DatabaseExternalExtensive(ShowOspf3DatabaseExternalExtensiveSchem
             if m:
                 last_database = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
 
-                last_database.setdefault("ospf-database-extensive", {}).setdefault("generation-timer", {})
+                last_database.setdefault("ospf-database-extensive", {})\
+                    .setdefault("generation-timer", {})
 
                 group = m.groupdict()
-                last_database["ospf-database-extensive"]["generation-timer"]["#text"] = group['generation_timer']
+                last_database["ospf-database-extensive"]["generation-timer"]["#text"]\
+                     = group['generation_timer']
 
                 continue
 
@@ -696,14 +703,20 @@ class ShowOspf3DatabaseExternalExtensive(ShowOspf3DatabaseExternalExtensiveSchem
             if m:
                 last_database = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
 
-                last_database.setdefault("ospf-database-extensive", {}).setdefault("expiration-time", {})
-                last_database.setdefault("ospf-database-extensive", {}).setdefault("installation-time", {})
-                last_database.setdefault("ospf-database-extensive", {}).setdefault("send-time", {})
+                last_database.setdefault("ospf-database-extensive", {})\
+                    .setdefault("expiration-time", {})
+                last_database.setdefault("ospf-database-extensive", {})\
+                    .setdefault("installation-time", {})
+                last_database.setdefault("ospf-database-extensive", {})\
+                    .setdefault("send-time", {})
 
                 group = m.groupdict()
-                last_database["ospf-database-extensive"]["expiration-time"]["#text"] = group['expiration_time']
-                last_database["ospf-database-extensive"]["installation-time"]["#text"] = group['installation_time']
-                last_database["ospf-database-extensive"]["send-time"]["#text"] = group['send_time']
+                last_database["ospf-database-extensive"]["expiration-time"]["#text"]\
+                     = group['expiration_time']
+                last_database["ospf-database-extensive"]["installation-time"]["#text"]\
+                     = group['installation_time']
+                last_database["ospf-database-extensive"]["send-time"]["#text"]\
+                     = group['send_time']
 
                 continue
 
@@ -715,8 +728,10 @@ class ShowOspf3DatabaseExternalExtensive(ShowOspf3DatabaseExternalExtensiveSchem
                 last_database.setdefault("ospf-database-extensive", {}).setdefault("lsa-changed-time", {})
 
                 group = m.groupdict()
-                last_database["ospf-database-extensive"]["lsa-changed-time"]["#text"] = group['lsa_changed_time']
-                last_database["ospf-database-extensive"]["lsa-change-count"] = group['lsa_change_count']
+                last_database["ospf-database-extensive"]["lsa-changed-time"]["#text"]\
+                    = group['lsa_changed_time']
+                last_database["ospf-database-extensive"]["lsa-change-count"]\
+                    = group['lsa_change_count']
 
                 continue
 
@@ -725,12 +740,16 @@ class ShowOspf3DatabaseExternalExtensive(ShowOspf3DatabaseExternalExtensiveSchem
             if m:
                 last_database = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
 
-                last_database.setdefault("ospf-database-extensive", {}).setdefault("lsa-changed-time", {})
+                last_database.setdefault("ospf-database-extensive", {})\
+                    .setdefault("lsa-changed-time", {})
 
                 group = m.groupdict()
-                last_database["ospf-database-extensive"]["lsa-changed-time"]["#text"] = group['lsa_changed_time']
-                last_database["ospf-database-extensive"]["lsa-change-count"] = group['lsa_change_count']
-                last_database["ospf-database-extensive"]["database-entry-state"] = group['database_entry_state']
+                last_database["ospf-database-extensive"]["lsa-changed-time"]["#text"]\
+                    = group['lsa_changed_time']
+                last_database["ospf-database-extensive"]["lsa-change-count"]\
+                    = group['lsa_change_count']
+                last_database["ospf-database-extensive"]["database-entry-state"]\
+                    = group['database_entry_state']
 
                 continue
 
