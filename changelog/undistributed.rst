@@ -70,7 +70,9 @@
     * Added ShowOspfNeighbor for:
         * show ospf neighbor
     * Added ShowRouteProtocol for:
+        * show route protocol {protocol}
         * show route protocol {protocol} {ip_address}
+        * show route protocol {protocol} table {table}
     * Added ShowRouteProtocolNoMore for:
         * show route protocol {protocol} {ip_address} | no-more
     * Added ShowOspf3Interface for:
