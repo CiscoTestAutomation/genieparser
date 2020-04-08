@@ -75,6 +75,10 @@
         * show route protocol {protocol} {ip_address} | no-more
     * Added ShowOspf3Interface for:
         * show ospf3 interface
+    * Added ShowOspf3Neighbor for:
+        * show ospf3 neighbor | no more
+    * Added ShowOspf3NeighborExtensive for:
+        * show ospf3 neighbor extensive
     * Added ShowArp for:
         * show arp
     * Added ShowArpNoMore for:
@@ -143,6 +147,8 @@
         * Fix the way that assigns value to key 'vrf'
     * Update ShowStandbyAll:
         * Update regex to support various outputs.
+    * Update ShowInventory:
+        * Added regex to support various outputs.
 * NXOS
     * Updated ShowInterface
         * Update regex to cover both 'IP' and 'ip', both 'Rx' and 'RX'

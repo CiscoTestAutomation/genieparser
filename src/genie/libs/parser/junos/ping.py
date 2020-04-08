@@ -13,32 +13,36 @@ from genie.metaparser.util.schemaengine import (Any,
         Optional, Use, SchemaTypeError, Schema)
 
 class PingSchema(MetaParser):
-    # schema = {
-    #     'ping': {
-    #         'addr': str,
-    #         'data-bytes': int,
-    #         'result': [
-    #             {
-    #                 'bytes': int,
-    #                 'from': str,
-    #                 'icmp-seq': int,
-    #                 'ttl': int,
-    #                 'time': str,
-    #             }
-    #         ],
-    #         'ping-statistics': {
-    #             'send': str,
-    #             'received': str,
-    #             'loss-rate': str,
-    #             'round-trip': {
-    #                 'min': str,
-    #                 'avg': str,
-    #                 'max': str,
-    #                 'stddev': str,
-    #             }
-    #         }
-    #     }
-    # }
+    """
+        schema = {
+            'ping': {
+                'addrress': str,
+                'source': str,
+                'data-bytes': int,
+                'result': [
+                    {
+                        'bytes': int,
+                        'from': str,
+                        'icmp-seq': int,
+                        'ttl': int,
+                        'hlim': int,
+                        'time': str,
+                    }
+                ],
+                'ping-statistics': {
+                    'send': str,
+                    'received': str,
+                    'loss-rate': str,
+                    'round-trip': {
+                        'min': str,
+                        'avg': str,
+                        'max': str,
+                        'stddev': str,
+                    }
+                }
+            }
+        }
+    """
     def validate_ping_result_list(value):
         # Pass ping result list of dict in value
         if not isinstance(value, list):
@@ -48,7 +52,8 @@ class PingSchema(MetaParser):
                     'bytes': int,
                     'from': str,
                     'icmp-seq': int,
-                    'ttl': int,
+                    Optional('hlim'): int,
+                    Optional('ttl'): int,
                     'time': str,
                 })
         # Validate each dictionary in list
@@ -60,6 +65,7 @@ class PingSchema(MetaParser):
     schema = {
         'ping': {
             'address': str,
+            'source': str,
             'data-bytes': int,
             'result': Use(validate_ping_result_list),
             'statistics': {
@@ -95,13 +101,15 @@ class Ping(PingSchema):
         ret_dict = {}
 
         # PING 10.189.5.94 (10.189.5.94): 56 data bytes
-        p1 = re.compile(r'^PING +(?P<address>\S+) +\(\S+\): +'
+        p1 = re.compile(r'^PING +(?P<address>\S+) +\((?P<source>\S+)\): +'
                 r'(?P<data_bytes>\d+) +data +bytes$')
+        
+        # PING6(56=40+8+8 bytes) 2001:268:fb90:14::1 --> 2001:268:fb90:14::2
+        p1_1 = re.compile(r'^PING6\((?P<data_bytes>\d+)=\S+ +bytes\) +'
+                r'(?P<source>\S+) --> +(?P<address>\S+)$')
 
         # 64 bytes from 10.189.5.94: icmp_seq=0 ttl=62 time=2.261 ms
-        p2 = re.compile(r'^(?P<bytes>\d+) +bytes +from +(?P<from>\S+): +'
-                r'icmp_seq=(?P<icmp_seq>\d+) +ttl=(?P<ttl>\d+) +'
-                r'time=(?P<time>\S+) +ms$')
+        p2 = re.compile(r'^(?P<bytes>\d+)\s+bytes\s+from\s+(?P<from>\S+)(:|,)\s+icmp_seq=(?P<icmp_seq>\d+)\s+(ttl=(?P<ttl>\d+)|hlim=(?P<hlim>\d+)) +time=(?P<time>\S+) +ms$')
 
         # 5 packets transmitted, 5 packets received, 0% packet loss
         p3 = re.compile(r'^(?P<send>\d+) +packets +transmitted, +'
@@ -109,15 +117,22 @@ class Ping(PingSchema):
                 r'(?P<loss_rate>\d+)\% +packet +loss$')
         
         # round-trip min/avg/max/stddev = 1.823/2.175/2.399/0.191 ms
-        p4 = re.compile(r'^round-trip +min\/avg\/max\/stddev +\= +'
-                r'(?P<min>[\d\.]+)\/(?P<avg>[\d\.]+)\/(?P<max>[\d\.]+)\/'
-                r'(?P<stddev>[\d\.]+) +ms$')
+        # round-trip min/avg/max/std-dev = 0.677/98.186/973.514/291.776 ms
+        p4 = re.compile(r'^round-trip +min\/avg\/max\/std(\-)?dev +\= +(?P<min>[\d\.]+)\/(?P<avg>[\d\.]+)\/(?P<max>[\d\.]+)\/(?P<stddev>[\d\.]+) +ms$')
         
         for line in out.splitlines():
             line = line.strip()
 
             # PING 10.189.5.94 (10.189.5.94): 56 data bytes
             m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ping_dict = ret_dict.setdefault('ping', {})
+                ping_dict.update({k.replace('_', '-'): (int(v) 
+                    if v.isdigit() else v) for k, v in group.items() if v is not None})
+                continue
+
+            m = p1_1.match(line)
             if m:
                 group = m.groupdict()
                 ping_dict = ret_dict.setdefault('ping', {})
