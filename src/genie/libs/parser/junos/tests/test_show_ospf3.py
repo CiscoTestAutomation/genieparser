@@ -80,12 +80,12 @@ class TestShowOspf3NeighborExtensive(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         show ospf3 neighbor extensive
         ID               Interface              State     Pri   Dead
-        111.87.5.253     ge-0/0/0.0             Full      128     35
+        10.189.5.253     ge-0/0/0.0             Full      128     35
           Neighbor-address fe80::250:56ff:fe8d:53c0
           Area 0.0.0.8, opt 0x13, OSPF3-Intf-Index 2
           DR-ID 0.0.0.0, BDR-ID 0.0.0.0
           Up 3w0d 17:07:00, adjacent 3w0d 17:07:00
-        106.187.14.240   ge-0/0/1.0             Full      128     33
+        10.169.14.240   ge-0/0/1.0             Full      128     33
           Neighbor-address fe80::250:56ff:fe8d:72bd
          Area 0.0.0.8, opt 0x13, OSPF3-Intf-Index 3
           DR-ID 0.0.0.0, BDR-ID 0.0.0.0
@@ -104,7 +104,7 @@ class TestShowOspf3NeighborExtensive(unittest.TestCase):
                     "neighbor-adjacency-time": {
                         "#text": "3w0d 17:07:00"
                     },
-                    "neighbor-id": "111.87.5.253",
+                    "neighbor-id": "10.189.5.253",
                     "neighbor-priority": "128",
                     "neighbor-up-time": {
                         "#text": "3w0d 17:07:00"
@@ -123,7 +123,7 @@ class TestShowOspf3NeighborExtensive(unittest.TestCase):
                     "neighbor-adjacency-time": {
                         "#text": "3w0d 17:06:55"
                     },
-                    "neighbor-id": "106.187.14.240",
+                    "neighbor-id": "10.169.14.240",
                     "neighbor-priority": "128",
                     "neighbor-up-time": {
                         "#text": "3w0d 17:06:59"
@@ -163,12 +163,12 @@ class TestShowOspf3NeighborDetail(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         show ospf3 neighbor detail
         ID               Interface              State     Pri   Dead
-        111.87.5.253     ge-0/0/0.0             Full      128     34
+        10.189.5.253     ge-0/0/0.0             Full      128     34
           Neighbor-address fe80::250:56ff:fe8d:53c0
           Area 0.0.0.8, opt 0x13, OSPF3-Intf-Index 2
           DR-ID 0.0.0.0, BDR-ID 0.0.0.0
           Up 3w0d 17:06:45, adjacent 3w0d 17:06:45
-        106.187.14.240   ge-0/0/1.0             Full      128     31
+        10.169.14.240   ge-0/0/1.0             Full      128     31
           Neighbor-address fe80::250:56ff:fe8d:72bd
           Area 0.0.0.8, opt 0x13, OSPF3-Intf-Index 3
           DR-ID 0.0.0.0, BDR-ID 0.0.0.0
@@ -187,7 +187,7 @@ class TestShowOspf3NeighborDetail(unittest.TestCase):
                     "neighbor-adjacency-time": {
                         "#text": "3w0d 17:06:45"
                     },
-                    "neighbor-id": "111.87.5.253",
+                    "neighbor-id": "10.189.5.253",
                     "neighbor-priority": "128",
                     "neighbor-up-time": {
                         "#text": "3w0d 17:06:45"
@@ -206,7 +206,7 @@ class TestShowOspf3NeighborDetail(unittest.TestCase):
                     "neighbor-adjacency-time": {
                         "#text": "3w0d 17:06:40"
                     },
-                    "neighbor-id": "106.187.14.240",
+                    "neighbor-id": "10.169.14.240",
                     "neighbor-priority": "128",
                     "neighbor-up-time": {
                         "#text": "3w0d 17:06:44"
@@ -245,9 +245,9 @@ class TestShowOspf3Neighbor(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         show ospf3 neighbor | no-more
         ID               Interface              State     Pri   Dead
-        111.87.5.253     ge-0/0/0.0             Full      128     35
+        10.189.5.253     ge-0/0/0.0             Full      128     35
           Neighbor-address fe80::250:56ff:fe8d:53c0
-        106.187.14.240   ge-0/0/1.0             Full      128     33
+        10.169.14.240   ge-0/0/1.0             Full      128     33
           Neighbor-address fe80::250:56ff:fe8d:72bd
     '''}
 
@@ -258,7 +258,7 @@ class TestShowOspf3Neighbor(unittest.TestCase):
                     "activity-timer": "35",
                     "interface-name": "ge-0/0/0.0",
                     "neighbor-address": "fe80::250:56ff:fe8d:53c0",
-                    "neighbor-id": "111.87.5.253",
+                    "neighbor-id": "10.189.5.253",
                     "neighbor-priority": "128",
                     "ospf-neighbor-state": "Full"
                 },
@@ -266,7 +266,7 @@ class TestShowOspf3Neighbor(unittest.TestCase):
                     "activity-timer": "33",
                     "interface-name": "ge-0/0/1.0",
                     "neighbor-address": "fe80::250:56ff:fe8d:72bd",
-                    "neighbor-id": "106.187.14.240",
+                    "neighbor-id": "10.169.14.240",
                     "neighbor-priority": "128",
                     "ospf-neighbor-state": "Full"
                 }

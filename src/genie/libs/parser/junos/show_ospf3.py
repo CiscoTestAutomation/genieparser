@@ -175,7 +175,7 @@ class ShowOspf3NeighborExtensive(ShowOspf3NeighborExtensiveSchema):
 
         ret_dict = {}
 
-        #111.87.5.253     ge-0/0/0.0             Full      128     35
+        #10.189.5.253     ge-0/0/0.0             Full      128     35
         p1 = re.compile(r'^(?P<neighborid>[\w\.\:\/]+) +(?P<interfacename>\S+) '
                 r'+(?P<ospfneighborstate>\S+) +(?P<pri>\S+) +(?P<dead>\d+)$')
         
@@ -194,7 +194,7 @@ class ShowOspf3NeighborExtensive(ShowOspf3NeighborExtensiveSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            #111.87.5.253     ge-0/0/0.0             Full      128     35
+            #10.189.5.253     ge-0/0/0.0             Full      128     35
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -309,7 +309,7 @@ class ShowOspf3Neighbor(ShowOspf3NeighborSchema):
 
         ret_dict = {}
 
-        #111.87.5.253     ge-0/0/0.0             Full      128     35
+        #10.189.5.253     ge-0/0/0.0             Full      128     35
         p1 = re.compile(r'^(?P<id>[\d\.]+) +(?P<interface>\S+) '
                 r'+(?P<state>\S+) +(?P<pri>\S+) +(?P<dead>\d+)$')
         
@@ -319,7 +319,7 @@ class ShowOspf3Neighbor(ShowOspf3NeighborSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            #111.87.5.253     ge-0/0/0.0             Full      128     35
+            #10.189.5.253     ge-0/0/0.0             Full      128     35
             m = p1.match(line)
             if m:
                 group = m.groupdict()

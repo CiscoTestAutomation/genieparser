@@ -83,6 +83,9 @@
         * show arp
     * Added ShowArpNoMore for:
         * show arp | no-more
+    * Added Ping for:
+        * ping {addr}
+        * ping {addr} count {count}
 
 
 --------------------------------------------------------------------------------
