@@ -11,6 +11,8 @@ class TestShowKrtState(unittest.TestCase):
 
     device = Device(name='aDevice')
 
+    maxDiff = None
+
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
@@ -85,6 +87,8 @@ Routing socket lossage:
 class TestShowKrtQueue(unittest.TestCase):
 
     device = Device(name='aDevice')
+
+    maxDiff = None
 
     empty_output = {'execute.return_value': ''}
 

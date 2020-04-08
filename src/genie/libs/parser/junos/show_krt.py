@@ -1,3 +1,10 @@
+""" show_krt.py
+
+JunOs parsers for the following show commands:
+    * show krt state
+    * show krt queue
+"""
+
 import re
 
 from genie.metaparser import MetaParser
@@ -62,22 +69,29 @@ class ShowKrtState(ShowKrtStateSchema):
         p3 = re.compile(r'^Interface routes: +(?P<krtq_interface_routes>\d+)$')
 
         #High pri multicast   Adds/Changes: 0
-        p4 = re.compile(r'^High pri multicast   Adds\/Changes: +(?P<krtq_high_multicast_adds_changes>\d+)$')
+        p4 = re.compile(r'^High pri multicast   +Adds\/Changes: +'
+                        r'(?P<krtq_high_multicast_adds_changes>\d+)$')
 
         #Indirect Next Hop    Adds/Changes: 0       Deletes: 0
-        p5 = re.compile(r'^Indirect Next Hop    Adds\/Changes: +(?P<krtq_indirect_adds_changes>\d+) +Deletes: +(?P<krtq_indirect_deletes>\d+)$')
+        p5 = re.compile(r'^Indirect Next Hop    +Adds\/Changes: +(?P<krtq_indirect_adds_changes>\d+) +'
+                        r'Deletes: +(?P<krtq_indirect_deletes>\d+)$')
 
         #MPLS        Adds: 0       Changes: 0
-        p6 = re.compile(r'^MPLS \s+ Adds: +(?P<krtq_high_mpls_adds>\d+) \s+Changes: +(?P<krtq_high_mpls_changes>\d+)')
+        p6 = re.compile(r'^MPLS\s+ Adds: +(?P<krtq_high_mpls_adds>\d+)\s+Changes: +'
+                        r'(?P<krtq_high_mpls_changes>\d+)')
 
         #High pri    Adds: 0       Changes: 0       Deletes: 0
-        p7 = re.compile(r'^High pri \s+ Adds: +(?P<krtq_high_priority_adds>\d+) \s+Changes: +(?P<krtq_high_priority_changes>\d+) \s+Deletes: +(?P<krtq_high_priority_deletes>\d+)$')
+        p7 = re.compile(r'^High pri\s+ Adds: +(?P<krtq_high_priority_adds>\d+)\s+Changes: +'
+                        r'(?P<krtq_high_priority_changes>\d+)\s+Deletes: +'
+                        r'(?P<krtq_high_priority_deletes>\d+)$')
         
         #Normal pri Indirects: 0
         p8 = re.compile(r'^Normal pri Indirects: +(?P<krtq_normal_priority_indirects>\d+)$')
 
         #Normal pri  Adds: 0       Changes: 0       Deletes: 0
-        p9 = re.compile(r'^Normal pri\s+ Adds: +(?P<krtq_normal_priority_adds>\d+) \s+Changes: +(?P<krtq_normal_priority_changes>\d+) \s+Deletes: +(?P<krtq_normal_priority_deletes>\d+)$')
+        p9 = re.compile(r'^Normal pri\s+ Adds: +(?P<krtq_normal_priority_adds>\d+)\s+Changes: +'
+                        r'(?P<krtq_normal_priority_changes>\d+)\s+Deletes: +'
+                        r'(?P<krtq_normal_priority_deletes>\d+)$')
 
         #GMP GENCFG Objects: 0
         p10 = re.compile(r'^GMP GENCFG Objects: +(?P<krtq_normal_priority_gmp>\d+)$')
