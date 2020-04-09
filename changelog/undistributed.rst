@@ -70,7 +70,9 @@
     * Added ShowOspfNeighbor for:
         * show ospf neighbor
     * Added ShowRouteProtocol for:
+        * show route protocol {protocol}
         * show route protocol {protocol} {ip_address}
+        * show route protocol {protocol} table {table}
     * Added ShowRouteProtocolNoMore for:
         * show route protocol {protocol} {ip_address} | no-more
     * Added ShowOspf3Interface for:
@@ -83,6 +85,9 @@
         * show arp
     * Added ShowArpNoMore for:
         * show arp | no-more
+    * Added ShowRouteProtocolExtensive for:
+        * show route protocol {protocol} extensive
+        * show route protocol {protocol} table {table} extensive
     * Added ShowOspf3Database for:
         * show ospf3 database
     * Added Ping for:
@@ -90,6 +95,8 @@
         * ping {addr} count {count}
     * Added ShowOspf3DatabaseExternalExtensive for:
         * show ospf3 database external extensive
+    * Added ShowOspf3InterfaceExtensive for:
+        * show ospf3 interface extensive
 
 
 --------------------------------------------------------------------------------
