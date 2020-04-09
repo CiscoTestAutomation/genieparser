@@ -578,25 +578,35 @@ class ShowOspf3InterfaceExtensive(ShowOspf3InterfaceExtensiveSchema):
         ret_dict = {}
 
         # ge-0/0/0.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
-        p1 = re.compile(r'^(?P<interface_name>\S+)( +)(?P<ospf_interface_state>\S+)( +)(?P<ospf_area>[\d\.]+)( +)(?P<dr_id>[\d\.]+)( +)(?P<bdr_id>[\d\.]+)( +)(?P<neighbor_count>\d+)$')
+        p1 = re.compile(r'^(?P<interface_name>\S+)( +)(?P<ospf_interface_state>\S+)'
+            r'( +)(?P<ospf_area>[\d\.]+)( +)(?P<dr_id>[\d\.]+)( +)'
+            r'(?P<bdr_id>[\d\.]+)( +)(?P<neighbor_count>\d+)$')
 
         # Address fe80::250:56ff:fe8d:c829, Prefix-length 64
-        p2 = re.compile(r'Address( +)(?P<interface_address>\S+),( +)Prefix-length( +)(?P<prefix_length>\d+)')
+        p2 = re.compile(r'Address( +)(?P<interface_address>\S+),( +)Prefix-length'
+            r'( +)(?P<prefix_length>\d+)')
 
         # OSPF3-Intf-index 2, Type P2P, MTU 1500, Cost 5
-        p3 = re.compile(r'^OSPF3-Intf-index( +)(?P<ospf3_interface_index>\d+),( +)Type( +)(?P<interface_type>\S+),( +)MTU( +)(?P<mtu>\d+),( +)Cost( +)(?P<interface_cost>\d+)$')
+        p3 = re.compile(r'^OSPF3-Intf-index( +)(?P<ospf3_interface_index>\d+),( +)'
+            r'Type( +)(?P<interface_type>\S+),( +)MTU( +)(?P<mtu>\d+),( +)Cost( +)'
+            r'(?P<interface_cost>\d+)$')
 
         # Adj count: 1, Router LSA ID: 0
-        p4 = re.compile(r'^Adj( +)count:( +)(?P<adj_count>\d+),( +)Router( +)LSA( +)ID:( +)(?P<ospf3_router_lsa_id>\S+)$')
+        p4 = re.compile(r'^Adj( +)count:( +)(?P<adj_count>\d+),( +)Router( +)LSA'
+            r'( +)ID:( +)(?P<ospf3_router_lsa_id>\S+)$')
 
         # Hello 10, Dead 40, ReXmit 5, Not Stub
-        p5 = re.compile(r'^Hello( +)(?P<hello_interval>\d+),( +)Dead( +)(?P<dead_interval>\d+),( +)ReXmit( +)(?P<retransmit_interval>\d+),( +)(?P<ospf_stub_type>(\S+ ){0,1}\S+)$')
+        p5 = re.compile(r'^Hello( +)(?P<hello_interval>\d+),( +)Dead( +)'
+            r'(?P<dead_interval>\d+),( +)ReXmit( +)(?P<retransmit_interval>\d+),'
+            r'( +)(?P<ospf_stub_type>(\S+ ){0,1}\S+)$')
 
         # Protection type: None
         p6 = re.compile(r'^Protection( +)type:( +)(?P<ospf_interface_protection_type>\S+)$')
 
         #   OSPF3-Intf-index 1, Type LAN, MTU 65535, Cost 0, Priority 128
-        p7 = re.compile(r'^OSPF3-Intf-index( +)(?P<ospf3_interface_index>\d+),( +)Type( +)(?P<interface_type>\S+),( +)MTU( +)(?P<mtu>\d+),( +)Cost( +)(?P<interface_cost>\d+),( +)Priority( +)(?P<router_priority>\d+)$')
+        p7 = re.compile(r'^OSPF3-Intf-index( +)(?P<ospf3_interface_index>\d+),( +)'
+            r'Type( +)(?P<interface_type>\S+),( +)MTU( +)(?P<mtu>\d+),( +)Cost( +)'
+            r'(?P<interface_cost>\d+),( +)Priority( +)(?P<router_priority>\d+)$')
 
         # DR addr fe80::250:560f:fc8d:7c08
         p8 = re.compile(r'^DR( +)addr( +)(?P<dr_address>\S+)$')
