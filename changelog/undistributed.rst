@@ -93,6 +93,8 @@
     * Added Ping for:
         * ping {addr}
         * ping {addr} count {count}
+    * Added ShowOspf3DatabaseExternalExtensive for:
+        * show ospf3 database external extensive
     * Added ShowOspf3InterfaceExtensive for:
         * show ospf3 interface extensive
 

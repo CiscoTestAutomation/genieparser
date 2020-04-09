@@ -726,3 +726,235 @@ class ShowOspf3InterfaceExtensive(ShowOspf3InterfaceExtensiveSchema):
 
         return ret_dict
 
+class ShowOspf3DatabaseExternalExtensiveSchema(MetaParser):
+    """ Schema for:
+            * show ospf3 database external extensive
+    """
+
+    # Sub Schema
+    def validate_ospf3_database_list(value):
+        # Pass ospf3-database list as value
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-interface is not a list')
+        ospf3_interface_schema = Schema({
+                "advertising-router": str,
+                "age": str,
+                "checksum": str,
+                "lsa-id": str,
+                "lsa-length": str,
+                "lsa-type": str,
+                Optional('our-entry'): bool,
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": str
+                    },
+                    "expiration-time": {
+                        "#text": str
+                    },
+                    "installation-time": {
+                        "#text": str
+                    },
+                    Optional("generation-timer"): {
+                        "#text": str
+                    },
+                    "lsa-change-count": str,
+                    "lsa-changed-time": {
+                        "#text": str
+                    },
+                    Optional("send-time"): {
+                        "#text": str
+                    },
+                    Optional("database-entry-state"): str
+                },
+                "ospf3-external-lsa": {
+                    "metric": str,
+                    "ospf3-prefix": str,
+                    "ospf3-prefix-options": str,
+                    "type-value": str
+                },
+                "sequence-number": str
+            })
+        # Validate each dictionary in list
+        for item in value:
+            ospf3_interface_schema.validate(item)
+        return value
+
+    schema = {
+    "ospf3-database-information": {
+        "ospf3-database": Use(validate_ospf3_database_list)
+    }
+}
+
+class ShowOspf3DatabaseExternalExtensive(ShowOspf3DatabaseExternalExtensiveSchema):
+    """ Parser for:
+            * show ospf3 database external extensive
+    """
+    cli_command = 'show ospf3 database external extensive'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Extern      0.0.0.1          59.128.2.250     0x8000178e  1412  0x3c81  28
+        p1 = re.compile(r'^(?P<lsa_type>\S+) +(?P<lsa_id>(\*{0,1})[\d\.]+) +'
+            r'(?P<advertising_router>[\d\.]+) +(?P<sequence_number>\S+) +(?P<age>\d+)'
+            r' +(?P<checksum>\S+) +(?P<lsa_length>\d+)$')
+
+        # Prefix ::/0
+        p2 = re.compile(r'^Prefix +(?P<ospf3_prefix>\S+)$')
+
+        # Prefix-options 0x0, Metric 1, Type 1,
+        p3 = re.compile(r'^Prefix-options +(?P<ospf3_prefix_options>\S+),'
+            r' Metric +(?P<metric>\d+), +Type +(?P<type_value>\d+),$')
+
+        # Aging timer 00:36:27
+        p4 = re.compile(r'^Aging +timer +(?P<aging_timer>(\S+ ){0,1}[\d:]+)$')
+
+        # Gen timer 00:49:49
+        p5 = re.compile(r'^Gen +timer +(?P<generation_timer>\S+)$')
+
+        # Installed 00:23:26 ago, expires in 00:36:28, sent 00:23:24 ago
+        p6 = re.compile(r'^Installed +(?P<installation_time>(\S+ ){0,1}[\d:]+)'
+            r' ago, +expires +in +(?P<expiration_time>(\S+ ){0,1}[\d:]+),'
+            r' sent +(?P<send_time>(\S+ ){0,1}[\d:]+) +ago$')
+
+        # Last changed 29w5d 21:04:29 ago, Change count: 1
+        p7 =re.compile(r'^Last +changed +(?P<lsa_changed_time>(\S+ ){0,1}[\d:]+)'
+            r' ago, +Change +count: +(?P<lsa_change_count>\d+)$')
+
+        # Last changed 3w0d 17:02:47 ago, Change count: 2, Ours
+        p8 = re.compile(r'^Last +changed +(?P<lsa_changed_time>(\S+ ){0,1}[\d:]+)'
+            r' ago, +Change +count: +(?P<lsa_change_count>\d+), +(?P<database_entry_state>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Extern      0.0.0.1          59.128.2.250     0x8000178e  1412  0x3c81  28
+            m = p1.match(line)
+            if m:
+                entry_list = ret_dict.setdefault("ospf3-database-information", {})\
+                    .setdefault("ospf3-database", [])
+
+                group = m.groupdict()
+                entry = {}
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                if entry['lsa-id'][0] == "*":
+                    entry['lsa-id'] = entry['lsa-id'][1:]
+                    entry['our-entry'] = True
+
+                entry_list.append(entry)
+                continue
+
+            # Prefix ::/0
+            m = p2.match(line)
+            if m:
+                last_database = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
+
+                group = m.groupdict()
+
+                entry = last_database.setdefault("ospf3-external-lsa", {})
+                entry['ospf3-prefix'] = group['ospf3_prefix']
+
+                continue
+
+            # Prefix-options 0x0, Metric 1, Type 1,
+            m = p3.match(line)
+            if m:
+                last_database = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
+
+                group = m.groupdict()
+                entry = last_database.setdefault("ospf3-external-lsa", {})
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                continue
+
+            # Aging timer 00:36:27
+            m = p4.match(line)
+            if m:
+                last_database = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
+                last_database.setdefault("ospf-database-extensive", {}).setdefault("aging-timer", {})
+
+                group = m.groupdict()
+                last_database["ospf-database-extensive"]["aging-timer"]["#text"] = group['aging_timer']
+
+                continue
+
+            # Gen timer 00:49:49
+            m = p5.match(line)
+            if m:
+                last_database = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
+
+                last_database.setdefault("ospf-database-extensive", {})\
+                    .setdefault("generation-timer", {})
+
+                group = m.groupdict()
+                last_database["ospf-database-extensive"]["generation-timer"]["#text"]\
+                     = group['generation_timer']
+
+                continue
+
+            # Installed 00:23:26 ago, expires in 00:36:28, sent 00:23:24 ago
+            m = p6.match(line)
+            if m:
+                last_database = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
+
+                last_database.setdefault("ospf-database-extensive", {})\
+                    .setdefault("expiration-time", {})
+                last_database.setdefault("ospf-database-extensive", {})\
+                    .setdefault("installation-time", {})
+                last_database.setdefault("ospf-database-extensive", {})\
+                    .setdefault("send-time", {})
+
+                group = m.groupdict()
+                last_database["ospf-database-extensive"]["expiration-time"]["#text"]\
+                     = group['expiration_time']
+                last_database["ospf-database-extensive"]["installation-time"]["#text"]\
+                     = group['installation_time']
+                last_database["ospf-database-extensive"]["send-time"]["#text"]\
+                     = group['send_time']
+
+                continue
+
+            # Last changed 29w5d 21:04:29 ago, Change count: 1
+            m = p7.match(line)
+            if m:
+                last_database = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
+
+                last_database.setdefault("ospf-database-extensive", {}).setdefault("lsa-changed-time", {})
+
+                group = m.groupdict()
+                last_database["ospf-database-extensive"]["lsa-changed-time"]["#text"]\
+                    = group['lsa_changed_time']
+                last_database["ospf-database-extensive"]["lsa-change-count"]\
+                    = group['lsa_change_count']
+
+                continue
+
+            # Last changed 29w5d 21:40:56 ago, Change count: 1, Ours
+            m = p8.match(line)
+            if m:
+                last_database = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
+
+                last_database.setdefault("ospf-database-extensive", {})\
+                    .setdefault("lsa-changed-time", {})
+
+                group = m.groupdict()
+                last_database["ospf-database-extensive"]["lsa-changed-time"]["#text"]\
+                    = group['lsa_changed_time']
+                last_database["ospf-database-extensive"]["lsa-change-count"]\
+                    = group['lsa_change_count']
+                last_database["ospf-database-extensive"]["database-entry-state"]\
+                    = group['database_entry_state']
+
+                continue
+
+        return ret_dict
