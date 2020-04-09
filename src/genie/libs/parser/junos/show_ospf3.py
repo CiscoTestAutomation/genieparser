@@ -605,7 +605,7 @@ class ShowOspf3DatabaseExternalExtensive(ShowOspf3DatabaseExternalExtensiveSchem
 
         # Prefix-options 0x0, Metric 1, Type 1,
         p3 = re.compile(r'^Prefix-options +(?P<ospf3_prefix_options>\S+),'
-            r' Metric +(?P<metric>\S+), +Type +(?P<type_value>\S+),$')
+            r' Metric +(?P<metric>\d+), +Type +(?P<type_value>\d+),$')
 
         # Aging timer 00:36:27
         p4 = re.compile(r'^Aging +timer +(?P<aging_timer>(\S+ ){0,1}[\d:]+)$')
