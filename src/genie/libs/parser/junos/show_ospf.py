@@ -450,6 +450,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetailSchema(MetaParser):
                 "age": str,
                 "checksum": str,
                 "lsa-id": str,
+                Optional("our-entry"): bool,
                 "lsa-length": str,
                 "lsa-type": str,
                 "options": str,
@@ -497,10 +498,10 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             out = output
 
         # OSPF database, Area 0.0.0.8
-        p1 = re.compile(r'^OSPF +database, +Area +(?P<ospf_area>[/d/.]+)$')
+        p1 = re.compile(r'^OSPF *database, +Area +(?P<ospf_area>[/d/.]+)$')
 
         # Router  *111.87.5.252     111.87.5.252     0x80001b9e  1801  0x22 0x1e2  120
-        p2 = re.compile(r'^(?P<lsa_type>\S+)( +)(?P<lsa_id>\S+)( +)(?P<advertising_router>\S+)( +)(?P<sequence_number>\S+)( +)(?P<age>\S+)( +)(?P<options>\S+)( +)(?P<checksum>\S+)( +)(?P<lsa_length>\S+)$')
+        p2 = re.compile(r'^(?P<lsa_type>\S+)( *)(?P<lsa_id>\*?[\d\.]+)( +)(?P<advertising_router>\S+)( +)(?P<sequence_number>\S+)( +)(?P<age>\S+)( +)(?P<options>\S+)( +)(?P<checksum>\S+)( +)(?P<lsa_length>\S+)$')
 
         # bits 0x2, link count 8
         p3 = re.compile(r'^bits +(?P<bits>\S+), +link +count (?P<link_count>\d+)$')
@@ -513,6 +514,18 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
 
         # Topology default (ID 0)
         p6 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\S+)\)$')
+
+        # Type: PointToPoint, Node ID: 27.86.198.239
+        p7 = re.compile(r'^Type: +(?P<link_type_name>\S+), +Node +ID: +(?P<ospf_lsa_topology_link_node_id>[\d\.]+)$')
+
+        # Metric: 1000, Bidirectional
+        p8 = re.compile(r'^Metric: +(?P<link_type_name>\d+), +(?P<link_type_name>\S+)$')
+
+        # RtrAddr (1), length 4:
+        p9 =re.compile(r'^(?P<tlv_type_name>\d+) +\((?P<tlv_type_value>\d+)\), +length (?P<link_type_name>\d+):$')
+
+        # 111.87.5.252
+        p10 = re.compile(r'^(?P<tlv_type_name>[\d\.]+)$')
 
         ret_dict = {}
 
@@ -546,6 +559,10 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_','-')
                     entry[entry_key] = group_value
+
+                if entry['lsa-id'][0] == "*":
+                    entry['lsa-id'] = entry['lsa-id'][1:]
+                    entry['our-entry'] = True
 
                 database_list.append(entry)
                 continue
@@ -598,6 +615,91 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                 ospf_link_list.append(entry)
                 continue
 
+            # Topology default (ID 0)
+            m = p6.match(line)
+            if m:
+                last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
+
+                group = m.groupdict()
+                ospf_lsa_topology = last_database.setdefault("ospf-lsa-topology", {})
+
+                group = m.groupdict()
+                entry = ospf_lsa_topology
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                continue
+
+            # Type: PointToPoint, Node ID: 27.86.198.239
+            m = p7.match(line)
+            if m:
+                last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
+
+                group = m.groupdict()
+                ospf_lsa_topology_list = last_database.setdefault("ospf-lsa-topology", {}).setdefault("ospf-lsa-topology-link", [])
+                last_ospf_lsa_topology = ospf_lsa_topology_list[-1]
+
+                group = m.groupdict()
+                entry = last_ospf_lsa_topology
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                ospf_lsa_topology_list.append(entry)
+                continue
+
+            # Metric: 1000, Bidirectional
+            m = p8.match(line)
+            if m:
+                last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
+
+                group = m.groupdict()
+                ospf_lsa_topology_list = last_database.setdefault("ospf-lsa-topology", {}).setdefault("ospf-lsa-topology-link", [])
+                last_ospf_lsa_topology = ospf_lsa_topology_list[-1]
+
+                group = m.groupdict()
+                entry = last_ospf_lsa_topology
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                ospf_lsa_topology_list.append(entry)
+                continue
+
+            # RtrAddr (1), length 4:
+            m = p9.match(line)
+            if m:
+                last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
+
+                group = m.groupdict()
+                tlv_block = last_database.setdefault("ospf-opaque-area-lsa", {}).setdefault("tlv-block", {})
+
+                group = m.groupdict()
+                entry = tlv_block
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                ospf_lsa_topology_list.append(entry)
+                continue
+
+            # 111.87.5.252
+            m = p10.match(line)
+            if m:
+                last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
+
+                group = m.groupdict()
+                tlv_block = last_database.setdefault("ospf-opaque-area-lsa", {}).setdefault("tlv-block", {})
+
+                group = m.groupdict()
+                entry = tlv_block
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                ospf_lsa_topology_list.append(entry)
+                continue
 
 
 
