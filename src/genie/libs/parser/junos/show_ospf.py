@@ -547,3 +547,170 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
 
         return ret_dict
 
+
+class ShowOspfDatabaseSummarySchema(MetaParser):
+    '''
+    schema = {
+    "ospf-database-information": {
+        "ospf-database-summary": [
+            {
+                "ospf-area": str,
+                "ospf-lsa-count": list,
+                "ospf-lsa-type": list
+            },
+            {
+                Optional("@external-heading"): str,
+                "ospf-lsa-count": str,
+                "ospf-lsa-type": str
+            },
+            {
+                "ospf-area": list,
+                "ospf-intf": list
+            }
+        ]
+    }
+}
+'''
+    def validate_neighbor_database_summary_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-database-summary is not a list')
+        neighbor_schema = Schema(
+             {
+                "ospf-area": str,
+                "ospf-lsa-count": list,
+                "ospf-lsa-type": list
+            },
+            {
+                Optional("@external-heading"): str,
+                "ospf-lsa-count": str,
+                "ospf-lsa-type": str
+            },
+            {
+                "ospf-area": list,
+                "ospf-intf": list
+            }
+        )
+        for item in value:
+            neighbor_schema.validate(item)
+        return value
+        
+    schema = {
+        'ospf-database-information': {
+            'ospf-database-summary': Use(validate_neighbor_database_summary_list)
+        }
+    }
+
+'''
+Parser for:
+    * show ospf database
+'''
+class ShowOspfDatabaseSummary(ShowOspfDatabaseSummarySchema):
+    cli_command = 'show ospf database summary'
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        ret_dict = {}
+
+        #Area 0.0.0.8:
+        p1 = re.compile(r'^Area +(?P<ospf_area1>[\w\.\/]+):$')
+
+        #12 Router LSAs
+        p2 = re.compile(r'^(?P<area_value>\d+) (?P<area_name>\S+) LSAs$')
+
+        #Externals:
+        p3 = re.compile(r'^(?P<externals>\S+):$')
+
+        #19 Extern LSAs
+        p4 = re.compile(r'^(?P<external_value>\d+) (?P<external_name>\S+) LSAs$')
+
+        #Area 0.0.0.8:
+        p5 = re.compile(r'^Area +(?P<ospf_area2>[\w\.\/]+):$')
+
+        #Interface ge-0/0/3.0:
+        p6 = re.compile(r'^Interface (?P<interface>\S+):$')
+
+
+
+        ospf_database_info_dict = ret_dict.setdefault('ospf-database-information', {})
+        ospf_database_info_list = ospf_database_info_dict.setdefault('ospf-database-summary', [])
+        ospf_database_entry_dict1 = {}
+        ospf_database_entry_dict2 = {}
+        ospf_database_entry_dict3 = {}
+        ospf_database_entry_name_list = []
+        ospf_database_entry_value_list = []
+        ospf_database_entry_area_list = []
+        ospf_database_entry_intf_list = []
+
+        for line in out.splitlines():
+            line = line.strip()
+            #import pdb; pdb.set_trace()
+            #Area 0.0.0.8:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                
+                ospf_database_entry_dict1['ospf-area'] = group['ospf_area1']
+                p1 = re.compile(r'^empty$')
+                continue
+            
+            #12 Router LSAs
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                
+                ospf_database_entry_value_list.append(group['area_value'])
+                ospf_database_entry_name_list.append(group['area_name'])
+                continue
+
+            #Externals:
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_database_entry_dict2['@external-heading'] = group['externals']
+                p1 = re.compile(r'^empty$')
+                p2 = re.compile(r'^empty$')
+                continue
+
+            #19 Extern LSAs
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                
+                ospf_database_entry_dict2['ospf-lsa-count'] = group['external_value']
+                ospf_database_entry_dict2['ospf-lsa-type'] = group['external_name']
+                continue
+
+            #Area 0.0.0.8:
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_database_entry_area_list.append(group['ospf_area2'])
+                continue
+
+            #Interface ge-0/0/3.0:
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_database_entry_intf_list.append(group['interface'])
+                continue
+
+        ospf_database_entry_dict1["ospf-lsa-count"] = ospf_database_entry_value_list
+        ospf_database_entry_dict1["ospf-lsa-type"] = ospf_database_entry_name_list
+        ospf_database_entry_dict3["ospf-area"] = ospf_database_entry_area_list
+        ospf_database_entry_dict3["ospf-intf"] = ospf_database_entry_intf_list
+
+        ospf_database_info_list.append(ospf_database_entry_dict1)
+        ospf_database_info_list.append(ospf_database_entry_dict2)
+        ospf_database_info_list.append(ospf_database_entry_dict3)
+
+
+        import json
+        json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
+        f = open("dict.txt","w")
+        f.write(json_data)
+        f.close()
+        return ret_dict
+

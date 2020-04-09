@@ -15,7 +15,8 @@ from genie.libs.parser.junos.show_ospf import (ShowOspfInterface,
                                                ShowOspfInterfaceBrief,
                                                ShowOspfInterfaceDetail,
                                                ShowOspfNeighbor,
-                                               ShowOspfDatabase)
+                                               ShowOspfDatabase,
+                                               ShowOspfDatabaseSummary)
 
 
 class test_show_ospf_interface(unittest.TestCase):
@@ -1959,5 +1960,48 @@ class TestShowOspfDatabase(unittest.TestCase):
         obj = ShowOspfDatabase(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class TestShowOspfDatabaseSummary(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show ospf database summary
+            Area 0.0.0.8:
+               12 Router LSAs
+               2 Network LSAs
+               79 OpaqArea LSAs
+            Externals:
+               19 Extern LSAs
+            Interface ge-0/0/0.0:
+            Area 0.0.0.8:
+            Interface ge-0/0/1.0:
+            Area 0.0.0.8:
+            Interface ge-0/0/2.0:
+            Area 0.0.0.8:
+            Interface ge-0/0/3.0:
+            Area 0.0.0.8:
+            Interface lo0.0:
+            Area 0.0.0.8:
+    '''}
+
+    golden_parsed_output = {
+        }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfDatabaseSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspfDatabaseSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
 if __name__ == '__main__':
     unittest.main()
