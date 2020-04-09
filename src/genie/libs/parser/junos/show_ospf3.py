@@ -578,7 +578,7 @@ class ShowOspf3InterfaceExtensive(ShowOspf3InterfaceExtensiveSchema):
         ret_dict = {}
 
         # ge-0/0/0.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
-        p1 = re.compile(r'^(?P<interface_name>\S+)( +)(?P<ospf_interface_state>\S+)( +)(?P<ospf_area>[0-9]{1,3}(\.[0-9]{1,3}){3})( +)(?P<dr_id>[0-9]{1,3}(\.[0-9]{1,3}){3})( +)(?P<bdr_id>[0-9]{1,3}(\.[0-9]{1,3}){3})( +)(?P<neighbor_count>\d+)$')
+        p1 = re.compile(r'^(?P<interface_name>\S+)( +)(?P<ospf_interface_state>\S+)( +)(?P<ospf_area>[\d\.]+)( +)(?P<dr_id>[\d\.]+)( +)(?P<bdr_id>[\d\.]+)( +)(?P<neighbor_count>\d+)$')
 
         # Address fe80::250:56ff:fe8d:c829, Prefix-length 64
         p2 = re.compile(r'Address( +)(?P<interface_address>\S+),( +)Prefix-length( +)(?P<prefix_length>\d+)')
