@@ -16,7 +16,7 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
     golden_output = {'execute.return_value':
     '''
 
-        show ospf3 database extensive | no-more
+        show ospf3 database extensive
 
             OSPF3 database, Area 0.0.0.8
         Type       ID               Adv Rtr           Seq         Age  Cksum  Len
@@ -535,7 +535,7 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                                                                                                     'ospf-lsa-topology-link-node-id': '111.87.5.253',
                                                                                                     'ospf-lsa-topology-link-state': 'Bidirectional'}]},
                                                 'ospf3-options': '0x33'},
-                        'our-entry': None,
+                        'our-entry': True,
                         'sequence-number': '0x80001890'},
                         {'advertising-router': '111.87.5.253',
                         'age': '1012',
@@ -717,7 +717,7 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                                                         'reference-lsa-id': '0.0.0.0',
                                                         'reference-lsa-router-id': '111.87.5.252',
                                                         'reference-lsa-type': 'Router'},
-                        'our-entry': None,
+                        'our-entry': True,
                         'sequence-number': '0x8000178a'},
                         {'advertising-router': '111.87.5.253',
                         'age': '512',
@@ -1017,7 +1017,7 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                                                 'ospf3-prefix': '2001:268:fb8f::1/128',
                                                 'ospf3-prefix-options': '0x0',
                                                 'type-value': '1'},
-                        'our-entry': None,
+                        'our-entry': True,
                         'sequence-number': '0x8000063f'},
                         {'advertising-router': '111.87.5.253',
                         'age': '2012',
@@ -1058,7 +1058,7 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                                             'ospf3-prefix-options': '0x0',
                                             'prefix-count': '1',
                                             'router-priority': '128'},
-                        'our-entry': None,
+                        'our-entry': True,
                         'sequence-number': '0x8000178a'},
                         {'advertising-router': '111.87.5.253',
                         'age': '2512',
@@ -1121,7 +1121,7 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                                             'ospf3-prefix-options': '0x0',
                                             'prefix-count': '1',
                                             'router-priority': '128'},
-                        'our-entry': None,
+                        'our-entry': True,
                         'sequence-number': '0x8000178a'},
                         {'advertising-router': '111.87.5.252',
                         'age': '2510',
@@ -1141,7 +1141,7 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                                             'ospf3-options': '0x33',
                                             'prefix-count': '0',
                                             'router-priority': '128'},
-                        'our-entry': None,
+                        'our-entry': True,
                         'sequence-number': '0x8000178b'}],
     'ospf3-intf-header': [{'ospf-area': '0.0.0.8',
                             'ospf-intf': 'ge-0/0/0.0'},

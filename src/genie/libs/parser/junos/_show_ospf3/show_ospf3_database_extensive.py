@@ -124,7 +124,7 @@ class ShowOspf3DatabaseExtensiveSchema(MetaParser):
                 "age": str,
                 "checksum": str,
                 "lsa-id": str,
-                Optional("our-entry"): None,
+                Optional("our-entry"): bool,
                 "lsa-length": str,
                 "lsa-type": str,
                 "sequence-number": str,
@@ -324,7 +324,7 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
 
                 if entry['lsa-id'][0] == "*":
                     entry['lsa-id'] = entry['lsa-id'][1:]
-                    entry['our-entry'] = None
+                    entry['our-entry'] = True
 
                 self.state = group['lsa_type']
 
