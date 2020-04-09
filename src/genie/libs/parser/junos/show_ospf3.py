@@ -421,10 +421,10 @@ class ShowOspf3DatabaseExtensiveSchema(MetaParser):
                     "router-priority": str
                 },
                 Optional("ospf3-external-lsa"): {
-                    Optional("metric"): str,
-                    Optional("ospf3-prefix"): str,
-                    Optional("ospf3-prefix-options"): str,
-                    Optional("type-value"): str
+                    "metric": str,
+                    "ospf3-prefix": str,
+                    "ospf3-prefix-options": str,
+                    "type-value": str
                 }
             })
         # Validate each dictionary in list
@@ -472,43 +472,41 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
 
         #    OSPF3 database, Area 0.0.0.8
         p1 = re.compile(r'^OSPF3( +)database,( +)Area( +)'
-                r'(?P<ospf_area>[0-9]{1,3}(\.[0-9]{1,3}){3})$')
+                r'(?P<ospf_area>[\d\.]+)$')
 
         # Type       ID               Adv Rtr           Seq         Age  Cksum  Len
             # Router      0.0.0.0          10.34.2.250     0x800018ed  2407  0xaf2d  56
-        p2 = re.compile(r'^(?P<lsa_type>\S+) +(?P<lsa_id>(\*{0,1})[0-9]{1,3}'
-            r'(\.[0-9]{1,3}){3}) +(?P<advertising_router>[0-9]{1,3}(\.[0-9]{1,3})'
-            r'{3}) +(?P<sequence_number>\S+) +(?P<age>\d+) +(?P<checksum>\S+) +(?P<lsa_length>\d+)$')
+        p2 = re.compile(r'^(?P<lsa_type>\S+) +(?P<lsa_id>(\*{0,1})[\d\.]+) +(?P<advertising_router>[0-9][\d\.]+) +(?P<sequence_number>\S+) +(?P<age>\d+) +(?P<checksum>\S+) +(?P<lsa_length>\d+)$')
 
         # bits 0x2, Options 0x33
         p3 = re.compile(r'^bits +(?P<bits>\S+), +Options +(?P<ospf3_options>\S+)$')
 
         #  Type: PointToPoint, Node ID: 106.187.14.240, Metric: 100, Bidirectional
-        p4 = re.compile(r'^Type: (?P<link_type_name>\S+), Node ID: (?P<ospf_lsa_topology_link_node_id>[0-9]{1,3}(\.[0-9]{1,3}){3}), Metric: (?P<ospf_lsa_topology_link_metric>\d+), (?P<ospf_lsa_topology_link_state>\S+)$')
+        p4 = re.compile(r'^Type: +(?P<link_type_name>\S+), Node +ID: +(?P<ospf_lsa_topology_link_node_id>[\d\.]+), Metric: (?P<ospf_lsa_topology_link_metric>\d+), (?P<ospf_lsa_topology_link_state>\S+)$')
 
         # Aging timer 00:18:16
-        p5 = re.compile(r'^Aging timer +(?P<aging_timer>(\S+ ){0,1}\d\d:\d\d:\d\d)$')
+        p5 = re.compile(r'^Aging timer +(?P<aging_timer>(\S+ ){0,1}[\d\:]+)$')
 
         # Installed 00:10:20 ago, expires in 00:49:31, sent 00:10:18 ago
-        p6 = re.compile(r'^Installed (?P<installation_time>(\S+ ){0,1}\d\d:\d\d:\d\d) ago, expires in (?P<expiration_time>(\S+ ){0,1}\d\d:\d\d:\d\d), sent (?P<send_time>(\S+ ){0,1}\d\d:\d\d:\d\d) ago$')
+        p6 = re.compile(r'^Installed (?P<installation_time>(\S+ ){0,1}[\d\:]+) ago, expires in (?P<expiration_time>(\S+ ){0,1}[\d\:]+), sent (?P<send_time>(\S+ ){0,1}[\d\:]+) ago$')
 
         # Last changed 2w6d 04:50:31 ago, Change count: 196
-        p7 = re.compile(r'^Last changed (?P<lsa_changed_time>(\S+ ){0,1}\d\d:\d\d:\d\d) ago, Change count: (?P<lsa_change_count>\d+)$')
+        p7 = re.compile(r'^Last changed (?P<lsa_changed_time>(\S+ ){0,1}[\d\:]+) ago, Change count: (?P<lsa_change_count>\d+)$')
 
         # Ref-lsa-type Router, Ref-lsa-id 0.0.0.0, Ref-router-id 59.128.2.250
-        p8 = re.compile(r'^Ref-lsa-type (?P<reference_lsa_type>\S+), Ref-lsa-id (?P<reference_lsa_id>[0-9]{1,3}(\.[0-9]{1,3}){3}), Ref-router-id (?P<reference_lsa_router_id>[0-9]{1,3}(\.[0-9]{1,3}){3})$')
+        p8 = re.compile(r'^Ref-lsa-type (?P<reference_lsa_type>\S+), Ref-lsa-id (?P<reference_lsa_id>[\d\.]+), Ref-router-id (?P<reference_lsa_router_id>[\d\.]+)$')
 
         # Prefix-count 3
-        p9 = re.compile(r'^Prefix-count (?P<prefix_count>\d+)$')
+        p9 = re.compile(r'^Prefix-count +(?P<prefix_count>\d+)$')
 
         # Prefix 2001:268:fb80:3e::/64
-        p10 = re.compile(r'^Prefix (?P<ospf3_prefix>\S+)$')
+        p10 = re.compile(r'^Prefix +(?P<ospf3_prefix>\S+)$')
 
         # Prefix-options 0x0, Metric 5
         p11 = re.compile(r'^Prefix-options (?P<ospf3_prefix_options>\S+), Metric (?P<metric>\d+)$')
 
         # fe80::250:56ff:fe8d:a96c
-        p12 = re.compile(r'^(?P<linklocal_address>\S{4}::\S{3}:\S{4}:\S{4}:\S{4})$')
+        p12 = re.compile(r'^(?P<linklocal_address>[\S\:]+)$')
 
         # Gen timer 00:49:49
         p13 = re.compile(r'^Gen timer (?P<generation_timer>\S+)$')
@@ -529,10 +527,10 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
         p18 = re.compile(r'^Prefix-options (?P<ospf3_prefix_options>\S+), Metric (?P<metric>\S+), Type (?P<type_value>\S+),$')
 
         # Last changed 29w5d 21:40:56 ago, Change count: 1, Ours
-        p19 = re.compile(r'^Last changed (?P<lsa_changed_time>(\S+ ){0,1}\d\d:\d\d:\d\d) ago, Change count: (?P<lsa_change_count>\d+), (?P<database_entry_state>\S+)$')
+        p19 = re.compile(r'^Last changed (?P<lsa_changed_time>(\S+ ){0,1}[\d\:]+) ago, Change count: (?P<lsa_change_count>\d+), (?P<database_entry_state>\S+)$')
 
         # Installed 00:41:50 ago, expires in 00:18:10
-        p20 = re.compile(r'^Installed (?P<installation_time>(\S+ ){0,1}\d\d:\d\d:\d\d) ago, expires in (?P<expiration_time>(\S+ ){0,1}\d\d:\d\d:\d\d)$')
+        p20 = re.compile(r'^Installed (?P<installation_time>(\S+ ){0,1}[\d\:]+) ago, expires in (?P<expiration_time>(\S+ ){0,1}[\d\:]+)$')
 
         # Prefix 2001:268:fb8f:1f::/64 Prefix-options 0x0
         p21 = re.compile(r'^Prefix (?P<ospf3_prefix>\S+) Prefix-options (?P<ospf3_prefix_options>\S+)$')
@@ -693,6 +691,7 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
                     entry_list.append(group['ospf3_prefix'])
 
                 elif self.state == 'Extern':
+
                     entry = last_database.setdefault("ospf3-external-lsa", {})
                     entry['ospf3-prefix'] = group['ospf3_prefix']
 
@@ -717,9 +716,9 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
             # fe80::250:56ff:fe8d:a96c
             m = p12.match(line)
             if m:
-                last_entry = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
+                last_database = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
 
-                entry = last_entry.setdefault("ospf3-link-lsa", {})
+                entry = last_database.setdefault("ospf3-link-lsa", {})
 
                 group = m.groupdict()
                 for group_key, group_value in group.items():
@@ -731,19 +730,19 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
             # Gen timer 00:49:49
             m = p13.match(line)
             if m:
-                last_entry = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
+                last_database = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
 
-                last_entry.setdefault("ospf-database-extensive", {}).setdefault("generation-timer", {})
+                last_database.setdefault("ospf-database-extensive", {}).setdefault("generation-timer", {})
 
                 group = m.groupdict()
-                last_entry["ospf-database-extensive"]["generation-timer"]["#text"] = group['generation_timer']
+                last_database["ospf-database-extensive"]["generation-timer"]["#text"] = group['generation_timer']
 
                 continue
 
             # OSPF3 Link-Local database, interface ge-0/0/0.0 Area 0.0.0.8
             m = p14.match(line)
             if m:
-                entry_list = ret_dict.setdefault("ospf3-database-information", {}).setdefault("ospf3-intf-header", [])
+                header_list = ret_dict.setdefault("ospf3-database-information", {}).setdefault("ospf3-intf-header", [])
 
                 group = m.groupdict()
                 entry = {}
@@ -751,7 +750,7 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
                     entry_key = group_key.replace('_','-')
                     entry[entry_key] = group_value
 
-                entry_list.append(entry)
+                header_list.append(entry)
 
                 continue
 
@@ -804,7 +803,6 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
             m = p18.match(line)
             if m:
                 last_database = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
-
                 group = m.groupdict()
                 entry = last_entry.setdefault("ospf3-external-lsa", {})
                 for group_key, group_value in group.items():
@@ -855,8 +853,9 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
 
                 continue
 
-        # print("here")
-        # print()
-        # print(ret_dict)
-        # print()
+        import pprint
+        print("here")
+        print()
+        pprint.pprint(ret_dict)
+        print()
         return ret_dict
