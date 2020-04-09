@@ -4,9 +4,12 @@ from unittest.mock import Mock
 from pyats.topology import loader, Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.junos.show_ospf3 import ShowOspf3Interface, \
-                                               ShowOspf3NeighborExtensive, \
-                                               ShowOspf3NeighborDetail, \
-                                               ShowOspf3Neighbor, ShowOspf3Database
+                                                ShowOspf3NeighborExtensive, \
+                                                ShowOspf3NeighborDetail, \
+                                                ShowOspf3Neighbor,\
+                                                ShowOspf3Database,\
+                                                ShowOspf3InterfaceExtensive
+
 
 class TestShowOspf3Interface(unittest.TestCase):
 
@@ -681,6 +684,122 @@ class TestShowOspf3Database(unittest.TestCase):
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowOspf3Database(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+class TestShowOspf3InterfaceExtensive(unittest.TestCase):
+
+    maxDiff = None
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': """
+                    show ospf3 interface extensive | no-more
+            Interface           State   Area            DR ID           BDR ID          Nbrs
+            ge-0/0/0.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
+            Address fe80::250:56ff:fe8d:c829, Prefix-length 64
+            OSPF3-Intf-index 2, Type P2P, MTU 1500, Cost 5
+            Adj count: 1, Router LSA ID: 0
+            Hello 10, Dead 40, ReXmit 5, Not Stub
+            Protection type: None
+            ge-0/0/1.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
+            Address fe80::250:56ff:fe8d:a96c, Prefix-length 64
+            OSPF3-Intf-index 3, Type P2P, MTU 1500, Cost 100
+            Adj count: 1, Router LSA ID: 0
+            Hello 10, Dead 40, ReXmit 5, Not Stub
+            Protection type: None
+            lo0.0               DR      0.0.0.8         111.87.5.252    0.0.0.0            0
+            Address fe80::250:560f:fc8d:7c08, Prefix-length 128
+            OSPF3-Intf-index 1, Type LAN, MTU 65535, Cost 0, Priority 128
+            Adj count: 0, Router LSA ID: -
+            DR addr fe80::250:560f:fc8d:7c08
+            Hello 10, Dead 40, ReXmit 5, Not Stub
+            Protection type: None
+        """
+        }
+
+    golden_parsed_output = {
+        "ospf3-interface-information": {
+            "ospf3-interface": [
+                {
+                    "adj-count": "1",
+                    "bdr-id": "0.0.0.0",
+                    "dead-interval": "40",
+                    "dr-id": "0.0.0.0",
+                    "hello-interval": "10",
+                    "interface-address": "fe80::250:56ff:fe8d:c829",
+                    "interface-cost": "5",
+                    "interface-name": "ge-0/0/0.0",
+                    "interface-type": "P2P",
+                    "mtu": "1500",
+                    "neighbor-count": "1",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-interface-protection-type": "None",
+                    "ospf-interface-state": "PtToPt",
+                    "ospf-stub-type": "Not Stub",
+                    "ospf3-interface-index": "2",
+                    "ospf3-router-lsa-id": "0",
+                    "prefix-length": "64",
+                    "retransmit-interval": "5"
+                },
+                {
+                    "adj-count": "1",
+                    "bdr-id": "0.0.0.0",
+                    "dead-interval": "40",
+                    "dr-id": "0.0.0.0",
+                    "hello-interval": "10",
+                    "interface-address": "fe80::250:56ff:fe8d:a96c",
+                    "interface-cost": "100",
+                    "interface-name": "ge-0/0/1.0",
+                    "interface-type": "P2P",
+                    "mtu": "1500",
+                    "neighbor-count": "1",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-interface-protection-type": "None",
+                    "ospf-interface-state": "PtToPt",
+                    "ospf-stub-type": "Not Stub",
+                    "ospf3-interface-index": "3",
+                    "ospf3-router-lsa-id": "0",
+                    "prefix-length": "64",
+                    "retransmit-interval": "5"
+                },
+                {
+                    "adj-count": "0",
+                    "bdr-id": "0.0.0.0",
+                    "dead-interval": "40",
+                    "dr-address": "fe80::250:560f:fc8d:7c08",
+                    "dr-id": "111.87.5.252",
+                    "hello-interval": "10",
+                    "interface-address": "fe80::250:560f:fc8d:7c08",
+                    "interface-cost": "0",
+                    "interface-name": "lo0.0",
+                    "interface-type": "LAN",
+                    "mtu": "65535",
+                    "neighbor-count": "0",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-interface-protection-type": "None",
+                    "ospf-interface-state": "DR",
+                    "ospf-stub-type": "Not Stub",
+                    "ospf3-interface-index": "1",
+                    "prefix-length": "128",
+                    "retransmit-interval": "5",
+                    "router-priority": "128"
+                }
+            ]
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspf3InterfaceExtensive(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspf3InterfaceExtensive(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
