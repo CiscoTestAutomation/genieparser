@@ -581,13 +581,12 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
             if m:
                 last_database = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
 
-                last_database.setdefault("ospf3-router-lsa", {})
+                entry = last_database.setdefault("ospf3-router-lsa", {})
 
                 group = m.groupdict()
-                entry = {}
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_','-')
-                    last_database["ospf3-router-lsa"][entry_key] = group_value
+                    entry[entry_key] = group_value
 
                 continue
 
@@ -596,10 +595,11 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
             if m:
                 last_database = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
 
-                last_database.setdefault("ospf3-router-lsa", {}).setdefault("ospf3-lsa-topology", {}).setdefault("ospf-topology-id", "0")
-                last_database.setdefault("ospf3-router-lsa", {}).setdefault("ospf3-lsa-topology", {}).setdefault("ospf-topology-name", "default")
+                topology = last_database.setdefault("ospf3-router-lsa", {}).setdefault("ospf3-lsa-topology", {})
+                topology["ospf-topology-id"] = "0"
+                topology["ospf-topology-name"] = "default"
 
-                link_list = last_database.setdefault("ospf3-router-lsa", {}).setdefault("ospf3-lsa-topology", {}).setdefault("ospf3-lsa-topology-link", [])
+                link_list = topology.setdefault("ospf3-lsa-topology-link", [])
 
                 group = m.groupdict()
                 entry = {}
@@ -613,11 +613,11 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
             # Aging timer 00:18:16
             m = p5.match(line)
             if m:
-                last_entry = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
-                last_entry.setdefault("ospf-database-extensive", {}).setdefault("aging-timer", {})
+                last_database = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
+                last_database.setdefault("ospf-database-extensive", {}).setdefault("aging-timer", {})
 
                 group = m.groupdict()
-                last_entry["ospf-database-extensive"]["aging-timer"]["#text"] = group['aging_timer']
+                last_database["ospf-database-extensive"]["aging-timer"]["#text"] = group['aging_timer']
 
                 continue
 
@@ -695,19 +695,20 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
                 elif self.state == 'Extern':
                     entry = last_database.setdefault("ospf3-external-lsa", {})
                     entry['ospf3-prefix'] = group['ospf3_prefix']
+
                 else:
                     raise "state error"
 
                 continue
 
             # Prefix-options 0x0, Metric 5
-            m = p11.match(line) # p11 = re.compile(r'^Prefix-options (?P<ospf3_prefix_options>\S+), Metric (?P<metric>\d+)$')
+            m = p11.match(line)
             if m:
-                last_entry = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
+                last_database = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
 
                 group = m.groupdict()
 
-                entry = last_entry.setdefault("ospf3-intra-area-prefix-lsa", {})
+                entry = last_database.setdefault("ospf3-intra-area-prefix-lsa", {})
                 entry.setdefault('ospf3-prefix-options', []).append(group['ospf3_prefix_options'])
                 entry.setdefault('ospf3-prefix-metric', []).append(group['metric'])
 
