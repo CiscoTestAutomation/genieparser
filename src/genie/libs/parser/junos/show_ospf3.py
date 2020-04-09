@@ -9,8 +9,10 @@ Parser for the following show commands:
     * show ospf3 neighbor detail
     * show ospf3 database external extensive
 '''
+# Python
 import re
 
+# Genie
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import (Any,
         Optional, Use, SchemaTypeError, Schema)
