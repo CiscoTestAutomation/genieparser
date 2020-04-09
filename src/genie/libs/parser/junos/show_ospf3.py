@@ -596,9 +596,9 @@ class ShowOspf3DatabaseExternalExtensive(ShowOspf3DatabaseExternalExtensiveSchem
         ret_dict = {}
 
         # Extern      0.0.0.1          59.128.2.250     0x8000178e  1412  0x3c81  28
-        p1 = re.compile(r'^(?P<lsa_type>\S+) +(?P<lsa_id>(\*{0,1})[0-9]{1,3}'
-            r'(\.[0-9]{1,3}){3}) +(?P<advertising_router>[0-9]{1,3}(\.[0-9]{1,3})'
-            r'{3}) +(?P<sequence_number>\S+) +(?P<age>\d+) +(?P<checksum>\S+) +(?P<lsa_length>\d+)$')
+        p1 = re.compile(r'^(?P<lsa_type>\S+) +(?P<lsa_id>(\*{0,1})[\d\.]+) +'
+            r'(?P<advertising_router>[\d\.]+) +(?P<sequence_number>\S+) +(?P<age>\d+)'
+            r' +(?P<checksum>\S+) +(?P<lsa_length>\d+)$')
 
         # Prefix ::/0
         p2 = re.compile(r'^Prefix +(?P<ospf3_prefix>\S+)$')
@@ -608,22 +608,22 @@ class ShowOspf3DatabaseExternalExtensive(ShowOspf3DatabaseExternalExtensiveSchem
             r' Metric +(?P<metric>\S+), +Type +(?P<type_value>\S+),$')
 
         # Aging timer 00:36:27
-        p4 = re.compile(r'^Aging +timer +(?P<aging_timer>(\S+ ){0,1}\d\d:\d\d:\d\d)$')
+        p4 = re.compile(r'^Aging +timer +(?P<aging_timer>(\S+ ){0,1}[\d:]+)$')
 
         # Gen timer 00:49:49
         p5 = re.compile(r'^Gen +timer +(?P<generation_timer>\S+)$')
 
         # Installed 00:23:26 ago, expires in 00:36:28, sent 00:23:24 ago
-        p6 = re.compile(r'^Installed +(?P<installation_time>(\S+ ){0,1}\d\d:\d\d:\d\d)'
-            r' ago, +expires +in +(?P<expiration_time>(\S+ ){0,1}\d\d:\d\d:\d\d),'
-            r' sent +(?P<send_time>(\S+ ){0,1}\d\d:\d\d:\d\d) +ago$')
+        p6 = re.compile(r'^Installed +(?P<installation_time>(\S+ ){0,1}[\d:]+)'
+            r' ago, +expires +in +(?P<expiration_time>(\S+ ){0,1}[\d:]+),'
+            r' sent +(?P<send_time>(\S+ ){0,1}[\d:]+) +ago$')
 
         # Last changed 29w5d 21:04:29 ago, Change count: 1
-        p7 =re.compile(r'^Last +changed +(?P<lsa_changed_time>(\S+ ){0,1}\d\d:\d\d:\d\d)'
+        p7 =re.compile(r'^Last +changed +(?P<lsa_changed_time>(\S+ ){0,1}[\d:]+)'
             r' ago, +Change +count: +(?P<lsa_change_count>\d+)$')
 
         # Last changed 3w0d 17:02:47 ago, Change count: 2, Ours
-        p8 = re.compile(r'^Last +changed +(?P<lsa_changed_time>(\S+ ){0,1}\d\d:\d\d:\d\d)'
+        p8 = re.compile(r'^Last +changed +(?P<lsa_changed_time>(\S+ ){0,1}[\d:]+)'
             r' ago, +Change +count: +(?P<lsa_change_count>\d+), +(?P<database_entry_state>\S+)$')
 
         for line in out.splitlines():
