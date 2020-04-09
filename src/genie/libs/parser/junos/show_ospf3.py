@@ -84,8 +84,8 @@ class ShowOspf3Interface(ShowOspf3InterfaceSchema):
                 group = m.groupdict()
                 entry = {}
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
-                    entry[entry_key] = group_value
+                    entry_key_ = group_key.replace('_','-')
+                    entry[entry_key_] = group_value
 
                 entry_list.append(entry)
                 continue
@@ -219,8 +219,8 @@ class ShowOspf3Database(ShowOspf3DatabaseSchema):
                 group = m.groupdict()
                 entry = {}
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
-                    entry[entry_key] = group_value
+                    entry_key_ = group_key.replace('_','-')
+                    entry[entry_key_] = group_value
 
                 lsa_id = entry['lsa-id']
                 if lsa_id[0] == '*':
@@ -239,8 +239,8 @@ class ShowOspf3Database(ShowOspf3DatabaseSchema):
                 group = m.groupdict()
                 entry = {}
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
-                    entry[entry_key] = group_value
+                    entry_key_ = group_key.replace('_','-')
+                    entry[entry_key_] = group_value
 
                 entry_list.append(entry)
                 continue
