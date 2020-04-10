@@ -1039,6 +1039,9 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         return ret_dict
 
 class ShowRouteAdvertisingProtocolSchema(MetaParser):
+    """ Schema for:
+            * show route advertising-protocol {protocol} {ip_address}
+    """
     """
         schema = {
             Optional("@xmlns:junos"): str,
@@ -1116,6 +1119,9 @@ class ShowRouteAdvertisingProtocolSchema(MetaParser):
     }
 
 class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
+    """ Parser for:
+            * show route advertising-protocol {protocol} {ip_address}
+    """
 
     cli_command = 'show route advertising-protocol {protocol} {ip_address}'
     def cli(self, protocol=None, ip_address=None, output=None):
