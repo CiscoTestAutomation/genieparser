@@ -1121,14 +1121,14 @@ class ShowRouteAdvertisingProtocolSchema(MetaParser):
 
 class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
     """ Parser for:
-            * show route advertising-protocol {protocol} {ip_address}
+            * show route advertising-protocol {protocol} {neighbor}
     """
 
-    cli_command = 'show route advertising-protocol {protocol} {ip_address}'
-    def cli(self, protocol=None, ip_address=None, output=None):
+    cli_command = 'show route advertising-protocol {protocol} {neighbor}'
+    def cli(self, protocol, neighbor, output=None):
         if not output:
             cmd = self.cli_command.format(protocol=protocol,
-                    ip_address=ip_address)
+                    neighbor=neighbor)
             out = self.device.execute(cmd)
         else:
             out = output

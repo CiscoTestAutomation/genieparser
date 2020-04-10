@@ -98,7 +98,7 @@
     * Added ShowOspf3InterfaceExtensive for:
         * show ospf3 interface extensive
     * Added ShowRouteAdvertisingProtocol for:
-        * show route advertising-protocol {protocol} {ip_address}
+        * show route advertising-protocol {protocol} {neighbor}
 
 
 --------------------------------------------------------------------------------
