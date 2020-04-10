@@ -9,6 +9,7 @@ JUNOS parsers for the following commands:
     * show route protocol {protocol} table {table}
     * show route protocol {protocol}
     * show route protocol {protocol} {ip_address}
+    * show route advertising-protocol {protocol} {ip_address}
 '''
 
 import re
