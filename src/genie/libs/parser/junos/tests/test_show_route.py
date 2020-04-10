@@ -47182,7 +47182,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
 
 '''
 Unit test for:
-    * show route advertising-protocol {protocol} {ip_address}
+    * show route advertising-protocol {protocol} {neighbor}
 '''
 class TestShowRouteAdvertisingProtocol(unittest.TestCase):
     device = Device(name='aDevice')
@@ -47293,7 +47293,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(
                 protocol='bgp',
-                ip_address='111.87.5.253'
+                neighbor='111.87.5.253'
             )
 
     def test_golden(self):
@@ -47301,7 +47301,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
         obj = ShowRouteAdvertisingProtocol(device=self.device)
         parsed_output = obj.parse(
             protocol='bgp',
-            ip_address='111.87.5.253')
+            neighbor='111.87.5.253')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
