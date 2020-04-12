@@ -19,7 +19,7 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import (Any, 
-        Optional, Use, SchemaTypeError, Schema)
+        Optional, Use, SchemaTypeError, Schema, Or)
 
 
 class ShowOspfInterfaceBriefSchema(MetaParser):
@@ -551,21 +551,16 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
 class ShowOspfDatabaseSummarySchema(MetaParser):
     '''
     schema = {
+    Optional("@xmlns:junos"): str,
     "ospf-database-information": {
+        Optional("@xmlns"): str,
         "ospf-database-summary": [
             {
-                "ospf-area": str,
-                "ospf-lsa-count": list,
-                "ospf-lsa-type": list
-            },
-            {
                 Optional("@external-heading"): str,
-                "ospf-lsa-count": str,
-                "ospf-lsa-type": str
-            },
-            {
-                "ospf-area": list,
-                "ospf-intf": list
+                Optional("ospf-area"): Or(list, str),
+                Optional("ospf-intf"): list,
+                Optional("ospf-lsa-count"): Or(list, str),
+                Optional("ospf-lsa-type"): Or(list, str)
             }
         ]
     }
@@ -574,22 +569,16 @@ class ShowOspfDatabaseSummarySchema(MetaParser):
     def validate_neighbor_database_summary_list(value):
         if not isinstance(value, list):
             raise SchemaTypeError('ospf-database-summary is not a list')
-        neighbor_schema = Schema(
-             {
-                "ospf-area": str,
-                "ospf-lsa-count": list,
-                "ospf-lsa-type": list
-            },
-            {
-                Optional("@external-heading"): str,
-                "ospf-lsa-count": str,
-                "ospf-lsa-type": str
-            },
-            {
-                "ospf-area": list,
-                "ospf-intf": list
-            }
-        )
+        neighbor_schema = Schema({
+            Optional("@external-heading"): str,
+            Optional("ospf-area"): Or(list, str),
+            Optional("ospf-intf"): list,
+            Optional("ospf-lsa-count"): Or(list, str),
+            Optional("ospf-lsa-type"): Or(list, str)
+        })
+        for item in value:
+            neighbor_schema.validate(item)
+        return value
         for item in value:
             neighbor_schema.validate(item)
         return value
@@ -634,15 +623,7 @@ class ShowOspfDatabaseSummary(ShowOspfDatabaseSummarySchema):
 
 
 
-        ospf_database_info_dict = ret_dict.setdefault('ospf-database-information', {})
-        ospf_database_info_list = ospf_database_info_dict.setdefault('ospf-database-summary', [])
-        ospf_database_entry_dict1 = {}
-        ospf_database_entry_dict2 = {}
-        ospf_database_entry_dict3 = {}
-        ospf_database_entry_name_list = []
-        ospf_database_entry_value_list = []
-        ospf_database_entry_area_list = []
-        ospf_database_entry_intf_list = []
+        
 
         for line in out.splitlines():
             line = line.strip()
@@ -651,6 +632,15 @@ class ShowOspfDatabaseSummary(ShowOspfDatabaseSummarySchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
+                ospf_database_info_dict = ret_dict.setdefault('ospf-database-information', {})
+                ospf_database_info_list = ospf_database_info_dict.setdefault('ospf-database-summary', [None]*3)
+                ospf_database_entry_dict1 = {}
+                ospf_database_entry_dict2 = {}
+                ospf_database_entry_dict3 = {}
+                ospf_database_entry_name_list = []
+                ospf_database_entry_value_list = []
+                ospf_database_entry_area_list = []
+                ospf_database_entry_intf_list = []
                 
                 ospf_database_entry_dict1['ospf-area'] = group['ospf_area1']
                 p1 = re.compile(r'^empty$')
@@ -695,16 +685,21 @@ class ShowOspfDatabaseSummary(ShowOspfDatabaseSummarySchema):
             if m:
                 group = m.groupdict()
                 ospf_database_entry_intf_list.append(group['interface'])
+
+                ospf_database_entry_dict1["ospf-lsa-count"] = ospf_database_entry_value_list
+                ospf_database_entry_dict1["ospf-lsa-type"] = ospf_database_entry_name_list
+                ospf_database_entry_dict3["ospf-area"] = ospf_database_entry_area_list
+                ospf_database_entry_dict3["ospf-intf"] = ospf_database_entry_intf_list
+
+                ospf_database_info_list[0:] = ospf_database_entry_dict1, ospf_database_entry_dict2, ospf_database_entry_dict3
+                #ospf_database_info_list.append(ospf_database_entry_dict1)
+                #ospf_database_info_list.append(ospf_database_entry_dict2)
+                #ospf_database_info_list.append(ospf_database_entry_dict3)
                 continue
 
-        ospf_database_entry_dict1["ospf-lsa-count"] = ospf_database_entry_value_list
-        ospf_database_entry_dict1["ospf-lsa-type"] = ospf_database_entry_name_list
-        ospf_database_entry_dict3["ospf-area"] = ospf_database_entry_area_list
-        ospf_database_entry_dict3["ospf-intf"] = ospf_database_entry_intf_list
+        
 
-        ospf_database_info_list.append(ospf_database_entry_dict1)
-        ospf_database_info_list.append(ospf_database_entry_dict2)
-        ospf_database_info_list.append(ospf_database_entry_dict3)
+        
 
 
         import json
