@@ -73,6 +73,7 @@ class TestShowOspf3Overview(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
+        show ospf3 overview
         Instance: master
           Router ID: 111.87.5.252
           Route table index: 0
@@ -144,6 +145,7 @@ class TestShowOspf3OverviewExtensive(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
+        show ospf3 overview extensive
         Instance: master
           Router ID: 111.87.5.252
           Route table index: 0

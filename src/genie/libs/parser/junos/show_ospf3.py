@@ -168,7 +168,7 @@ class ShowOspf3Overview(ShowOspf3OverviewSchema):
         p7 = re.compile(r'^Area: +(?P<ospf_area>[\w\.\:\/]+)$')
 
         #Stub type: Not Stub
-        p8 = re.compile(r'^Stub type: +(?P<ospf_stub_type>\w+ \w+)$')
+        p8 = re.compile(r'^Stub type: +(?P<ospf_stub_type>[\S\s]+)$')
 
         #Area border routers: 0, AS boundary routers: 5
         p9 = re.compile(r'^Area border routers: +(?P<ospf_abr_count>\d+), AS boundary routers: +(?P<ospf_asbr_count>\d+)$')
@@ -190,7 +190,7 @@ class ShowOspf3Overview(ShowOspf3OverviewSchema):
         p14 = re.compile(r'^SPF delay: +(?P<ospf_spf_delay>[\w\.\:\/]+) sec, SPF holddown: +(?P<ospf_spf_holddown>[\w\.]+) sec, SPF rapid runs: +(?P<ospf_spf_rapid_runs>[\w\.]+)$')
 
         #Backup SPF: Not Needed
-        p15 = re.compile(r'^Backup SPF: +(?P<ospf_backup_spf_status>\w+ \w+)$')
+        p15 = re.compile(r'^Backup SPF: +(?P<ospf_backup_spf_status>[\S\s]+)$')
 
 
         for line in out.splitlines():
