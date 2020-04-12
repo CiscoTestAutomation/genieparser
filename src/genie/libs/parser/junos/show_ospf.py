@@ -564,8 +564,7 @@ class ShowOspfDatabaseSummarySchema(MetaParser):
             }
         ]
     }
-}
-'''
+    '''
     def validate_neighbor_database_summary_list(value):
         if not isinstance(value, list):
             raise SchemaTypeError('ospf-database-summary is not a list')
@@ -576,9 +575,6 @@ class ShowOspfDatabaseSummarySchema(MetaParser):
             Optional("ospf-lsa-count"): Or(list, str),
             Optional("ospf-lsa-type"): Or(list, str)
         })
-        for item in value:
-            neighbor_schema.validate(item)
-        return value
         for item in value:
             neighbor_schema.validate(item)
         return value
@@ -696,16 +692,17 @@ class ShowOspfDatabaseSummary(ShowOspfDatabaseSummarySchema):
                 #ospf_database_info_list.append(ospf_database_entry_dict2)
                 #ospf_database_info_list.append(ospf_database_entry_dict3)
                 continue
+        
+        if ret_dict:
+            ospf_database_entry_dict1["ospf-lsa-count"] = ospf_database_entry_value_list
+            ospf_database_entry_dict1["ospf-lsa-type"] = ospf_database_entry_name_list
+            ospf_database_entry_dict3["ospf-area"] = ospf_database_entry_area_list
+            ospf_database_entry_dict3["ospf-intf"] = ospf_database_entry_intf_list
 
         
 
         
 
 
-        import json
-        json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
-        f = open("dict.txt","w")
-        f.write(json_data)
-        f.close()
         return ret_dict
 

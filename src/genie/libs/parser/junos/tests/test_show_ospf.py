@@ -1965,7 +1965,7 @@ class TestShowOspfDatabase(unittest.TestCase):
 class TestShowOspfDatabaseSummary(unittest.TestCase):
 
     device = Device(name='aDevice')
-
+    maxDiff = None
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
