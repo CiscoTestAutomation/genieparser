@@ -77,7 +77,7 @@ class ShowKrtState(ShowKrtStateSchema):
                         r'Deletes: +(?P<krtq_indirect_deletes>\d+)$')
 
         #MPLS        Adds: 0       Changes: 0
-        p6 = re.compile(r'^MPLS\s+Adds: +(?P<krtq_high_mpls_adds>\d+)\s+Changes: +'
+        p6 = re.compile(r'^MPLS +Adds: +(?P<krtq_high_mpls_adds>\d+) +Changes: +'
                         r'(?P<krtq_high_mpls_changes>\d+)$')
 
         #High pri    Adds: 0       Changes: 0       Deletes: 0
