@@ -28,6 +28,9 @@
         * show install summary
     * Added ShowPlatformIntegrity for
         * show platform integrity
+    * Added ShowDmvpn for
+        * show dmvpn
+        * show dmvpn interface {interface}
 
 * NXOS
     * Added ShowIpRouteSummary for:
@@ -54,6 +57,7 @@
         * show resource usage
     * Added ShowAspDrop for
         * show asp drop
+
 * JUNOS
     * Added ShowBgpGroupBrief for:
         * show bgp group brief
@@ -63,16 +67,20 @@
         * show bgp group detail
     * Added ShowBgpGroupDetailNoMore for:
         * show bgp group detail | no-more
-
-* JUNOS
     * Added ShowOspfNeighbor for:
         * show ospf neighbor
     * Added ShowRouteProtocol for:
+        * show route protocol {protocol}
         * show route protocol {protocol} {ip_address}
+        * show route protocol {protocol} table {table}
     * Added ShowRouteProtocolNoMore for:
         * show route protocol {protocol} {ip_address} | no-more
     * Added ShowOspf3Interface for:
         * show ospf3 interface
+    * Added ShowOspf3Neighbor for:
+        * show ospf3 neighbor | no more
+    * Added ShowOspf3NeighborExtensive for:
+        * show ospf3 neighbor extensive
     * Added ShowArp for:
         * show arp
     * Added ShowArpNoMore for:
@@ -81,6 +89,18 @@
         * show krt state
     * Added ShowKrtQueue for:
         * show krt queue
+    * Added ShowRouteProtocolExtensive for:
+        * show route protocol {protocol} extensive
+        * show route protocol {protocol} table {table} extensive
+    * Added ShowOspf3Database for:
+        * show ospf3 database
+    * Added Ping for:
+        * ping {addr}
+        * ping {addr} count {count}
+    * Added ShowOspf3DatabaseExternalExtensive for:
+        * show ospf3 database external extensive
+    * Added ShowOspf3InterfaceExtensive for:
+        * show ospf3 interface extensive
 
 
 --------------------------------------------------------------------------------
@@ -142,6 +162,8 @@
         * Fix the way that assigns value to key 'vrf'
     * Update ShowStandbyAll:
         * Update regex to support various outputs.
+    * Update ShowInventory:
+        * Added regex to support various outputs.
 * NXOS
     * Updated ShowInterface
         * Update regex to cover both 'IP' and 'ip', both 'Rx' and 'RX'
