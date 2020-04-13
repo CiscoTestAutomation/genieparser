@@ -101,7 +101,8 @@
         * show ospf3 database external extensive
     * Added ShowOspf3InterfaceExtensive for:
         * show ospf3 interface extensive
-
+    * Added ShowRouteSummary for:
+        * show route summary
 
 --------------------------------------------------------------------------------
                                 Fix
