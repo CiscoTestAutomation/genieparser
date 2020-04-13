@@ -9,7 +9,7 @@ JUNOS parsers for the following commands:
     * show route protocol {protocol} table {table}
     * show route protocol {protocol}
     * show route protocol {protocol} {ip_address}
-    * 'show route protocol {protocol} table {table} extensive {destination}'
+    * show route protocol {protocol} table {table} extensive {destination}
 '''
 
 import re
