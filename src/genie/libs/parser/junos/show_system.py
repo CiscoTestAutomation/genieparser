@@ -11,7 +11,7 @@ import re
 # metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use
-
+from genie.metaparser.util.exceptions import SchemaTypeError
 
 class ShowSystemBufferSchema(MetaParser):
     """ Schema for:
