@@ -432,6 +432,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     entry_key = group_key.replace('_','-')
                     entry[entry_key] = group_value
                 continue
+
             # LACP                       :                    0
             m = p23.match(line)
             if m:
@@ -441,6 +442,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     entry_key = group_key.replace('_','-')
                     entry[entry_key] = group_value
                 continue
+
             # ARP                        :                56818
             m = p24.match(line)
             if m:
