@@ -1,7 +1,7 @@
 """show_system.py
 
 JunOS parsers for the following show commands:
-    - 'show system buffer'
+    - 'show system buffers'
 """
 
 # python
@@ -58,7 +58,7 @@ class ShowSystemBufferSchema(MetaParser):
 
 class ShowSystemBuffer(ShowSystemBufferSchema):
     """ Parser for:
-            - 'show system buffer'
+            - 'show system buffers'
     """
 
     cli_command = "show system buffers"
@@ -75,7 +75,6 @@ class ShowSystemBuffer(ShowSystemBufferSchema):
         # 588/2142/2730 mbufs in use (current/cache/total)
         p1 = re.compile(r'^(?P<current_mbufs>\S+)/(?P<cached_mbufs>\S+)/'
         r'(?P<total_mbufs>\S+) +mbufs +in +use +\(current/cache/total\)$')
-        # p1 = re.compile(r'^588/2142/2730 mbufs in use (current/cache/total)$')
 
         # 516/714/1230/124756 mbuf clusters in use (current/cache/total/max)
         p2 = re.compile(r'^(?P<current_mbuf_clusters>\S+)/(?P<cached_mbuf_clusters>\S+)'
