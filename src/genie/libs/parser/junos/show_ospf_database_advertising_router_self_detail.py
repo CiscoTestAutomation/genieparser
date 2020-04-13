@@ -107,16 +107,15 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
 
         ret_dict = {}
 
-        lines = out.splitlines()
-        last_tlv = None
+        history = []
 
-        for line_index in range(len(lines)):
-            line = lines[line_index]
+        for line in out.splitlines():
             line = line.strip()
 
             # OSPF database, Area 0.0.0.8
             m = p1.match(line)
             if m:
+                history.append("p1")
                 ospf_area = ret_dict.setdefault("ospf-database-information", {}).setdefault("ospf-area-header", {}).setdefault("ospf-area", None)
                 if ospf_area:
                     raise Exception("ospf-area has already been set.")
@@ -128,6 +127,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             # Router  *111.87.5.252     111.87.5.252     0x80001b9e  1801  0x22 0x1e2  120
             m = p2.match(line)
             if m:
+                history.append("p2")
                 database_list = ret_dict.setdefault("ospf-database-information", {}).setdefault("ospf-database", [])
 
                 group = m.groupdict()
@@ -146,6 +146,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             # bits 0x2, link count 8
             m = p3.match(line)
             if m:
+                history.append("p3")
                 last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
                 group = m.groupdict()
@@ -159,6 +160,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             # id 111.87.5.253, data 111.87.5.93, Type PointToPoint (1)
             m = p4.match(line)
             if m:
+                history.append("p4")
                 last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
                 group = m.groupdict()
@@ -176,6 +178,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             # Topology count: 0, Default metric: 5
             m = p5.match(line)
             if m:
+                history.append("p5")
                 last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
                 group = m.groupdict()
@@ -194,6 +197,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             # Topology default (ID 0)
             m = p6.match(line)
             if m:
+                history.append("p6")
                 last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
                 group = m.groupdict()
@@ -210,6 +214,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             # Type: PointToPoint, Node ID: 27.86.198.239
             m = p7.match(line)
             if m:
+                history.append("p7")
                 last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
                 group = m.groupdict()
@@ -228,6 +233,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             # Metric: 1000, Bidirectional
             m = p8.match(line)
             if m:
+                history.append("p8")
                 last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
                 group = m.groupdict()
@@ -246,6 +252,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             # RtrAddr (1), length 4:
             m = p9.match(line)
             if m:
+                history.append("p9")
                 last_tlv = line_index
                 last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
@@ -270,6 +277,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             # word
             m = p10.match(line)
             if m:
+                history.append("p10")
                 if last_tlv == line_index - 1:
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
@@ -287,6 +295,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             # Priority 0, 1000Mbps
             m = p11.match(line)
             if m:
+                history.append("p11")
                 last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
                 group = m.groupdict()
@@ -303,6 +312,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             # Local 336, Remote 0
             m = p12.match(line)
             if m:
+                history.append("p12")
                 last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
                 group = m.groupdict()
