@@ -103,6 +103,8 @@
         * show ospf3 interface extensive
     * Added ShowSystemBuffer for:
         * show system buffer
+    * Added ShowSystemCommit for:
+        * show system commit
 
 
 --------------------------------------------------------------------------------
