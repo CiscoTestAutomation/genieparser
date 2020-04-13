@@ -15,7 +15,7 @@ from genie.libs.parser.junos.show_pfe import ShowPfeStatisticsTraffic
 #=========================================================
 # Unit test for show pfe statistics traffic
 #=========================================================
-class test_show_ntp_associations(unittest.TestCase):
+class test_show_pfe_statistics_traffic(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
