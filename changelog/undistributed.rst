@@ -102,7 +102,7 @@
     * Added ShowOspf3InterfaceExtensive for:
         * show ospf3 interface extensive
     * Added ShowSystemBuffer for:
-        * show system buffer
+        * show system buffers
 
 
 --------------------------------------------------------------------------------
