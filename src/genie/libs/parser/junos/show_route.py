@@ -1149,7 +1149,10 @@ class ShowRouteInstanceDetail(ShowRouteInstanceDetailSchema):
 
         # inet.0                 : 1615 routes (929 active, 0 holddown, 0 hidden)
         # __juniper_private1__.inet.0: 6 routes (5 active, 0 holddown, 0 hidden)
-        p5 = re.compile(r'^(?P<irib_name>\S+) *: +(?P<irib_route_count>\d+) +routes +\((?P<irib_active_count>\d+) +active, +(?P<irib_holddown_count>\d+) +holddown, +(?P<irib_hidden_count>\d+) +hidden\)$')
+        p5 = re.compile(r'^(?P<irib_name>\S+) *: +(?P<irib_route_count>\d+) +'
+                r'routes +\((?P<irib_active_count>\d+) +active, +'
+                r'(?P<irib_holddown_count>\d+) +holddown, +'
+                r'(?P<irib_hidden_count>\d+) +hidden\)$')
 
         # master:
         p6 = re.compile(r'^(?P<instance_name>\S+):$')
