@@ -13,9 +13,9 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 from genie.libs.parser.junos.show_system import ShowSystemBuffer
 
 #=========================================================
-# Unit test for show pfe statistics traffic
+# Unit test for show system buffer
 #=========================================================
-class test_show_pfe_statistics_traffic(unittest.TestCase):
+class test_show_system_buffer(unittest.TestCase):
 
     device = Device(name='aDevice')
 
