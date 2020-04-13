@@ -19,6 +19,7 @@ class test_show_pfe_statistics_traffic(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
+    maxDiff = None
 
     golden_parsed_output_1 = {
         "pfe-statistics": {
@@ -138,7 +139,6 @@ class test_show_pfe_statistics_traffic(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden_1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
         obj = ShowPfeStatisticsTraffic(device=self.device)
         parsed_output = obj.parse()
