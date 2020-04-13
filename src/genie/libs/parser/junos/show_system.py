@@ -1,7 +1,7 @@
 """show_system.py
 
 JunOS parsers for the following show commands:
-    - 'show system boot-messages no-forwarding'
+    - 'show system buffer'
 """
 
 # python
@@ -73,41 +73,60 @@ class ShowSystemBuffer(ShowSystemBufferSchema):
         ret_dict = {}
 
         # 588/2142/2730 mbufs in use (current/cache/total)
-        p1 = re.compile(r'^(?P<current_mbufs>\S+)/(?P<cached_mbufs>\S+)/(?P<total_mbufs>\S+) +mbufs +in +use +\(current/cache/total\)$')
+        p1 = re.compile(r'^(?P<current_mbufs>\S+)/(?P<cached_mbufs>\S+)/'
+        r'(?P<total_mbufs>\S+) +mbufs +in +use +\(current/cache/total\)$')
         # p1 = re.compile(r'^588/2142/2730 mbufs in use (current/cache/total)$')
 
         # 516/714/1230/124756 mbuf clusters in use (current/cache/total/max)
-        p2 = re.compile(r'^(?P<current_mbuf_clusters>\S+)/(?P<cached_mbuf_clusters>\S+)/(?P<total_mbuf_clusters>\S+)/(?P<max_mbuf_clusters>\S+) +mbuf +clusters +in use +\(current/cache/total/max\)$')
+        p2 = re.compile(r'^(?P<current_mbuf_clusters>\S+)/(?P<cached_mbuf_clusters>\S+)'
+        r'/(?P<total_mbuf_clusters>\S+)/(?P<max_mbuf_clusters>\S+) +mbuf +clusters'
+        r' +in use +\(current/cache/total/max\)$')
 
         # 513/499 mbuf+clusters out of packet secondary zone in use (current/cache)
-        p3 = re.compile(r'^(?P<packet_count>\S+)/(?P<packet_free>\S+) +mbuf\+clusters +out +of +packet +secondary +zone +in +use +\(current/cache\)$')
+        p3 = re.compile(r'^(?P<packet_count>\S+)/(?P<packet_free>\S+) +mbuf\+clusters'
+        r' +out +of +packet +secondary +zone +in +use +\(current/cache\)$')
 
         # 0/2/2/62377 4k (page size) jumbo clusters in use (current/cache/total/max)
-        p4 = re.compile(r'^(?P<current_jumbo_clusters_4k>\S+)/(?P<cached_jumbo_clusters_4k>\S+)/(?P<total_jumbo_clusters_4k>\S+)/(?P<max_jumbo_clusters_4k>\S+) +4k +\(page +size\) +jumbo +clusters +in +use +\(current/cache/total/max\)$')
+        p4 = re.compile(r'^(?P<current_jumbo_clusters_4k>\S+)/'
+        r'(?P<cached_jumbo_clusters_4k>\S+)/(?P<total_jumbo_clusters_4k>\S+)/'
+        r'(?P<max_jumbo_clusters_4k>\S+) +4k +\(page +size\) +jumbo +clusters +in'
+        r' +use +\(current/cache/total/max\)$')
 
         # 0/0/0/18482 9k (page size) jumbo clusters in use (current/cache/total/max)
-        p5 = re.compile(r'^(?P<current_jumbo_clusters_9k>\S+)/(?P<cached_jumbo_clusters_9k>\S+)/(?P<total_jumbo_clusters_9k>\S+)/(?P<max_jumbo_clusters_9k>\S+) +9k +\(page +size\) +jumbo +clusters +in +use +\(current/cache/total/max\)$')
+        p5 = re.compile(r'^(?P<current_jumbo_clusters_9k>\S+)/'
+        r'(?P<cached_jumbo_clusters_9k>\S+)/(?P<total_jumbo_clusters_9k>\S+)/'
+        r'(?P<max_jumbo_clusters_9k>\S+) +9k +\(page +size\) +jumbo +clusters +in'
+        r' +use +\(current/cache/total/max\)$')
 
         # 0/0/0/10396 16k (page size) jumbo clusters in use (current/cache/total/max)
-        p6 = re.compile(r'^(?P<current_jumbo_clusters_16k>\S+)/(?P<cached_jumbo_clusters_16k>\S+)/(?P<total_jumbo_clusters_16k>\S+)/(?P<max_jumbo_clusters_16k>\S+) +16k +\(page +size\) +jumbo +clusters +in +use +\(current/cache/total/max\)$')
+        p6 = re.compile(r'^(?P<current_jumbo_clusters_16k>\S+)/'
+        r'(?P<cached_jumbo_clusters_16k>\S+)/(?P<total_jumbo_clusters_16k>\S+)/'
+        r'(?P<max_jumbo_clusters_16k>\S+) +16k +\(page +size\) +jumbo +clusters'
+        r' +in +use +\(current/cache/total/max\)$')
 
         # 1179K/1971K/3150K bytes allocated to network (current/cache/total)
-        p7 =re.compile(r'^(?P<current_bytes_in_use>\S+)K/(?P<cached_bytes>\S+)K/(?P<total_bytes>\S+)K +bytes +allocated +to +network +\(current/cache/total\)$')
+        p7 =re.compile(r'^(?P<current_bytes_in_use>\S+)K/(?P<cached_bytes>\S+)K/'
+        r'(?P<total_bytes>\S+)K +bytes +allocated +to +network +\(current/cache/total\)$')
 
         # 0/0/0 requests for mbufs denied (mbufs/clusters/mbuf+clusters)
-        p8 = re.compile(r'^(?P<mbuf_failures>\S+)/(?P<cluster_failures>\S+)/(?P<packet_failures>\S+) +requests +for +mbufs +denied +\(mbufs/clusters/mbuf\+clusters\)$')
+        p8 = re.compile(r'^(?P<mbuf_failures>\S+)/(?P<cluster_failures>\S+)/'
+        r'(?P<packet_failures>\S+) +requests +for +mbufs +denied +\(mbufs/clusters/mbuf\+clusters\)$')
 
         # 0/0/0 requests for jumbo clusters denied (4k/9k/16k)
-        p9 =re.compile(r'^(?P<jumbo_cluster_failures_4k>\S+)/(?P<jumbo_cluster_failures_9k>\S+)/(?P<jumbo_cluster_failures_16k>\S+) +requests +for +jumbo +clusters +denied +\(4k/9k/16k\)$')
+        p9 =re.compile(r'^(?P<jumbo_cluster_failures_4k>\S+)/(?P<jumbo_cluster_failures_9k>\S+)'
+        r'/(?P<jumbo_cluster_failures_16k>\S+) +requests +for +jumbo +clusters +denied +\(4k/9k/16k\)$')
 
         # 0 requests for sfbufs denied
-        p10 = re.compile(r'^(?P<sfbuf_requests_denied>\S+) +requests +for +sfbufs +denied$')
+        p10 = re.compile(r'^(?P<sfbuf_requests_denied>\S+) +requests +for +sfbufs'
+        r' +denied$')
 
         # 0 requests for sfbufs delayed
-        p11 = re.compile(r'^(?P<sfbuf_requests_delayed>\S+) +requests +for +sfbufs +delayed$')
+        p11 = re.compile(r'^(?P<sfbuf_requests_delayed>\S+) +requests +for'
+        r' +sfbufs +delayed$')
 
         # 0 requests for I/O initiated by sendfile
-        p12 = re.compile(r'^(?P<io_initiated>\S+) +requests +for +I/O +initiated +by +sendfile$')
+        p12 = re.compile(r'^(?P<io_initiated>\S+) +requests +for +I/O +initiated'
+        r' +by +sendfile$')
 
         for line in out.splitlines():
             line = line.strip()
