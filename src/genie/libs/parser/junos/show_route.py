@@ -9,6 +9,7 @@ JUNOS parsers for the following commands:
     * show route protocol {protocol} table {table}
     * show route protocol {protocol}
     * show route protocol {protocol} {ip_address}
+    * 'show route protocol {protocol} table {table} extensive {destination}'
 '''
 
 import re
@@ -660,13 +661,20 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
     """ Parser for:
             * show route protocol {protocol} extensive
             * show route protocol {protocol} table {table} extensive
+            * show route protocol {protocol} table {table} extensive {destination}
     """
 
     cli_command = ['show route protocol {protocol} extensive',
-                    'show route protocol {protocol} table {table} extensive']
-    def cli(self, protocol, table=None, output=None):
+                    'show route protocol {protocol} table {table} extensive',
+                    'show route protocol {protocol} table {table} extensive {destination}',]
+    def cli(self, protocol, table=None, destination=None, output=None):
         if not output:
-            if table:
+            if table and destination:
+                cmd = self.cli_command[1].format(
+                    protocol=protocol,
+                    table=table,
+                    destination=destination)
+            elif table:
                 cmd = self.cli_command[1].format(
                     protocol=protocol,
                     table=table)
