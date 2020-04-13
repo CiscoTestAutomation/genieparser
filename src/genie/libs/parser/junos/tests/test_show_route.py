@@ -10,7 +10,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 from genie.libs.parser.junos.show_route import (ShowRouteTable,
                                                 ShowRouteProtocol,
-                                                ShowRouteProtocolExtensive)
+                                                ShowRouteProtocolExtensive,
+                                                ShowRouteInstanceDetail)
 
 '''
 Unit test for:
@@ -47178,6 +47179,194 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
             protocol='ospf',
             table='inet.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+
+'''
+Unit test for:
+    * show route instance detail
+'''
+class TestShowRouteInstanceDetail(unittest.TestCase):
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show route instance detail | no-more 
+        master:
+        Router ID: 111.87.5.252
+        Type: forwarding        State: Active        
+        Tables:
+            inet.0                 : 1615 routes (929 active, 0 holddown, 0 hidden)
+            inet.3                 : 11 routes (11 active, 0 holddown, 0 hidden)
+            mpls.0                 : 44 routes (44 active, 0 holddown, 0 hidden)
+            inet6.0                : 23 routes (22 active, 0 holddown, 0 hidden)
+
+        __juniper_private1__:
+        Router ID: 0.0.0.0
+        Type: forwarding        State: Active        
+        Interfaces:
+            pfh-0/0/0.16383
+            pfe-0/0/0.16383
+            lo0.16385
+            em1.0
+        Tables:
+            __juniper_private1__.inet.0: 6 routes (5 active, 0 holddown, 0 hidden)
+            __juniper_private1__.inet6.0: 3 routes (3 active, 0 holddown, 0 hidden)
+
+        __juniper_private2__:
+        Router ID: 0.0.0.0
+        Type: forwarding        State: Active        
+        Interfaces:
+            pfh-0/0/0.16384
+            lo0.16384
+        Tables:
+            __juniper_private2__.inet.0: 1 routes (0 active, 0 holddown, 1 hidden)
+
+        __juniper_private4__:
+        Router ID: 0.0.0.0
+        Type: forwarding        State: Active        
+
+        __master.anon__:
+        Router ID: 0.0.0.0
+        Type: forwarding        State: Active        
+
+        mgmt_junos:
+        Router ID: 0.0.0.0
+        Type: forwarding        State: Active      
+    '''}
+
+    golden_parsed_output = {
+        "instance-information": {
+            "instance-core": [
+                {
+                    "instance-name": "master",
+                    "instance-rib": [
+                        {
+                            "irib-active-count": "929",
+                            "irib-hidden-count": "0",
+                            "irib-holddown-count": "0",
+                            "irib-name": "inet.0",
+                            "irib-route-count": "1615"
+                        },
+                        {
+                            "irib-active-count": "11",
+                            "irib-hidden-count": "0",
+                            "irib-holddown-count": "0",
+                            "irib-name": "inet.3",
+                            "irib-route-count": "11"
+                        },
+                        {
+                            "irib-active-count": "44",
+                            "irib-hidden-count": "0",
+                            "irib-holddown-count": "0",
+                            "irib-name": "mpls.0",
+                            "irib-route-count": "44"
+                        },
+                        {
+                            "irib-active-count": "22",
+                            "irib-hidden-count": "0",
+                            "irib-holddown-count": "0",
+                            "irib-name": "inet6.0",
+                            "irib-route-count": "23"
+                        }
+                    ],
+                    "instance-state": "Active",
+                    "instance-type": "forwarding",
+                    "router-id": "111.87.5.252"
+                },
+                {
+                    "instance-interface": [
+                        {
+                            "interface-name": "pfh-0/0/0.16383"
+                        },
+                        {
+                            "interface-name": "pfe-0/0/0.16383"
+                        },
+                        {
+                            "interface-name": "lo0.16385"
+                        },
+                        {
+                            "interface-name": "em1.0"
+                        }
+                    ],
+                    "instance-name": "__juniper_private1__",
+                    "instance-rib": [
+                        {
+                            "irib-active-count": "5",
+                            "irib-hidden-count": "0",
+                            "irib-holddown-count": "0",
+                            "irib-name": "__juniper_private1__.inet.0",
+                            "irib-route-count": "6"
+                        },
+                        {
+                            "irib-active-count": "3",
+                            "irib-hidden-count": "0",
+                            "irib-holddown-count": "0",
+                            "irib-name": "__juniper_private1__.inet6.0",
+                            "irib-route-count": "3"
+                        }
+                    ],
+                    "instance-state": "Active",
+                    "instance-type": "forwarding",
+                    "router-id": "0.0.0.0"
+                },
+                {
+                    "instance-interface": [
+                        {
+                            "interface-name": "pfh-0/0/0.16384"
+                        },
+                        {
+                            "interface-name": "lo0.16384"
+                        }
+                    ],
+                    "instance-name": "__juniper_private2__",
+                    "instance-rib": [
+                        {
+                            "irib-active-count": "0",
+                            "irib-hidden-count": "1",
+                            "irib-holddown-count": "0",
+                            "irib-name": "__juniper_private2__.inet.0",
+                            "irib-route-count": "1"
+                        }
+                    ],
+                    "instance-state": "Active",
+                    "instance-type": "forwarding",
+                    "router-id": "0.0.0.0"
+                },
+                {
+                    "instance-name": "__juniper_private4__",
+                    "instance-state": "Active",
+                    "instance-type": "forwarding",
+                    "router-id": "0.0.0.0"
+                },
+                {
+                    "instance-name": "__master.anon__",
+                    "instance-state": "Active",
+                    "instance-type": "forwarding",
+                    "router-id": "0.0.0.0"
+                },
+                {
+                    "instance-name": "mgmt_junos",
+                    "instance-state": "Active",
+                    "instance-type": "forwarding",
+                    "router-id": "0.0.0.0"
+                }
+            ]
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRouteInstanceDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowRouteInstanceDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()
