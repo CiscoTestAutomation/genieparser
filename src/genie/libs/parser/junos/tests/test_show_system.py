@@ -19,6 +19,8 @@ class test_show_system_buffer(unittest.TestCase):
 
     device = Device(name='aDevice')
 
+    maxDiff = None
+
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output_1 = {
@@ -85,7 +87,6 @@ class test_show_system_buffer(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden_1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
         obj = ShowSystemBuffer(device=self.device)
         parsed_output = obj.parse()
