@@ -101,6 +101,8 @@
         * show ospf3 database external extensive
     * Added ShowOspf3InterfaceExtensive for:
         * show ospf3 interface extensive
+    * Added ShowRouteReceiveProtocol for:
+        * show route receive-protocol {protocol} {peer}
 
 
 --------------------------------------------------------------------------------
