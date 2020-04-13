@@ -14,7 +14,7 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
 class ShowSystemBufferSchema(MetaParser):
     """ Schema for:
-            - 'show system buffer'
+            - 'show system buffers'
     """
 
     schema = {
