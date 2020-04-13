@@ -107,6 +107,8 @@
         * show system commit
     # Added ShowSystemQueues for:
         * show system queues
+    # Added ShowSystemStorage for:
+        * show system storage
 
 
 --------------------------------------------------------------------------------
