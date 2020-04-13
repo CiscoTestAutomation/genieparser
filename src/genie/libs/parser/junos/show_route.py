@@ -1037,3 +1037,156 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 continue
 
         return ret_dict
+
+class ShowRouteReceiveProtocolSchema(MetaParser):
+    """ Schema for:
+            * show route receive-protocol {protocol} {peer}
+    """
+    """
+        schema = {
+            Optional("@xmlns:junos"): str,
+            "route-information": {
+                Optional("@xmlns"): str,
+                "route-table": [
+                    {
+                        "active-route-count": str,
+                        "destination-count": str,
+                        "hidden-route-count": str,
+                        "holddown-route-count": str,
+                        "rt": [
+                            {
+                                Optional("@junos:style"): str,
+                                "rt-destination": str,
+                                "rt-entry": {
+                                    "active-tag": str,
+                                    "as-path": str,
+                                    "local-preference": str,
+                                    "med": str,
+                                    "nh": {
+                                        "to": str
+                                    },
+                                    "protocol-name": str
+                                }
+                            }
+                        ],
+                        "table-name": str,
+                        "total-route-count": str
+                    }
+                ]
+            }
+        }
+    """
+
+    def validate_route_table_list(value):
+        # Pass route-table list of dict in value
+        if not isinstance(value, list):
+            raise SchemaTypeError('route-table is not a list')
+        
+        def validate_rt_list(value):
+            # Pass rt list of dict in value
+            if not isinstance(value, list):
+                raise SchemaTypeError('rt is not a list')
+            # Create rt entry Schema
+            rt_entry_schema = Schema({
+                Optional("@junos:style"): str,
+                "rt-destination": str,
+                "rt-entry": {
+                    Optional("active-tag"): str,
+                    "as-path": str,
+                    "local-preference": str,
+                    "med": str,
+                    "nh": {
+                        "to": str
+                    },
+                    "protocol-name": str
+                }
+            })
+            # Validate each dictionary in list
+            for item in value:
+                rt_entry_schema.validate(item)
+            return value
+
+        # Create route-table entry Schema
+        route_table_schema = Schema({
+            "active-route-count": str,
+            "destination-count": str,
+            "hidden-route-count": str,
+            "holddown-route-count": str,
+            Optional("rt"): Use(validate_rt_list),
+            "table-name": str,
+            "total-route-count": str
+        })
+        # Validate each dictionary in list
+        for item in value:
+            route_table_schema.validate(item)
+        return value
+    
+    # Main Schema
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "route-information": {
+            Optional("@xmlns"): str,
+            "route-table": Use(validate_route_table_list)
+        }
+    }
+
+class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
+    """ Parser for:
+            * show route receive-protocol {protocol} {peer}
+    """
+
+    cli_command = 'show route receive-protocol {protocol} {peer}'
+    def cli(self, protocol, peer, output=None):
+        if not output:
+            cmd = self.cli_command.format(protocol=protocol,
+                    peer=peer)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        ret_dict = {}
+        
+        # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+        p1 = re.compile(r'^(?P<table_name>\S+): +(?P<destination_count>\d+) +'
+                r'destinations, +(?P<total_route_count>\d+) +routes +'
+                r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
+                r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
+
+        # * 14.101.0.0/16           Self                 12003   120        (65151 65000) I
+        # 14.101.0.0/16           111.87.5.253         12003   120        (65151 65000) I
+        p2 = re.compile(r'^((?P<active_tag>\*) +)?(?P<rt_destination>\S+) +'
+                r'(?P<to>\S+) +(?P<med>\d+) +(?P<local_preference>\d+) +'
+                r'(?P<as_path>\([\S\s]+\) +\w+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                route_table_list = ret_dict.setdefault('route-information', {}). \
+                    setdefault('route-table', [])
+                route_table_dict = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                route_table_list.append(route_table_dict)
+                continue
+            
+            # * 14.101.0.0/16           Self                 12003   120        (65151 65000) I
+            # 14.101.0.0/16           111.87.5.253         12003   120        (65151 65000) I
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                rt_list = route_table_dict.setdefault('rt', [])
+                rt_dict = {'rt-destination': group['rt_destination']}
+                rt_entry_dict = rt_dict.setdefault('rt-entry', {})
+                keys = ['active_tag', 'as_path', 'local_preference', 'med']
+                for key in keys:
+                    v = group[key]
+                    if v:
+                        rt_entry_dict.update({key.replace('_', '-'): v})
+                nh_dict = rt_entry_dict.setdefault('nh', {})
+                nh_dict.update({'to': group['to']})
+                rt_entry_dict.update({'protocol-name': protocol.upper()})
+                rt_list.append(rt_dict)
+
+        return ret_dict
