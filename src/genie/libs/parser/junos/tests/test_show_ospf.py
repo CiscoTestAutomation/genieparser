@@ -16,7 +16,10 @@ from genie.libs.parser.junos.show_ospf import (ShowOspfInterface,
                                                ShowOspfInterfaceDetail,
                                                ShowOspfNeighbor,
                                                ShowOspfDatabase,
-                                               ShowOspfDatabaseSummary)
+                                               ShowOspfDatabaseSummary,
+                                               ShowOspfDatabaseExternalExtensive,
+                                               ShowOspfOspfOverview,
+                                               ShowOspfOspfOverviewExtensive)
 
 
 class test_show_ospf_interface(unittest.TestCase):
@@ -2040,6 +2043,1096 @@ class TestShowOspfDatabaseSummary(unittest.TestCase):
         obj = ShowOspfDatabaseSummary(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class TestShowOspfDatabaseExternalExtensive(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    maxDiff = None
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show ospf database external extensive
+            OSPF AS SCOPE link state database
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len 
+        Extern   0.0.0.0          59.128.2.251     0x800019e3  2728  0x22 0x6715  36
+        mask 0.0.0.0
+        Topology default (ID 0)
+            Type: 1, Metric: 1, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:14:32
+        Installed 00:45:19 ago, expires in 00:14:32, sent 00:45:17 ago
+        Last changed 30w0d 01:34:30 ago, Change count: 1
+        Extern   0.0.0.0          106.187.14.240   0x8000039e  2396  0x22 0x9fcc  36
+        mask 0.0.0.0
+        Topology default (ID 0)
+            Type: 1, Metric: 1, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:20:03
+        Installed 00:39:53 ago, expires in 00:20:04, sent 00:39:51 ago
+        Last changed 4w2d 05:48:46 ago, Change count: 1
+        Extern   1.0.0.0          202.239.165.119  0x800019b0  1333  0x20 0x3bc3  36
+        mask 255.255.255.0
+        Topology default (ID 0)
+            Type: 2, Metric: 20, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:37:47
+        Installed 00:22:09 ago, expires in 00:37:47, sent 00:22:07 ago
+        Last changed 21w6d 00:06:09 ago, Change count: 1
+        Extern   1.0.0.0          202.239.165.120  0x800019b1   905  0x20 0x33c9  36
+        mask 255.255.255.0
+        Topology default (ID 0)
+            Type: 2, Metric: 20, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:44:55
+        Installed 00:15:01 ago, expires in 00:44:55, sent 00:14:59 ago
+        Last changed 21w6d 00:06:37 ago, Change count: 1
+        Extern   27.90.132.237    106.187.14.240   0x8000039e  2246  0x22 0xf161  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:22:34
+        Installed 00:37:23 ago, expires in 00:22:34, sent 00:37:21 ago
+        Last changed 4w2d 05:48:43 ago, Change count: 1
+        Extern   59.128.2.250     106.187.14.240   0x80000288  2848  0x22 0x473e  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 3.226.34.12
+        Aging timer 00:12:32
+        Installed 00:47:25 ago, expires in 00:12:32, sent 00:47:23 ago
+        Last changed 3w0d 08:51:45 ago, Change count: 1
+        Extern   59.128.2.250     106.187.14.241   0x80000298  2751  0x22 0x2153  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 3.226.34.12
+        Aging timer 00:14:09
+        Installed 00:45:45 ago, expires in 00:14:09, sent 00:45:43 ago
+        Last changed 3w0d 08:11:45 ago, Change count: 1
+        Extern   59.128.2.251     106.187.14.240   0x80000289   589  0x22 0x3b48  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 3.226.34.12
+        Aging timer 00:50:11
+        Installed 00:09:46 ago, expires in 00:50:11, sent 00:09:44 ago
+        Last changed 3w0d 08:51:50 ago, Change count: 1
+        Extern   59.128.2.251     106.187.14.241   0x80000298  1581  0x22 0x175c  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 3.226.34.12
+        Aging timer 00:33:38
+        Installed 00:26:15 ago, expires in 00:33:39, sent 00:26:13 ago
+        Last changed 3w0d 08:11:40 ago, Change count: 1
+        Extern   106.187.14.240   59.128.2.250     0x8000029a  1602  0x22 0xf88e  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:33:18
+        Installed 00:26:36 ago, expires in 00:33:18, sent 00:26:34 ago
+        Last changed 3w0d 08:51:43 ago, Change count: 1
+        Extern   106.187.14.240   59.128.2.251     0x800019e4  2289  0x22 0x190c  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:21:51
+        Installed 00:38:00 ago, expires in 00:21:51, sent 00:37:59 ago
+        Last changed 30w0d 01:34:30 ago, Change count: 1
+        Extern  *106.187.14.240   111.87.5.252     0x80001a3a  2548  0x22 0xc3fb  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Gen timer 00:02:55
+        Aging timer 00:17:31
+        Installed 00:42:28 ago, expires in 00:17:32, sent 00:42:26 ago
+        Last changed 3w3d 07:34:17 ago, Change count: 25, Ours
+        Extern   106.187.14.241   59.128.2.250     0x80001a14  2754  0x22 0xb341  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:14:05
+        Installed 00:45:48 ago, expires in 00:14:06, sent 00:45:46 ago
+        Last changed 30w0d 01:05:04 ago, Change count: 1
+        Extern   106.187.14.241   59.128.2.251     0x80000299   455  0x22 0xea9b  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:52:25
+        Installed 00:07:27 ago, expires in 00:52:25, sent 00:07:25 ago
+        Last changed 3w0d 08:11:38 ago, Change count: 1
+        Extern   106.187.14.241   111.87.5.253     0x80000fae   569  0x22 0xeb68  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:50:31
+        Installed 00:09:26 ago, expires in 00:50:31, sent 00:09:24 ago
+        Last changed 3w3d 07:33:47 ago, Change count: 31
+        Extern   111.87.5.252     106.187.14.240   0x800019b0  1944  0x22 0xc372  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 3.226.34.12
+        Aging timer 00:27:35
+        Installed 00:32:21 ago, expires in 00:27:36, sent 00:32:19 ago
+        Last changed 3w3d 07:33:50 ago, Change count: 3
+        Extern   111.87.5.253     106.187.14.241   0x80001410   227  0x22 0x4d5   36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 3.226.34.12
+        Aging timer 00:56:12
+        Installed 00:03:41 ago, expires in 00:56:13, sent 00:03:39 ago
+        Last changed 3w3d 07:24:57 ago, Change count: 17
+        Extern   202.239.164.0    106.187.14.240   0x800002da  1191  0x22 0xfb51  36
+        mask 255.255.255.128
+        Topology default (ID 0)
+            Type: 1, Metric: 31900, Fwd addr: 0.0.0.0, Tag: 3.223.212.52
+        Aging timer 00:40:08
+        Installed 00:19:48 ago, expires in 00:40:09, sent 00:19:46 ago
+        Last changed 2w6d 19:00:07 ago, Change count: 75
+        Extern   202.239.164.252  106.187.14.240   0x800002d9  1041  0x22 0x19b8  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 31900, Fwd addr: 0.0.0.0, Tag: 3.223.212.52
+        Aging timer 00:42:39
+        Installed 00:17:18 ago, expires in 00:42:39, sent 00:17:16 ago
+        Last changed 2w6d 19:00:07 ago, Change count: 75
+    '''}
+
+    golden_parsed_output = {
+        "ospf-database-information": {
+        "ospf-database": [
+            {
+                "@external-heading": "show ospf database external extensive",
+                "@heading": "OSPF AS SCOPE link state database",
+                "advertising-router": "59.128.2.251",
+                "age": "2728",
+                "checksum": "0x6715",
+                "lsa-id": "0.0.0.0",
+                "lsa-length": "36",
+                "lsa-type": "Extern",
+                "options": "0x22",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:14:32"
+                    },
+                    "expiration-time": {
+                        "#text": "00:14:32"
+                    },
+                    "installation-time": {
+                        "#text": "00:45:19"
+                    },
+                    "lsa-change-count": "1",
+                    "lsa-changed-time": {
+                        "#text": "30w0d 01:34:30"
+                    },
+                    "send-time": {
+                        "#text": "00:45:17"
+                    }
+                },
+                "ospf-external-lsa": {
+                    "address-mask": "0.0.0.0",
+                    "ospf-external-lsa-topology": {
+                        "forward-address": "0.0.0.0",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "1",
+                        "ospf-topology-name": "default",
+                        "tag": "0.0.0.0",
+                        "type-value": "1"
+                    }
+                },
+                "sequence-number": "0x800019e3"
+            },
+            {
+                "advertising-router": "106.187.14.240",
+                "age": "2396",
+                "checksum": "0x9fcc",
+                "lsa-id": "0.0.0.0",
+                "lsa-length": "36",
+                "lsa-type": "Extern",
+                "options": "0x22",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:20:03"
+                    },
+                    "expiration-time": {
+                        "#text": "00:20:04"
+                    },
+                    "installation-time": {
+                        "#text": "00:39:53"
+                    },
+                    "lsa-change-count": "1",
+                    "lsa-changed-time": {
+                        "#text": "4w2d 05:48:46"
+                    },
+                    "send-time": {
+                        "#text": "00:39:51"
+                    }
+                },
+                "ospf-external-lsa": {
+                    "address-mask": "0.0.0.0",
+                    "ospf-external-lsa-topology": {
+                        "forward-address": "0.0.0.0",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "1",
+                        "ospf-topology-name": "default",
+                        "tag": "0.0.0.0",
+                        "type-value": "1"
+                    }
+                },
+                "sequence-number": "0x8000039e"
+            },
+            {
+                "advertising-router": "202.239.165.119",
+                "age": "1333",
+                "checksum": "0x3bc3",
+                "lsa-id": "1.0.0.0",
+                "lsa-length": "36",
+                "lsa-type": "Extern",
+                "options": "0x20",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:37:47"
+                    },
+                    "expiration-time": {
+                        "#text": "00:37:47"
+                    },
+                    "installation-time": {
+                        "#text": "00:22:09"
+                    },
+                    "lsa-change-count": "1",
+                    "lsa-changed-time": {
+                        "#text": "21w6d 00:06:09"
+                    },
+                    "send-time": {
+                        "#text": "00:22:07"
+                    }
+                },
+                "ospf-external-lsa": {
+                    "address-mask": "255.255.255.0",
+                    "ospf-external-lsa-topology": {
+                        "forward-address": "0.0.0.0",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "20",
+                        "ospf-topology-name": "default",
+                        "tag": "0.0.0.0",
+                        "type-value": "2"
+                    }
+                },
+                "sequence-number": "0x800019b0"
+            },
+            {
+                "advertising-router": "202.239.165.120",
+                "age": "905",
+                "checksum": "0x33c9",
+                "lsa-id": "1.0.0.0",
+                "lsa-length": "36",
+                "lsa-type": "Extern",
+                "options": "0x20",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:44:55"
+                    },
+                    "expiration-time": {
+                        "#text": "00:44:55"
+                    },
+                    "installation-time": {
+                        "#text": "00:15:01"
+                    },
+                    "lsa-change-count": "1",
+                    "lsa-changed-time": {
+                        "#text": "21w6d 00:06:37"
+                    },
+                    "send-time": {
+                        "#text": "00:14:59"
+                    }
+                },
+                "ospf-external-lsa": {
+                    "address-mask": "255.255.255.0",
+                    "ospf-external-lsa-topology": {
+                        "forward-address": "0.0.0.0",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "20",
+                        "ospf-topology-name": "default",
+                        "tag": "0.0.0.0",
+                        "type-value": "2"
+                    }
+                },
+                "sequence-number": "0x800019b1"
+            },
+            {
+                "advertising-router": "106.187.14.240",
+                "age": "2246",
+                "checksum": "0xf161",
+                "lsa-id": "27.90.132.237",
+                "lsa-length": "36",
+                "lsa-type": "Extern",
+                "options": "0x22",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:22:34"
+                    },
+                    "expiration-time": {
+                        "#text": "00:22:34"
+                    },
+                    "installation-time": {
+                        "#text": "00:37:23"
+                    },
+                    "lsa-change-count": "1",
+                    "lsa-changed-time": {
+                        "#text": "4w2d 05:48:43"
+                    },
+                    "send-time": {
+                        "#text": "00:37:21"
+                    }
+                },
+                "ospf-external-lsa": {
+                    "address-mask": "255.255.255.255",
+                    "ospf-external-lsa-topology": {
+                        "forward-address": "0.0.0.0",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "50",
+                        "ospf-topology-name": "default",
+                        "tag": "0.0.0.0",
+                        "type-value": "1"
+                    }
+                },
+                "sequence-number": "0x8000039e"
+            },
+            {
+                "advertising-router": "106.187.14.240",
+                "age": "2848",
+                "checksum": "0x473e",
+                "lsa-id": "59.128.2.250",
+                "lsa-length": "36",
+                "lsa-type": "Extern",
+                "options": "0x22",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:12:32"
+                    },
+                    "expiration-time": {
+                        "#text": "00:12:32"
+                    },
+                    "installation-time": {
+                        "#text": "00:47:25"
+                    },
+                    "lsa-change-count": "1",
+                    "lsa-changed-time": {
+                        "#text": "3w0d 08:51:45"
+                    },
+                    "send-time": {
+                        "#text": "00:47:23"
+                    }
+                },
+                "ospf-external-lsa": {
+                    "address-mask": "255.255.255.255",
+                    "ospf-external-lsa-topology": {
+                        "forward-address": "0.0.0.0",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "50",
+                        "ospf-topology-name": "default",
+                        "tag": "3.226.34.12",
+                        "type-value": "1"
+                    }
+                },
+                "sequence-number": "0x80000288"
+            },
+            {
+                "advertising-router": "106.187.14.241",
+                "age": "2751",
+                "checksum": "0x2153",
+                "lsa-id": "59.128.2.250",
+                "lsa-length": "36",
+                "lsa-type": "Extern",
+                "options": "0x22",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:14:09"
+                    },
+                    "expiration-time": {
+                        "#text": "00:14:09"
+                    },
+                    "installation-time": {
+                        "#text": "00:45:45"
+                    },
+                    "lsa-change-count": "1",
+                    "lsa-changed-time": {
+                        "#text": "3w0d 08:11:45"
+                    },
+                    "send-time": {
+                        "#text": "00:45:43"
+                    }
+                },
+                "ospf-external-lsa": {
+                    "address-mask": "255.255.255.255",
+                    "ospf-external-lsa-topology": {
+                        "forward-address": "0.0.0.0",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "50",
+                        "ospf-topology-name": "default",
+                        "tag": "3.226.34.12",
+                        "type-value": "1"
+                    }
+                },
+                "sequence-number": "0x80000298"
+            },
+            {
+                "advertising-router": "106.187.14.240",
+                "age": "589",
+                "checksum": "0x3b48",
+                "lsa-id": "59.128.2.251",
+                "lsa-length": "36",
+                "lsa-type": "Extern",
+                "options": "0x22",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:50:11"
+                    },
+                    "expiration-time": {
+                        "#text": "00:50:11"
+                    },
+                    "installation-time": {
+                        "#text": "00:09:46"
+                    },
+                    "lsa-change-count": "1",
+                    "lsa-changed-time": {
+                        "#text": "3w0d 08:51:50"
+                    },
+                    "send-time": {
+                        "#text": "00:09:44"
+                    }
+                },
+                "ospf-external-lsa": {
+                    "address-mask": "255.255.255.255",
+                    "ospf-external-lsa-topology": {
+                        "forward-address": "0.0.0.0",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "50",
+                        "ospf-topology-name": "default",
+                        "tag": "3.226.34.12",
+                        "type-value": "1"
+                    }
+                },
+                "sequence-number": "0x80000289"
+            },
+            {
+                "advertising-router": "106.187.14.241",
+                "age": "1581",
+                "checksum": "0x175c",
+                "lsa-id": "59.128.2.251",
+                "lsa-length": "36",
+                "lsa-type": "Extern",
+                "options": "0x22",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:33:38"
+                    },
+                    "expiration-time": {
+                        "#text": "00:33:39"
+                    },
+                    "installation-time": {
+                        "#text": "00:26:15"
+                    },
+                    "lsa-change-count": "1",
+                    "lsa-changed-time": {
+                        "#text": "3w0d 08:11:40"
+                    },
+                    "send-time": {
+                        "#text": "00:26:13"
+                    }
+                },
+                "ospf-external-lsa": {
+                    "address-mask": "255.255.255.255",
+                    "ospf-external-lsa-topology": {
+                        "forward-address": "0.0.0.0",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "50",
+                        "ospf-topology-name": "default",
+                        "tag": "3.226.34.12",
+                        "type-value": "1"
+                    }
+                },
+                "sequence-number": "0x80000298"
+            },
+            {
+                "advertising-router": "59.128.2.250",
+                "age": "1602",
+                "checksum": "0xf88e",
+                "lsa-id": "106.187.14.240",
+                "lsa-length": "36",
+                "lsa-type": "Extern",
+                "options": "0x22",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:33:18"
+                    },
+                    "expiration-time": {
+                        "#text": "00:33:18"
+                    },
+                    "installation-time": {
+                        "#text": "00:26:36"
+                    },
+                    "lsa-change-count": "1",
+                    "lsa-changed-time": {
+                        "#text": "3w0d 08:51:43"
+                    },
+                    "send-time": {
+                        "#text": "00:26:34"
+                    }
+                },
+                "ospf-external-lsa": {
+                    "address-mask": "255.255.255.255",
+                    "ospf-external-lsa-topology": {
+                        "forward-address": "0.0.0.0",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "50",
+                        "ospf-topology-name": "default",
+                        "tag": "0.0.0.0",
+                        "type-value": "1"
+                    }
+                },
+                "sequence-number": "0x8000029a"
+            },
+            {
+                "advertising-router": "59.128.2.251",
+                "age": "2289",
+                "checksum": "0x190c",
+                "lsa-id": "106.187.14.240",
+                "lsa-length": "36",
+                "lsa-type": "Extern",
+                "options": "0x22",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:21:51"
+                    },
+                    "expiration-time": {
+                        "#text": "00:21:51"
+                    },
+                    "installation-time": {
+                        "#text": "00:38:00"
+                    },
+                    "lsa-change-count": "1",
+                    "lsa-changed-time": {
+                        "#text": "30w0d 01:34:30"
+                    },
+                    "send-time": {
+                        "#text": "00:37:59"
+                    }
+                },
+                "ospf-external-lsa": {
+                    "address-mask": "255.255.255.255",
+                    "ospf-external-lsa-topology": {
+                        "forward-address": "0.0.0.0",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "50",
+                        "ospf-topology-name": "default",
+                        "tag": "0.0.0.0",
+                        "type-value": "1"
+                    }
+                },
+                "sequence-number": "0x800019e4"
+            },
+            {
+                "advertising-router": "59.128.2.250",
+                "age": "2754",
+                "checksum": "0xb341",
+                "lsa-id": "106.187.14.241",
+                "lsa-length": "36",
+                "lsa-type": "Extern",
+                "options": "0x22",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:14:05"
+                    },
+                    "expiration-time": {
+                        "#text": "00:14:06"
+                    },
+                    "installation-time": {
+                        "#text": "00:45:48"
+                    },
+                    "lsa-change-count": "1",
+                    "lsa-changed-time": {
+                        "#text": "30w0d 01:05:04"
+                    },
+                    "send-time": {
+                        "#text": "00:45:46"
+                    }
+                },
+                "ospf-external-lsa": {
+                    "address-mask": "255.255.255.255",
+                    "ospf-external-lsa-topology": {
+                        "forward-address": "0.0.0.0",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "50",
+                        "ospf-topology-name": "default",
+                        "tag": "0.0.0.0",
+                        "type-value": "1"
+                    }
+                },
+                "sequence-number": "0x80001a14"
+            },
+            {
+                "advertising-router": "59.128.2.251",
+                "age": "455",
+                "checksum": "0xea9b",
+                "lsa-id": "106.187.14.241",
+                "lsa-length": "36",
+                "lsa-type": "Extern",
+                "options": "0x22",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:52:25"
+                    },
+                    "expiration-time": {
+                        "#text": "00:52:25"
+                    },
+                    "installation-time": {
+                        "#text": "00:07:27"
+                    },
+                    "lsa-change-count": "1",
+                    "lsa-changed-time": {
+                        "#text": "3w0d 08:11:38"
+                    },
+                    "send-time": {
+                        "#text": "00:07:25"
+                    }
+                },
+                "ospf-external-lsa": {
+                    "address-mask": "255.255.255.255",
+                    "ospf-external-lsa-topology": {
+                        "forward-address": "0.0.0.0",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "50",
+                        "ospf-topology-name": "default",
+                        "tag": "0.0.0.0",
+                        "type-value": "1"
+                    }
+                },
+                "sequence-number": "0x80000299"
+            },
+            {
+                "advertising-router": "111.87.5.253",
+                "age": "569",
+                "checksum": "0xeb68",
+                "lsa-id": "106.187.14.241",
+                "lsa-length": "36",
+                "lsa-type": "Extern",
+                "options": "0x22",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:50:31"
+                    },
+                    "expiration-time": {
+                        "#text": "00:50:31"
+                    },
+                    "installation-time": {
+                        "#text": "00:09:26"
+                    },
+                    "lsa-change-count": "31",
+                    "lsa-changed-time": {
+                        "#text": "3w3d 07:33:47"
+                    },
+                    "send-time": {
+                        "#text": "00:09:24"
+                    }
+                },
+                "ospf-external-lsa": {
+                    "address-mask": "255.255.255.255",
+                    "ospf-external-lsa-topology": {
+                        "forward-address": "0.0.0.0",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "50",
+                        "ospf-topology-name": "default",
+                        "tag": "0.0.0.0",
+                        "type-value": "1"
+                    }
+                },
+                "sequence-number": "0x80000fae"
+            },
+            {
+                "advertising-router": "106.187.14.240",
+                "age": "1944",
+                "checksum": "0xc372",
+                "lsa-id": "111.87.5.252",
+                "lsa-length": "36",
+                "lsa-type": "Extern",
+                "options": "0x22",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:27:35"
+                    },
+                    "expiration-time": {
+                        "#text": "00:27:36"
+                    },
+                    "installation-time": {
+                        "#text": "00:32:21"
+                    },
+                    "lsa-change-count": "3",
+                    "lsa-changed-time": {
+                        "#text": "3w3d 07:33:50"
+                    },
+                    "send-time": {
+                        "#text": "00:32:19"
+                    }
+                },
+                "ospf-external-lsa": {
+                    "address-mask": "255.255.255.255",
+                    "ospf-external-lsa-topology": {
+                        "forward-address": "0.0.0.0",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "50",
+                        "ospf-topology-name": "default",
+                        "tag": "3.226.34.12",
+                        "type-value": "1"
+                    }
+                },
+                "sequence-number": "0x800019b0"
+            },
+            {
+                "advertising-router": "106.187.14.241",
+                "age": "227",
+                "checksum": "0x4d5",
+                "lsa-id": "111.87.5.253",
+                "lsa-length": "36",
+                "lsa-type": "Extern",
+                "options": "0x22",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:56:12"
+                    },
+                    "expiration-time": {
+                        "#text": "00:56:13"
+                    },
+                    "installation-time": {
+                        "#text": "00:03:41"
+                    },
+                    "lsa-change-count": "17",
+                    "lsa-changed-time": {
+                        "#text": "3w3d 07:24:57"
+                    },
+                    "send-time": {
+                        "#text": "00:03:39"
+                    }
+                },
+                "ospf-external-lsa": {
+                    "address-mask": "255.255.255.255",
+                    "ospf-external-lsa-topology": {
+                        "forward-address": "0.0.0.0",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "50",
+                        "ospf-topology-name": "default",
+                        "tag": "3.226.34.12",
+                        "type-value": "1"
+                    }
+                },
+                "sequence-number": "0x80001410"
+            },
+            {
+                "advertising-router": "106.187.14.240",
+                "age": "1191",
+                "checksum": "0xfb51",
+                "lsa-id": "202.239.164.0",
+                "lsa-length": "36",
+                "lsa-type": "Extern",
+                "options": "0x22",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:40:08"
+                    },
+                    "expiration-time": {
+                        "#text": "00:40:09"
+                    },
+                    "installation-time": {
+                        "#text": "00:19:48"
+                    },
+                    "lsa-change-count": "75",
+                    "lsa-changed-time": {
+                        "#text": "2w6d 19:00:07"
+                    },
+                    "send-time": {
+                        "#text": "00:19:46"
+                    }
+                },
+                "ospf-external-lsa": {
+                    "address-mask": "255.255.255.128",
+                    "ospf-external-lsa-topology": {
+                        "forward-address": "0.0.0.0",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "31900",
+                        "ospf-topology-name": "default",
+                        "tag": "3.223.212.52",
+                        "type-value": "1"
+                    }
+                },
+                "sequence-number": "0x800002da"
+            },
+            {
+                "advertising-router": "106.187.14.240",
+                "age": "1041",
+                "checksum": "0x19b8",
+                "lsa-id": "202.239.164.252",
+                "lsa-length": "36",
+                "lsa-type": "Extern",
+                "options": "0x22",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:42:39"
+                    },
+                    "expiration-time": {
+                        "#text": "00:42:39"
+                    },
+                    "installation-time": {
+                        "#text": "00:17:18"
+                    },
+                    "lsa-change-count": "75",
+                    "lsa-changed-time": {
+                        "#text": "2w6d 19:00:07"
+                    },
+                    "send-time": {
+                        "#text": "00:17:16"
+                    }
+                },
+                "ospf-external-lsa": {
+                    "address-mask": "255.255.255.255",
+                    "ospf-external-lsa-topology": {
+                        "forward-address": "0.0.0.0",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "31900",
+                        "ospf-topology-name": "default",
+                        "tag": "3.223.212.52",
+                        "type-value": "1"
+                    }
+                },
+                "sequence-number": "0x800002d9"
+            }
+        ]
+    }
+        }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfDatabaseExternalExtensive(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspfDatabaseExternalExtensive(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+
+class TestShowOspfOspfOverview(unittest.TestCase):
+    """ Unit tests for:
+            * show ospf overview
+    """
+
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show ospf overview
+        Instance: master
+            Router ID: 111.87.5.252
+            Route table index: 0
+            AS boundary router
+            LSA refresh time: 50 minutes
+            Traffic engineering
+            SPRING: Enabled
+                SRGB Config Range :
+                SRGB Start-Label : 16000, SRGB Index-Range : 8000
+                SRGB Block Allocation: Success
+                SRGB Start Index : 16000, SRGB Size : 8000, Label-Range: [ 16000, 23999 ]
+                Node Segments: Enabled
+                Ipv4 Index : 71
+            Post Convergence Backup: Enabled
+                Max labels: 3, Max spf: 100, Max Ecmp Backup: 1
+            Area: 0.0.0.8
+                Stub type: Not Stub
+                Authentication Type: None
+                Area border routers: 0, AS boundary routers: 7
+                Neighbors
+                Up (in full state): 3
+            Topology: default (ID 0)
+                Prefix export count: 1
+                Full SPF runs: 173416
+                SPF delay: 0.200000 sec, SPF holddown: 2 sec, SPF rapid runs: 3
+                Backup SPF: Not Needed
+    '''}
+
+    golden_parsed_output = {
+        "ospf-overview-information": {
+        "ospf-overview": {
+            "instance-name": "master",
+            "ospf-area-overview": {
+                "authentication-type": "None",
+                "ospf-abr-count": "0",
+                "ospf-area": "0.0.0.8",
+                "ospf-asbr-count": "7",
+                "ospf-nbr-overview": {
+                    "ospf-nbr-up-count": "3"
+                },
+                "ospf-stub-type": "Not Stub"
+            },
+            "ospf-lsa-refresh-time": "50",
+            "ospf-route-table-index": "0",
+            "ospf-router-id": "111.87.5.252",
+            "ospf-spring-overview": {
+                "ospf-node-segment": {
+                    "ospf-node-segment-ipv4-index": "71"
+                },
+                "ospf-node-segment-enabled": "Enabled",
+                "ospf-spring-enabled": "Enabled",
+                "ospf-srgb-allocation": "Success",
+                "ospf-srgb-block": {
+                    "ospf-srgb-first-label": "16000",
+                    "ospf-srgb-last-label": "23999",
+                    "ospf-srgb-size": "8000",
+                    "ospf-srgb-start-index": "16000"
+                },
+                "ospf-srgb-config": {
+                    "ospf-srgb-config-block-header": "SRGB Config Range",
+                    "ospf-srgb-index-range": "8000",
+                    "ospf-srgb-start-label": "16000"
+                }
+            },
+            "ospf-tilfa-overview": {
+                "ospf-tilfa-ecmp-backup": "1",
+                "ospf-tilfa-enabled": "Enabled",
+                "ospf-tilfa-max-labels": "3",
+                "ospf-tilfa-max-spf": "100"
+            },
+            "ospf-topology-overview": {
+                "ospf-backup-spf-status": "Not Needed",
+                "ospf-full-spf-count": "173416",
+                "ospf-prefix-export-count": "1",
+                "ospf-spf-delay": "0.200000",
+                "ospf-spf-holddown": "2",
+                "ospf-spf-rapid-runs": "3",
+                "ospf-topology-id": "0",
+                "ospf-topology-name": "default"
+            }
+        }
+    }
+        
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfOspfOverview(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspfOspfOverview(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+class TestShowOspfOspfOverviewExtensive(unittest.TestCase):
+    """ Unit tests for:
+            * show ospf overview extensive
+    """
+
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show ospf overview
+        Instance: master
+            Router ID: 111.87.5.252
+            Route table index: 0
+            AS boundary router
+            LSA refresh time: 50 minutes
+            Traffic engineering
+            SPRING: Enabled
+                SRGB Config Range :
+                SRGB Start-Label : 16000, SRGB Index-Range : 8000
+                SRGB Block Allocation: Success
+                SRGB Start Index : 16000, SRGB Size : 8000, Label-Range: [ 16000, 23999 ]
+                Node Segments: Enabled
+                Ipv4 Index : 71
+            Post Convergence Backup: Enabled
+                Max labels: 3, Max spf: 100, Max Ecmp Backup: 1
+            Area: 0.0.0.8
+                Stub type: Not Stub
+                Authentication Type: None
+                Area border routers: 0, AS boundary routers: 7
+                Neighbors
+                Up (in full state): 3
+            Topology: default (ID 0)
+                Prefix export count: 1
+                Full SPF runs: 173416
+                SPF delay: 0.200000 sec, SPF holddown: 2 sec, SPF rapid runs: 3
+                Backup SPF: Not Needed
+    '''}
+
+    golden_parsed_output = {
+        "ospf-overview-information": {
+        "ospf-overview": {
+            "instance-name": "master",
+            "ospf-area-overview": {
+                "authentication-type": "None",
+                "ospf-abr-count": "0",
+                "ospf-area": "0.0.0.8",
+                "ospf-asbr-count": "7",
+                "ospf-nbr-overview": {
+                    "ospf-nbr-up-count": "3"
+                },
+                "ospf-stub-type": "Not Stub"
+            },
+            "ospf-lsa-refresh-time": "50",
+            "ospf-route-table-index": "0",
+            "ospf-router-id": "111.87.5.252",
+            "ospf-spring-overview": {
+                "ospf-node-segment": {
+                    "ospf-node-segment-ipv4-index": "71"
+                },
+                "ospf-node-segment-enabled": "Enabled",
+                "ospf-spring-enabled": "Enabled",
+                "ospf-srgb-allocation": "Success",
+                "ospf-srgb-block": {
+                    "ospf-srgb-first-label": "16000",
+                    "ospf-srgb-last-label": "23999",
+                    "ospf-srgb-size": "8000",
+                    "ospf-srgb-start-index": "16000"
+                },
+                "ospf-srgb-config": {
+                    "ospf-srgb-config-block-header": "SRGB Config Range",
+                    "ospf-srgb-index-range": "8000",
+                    "ospf-srgb-start-label": "16000"
+                }
+            },
+            "ospf-tilfa-overview": {
+                "ospf-tilfa-ecmp-backup": "1",
+                "ospf-tilfa-enabled": "Enabled",
+                "ospf-tilfa-max-labels": "3",
+                "ospf-tilfa-max-spf": "100"
+            },
+            "ospf-topology-overview": {
+                "ospf-backup-spf-status": "Not Needed",
+                "ospf-full-spf-count": "173416",
+                "ospf-prefix-export-count": "1",
+                "ospf-spf-delay": "0.200000",
+                "ospf-spf-holddown": "2",
+                "ospf-spf-rapid-runs": "3",
+                "ospf-topology-id": "0",
+                "ospf-topology-name": "default"
+            }
+        }
+    }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfOspfOverviewExtensive(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspfOspfOverviewExtensive(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 if __name__ == '__main__':
     unittest.main()
