@@ -67,6 +67,8 @@
         * show bgp group detail
     * Added ShowBgpGroupDetailNoMore for:
         * show bgp group detail | no-more
+    * Added ShowBgpGroupSummary for:
+        * show bgp group summary
     * Added ShowOspfNeighbor for:
         * show ospf neighbor
     * Added ShowRouteProtocol for:
