@@ -103,6 +103,8 @@
         * show ospf3 interface extensive
     * Added ShowSystemBuffer for:
         * show system buffer
+    * Added ShowSystemBufferNoForwarding for:
+        * show system buffer no-forwarding
 
 
 --------------------------------------------------------------------------------
