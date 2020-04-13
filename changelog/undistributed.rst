@@ -105,6 +105,8 @@
         * show system buffer
     * Added ShowSystemCommit for:
         * show system commit
+    # Added ShowSystemQueues for:
+        * show system queues
 
 
 --------------------------------------------------------------------------------
