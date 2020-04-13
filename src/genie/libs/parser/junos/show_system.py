@@ -252,3 +252,10 @@ class ShowSystemBuffer(ShowSystemBufferSchema):
                 continue
 
         return ret_dict
+
+class ShowSystemBufferNoForwarding(ShowSystemBuffer):
+    """ Parser for:
+            - 'show system buffer no-forwarding'
+    """
+
+    cli_command = "show system buffers no-forwarding"
