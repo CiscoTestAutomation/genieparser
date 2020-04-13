@@ -407,9 +407,4 @@ class ShowSystemQueues(ShowSystemQueuesSchema):
             if m:
                 interface_flag = False
 
-        # print()
-        # print("heerereee")
-        # import pprint
-        # pprint.pprint(ret_dict)
-
         return ret_dict
