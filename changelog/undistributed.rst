@@ -105,6 +105,10 @@
         * show system buffers
     * Added ShowPfeStatisticsTraffic for:
         * show pfe statistics traffic
+    * Added ShowSystemUpdate for:
+        * show system uptime
+    * Added ShowSystemUpdateNoForwarding for:
+        * show system uptime no-forwarding
 
 
 --------------------------------------------------------------------------------
