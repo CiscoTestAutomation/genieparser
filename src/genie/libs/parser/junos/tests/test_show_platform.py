@@ -10,30 +10,30 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # Parser
 from genie.libs.parser.junos.show_platform import FileList
+from genie.libs.parser.junos.show_platform import ShowVersion
 
 
-#==========================
+# ==========================
 # Unit test for 'file list'
-#==========================
+# ==========================
 class test_file_list(unittest.TestCase):
-
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
-        'dir': 
-            {'root': 
-                {'files': 
-                    {'.cshrc@': 
-                        {'path': '/packages/mnt/os-runtime/root/.cshrc'},
-                    '.history': {},
-                    '.login@': 
-                        {'path': '/packages/mnt/os-runtime/root/.login'},
-                    '.profile@': 
-                        {'path': '/packages/mnt/os-runtime/root/.profile'},
-                    'filename': {},
-                    'my_file1': {},
-                    'golden_config': {}}}}}
+        'dir':
+            {'root':
+                 {'files':
+                      {'.cshrc@':
+                           {'path': '/packages/mnt/os-runtime/root/.cshrc'},
+                       '.history': {},
+                       '.login@':
+                           {'path': '/packages/mnt/os-runtime/root/.login'},
+                       '.profile@':
+                           {'path': '/packages/mnt/os-runtime/root/.profile'},
+                       'filename': {},
+                       'my_file1': {},
+                       'golden_config': {}}}}}
 
     golden_output1 = {'execute.return_value': '''
         root@junos_vmx1> file list
@@ -48,10 +48,10 @@ class test_file_list(unittest.TestCase):
         '''}
 
     golden_parsed_output2 = {
-        'dir': 
-            {'root': 
-                {'files': 
-                    {'filename999': {}}}}}
+        'dir':
+            {'root':
+                 {'files':
+                      {'filename999': {}}}}}
 
     golden_output2 = {'execute.return_value': '''
         root@junos_vmx1> file list filename999
@@ -59,7 +59,7 @@ class test_file_list(unittest.TestCase):
         '''}
 
     golden_parsed_output3 = {
-        'dir': 
+        'dir':
             {'root': {}}}
 
     golden_output3 = {'execute.return_value': '''
@@ -93,6 +93,45 @@ class test_file_list(unittest.TestCase):
         obj = FileList(device=self.device)
         parsed_output = obj.parse(filename='filename999')
         self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+
+# ==========================
+# Unit test for 'show version'
+# ==========================
+class test_show_version(unittest.TestCase):
+    device = Device(name='aDevice')
+
+    golden_parsed_output = {'hostname': "JunosHostname-1",
+                             'operating_system': "18.2R2-S1",
+                             'software_version': "Junos",
+                             'model': "ex4200-24p",
+                             }
+
+    golden_output = {'execute.return_value': '''
+        user2@JunosHostname-1> show version 
+        fpc0:
+        --------------------------------------------------------------------------
+        Hostname: JunosHostname-1
+        Model: ex4200-24p
+        Junos: 18.2R2-S1
+        JUNOS EX  Software Suite [18.2R2-S1]
+        JUNOS FIPS mode utilities [18.2R2-S1]
+        JUNOS Crypto Software Suite [18.2R2-S1]
+        JUNOS Online Documentation [18.2R2-S1]
+        JUNOS Phone-Home Software Suite [18.2R2-S1]
+        
+        {master:0}
+        user1@JunosHostname-1> 
+        '''}
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowVersion(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
 
 if __name__ == '__main__':
     unittest.main()

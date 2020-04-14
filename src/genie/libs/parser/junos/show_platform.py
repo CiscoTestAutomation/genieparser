@@ -3,6 +3,7 @@
 JunOS parsers for the following show commands:
     * file list
     * file list {filename}
+    * show version
 
 '''
 
@@ -112,4 +113,71 @@ class FileList(FileListSchema):
                 continue
 
         return ret_dict
+
+# ===========================
+# Parser for show version
+# ===========================
+
+class ShowVersionSchema(MetaParser):
+    """Schema for show version"""
+    schema = {'hostname': str,
+              'operating_system': str,
+              'software_version': str,
+              'model': str,
+              }
+
+
+# =========================
+# Parser for 'show version'
+# =========================
+
+
+class ShowVersion(ShowVersionSchema):
+    """Parser for show version"""
+    cli_command = 'show version'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Init vars
+        show_version_dict = {}
+
+        # regex patterns
+
+        # Junos: 15.1R1-S1
+        p1 = re.compile('\s*Junos: +(?P<software_version>.*$)')
+
+        # Model: ex4300-24p
+        p2 = re.compile('\s*Model: +(?P<model>.*$)')
+
+        # Hostname: myJunosDevice
+        p3 = re.compile('\s*Hostname: +(?P<hostname>.*$)')
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                show_version_dict['operating_system'] = 'Junos'
+                show_version_dict['software_version'] = \
+                    str(m.groupdict()['software_version'])
+                continue
+
+            m = p2.match(line)
+            if m:
+                show_version_dict['model'] = \
+                    str(m.groupdict()['model'])
+                continue
+
+            m = p3.match(line)
+            if m:
+                show_version_dict['hostname'] = \
+                    str(m.groupdict()['hostname'])
+                continue
+
+        return show_version_dict
 
