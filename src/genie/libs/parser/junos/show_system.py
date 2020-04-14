@@ -382,3 +382,10 @@ class ShowSystemCoreDumps(ShowSystemCoreDumpsSchema):
                 continue
 
         return ret_dict
+
+class ShowSystemCoreDumpsNoForwarding(ShowSystemCoreDumps):
+    """ Parser for:
+            - 'show system core-dumps no-forwarding'
+    """
+
+    cli_command = "show system core-dumps no-forwarding"
