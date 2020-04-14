@@ -103,6 +103,8 @@
         * show ospf3 interface extensive
     * Added ShowSystemBuffer for:
         * show system buffers
+    * Added ShowPfeStatisticsTraffic for:
+        * show pfe statistics traffic
 
 
 --------------------------------------------------------------------------------
