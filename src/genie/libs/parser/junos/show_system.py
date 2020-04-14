@@ -251,3 +251,89 @@ class ShowSystemBuffer(ShowSystemBufferSchema):
                 continue
 
         return ret_dict
+
+class ShowSystemCoreDumpsSchema(MetaParser):
+	""" Schema for:
+            * show system core-dumps
+    """
+
+    '''
+    schema = {
+        "directory-list": {
+            "directory": {
+                "file-information": [
+                    {
+                        "file-date": {
+                            "#text": str,
+                            "junos:format": str
+                        },
+                        "file-group": str,
+                        "file-links": str,
+                        "file-name": str,
+                        "file-owner": str,
+                        "file-permissions": {
+                            "#text": str,
+                            "junos:format": str
+                        },
+                        "file-size": str
+                    }
+                ],
+                "output": "list",
+                "total-files": str
+            }
+        }
+    }
+    '''
+    # Sub Schema file-information
+    def validate_file_information_list(value):
+        # Pass file-information list as value
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-interface is not a list')
+        file_information_schema = Schema({
+                        "file-date": {
+                            "#text": str,
+                            "junos:format": str
+                        },
+                        "file-group": str,
+                        "file-links": str,
+                        "file-name": str,
+                        "file-owner": str,
+                        "file-permissions": {
+                            "#text": str,
+                            "junos:format": str
+                        },
+                        "file-size": str
+                    })
+        # Validate each dictionary in list
+        for item in value:
+            file_information_schema.validate(item)
+        return value
+
+    schema = {
+        "directory-list": {
+            "directory": {
+                "file-information": Use(validate_file_information_list),
+                "output": list,
+                "total-files": str
+            }
+        }
+    }
+
+class ShowSystemCoreDumps(ShowSystemCoreDumpsSchema):
+	""" Parser for:
+            * show system core-dumps
+    """
+	cli_command = 'show system core-dumps'
+
+	def cli(self, output=None):
+		if not output:
+			out = self.device.execute(self.cli_command)
+		else:
+			out = output
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+        return ret_dict
