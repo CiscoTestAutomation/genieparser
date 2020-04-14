@@ -102,8 +102,8 @@ class test_show_version(unittest.TestCase):
     device = Device(name='aDevice')
 
     golden_parsed_output = {'hostname': "JunosHostname-1",
-                             'operating_system': "18.2R2-S1",
-                             'software_version': "Junos",
+                             'operating_system': "Junos",
+                             'software_version': "18.2R2-S1",
                              'model': "ex4200-24p",
                              }
 
