@@ -334,7 +334,9 @@ class ShowSystemCoreDumps(ShowSystemCoreDumpsSchema):
             out = output
 
         # -rw-r--r--  1 root  wheel    1252383 Aug 8   2019 /var/crash/core.riot.mpc0.1565307741.1716.gz
-        p1 = re.compile(r'^(?P<file_permissions>\S+) +(?P<file_links>\S+) +(?P<file_owner>\S+)  +(?P<file_group>\S+) +(?P<file_size>\S+) +(?P<file_date>\S+ +\d+ +\d+) +(?P<file_name>\S+)$')
+        p1 = re.compile(r'^(?P<file_permissions>\S+) +(?P<file_links>\S+) +'
+        r'(?P<file_owner>\S+)  +(?P<file_group>\S+) +(?P<file_size>\S+) +'
+        r'(?P<file_date>\S+ +\d+ +\d+) +(?P<file_name>\S+)$')
 
         # /var/tmp/*core*: No such file or directory
         p2 = re.compile(r'^(?P<output>\S+: +No +such +file +or +directory)$')
@@ -351,7 +353,8 @@ class ShowSystemCoreDumps(ShowSystemCoreDumpsSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                entry_list = ret_dict.setdefault("directory-list", {}).setdefault("directory", {}).setdefault("file-information", [])
+                entry_list = ret_dict.setdefault("directory-list", {})\
+                    .setdefault("directory", {}).setdefault("file-information", [])
                 entry = {}
                 entry["file-date"] = {"@junos:format": group['file_date']}
                 entry["file-group"] = group['file_group']
@@ -368,7 +371,8 @@ class ShowSystemCoreDumps(ShowSystemCoreDumpsSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                entry_list = ret_dict.setdefault("directory-list", {}).setdefault("directory", {}).setdefault("output", [])
+                entry_list = ret_dict.setdefault("directory-list", {})\
+                    .setdefault("directory", {}).setdefault("output", [])
 
                 entry_list.append(group['output'])
                 continue
@@ -377,7 +381,8 @@ class ShowSystemCoreDumps(ShowSystemCoreDumpsSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                entry = ret_dict.setdefault("directory-list", {}).setdefault("directory", {})
+                entry = ret_dict.setdefault("directory-list", {})\
+                    .setdefault("directory", {})
 
                 entry['total-files'] = group['total_files']
                 continue
