@@ -1,7 +1,6 @@
 """show_system.py
 
 JunOS parsers for the following show commands:
-    - 'show system boot-messages no-forwarding'
     - 'show sysyem commit'
     - 'show system buffers'
 """
