@@ -2,7 +2,8 @@
 
 JunOS parsers for the following show commands:
     - 'show system boot-messages no-forwarding'
-    - 'show sysyem commit'
+    - 'show system commit'
+    - 'show system queues no-forwarding'
 """
 
 # python
@@ -408,3 +409,9 @@ class ShowSystemQueues(ShowSystemQueuesSchema):
                 interface_flag = False
 
         return ret_dict
+
+class ShowSystemQueuesNoForwarding(ShowSystemQueues):
+    """ Parser for:
+            * show system queues no-forwarding
+    """
+    cli_command = 'show system queues no-forwarding'
