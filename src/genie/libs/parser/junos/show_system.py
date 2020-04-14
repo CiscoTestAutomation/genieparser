@@ -111,14 +111,18 @@ class ShowSystemBuffer(ShowSystemBufferSchema):
 
         # 0/0/0 requests for mbufs denied (mbufs/clusters/mbuf+clusters)
         p8 = re.compile(r'^(?P<mbuf_failures>\S+)/(?P<cluster_failures>\S+)/'
-        r'(?P<packet_failures>\S+) +requests +for +mbufs +denied +\(mbufs/clusters/mbuf\+clusters\)$')
+        r'(?P<packet_failures>\S+) +requests +for +mbufs +denied +\'
+        r'(mbufs/clusters/mbuf\+clusters\)$')
 
         # 0/0/0 requests for jumbo clusters denied (4k/9k/16k)
-        p9 =re.compile(r'^(?P<jumbo_cluster_failures_4k>\S+)/(?P<jumbo_cluster_failures_9k>\S+)'
-        r'/(?P<jumbo_cluster_failures_16k>\S+) +requests +for +jumbo +clusters +denied +\(4k/9k/16k\)$')
+        p9 =re.compile(r'^(?P<jumbo_cluster_failures_4k>\S+)/'
+        r'(?P<jumbo_cluster_failures_9k>\S+)'
+        r'/(?P<jumbo_cluster_failures_16k>\S+) +requests +for +jumbo'
+        r' +clusters +denied +\(4k/9k/16k\)$')
 
         # 0 requests for sfbufs denied
-        p10 = re.compile(r'^(?P<sfbuf_requests_denied>\S+) +requests +for +sfbufs'
+        p10 = re.compile(r'^(?P<sfbuf_requests_denied>\S+) +'
+        r'requests +for +sfbufs'
         r' +denied$')
 
         # 0 requests for sfbufs delayed
@@ -296,7 +300,8 @@ class ShowSystemCommit(ShowSystemCommitSchema):
             out = output
 
         # 0   2020-03-05 16:04:34 UTC by kddi via cli
-        p1 = re.compile(r'^(?P<sequence_number>\d+) +(?P<date_time>([\d\-]+) +(([\d\:]+)) (\S+)) +by +(?P<user>\S+) +via +(?P<client>\S+)$')
+        p1 = re.compile(r'^(?P<sequence_number>\d+) +(?P<date_time>([\d\-]+) +'
+        r'(([\d\:]+)) (\S+)) +by +(?P<user>\S+) +via +(?P<client>\S+)$')
 
         ret_dict = {}
 
@@ -307,7 +312,8 @@ class ShowSystemCommit(ShowSystemCommitSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                entry_list = ret_dict.setdefault("commit-information", {}).setdefault("commit-history", [])
+                entry_list = ret_dict.setdefault("commit-information", {})\
+                    .setdefault("commit-history", [])
                 entry = {}
                 entry['client'] = group['client']
                 entry['date-time'] = {"#text": group['date_time']}
