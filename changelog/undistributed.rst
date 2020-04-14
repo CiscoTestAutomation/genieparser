@@ -79,6 +79,9 @@
         * show arp
     * Added ShowArpNoMore for:
         * show arp | no-more
+    * Added ShowVersion for command;
+        * 'show version'
+
 
 
 --------------------------------------------------------------------------------
@@ -171,5 +174,3 @@
         * show interfaces {interface} terse
     * Update ShowInterfacesTerseInterface
         * show interfaces terse {interface}
-    * Add ShowVersion for command;
-        * 'show version'
