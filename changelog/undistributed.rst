@@ -105,6 +105,8 @@
         * show system buffer
     * Added ShowSystemCommit for:
         * show system commit
+    * Added ShowPfeStatisticsTraffic for:
+        * show pfe statistics traffic
 
 
 --------------------------------------------------------------------------------
