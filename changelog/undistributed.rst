@@ -105,6 +105,8 @@
         * show system buffers
     * Added ShowPfeStatisticsTraffic for:
         * show pfe statistics traffic
+    * Added ShowSystemCoreDumps for:
+        * show system core-dumps
 
 
 --------------------------------------------------------------------------------

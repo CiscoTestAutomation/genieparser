@@ -2,6 +2,7 @@
 
 JunOS parsers for the following show commands:
     - 'show system buffers'
+    - 'show system core-dumps'
 """
 
 # python
