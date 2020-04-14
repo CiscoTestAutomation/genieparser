@@ -101,6 +101,8 @@ class test_show_system_commit(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
+    maxDiff = None
+
     golden_parsed_output_1 = {
         "commit-information": {
             "commit-history": [
@@ -572,7 +574,6 @@ class test_show_system_commit(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden_1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
         obj = ShowSystemCommit(device=self.device)
         parsed_output = obj.parse()
