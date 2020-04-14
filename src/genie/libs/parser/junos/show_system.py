@@ -9,7 +9,7 @@ import re
 
 # metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use, SchemaTypeError
 
 
 class ShowSystemBufferSchema(MetaParser):
@@ -253,7 +253,7 @@ class ShowSystemBuffer(ShowSystemBufferSchema):
         return ret_dict
 
 class ShowSystemCoreDumpsSchema(MetaParser):
-	""" Schema for:
+    """ Schema for:
             * show system core-dumps
     """
 
@@ -291,16 +291,16 @@ class ShowSystemCoreDumpsSchema(MetaParser):
             raise SchemaTypeError('ospf-interface is not a list')
         file_information_schema = Schema({
                         "file-date": {
-                            "#text": str,
-                            "junos:format": str
+                            Optional("#text"): str,
+                            "@junos:format": str
                         },
                         "file-group": str,
                         "file-links": str,
                         "file-name": str,
                         "file-owner": str,
                         "file-permissions": {
-                            "#text": str,
-                            "junos:format": str
+                            Optional("#text"): str,
+                            "@junos:format": str
                         },
                         "file-size": str
                     })
@@ -320,20 +320,64 @@ class ShowSystemCoreDumpsSchema(MetaParser):
     }
 
 class ShowSystemCoreDumps(ShowSystemCoreDumpsSchema):
-	""" Parser for:
+    """ Parser for:
             * show system core-dumps
     """
-	cli_command = 'show system core-dumps'
+    cli_command = 'show system core-dumps'
 
-	def cli(self, output=None):
-		if not output:
-			out = self.device.execute(self.cli_command)
-		else:
-			out = output
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # -rw-r--r--  1 root  wheel    1252383 Aug 8   2019 /var/crash/core.riot.mpc0.1565307741.1716.gz
+        p1 = re.compile(r'^(?P<file_permissions>\S+) +(?P<file_links>\S+) +(?P<file_owner>\S+)  +(?P<file_group>\S+) +(?P<file_size>\S+) +(?P<file_date>\S+ +\d+ +\d+) +(?P<file_name>\S+)$')
+
+        # /var/tmp/*core*: No such file or directory
+        p2 = re.compile(r'^(?P<output>\S+: +No +such +file +or +directory)$')
+
+        # total files: 6
+        p3 = re.compile(r'^total +files: +(?P<total_files>\d)$')
 
         ret_dict = {}
 
         for line in out.splitlines():
             line = line.strip()
+
+            # -rw-r--r--  1 root  wheel    1252383 Aug 8   2019 /var/crash/core.riot.mpc0.1565307741.1716.gz
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                entry_list = ret_dict.setdefault("directory-list", {}).setdefault("directory", {}).setdefault("file-information", [])
+                entry = {}
+                entry["file-date"] = {"@junos:format": group['file_date']}
+                entry["file-group"] = group['file_group']
+                entry["file-links"] = group['file_links']
+                entry["file-name"] = group['file_name']
+                entry["file-owner"] = group['file_owner']
+                entry["file-permissions"] = {"@junos:format": group['file_permissions']}
+                entry["file-size"] = group['file_size']
+
+                entry_list.append(entry)
+                continue
+
+            # /var/tmp/*core*: No such file or directory
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                entry_list = ret_dict.setdefault("directory-list", {}).setdefault("directory", {}).setdefault("output", [])
+
+                entry_list.append(group['output'])
+                continue
+
+            # total files: 6
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict.setdefault("directory-list", {}).setdefault("directory", {})
+
+                entry['total-files'] = group['total_files']
+                continue
 
         return ret_dict
