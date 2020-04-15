@@ -57,34 +57,34 @@ class ShowChassisFpcDetail(ShowChassisFpcDetailSchema):
             out = output
 
         #Slot 0 information:
-        p1 = re.compile(r'^Slot (?P<slot>\d+)\s+information:$')
+        p1 = re.compile(r'^Slot (?P<slot>\d+) +information:$')
 
         #State                               Online
-        p2 = re.compile(r'^State\s+(?P<state>\S+)$')
+        p2 = re.compile(r'^State +(?P<state>\S+)$')
 
         #Temperature                      Testing
-        p3 = re.compile(r'^Temperature\s+(?P<temperature>\S+)$')
+        p3 = re.compile(r'^Temperature +(?P<temperature>\S+)$')
 
         #Total CPU DRAM                  511 MB
-        p4 = re.compile(r'^Total CPU DRAM\s+(?P<memory_dram_size>\S+)\sMB$')
+        p4 = re.compile(r'^Total CPU DRAM +(?P<memory_dram_size>\d+)\sMB$')
 
         #Total RLDRAM                     10 MB
-        p5 = re.compile(r'^Total RLDRAM\s+(?P<memory_rldram_size>\S+)\sMB$')
+        p5 = re.compile(r'^Total RLDRAM +(?P<memory_rldram_size>\d+)\sMB$')
 
         #Total DDR DRAM                    0 MB
-        p6 = re.compile(r'^Total DDR DRAM\s+(?P<memory_ddr_dram_size>\S+)\sMB$')
+        p6 = re.compile(r'^Total DDR DRAM +(?P<memory_ddr_dram_size>\d+)\sMB$')
 
         #FIPS Capable                        False
-        p7 = re.compile(r'^FIPS Capable\s+(?P<fips_capable>\S+)$')
+        p7 = re.compile(r'^FIPS Capable +(?P<fips_capable>\S+)$')
 
         #FIPS Mode                           False
-        p8 = re.compile(r'^FIPS Mode\s+(?P<fips_mode>\S+)$')
+        p8 = re.compile(r'^FIPS Mode +(?P<fips_mode>\S+)$')
 
         #Start time                          2019-08-29 09:09:16 UTC
-        p9 = re.compile(r'^Start time\s+(?P<start_time>[\d\-\:A-Za-z ]+)$')
+        p9 = re.compile(r'^Start time +(?P<start_time>[\d\-\:A-Za-z ]+)$')
 
         #Uptime                              208 days, 22 hours, 50 minutes, 26 seconds
-        p10 = re.compile(r'^Uptime\s+(?P<up_time>[\d\-\,A-Za-z ]+)$')
+        p10 = re.compile(r'^Uptime +(?P<up_time>[\d\-\,A-Za-z ]+)$')
 
         ret_dict = {}
 
