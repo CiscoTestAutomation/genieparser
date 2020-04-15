@@ -169,6 +169,8 @@
     * Update ShowInventory:
         * Added regex to support various outputs.
 * NXOS
+    * Updated ShowAccessLists
+        * Update regex to support various outputs.
     * Updated ShowInterface
         * Update regex to cover both 'IP' and 'ip', both 'Rx' and 'RX'
         * Clean code and correctly assign values to the key 'enabled'

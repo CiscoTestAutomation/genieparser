@@ -651,11 +651,6 @@ IP access list NTP-ACL
         self.dev = Mock(**self.device_output3)
         obj = ShowAccessLists(device=self.dev)
         parsed_output = obj.parse()
-        import pprint
-        pprint.pprint(parsed_output)
-        import pdb
-        pdb.set_trace()
-
         self.assertEqual(parsed_output,self.parsed_output3)
 
 class TestShowAccessListsSummary(unittest.TestCase):
