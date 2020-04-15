@@ -10,7 +10,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                              SchemaMissingKeyError
 
 # Parser
-from genie.libs.parser.junos.show_system import ShowSystemBuffer
+from genie.libs.parser.junos.show_system import (ShowSystemBuffer,
+                                                ShowSystemUsers)
 
 #=========================================================
 # Unit test for show system buffer
@@ -91,6 +92,99 @@ class test_show_system_buffer(unittest.TestCase):
         obj = ShowSystemBuffer(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+
+#=========================================================
+# Unit test for show system Users
+#=========================================================
+class TestShowSystemUsers(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_1 = {'execute.return_value': '''
+        show system users 
+        9:38AM  up 209 days, 37 mins, 3 users, load averages: 0.28, 0.39, 0.37
+        USER     TTY      FROM                              LOGIN@  IDLE WHAT
+        kddi     pts/0    1.0.0.1                          2:35AM      - -cl           
+        kddi     pts/1    1.0.0.1                          8:31AM     56 -cl           
+        kddi     pts/2    1.0.0.1                          7:45AM      3 -cl
+        '''}
+
+
+    golden_output_1 = {
+        "system-users-information": {
+        "uptime-information": {
+            "active-user-count": {
+                "#text": "3"
+            },
+            "date-time": {
+                "#text": "9:38AM"
+            },
+            "load-average-1": "0.28",
+            "load-average-15": "0.39",
+            "load-average-5": "0.37",
+            "up-time": {
+                "#text": "209 days, 37 mins"
+            },
+            "user-table": {
+                "user-entry": [
+                    {
+                        "command": "-cl",
+                        "from": "1.0.0.1",
+                        "idle-time": {
+                            "#text": "-"
+                        },
+                        "login-time": {
+                            "#text": "2:35AM"
+                        },
+                        "tty": "pts/0",
+                        "user": "kddi"
+                    },
+                    {
+                        "command": "-cl",
+                        "from": "1.0.0.1",
+                        "idle-time": {
+                            "#text": "56"
+                        },
+                        "login-time": {
+                            "#text": "8:31AM"
+                        },
+                        "tty": "pts/1",
+                        "user": "kddi"
+                    },
+                    {
+                        "command": "-cl",
+                        "from": "1.0.0.1",
+                        "idle-time": {
+                            "#text": "3"
+                        },
+                        "login-time": {
+                            "#text": "7:45AM"
+                        },
+                        "tty": "pts/2",
+                        "user": "kddi"
+                    }
+                ]
+            }
+        }
+    }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowSystemUsers(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_parsed_output_1)
+        obj = ShowSystemUsers(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_output_1)
 
 if __name__ == '__main__':
     unittest.main()

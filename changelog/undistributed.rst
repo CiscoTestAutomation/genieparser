@@ -113,6 +113,8 @@
         * show system buffers
     * Added ShowPfeStatisticsTraffic for:
         * show pfe statistics traffic
+    * Added ShowSystemUsers for:
+        * show system users
     * Added ShowChassisFpcDetail for:
         * show chassis fpc detail
 
