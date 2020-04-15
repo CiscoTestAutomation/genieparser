@@ -957,6 +957,8 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
 
         p5 = re.compile(r'^(?P<header_for_source_address_selection>source +addresses +[\S\s]+)$')
 
+        p6 = re.compile(r'^(?P<histogram_type>\S+ +histogram:)$')
+
         ret_dict = {}
         self.state = None
 
@@ -969,6 +971,10 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
             if m:
                 group = m.groupdict()
                 self.state = group['state']
+
+                if self.state == 'icmp6':
+                    self.histogram = None
+
                 continue
 
             if self.state == 'Tcp':
@@ -1787,10 +1793,9 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
                         entry['arp-mgt-drop'] = value
 
             if self.state == 'ip6':
-
+                continue
                 m = p5.match(line)
                 if m:
-                    continue
                     group = m.groupdict()
                     header_type_list = ret_dict.setdefault("statistics", {}).setdefault("ip6", {}).setdefault("header-type", [])
                     entry = {
@@ -1799,9 +1804,15 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
                     header_type_list.append(entry)
                     continue
 
+                m = p6.match(line)
+                if m:
+                    group = m.groupdict()
+                    ret_dict["statistics"]["ip6"]['histogram'] = group['histogram_type']
+                    continue
+
                 m = p2.match(line)
                 if m:
-                    continue
+                    count += 1
                     group = m.groupdict()
                     key = group['key']
                     key = key.strip()
@@ -1809,9 +1820,224 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
                     value = group['number_value']
                     entry = ret_dict.setdefault("statistics", {}).setdefault("ip6", {})
 
-                    if key == "temp":
+                    print(count, key, value)
+
+                    if key == "total_packets_received":
+                        entry['total-packets-received'] = value
+                    elif key == "packets_with_size_smaller_than_minimum":
+                        entry['ip6-packets-with-size-smaller-than-minimum>'] = value
+                    elif key == "packets_with_data_size_<_data_length":
+                        entry['packets-with-datasize-less-than-data-length'] = value
+                    elif key == "packets_with_bad_options":
+                        entry['ip6-packets-with-bad-options'] = value
+                    elif key == "packets_with_incorrect_version_number":
+                        entry['ip6-packets-with-incorrect-version-number'] = value
+                    elif key == "fragments_received":
+                        entry['ip6-fragments-received'] = value
+                    elif key == "fragments_dropped_(dup_or_out_of_space)":
+                        entry['duplicate-or-out-of-space-fragments-dropped'] = value
+                    elif key == "fragments_dropped_after_timeout":
+                        entry['ip6-fragments-dropped-after-timeout'] = value
+                    elif key == "fragment_sessions_dropped_(queue_overflow)":
+                        entry['fragments-that-exceeded-limit'] = value
+                    elif key == "packets_reassembled_ok":
+                        entry['ip6-packets-reassembled-ok'] = value
+                    elif key == "packets_for_this_host":
+                        entry['ip6-packets-for-this-host'] = value
+                    elif key == "packets_forwarded":
+                        entry['ip6-packets-forwarded'] = value
+                    elif key == "packets_not_forwardable":
+                        entry['ip6-packets-not-forwardable'] = value
+                    elif key == "redirects_sent":
+                        entry['ip6-redirects-sent'] = value
+                    elif key == "packets_sent_from_this_host":
+                        entry['ip6-packets-sent-from-this-host'] = value
+                    elif key == "packets_sent_with_fabricated_ip_header":
+                        entry['ip6-packets-sent-with-fabricated-ip-header'] = value
+                    elif key == "output_packets_dropped_due_to_no_bufs,_etc.":
+                        entry['ip6-output-packets-dropped-due-to-no-bufs'] = value
+                    elif key == "output_packets_discarded_due_to_no_route":
+                        entry['ip6-output-packets-discarded-due-to-no-route'] = value
+                    elif key == "output_datagrams_fragmented":
+                        entry['ip6-output-datagrams-fragmented'] = value
+                    elif key == "fragments_created":
+                        entry['ip6-fragments-created'] = value
+                    elif key == "datagrams_that_can't_be_fragmented":
+                        entry['ip6-datagrams-that-can-not-be-fragmented'] = value
+                    elif key == "packets_that_violated_scope_rules":
+                        entry['packets-that-violated-scope-rules'] = value
+                    elif key == "multicast_packets_which_we_don't_join":
+                        entry['multicast-packets-which-we-do-not-join'] = value
+                    elif key == "TCP":
+                        entry['ip6nh-tcp'] = value
+                    elif key == "UDP":
+                        entry['ip6nh-udp'] = value
+                    elif key == "ICMP6":
+                        entry['ip6nh-icmp6'] = value
+                    elif key == "OSPF":
+                        entry['ip6nh-ospf'] = value
+                    elif key == "packets_whose_headers_are_not_continuous":
+                        entry['packets-whose-headers-are-not-continuous'] = value
+                    elif key == "tunneling_packets_that_can't_find_gif":
+                        entry['tunneling-packets-that-can-not-find-gif'] = value
+                    elif key == "packets_discarded_due_to_too_may_headers":
+                        entry['packets-discarded-due-to-too-may-headers'] = value
+                    elif key == "failures_of_source_address_selection":
+                        entry['failures-of-source-address-selection'] = value
+                    elif key == "link-locals":
+                        entry['header-type'][-1]["link-locals"] = value
+                    elif key == "globals":
+                        entry['header-type'][-1]["globals"] = value
+                    elif key == "forward_cache_hit":
+                        entry['forward-cache-hit'] = value
+                    elif key == "forward_cache_miss":
+                        entry['forward-cache-miss'] = value
+                    elif key == "Packets_destined_to_dead_next_hop":
+                        entry['ip6-packets-destined-to-dead-next-hop'] = value
+                    elif key == "option_packets_dropped_due_to_rate_limit":
+                        entry['ip6-option-packets-dropped-due-to-rate-limit'] = value
+                    elif key == "Packets_dropped_(src_and_int_don't_match)":
+                        entry['ip6-packets-dropped'] = value
+                    elif key == "packets_dropped_due_to_bad_protocol":
+                        entry['packets-dropped-due-to-bad-protocol'] = value
+                    elif key == "transit_re_packet(null)_dropped_on_mgmt_i/f":
+                        entry['transit-re-packet-dropped-on-mgmt-interface'] = value
+
+            if self.state == 'icmp6':
+
+                m = p2.match(line)
+                if m:
+                    count += 1
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("ip6", {})
+                    entry["protocol-name"] = "icmp6:"
+
+                    print(count, key, value)
+
+                    continue
+
+                    if key == "Calls_to_icmp_error":
+                        entry['calls-to-icmp6-error'] = value
+                    elif key == "Errors_not_generated_because_old_message_was_icmp_error":
+                        entry['errors-not-generated-because-old-message-was-icmp-error'] = value
+                    elif key == "Errors_not_generated_because_rate_limitation":
+                        entry['errors-not-generated-because-rate-limitation'] = value
+                    elif key == "unreach":
+                        if self.histogram == "output":
+                            entry['output-histogram']['unreachable-icmp6-packets'] = value
+                        else:
+                            entry['input-histogram']['unreachable-icmp6-packets'] = value
+                    elif key == "neighbor_solicitation":
+                        if self.histogram == "output":
+                            entry['output-histogram']['neighbor-solicitation'] = value
+                        else:
+                            entry['input-histogram']['neighbor-solicitation'] = value
+                    elif key == "neighbor_advertisement":
+                        if self.histogram == "output":
+                            entry['output-histogram']['neighbor-advertisement'] = value
+                        else:
+                            entry['input-histogram']['neighbor-advertisement'] = value
+                    elif key == "Messages_with_bad_code_fields":
+                        entry['icmp6-messages-with-bad-code-fields'] = value
+                    elif key == "Messages_<_minimum_length":
+                        entry['messages-less-than-minimum-length'] = value
+                    elif key == "Bad_checksums":
+                        entry['bad-checksums'] = value
+                    elif key == "Messages_with_bad_length":
+                        entry['icmp6-messages-with-bad-length'] = value
+                    elif key == "time_exceeded":
+                        if self.histogram == "output":
+                            entry['output-histogram']['time-exceeded-icmp6-packets'] = value
+                        else:
+                            entry['input-histogram']['time-exceeded-icmp6-packets'] = value
+                    elif key == "router_solicitation":
+                        if self.histogram == "output":
+                            entry['output-histogram']['router-solicitation-icmp6-packets'] = value
+                        else:
+                            entry['input-histogram']['router-solicitation-icmp6-packets'] = value
+                    elif key == "router_advertisment":
+                        if self.histogram == "output":
+                            entry['output-histogram']['router-advertisement-icmp6-packets'] = value
+                        else:
+                            entry['input-histogram']['router-advertisement-icmp6-packets'] = value
+                    elif key == "neighbor_advertisement":
+                        if self.histogram == "output":
+                            entry['output-histogram']['neighbor-advertisement'] = value
+                        else:
+                            entry['input-histogram']['neighbor-advertisement'] = value
+                    elif key == "No_route":
+                        entry['no-route'] = value
+                    elif key == "Administratively_prohibited":
+                        entry['administratively-prohibited'] = value
+                    elif key == "Beyond_scope":
+                        entry['beyond-scope'] = value
+                    elif key == "Address_unreachable":
+                        entry['address-unreachable'] = value
+                    elif key == "Port_unreachable":
+                        entry['port-unreachable'] = value
+                    elif key == "Time_exceed_transit":
+                        entry['time-exceed-transit'] = value
+                    elif key == "Time_exceed_reassembly":
+                        entry['time-exceed-reassembly'] = value
+                    elif key == "Erroneous_header_field":
+                        entry['erroneous-header-field'] = value
+                    elif key == "Unrecognized_next_header":
+                        entry['unrecognized-next-header'] = value
+                    elif key == "Unrecognized_option":
+                        entry['unrecognized-option'] = value
+                    elif key == "Unknown":
+                        entry['unknown'] = value
+                    elif key == "Message_responses_generated":
+                        entry['icmp6-message-responses-generated'] = value
+                    elif key == "Messages_with_too_many_ND_options":
+                        entry['messages-with-too-many-nd-options'] = value
+                    elif key == "Max_System_ND_nh_cache_limit":
+                        entry['nd-system-max'] = value
+                    elif key == "Max_Public_ND_nh_cache_limit":
+                        entry['nd-public-max'] = value
+                    elif key == "Max_IRI_ND_nh_cache_limit":
+                        entry['nd-iri-max'] = value
+                    elif key == "Max_Management_intf_ND_nh_cache_limit":
+                        entry['nd-mgt-max'] = value
+                    elif key == "Current_Public_ND_nexthops_present":
+                        entry['nd-public-cnt'] = value
+                    elif key == "Current_IRI_ND_nexthops_present":
+                        entry['nd-iri-cnt'] = value
+                    elif key == "Current_Management_ND_nexthops_present":
                         entry['temp'] = value
-                    elif key == "temp":
+                    elif key == "Total_ND_nexthops_creation_failed_as_limit_reached":
+                        entry['temp'] = value
+                    elif key == "Public_ND_nexthops_creation_failed_as_public_limit_reached":
+                        entry['temp'] = value
+                    elif key == "IRI_ND_nexthops_creation_failed_as_iri_limit_reached":
+                        entry['temp'] = value
+                    elif key == "Management_ND_nexthops_creation_failed_as_mgt_limit_reached":
+                        entry['temp'] = value
+                    elif key == "Management_ND_nexthops_creation_failed_as_mgt_limit_reached":
+                        entry['temp'] = value
+                    elif key == "interface-restricted_dad_proxy_requests":
+                        entry['temp'] = value
+                    elif key == "interface-restricted_ndp_proxy_responses":
+                        entry['temp'] = value
+                    elif key == "interface-restricted_dad_proxy_conflicts":
+                        entry['temp'] = value
+                    elif key == "interface-restricted_dad_proxy_duplicates":
+                        entry['temp'] = value
+                    elif key == "interface-restricted_ndp_proxy_resolve_requests":
+                        entry['temp'] = value
+                    elif key == "interface-restricted_dad_proxy_resolve_requests":
+                        entry['temp'] = value
+                    elif key == "interface-restricted_dad_packets_from_same_node_dropped":
+                        entry['temp'] = value
+                    elif key == "interface-restricted_proxy_packets_dropped_with_nomac":
+                        entry['temp'] = value
+                    elif key == "ND_hold_nexthops_dropped_on_entry_by_RED_mark":
+                        entry['temp'] = value
+                    elif key == "ND_hold_nexthops_dropped_on_timer_expire_by_RED_mark":
                         entry['temp'] = value
 
         ret_dict['test'] = True
