@@ -656,7 +656,7 @@ class ShowBgpSummarySchema(MetaParser):
 
         bgp_peer_schema = Schema(
             {
-                'bgp-rib': Use(validate_bgp_rib_list),
+                Optional('bgp-rib'): Use(validate_bgp_rib_list),
                 "description": str,
                 "elapsed-time": {
                     "#text": str,
@@ -718,7 +718,9 @@ class ShowBgpSummary(ShowBgpSummarySchema):
     p3 = re.compile(r'^(?P<name>inet(\d+)?.\d)$')
 
     # 1366        682          0          0          0          0
-    p4 = re.compile(r'^$')
+    p4 = re.compile(r'^(?P<total_prefix_count>\d+) +(?P<active_prefix_count>\d+) +'
+                    r'(?P<suppressed_prefix_count>\d+) +(?P<history_prefix_count>\d+) +'
+                    r'(?P<damp_prefix_count>\d+) +(?P<pending_prefix_count>\d+)$')
 
     p = re.compile(r'^$')
     p = re.compile(r'^$')
