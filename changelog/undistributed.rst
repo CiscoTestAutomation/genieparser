@@ -89,6 +89,10 @@
         * show arp
     * Added ShowArpNoMore for:
         * show arp | no-more
+    * Added ShowKrtState for:
+        * show krt state
+    * Added ShowKrtQueue for:
+        * show krt queue
     * Added ShowRouteProtocolExtensive for:
         * show route protocol {protocol} extensive
         * show route protocol {protocol} table {table} extensive
@@ -101,6 +105,10 @@
         * show ospf3 database external extensive
     * Added ShowOspf3InterfaceExtensive for:
         * show ospf3 interface extensive
+    * Added ShowSystemBuffer for:
+        * show system buffers
+    * Added ShowPfeStatisticsTraffic for:
+        * show pfe statistics traffic
 
 
 --------------------------------------------------------------------------------
