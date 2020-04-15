@@ -2008,37 +2008,37 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
                     elif key == "Current_IRI_ND_nexthops_present":
                         entry['nd-iri-cnt'] = value
                     elif key == "Current_Management_ND_nexthops_present":
-                        entry['temp'] = value
+                        entry['nd-mgt-cnt'] = value
                     elif key == "Total_ND_nexthops_creation_failed_as_limit_reached":
-                        entry['temp'] = value
+                        entry['nd-system-drop'] = value
                     elif key == "Public_ND_nexthops_creation_failed_as_public_limit_reached":
-                        entry['temp'] = value
+                        entry['nd-public-drop'] = value
                     elif key == "IRI_ND_nexthops_creation_failed_as_iri_limit_reached":
-                        entry['temp'] = value
+                        entry['nd-iri-drop'] = value
                     elif key == "Management_ND_nexthops_creation_failed_as_mgt_limit_reached":
-                        entry['temp'] = value
-                    elif key == "Management_ND_nexthops_creation_failed_as_mgt_limit_reached":
-                        entry['temp'] = value
+                        entry['nd-mgt-drop'] = value
+                    elif key == "interface-restricted_ndp_proxy_requests":
+                        entry['nd6-ndp-proxy-requests'] = value
                     elif key == "interface-restricted_dad_proxy_requests":
-                        entry['temp'] = value
+                        entry['nd6-dad-proxy-requests'] = value
                     elif key == "interface-restricted_ndp_proxy_responses":
-                        entry['temp'] = value
+                        entry['nd6-ndp-proxy-responses'] = value
                     elif key == "interface-restricted_dad_proxy_conflicts":
-                        entry['temp'] = value
+                        entry['nd6-dad-proxy-conflicts'] = value
                     elif key == "interface-restricted_dad_proxy_duplicates":
-                        entry['temp'] = value
+                        entry['nd6-dup-proxy-responses'] = value
                     elif key == "interface-restricted_ndp_proxy_resolve_requests":
-                        entry['temp'] = value
+                        entry['nd6-ndp-proxy-resolve-cnt'] = value
                     elif key == "interface-restricted_dad_proxy_resolve_requests":
-                        entry['temp'] = value
+                        entry['nd6-dad-proxy-resolve-cnt'] = value
                     elif key == "interface-restricted_dad_packets_from_same_node_dropped":
-                        entry['temp'] = value
+                        entry['nd6-dad-proxy-eqmac-drop'] = value
                     elif key == "interface-restricted_proxy_packets_dropped_with_nomac":
-                        entry['temp'] = value
+                        entry['nd6-dad-proxy-nomac-drop'] = value
                     elif key == "ND_hold_nexthops_dropped_on_entry_by_RED_mark":
-                        entry['temp'] = value
+                        entry['nd6-requests-dropped-on-entry'] = value
                     elif key == "ND_hold_nexthops_dropped_on_timer_expire_by_RED_mark":
-                        entry['temp'] = value
+                        entry['nd6-requests-dropped-during-retry'] = value
 
         ret_dict['test'] = True
         return ret_dict
