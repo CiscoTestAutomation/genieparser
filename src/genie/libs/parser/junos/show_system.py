@@ -366,10 +366,10 @@ class ShowSystemUsers(ShowSystemUsersSchema):
 
         
         #9:38AM  up 209 days, 37 mins, 3 users, load averages: 0.28, 0.39, 0.37
-        p1 = re.compile(r'^(?P<time>[\d\:a-zA-Z]+)  up '
-                        r'(?P<days>\w+\s\w+), (?P<mins>\d+\s+\w+), '
-                        r'(?P<user_count>\d+) users, load averages: '
-                        r'(?P<avg1>[\d\.]+), (?P<avg2>[\d\.]+), (?P<avg3>[\d\.]+)$')
+        p1 = re.compile(r'^(?P<time>[\d\:a-zA-Z]+) +up '
+                        r'(?P<days>\w+\s\w+), +(?P<mins>\d+\s+\w+), +'
+                        r'(?P<user_count>\d+) +users, +load +averages: '
+                        r'(?P<avg1>[\d\.]+), +(?P<avg2>[\d\.]+), +(?P<avg3>[\d\.]+)$')
         
         #kddi     pts/0    1.0.0.1                          2:35AM      - -cl
         p2 = re.compile(r'^(?P<user>\S+)\s+(?P<tty>\S+)\s+'
@@ -387,7 +387,6 @@ class ShowSystemUsers(ShowSystemUsersSchema):
                 user_table_entry_list = ret_dict.setdefault('system-users-information', {}). \
                     setdefault('uptime-information', {})
 
-                user_table_dict = {}
                 user_entry_list = []
                 user_table_entry_list["user-table"] = {"user-entry": user_entry_list}
                 date_time_entry_dict = {}

@@ -97,7 +97,7 @@ class test_show_system_buffer(unittest.TestCase):
 #=========================================================
 # Unit test for show system Users
 #=========================================================
-class Test_Show_System_Users(unittest.TestCase):
+class TestShowSystemUsers(unittest.TestCase):
 
     device = Device(name='aDevice')
 
