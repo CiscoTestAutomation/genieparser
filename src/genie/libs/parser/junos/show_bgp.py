@@ -5,6 +5,8 @@ JunOs parsers for the following show commands:
     * show bgp group brief | no-more
     * show bgp group detail
     * show bgp group detail | no-more
+    * show bgp summary
+    * show bgp summary | no-more
 """
 
 # Python
@@ -563,3 +565,163 @@ class ShowBgpGroupDetailNoMore(ShowBgpGroupDetail):
             out = output
         
         return super().cli(output=out)
+
+
+class ShowBgpSummarySchema(MetaParser):
+    """ Schema for:
+            * show bgp summary
+    """
+    """
+        schema = {
+            "bgp-information": {
+                "bgp-peer": [
+                    {
+                        "bgp-rib": [
+                            {
+                                "accepted-prefix-count": str,
+                                "active-prefix-count": str,
+                                "name": str,
+                                "received-prefix-count": str,
+                                "suppressed-prefix-count": str,
+                            }
+                        ],
+                        "description": str,
+                        "elapsed-time": {
+                            "#text": str,
+                            "@junos:seconds": str,
+                        },
+                        "flap-count": str,
+                        "input-messages": str,
+                        "output-messages": str,
+                        "peer-address": str,
+                        "peer-as": str,
+                        "peer-state": str,
+                        "route-queue-count": str,
+                    }
+                ],
+                "bgp-rib": [
+                    {
+                        "accepted-prefix-count": str,
+                        "active-prefix-count": str,
+                        "name": str, ok
+                        "received-prefix-count": str,
+                        "suppressed-prefix-count": str,
+                    }
+                ],
+                "bgp-thread-mode": str, ok
+                "down-peer-count": str, ok
+                "group-count": str, ok
+                "peer-count": str, ok
+            }
+        }
+    """
+
+    def validate_bgp_rib_list(self, value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('bgp-rib is not a list')
+        bgp_rib_schema = Schema(
+            {
+                'accepted-prefix-count': str,
+                'active-prefix-count': str,
+                'name': str,
+                'received-prefix-count': str,
+                'suppressed-prefix-count': str
+            }
+        )
+
+        for item in value:
+            bgp_rib_schema.validate(item)
+        return value
+
+    def validate_bgp_peer_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('bgp-peer is not a list')
+
+        def validate_bgp_rib_list(self, value):
+            if not isinstance(value, list):
+                raise SchemaTypeError('bgp-rib is not a list')
+            bgp_rib_schema = Schema(
+                {
+                    'accepted-prefix-count': str,
+                    'active-prefix-count': str,
+                    'name': str,
+                    'received-prefix-count': str,
+                    'suppressed-prefix-count': str
+                }
+            )
+
+            for item in value:
+                bgp_rib_schema.validate(item)
+            return value
+
+        bgp_peer_schema = Schema(
+            {
+                'bgp-rib': Use(validate_bgp_rib_list),
+                "description": str,
+                "elapsed-time": {
+                    "#text": str,
+                    "@junos:seconds": str,
+                },
+                "flap-count": str,
+                "input-messages": str,
+                "output-messages": str,
+                "peer-address": str,
+                "peer-as": str,
+                "peer-state": str,
+                "route-queue-count": str,
+            }
+        )
+        for item in value:
+            bgp_peer_schema.validate(item)
+
+    # Main schema
+    schema = {
+        "bgp-information": {
+            "bgp-peer": Use(validate_bgp_peer_list),
+            "bgp-rib": Use(validate_bgp_rib_list),
+            "bgp-thread-mode": str,
+            "down-peer-count": str,
+            "group-count": str,
+            "peer-count": str,
+        }
+    }
+
+
+class ShowBgpSummary(ShowBgpSummarySchema):
+    """
+    Parser for:
+        * show bgp summary
+    """
+    cli_command = 'show bgp summary'
+
+    def cli(self, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+    # ============================================================
+    # Regex Patterns
+    # ============================================================
+
+    # Threading mode: BGP I/O
+    p1 = re.compile(r'^Threading +mode: +(?P<bgp_thread_mode>[\S\s]+)$')
+
+    # Groups: 14 Peers: 19 Down peers: 15
+    p2 = re.compile(r'^Groups: +(?P<group_count>\d+) +Peers: '
+                    r'+(?P<peer_count>\d+) +Down +peers: '
+                    r'+(?P<down_peer_count>\d+)$')
+
+    # inet.0
+    # inet6.0
+    p3 = re.compile(r'^(?P<name>inet(\d+)?.\d)$')
+
+    # 1366        682          0          0          0          0
+    p4 = re.compile(r'^$')
+
+    p = re.compile(r'^$')
+    p = re.compile(r'^$')
+    p = re.compile(r'^$')
+    p = re.compile(r'^$')
+    p = re.compile(r'^$')

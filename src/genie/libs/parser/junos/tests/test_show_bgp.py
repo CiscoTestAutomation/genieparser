@@ -12,7 +12,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # junos show_ospf
 from genie.libs.parser.junos.show_bgp import (ShowBgpGroupBrief,
-                                              ShowBgpGroupDetail)
+                                              ShowBgpGroupDetail,
+                                              ShowBgpSummary)
 
 
 class TestShowBgpGroupBrief(unittest.TestCase):
@@ -1203,5 +1204,68 @@ class TestShowBgpGroupDetail(unittest.TestCase):
         obj = ShowBgpGroupDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+class TestShowBgpSummary(unittest.TestCase):
+    """ Unit tests for:
+            * show bgp summary
+    """
+    maxDiff = None
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    # show bgp summary | no-more
+    golden_output = {'execute.return_value': '''
+        Threading mode: BGP I/O
+        Groups: 14 Peers: 19 Down peers: 15
+        Table          Tot Paths  Act Paths Suppressed    History Damp State    Pending
+        inet.0               
+                            1366        682          0          0          0          0
+        inet.3               
+                               2          2          0          0          0          0
+        inet6.0              
+                               0          0          0          0          0          0
+        Peer                     AS      InPkt     OutPkt    OutQ   Flaps Last Up/Dwn State|#Active/Received/Accepted/Damped...
+        27.85.216.179         65171          0          0       0       0 29w5d 22:42:36 Connect
+        106.187.14.240        65151     280414     221573       0     127 3w2d 4:19:15 Establ
+          inet.0: 682/684/684/0
+          inet.3: 2/2/2/0
+        106.187.14.249        65151          0          0       0       0 29w5d 22:42:36 Active
+        111.87.5.240          65171          0          0       0       0 29w5d 22:42:36 Connect
+        111.87.5.241          65171          0          0       0       0 29w5d 22:42:36 Connect
+        111.87.5.242          65171          0          0       0       0 29w5d 22:42:36 Active
+        111.87.5.243          65171          0          0       0       0 29w5d 22:42:36 Active
+        111.87.5.245          65171          0          0       0       0 29w5d 22:42:36 Active
+        111.87.5.253          65171     110832     172140       0      44 3w2d 4:18:45 Establ
+          inet.0: 0/682/682/0
+        111.87.6.250          65181          0          0       0       0 29w5d 22:42:36 Active
+        2001:268:fa03:272::1:140       65171          0          0       0       0 29w5d 22:42:36 Connect
+        2001:268:fb8f::1       65151     218994     221571       0     133 3w2d 4:19:10 Establ
+          inet6.0: 0/0/0/0
+        2001:268:fb8f::11       65151          0          0       0       0 29w5d 22:42:36 Connect
+        2001:268:fb90::7       65171          0          0       0       0 29w5d 22:42:36 Active
+        2001:268:fb90::8       65171          0          0       0       0 29w5d 22:42:36 Connect
+        2001:268:fb90::9       65171          0          0       0       0 29w5d 22:42:36 Connect
+        2001:268:fb90::a       65171          0          0       0       0 29w5d 22:42:36 Connect
+        2001:268:fb90::c       65171     110861     110862       0      55 3w2d 4:27:54 Establ
+          inet6.0: 0/0/0/0
+        2001:268:fb91::1       65181          0          0       0       0 29w5d 22:42:36 Connect
+
+    '''}
+
+    # golden_parsed_output
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
 if __name__ == '__main__':
     unittest.main()
