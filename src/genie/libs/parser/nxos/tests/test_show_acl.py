@@ -564,6 +564,68 @@ IP access list NTP-ACL
     },
 }
 
+    device_output3 = {'execute.return_value': '''
+    IPV4 ACL 1
+    10 remark NTP Access
+    20 permit ip 10.1.1.39/32 any
+    30 permit ip 172.16.154.23/32 any
+    '''}
+
+    parsed_output3 = {
+        '1': {
+            'aces': {
+                '30': {
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'ip',
+                                'source_network': {
+                                    '172.16.154.23/32': {
+                                        'source_network': '172.16.154.23/32',
+                                    },
+                                },
+                                'destination_network': {
+                                    'any': {
+                                        'destination_network': 'any',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'name': '30',
+                    'actions': {
+                        'forwarding': 'permit',
+                    },
+                },
+                '20': {
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'ip',
+                                'source_network': {
+                                    '10.1.1.39/32': {
+                                        'source_network': '10.1.1.39/32',
+                                    },
+                                },
+                                'destination_network': {
+                                    'any': {
+                                        'destination_network': 'any',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'name': '20',
+                    'actions': {
+                        'forwarding': 'permit',
+                    },
+                },
+            },
+            'type': 'ipv4-acl-type',
+            'name': '1',
+        },
+    }
+
     def test_empty(self):
         self.dev = Mock(**self.empty_output)
         obj = ShowAccessLists(device=self.dev)
@@ -583,6 +645,13 @@ IP access list NTP-ACL
         obj = ShowAccessLists(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.parsed_output2)
+
+    def test_golden3(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.device_output3)
+        obj = ShowAccessLists(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.parsed_output3)
 
 class TestShowAccessListsSummary(unittest.TestCase):
     dev = Device(name='device')
