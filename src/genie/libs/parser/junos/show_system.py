@@ -947,14 +947,15 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
         else:
             out = output
 
-        print()
         p1 = re.compile(r'^(?P<state>\S+):$')
 
-        p2 = re.compile(r'^(?P<number_value>\d+) +(?P<key>[\D\s]+)$')
+        p2 = re.compile(r'^(?P<number_value>\d+) +(?P<key>([\w\-\'\>\,\/\.\<\s]|\([(\D+)\s]+\))+)$')
 
         p3 = re.compile(r'^(?P<number_value_one>\d+) +(?P<key>[\D\s]+)\([(\D+)\s]*(?P<number_value_two>\d+)[(\D+)\s]*\)$')
 
         p4 = re.compile(r'^(?P<histogram_type>\S+) +Histogram$')
+
+        p5 = re.compile(r'^(?P<header_for_source_address_selection>source +addresses +[\S\s]+)$')
 
         ret_dict = {}
         self.state = None
@@ -1292,6 +1293,91 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
                         entry['incoming-virtual-node-packets-delivered'] = value
 
             if self.state == 'icmp':
+                continue
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("udp", {})
+
+                    if key == "drops_due_to_rate_limit":
+                        entry['drops-due-to-rate-limit'] = value
+                    elif key == "calls_to_icmp_error":
+                        entry['calls-to-icmp-error'] = value
+                    elif key == "errors_not_generated_because_old_message_was_icmp":
+                        entry['errors-not-generated-because-old-message-was-icmp'] = value
+                    elif key == "echo_reply":
+                        entry['histogram'][-1]["icmp-echo-reply"] = value
+                    elif key == "destination_unreachable":
+                        entry['histogram'][-1]["destination-unreachable"] = value
+                    elif key == "echo":
+                        entry['histogram'][-1]["icmp-echo"] = value
+                    elif key == "time_exceeded":
+                        entry['histogram'][-1]["time-exceeded"] = value
+                    elif key == "messages_with_bad_code_fields":
+                        entry['messages-with-bad-code-fields'] = value
+                    elif key == "messages_less_than_the_minimum_length":
+                        entry['messages-less-than-the-minimum-length'] = value
+                    elif key == "messages_with_bad_checksum":
+                        entry['messages-with-bad-checksum'] = value
+                    elif key == "messages_with_bad_source_address":
+                        entry['messages-with-bad-source-address'] = value
+                    elif key == "messages_with_bad_length":
+                        entry['messages-with-bad-length'] = value
+                    elif key == "echo_drops_with_broadcast_or_multicast_destinaton_address":
+                        entry['echo-drops-with-broadcast-or-multicast-destinaton-address'] = value
+                    elif key == "timestamp_drops_with_broadcast_or_multicast_destination_address":
+                        entry['timestamp-drops-with-broadcast-or-multicast-destination-address'] = value
+                    elif key == "message_responses_generated":
+                        entry['message-responses-generated'] = value
+                    continue
+
+                m = p4.match(line)
+                if m:
+                    group = m.groupdict()
+                    histogram_type = group['histogram_type']
+                    histogram_list = ret_dict.setdefault("statistics", {}).setdefault("udp", {}).setdefault("histogram", [])
+                    entry = {
+                        "type-of-histogram": histogram_type
+                    }
+                    histogram_list.append(entry)
+                    continue
+
+            if self.state == 'igmp':
+                continue
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("udp", {})
+
+                    if key == "messages_received":
+                        entry['messages-received'] = value
+                    elif key == "messages_received_with_too_few_bytes":
+                        entry['messages-received-with-too-few-bytes'] = value
+                    elif key == "messages_received_with_bad_checksum":
+                        entry['messages-received-with-bad-checksum'] = value
+                    elif key == "membership_queries_received":
+                        entry['membership-queries-received'] = value
+                    elif key == "membership_queries_received_with_invalid_fields":
+                        entry['membership-queries-received-with-invalid-fields'] = value
+                    elif key == "membership_reports_received":
+                        entry['membership-reports-received'] = value
+                    elif key == "membership_reports_received_with_invalid_fields":
+                        entry['membership-reports-received-with-invalid-fields'] = value
+                    elif key == "membership_reports_received_for_groups_to_which_we_belong":
+                        entry['membership-reports-received-for-groups-to-which-we-belong'] = value
+                    elif key == "Membership_reports_sent":
+                        entry['membership-reports-sent'] = value
+
+            if self.state == 'ipsec':
+                continue
                 m = p2.match(line)
                 if m:
                     count += 1
@@ -1303,41 +1389,430 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
                     entry = ret_dict.setdefault("statistics", {}).setdefault("udp", {})
                     print(count, key, value)
 
-                    if key == "drops_due_to_rate_limit":
-                        entry['temp'] = value
-                    elif key == "calls_to_icmp_error":
-                        entry['temp'] = value
-                    elif key == "errors_not_generated_because_old_message_was_icmp":
-                        entry['temp'] = value
-                    elif key == "echo_reply":
-                        entry['temp'] = value
-                        pass
-                    elif key == "destination_unreachable":
-                        entry['temp'] = value
-                        pass
-                    elif key == "echo":
-                        entry['temp'] = value
-                        pass
-                    elif key == "time_exceeded":
-                        entry['temp'] = value
-                        pass
-                    elif key == "messages_with_bad_code_fields":
-                        entry['temp'] = value
-                    elif key == "messages_less_than_the_minimum_length":
-                        entry['temp'] = value
-                    elif key == "messages_with_bad_checksum":
-                        entry['temp'] = value
-                    elif key == "messages_with_bad_source_address":
-                        entry['temp'] = value
-                    elif key == "messages_with_bad_length":
-                        entry['temp'] = value
-                    elif key == "echo_drops_with_broadcast_or_multicast_destinaton_address":
-                        entry['temp'] = value
-                    elif key == "timestamp_drops_with_broadcast_or_multicast_destination_address":
-                        entry['temp'] = value
-                    elif key == "message_responses_generated":
-                        entry['temp'] = value
+                    if key == "inbound_packets_violated_process_security_policy":
+                        entry['inbound-packets-violated-process-security-policy'] = value
+                    elif key == "Outbound_packets_violated_process_security_policy":
+                        entry['outbound-packets-violated-process-security-policy'] = value
+                    elif key == "outbound_packets_with_no_SA_available":
+                        entry['outbound-packets-with-no-sa-available'] = value
+                    elif key == "outbound_packets_failed_due_to_insufficient_memory":
+                        entry['outbound-packets-failed-due-to-insufficient-memory'] = value
+                    elif key == "outbound_packets_with_no_route":
+                        entry['outbound-packets-with-no-route'] = value
+                    elif key == "invalid_outbound_packets":
+                        entry['invalid-outbound-packets'] = value
+                    elif key == "Outbound_packets_with_bundles_SAs":
+                        entry['outbound-packets-with-bundled-sa'] = value
+                    elif key == "mbuf_coleasced_during_clone":
+                        entry['mbuf-coalesced-during-clone'] = value
+                    elif key == "Cluster_coalesced_during_clone":
+                        entry['cluster-coalesced-during-clone'] = value
+                    elif key == "Cluster_copied_during_clone":
+                        entry['cluster-copied-during-clone'] = value
+                    elif key == "mbuf_inserted_during_makespace":
+                        entry['mbuf-inserted-during-makespace'] = value
+
+            if self.state == 'ah':
+                continue
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("udp", {})
+
+                    if key == "packets_shorter_than_header_shows":
+                        entry['packets-shorter-than-header-shows'] = value
+                    elif key == "packets_dropped_protocol_unsupported":
+                        entry['packets-dropped-as-protocol-unsupported'] = value
+                    elif key == "packets_dropped_no_TDB":
+                        entry['packets-dropped-due-to-no-tdb'] = value
+                    elif key == "packets_dropped_bad_KCR":
+                        entry['packets-dropped-due-to-bad-kcr'] = value
+                    elif key == "packets_dropped_queue_full":
+                        entry['packets-dropped-due-to-queue-full'] = value
+                    elif key == "packets_dropped_no_transform":
+                        entry['packets-dropped-due-to-no-transform'] = value
+                    elif key == "replay_counter_wrap":
+                        entry['replay-counter-wrap'] = value
+                    elif key == "packets_dropped_bad_authentication_detected":
+                        entry['packets-dropped-as-bad-authentication-detected'] = value
+                    elif key == "packets_dropped_bad_authentication_length":
+                        entry['packets-dropped-due-to-bad-authentication-length'] = value
+                    elif key == "possible_replay_packets_detected":
+                        entry['possible-replay-packets-detected'] = value
+                    elif key == "packets_in":
+                        entry['packets-in'] = value
+                    elif key == "packets_out":
+                        entry['packets-out'] = value
+                    elif key == "packets_dropped_invalid_TDB":
+                        entry['packets-dropped-due-to-invalid-tdb'] = value
+                    elif key == "bytes_in":
+                        entry['bytes-in'] = value
+                    elif key == "bytes_out":
+                        entry['bytes-out'] = value
+                    elif key == "packets_dropped_larger_than_maxpacket":
+                        entry['packets-dropped-as-larger-than-ip-maxpacket'] = value
+                    elif key == "packets_blocked_due_to_policy":
+                        entry['packets-blocked-due-to-policy'] = value
+                    elif key == "crypto_processing_failure":
+                        entry['crypto-processing-failure'] = value
+                    elif key == "tunnel_sanity_check_failures":
+                        entry['tunnel-sanity-check-failures'] = value
+
+            if self.state == 'esp':
+                continue
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("udp", {})
+
+                    if key == "packets_shorter_than_header_shows":
+                        entry['esp-packets-shorter-than-header-shows'] = value
+                    elif key == "packets_dropped_protocol_not_supported":
+                        entry['esp-packets-dropped-as-protocol-not-supported'] = value
+                    elif key == "packets_dropped_no_TDB":
+                        entry['esp-packets-dropped-due-to-no-tdb'] = value
+                    elif key == "packets_dropped_bad_KCR":
+                        entry['esp-packets-dropped-due-to-bad-kcr'] = value
+                    elif key == "packets_dropped_queue_full":
+                        entry['esp-packets-dropped-due-to-queue-full'] = value
+                    elif key == "packets_dropped_no_transform":
+                        entry['esp-packets-dropped-due-to-no-transform'] = value
+                    elif key == "packets_dropped_bad_ilen":
+                        entry['esp-packets-dropped-as-bad-ilen'] = value
+                    elif key == "replay_counter_wrap":
+                        entry['esp-replay-counter-wrap'] = value
+                    elif key == "packets_dropped_bad_encryption_detected":
+                        entry['esp-packets-dropped-as-bad-encryption-detected'] = value
+                    elif key == "packets_dropped_bad_authentication_detected":
+                        entry['esp-packets-dropped-as-bad-authentication-detected'] = value
+                    elif key == "possible_replay_packets_detected":
+                        entry['esp-possible-replay-packets-detected'] = value
+                    elif key == "packets_in":
+                        entry['esp-packets-in'] = value
+                    elif key == "packets_out":
+                        entry['esp-packets-out'] = value
+                    elif key == "packets_dropped_invalid_TDB":
+                        entry['esp-packets-dropped-as-invalid-tdb'] = value
+                    elif key == "bytes_in":
+                        entry['esp-bytes-in'] = value
+                    elif key == "bytes_out":
+                        entry['esp-bytes-out'] = value
+                    elif key == "packets_dropped_larger_than_maxpacket":
+                        entry['esp-packets-dropped-as-larger-than-ip-maxpacket'] = value
+                    elif key == "packets_blocked_due_to_policy":
+                        entry['esp-packets-blocked-due-to-policy'] = value
+                    elif key == "crypto_processing_failure":
+                        entry['esp-crypto-processing-failure'] = value
+                    elif key == "tunnel_sanity_check_failures":
+                        entry['esp-tunnel-sanity-check-failures'] = value
+
+            if self.state == 'ipcomp':
+                continue
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("udp", {})
+
+                    if key == "packets_shorter_than_header_shows":
+                        entry['ipcomp-packets-shorter-than-header-shows'] = value
+                    elif key == "packets_dropped_protocol_not_supported":
+                        entry['ipcomp-packets-dropped-as-protocol-not-supported'] = value
+                    elif key == "packets_dropped_no_TDB":
+                        entry['ipcomp-packets-dropped-due-to-no-tdb'] = value
+                    elif key == "packets_dropped_bad_KCR":
+                        entry['ipcomp-packets-dropped-due-to-bad-kcr'] = value
+                    elif key == "packets_dropped_queue_full":
+                        entry['ipcomp-packets-dropped-due-to-queue-full'] = value
+                    elif key == "packets_dropped_no_transform":
+                        entry['ipcomp-packets-dropped-due-to-no-transform'] = value
+                    elif key == "replay_counter_wrap":
+                        entry['ipcomp-replay-counter-wrap'] = value
+                    elif key == "packets_in":
+                        entry['ipcomp-packets-in'] = value
+                    elif key == "packets_out":
+                        entry['ipcomp-packets-out'] = value
+                    elif key == "packets_dropped_invalid_TDB":
+                        entry['ipcomp-packets-dropped-as-invalid-tdb'] = value
+                    elif key == "bytes_in":
+                        entry['ipcomp-bytes-in'] = value
+                    elif key == "bytes_out":
+                        entry['ipcomp-bytes-out'] = value
+                    elif key == "packets_dropped_larger_than_maxpacket":
+                        entry['ipcomp-packets-dropped-as-larger-than-ip-maxpacket'] = value
+                    elif key == "packets_blocked_due_to_policy":
+                        entry['ipcomp-packets-blocked-due-to-policy'] = value
+                    elif key == "crypto_processing_failure":
+                        entry['ipcomp-crypto-processing-failure'] = value
+                    elif key == "packets_sent_uncompressed_threshold":
+                        entry['packets-sent-uncompressed-threshold'] = value
+                    elif key == "packets_sent_uncompressed_useless":
+                        entry['packets-sent-uncompressed-useless'] = value
+
+            if self.state == 'raw_if':
+                continue
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("udp", {})
+
+                    if key == "RAW_packets_transmitted":
+                        entry['raw-packets-transmitted'] = value
+                    elif key == "PPPOE_packets_transmitted":
+                        entry['ppoe-packets-transmitted'] = value
+                    elif key == "ISDN_packets_transmitted":
+                        entry['isdn-packets-transmitted'] = value
+                    elif key == "DIALER_packets_transmitted":
+                        entry['dialer-packets-transmitted'] = value
+                    elif key == "PPP_packets_transmitted_to_pppd":
+                        entry['ppp-packets-transmitted-to-pppd'] = value
+                    elif key == "PPP_packets_transmitted_to_jppd":
+                        entry['ppp-packets-transmitted-to-jppd'] = value
+                    elif key == "IGMPL2_packets_transmitted":
+                        entry['igmpl2-packets-transmitted'] = value
+                    elif key == "MLDL2_packets_transmitted":
+                        entry['mldl2-packets-transmitted'] = value
+                    elif key == "Fibre_Channel_packets_transmitted":
+                        entry['fibre-channel-packets-transmitted'] = value
+                    elif key == "FIP_packets_transmitted":
+                        entry['fip-packets-transmitted'] = value
+                    elif key == "STP_packets_transmitted":
+                        entry['stp-packets-transmitted'] = value
+                    elif key == "LACP_packets_transmitted":
+                        entry['lacp-packets-transmitted'] = value
+                    elif key == "VCCP_packets_transmitted":
+                        entry['vccp-packets-transmitted'] = value
+                    elif key == "Fabric_OAM_packets_transmitted":
+                        entry['faboam-packets-transmitted'] = value
+                    elif key == "output_drops_due_to_tx_error":
+                        entry['output-drops-due-to-transmit-error'] = value
+                    elif key == "MPU_packets_transmitted":
+                        entry['mpu-packets-transmitted'] = value
+                    elif key == "PPPOE_packets_received":
+                        entry['pppoe-packets-received'] = value
+                    elif key == "ISDN_packets_received":
+                        entry['isdn-packets-received'] = value
+                    elif key == "DIALER_packets_received":
+                        entry['dialer-packets-received'] = value
+                    elif key == "PPP_packets_received_from_pppd":
+                        entry['ppp-packets-received-from-pppd'] = value
+                    elif key == "MPU_packets_received":
+                        entry['mpu-packets-received'] = value
+                    elif key == "PPP_packets_received_from_jppd":
+                        entry['ppp-packets-received-from-jppd'] = value
+                    elif key == "IGMPL2_packets_received":
+                        entry['igmpl2-packets-received'] = value
+                    elif key == "MLDL2_packets_received":
+                        entry['mldl2-packets-received'] = value
+                    elif key == "Fibre_Channel_packets_received":
+                        entry['fibre-channel-packets-received'] = value
+                    elif key == "FIP_packets_received":
+                        entry['fip-packets-received'] = value
+                    elif key == "STP_packets_received":
+                        entry['stp-packets-received'] = value
+                    elif key == "LACP_packets_received":
+                        entry['lacp-packets-received'] = value
+                    elif key == "VCCP_packets_received":
+                        entry['vccp-packets-received'] = value
+                    elif key == "Fabric_OAM_packets_received":
+                        entry['faboam-packets-received'] = value
+                    elif key == "Fibre_Channel_packets_dropped":
+                        entry['fibre-channel-packets-dropped'] = value
+                    elif key == "FIP_packets_dropped":
+                        entry['fip-packets-dropped'] = value
+                    elif key == "STP_packets_dropped":
+                        entry['stp-packets-dropped'] = value
+                    elif key == "LACP_packets_dropped":
+                        entry['lacp-packets-dropped'] = value
+                    elif key == "Fabric_OAM_packets_dropped":
+                        entry['faboam-packets-dropped'] = value
+                    elif key == "VCCP_packets_dropped":
+                        entry['vccp-packets-dropped'] = value
+                    elif key == "Input_drops_due_to_bogus_protocol":
+                        entry['input-drops-due-to-bogus-protocol'] = value
+                    elif key == "input_drops_due_to_no_mbufs_available":
+                        entry['input-drops-due-to-no-mbufs-available'] = value
+                    elif key == "input_drops_due_to_no_space_in_socket":
+                        entry['input-drops-due-to-no-space-in-socket'] = value
+                    elif key == "input_drops_due_to_no_socket":
+                        entry['input-drops-due-to-no-socket'] = value
+
+            if self.state == 'arp':
+                continue
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("udp", {})
+
+                    if key == "datagrams_received":
+                        entry['datagrams-received'] = value
+                    elif key == "ARP_requests_received":
+                        entry['arp-requests-received'] = value
+                    elif key == "ARP_replies_received":
+                        entry['arp-replies-received'] = value
+                    elif key == "resolution_request_received":
+                        entry['resolution-request-received'] = value
+                    elif key == "resolution_request_dropped":
+                        entry['resolution-request-dropped'] = value
+                    elif key == "unrestricted_proxy_requests":
+                        entry['unrestricted-proxy-requests'] = value
+                    elif key == "restricted_proxy_requests":
+                        entry['restricted-proxy-requests'] = value
+                    elif key == "received_proxy_requests":
+                        entry['received-proxy-requests'] = value
+                    elif key == "unrestricted_proxy_requests_not_proxied":
+                        entry['proxy-requests-not-proxied'] = value
+                    elif key == "restricted_proxy_requests_not_proxied":
+                        entry['restricted-proxy-requests-not-proxied'] = value
+                    elif key == "datagrams_with_bogus_interface":
+                        entry['datagrams-with-bogus-interface'] = value
+                    elif key == "datagrams_with_incorrect_length":
+                        entry['datagrams-with-incorrect-length'] = value
+                    elif key == "datagrams_for_non-IP_protocol":
+                        entry['datagrams-for-non-ip-protocol'] = value
+                    elif key == "datagrams_with_unsupported_op_code":
+                        entry['datagrams-with-unsupported-opcode'] = value
+                    elif key == "datagrams_with_bad_protocol_address_length":
+                        entry['datagrams-with-bad-protocol-address-length'] = value
+                    elif key == "datagrams_with_bad_hardware_address_length":
+                        entry['datagrams-with-bad-hardware-address-length'] = value
+                    elif key == "datagrams_with_multicast_source_address":
+                        entry['datagrams-with-multicast-source-address'] = value
+                    elif key == "datagrams_with_multicast_target_address":
+                        entry['datagrams-with-multicast-target-address'] = value
+                    elif key == "datagrams_with_my_own_hardware_address":
+                        entry['datagrams-with-my-own-hardware-address'] = value
+                    elif key == "datagrams_for_an_address_not_on_the_interface":
+                        entry['datagrams-for-an-address-not-on-the-interface'] = value
+                    elif key == "datagrams_with_a_broadcast_source_address":
+                        entry['datagrams-with-a-broadcast-source-address'] = value
+                    elif key == "datagrams_with_source_address_duplicate_to_mine":
+                        entry['datagrams-with-source-address-duplicate-to-mine'] = value
+                    elif key == "datagrams_which_were_not_for_me":
+                        entry['datagrams-which-were-not-for-me'] = value
+                    elif key == "packets_discarded_waiting_for_resolution":
+                        entry['packets-discarded-waiting-for-resolution'] = value
+                    elif key == "packets_sent_after_waiting_for_resolution":
+                        entry['packets-sent-after-waiting-for-resolution'] = value
+                    elif key == "ARP_requests_sent":
+                        entry['arp-requests-sent'] = value
+                    elif key == "ARP_replies_sent":
+                        entry['arp-replies-sent'] = value
+                    elif key == "requests_for_memory_denied":
+                        entry['requests-for-memory-denied'] = value
+                    elif key == "requests_dropped_on_entry":
+                        entry['requests-dropped-on-entry'] = value
+                    elif key == "requests_dropped_during_retry":
+                        entry['requests-dropped-during-retry'] = value
+                    elif key == "requests_dropped_due_to_interface_deletion":
+                        entry['requests-dropped-due-to-interface-deletion'] = value
+                    elif key == "requests_on_unnumbered_interfaces":
+                        entry['requests-on-unnumbered-interfaces'] = value
+                    elif key == "new_requests_on_unnumbered_interfaces":
+                        entry['new-requests-on-unnumbered-interfaces'] = value
+                    elif key == "replies_for_from_unnumbered_interfaces":
+                        entry['replies-from-unnumbered-interfaces'] = value
+                    elif key == "requests_on_unnumbered_interface_with_non-subnetted_donor":
+                        entry['requests-on-unnumbered-interface-with-non-subnetted-donor'] = value
+                    elif key == "replies_from_unnumbered_interface_with_non-subnetted_donor":
+                        entry['replies-from-unnumbered-interface-with-non-subnetted-donor'] = value
+                    elif key == "arp_packets_rejected_as_family_is_configured_with_deny_arp":
+                        entry['arp-packets-rejected-as-family-is-configured-with-deny-arp'] = value
+                    elif key == "arp_response_packets_are_rejected_on_mace_icl_interface":
+                        entry['arp-response-packets-are-rejected-on-mace-icl-interface'] = value
+                    elif key == "arp_replies_are_rejected_as_source_and_destination_is_same":
+                        entry['arp-replies-are-rejected-as-source-and-destination-is-same'] = value
+                    elif key == "arp_probe_for_proxy_address_reachable_from_the_incoming_interface":
+                        entry['arp-probe-for-proxy-address-reachable-from-the-incoming-interface'] = value
+                    elif key == "arp_request_discarded_for_vrrp_source_address":
+                        entry['arp-request-discarded-for-vrrp-source-address'] = value
+                    elif key == "self_arp_request_packet_received_on_irb_interface":
+                        entry['self-arp-request-packet-received-on-irb-interface'] = value
+                    elif key == "proxy_arp_request_discarded_as_source_ip_is_a_proxy_target":
+                        entry['proxy-arp-request-discarded-as-source-ip-is-a-proxy-target'] = value
+                    elif key == "arp_packets_are_dropped_as_nexthop_allocation_failed":
+                        entry['arp-packets-are-dropped-as-nexthop-allocation-failed'] = value
+                    elif key == "arp_packets_received_from_peer_vrrp_rotuer_and_discarded":
+                        entry['arp-packets-received-from-peer-vrrp-router-and-discarded'] = value
+                    elif key == "arp_packets_are_rejected_as_target_ip_arp_resolve_is_in_progress":
+                        entry['arp-packets-are-rejected-as-target-ip-arp-resolve-is-in-progress'] = value
+                    elif key == "grat_arp_packets_are_ignored_as_mac_address_is_not_changed":
+                        entry['grat-arp-packets-are-ignored-as-mac-address-is-not-changed'] = value
+                    elif key == "arp_packets_are_dropped_from_peer_vrrp":
+                        entry['arp-packets-are-dropped-from-peer-vrrp'] = value
+                    elif key == "arp_packets_are_dropped_as_driver_call_failed":
+                        entry['arp-packets-are-dropped-as-driver-call-failed'] = value
+                    elif key == "arp_packets_are_dropped_as_source_is_not_validated":
+                        entry['arp-packets-are-dropped-as-source-is-not-validated'] = value
+                    elif key == "Max_System_ARP_nh_cache_limit":
+                        entry['arp-system-max'] = value
+                    elif key == "Max_Public_ARP_nh_cache_limit":
+                        entry['arp-public-max'] = value
+                    elif key == "Max_IRI_ARP_nh_cache_limit":
+                        entry['arp-iri-max'] = value
+                    elif key == "Max_Management_intf_ARP_nh_cache_limit":
+                        entry['arp-mgt-max'] = value
+                    elif key == "Current_Public_ARP_nexthops_present":
+                        entry['arp-public-cnt'] = value
+                    elif key == "Current_IRI_ARP_nexthops_present":
+                        entry['arp-iri-cnt'] = value
+                    elif key == "Current_Management_ARP_nexthops_present":
+                        entry['arp-mgt-cnt'] = value
+                    elif key == "Total_ARP_nexthops_creation_failed_as_limit_reached":
+                        entry['arp-system-drop'] = value
+                    elif key == "Public_ARP_nexthops_creation_failed_as_public_limit_reached":
+                        entry['arp-public-drop'] = value
+                    elif key == "IRI_ARP_nexthops_creation_failed_as_iri_limit_reached":
+                        entry['arp-iri-drop'] = value
+                    elif key == "Management_ARP_nexthops_creation_failed_as_mgt_limit_reached":
+                        entry['arp-mgt-drop'] = value
+
+            if self.state == 'ip6':
+
+                m = p5.match(line)
+                if m:
                     continue
+                    group = m.groupdict()
+                    header_type_list = ret_dict.setdefault("statistics", {}).setdefault("ip6", {}).setdefault("header-type", [])
+                    entry = {
+                        "header-for-source-address-selection": group["header_for_source_address_selection"]
+                    }
+                    header_type_list.append(entry)
+                    continue
+
+                m = p2.match(line)
+                if m:
+                    continue
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("ip6", {})
+
+                    if key == "temp":
+                        entry['temp'] = value
+                    elif key == "temp":
+                        entry['temp'] = value
 
         ret_dict['test'] = True
         return ret_dict
