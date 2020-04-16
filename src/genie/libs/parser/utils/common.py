@@ -74,17 +74,21 @@ def get_parser(command, device):
     '''From a show command and device, return parser class and kwargs if any'''
 
     #TODO ADD FLAG FOR REGEX
-    regex = True
+    regex = False
     kwargs = {}
     lookup = Lookup.from_device(device, packages={'parser': parser})
 
     if regex:
         data = _fuzzy_regex_search_command(command)
-
+        print("===================")
         print([d[0] for d in data])
+        print("===================")
         return
     else:
-        _, data, kwargs = _fuzzy_search_command(command)
+        command, data, kwargs = _fuzzy_search_command(command)
+        print(command)
+        print(kwargs)
+        return
         for token in lookup._tokens:
             if token in data:
                 data = data[token]
@@ -217,6 +221,10 @@ def _fuzzy_search_command(command):
             SyntaxError
 
     '''
+    # If command is found then stop
+    if command in parser_data:
+        return command, parser_data[command], {}
+
     # Tokenize the command
     tokens = command.split()
     token_length = len(tokens)
@@ -233,8 +241,6 @@ def _fuzzy_search_command(command):
     # Process tokens one by one, fuzzy matching each one
     for index, token in enumerate(tokens):
         heap = []
-
-        # Store entries with wild card arguments 
         wild_entries = []
 
         for key_tokens, value in search:
@@ -261,7 +267,7 @@ def _fuzzy_search_command(command):
                         heapq.heappush(heap, (-100, (key_tokens, value)))
                 
             # Skip tokens with poor locality sensitive ratio
-            if fuzz.ratio(token, current) <= 30:
+            if not current.startswith(token) and fuzz.ratio(token, current) <= 30:
                 continue
             
             # If last token is perfect match, add to perfect matches
@@ -289,7 +295,7 @@ def _fuzzy_search_command(command):
 
     match = None
 
-    if len(perfect_matches) == 1: 
+    if len(perfect_matches) > 0: 
         match = perfect_matches[0]
     elif len(search) == 1:
         match = search[0]
@@ -302,12 +308,11 @@ def _fuzzy_search_command(command):
 
     # Get kwargs from command if any
     # Use regex search in case there is something before/after argument
-    kwargs = { 
-        re.search('{(.*)}', key).groups()[0]: 
-        tokens[index] for index, key in enumerate(
-            filter(lambda item: '{' in item, match[0])
-        )
-    }
+    kwargs = {}
+
+    for index, key in enumerate(match[0]):
+        if '{' in key:
+            kwargs[re.search('{(.*)}', key).groups()[0]] = tokens[index]
 
     # Return actual command name, command data, and kwargs
     return ' '.join(match[0]), match[1], kwargs
