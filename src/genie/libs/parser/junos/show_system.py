@@ -2411,6 +2411,100 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
                         entry['datagrams-output'] = value
 
             if self.state == 'ttp':
+                continue
+                m = p2.match(line)
+                if m:
+                    count += 1
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("ipsec6", {})
+
+                    if key == "Packets_sent":
+                        entry['ttp-packets-sent'] = value
+                    elif key == "Packets_sent_while_unconnected":
+                        entry['packets-sent-while-unconnected'] = value
+                    elif key == "Packets_sent_while_interface_down":
+                        entry['packets-sent-while-interface-down'] = value
+                    elif key == "Packets_sent_couldn't_get_buffer":
+                        entry['packets-sent-could-not-get-buffer'] = value
+                    elif key == "Packets_sent_couldn't_find_neighbor":
+                        entry['packets-sent-could-not-find-neighbor'] = value
+                    elif key == "Packets_sent_when_transmit_is_disable":
+                        entry['packets-sent-when-transmit-disabled'] = value
+                    elif key == "Packets_sent_when_host_unreachable":
+                        entry['packets-sent-when-host_unreachable'] = value
+                    elif key == "L3_Packets_sent_could_not_get_buffer":
+                        entry['l3-packets-sent-could-not-get-buffer'] = value
+                    elif key == "L3_Packets_dropped":
+                        entry['l3-packets-dropped'] = value
+                    elif key == "Packets_sent_with_bad_logical_interface":
+                        entry['packets-sent-with-bad-ifl'] = value
+                    elif key == "Packets_sent_with_bad_address_family":
+                        entry['packets-sent-with-bad-af'] = value
+                    elif key == "L2_packets_received":
+                        entry['l2-packets-received'] = value
+                    elif key == "Unknown_L3_packets_received":
+                        entry['unknown-l3-packets-received'] = value
+                    elif key == "IPv4_L3_packets_received":
+                        entry['ipv4-l3-packets-received'] = value
+                    elif key == "MPLS_L3_packets_received":
+                        entry['mpls-l3-packets-received'] = value
+                    elif key == "MPLS->IPV4_L3_packets_received":
+                        entry['mpls-to-ipv4-l3-packets-received'] = value
+                    elif key == "IPv4->MPLS_L3_packets_received":
+                        entry['ipv4-to-mpls-l3-packets-received'] = value
+                    elif key == "VPLS_L3_packets_received":
+                        entry['vpls-l3-packets-received'] = value
+                    elif key == "IPv6_L3_packets_received":
+                        entry['ipv6-l3-packets-received'] = value
+                    elif key == "ARP_L3_packets_received":
+                        entry['arp-l3-packets-received'] = value
+                    elif key == "CLNP_L3_packets_received":
+                        entry['clnp-l3-packets-received'] = value
+                    elif key == "TNP_L3_packets_received":
+                        entry['tnp-l3-packets-received'] = value
+                    elif key == "NULL_L3_packets_received":
+                        entry['null-l3-packets-received'] = value
+                    elif key == "Cyclotron_cycle_L3_packets_received":
+                        entry['cyclotron-cycle-l3-packets-received'] = value
+                    elif key == "Cyclotron_send_L3_packets_received":
+                        entry['cyclotron-send-l3-packets-received'] = value
+                    elif key == "Openflow_packets_received":
+                        entry['openflow-packets-received'] = value
+                    elif key == "Packets_received_while_unconnected":
+                        entry['packets-received-while-unconnected'] = value
+                    elif key == "Packets_received_from_unknown_ifl":
+                        entry['packets-received-from-unknown-ifl'] = value
+                    elif key == "Input_packets_couldn't_get_buffer":
+                        entry['input-packets-could-not-get-buffer'] = value
+                    elif key == "Input_packets_with_bad_type":
+                        entry['input-packets-with-bad-type'] = value
+                    elif key == "Input_packets_with_discard_type":
+                        entry['input-packets-with-discard-type'] = value
+                    elif key == "Input_packets_with_too_many_tlvs":
+                        entry['input-packets-with-too-many-tlvs'] = value
+                    elif key == "Input_packets_with_bad_tlv_header":
+                        entry['input-packets-with-bad-tlv-header'] = value
+                    elif key == "Input_packets_with_bad_tlv_type":
+                        entry['input-packets-with-bad-tlv-type'] = value
+                    elif key == "Input_packets_dropped_based_on_tlv_result":
+                        entry['input-packets-tlv-dropped'] = value
+                    elif key == "Input_packets_with_bad_address_family":
+                        entry['input-packets-with-bad-af'] = value
+                    elif key == "Input_packets_for_which_rt_lookup_is_bypassed":
+                        entry['input-packets-for-which-route-lookup-is-bypassed'] = value
+                    elif key == "Input_packets_with_ttp_tlv_of_type_TTP_TLV_P2MP_NBR_NHID":
+                        entry['input-packets-with-ttp-tlv-p2mp-nbr-nhid-type'] = value
+                    elif key == "Input_packets_with_unknown_p2mp_nbr_nhid_value":
+                        entry['input-packets-with-unknown-p2mp-nbr-nhid'] = value
+                    elif key == "Input_packets_of_type_vxlan_bfd":
+                        entry['input-packets-with-vxlan-bfd-pkts'] = value
+
+            if self.state == 'mpls':
+                continue
                 m = p2.match(line)
                 if m:
                     count += 1
@@ -2423,99 +2517,256 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
 
                     print(count, key, value)
 
-                    # 1  185307601
-                    # 2  0
-                    # 3  0
-                    # 4  0
-                    # 5  0
-                    # 6  0
-                    # 7  0
-                    # 8  0
-                    # 9  0
-                    # 10 Packets_sent_with_bad_logical_interface 0
-                    # 11 Packets_sent_with_bad_address_family 0
-                    # 12 L2_packets_received 56842
-                    # 13 Unknown_L3_packets_received 0
-                    # 14 IPv4_L3_packets_received 83525851
-                    # 15 MPLS_L3_packets_received 0
-                    # 16 MPLS->IPV4_L3_packets_received 0
-                    # 17 IPv4->MPLS_L3_packets_received 4214
-                    # 18 VPLS_L3_packets_received 0
-                    # 19 IPv6_L3_packets_received 100720250
-                    # 20 ARP_L3_packets_received 0
-                    # 21 CLNP_L3_packets_received 0
-                    # 22 TNP_L3_packets_received 0
-                    # 23 NULL_L3_packets_received 0
-                    # 24 Cyclotron_cycle_L3_packets_received 0
-                    # 25 Cyclotron_send_L3_packets_received 0
-                    # 26 Openflow_packets_received 0
-                    # 27 Packets_received_while_unconnected 0
-                    # 28 Packets_received_from_unknown_ifl 0
-                    # 29 Input_packets_couldn't_get_buffer 0
-                    # 30 Input_packets_with_bad_type 0
-                    # 31 Input_packets_with_discard_type 0
-                    # 32 Input_packets_with_too_many_tlvs 0
-                    # 33 Input_packets_with_bad_tlv_header 0
-                    # 34 Input_packets_with_bad_tlv_type 0
-                    # 35 Input_packets_dropped_based_on_tlv_result 0
-                    # 36 Input_packets_with_bad_address_family 0
-                    # 37 Input_packets_for_which_rt_lookup_is_bypassed 0
-                    # 38 Input_packets_with_ttp_tlv_of_type_TTP_TLV_P2MP_NBR_NHID 0
-                    # 39 Input_packets_with_unknown_p2mp_nbr_nhid_value 0
-                    # 40 Input_packets_of_type_vxlan_bfd 0
+                    if key == "Total_MPLS_packets_received":
+                        entry['total-mpls-packets-received>'] = value
+                    elif key == "Packets_forwarded":
+                        entry['packets-forwarded'] = value
+                    elif key == "Packets_dropped":
+                        entry['packets-dropped'] = value
+                    elif key == "Packets_with_header_too_small":
+                        entry['packets-with-header-too-small'] = value
+                    elif key == "After_tagging,_packets_can't_fit_link_MTU":
+                        entry['after-tagging-packets-can-not-fit-link-mtu'] = value
+                    elif key == "Packets_with_IPv4_explicit_NULL_tag":
+                        entry['packets-with-ipv4-explicit-null-tag'] = value
+                    elif key == "Packets_with_IPv4_explicit_NULL_cksum_errors":
+                        entry['packets-with-ipv4-explicit-null-checksum-errors>'] = value
+                    elif key == "Packets_with_router_alert_tag":
+                        entry['packets-with-router-alert-tag'] = value
+                    elif key == "LSP_ping_packets_(ttl-expired/router_alert)":
+                        entry['lsp-ping-packets'] = value
+                    elif key == "Packets_with_tag_encoding_error":
+                        entry['packets-with-tag-encoding-error'] = value
+                    elif key == "Packets_discarded_due_to_no_route":
+                        entry['packets-discarded-due-to-no-route'] = value
+                    elif key == "Packets_used_first_nexthop_in_ecmp_unilist":
+                        entry['packets-used-first-nexthop-in-ecmp-unilist'] = value
+                    elif key == "Packets_dropped_due_to_ifl_down":
+                        entry['packets-dropped-due-to-ifl-down'] = value
+                    elif key == "Packets_dropped_at_mpls_socket_send_op":
+                        entry['packets-dropped-at-mpls-socket-send'] = value
+                    elif key == "Packets_forwarded_at_mpls_socket_send_op":
+                        entry['packets-forwarded-at-mpls-socket-send'] = value
+                    elif key == "Packets_dropped,_over_p2mp_composite_nexthop":
+                        entry['packets-dropped-at-p2mp-cnh-output'] = value
 
-                    if key == "Packets_sent":
-                        entry['temp'] = value
-                    elif key == "Packets_sent_while_unconnected":
-                        entry['temp'] = value
-                    elif key == "Packets_sent_while_interface_down":
-                        entry['temp'] = value
-                    elif key == "Packets_sent_couldn't_get_buffer":
-                        entry['temp'] = value
-                    elif key == "Packets_sent_couldn't_find_neighbor":
-                        entry['temp'] = value
-                    elif key == "Packets_sent_when_transmit_is_disable":
-                        entry['temp'] = value
-                    elif key == "Packets_sent_when_host_unreachable":
-                        entry['temp'] = value
-                    elif key == "L3_Packets_sent_could_not_get_buffer":
-                        entry['temp'] = value
-                    elif key == "L3_Packets_dropped":
-                        entry['temp'] = value
-                    elif key == "temp":
-                        entry['temp'] = value
-                    elif key == "temp":
-                        entry['temp'] = value
-                    elif key == "temp":
-                        entry['temp'] = value
-                    elif key == "temp":
-                        entry['temp'] = value
-                    elif key == "temp":
-                        entry['temp'] = value
-                    elif key == "temp":
-                        entry['temp'] = value
-                    elif key == "temp":
-                        entry['temp'] = value
-                    elif key == "temp":
-                        entry['temp'] = value
-                    elif key == "temp":
-                        entry['temp'] = value
-                    elif key == "temp":
-                        entry['temp'] = value
-                    elif key == "temp":
-                        entry['temp'] = value
-                    elif key == "temp":
-                        entry['temp'] = value
-                    elif key == "temp":
-                        entry['temp'] = value
-                    elif key == "temp":
-                        entry['temp'] = value
-                    elif key == "temp":
-                        entry['temp'] = value
-                    elif key == "temp":
-                        entry['temp'] = value
-                    elif key == "temp":
-                        entry['temp'] = value
+            if self.state == 'ethoamlfm':
+                continue
+                m = p2.match(line)
+                if m:
+                    count += 1
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("ipsec6", {})
+
+                    if key == "total_received_packets":
+                        entry['total-packets-received'] = value
+                    elif key == "input_drops_due_to_bad_interface_state":
+                        entry['input-packets-drop-bad-interface-state'] = value
+                    elif key == "received_packets_forwarded":
+                        entry['received-packets-forwarded'] = value
+                    elif key == "total_transmitted_packets":
+                        entry['total-packets-transmitted'] = value
+                    elif key == "sent_packets":
+                        entry['packets-sent'] = value
+                    elif key == "output_drops_due_to_bad_interface_state":
+                        entry['output-packets-drop-bad-interface-state'] = value
+
+            if self.state == 'ethoamcfm':
+                continue
+                m = p2.match(line)
+                if m:
+                    count += 1
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("ipsec6", {})
+                    print(count, key, value)
+
+                    if key == "total_received_packets":
+                        entry['total-packets-received'] = value
+                    elif key == "input_drops_due_to_bad_interface_state":
+                        entry['input-packets-drop-bad-interface-state'] = value
+                    elif key == "received_packets_forwarded":
+                        entry['received-packets-forwarded'] = value
+                    elif key == "total_transmitted_packets":
+                        entry['total-packets-transmitted'] = value
+                    elif key == "sent_packets":
+                        entry['packets-sent'] = value
+                    elif key == "output_drops_due_to_bad_interface_state":
+                        entry['output-packets-drop-bad-interface-state'] = value
+                    elif key == "flood_requests_forwarded_to_PFE":
+                        entry['flood-requests-forwarded-to-pfe'] = value
+                    elif key == "flood_requests_dropped":
+                        entry['flood-requests-dropped'] = value
+
+            if self.state == 'vpls':
+                continue
+                m = p2.match(line)
+                if m:
+                    count += 1
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("ipsec6", {})
+
+                    print(count, key, value)
+
+                    if key == "Total_packets_received":
+                        entry['packets-received'] = value
+                    elif key == "Packets_with_size_smaller_than_minimum":
+                        entry['packets-with-size-smaller-than-minimum'] = value
+                    elif key == "Packets_with_incorrect_version_number":
+                        entry['packets-with-incorrect-version-number'] = value
+                    elif key == "Packets_for_this_host":
+                        entry['packets-for-this-host'] = value
+                    elif key == "Packets_with_no_logical_interface":
+                        entry['packets-with-no-logical-interface'] = value
+                    elif key == "Packets_with_no_family":
+                        entry['packets-with-no-family'] = value
+                    elif key == "Packets_with_no_route_table":
+                        entry['packets-with-no-route-table'] = value
+                    elif key == "Packets_with_no_auxiliary_table":
+                        entry['packets-with-no-auxiliary-table'] = value
+                    elif key == "Packets_with_no_core-facing_entry":
+                        entry['packets-with-no-core-facing-entry'] = value
+                    elif key == "packets_with_no_CE-facing_entry":
+                        entry['packets-with-no-ce-facing-entry'] = value
+                    elif key == "MAC_route_learning_requests":
+                        entry['mac-route-learning-requests'] = value
+                    elif key == "MAC_routes_learnt":
+                        entry['mac-routes-learned'] = value
+                    elif key == "Requests_to_learn_an_existing_route":
+                        entry['requests-to-learn-an-existing-route'] = value
+                    elif key == "Learning_requests_while_learning_disabled_on_interface":
+                        entry['learning-requests-while-learning-disabled-on-interface'] = value
+                    elif key == "Learning_requests_over_capacity":
+                        entry['learning-requests-over-capacity'] = value
+                    elif key == "MAC_routes_moved":
+                        entry['mac-routes-moved'] = value
+                    elif key == "Requests_to_move_static_route":
+                        entry['requests-to-move-static-route'] = value
+                    elif key == "MAC_route_aging_requests":
+                        entry['mac-route-aging-requests'] = value
+                    elif key == "MAC_routes_aged":
+                        entry['mac-routes-aged'] = value
+                    elif key == "Bogus_address_in_aging_requests":
+                        entry['bogus-address-in-aging-requests'] = value
+                    elif key == "Requests_to_age_static_route":
+                        entry['requests-to-age-static-route'] = value
+                    elif key == "Requests_to_re-ageout_aged_route":
+                        entry['requests-to-re-ageout-aged-route'] = value
+                    elif key == "Requests_involving_multiple_peer_FEs":
+                        entry['requests-involving-multiple-peer-fes'] = value
+                    elif key == "Aging_acks_from_PFE":
+                        entry['aging-acks-from-pfe'] = value
+                    elif key == "Aging_non-acks_from_PFE":
+                        entry['aging-non-acks-from-pfe'] = value
+                    elif key == "Aging_requests_timed_out_waiting_on_FEs":
+                        entry['aging-requests-timed-out-waiting-on-fes'] = value
+                    elif key == "Aging_requests_over_max-rate":
+                        entry['aging-requests-over-max-rate'] = value
+                    elif key == "Errors_finding_peer_FEs":
+                        entry['errors-finding-peer-fes'] = value
+                    elif key == "Unsupported_platform":
+                        entry['unsupported-platform'] = value
+                    elif key == "Packets_dropped_due_to_no_l3_route_table":
+                        entry['packets-dropped-due-to-no-l3-route-table'] = value
+                    elif key == "Packets_dropped_due_to_no_local_ifl":
+                        entry['packets-dropped-due-to-no-local-ifl'] = value
+                    elif key == "Packets_punted":
+                        entry['packets-punted'] = value
+                    elif key == "Packets_dropped_due_to_no_socket":
+                        entry['packets-dropped-due-to-no-socket'] = value
+
+            if self.state == 'bridge':
+                continue
+                m = p2.match(line)
+                if m:
+                    count += 1
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("ipsec6", {})
+
+                    print(count, key, value)
+
+                    if key == "Total_packets_received":
+                        entry['packets-received'] = value
+                    elif key == "Packets_with_size_smaller_than_minimum":
+                        entry['packets-with-size-smaller-than-minimum'] = value
+                    elif key == "Packets_with_incorrect_version_number":
+                        entry['packets-with-incorrect-version-number'] = value
+                    elif key == "Packets_for_this_host":
+                        entry['packets-for-this-host'] = value
+                    elif key == "Packets_with_no_logical_interface":
+                        entry['packets-with-no-logical-interface'] = value
+                    elif key == "Packets_with_no_family":
+                        entry['packets-with-no-family'] = value
+                    elif key == "Packets_with_no_route_table":
+                        entry['packets-with-no-route-table'] = value
+                    elif key == "Packets_with_no_auxiliary_table":
+                        entry['packets-with-no-auxiliary-table'] = value
+                    elif key == "Packets_with_no_core-facing_entry":
+                        entry['packets-with-no-core-facing-entry'] = value
+                    elif key == "packets_with_no_CE-facing_entry":
+                        entry['packets-with-no-ce-facing-entry'] = value
+                    elif key == "MAC_route_learning_requests":
+                        entry['mac-route-learning-requests'] = value
+                    elif key == "MAC_routes_learnt":
+                        entry['mac-routes-learned'] = value
+                    elif key == "Requests_to_learn_an_existing_route":
+                        entry['requests-to-learn-an-existing-route'] = value
+                    elif key == "Learning_requests_while_learning_disabled_on_interface":
+                        entry['learning-requests-while-learning-disabled-on-interface'] = value
+                    elif key == "Learning_requests_over_capacity":
+                        entry['learning-requests-over-capacity'] = value
+                    elif key == "MAC_routes_moved":
+                        entry['mac-routes-moved'] = value
+                    elif key == "Requests_to_move_static_route":
+                        entry['requests-to-move-static-route'] = value
+                    elif key == "MAC_route_aging_requests":
+                        entry['mac-route-aging-requests'] = value
+                    elif key == "MAC_routes_aged":
+                        entry['mac-routes-aged'] = value
+                    elif key == "Bogus_address_in_aging_requests":
+                        entry['bogus-address-in-aging-requests'] = value
+                    elif key == "Requests_to_age_static_route":
+                        entry['requests-to-age-static-route'] = value
+                    elif key == "Requests_to_re-ageout_aged_route":
+                        entry['requests-to-re-ageout-aged-route'] = value
+                    elif key == "Requests_involving_multiple_peer_FEs":
+                        entry['requests-involving-multiple-peer-fes'] = value
+                    elif key == "Aging_acks_from_PFE":
+                        entry['aging-acks-from-pfe'] = value
+                    elif key == "Aging_non-acks_from_PFE":
+                        entry['aging-non-acks-from-pfe'] = value
+                    elif key == "Aging_requests_timed_out_waiting_on_FEs":
+                        entry['aging-requests-timed-out-waiting-on-fes'] = value
+                    elif key == "Aging_requests_over_max-rate":
+                        entry['aging-requests-over-max-rate'] = value
+                    elif key == "Errors_finding_peer_FEs":
+                        entry['errors-finding-peer-fes'] = value
+                    elif key == "Unsupported_platform":
+                        entry['unsupported-platform'] = value
+                    elif key == "Packets_dropped_due_to_no_l3_route_table":
+                        entry['packets-dropped-due-to-no-l3-route-table'] = value
+                    elif key == "Packets_dropped_due_to_no_local_ifl":
+                        entry['packets-dropped-due-to-no-local-ifl'] = value
+                    elif key == "Packets_punted":
+                        entry['packets-punted'] = value
+                    elif key == "Packets_dropped_due_to_no_socket":
+                        entry['packets-dropped-due-to-no-socket'] = value
+
 
         ret_dict['test'] = True
         return ret_dict
