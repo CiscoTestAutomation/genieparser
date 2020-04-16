@@ -213,7 +213,11 @@
         * show interfaces {interface} terse
     * Update ShowInterfacesTerseInterface
         * show interfaces terse {interface}
-
+    * Update Ping
+        * Update regex to support various output
+    * Update ShowRouteProtocol
+        * Update regex to support various output
+    
 --------------------------------------------------------------------------------
                                 common.py
 --------------------------------------------------------------------------------
