@@ -957,10 +957,14 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
 
         p5 = re.compile(r'^(?P<header_for_source_address_selection>source +addresses +[\S\s]+)$')
 
-        p6 = re.compile(r'^(?P<histogram_type>\S+ +histogram:)$')
+        p6 = re.compile(r'^(?P<histogram_type>\S+) +histogram:$')
+
+        p7 = re.compile(r'^histogram +by +message +type:$')
 
         ret_dict = {}
         self.state = None
+
+        self.pfkey_state = None
 
         count = 0
 
@@ -1807,20 +1811,17 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
                 m = p6.match(line)
                 if m:
                     group = m.groupdict()
-                    ret_dict["statistics"]["ip6"]['histogram'] = group['histogram_type']
+                    ret_dict["statistics"]["ip6"]['histogram'] = line
                     continue
 
                 m = p2.match(line)
                 if m:
-                    count += 1
                     group = m.groupdict()
                     key = group['key']
                     key = key.strip()
                     key = key.replace(" ", "_")
                     value = group['number_value']
                     entry = ret_dict.setdefault("statistics", {}).setdefault("ip6", {})
-
-                    print(count, key, value)
 
                     if key == "total_packets_received":
                         entry['total-packets-received'] = value
@@ -1904,10 +1905,17 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
                         entry['transit-re-packet-dropped-on-mgmt-interface'] = value
 
             if self.state == 'icmp6':
+                continue
+
+                m = p6.match(line)
+                if m:
+                    group = m.groupdict()
+                    self.histogram = group['histogram_type'].lower()
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("ip6", {})
+                    entry.setdefault(self.histogram+"-histogram", {})
 
                 m = p2.match(line)
                 if m:
-                    count += 1
                     group = m.groupdict()
                     key = group['key']
                     key = key.strip()
@@ -1915,10 +1923,6 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
                     value = group['number_value']
                     entry = ret_dict.setdefault("statistics", {}).setdefault("ip6", {})
                     entry["protocol-name"] = "icmp6:"
-
-                    print(count, key, value)
-
-                    continue
 
                     if key == "Calls_to_icmp_error":
                         entry['calls-to-icmp6-error'] = value
@@ -1929,17 +1933,17 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
                     elif key == "unreach":
                         if self.histogram == "output":
                             entry['output-histogram']['unreachable-icmp6-packets'] = value
-                        else:
+                        elif self.histogram == "input":
                             entry['input-histogram']['unreachable-icmp6-packets'] = value
                     elif key == "neighbor_solicitation":
                         if self.histogram == "output":
                             entry['output-histogram']['neighbor-solicitation'] = value
-                        else:
+                        elif self.histogram == "input":
                             entry['input-histogram']['neighbor-solicitation'] = value
                     elif key == "neighbor_advertisement":
                         if self.histogram == "output":
                             entry['output-histogram']['neighbor-advertisement'] = value
-                        else:
+                        elif self.histogram == "input":
                             entry['input-histogram']['neighbor-advertisement'] = value
                     elif key == "Messages_with_bad_code_fields":
                         entry['icmp6-messages-with-bad-code-fields'] = value
@@ -1952,22 +1956,22 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
                     elif key == "time_exceeded":
                         if self.histogram == "output":
                             entry['output-histogram']['time-exceeded-icmp6-packets'] = value
-                        else:
+                        elif self.histogram == "input":
                             entry['input-histogram']['time-exceeded-icmp6-packets'] = value
                     elif key == "router_solicitation":
                         if self.histogram == "output":
                             entry['output-histogram']['router-solicitation-icmp6-packets'] = value
-                        else:
+                        elif self.histogram == "input":
                             entry['input-histogram']['router-solicitation-icmp6-packets'] = value
                     elif key == "router_advertisment":
                         if self.histogram == "output":
                             entry['output-histogram']['router-advertisement-icmp6-packets'] = value
-                        else:
+                        elif self.histogram == "input":
                             entry['input-histogram']['router-advertisement-icmp6-packets'] = value
                     elif key == "neighbor_advertisement":
                         if self.histogram == "output":
                             entry['output-histogram']['neighbor-advertisement'] = value
-                        else:
+                        elif self.histogram == "input":
                             entry['input-histogram']['neighbor-advertisement'] = value
                     elif key == "No_route":
                         entry['no-route'] = value
@@ -2039,6 +2043,479 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
                         entry['nd6-requests-dropped-on-entry'] = value
                     elif key == "ND_hold_nexthops_dropped_on_timer_expire_by_RED_mark":
                         entry['nd6-requests-dropped-during-retry'] = value
+
+            if self.state == 'ipsec6':
+                continue
+                m = p2.match(line)
+
+                if m:
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("ipsec6", {})
+
+                    if key == "Inbound_packets_violated_process_security_policy":
+                        entry['inbound-packets-violated-process-security-policy'] = value
+                    elif key == "Outbound_packets_violated_process_security_policy":
+                        entry['outbound-packets-violated-process-security-policy'] = value
+                    elif key == "Outbound_packets_with_no_SA_available":
+                        entry['outbound-packets-with-no-sa-available'] = value
+                    elif key == "Outbound_packets_failed_due_to_insufficient_memory":
+                        entry['outbound-packets-failed-due-to-insufficient-memory'] = value
+                    elif key == "Outbound_packets_with_no_route":
+                        entry['outbound-packets-with-no-route'] = value
+                    elif key == "Invalid_outbound_packets":
+                        entry['invalid-outbound-packets'] = value
+                    elif key == "Outbound_packets_with_bundles_SAs":
+                        entry['outbound-packets-with-bundled-sa'] = value
+                    elif key == "mbuf_coleasced_during_clone":
+                        entry['mbuf-coalesced-during-clone'] = value
+                    elif key == "Cluster_coalesced_during_clone":
+                        entry['cluster-coalesced-during-clone'] = value
+                    elif key == "Cluster_copied_during_clone":
+                        entry['cluster-copied-during-clone'] = value
+                    elif key == "mbuf_inserted_during_makespace":
+                        entry['mbuf-inserted-during-makespace'] = value
+
+            if self.state == 'pfkey':
+                continue
+                m = p7.match(line)
+                if m:
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("ipsec6", {})
+                    if self.pfkey_state == None:
+                        self.pfkey_state = False
+                        entry.setdefault("output-histogram", {})['histogram'] = line
+                    else:
+                        self.pfkey_state = True
+                        entry.setdefault("input-histogram", {})['histogram'] = line
+
+                m = p2.match(line)
+                if m:
+
+                    count += 1
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("ipsec6", {})
+
+                    if key == "Requests_sent_from_userland":
+                        entry['requests-sent-from-userland'] = value
+                    elif key == "Bytes_sent_from_userland":
+                        entry['bytes-sent-from-userland'] = value
+                    elif key == "reserved":
+                        if self.pfkey_state:
+                            entry['input-histogram']['reserved'] = value
+                        else:
+                            entry['output-histogram']['reserved'] = value
+                    elif key == "add":
+                        if self.pfkey_state:
+                            entry['input-histogram']['add'] = value
+                        else:
+                            entry['output-histogram']['add'] = value
+                    elif key == "dump":
+                        if self.pfkey_state:
+                            entry['input-histogram']['dump'] = value
+                        else:
+                            entry['output-histogram']['dump'] = value
+                    elif key == "Messages_with_invalid_length_field":
+                        entry['messages-with-invalid-length-field'] = value
+                    elif key == "Messages_with_invalid_version_field":
+                        entry['messages-with-invalid-version-field'] = value
+                    elif key == "Messages_with_invalid_message_type_field":
+                        entry['messages-with-invalid-message-type-field'] = value
+                    elif key == "Messages_too_short":
+                        entry['messages-too-short'] = value
+                    elif key == "Messages_with_memory_allocation_failure":
+                        entry['outgoing-messages-with-memory-allocation-failure'] = value
+                    elif key == "Messages_with_duplicate_extension":
+                        entry['messages-with-duplicate-extension'] = value
+                    elif key == "Messages_with_invalid_extension_type":
+                        entry['messages-with-invalid-extension-type'] = value
+                    elif key == "Messages_with_invalid_sa_type":
+                        entry['messages-with-invalid-sa-type'] = value
+                    elif key == "Messages_with_invalid_address_extension":
+                        entry['messages-with-invalid-address-extension'] = value
+                    elif key == "Requests_sent_to_userland":
+                        entry['requests-sent-to-userland'] = value
+                    elif key == "Bytes_sent_to_userland":
+                        entry['bytes-sent-to-userland'] = value
+                    elif key == "Messages_toward_single_socket":
+                        entry['messages-toward-single-socket'] = value
+                    elif key == "Messages_toward_all_sockets":
+                        entry['messages-toward-all-sockets'] = value
+                    elif key == "Messages_toward_registered_sockets":
+                        entry['messages-toward-registered-sockets'] = value
+                    elif key == "Messages_with_memory_allocation_failure":
+                        entry['incoming-messages-with-memory-allocation-failure'] = value
+
+            if self.state == 'clnl':
+                continue
+                m = p2.match(line)
+
+                if m:
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("ipsec6", {})
+
+                    if key == "Total_packets_received":
+                        entry['total-clnl-packets-received'] = value
+                    elif key == "Packets_delivered":
+                        entry['packets-delivered'] = value
+                    elif key == "Too_small_packets":
+                        entry['too-small-packets'] = value
+                    elif key == "Packets_with_bad_header_length":
+                        entry['packets-with-bad-header-length'] = value
+                    elif key == "Packets_with_bad_checksum":
+                        entry['packets-with-bad-checksum'] = value
+                    elif key == "Bad_version_packets":
+                        entry['bad-version-packets'] = value
+                    elif key == "Unknown_or_unsupported_protocol_packets":
+                        entry['unknown-or-unsupported-protocol-packets'] = value
+                    elif key == "Packets_with_bogus_sdl_size":
+                        entry['packets-with-bogus-sdl-size'] = value
+                    elif key == "No_free_memory_in_socket_buffer":
+                        entry['no-free-memory-in-socket-buffer'] = value
+                    elif key == "Send_packets_discarded":
+                        entry['send-packets-discarded'] = value
+                    elif key == "Sbappend_failure":
+                        entry['sbappend-failure'] = value
+                    elif key == "Mcopy_failure":
+                        entry['mcopy-failure'] = value
+                    elif key == "Address_fields_were_not_reasonable":
+                        entry['address-fields-were-not-reasonable'] = value
+                    elif key == "Segment_information_forgotten":
+                        entry['segment-information-forgotten'] = value
+                    elif key == "Forwarded_packets":
+                        entry['forwarded-packets'] = value
+                    elif key == "Total_packets_sent":
+                        entry['total-packets-sent'] = value
+                    elif key == "Output_packets_discarded":
+                        entry['output-packets-discarded'] = value
+                    elif key == "Non-forwarded_packets":
+                        entry['non-forwarded-packets'] = value
+                    elif key == "Packets_fragmented":
+                        entry['packets-fragmented'] = value
+                    elif key == "Fragments_sent":
+                        entry['fragments-sent'] = value
+                    elif key == "Fragments_discarded":
+                        entry['fragments-discarded'] = value
+                    elif key == "Fragments_timed_out":
+                        entry['fragments-timed-out'] = value
+                    elif key == "Fragmentation_prohibited":
+                        entry['fragmentation-prohibited'] = value
+                    elif key == "Packets_reconstructed":
+                        entry['packets-reconstructed'] = value
+                    elif key == "Packets_destined_to_dead_nexthop":
+                        entry['packets-destined-to-dead-nexthop'] = value
+                    elif key == "Packets_discarded_due_to_no_route":
+                        entry['packets-discarded-due-to-no-route'] = value
+                    elif key == "Error_pdu_rate_drops":
+                        entry['error-pdu-rate-drops'] = value
+                    elif key == "ER_pdu_generation_failure":
+                        entry['er-pdu-generation-failure'] = value
+
+            if self.state == 'esis':
+                continue
+                m = p2.match(line)
+                if m:
+                    count += 1
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("ipsec6", {})
+
+                    if key == "Total_pkts_received":
+                        entry['total-esis-packets-received'] = value
+                    elif key == "Total_packets_consumed_by_protocol":
+                        entry['total-packets-consumed-by-protocol'] = value
+                    elif key == "Pdus_received_with_bad_checksum":
+                        entry['pdus-received-with-bad-checksum'] = value
+                    elif key == "Pdus_received_with_bad_version_number":
+                        entry['pdus-received-with-bad-version-number'] = value
+                    elif key == "Pdus_received_with_bad_type_field":
+                        entry['pdus-received-with-bad-type-field'] = value
+                    elif key == "Short_pdus_received":
+                        entry['short-pdus-received'] = value
+                    elif key == "Pdus_withbogus_sdl_size":
+                        entry['pdus-with-bogus-sdl-size'] = value
+                    elif key == "Pdus_with_bad_header_length":
+                        entry['pdus-with-bad-header-length'] = value
+                    elif key == "Pdus_with_unknown_or_unsupport_protocol":
+                        entry['pdus-with-unknown-or-unsupport-protocol'] = value
+                    elif key == "No_free_memory_in_socket_buffer":
+                        entry['no-free-memory-in-socket-buffer'] = value
+                    elif key == "Send_packets_discarded":
+                        entry['send-packets-discarded'] = value
+                    elif key == "Sbappend_failure":
+                        entry['sbappend-failure'] = value
+                    elif key == "Mcopy_failure":
+                        entry['mcopy-failure'] = value
+                    elif key == "ISO_family_not_configured":
+                        entry['iso-family-not-configured'] = value
+
+            if self.state == 'tnp':
+                continue
+                m = p2.match(line)
+                if m:
+                    count += 1
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("ipsec6", {})
+
+                    if key == "Unicast_packets_received":
+                        entry['unicast-packets-received'] = value
+                    elif key == "Broadcast_packets_received":
+                        entry['broadcast-packets-received'] = value
+                    elif key == "Fragmented_packets_received":
+                        entry['fragmented-packets-received'] = value
+                    elif key == "Hello_packets_dropped":
+                        entry['received-hello-packets-dropped'] = value
+                    elif key == "Fragments_dropped":
+                        entry['received-fragments-dropped'] = value
+                    elif key == "Fragment_reassembly_queue_flushes":
+                        entry['fragment-reassembly-queue-flushes'] = value
+                    elif key == "Packets_with_tnp_src_address_collision_received":
+                        entry['packets-with-tnp-src-address-collision-received'] = value
+                    elif key == "Hello_packets_received":
+                        entry['hello-packets-received'] = value
+                    elif key == "Control_packets_received":
+                        entry['control-packets-received'] = value
+                    elif key == "Rdp_packets_received":
+                        entry['rdp-packets-received'] = value
+                    elif key == "Udp_packets_received":
+                        entry['udp-packets-received'] = value
+                    elif key == "Tunnel_packets_received":
+                        entry['tunnel-packets-received'] = value
+                    elif key == "Input_packets_discarded_with_no_protocol":
+                        entry['input-packets-discarded-with-no-protocol'] = value
+                    elif key == "Packets_of_version_unspecified_received":
+                        entry['packets-of-version-unspecified-received'] = value
+                    elif key == "Packets_of_version_1_received":
+                        entry['packets-of-version1-received'] = value
+                    elif key == "Packets_of_version_2_received":
+                        entry['packets-of-version2-received'] = value
+                    elif key == "Packets_of_version_3_received":
+                        entry['packets-of-version3-received'] = value
+                    elif key == "Unicast_packets_sent":
+                        entry['unicast-packets-sent'] = value
+                    elif key == "Broadcast_packets_sent":
+                        entry['broadcast-packets-sent'] = value
+                    elif key == "Fragmented_packets_sent":
+                        entry['fragmented-packets-sent'] = value
+                    elif key == "Hello_packets_dropped":
+                        entry['sent-hello-packets-dropped'] = value
+                    elif key == "Fragments_dropped":
+                        entry['sent-fragments-dropped'] = value
+                    elif key == "Hello_packets_sent":
+                        entry['hello-packets-sent'] = value
+                    elif key == "Control_packets_sent":
+                        entry['control-packets-sent'] = value
+                    elif key == "Rdp_packets_sent":
+                        entry['rdp-packets-sent'] = value
+                    elif key == "Udp_packets_sent":
+                        entry['udp-packets-sent'] = value
+                    elif key == "Tunnel_packets_sent":
+                        entry['tunnel-packets-sent'] = value
+                    elif key == "Packets_sent_with_unknown_protocol":
+                        entry['packets-sent-with-unknown-protocol'] = value
+                    elif key == "Packets_of_version_unspecified_sent":
+                        entry['packets-of-version-unspecified-sent'] = value
+                    elif key == "Packets_of_version_1_sent":
+                        entry['packets-of-version1-sent'] = value
+                    elif key == "Packets_of_version_2_sent":
+                        entry['packets-of-version2-sent'] = value
+                    elif key == "Packets_of_version_3_sent":
+                        entry['packets-of-version3-sent'] = value
+
+            if self.state == 'rdp':
+                continue
+
+                m = p2.match(line)
+                if m:
+                    count += 1
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("ipsec6", {})
+
+                    if key == "Input_packets":
+                        entry['input-packets'] = value
+                    elif key == "Packets_discarded_for_bad_checksum":
+                        entry['packets-discarded-for-bad-checksum'] = value
+                    elif key == "Packets_discarded_due_to_bad_sequence_number":
+                        entry['packets-discarded-due-to-bad-sequence-number'] = value
+                    elif key == "Refused_connections":
+                        entry['refused-connections'] = value
+                    elif key == "Acks_received":
+                        entry['acks-received'] = value
+                    elif key == "Packets_dropped_due_to_full_socket_buffers":
+                        entry['packets-dropped-due-to-full-socket-buffers'] = value
+                    elif key == "Retransmits":
+                        entry['retransmits'] = value
+                    elif key == "Output_packets":
+                        entry['output-packets'] = value
+                    elif key == "Acks_sent":
+                        entry['acks-sent'] = value
+                    elif key == "Connects":
+                        entry['connects'] = value
+                    elif key == "Closes":
+                        entry['closes'] = value
+                    elif key == "Keepalives_received":
+                        entry['keepalives-received'] = value
+                    elif key == "Keepalives_sent":
+                        entry['keepalives-sent'] = value
+
+            if self.state == 'tudp':
+                continue
+                m = p2.match(line)
+                if m:
+                    count += 1
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("ipsec6", {})
+
+                    if key == "Datagrams_received":
+                        entry['datagrams-received'] = value
+                    elif key == "Datagrams_with_incomplete_header":
+                        entry['datagrams-with-incomplete-header'] = value
+                    elif key == "Datagrams_with_bad_data_length_field":
+                        entry['datagrams-with-bad-data-length-field'] = value
+                    elif key == "Datagrams_with_bad_checksum":
+                        entry['datagrams-with-bad-checksum'] = value
+                    elif key == "Datagrams_dropped_due_to_no_socket":
+                        entry['datagrams-dropped-due-to-no-socket'] = value
+                    elif key == "Broadcast/multicast_datagrams_dropped_due_to_no_socket":
+                        entry['broadcast-or-multicast-datagrams-dropped-due-to-no-socket'] = value
+                    elif key == "Datagrams_dropped_due_to_full_socket_buffers":
+                        entry['datagrams-dropped-due-to-full-socket-buffers'] = value
+                    elif key == "Delivered":
+                        entry['delivered'] = value
+                    elif key == "Datagrams_output":
+                        entry['datagrams-output'] = value
+
+            if self.state == 'ttp':
+                m = p2.match(line)
+                if m:
+                    count += 1
+                    group = m.groupdict()
+                    key = group['key']
+                    key = key.strip()
+                    key = key.replace(" ", "_")
+                    value = group['number_value']
+                    entry = ret_dict.setdefault("statistics", {}).setdefault("ipsec6", {})
+
+                    print(count, key, value)
+
+                    # 1  185307601
+                    # 2  0
+                    # 3  0
+                    # 4  0
+                    # 5  0
+                    # 6  0
+                    # 7  0
+                    # 8  0
+                    # 9  0
+                    # 10 Packets_sent_with_bad_logical_interface 0
+                    # 11 Packets_sent_with_bad_address_family 0
+                    # 12 L2_packets_received 56842
+                    # 13 Unknown_L3_packets_received 0
+                    # 14 IPv4_L3_packets_received 83525851
+                    # 15 MPLS_L3_packets_received 0
+                    # 16 MPLS->IPV4_L3_packets_received 0
+                    # 17 IPv4->MPLS_L3_packets_received 4214
+                    # 18 VPLS_L3_packets_received 0
+                    # 19 IPv6_L3_packets_received 100720250
+                    # 20 ARP_L3_packets_received 0
+                    # 21 CLNP_L3_packets_received 0
+                    # 22 TNP_L3_packets_received 0
+                    # 23 NULL_L3_packets_received 0
+                    # 24 Cyclotron_cycle_L3_packets_received 0
+                    # 25 Cyclotron_send_L3_packets_received 0
+                    # 26 Openflow_packets_received 0
+                    # 27 Packets_received_while_unconnected 0
+                    # 28 Packets_received_from_unknown_ifl 0
+                    # 29 Input_packets_couldn't_get_buffer 0
+                    # 30 Input_packets_with_bad_type 0
+                    # 31 Input_packets_with_discard_type 0
+                    # 32 Input_packets_with_too_many_tlvs 0
+                    # 33 Input_packets_with_bad_tlv_header 0
+                    # 34 Input_packets_with_bad_tlv_type 0
+                    # 35 Input_packets_dropped_based_on_tlv_result 0
+                    # 36 Input_packets_with_bad_address_family 0
+                    # 37 Input_packets_for_which_rt_lookup_is_bypassed 0
+                    # 38 Input_packets_with_ttp_tlv_of_type_TTP_TLV_P2MP_NBR_NHID 0
+                    # 39 Input_packets_with_unknown_p2mp_nbr_nhid_value 0
+                    # 40 Input_packets_of_type_vxlan_bfd 0
+
+                    if key == "Packets_sent":
+                        entry['temp'] = value
+                    elif key == "Packets_sent_while_unconnected":
+                        entry['temp'] = value
+                    elif key == "Packets_sent_while_interface_down":
+                        entry['temp'] = value
+                    elif key == "Packets_sent_couldn't_get_buffer":
+                        entry['temp'] = value
+                    elif key == "Packets_sent_couldn't_find_neighbor":
+                        entry['temp'] = value
+                    elif key == "Packets_sent_when_transmit_is_disable":
+                        entry['temp'] = value
+                    elif key == "Packets_sent_when_host_unreachable":
+                        entry['temp'] = value
+                    elif key == "L3_Packets_sent_could_not_get_buffer":
+                        entry['temp'] = value
+                    elif key == "L3_Packets_dropped":
+                        entry['temp'] = value
+                    elif key == "temp":
+                        entry['temp'] = value
+                    elif key == "temp":
+                        entry['temp'] = value
+                    elif key == "temp":
+                        entry['temp'] = value
+                    elif key == "temp":
+                        entry['temp'] = value
+                    elif key == "temp":
+                        entry['temp'] = value
+                    elif key == "temp":
+                        entry['temp'] = value
+                    elif key == "temp":
+                        entry['temp'] = value
+                    elif key == "temp":
+                        entry['temp'] = value
+                    elif key == "temp":
+                        entry['temp'] = value
+                    elif key == "temp":
+                        entry['temp'] = value
+                    elif key == "temp":
+                        entry['temp'] = value
+                    elif key == "temp":
+                        entry['temp'] = value
+                    elif key == "temp":
+                        entry['temp'] = value
+                    elif key == "temp":
+                        entry['temp'] = value
+                    elif key == "temp":
+                        entry['temp'] = value
+                    elif key == "temp":
+                        entry['temp'] = value
+                    elif key == "temp":
+                        entry['temp'] = value
 
         ret_dict['test'] = True
         return ret_dict
