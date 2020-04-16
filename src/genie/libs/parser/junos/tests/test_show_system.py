@@ -93,9 +93,9 @@ class test_show_system_buffer(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 #=========================================================
-# Unit test for show system buffer
+# Unit test for show system statistics
 #=========================================================
-class test_show_system_buffer(unittest.TestCase):
+class test_show_system_statistics(unittest.TestCase):
 
     device = Device(name='aDevice')
 

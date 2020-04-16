@@ -1774,24 +1774,32 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
         else:
             out = output
 
+        #Tcp:
         p1 = re.compile(r"^(?P<state>\S+):$")
 
+        # 265063785 packets sent
         p2 = re.compile(
             r"^(?P<number_value>\d+) +(?P<key>([\w\-\'\>\,\/\.\<\s]|\([(\D+)\s]+\))+)$"
         )
 
+        # 52538606 data packets (49634888 bytes)
         p3 = re.compile(
-            r"^(?P<number_value_one>\d+) +(?P<key>[\D\s]+)\([(\D+)\s]*(?P<number_value_two>\d+)[(\D+)\s]*\)$"
+            r"^(?P<number_value_one>\d+) +(?P<key>[\D\s]+)\([(\D+)\s]*"
+            r"(?P<number_value_two>\d+)[(\D+)\s]*\)$"
         )
 
+        # Output Histogram
         p4 = re.compile(r"^(?P<histogram_type>\S+) +Histogram$")
 
+        # source addresses on an outgoing I/F
         p5 = re.compile(
             r"^(?P<header_for_source_address_selection>source +addresses +[\S\s]+)$"
         )
 
+        # Output histogram:
         p6 = re.compile(r"^(?P<histogram_type>\S+) +histogram:$")
 
+        # histogram by message type:
         p7 = re.compile(r"^histogram +by +message +type:$")
 
         ret_dict = {}
@@ -1799,8 +1807,6 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
         self.state = None
 
         self.pfkey_state = None
-
-        count = 0
 
         for line in out.splitlines():
             line = line.strip()
@@ -1818,9 +1824,6 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
                     self.icmp6_histogram = None
 
                 continue
-
-            # if not self.state == "ethoamcfm":
-            #     continue
 
             if self.state == "Tcp":
                 m = p2.match(line)
