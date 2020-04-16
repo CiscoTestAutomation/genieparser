@@ -335,7 +335,7 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
         # 10.169.14.240/32  *[Static/5] 5w2d 15:42:25
         # *[OSPF3/10] 3w1d 17:03:23, metric 5
         # 0.0.0.0/0          *[OSPF/150/10] 3w3d 03:24:58, metric 101, tag 0
-        # 106.187.14.240/32  *[Static/5] 12:57:37
+        # 10.169.14.240/32  *[Static/5] 12:57:37
         p2 = re.compile(r'^((?P<rt_destination>\S+) +)?(?P<active_tag>[\*\+\-])?'
                 r'\[(?P<protocol>[\w\-]+)\/(?P<preference>\d+)(\/(?P<preference2>\d+))?\] +'
                 r'(?P<text>\S+( +\S+)?)(, +metric +(?P<metric>\d+))?'
