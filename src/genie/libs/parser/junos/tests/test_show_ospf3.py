@@ -710,7 +710,7 @@ class TestShowOspf3InterfaceExtensive(unittest.TestCase):
             Adj count: 1, Router LSA ID: 0
             Hello 10, Dead 40, ReXmit 5, Not Stub
             Protection type: None
-            lo0.0               DR      0.0.0.8         111.87.5.252    0.0.0.0            0
+            lo0.0               DR      0.0.0.8         10.189.5.252    0.0.0.0            0
             Address fe80::250:560f:fc8d:7c08, Prefix-length 128
             OSPF3-Intf-index 1, Type LAN, MTU 65535, Cost 0, Priority 128
             Adj count: 0, Router LSA ID: -
@@ -770,7 +770,7 @@ class TestShowOspf3InterfaceExtensive(unittest.TestCase):
                     "bdr-id": "0.0.0.0",
                     "dead-interval": "40",
                     "dr-address": "fe80::250:560f:fc8d:7c08",
-                    "dr-id": "111.87.5.252",
+                    "dr-id": "10.189.5.252",
                     "hello-interval": "10",
                     "interface-address": "fe80::250:560f:fc8d:7c08",
                     "interface-cost": "0",
@@ -816,99 +816,99 @@ class TestShowOspf3DatabaseExternalExtensive(unittest.TestCase):
                 show ospf3 database external extensive | no-more
             OSPF3 AS SCOPE link state database
         Type       ID               Adv Rtr           Seq         Age  Cksum  Len
-        Extern      0.0.0.1          59.128.2.250     0x8000178e  1412  0x3c81  28
+        Extern      0.0.0.1          10.34.2.250     0x8000178e  1412  0x3c81  28
         Prefix ::/0
         Prefix-options 0x0, Metric 1, Type 1,
         Aging timer 00:36:27
         Installed 00:23:26 ago, expires in 00:36:28, sent 00:23:24 ago
         Last changed 29w5d 21:04:29 ago, Change count: 1
-        Extern      0.0.0.3          59.128.2.250     0x8000178e  1037  0x21bf  44
-        Prefix 2001:268:fb8f::2/128
+        Extern      0.0.0.3          10.34.2.250     0x8000178e  1037  0x21bf  44
+        Prefix 2001:db8:eb18:ca45::2/128
         Prefix-options 0x0, Metric 50, Type 1,
         Aging timer 00:42:42
         Installed 00:17:11 ago, expires in 00:42:43, sent 00:17:09 ago
         Last changed 29w5d 21:04:29 ago, Change count: 1
-        Extern      0.0.0.4          59.128.2.250     0x80000246  2913  0xcc71  44
-        Prefix 2001:268:fb8f::1/128
+        Extern      0.0.0.4          10.34.2.250     0x80000246  2913  0xcc71  44
+        Prefix 2001:db8:eb18:ca45::1/128
         Prefix-options 0x0, Metric 50, Type 1,
         Aging timer 00:11:26
         Installed 00:48:26 ago, expires in 00:11:27, sent 00:48:24 ago
         Last changed 2w6d 04:51:00 ago, Change count: 1
-        Extern      0.0.0.1          59.128.2.251     0x80001789  1412  0x4081  28
+        Extern      0.0.0.1          10.34.2.251     0x80001789  1412  0x4081  28
         Prefix ::/0
         Prefix-options 0x0, Metric 1, Type 1,
         Aging timer 00:36:27
         Installed 00:23:23 ago, expires in 00:36:28, sent 00:23:21 ago
         Last changed 29w5d 21:04:28 ago, Change count: 1
-        Extern      0.0.0.2          59.128.2.251     0x80001788  2912  0x17d0  44
-        Prefix 2001:268:fb8f::1/128
+        Extern      0.0.0.2          10.34.2.251     0x80001788  2912  0x17d0  44
+        Prefix 2001:db8:eb18:ca45::1/128
         Prefix-options 0x0, Metric 50, Type 1,
         Aging timer 00:11:27
         Installed 00:48:23 ago, expires in 00:11:28, sent 00:48:21 ago
         Last changed 29w5d 21:04:28 ago, Change count: 1
-        Extern      0.0.0.3          59.128.2.251     0x80000246   287  0xea52  44
-        Prefix 2001:268:fb8f::2/128
+        Extern      0.0.0.3          10.34.2.251     0x80000246   287  0xea52  44
+        Prefix 2001:db8:eb18:ca45::2/128
         Prefix-options 0x0, Metric 50, Type 1,
         Aging timer 00:55:12
         Installed 00:04:38 ago, expires in 00:55:13, sent 00:04:36 ago
         Last changed 2w6d 04:10:55 ago, Change count: 1
-        Extern      0.0.0.18         106.187.14.240   0x80000349  1722  0xbddb  28
+        Extern      0.0.0.18         10.169.14.240   0x80000349  1722  0xbddb  28
         Prefix ::/0
         Prefix-options 0x0, Metric 1, Type 1,
         Aging timer 00:31:17
         Installed 00:28:39 ago, expires in 00:31:18, sent 00:28:37 ago
         Last changed 4w1d 01:48:00 ago, Change count: 1
-        Extern      0.0.0.19         106.187.14.240   0x8000034d   904  0x3603  44
-        Prefix 2001:268:fa00:200::1001/128
+        Extern      0.0.0.19         10.169.14.240   0x8000034d   904  0x3603  44
+        Prefix 2001:db8:6aa8:6a53::1001/128
         Prefix-options 0x0, Metric 50, Type 1,
         Aging timer 00:44:55
         Installed 00:15:01 ago, expires in 00:44:56, sent 00:14:59 ago
         Last changed 3w3d 02:05:47 ago, Change count: 3
-        Extern      0.0.0.22         106.187.14.240   0x800002b9  2268  0xab95  44
-        Prefix 2001:268:fb90::b/128
+        Extern      0.0.0.22         10.169.14.240   0x800002b9  2268  0xab95  44
+        Prefix 2001:db8:223c:ca45::b/128
         Prefix-options 0x0, Metric 50, Type 1,
         Aging timer 00:22:11
         Installed 00:37:45 ago, expires in 00:22:12, sent 00:37:43 ago
         Last changed 3w0d 17:02:47 ago, Change count: 1
-        Extern      0.0.0.23         106.187.14.240   0x80000247   631  0x7049  44
-        Prefix 2001:268:fb80::14/128
+        Extern      0.0.0.23         10.169.14.240   0x80000247   631  0x7049  44
+        Prefix 2001:db8:b0f8:ca45::14/128
         Prefix-options 0x0, Metric 50, Type 1,
         Aging timer 00:49:28
         Installed 00:10:28 ago, expires in 00:49:29, sent 00:10:26 ago
         Last changed 2w6d 04:51:04 ago, Change count: 1
-        Extern      0.0.0.24         106.187.14.240   0x80000246  2540  0x4e6c  44
-        Prefix 2001:268:fb80::13/128
+        Extern      0.0.0.24         10.169.14.240   0x80000246  2540  0x4e6c  44
+        Prefix 2001:db8:b0f8:ca45::13/128
         Prefix-options 0x0, Metric 50, Type 1,
         Aging timer 00:17:39
         Installed 00:42:17 ago, expires in 00:17:40, sent 00:42:15 ago
         Last changed 2w6d 04:50:58 ago, Change count: 1
-        Extern      0.0.0.9          106.187.14.241   0x800002f0  2723  0xd341  44
-        Prefix 2001:268:fb90::c/128
+        Extern      0.0.0.9          10.169.14.241   0x800002f0  2723  0xd341  44
+        Prefix 2001:db8:223c:ca45::c/128
         Prefix-options 0x0, Metric 50, Type 1,
         Aging timer 00:14:36
         Installed 00:45:17 ago, expires in 00:14:37, sent 00:45:15 ago
         Last changed 3w2d 03:24:20 ago, Change count: 11
-        Extern      0.0.0.10         106.187.14.241   0x80000246   723  0xd4f2  44
-        Prefix 2001:268:fb80::13/128
+        Extern      0.0.0.10         10.169.14.241   0x80000246   723  0xd4f2  44
+        Prefix 2001:db8:b0f8:ca45::13/128
         Prefix-options 0x0, Metric 50, Type 1,
         Aging timer 00:47:56
         Installed 00:11:57 ago, expires in 00:47:57, sent 00:11:55 ago
         Last changed 2w6d 04:10:59 ago, Change count: 1
-        Extern      0.0.0.11         106.187.14.241   0x80000246    56  0xe4e0  44
-        Prefix 2001:268:fb80::14/128
+        Extern      0.0.0.11         10.169.14.241   0x80000246    56  0xe4e0  44
+        Prefix 2001:db8:b0f8:ca45::14/128
         Prefix-options 0x0, Metric 50, Type 1,
         Aging timer 00:59:03
         Installed 00:00:50 ago, expires in 00:59:04, sent 00:00:48 ago
         Last changed 2w6d 04:10:53 ago, Change count: 1
-        Extern     *0.0.0.1          111.87.5.252     0x8000063f  2043  0x3ff4  44
-        Prefix 2001:268:fb8f::1/128
+        Extern     *0.0.0.1          10.189.5.252     0x8000063f  2043  0x3ff4  44
+        Prefix 2001:db8:eb18:ca45::1/128
         Prefix-options 0x0, Metric 50, Type 1,
         Gen timer 00:15:56
         Aging timer 00:25:56
         Installed 00:34:03 ago, expires in 00:25:57, sent 00:34:01 ago
         Last changed 3w0d 17:02:47 ago, Change count: 2, Ours
-        Extern      0.0.0.1          111.87.5.253     0x80000e1e  2045  0x7dcd  44
-        Prefix 2001:268:fb8f::2/128
+        Extern      0.0.0.1          10.189.5.253     0x80000e1e  2045  0x7dcd  44
+        Prefix 2001:db8:eb18:ca45::2/128
         Prefix-options 0x0, Metric 50, Type 1,
         Aging timer 00:25:54
         Installed 00:34:02 ago, expires in 00:25:55, sent 00:34:01 ago
@@ -917,7 +917,7 @@ class TestShowOspf3DatabaseExternalExtensive(unittest.TestCase):
 
     golden_parsed_output = {'ospf3-database-information':
     {'ospf3-database': [
-        {'advertising-router': '59.128.2.250',
+        {'advertising-router': '10.34.2.250',
             'age': '1412',
             'checksum': '0x3c81',
             'lsa-id': '0.0.0.1',
@@ -940,7 +940,7 @@ class TestShowOspf3DatabaseExternalExtensive(unittest.TestCase):
                 'type-value': '1'},
             'sequence-number': '0x8000178e'
             },
-            {'advertising-router': '59.128.2.250',
+            {'advertising-router': '10.34.2.250',
             'age': '1037',
             'checksum': '0x21bf',
             'lsa-id': '0.0.0.3',
@@ -954,11 +954,11 @@ class TestShowOspf3DatabaseExternalExtensive(unittest.TestCase):
                                                                         '21:04:29'},
                                         'send-time': {'#text': '00:17:09'}},
             'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:268:fb8f::2/128',
+                                    'ospf3-prefix': '2001:db8:eb18:ca45::2/128',
                                     'ospf3-prefix-options': '0x0',
                                     'type-value': '1'},
             'sequence-number': '0x8000178e'},
-            {'advertising-router': '59.128.2.250',
+            {'advertising-router': '10.34.2.250',
             'age': '2913',
             'checksum': '0xcc71',
             'lsa-id': '0.0.0.4',
@@ -972,11 +972,11 @@ class TestShowOspf3DatabaseExternalExtensive(unittest.TestCase):
                                                                         '04:51:00'},
                                         'send-time': {'#text': '00:48:24'}},
             'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:268:fb8f::1/128',
+                                    'ospf3-prefix': '2001:db8:eb18:ca45::1/128',
                                     'ospf3-prefix-options': '0x0',
                                     'type-value': '1'},
             'sequence-number': '0x80000246'},
-            {'advertising-router': '59.128.2.251',
+            {'advertising-router': '10.34.2.251',
             'age': '1412',
             'checksum': '0x4081',
             'lsa-id': '0.0.0.1',
@@ -994,7 +994,7 @@ class TestShowOspf3DatabaseExternalExtensive(unittest.TestCase):
                                     'ospf3-prefix-options': '0x0',
                                     'type-value': '1'},
             'sequence-number': '0x80001789'},
-            {'advertising-router': '59.128.2.251',
+            {'advertising-router': '10.34.2.251',
             'age': '2912',
             'checksum': '0x17d0',
             'lsa-id': '0.0.0.2',
@@ -1008,11 +1008,11 @@ class TestShowOspf3DatabaseExternalExtensive(unittest.TestCase):
                                                                         '21:04:28'},
                                         'send-time': {'#text': '00:48:21'}},
             'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:268:fb8f::1/128',
+                                    'ospf3-prefix': '2001:db8:eb18:ca45::1/128',
                                     'ospf3-prefix-options': '0x0',
                                     'type-value': '1'},
             'sequence-number': '0x80001788'},
-            {'advertising-router': '59.128.2.251',
+            {'advertising-router': '10.34.2.251',
             'age': '287',
             'checksum': '0xea52',
             'lsa-id': '0.0.0.3',
@@ -1026,11 +1026,11 @@ class TestShowOspf3DatabaseExternalExtensive(unittest.TestCase):
                                                                         '04:10:55'},
                                         'send-time': {'#text': '00:04:36'}},
             'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:268:fb8f::2/128',
+                                    'ospf3-prefix': '2001:db8:eb18:ca45::2/128',
                                     'ospf3-prefix-options': '0x0',
                                     'type-value': '1'},
             'sequence-number': '0x80000246'},
-            {'advertising-router': '106.187.14.240',
+            {'advertising-router': '10.169.14.240',
             'age': '1722',
             'checksum': '0xbddb',
             'lsa-id': '0.0.0.18',
@@ -1048,7 +1048,7 @@ class TestShowOspf3DatabaseExternalExtensive(unittest.TestCase):
                                     'ospf3-prefix-options': '0x0',
                                     'type-value': '1'},
             'sequence-number': '0x80000349'},
-            {'advertising-router': '106.187.14.240',
+            {'advertising-router': '10.169.14.240',
             'age': '904',
             'checksum': '0x3603',
             'lsa-id': '0.0.0.19',
@@ -1062,11 +1062,11 @@ class TestShowOspf3DatabaseExternalExtensive(unittest.TestCase):
                                                                         '02:05:47'},
                                         'send-time': {'#text': '00:14:59'}},
             'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:268:fa00:200::1001/128',
+                                    'ospf3-prefix': '2001:db8:6aa8:6a53::1001/128',
                                     'ospf3-prefix-options': '0x0',
                                     'type-value': '1'},
             'sequence-number': '0x8000034d'},
-            {'advertising-router': '106.187.14.240',
+            {'advertising-router': '10.169.14.240',
             'age': '2268',
             'checksum': '0xab95',
             'lsa-id': '0.0.0.22',
@@ -1080,11 +1080,11 @@ class TestShowOspf3DatabaseExternalExtensive(unittest.TestCase):
                                                                         '17:02:47'},
                                         'send-time': {'#text': '00:37:43'}},
             'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:268:fb90::b/128',
+                                    'ospf3-prefix': '2001:db8:223c:ca45::b/128',
                                     'ospf3-prefix-options': '0x0',
                                     'type-value': '1'},
             'sequence-number': '0x800002b9'},
-            {'advertising-router': '106.187.14.240',
+            {'advertising-router': '10.169.14.240',
             'age': '631',
             'checksum': '0x7049',
             'lsa-id': '0.0.0.23',
@@ -1098,11 +1098,11 @@ class TestShowOspf3DatabaseExternalExtensive(unittest.TestCase):
                                                                         '04:51:04'},
                                         'send-time': {'#text': '00:10:26'}},
             'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:268:fb80::14/128',
+                                    'ospf3-prefix': '2001:db8:b0f8:ca45::14/128',
                                     'ospf3-prefix-options': '0x0',
                                     'type-value': '1'},
             'sequence-number': '0x80000247'},
-            {'advertising-router': '106.187.14.240',
+            {'advertising-router': '10.169.14.240',
             'age': '2540',
             'checksum': '0x4e6c',
             'lsa-id': '0.0.0.24',
@@ -1116,11 +1116,11 @@ class TestShowOspf3DatabaseExternalExtensive(unittest.TestCase):
                                                                         '04:50:58'},
                                         'send-time': {'#text': '00:42:15'}},
             'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:268:fb80::13/128',
+                                    'ospf3-prefix': '2001:db8:b0f8:ca45::13/128',
                                     'ospf3-prefix-options': '0x0',
                                     'type-value': '1'},
             'sequence-number': '0x80000246'},
-            {'advertising-router': '106.187.14.241',
+            {'advertising-router': '10.169.14.241',
             'age': '2723',
             'checksum': '0xd341',
             'lsa-id': '0.0.0.9',
@@ -1134,11 +1134,11 @@ class TestShowOspf3DatabaseExternalExtensive(unittest.TestCase):
                                                                         '03:24:20'},
                                         'send-time': {'#text': '00:45:15'}},
             'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:268:fb90::c/128',
+                                    'ospf3-prefix': '2001:db8:223c:ca45::c/128',
                                     'ospf3-prefix-options': '0x0',
                                     'type-value': '1'},
             'sequence-number': '0x800002f0'},
-            {'advertising-router': '106.187.14.241',
+            {'advertising-router': '10.169.14.241',
             'age': '723',
             'checksum': '0xd4f2',
             'lsa-id': '0.0.0.10',
@@ -1152,11 +1152,11 @@ class TestShowOspf3DatabaseExternalExtensive(unittest.TestCase):
                                                                         '04:10:59'},
                                         'send-time': {'#text': '00:11:55'}},
             'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:268:fb80::13/128',
+                                    'ospf3-prefix': '2001:db8:b0f8:ca45::13/128',
                                     'ospf3-prefix-options': '0x0',
                                     'type-value': '1'},
             'sequence-number': '0x80000246'},
-            {'advertising-router': '106.187.14.241',
+            {'advertising-router': '10.169.14.241',
             'age': '56',
             'checksum': '0xe4e0',
             'lsa-id': '0.0.0.11',
@@ -1170,11 +1170,11 @@ class TestShowOspf3DatabaseExternalExtensive(unittest.TestCase):
                                                                         '04:10:53'},
                                         'send-time': {'#text': '00:00:48'}},
             'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:268:fb80::14/128',
+                                    'ospf3-prefix': '2001:db8:b0f8:ca45::14/128',
                                     'ospf3-prefix-options': '0x0',
                                     'type-value': '1'},
             'sequence-number': '0x80000246'},
-            {'advertising-router': '111.87.5.252',
+            {'advertising-router': '10.189.5.252',
             'age': '2043',
             'checksum': '0x3ff4',
             'lsa-id': '0.0.0.1',
@@ -1190,12 +1190,12 @@ class TestShowOspf3DatabaseExternalExtensive(unittest.TestCase):
                                                                         '17:02:47'},
                                         'send-time': {'#text': '00:34:01'}},
             'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:268:fb8f::1/128',
+                                    'ospf3-prefix': '2001:db8:eb18:ca45::1/128',
                                     'ospf3-prefix-options': '0x0',
                                     'type-value': '1'},
             'our-entry': True,
             'sequence-number': '0x8000063f'},
-            {'advertising-router': '111.87.5.253',
+            {'advertising-router': '10.189.5.253',
             'age': '2045',
             'checksum': '0x7dcd',
             'lsa-id': '0.0.0.1',
@@ -1209,7 +1209,7 @@ class TestShowOspf3DatabaseExternalExtensive(unittest.TestCase):
                                                                         '00:31:46'},
                                         'send-time': {'#text': '00:34:01'}},
             'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:268:fb8f::2/128',
+                                    'ospf3-prefix': '2001:db8:eb18:ca45::2/128',
                                     'ospf3-prefix-options': '0x0',
                                     'type-value': '1'},
             'sequence-number': '0x80000e1e'}]}}

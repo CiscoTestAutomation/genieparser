@@ -799,7 +799,7 @@ class ShowOspf3DatabaseExternalExtensive(ShowOspf3DatabaseExternalExtensiveSchem
 
         ret_dict = {}
 
-        # Extern      0.0.0.1          59.128.2.250     0x8000178e  1412  0x3c81  28
+        # Extern      0.0.0.1          10.34.2.250     0x8000178e  1412  0x3c81  28
         p1 = re.compile(r'^(?P<lsa_type>\S+) +(?P<lsa_id>(\*{0,1})[\d\.]+) +'
             r'(?P<advertising_router>[\d\.]+) +(?P<sequence_number>\S+) +(?P<age>\d+)'
             r' +(?P<checksum>\S+) +(?P<lsa_length>\d+)$')
@@ -833,7 +833,7 @@ class ShowOspf3DatabaseExternalExtensive(ShowOspf3DatabaseExternalExtensiveSchem
         for line in out.splitlines():
             line = line.strip()
 
-            # Extern      0.0.0.1          59.128.2.250     0x8000178e  1412  0x3c81  28
+            # Extern      0.0.0.1          10.34.2.250     0x8000178e  1412  0x3c81  28
             m = p1.match(line)
             if m:
                 entry_list = ret_dict.setdefault("ospf3-database-information", {})\
