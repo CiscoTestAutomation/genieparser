@@ -601,11 +601,24 @@ class ShowBgpSummarySchema(MetaParser):
                 ],
                 "bgp-rib": [
                     {
-                        "accepted-prefix-count": str,
-                        "active-prefix-count": str,
-                        "name": str, ok
-                        "received-prefix-count": str,
-                        "suppressed-prefix-count": str,
+                    "accepted-external-prefix-count": str, 
+                    "accepted-internal-prefix-count": str, 
+                    "accepted-prefix-count": str, 
+                    "active-external-prefix-count": str, 
+                    "active-internal-prefix-count": str, 
+                    "active-prefix-count": str, 
+                    "bgp-rib-state": str, 
+                    "damped-prefix-count": str, 
+                    "history-prefix-count": str, 
+                    "name": str, 
+                    "pending-prefix-count": str, 
+                    "received-prefix-count": str, 
+                    "suppressed-external-prefix-count": str, 
+                    "suppressed-internal-prefix-count": str, 
+                    "suppressed-prefix-count": str, 
+                    "total-external-prefix-count": str, 
+                    "total-internal-prefix-count": str, 
+                    "total-prefix-count": str
                     }
                 ],
                 "bgp-thread-mode": str, ok
@@ -621,11 +634,24 @@ class ShowBgpSummarySchema(MetaParser):
             raise SchemaTypeError('bgp-rib is not a list')
         bgp_rib_schema = Schema(
             {
-                'accepted-prefix-count': str,
-                'active-prefix-count': str,
-                'name': str,
-                'received-prefix-count': str,
-                'suppressed-prefix-count': str
+                "accepted-external-prefix-count": str,
+                "accepted-internal-prefix-count": str,
+                "accepted-prefix-count": str,
+                "active-external-prefix-count": str,
+                "active-internal-prefix-count": str,
+                "active-prefix-count": str,
+                "bgp-rib-state": str,
+                "damped-prefix-count": str,
+                "history-prefix-count": str,
+                "name": str,
+                "pending-prefix-count": str,
+                "received-prefix-count": str,
+                "suppressed-external-prefix-count": str,
+                "suppressed-internal-prefix-count": str,
+                "suppressed-prefix-count": str,
+                "total-external-prefix-count": str,
+                "total-internal-prefix-count": str,
+                "total-prefix-count": str
             }
         )
 
@@ -722,8 +748,35 @@ class ShowBgpSummary(ShowBgpSummarySchema):
                     r'(?P<suppressed_prefix_count>\d+) +(?P<history_prefix_count>\d+) +'
                     r'(?P<damp_prefix_count>\d+) +(?P<pending_prefix_count>\d+)$')
 
-    p = re.compile(r'^$')
-    p = re.compile(r'^$')
-    p = re.compile(r'^$')
-    p = re.compile(r'^$')
-    p = re.compile(r'^$')
+    # 27.85.216.179         65171          0          0       0       0 29w5d 22:42:36 Connect
+    # 2001:268:fb8f::11       65151          0          0       0       0 29w5d 22:42:36 Connect
+    p5 = re.compile(r'^(?P<peer_address>[\d\w:.]+) +(?P<peer_as>\d+) +'
+                    r'(?P<input_messages>\d+) +(?P<output_messages>\d+) +'
+                    r'(?P<route_queue_count>\d+) +(?P<flap_count>\d+) +'
+                    r'(?P<text>[\S\s]+) +(?P<peer_state>Active|Connect|Establ)$')
+
+    # inet.0: 682/684/684/0
+    p6 = re.compile(r'^(?P<name>inet(\d+)?\.\d+) *: +(?P<active_prefix_count>\d+)'
+                    r'\/(?P<received_prefix_count>\d+)\/(?P<accepted_prefix_count>\d+)'
+                    r'\/(?P<advertised_prefix_count>\d+)$')
+
+    # ============================================================
+    # Build Parsers
+    # ============================================================
+
+    result = {"bgp-information": {}}
+
+    for line in out.splitlines():
+        line = line.strip()
+
+        # Threading mode: BGP I/O
+        # Groups: 14 Peers: 19 Down peers: 15
+        m = p1.match(line) or p2.match(line)
+        if m:
+            group = m.groupdict()
+            for group_key, group_value in group.items():
+                entry_key = group_key.replace('_', '-')
+                result['bgp-information'][entry_key] = group_value
+            continue
+
+
