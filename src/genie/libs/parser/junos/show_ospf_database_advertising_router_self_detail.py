@@ -70,7 +70,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             out = output
 
         # OSPF database, Area 0.0.0.8
-        p1 = re.compile(r'^OSPF *database, +Area +(?P<ospf_area>[/d/.]+)$')
+        p1 = re.compile(r'^OSPF +database, +Area +(?P<ospf_area>[\d\.]+)$')
 
         # Router  *111.87.5.252     111.87.5.252     0x80001b9e  1801  0x22 0x1e2  120
         p2 = re.compile(r'^(?P<lsa_type>\S+)( *)(?P<lsa_id>\*?[\d\.]+)( +)(?P<advertising_router>\S+)( +)(?P<sequence_number>\S+)( +)(?P<age>\S+)( +)(?P<options>\S+)( +)(?P<checksum>\S+)( +)(?P<lsa_length>\S+)$')
@@ -91,13 +91,13 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
         p7 = re.compile(r'^Type: +(?P<link_type_name>\S+), +Node +ID: +(?P<ospf_lsa_topology_link_node_id>[\d\.]+)$')
 
         # Metric: 1000, Bidirectional
-        p8 = re.compile(r'^Metric: +(?P<link_type_name>\d+), +(?P<link_type_name>\S+)$')
+        p8 = re.compile(r'^Metric: +(?P<link_type_name>\d+), +(?P<link_type_name2>\S+)$')
 
         # RtrAddr (1), length 4:
-        p9 =re.compile(r'^(?P<tlv_type_name>\d+) +\((?P<tlv_type_value>\d+)\), +length (?P<link_type_name>\d+):$')
+        p9 = re.compile(r'^(?P<tlv_type_name>\S+) +\((?P<tlv_type_value>\d+)\), +length +(?P<tlv_length>\d+):$')
 
-        # 111.87.5.252, 100, 1000Mbps
-        p10 = re.compile(r'^(?P<data>\S+)$')
+        # 111.87.5.252
+        p10 = re.compile(r'^(?P<formatted_tlv_data>\S+)$')
 
         # Priority 0, 1000Mbps
         p11 = re.compile(r'^Priority \d+, \S+$')
@@ -107,7 +107,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
 
         ret_dict = {}
 
-        history = []
+        self.lsa_type = None
 
         for line in out.splitlines():
             line = line.strip()
@@ -115,10 +115,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             # OSPF database, Area 0.0.0.8
             m = p1.match(line)
             if m:
-                history.append("p1")
-                ospf_area = ret_dict.setdefault("ospf-database-information", {}).setdefault("ospf-area-header", {}).setdefault("ospf-area", None)
-                if ospf_area:
-                    raise Exception("ospf-area has already been set.")
+                ospf_area = ret_dict.setdefault("ospf-database-information", {}).setdefault("ospf-area-header", {})
 
                 group = m.groupdict()
                 ret_dict["ospf-database-information"]["ospf-area-header"]["ospf-area"] = group["ospf_area"]
@@ -127,7 +124,6 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             # Router  *111.87.5.252     111.87.5.252     0x80001b9e  1801  0x22 0x1e2  120
             m = p2.match(line)
             if m:
-                history.append("p2")
                 database_list = ret_dict.setdefault("ospf-database-information", {}).setdefault("ospf-database", [])
 
                 group = m.groupdict()
@@ -140,13 +136,14 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                     entry['lsa-id'] = entry['lsa-id'][1:]
                     entry['our-entry'] = True
 
+                self.lsa_type = group['lsa_type']
+
                 database_list.append(entry)
                 continue
 
             # bits 0x2, link count 8
             m = p3.match(line)
             if m:
-                history.append("p3")
                 last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
                 group = m.groupdict()
@@ -154,16 +151,13 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                 last_database["ospf-router-lsa"]["bits"] = group["bits"]
                 last_database["ospf-router-lsa"]["link-count"] = group["link_count"]
 
-                database_list.append(entry)
                 continue
 
             # id 111.87.5.253, data 111.87.5.93, Type PointToPoint (1)
             m = p4.match(line)
             if m:
-                history.append("p4")
                 last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                group = m.groupdict()
                 ospf_link_list = last_database.setdefault("ospf-router-lsa", {}).setdefault("ospf-link", [])
 
                 group = m.groupdict()
@@ -178,10 +172,8 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             # Topology count: 0, Default metric: 5
             m = p5.match(line)
             if m:
-                history.append("p5")
                 last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                group = m.groupdict()
                 ospf_link_list = last_database.setdefault("ospf-router-lsa", {}).setdefault("ospf-link", [])
                 last_ospf_link = ospf_link_list[-1]
 
@@ -197,10 +189,8 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             # Topology default (ID 0)
             m = p6.match(line)
             if m:
-                history.append("p6")
                 last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                group = m.groupdict()
                 ospf_lsa_topology = last_database.setdefault("ospf-lsa-topology", {})
 
                 group = m.groupdict()
@@ -214,15 +204,12 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             # Type: PointToPoint, Node ID: 27.86.198.239
             m = p7.match(line)
             if m:
-                history.append("p7")
                 last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                group = m.groupdict()
                 ospf_lsa_topology_list = last_database.setdefault("ospf-lsa-topology", {}).setdefault("ospf-lsa-topology-link", [])
-                last_ospf_lsa_topology = ospf_lsa_topology_list[-1]
 
                 group = m.groupdict()
-                entry = last_ospf_lsa_topology
+                entry = {}
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_','-')
                     entry[entry_key] = group_value
@@ -233,94 +220,82 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             # Metric: 1000, Bidirectional
             m = p8.match(line)
             if m:
-                history.append("p8")
                 last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
                 group = m.groupdict()
-                ospf_lsa_topology_list = last_database.setdefault("ospf-lsa-topology", {}).setdefault("ospf-lsa-topology-link", [])
-                last_ospf_lsa_topology = ospf_lsa_topology_list[-1]
+                last_link = last_database["ospf-lsa-topology"]["ospf-lsa-topology-link"][-1]
 
                 group = m.groupdict()
-                entry = last_ospf_lsa_topology
+                entry = last_link
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_','-')
                     entry[entry_key] = group_value
 
-                ospf_lsa_topology_list.append(entry)
                 continue
 
             # RtrAddr (1), length 4:
             m = p9.match(line)
             if m:
-                history.append("p9")
-                last_tlv = line_index
                 last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
+                last_database.setdefault("ospf-opaque-area-lsa", {}).setdefault("tlv-block", {})
 
-                group = m.groupdict()
-                tlv_block = last_database.setdefault("ospf-opaque-area-lsa", {})\
-                    .setdefault("tlv-block", {})
-
-                if not tlv_block:
-                    entry = tlv_block
+                if "tlv-type-name" not in last_database["ospf-opaque-area-lsa"]["tlv-block"]:
+                    entry = last_database["ospf-opaque-area-lsa"]["tlv-block"]
+                    group = m.groupdict()
                     for group_key, group_value in group.items():
                         entry_key = group_key.replace('_','-')
                         entry[entry_key] = group_value
-                    tlv_block.setdefault("formatted-tlv-data", "")
-
                 else:
-                    last_database.setdefault("ospf-opaque-area-lsa", {}).setdefault("te-subtlv", {}).setdefault("tlv-type-name", []).append(group["tlv_type_name"])
-                    last_database.setdefault("ospf-opaque-area-lsa", {}).setdefault("te-subtlv", {}).setdefault("tlv-type-value", []).append(group["tlv_type_value"])
-                    last_database.setdefault("ospf-opaque-area-lsa", {}).setdefault("te-subtlv", {}).setdefault("tlv-length", []).append(group["tlv_length"])
+                    group = m.groupdict()
+                    last_database.setdefault("ospf-opaque-area-lsa", {}).setdefault("te-subtlv", {}).setdefault("tlv-type-value",[]).append(group["tlv_type_value"])
+                    last_database.setdefault("ospf-opaque-area-lsa", {}).setdefault("te-subtlv", {}).setdefault("tlv-type-name",[]).append(group["tlv_type_name"])
+                    last_database.setdefault("ospf-opaque-area-lsa", {}).setdefault("te-subtlv", {}).setdefault("tlv-length",[]).append(group["tlv_length"])
 
                 continue
 
-            # word
+            # 111.87.5.252
             m = p10.match(line)
             if m:
-                history.append("p10")
-                if last_tlv == line_index - 1:
+                if self.lsa_type == "OpaqArea":
+                    group = m.groupdict()
+                    print(">>>>>>>", group["formatted_tlv_data"])
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                    group = m.groupdict()
-                    te_subtlv = last_database.setdefault("ospf-opaque-area-lsa", {}).setdefault("te-subtlv", {})
 
-                    if not te_subtlv:
-                        last_database["ospf-opaque-area-lsa"]["tlv-block"]["formatted-tlv-data"] = group["data"]
 
-                    else:
-                        last_database["ospf-opaque-area-lsa"]["te-subtlv"].setdefault("formatted-tlv-data", []).append(group["data"])
+                    last_database["ospf-opaque-area-lsa"]["tlv-block"]["formatted-tlv-data"] = group["formatted_tlv_data"]
 
                 continue
 
-            # Priority 0, 1000Mbps
-            m = p11.match(line)
-            if m:
-                history.append("p11")
-                last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
+            # # Priority 0, 1000Mbps
+            # m = p11.match(line)
+            # if m:
+            #     history.append("p11")
+            #     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                group = m.groupdict()
-                te_subtlv = last_database.setdefault("ospf-opaque-area-lsa", {}).setdefault("te-subtlv", {})
+            #     group = m.groupdict()
+            #     te_subtlv = last_database.setdefault("ospf-opaque-area-lsa", {}).setdefault("te-subtlv", {})
 
-                if last_tlv == line_index - 1:
-                    te_subtlv.setdefault("formatted-tlv-data", []).append(line+ " \n")
+            #     if last_tlv == line_index - 1:
+            #         te_subtlv.setdefault("formatted-tlv-data", []).append(line+ " \n")
 
-                else:
-                    te_subtlv["formatted-tlv-data"][-1] += line+ " \n"
+            #     else:
+            #         te_subtlv["formatted-tlv-data"][-1] += line+ " \n"
 
-                continue
+            #     continue
 
-            # Local 336, Remote 0
-            m = p12.match(line)
-            if m:
-                history.append("p12")
-                last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
+            # # Local 336, Remote 0
+            # m = p12.match(line)
+            # if m:
+            #     history.append("p12")
+            #     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                group = m.groupdict()
-                te_subtlv = last_database.setdefault("ospf-opaque-area-lsa", {}).setdefault("te-subtlv", {})
+            #     group = m.groupdict()
+            #     te_subtlv = last_database.setdefault("ospf-opaque-area-lsa", {}).setdefault("te-subtlv", {})
 
-                te_subtlv.setdefault("formatted-tlv-data", []).append(line)
+            #     te_subtlv.setdefault("formatted-tlv-data", []).append(line)
 
-                continue
+            #     continue
 
 
         return ret_dict
