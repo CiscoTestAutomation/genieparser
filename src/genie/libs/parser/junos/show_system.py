@@ -371,7 +371,7 @@ class ShowSystemUsers(ShowSystemUsersSchema):
                         r'(?P<user_count>\d+) +users, +load +averages: '
                         r'(?P<avg1>[\d\.]+), +(?P<avg2>[\d\.]+), +(?P<avg3>[\d\.]+)$')
         
-        #kddi     pts/0    1.0.0.1                          2:35AM      - -cl
+        #kddi     pts/0    10.1.0.1                          2:35AM      - -cl
         p2 = re.compile(r'^(?P<user>\S+)\s+(?P<tty>\S+)\s+'
                         r'(?P<from>[\d\.]+)\s+(?P<login>\S+)'
                         r'\s+(?P<idle>\S+)\s+(?P<what>\S+)$')
@@ -407,7 +407,7 @@ class ShowSystemUsers(ShowSystemUsersSchema):
                 
                 continue
 
-            #kddi     pts/0    1.0.0.1                          2:35AM      - -cl
+            #kddi     pts/0    10.1.0.1                          2:35AM      - -cl
             m = p2.match(line)
             if m:
                 group = m.groupdict()
