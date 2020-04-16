@@ -27,16 +27,17 @@ class FileListSchema(MetaParser):
     '''
 
     schema = {
-        'dir': 
-            {Any(): 
-                {Optional('files'): 
-                    {Any(): 
-                        {Optional('path'): str,
-                        },
-                    },
-                },
-            },
-        }
+        'dir':
+            {Any():
+                 {Optional('files'):
+                      {Any():
+                           {Optional('path'): str,
+                            },
+                       },
+                  },
+             },
+    }
+
 
 # ===========================
 # Parser for:
@@ -76,7 +77,7 @@ class FileList(FileListSchema):
         # /root/filename999
         # /root/filename999: No such file or directory
         p3 = re.compile(r'^\/(?P<dir>(\S+))\/(?P<file>([a-zA-Z0-9\-\_\/]+))'
-                         '(?P<missing>(?:\: +No +such +file +or +directory)?)$')
+                        '(?P<missing>(?:\: +No +such +file +or +directory)?)$')
 
         for line in out.splitlines():
             line = line.replace('\t', '    ')
@@ -85,8 +86,8 @@ class FileList(FileListSchema):
             # /root/:
             m = p1.match(line)
             if m:
-                dir_dict = ret_dict.setdefault('dir', {}).\
-                                    setdefault(m.groupdict()['dir'].strip(), {})
+                dir_dict = ret_dict.setdefault('dir', {}). \
+                    setdefault(m.groupdict()['dir'].strip(), {})
                 continue
 
             # filename
@@ -94,8 +95,8 @@ class FileList(FileListSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                files_dict = dir_dict.setdefault('files', {}).\
-                                      setdefault(group['file'].strip(), {})
+                files_dict = dir_dict.setdefault('files', {}). \
+                    setdefault(group['file'].strip(), {})
                 if group['path']:
                     files_dict['path'] = group['path'].strip()
                 continue
@@ -104,15 +105,16 @@ class FileList(FileListSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                dir_dict = ret_dict.setdefault('dir', {}).\
-                                    setdefault(group['dir'].strip(), {})
+                dir_dict = ret_dict.setdefault('dir', {}). \
+                    setdefault(group['dir'].strip(), {})
                 if group['missing']:
                     continue
-                files_dict = dir_dict.setdefault('files', {}).\
-                                      setdefault(group['file'].strip(), {})
+                files_dict = dir_dict.setdefault('files', {}). \
+                    setdefault(group['file'].strip(), {})
                 continue
 
         return ret_dict
+
 
 # ===========================
 # Parser for show version
@@ -120,11 +122,17 @@ class FileList(FileListSchema):
 
 class ShowVersionSchema(MetaParser):
     """Schema for show version"""
-    schema = {'hostname': str,
-              'operating_system': str,
-              'software_version': str,
-              'model': str,
-              }
+    schema = \
+        {"software-information":
+            {
+                'host-name': str,
+                'junos-version': str,
+                'product-model': str,
+                'product-name': str,
+                'package-information': list
+
+            }
+        }
 
 
 # =========================
@@ -143,41 +151,79 @@ class ShowVersion(ShowVersionSchema):
             out = output
 
         # Init vars
-        show_version_dict = {}
+        show_version_dict = {
+        }
 
         # regex patterns
 
         # Junos: 15.1R1-S1
-        p1 = re.compile('\s*Junos: +(?P<software_version>.*$)')
+        p1 = re.compile(r'^Junos: +(?P<junosversion>\S+)$')
 
         # Model: ex4300-24p
-        p2 = re.compile('\s*Model: +(?P<model>.*$)')
+        p2 = re.compile(r'^Model: +(?P<productmodel>\S+)$')
 
         # Hostname: myJunosDevice
-        p3 = re.compile('\s*Hostname: +(?P<hostname>.*$)')
+        p3 = re.compile(r'^Hostname: +(?P<hostname>\S+)$')
 
+        # Packages
+        p4 = re.compile(r'^JUNOS +(?P<package>.*)$')
+
+        show_version_dict["software-information"] = {}
+        show_version_dict["software-information"]["package-information"] = []
 
         for line in out.splitlines():
+            # print(line)
             line = line.strip()
 
             m = p1.match(line)
             if m:
-                show_version_dict['operating_system'] = 'Junos'
-                show_version_dict['software_version'] = \
-                    str(m.groupdict()['software_version'])
+                print("p1 match" + line)
+
+                show_version_dict["software-information"]['junos-version'] = \
+                    m.groupdict()['junosversion']
                 continue
 
             m = p2.match(line)
             if m:
-                show_version_dict['model'] = \
-                    str(m.groupdict()['model'])
+                print("p2 match" + line)
+                show_version_dict["software-information"]['product-model'] = \
+                    m.groupdict()['productmodel']
+                show_version_dict["software-information"]['product-name'] = \
+                    m.groupdict()['productmodel']
                 continue
 
             m = p3.match(line)
             if m:
-                show_version_dict['hostname'] = \
-                    str(m.groupdict()['hostname'])
+                print("p3 match" + line)
+                show_version_dict["software-information"]['host-name'] = \
+                    m.groupdict()['hostname']
                 continue
 
-        return show_version_dict
+            m = p4.match(line)
+            if m:
+                print("p4 match" + line)
+                # Cleaning name to remove multiple white spaces, lower case string,
+                # remove JUNOS word, version between brakes (if present)
+                # and replacing spaces for dashes
 
+                name = re.sub(' +', ' ', m.groupdict()['package'].replace("JUNOS", ""))
+
+                if "[" in name:
+                    name = name.split("[")[0].strip().lower().replace(" ", "-")
+                else:
+                    name = name.strip().lower().replace("  ", "-").replace(" ", "-")
+
+                show_version_dict["software-information"]['package-information'].append(
+                    {
+                        "comment": m.groupdict()['package'],
+                        "name": name
+                    }
+                )
+                continue
+
+        print(show_version_dict.keys())
+        # Check for empty input
+        if 'junos-version' not in show_version_dict["software-information"].keys():
+            return {}
+
+        return show_version_dict

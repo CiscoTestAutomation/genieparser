@@ -174,3 +174,8 @@
         * show interfaces {interface} terse
     * Update ShowInterfacesTerseInterface
         * show interfaces terse {interface}
+
+--------------------------------------------------------------------------------
+                                common.py
+--------------------------------------------------------------------------------
+* updated _find_command to find command for nxos in aci mode

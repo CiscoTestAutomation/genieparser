@@ -9,8 +9,7 @@ from pyats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # Parser
-from genie.libs.parser.junos.show_platform import FileList
-from genie.libs.parser.junos.show_platform import ShowVersion
+from genie.libs.parser.junos.show_platform import FileList, ShowVersion
 
 
 # ==========================
@@ -98,14 +97,41 @@ class test_file_list(unittest.TestCase):
 # ==========================
 # Unit test for 'show version'
 # ==========================
-class test_show_version(unittest.TestCase):
+class TestShowVersion(unittest.TestCase):
+    maxDiff = None
+
     device = Device(name='aDevice')
 
-    golden_parsed_output = {'hostname': "JunosHostname-1",
-                             'operating_system': "Junos",
-                             'software_version': "18.2R2-S1",
-                             'model': "ex4200-24p",
-                             }
+    golden_parsed_output = {
+        'software-information': {
+            'package-information': [
+                {
+                    'comment': 'EX  Software Suite [18.2R2-S1]',
+                    'name': 'ex-software-suite'
+                },
+                {
+                    'comment': 'FIPS mode utilities [18.2R2-S1]',
+                    'name': 'fips-mode-utilities'
+                },
+                {
+                    'comment': 'Crypto Software Suite [18.2R2-S1]',
+                    'name': 'crypto-software-suite'
+                },
+                {
+                    'comment': 'Online Documentation [18.2R2-S1]',
+                    'name': 'online-documentation'
+                },
+                {
+                    'comment': 'Phone-Home Software Suite [18.2R2-S1]',
+                    'name': 'phone-home-software-suite'
+                }
+            ],
+            'host-name': 'JunosHostname-1',
+            'product-model': 'ex4200-24p',
+            'product-name': 'ex4200-24p',
+            'junos-version': '18.2R2-S1'
+        }
+    }
 
     golden_output = {'execute.return_value': '''
         user2@JunosHostname-1> show version 
@@ -124,13 +150,21 @@ class test_show_version(unittest.TestCase):
         user1@JunosHostname-1> 
         '''}
 
+    empty_output = {'execute.return_value': ''}
+
     def test_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowVersion(device=self.device)
+
         parsed_output = obj.parse()
+        print("\n*****parsed******\n" + str(parsed_output) + "\n")
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowVersion(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
 
 if __name__ == '__main__':
