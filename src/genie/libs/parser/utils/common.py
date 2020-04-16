@@ -8,11 +8,13 @@ import sys
 import warnings
 import logging
 import importlib
+import heapq
+
+from fuzzywuzzy import fuzz
 from genie.libs import parser
 from genie.abstract import Lookup
 
 log = logging.getLogger(__name__)
-
 
 def _load_parser_json():
     '''get all parser data in json file'''
@@ -71,12 +73,18 @@ def get_parser_exclude(command, device):
 def get_parser(command, device):
     '''From a show command and device, return parser class and kwargs if any'''
 
+    #TODO ADD FLAG FOR REGEX
+    regex = True
     kwargs = {}
-    if command in parser_data:
-        # Then just return it
-        lookup = Lookup.from_device(device, packages={'parser': parser})
-        # Check if all the tokens exists; take the farthest one
-        data = parser_data[command]
+    lookup = Lookup.from_device(device, packages={'parser': parser})
+
+    if regex:
+        data = _fuzzy_regex_search_command(command)
+
+        print([d[0] for d in data])
+        return
+    else:
+        _, data, kwargs = _fuzzy_search_command(command)
         for token in lookup._tokens:
             if token in data:
                 data = data[token]
@@ -88,15 +96,221 @@ def get_parser(command, device):
             raise Exception("Could not find parser for "
                             "'{c}' under {l}".format(
                                 c=command, l=lookup._tokens)) from None
-    else:
-        # Regex world!
-        try:
-            found_data, kwargs = _find_command(command, parser_data, device)
-        except SyntaxError:
-            # Could not find a match
-            raise Exception("Could not find parser for "
-                            "'{c}'".format(c=command)) from None
-        return _find_parser_cls(device, found_data), kwargs
+
+def _fuzzy_regex_search_command(command):
+    # Tokenize command
+    tokens = command.split()
+
+    valid_tokens = {}
+
+    # Get all possible valid tokens and prepare to compute their average
+    for key in filter(lambda item: '{' not in item, parser_data.keys()):
+        for index, key_token in enumerate(key.split()):
+            info = valid_tokens.setdefault(key_token, [0, 0])
+
+            # First index is locality index sum
+            info[0] += index
+
+            # Second index is number of occurrance
+            info[1] += 1
+
+    # Transform valid dictionary to valid key and its average locality index
+    valid_tokens = {
+        key: value[0] / value[1] for key, value in valid_tokens.items()
+    }
+
+    for index, token in enumerate(tokens):
+        # Token is not a regex expression
+        if token.isalnum():
+            # If token is not valid, use fuzzy search to find best matching
+            if token not in valid_tokens:
+                heap = []
+
+                for candidate, average in valid_tokens.items():
+                    # Skip tokens with poor locality sensitive ratio
+                    if fuzz.ratio(token, candidate) <= 30:
+                        continue
+
+                    # Push token score
+                    heapq.heappush(heap, (
+                        -fuzz.partial_ratio(token, candidate), (candidate, average)
+                    ))
+                
+                score = None
+                best_match = []
+
+                # Get best matching valid tokens
+                while len(heap) > 0:
+                    current = heap[0]
+
+                    if score is None or score == current[0]:
+                        score, item = heapq.heappop(heap)
+                        best_match.append(item)
+                    elif not score == current[0]:
+                        break 
+
+                if len(best_match) == 1:
+                    tokens[index] = best_match[0][0]
+                elif len(best_match) > 0:
+                    # If too ambiguous, attempt prefix trie matching
+                    trie = {}
+                    is_matched = False
+
+                    # Construct trie
+                    for match in best_match:
+                        current = trie
+                        for char in match[0]: 
+                            current = current.setdefault(char, {'*': []})
+                            current['*'].append(match)
+                    
+                    # Get prefix matching result
+                    for char in token:
+                        if char in trie:
+                            trie = trie[char]
+                            is_matched = True
+
+                    # If found possible prefix matches, use closest locality
+                    if is_matched:
+                        trie['*'].sort(key=lambda x: abs(x[1] - index))
+                        
+                        # Replace token with closest
+                        tokens[index] = trie['*'][0][0]
+                    else:
+                        # Use regular locality matching
+                        if not is_matched:
+                            best_match.sort(key=lambda x: abs(x[1] - index))
+                            
+                            # Replace token with closest
+                            tokens[index] = best_match[0][0]
+
+    results = []
+    expression = ' '.join(tokens)
+
+    # Append match to end for regex
+    if len(expression) > 0 and not expression[-1] == '$':
+        expression += '$'
+
+    # Exclude argument based parsers
+    for key, item in filter(lambda item: '{' not in item[0], parser_data.items()):
+        if re.match(expression, key):
+            results.append((key, item))
+
+    if len(results) == 0:
+        # Ambiguous command or could not find parser
+        raise SyntaxError(
+            "Could not find unambiguous parser for '{}'. Try".format(command) +
+            " increasing the specificity of your command."
+        )
+
+    return results
+
+def _fuzzy_search_command(command):
+    ''' Performs fuzzy search for a command that most closely matches the input
+
+        Args:
+            command (`str`): The command that needs to be matched
+
+        Returns:
+            The actual command string that most closely matches the input
+
+        Raises:
+            SyntaxError
+
+    '''
+    # Tokenize the command
+    tokens = command.split()
+    token_length = len(tokens)
+
+    # Set search space to items with key tokens the same length as command
+    search = [
+        (key.split(), value) for key, value in 
+                filter(lambda item: len(item[0].split()) == token_length, 
+                                                        parser_data.items())]
+
+    # Store last token perfect matches to track specificity 
+    perfect_matches = []
+
+    # Process tokens one by one, fuzzy matching each one
+    for index, token in enumerate(tokens):
+        heap = []
+
+        # Store entries with wild card arguments 
+        wild_entries = []
+
+        for key_tokens, value in search:
+            current = key_tokens[index]
+            
+            # If current token is argument, bypass fuzzy match
+            if len(current) > 0 and current[0] == '{':
+                wild_entries.append((key_tokens, value))
+                continue
+
+            # If current token is partial argument, remove argument and perform
+            # perfect matching on base string
+            elif '{' in current:
+                left = current.split('{')
+                right = left[1].split('}')[1]
+                left = left[0]
+
+                if re.match(re.escape(left) + '.*' +  re.escape(right), token):
+                    if index + 1 == token_length:
+                        perfect_matches.append((key_tokens, value))
+                    else:
+                        
+                        # Also consider other matches
+                        heapq.heappush(heap, (-100, (key_tokens, value)))
+                
+            # Skip tokens with poor locality sensitive ratio
+            if fuzz.ratio(token, current) <= 30:
+                continue
+            
+            # If last token is perfect match, add to perfect matches
+            if token == current and index + 1 == token_length:
+                perfect_matches.append((key_tokens, value))
+            else:
+                # Update PQ with locality insensitive ratio
+                heapq.heappush(heap, (
+                    -fuzz.partial_ratio(token, current), (key_tokens, value)
+                ))
+
+        score = None
+        search = wild_entries
+
+        # Keep popping searches that has equal similarity ratio
+        # Add popped result back to search space
+        while len(heap) > 0: 
+            current = heap[0]
+
+            if score is None or score == current[0]:
+                score, item = heapq.heappop(heap)
+                search.append(item)
+            elif not score == current[0]:
+                break
+
+    match = None
+
+    if len(perfect_matches) == 1: 
+        match = perfect_matches[0]
+    elif len(search) == 1:
+        match = search[0]
+    else: 
+        # Ambiguous command or could not find parser
+        raise SyntaxError(
+            "Could not find unambiguous parser for '{}'. Try".format(command) +
+            " increasing the specificity of your command."
+        )
+
+    # Get kwargs from command if any
+    # Use regex search in case there is something before/after argument
+    kwargs = { 
+        re.search('{(.*)}', key).groups()[0]: 
+        tokens[index] for index, key in enumerate(
+            filter(lambda item: '{' in item, match[0])
+        )
+    }
+
+    # Return actual command name, command data, and kwargs
+    return ' '.join(match[0]), match[1], kwargs
 
 def _find_command(command, data, device):
     ratio = 0
