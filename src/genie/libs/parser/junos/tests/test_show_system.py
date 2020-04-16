@@ -109,9 +109,9 @@ class TestShowSystemUsers(unittest.TestCase):
         show system users 
         9:38AM  up 209 days, 37 mins, 3 users, load averages: 0.28, 0.39, 0.37
         USER     TTY      FROM                              LOGIN@  IDLE WHAT
-        kddi     pts/0    1.0.0.1                          2:35AM      - -cl           
-        kddi     pts/1    1.0.0.1                          8:31AM     56 -cl           
-        kddi     pts/2    1.0.0.1                          7:45AM      3 -cl
+        kddi     pts/0    10.1.0.1                          2:35AM      - -cl           
+        kddi     pts/1    10.1.0.1                          8:31AM     56 -cl           
+        kddi     pts/2    10.1.0.1                          7:45AM      3 -cl
         '''}
 
 
@@ -134,7 +134,7 @@ class TestShowSystemUsers(unittest.TestCase):
                 "user-entry": [
                     {
                         "command": "-cl",
-                        "from": "1.0.0.1",
+                        "from": "10.1.0.1",
                         "idle-time": {
                             "#text": "-"
                         },
@@ -146,7 +146,7 @@ class TestShowSystemUsers(unittest.TestCase):
                     },
                     {
                         "command": "-cl",
-                        "from": "1.0.0.1",
+                        "from": "10.1.0.1",
                         "idle-time": {
                             "#text": "56"
                         },
@@ -158,7 +158,7 @@ class TestShowSystemUsers(unittest.TestCase):
                     },
                     {
                         "command": "-cl",
-                        "from": "1.0.0.1",
+                        "from": "10.1.0.1",
                         "idle-time": {
                             "#text": "3"
                         },

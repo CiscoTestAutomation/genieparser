@@ -243,7 +243,7 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
         # bits 0x2, Options 0x33
         p3 = re.compile(r"^bits +(?P<bits>\S+), +Options +(?P<ospf3_options>\S+)$")
 
-        #  Type: PointToPoint, Node ID: 106.187.14.240, Metric: 100, Bidirectional
+        #  Type: PointToPoint, Node ID: 10.169.14.240, Metric: 100, Bidirectional
         p4 = re.compile(
             r"^Type: +(?P<link_type_name>\S+), +Node +ID: +(?P<ospf_lsa_topology_link_node_id>[\d\.]+)"
             r", +Metric: +(?P<ospf_lsa_topology_link_metric>\d+), +(?P<ospf_lsa_topology_link_state>\S+)$"
@@ -264,7 +264,7 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
             r"count: +(?P<lsa_change_count>\d+)$"
         )
 
-        # Ref-lsa-type Router, Ref-lsa-id 0.0.0.0, Ref-router-id 59.128.2.250
+        # Ref-lsa-type Router, Ref-lsa-id 0.0.0.0, Ref-router-id 10.34.2.250
         p8 = re.compile(
             r"^Ref-lsa-type +(?P<reference_lsa_type>\S+), +Ref-lsa-id +(?P<reference_lsa_id>[\d\.]+)"
             r", +Ref-router-id +(?P<reference_lsa_router_id>[\d\.]+)$"
@@ -273,7 +273,7 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
         # Prefix-count 3
         p9 = re.compile(r"^Prefix-count +(?P<prefix_count>\d+)$")
 
-        # Prefix 2001:268:fb80:3e::/64
+        # Prefix 2001:db8:b0f8:3ab::/64
         p10 = re.compile(r"^Prefix +(?P<ospf3_prefix>\S+)$")
 
         # Prefix-options 0x0, Metric 5
@@ -299,7 +299,7 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
             r"Metric +(?P<link_metric>\S+)$"
         )
 
-        # Loc-If-Id 2, Nbr-If-Id 2, Nbr-Rtr-Id 111.87.5.253
+        # Loc-If-Id 2, Nbr-If-Id 2, Nbr-Rtr-Id 10.189.5.253
         p16 = re.compile(
             r"^Loc-If-Id +(?P<link_intf_id>\S+), +Nbr-If-Id +(?P<nbr_intf_id>\S+)"
             r", +Nbr-Rtr-Id +(?P<nbr_rtr_id>\S+)$"
@@ -328,7 +328,7 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
             r"in +(?P<expiration_time>(\S+ ){0,1}[\d\:]+)$"
         )
 
-        # Prefix 2001:268:fb8f:1f::/64 Prefix-options 0x0
+        # Prefix 2001:db8:eb18:6337::/64 Prefix-options 0x0
         p21 = re.compile(
             r"^Prefix +(?P<ospf3_prefix>\S+) +Prefix-options +(?P<ospf3_prefix_options>\S+)$"
         )
@@ -355,7 +355,7 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
                 ] = group["ospf_area"]
                 continue
 
-            # Router      0.0.0.0          59.128.2.250     0x800018ed  2504  0xaf2d  56
+            # Router      0.0.0.0          10.34.2.250     0x800018ed  2504  0xaf2d  56
             m = p2.match(line)
             if m:
                 entry_list = ret_dict.setdefault(
@@ -393,7 +393,7 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
 
                 continue
 
-            #  Type: PointToPoint, Node ID: 106.187.14.240, Metric: 100, Bidirectional
+            #  Type: PointToPoint, Node ID: 10.169.14.240, Metric: 100, Bidirectional
             m = p4.match(line)
             if m:
                 last_database = ret_dict["ospf3-database-information"][
@@ -437,60 +437,37 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
             # Installed 00:10:20 ago, expires in 00:49:31, sent 00:10:18 ago
             m = p6.match(line)
             if m:
-                last_entry = ret_dict["ospf3-database-information"]["ospf3-database"][
-                    -1
-                ]
+                last_entry = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
 
-                last_entry.setdefault("ospf-database-extensive", {}).setdefault(
-                    "expiration-time", {}
-                )
-                last_entry.setdefault("ospf-database-extensive", {}).setdefault(
-                    "installation-time", {}
-                )
-                last_entry.setdefault("ospf-database-extensive", {}).setdefault(
-                    "send-time", {}
-                )
+                last_entry.setdefault("ospf-database-extensive", {}).setdefault("expiration-time", {})
+                last_entry.setdefault("ospf-database-extensive", {}).setdefault("installation-time", {})
+                last_entry.setdefault("ospf-database-extensive", {}).setdefault("send-time", {})
 
                 group = m.groupdict()
-                last_entry["ospf-database-extensive"]["expiration-time"][
-                    "#text"
-                ] = group["expiration_time"]
-                last_entry["ospf-database-extensive"]["installation-time"][
-                    "#text"
-                ] = group["installation_time"]
-                last_entry["ospf-database-extensive"]["send-time"]["#text"] = group[
-                    "send_time"
-                ]
+                last_entry["ospf-database-extensive"]["expiration-time"]["#text"] = group["expiration_time"]
+                last_entry["ospf-database-extensive"]["installation-time"]["#text"] = group["installation_time"]
+                last_entry["ospf-database-extensive"]["send-time"]["#text"] = group["send_time"]
 
                 continue
 
             # Last changed 2w6d 04:50:31 ago, Change count: 196
             m = p7.match(line)  # lsa_changed_time , lsa_changed_count
             if m:
-                last_entry = ret_dict["ospf3-database-information"]["ospf3-database"][
-                    -1
-                ]
+                last_entry = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
 
-                last_entry.setdefault("ospf-database-extensive", {}).setdefault(
-                    "lsa-changed-time", {}
-                )
+                last_entry.setdefault("ospf-database-extensive", {}).setdefault("lsa-changed-time", {})
 
                 group = m.groupdict()
-                last_entry["ospf-database-extensive"]["lsa-changed-time"][
-                    "#text"
-                ] = group["lsa_changed_time"]
-                last_entry["ospf-database-extensive"]["lsa-change-count"] = group[
-                    "lsa_change_count"
-                ]
+                last_entry["ospf-database-extensive"]["lsa-changed-time"]["#text"]\
+                     = group["lsa_changed_time"]
+                last_entry["ospf-database-extensive"]["lsa-change-count"] = group["lsa_change_count"]
 
                 continue
 
-            # Ref-lsa-type Router, Ref-lsa-id 0.0.0.0, Ref-router-id 59.128.2.250
+            # Ref-lsa-type Router, Ref-lsa-id 0.0.0.0, Ref-router-id 10.34.2.250
             m = p8.match(line)
             if m:
-                last_entry = ret_dict["ospf3-database-information"]["ospf3-database"][
-                    -1
-                ]
+                last_entry = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
 
                 entry = last_entry.setdefault("ospf3-intra-area-prefix-lsa", {})
 
@@ -504,9 +481,7 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
             # Prefix-count 3
             m = p9.match(line)
             if m:
-                last_entry = ret_dict["ospf3-database-information"]["ospf3-database"][
-                    -1
-                ]
+                last_entry = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
 
                 if self.state == "IntraArPfx":
                     entry = last_entry.setdefault("ospf3-intra-area-prefix-lsa", {})
@@ -520,12 +495,10 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
 
                 continue
 
-            # Prefix 2001:268:fb80:3e::/64
+            # Prefix 2001:db8:b0f8:3ab::/64
             m = p10.match(line)
             if m:
-                last_database = ret_dict["ospf3-database-information"][
-                    "ospf3-database"
-                ][-1]
+                last_database = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
 
                 group = m.groupdict()
 
@@ -581,13 +554,10 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
             # Gen timer 00:49:49
             m = p13.match(line)
             if m:
-                last_database = ret_dict["ospf3-database-information"][
-                    "ospf3-database"
-                ][-1]
+                last_database = ret_dict["ospf3-database-information"]["ospf3-database"][-1]
 
-                last_database.setdefault("ospf-database-extensive", {}).setdefault(
-                    "generation-timer", {}
-                )
+                last_database.setdefault("ospf-database-extensive", {})\
+                    .setdefault("generation-timer", {})
 
                 group = m.groupdict()
                 last_database["ospf-database-extensive"]["generation-timer"][
@@ -634,7 +604,7 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
 
                 continue
 
-            # Loc-If-Id 2, Nbr-If-Id 2, Nbr-Rtr-Id 111.87.5.253
+            # Loc-If-Id 2, Nbr-If-Id 2, Nbr-Rtr-Id 10.189.5.253
             m = p16.match(line)
             if m:
                 last_database = ret_dict["ospf3-database-information"][
@@ -728,7 +698,7 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
 
                 continue
 
-            # Prefix 2001:268:fb8f:1f::/64 Prefix-options 0x0
+            # Prefix 2001:db8:eb18:6337::/64 Prefix-options 0x0
             m = p21.match(line)
             if m:
                 last_entry = ret_dict["ospf3-database-information"]["ospf3-database"][

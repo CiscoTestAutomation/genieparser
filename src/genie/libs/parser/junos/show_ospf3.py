@@ -803,7 +803,7 @@ class ShowOspf3DatabaseExternalExtensive(ShowOspf3DatabaseExternalExtensiveSchem
 
         ret_dict = {}
 
-        # Extern      0.0.0.1          59.128.2.250     0x8000178e  1412  0x3c81  28
+        # Extern      0.0.0.1          10.34.2.250     0x8000178e  1412  0x3c81  28
         p1 = re.compile(r'^(?P<lsa_type>\S+) +(?P<lsa_id>(\*{0,1})[\d\.]+) +'
             r'(?P<advertising_router>[\d\.]+) +(?P<sequence_number>\S+) +(?P<age>\d+)'
             r' +(?P<checksum>\S+) +(?P<lsa_length>\d+)$')
@@ -838,7 +838,7 @@ class ShowOspf3DatabaseExternalExtensive(ShowOspf3DatabaseExternalExtensiveSchem
             line = line.strip()
 
            
-            # Extern      0.0.0.1          59.128.2.250     0x8000178e  1412  0x3c81  28
+            # Extern      0.0.0.1          10.34.2.250     0x8000178e  1412  0x3c81  28
             m = p1.match(line)
             if m:
                 entry_list = ret_dict.setdefault("ospf3-database-information", {})\
@@ -1027,7 +1027,7 @@ class ShowOspf3Overview(ShowOspf3OverviewSchema):
         #Instance: master
         p1 = re.compile(r'^Instance: +(?P<instance_name>\S+)$')
         
-        #Router ID: 111.87.5.252
+        #Router ID: 10.189.5.252
         p2 = re.compile(r'^Router ID: +(?P<ospf_router_id>[\w\.\:\/]+)$')
 
         #Route table index: 0
@@ -1079,7 +1079,7 @@ class ShowOspf3Overview(ShowOspf3OverviewSchema):
                 ospf3_entry_list['instance-name'] = group['instance_name']
                 continue
             
-            #Router ID: 111.87.5.252
+            #Router ID: 10.189.5.252
             m = p2.match(line)
             if m:
                 group = m.groupdict()
