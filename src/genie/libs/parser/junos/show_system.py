@@ -9,7 +9,7 @@ import re
 
 # metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use, SchemaTypeError
 
 
 class ShowSystemBufferSchema(MetaParser):
@@ -981,7 +981,7 @@ class ShowSystemStatisticsSchema(MetaParser):
 
         def ip6_header_type(value):
             if not isinstance(value, list):
-                raise
+                raise SchemaTypeError("statistics is not a list")
             ip6_header_type_schema = Schema(
                 {
                     "globals": str,
@@ -2068,8 +2068,6 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
                     value = group["number_value"]
                     entry = ret_dict["statistics"][0].setdefault("ip", {})
 
-                    print(key, value)
-
                     if key == "total_packets_received":
                         entry["packets-received"] = value
                     elif key == "bad_header_checksums":
@@ -3122,8 +3120,6 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
                     value = group["number_value"]
                     entry = ret_dict["statistics"][0].setdefault("pfkey", {})
 
-                    print(key, value)
-
                     if key == "Requests_sent_from_userland":
                         entry["requests-sent-from-userland"] = value
                     elif key == "Bytes_sent_from_userland":
@@ -3564,8 +3560,6 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
                     key = key.replace(" ", "_")
                     value = group["number_value"]
                     entry = ret_dict["statistics"][0].setdefault("mpls", {})
-
-                    print(">>>>", key, value)
 
                     if key == "Total_MPLS_packets_received":
                         entry["total-mpls-packets-received"] = value
