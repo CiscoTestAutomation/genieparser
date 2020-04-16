@@ -5,6 +5,10 @@ JunOs parsers for the following show commands:
     * show bgp group brief | no-more
     * show bgp group detail
     * show bgp group detail | no-more
+    * show bgp group summary
+    * show bgp neighbor
+    * show bgp neighbor {neighbor_address}
+    * show bgp summary
 """
 
 # Python
@@ -14,7 +18,8 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import (Any, 
         Optional, Use, SchemaTypeError, Schema)
-        
+
+
 class ShowBgpGroupBriefSchema(MetaParser):
     """ Schema for:
             * show bgp group brief
@@ -84,6 +89,7 @@ class ShowBgpGroupBriefSchema(MetaParser):
     def validate_bgp_group_list(value):
         if not isinstance(value, list):
             raise SchemaTypeError('bgp-rib is not a list')
+
         def validate_bgp_rib(value):
             if not isinstance(value, list):
                 raise SchemaTypeError('bgp-rib is not a list')
@@ -101,7 +107,7 @@ class ShowBgpGroupBriefSchema(MetaParser):
             return value
         bgp_group_list_schema = Schema(
             {
-                'bgp-option-information': {
+                Optional('bgp-option-information'): {
                         'bgp-options': str,
                         'bgp-options-extended': str,
                         'export-policy': str,
@@ -112,10 +118,10 @@ class ShowBgpGroupBriefSchema(MetaParser):
                 'established-count': str,
                 'name': str,
                 Optional('flap-count'): str,
-                'group-flags': str,
-                'group-index': str,
-                'local-as': str,
-                'peer-address': list,
+                Optional('group-flags'): str,
+                Optional('group-index'): str,
+                Optional('local-as'): str,
+                Optional('peer-address'): list,
                 Optional('peer-as'): str,
                 'peer-count': str,
                 'type': str,
@@ -133,22 +139,25 @@ class ShowBgpGroupBriefSchema(MetaParser):
             raise SchemaTypeError('bgp-information bgp-rib is not a list')
         bgp_rib_list_schema = Schema(
             {
-                'active-prefix-count': str,
-                Optional('damped-prefix-count'): str,
-                Optional('history-prefix-count'): str,
-                'name': str,
-                Optional('pending-prefix-count'): str,
-                'suppressed-prefix-count': str,
-                Optional('total-prefix-count'): str,
-                Optional('active-external-prefix-count'): str,
-                Optional('active-internal-prefix-count'): str,
-                Optional('suppressed-external-prefix-count'): str,
-                Optional('accepted-prefix-count'): str,
-                Optional('total-internal-prefix-count'): str,
-                Optional('received-prefix-count'): str,
-                Optional('total-external-prefix-count'): str,
-                Optional('suppressed-internal-prefix-count'): str,
-                Optional('bgp-rib-state'): str,
+                Optional("@junos:style"): str,
+                Optional("accepted-external-prefix-count"): str,
+                Optional("accepted-internal-prefix-count"): str,
+                Optional("accepted-prefix-count"): str,
+                Optional("active-external-prefix-count"): str,
+                Optional("active-internal-prefix-count"): str,
+                "active-prefix-count": str,
+                Optional("bgp-rib-state"): str,
+                Optional("damped-prefix-count"): str,
+                Optional("history-prefix-count"): str,
+                "name": str,
+                Optional("pending-prefix-count"): str,
+                Optional("received-prefix-count"): str,
+                Optional("suppressed-external-prefix-count"): str,
+                Optional("suppressed-internal-prefix-count"): str,
+                "suppressed-prefix-count": str,
+                Optional("total-external-prefix-count"): str,
+                Optional("total-internal-prefix-count"): str,
+                Optional("total-prefix-count"): str
             })
         for item in value:
             bgp_rib_list_schema.validate(item)
@@ -159,13 +168,14 @@ class ShowBgpGroupBriefSchema(MetaParser):
             'bgp-group': Use(validate_bgp_group_list),
             'bgp-information': {
                 'bgp-rib': Use(validate_bgp_info_bgp_rib_list),
-                    'down-peer-count': str,
-                    'external-peer-count': str,
-                    'group-count': str,
-                    'internal-peer-count': str,
-                    'peer-count': str,
-                    'flap-count': str,
+                'down-peer-count': str,
+                'external-peer-count': str,
+                'group-count': str,
+                'internal-peer-count': str,
+                'peer-count': str,
+                'flap-count': str,
                 }}}
+
 
 class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
     """ Parser for:
@@ -218,9 +228,10 @@ class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
                 r'Established: +(?P<established>\d+)$')
 
         # inet6.0: 0/0/0/0
-        p9 = re.compile(r'^(?P<name>inet(\d+)?\.\d+): +(?P<active_prefix_count>\d+)'
-                r'\/(?P<received_prefix_count>\d+)\/(?P<accepted_prefix_count>\d+)'
-                r'\/(?P<advertised_prefix_count>\d+)$')
+        # inet.0           : 0/682/682/0
+        p9 = re.compile(r'^(?P<name>inet(\d+)?\.\d+) *: +(?P<active_prefix_count>\d+)'
+                        r'\/(?P<received_prefix_count>\d+)\/(?P<accepted_prefix_count>\d+)'
+                        r'\/(?P<advertised_prefix_count>\d+)$')
         
         # Groups: 14 Peers: 19   External: 6    Internal: 13   Down peers: 15  Flaps: 359
         p10 = re.compile(r'^Groups:\s+(?P<group_count>\d+)\s+Peers:\s+'
@@ -234,7 +245,7 @@ class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
                 r'(?P<pending>\d+)$')
         
         # Table inet.0
-        p12 = re.compile(r'^Table +(?P<table_name>\S+)$')
+        p12 = re.compile(r'^Table +(?P<name>\S+)$')
 
         # Active prefixes:              0
         p13 = re.compile(r'^Active +prefixes: +(?P<active_prefix_count>\d+)$')
@@ -278,8 +289,48 @@ class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
         # 10.189.5.253+179
         pIp = re.compile(r'^(?P<peer_address>\S+)$')
 
+        # hktGCS002    Internal   1         1
+        # v6_hktGCS002 Internal   1         1
+        # sjkGCS001-EC11 External 1         1
+        p26 = re.compile(r'^(?P<name>\S+) +(?P<type>Internal|External) '
+                         r'+(?P<peer_count>\d+) +(?P<established_count>\d+)$')
+
+        # inet.3           : 2/2/2/0 External: 2/2/2/0 Internal: 0/0/0/0
+        p27 = re.compile(r'^(?P<name>inet(\d+)?\.\d+) *: '
+                         r'+(?P<active_prefix_count>\d+)\/'
+                         r'(?P<received_prefix_count>\d+)\/'
+                         r'(?P<accepted_prefix_count>\d+)\/'
+                         r'(?P<suppressed_prefix_count>\d+) '
+                         r'+External: +(?P<active_external_prefix_count>\d+)\/'
+                         r'(?P<total_external_prefix_count>\d+)\/'
+                         r'(?P<accepted_external_prefix_count>\d+)\/'
+                         r'(?P<suppressed_external_prefix_count>\d+) '
+                         r'+Internal: +(?P<active_internal_prefix_count>\d+)\/'
+                         r'(?P<total_internal_prefix_count>\d+)\/'
+                         r'(?P<accepted_internal_prefix_count>\d+)\/'
+                         r'(?P<suppressed_internal_prefix_count>\d+)$')
+
         for line in out.splitlines():
             line = line.strip()
+
+            # hktGCS002    Internal   1         1
+            # v6_hktGCS002 Internal   1         1
+            # sjkGCS001-EC11 External 1         1
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+
+                bgp_group_list = ret_dict.setdefault('bgp-group-information', {}). \
+                                          setdefault('bgp-group', [])
+                bgp_group_dict = {}
+                bgp_group_list.append(bgp_group_dict)
+
+                for k, v in group.items():
+                    k = k.replace('_', '-')
+                    bgp_group_dict[k] = v
+
+                continue
+
             # Group Type: Internal    AS: 65171                  Local AS: 65171
             m = p1.match(line)
             if m:
@@ -349,17 +400,18 @@ class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
                 continue
 
             # inet6.0: 0/0/0/0
+            # inet.0           : 0/682/682/0
             m = p9.match(line)
             if m:
                 group = m.groupdict()
                 bgp_rib_dict_list = bgp_group_dict.setdefault('bgp-rib', [])
                 bgp_rib_dict = {}
-                bgp_rib_dict.update({'name': group['name']})
-                bgp_rib_dict.update({'active-prefix-count': group['active_prefix_count']})
-                bgp_rib_dict.update({'received-prefix-count': group['received_prefix_count']})
-                bgp_rib_dict.update({'accepted-prefix-count': group['accepted_prefix_count']})
-                bgp_rib_dict.update({'advertised-prefix-count': group['advertised_prefix_count']})
-                pevious_table_dict.update({group['name'] : bgp_rib_dict})
+
+                for k, v in group.items():
+                    entry = k.replace('_', '-')
+                    bgp_rib_dict.update({entry: v})
+
+                pevious_table_dict.update({group['name']: bgp_rib_dict})
                 bgp_rib_dict_list.append(bgp_rib_dict)
                 continue
             
@@ -370,12 +422,10 @@ class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
                 group = m.groupdict()
                 bgp_information_dict = ret_dict.setdefault('bgp-group-information', {}). \
                     setdefault('bgp-information', {})
-                bgp_information_dict.update({'group-count': group['group_count']})
-                bgp_information_dict.update({'peer-count': group['peer_count']})
-                bgp_information_dict.update({'external-peer-count': group['external_peer_count']})
-                bgp_information_dict.update({'internal-peer-count': group['internal_peer_count']})
-                bgp_information_dict.update({'down-peer-count': group['down_peer_count']})
-                bgp_information_dict.update({'flap-count': group['flap_count']})
+
+                for k, v in group.items():
+                    entry = k.replace('_', '-')
+                    bgp_information_dict.update({entry: v})
                 continue
             
             # 1366        682          0          0          0          0
@@ -399,15 +449,43 @@ class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
                 sub_dict = {}
                 if not table_found:
                     bgp_rib_dict_list = bgp_group_dict.setdefault('bgp-rib', [])
-                    bgp_rib_dict.update({'name': group['table_name']})
-                    pevious_table_dict.update({group['table_name'] : bgp_rib_dict})
+                    bgp_rib_dict.update({'name': group['name']})
+                    pevious_table_dict.update({group['name']: bgp_rib_dict})
                     bgp_rib_dict_list.append(bgp_rib_dict)
                     sub_dict = bgp_rib_dict
                 else:
-                    bgp_info_rib_list =  bgp_information_dict.setdefault('bgp-rib', [])
-                    bgp_info_rib_dict.update({'name': group['table_name']})
+                    bgp_info_rib_list = bgp_information_dict.setdefault('bgp-rib', [])
+                    bgp_info_rib_dict.update({'name': group['name']})
                     bgp_info_rib_list.append(bgp_info_rib_dict)
                     sub_dict = bgp_info_rib_dict
+                continue
+
+            # inet.3           : 2/2/2/0 External: 2/2/2/0 Internal: 0/0/0/0
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                bgp_rib_dict = {}
+                bgp_info_rib_dict = {}
+                sub_dict = {}
+
+                # if output has:
+                #   Groups: 14 Peers: 19   External: 6    Internal: 13   Down peers: 15  Flaps: 359
+                # table_found == True
+                if not table_found:
+                    bgp_rib_dict_list = bgp_group_dict.setdefault('bgp-rib', [])
+                    bgp_rib_dict.update({'name': group['name']})
+                    pevious_table_dict.update({group['name']: bgp_rib_dict})
+                    bgp_rib_dict_list.append(bgp_rib_dict)
+                    sub_dict = bgp_rib_dict
+                else:
+                    bgp_info_rib_list = bgp_information_dict.setdefault('bgp-rib', [])
+                    bgp_info_rib_dict.update({'name': group['name']})
+                    bgp_info_rib_list.append(bgp_info_rib_dict)
+                    sub_dict = bgp_info_rib_dict
+
+                for k, v in group.items():
+                    entry = k.replace('_', '-')
+                    sub_dict.update({entry: v})
                 continue
 
             # Active prefixes:              0
@@ -495,7 +573,6 @@ class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
                 continue
             
             # Route Queue Timer: unset Route Queue: empty
-            p25 = re.compile(r'^Route +Queue +Timer: +(?P<timer>\w+) +Route +Queue: +(?P<state>\w+)$')
             m = p25.match(line)
             if m:
                 group = m.groupdict()
@@ -503,6 +580,7 @@ class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
                 route_queue_dict.update({'state': group['state']})
                 route_queue_dict.update({'timer': group['timer']})
                 continue
+
             # 10.189.5.253+179
             m = pIp.match(line)
             if m:
@@ -513,12 +591,13 @@ class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
                     bgp_group_dict.update({'peer-address': peer_address_list})
                 else:
                     table_name = group['peer_address']
-                    bgp_info_rib_list =  bgp_information_dict.setdefault('bgp-rib', [])
+                    bgp_info_rib_list = bgp_information_dict.setdefault('bgp-rib', [])
                     bgp_info_rib_dict = {}
                     bgp_info_rib_dict.update({'name': table_name})
                     bgp_info_rib_list.append(bgp_info_rib_dict)
                 continue
         return ret_dict
+
 
 class ShowBgpGroupBriefNoMore(ShowBgpGroupBrief):
     """ Parser for:
@@ -533,6 +612,7 @@ class ShowBgpGroupBriefNoMore(ShowBgpGroupBrief):
             out = output
         
         return super().cli(output=out)
+
 
 class ShowBgpGroupDetail(ShowBgpGroupBrief):
     """ Parser for:
@@ -549,7 +629,8 @@ class ShowBgpGroupDetail(ShowBgpGroupBrief):
             out = output
         
         return super().cli(output=out)
-    
+
+
 class ShowBgpGroupDetailNoMore(ShowBgpGroupDetail):
     """ Parser for:
             * show bgp group detail | no-more
@@ -562,4 +643,38 @@ class ShowBgpGroupDetailNoMore(ShowBgpGroupDetail):
         else:
             out = output
         
+        return super().cli(output=out)
+
+
+class ShowBgpGroupSummary(ShowBgpGroupBrief):
+    """
+    Schema for:
+    * show bgp group summary
+    """
+    cli_command = 'show bgp group summary'
+
+    def cli(self, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        return super().cli(output=out)
+
+
+class ShowBgpGroupSummaryNoMore(ShowBgpGroupSummary):
+    """
+    Schema for:
+    * show bgp group summary | no-more
+    """
+    cli_command = 'show bgp group summary | no-more'
+
+    def cli(self, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         return super().cli(output=out)
