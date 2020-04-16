@@ -3410,6 +3410,44 @@ class TestShowInventory(unittest.TestCase):
         },
     }
 
+    golden_output_3 = {'execute.return_value': '''
+    NAME: "c93xx Stack", DESCR: "c93xx Stack"
+PID: C9300-48UXM       , VID: V02  , SN: FCW2242G0V3
+
+NAME: "Switch 1", DESCR: "C9300-48UXM"
+PID: C9300-48UXM       , VID: V02  , SN: FCW2242G114
+
+NAME: "StackPort1/1", DESCR: "StackPort1/1"
+PID: STACK-T1-1M       , VID: V01  , SN: MOC2236A6JM
+
+NAME: "StackPort1/2", DESCR: "StackPort1/2"
+PID: STACK-T1-1M       , VID: V01  , SN: MOC2240A2JM
+
+NAME: "Switch 1 - Power Supply A", DESCR: "Switch 1 - Power Supply A"
+PID: PWR-C1-1100WAC    , VID: V02  , SN: DTN2236V68C
+
+NAME: "Switch 1 FRU Uplink Module 1", DESCR: "8x10G Uplink Module"
+PID: C9300-NM-8X       , VID: V02  , SN: FOC22423G0U
+
+NAME: "Te1/1/1", DESCR: "SFP-10GBase-SR"
+PID: SFP-10G-SR          , VID: V03  , SN: AVD223594E6
+
+NAME: "Switch 2", DESCR: "C9300-48UXM"
+PID: C9300-48UXM       , VID: V02  , SN: FCW2242G0V3
+
+NAME: "StackPort2/1", DESCR: "StackPort2/1"
+PID: STACK-T1-1M       , VID: V01  , SN: MOC2240A2JM
+
+NAME: "StackPort2/2", DESCR: "StackPort2/2"
+PID: STACK-T1-1M       , VID: V01  , SN: MOC2236A6JM
+
+NAME: "Switch 2 - Power Supply A", DESCR: "Switch 2 - Power Supply A"
+PID: PWR-C1-1100WAC    , VID: V02  , SN: DTN2236V6DL
+
+NAME: "Switch 2 FRU Uplink Module 1", DESCR: "8x10G Uplink Module"
+PID: C9300-NM-8X       , VID: V02  , SN: FOC22423FF4
+    '''}
+
     def test_show_inventory_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -3478,6 +3516,18 @@ class TestShowInventory(unittest.TestCase):
         self.device = Mock(**self.golden_output_2)
         inventory_obj = ShowInventory(device=self.device)
         parsed_output = inventory_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        inventory_obj = ShowInventory(device=self.device)
+        parsed_output = inventory_obj.parse()
+        import pprint
+        pprint.pprint(parsed_output)
+        import pdb
+        pdb.set_trace()
+
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 class TestShowPlatform(unittest.TestCase):
