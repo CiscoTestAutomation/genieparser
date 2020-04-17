@@ -742,24 +742,11 @@ class ShowBgpSummarySchema(MetaParser):
             raise SchemaTypeError('bgp-rib is not a list')
         bgp_rib_schema = Schema(
             {
-                Optional("accepted-external-prefix-count"): str,
-                Optional("accepted-internal-prefix-count"): str,
-                Optional("accepted-prefix-count"): str,
-                Optional("active-external-prefix-count"): str,
-                Optional("active-internal-prefix-count"): str,
-                "active-prefix-count": str,
-                Optional("bgp-rib-state"): str,
-                "damped-prefix-count": str,
-                "history-prefix-count": str,
-                "name": str,
-                "pending-prefix-count": str,
-                Optional("received-prefix-count"): str,
-                Optional("suppressed-external-prefix-count"): str,
-                Optional("suppressed-internal-prefix-count"): str,
-                "suppressed-prefix-count": str,
-                Optional("total-external-prefix-count"): str,
-                Optional("total-internal-prefix-count"): str,
-                "total-prefix-count": str
+                'accepted-prefix-count': str,
+                'active-prefix-count': str,
+                'name': str,
+                'received-prefix-count': str,
+                'suppressed-prefix-count': str
             }
         )
 
@@ -794,7 +781,7 @@ class ShowBgpSummarySchema(MetaParser):
                 "description": str,
                 "elapsed-time": {
                     "#text": str,
-                    Optional("@junos:seconds"): str,
+                    "@junos:seconds": str,
                 },
                 "flap-count": str,
                 "input-messages": str,
@@ -807,8 +794,6 @@ class ShowBgpSummarySchema(MetaParser):
         )
         for item in value:
             bgp_peer_schema.validate(item)
-
-        return value
 
     # Main schema
     schema = {
