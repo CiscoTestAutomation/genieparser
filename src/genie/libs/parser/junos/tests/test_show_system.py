@@ -12,7 +12,8 @@ from genie.metaparser.util.exceptions import (
 )
 
 # Parser
-from genie.libs.parser.junos.show_system import ShowSystemBuffer, ShowSystemStatistics, ShowSystemStatisticsNoForwarding
+from genie.libs.parser.junos.show_system import ShowSystemBuffer,\
+     ShowSystemStatistics, ShowSystemStatisticsNoForwarding
 
 # =========================================================
 # Unit test for show system buffer
