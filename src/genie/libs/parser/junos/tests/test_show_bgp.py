@@ -10,7 +10,6 @@ from pyats.topology import loader
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-# junos show_ospf
 from genie.libs.parser.junos.show_bgp import (ShowBgpGroupBrief,
                                               ShowBgpGroupDetail,
                                               ShowBgpSummary)
@@ -1265,6 +1264,11 @@ class TestShowBgpSummary(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowBgpSummary(device=self.device)
         parsed_output = obj.parse()
+        import pprint
+        pprint.pprint(parsed_output)
+        import pdb
+        pdb.set_trace()
+
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
