@@ -763,11 +763,24 @@ class ShowBgpSummarySchema(MetaParser):
                 raise SchemaTypeError('bgp-rib is not a list')
             bgp_rib_schema = Schema(
                 {
-                    'accepted-prefix-count': str,
-                    'active-prefix-count': str,
-                    'name': str,
-                    'received-prefix-count': str,
-                    'suppressed-prefix-count': str
+                    Optional("accepted-external-prefix-count"): str,
+                    Optional("accepted-internal-prefix-count"): str,
+                    Optional("accepted-prefix-count"): str,
+                    Optional("active-external-prefix-count"): str,
+                    Optional("active-internal-prefix-count"): str,
+                    "active-prefix-count": str,
+                    Optional("bgp-rib-state"): str,
+                    "damped-prefix-count": str,
+                    "history-prefix-count": str,
+                    "name": str,
+                    "pending-prefix-count": str,
+                    Optional("received-prefix-count"): str,
+                    Optional("suppressed-external-prefix-count"): str,
+                    Optional("suppressed-internal-prefix-count"): str,
+                    "suppressed-prefix-count": str,
+                    Optional("total-external-prefix-count"): str,
+                    Optional("total-internal-prefix-count"): str,
+                    "total-prefix-count": str
                 }
             )
 
