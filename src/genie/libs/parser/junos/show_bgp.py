@@ -742,23 +742,23 @@ class ShowBgpSummarySchema(MetaParser):
             raise SchemaTypeError('bgp-rib is not a list')
         bgp_rib_schema = Schema(
             {
-                "accepted-external-prefix-count": str,
-                "accepted-internal-prefix-count": str,
-                "accepted-prefix-count": str,
-                "active-external-prefix-count": str,
-                "active-internal-prefix-count": str,
+                Optional("accepted-external-prefix-count"): str,
+                Optional("accepted-internal-prefix-count"): str,
+                Optional("accepted-prefix-count"): str,
+                Optional("active-external-prefix-count"): str,
+                Optional("active-internal-prefix-count"): str,
                 "active-prefix-count": str,
-                "bgp-rib-state": str,
+                Optional("bgp-rib-state"): str,
                 "damped-prefix-count": str,
                 "history-prefix-count": str,
                 "name": str,
                 "pending-prefix-count": str,
-                "received-prefix-count": str,
-                "suppressed-external-prefix-count": str,
-                "suppressed-internal-prefix-count": str,
+                Optional("received-prefix-count"): str,
+                Optional("suppressed-external-prefix-count"): str,
+                Optional("suppressed-internal-prefix-count"): str,
                 "suppressed-prefix-count": str,
-                "total-external-prefix-count": str,
-                "total-internal-prefix-count": str,
+                Optional("total-external-prefix-count"): str,
+                Optional("total-internal-prefix-count"): str,
                 "total-prefix-count": str
             }
         )
@@ -771,7 +771,7 @@ class ShowBgpSummarySchema(MetaParser):
         if not isinstance(value, list):
             raise SchemaTypeError('bgp-peer is not a list')
 
-        def validate_bgp_rib_list(self, value):
+        def validate_bgp_rib_list(value):
             if not isinstance(value, list):
                 raise SchemaTypeError('bgp-rib is not a list')
             bgp_rib_schema = Schema(
@@ -794,7 +794,7 @@ class ShowBgpSummarySchema(MetaParser):
                 "description": str,
                 "elapsed-time": {
                     "#text": str,
-                    "@junos:seconds": str,
+                    Optional("@junos:seconds"): str,
                 },
                 "flap-count": str,
                 "input-messages": str,
@@ -807,6 +807,8 @@ class ShowBgpSummarySchema(MetaParser):
         )
         for item in value:
             bgp_peer_schema.validate(item)
+
+        return value
 
     # Main schema
     schema = {
@@ -854,7 +856,7 @@ class ShowBgpSummary(ShowBgpSummarySchema):
         # 1366        682          0          0          0          0
         p4 = re.compile(r'^(?P<total_prefix_count>\d+) +(?P<active_prefix_count>\d+) +'
                         r'(?P<suppressed_prefix_count>\d+) +(?P<history_prefix_count>\d+) +'
-                        r'(?P<damp_prefix_count>\d+) +(?P<pending_prefix_count>\d+)$')
+                        r'(?P<damped_prefix_count>\d+) +(?P<pending_prefix_count>\d+)$')
 
         # 27.85.216.179           65171          0          0       0       0 29w5d 22:42:36 Connect
         # 2001:268:fb8f::11       65151          0          0       0       0 29w5d 22:42:36 Connect
@@ -977,12 +979,13 @@ class ShowBgpSummary(ShowBgpSummarySchema):
                     key = key.replace('_', '_')
                     bgp_peer_dict[key] = value
 
-                bgp_peer_dict['bgp-rib'] = []
+                bgp_info_dict['bgp-peer'].append(bgp_peer_dict)
                 continue
 
             # inet.0: 682/684/684/0
             m = p6.match(line)
             if m:
+                bgp_peer_dict['bgp-rib'] = []
                 bgp_peer_rib_dict = {}
 
                 for key, value in m.groupdict().items():
