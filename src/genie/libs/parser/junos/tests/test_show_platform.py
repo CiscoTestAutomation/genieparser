@@ -157,7 +157,6 @@ class TestShowVersion(unittest.TestCase):
         obj = ShowVersion(device=self.device)
 
         parsed_output = obj.parse()
-        print("\n*****parsed******\n" + str(parsed_output) + "\n")
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_empty(self):

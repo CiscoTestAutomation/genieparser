@@ -172,20 +172,16 @@ class ShowVersion(ShowVersionSchema):
         show_version_dict["software-information"]["package-information"] = []
 
         for line in out.splitlines():
-            # print(line)
             line = line.strip()
 
             m = p1.match(line)
             if m:
-                print("p1 match" + line)
-
                 show_version_dict["software-information"]['junos-version'] = \
                     m.groupdict()['junosversion']
                 continue
 
             m = p2.match(line)
             if m:
-                print("p2 match" + line)
                 show_version_dict["software-information"]['product-model'] = \
                     m.groupdict()['productmodel']
                 show_version_dict["software-information"]['product-name'] = \
@@ -194,14 +190,12 @@ class ShowVersion(ShowVersionSchema):
 
             m = p3.match(line)
             if m:
-                print("p3 match" + line)
                 show_version_dict["software-information"]['host-name'] = \
                     m.groupdict()['hostname']
                 continue
 
             m = p4.match(line)
             if m:
-                print("p4 match" + line)
                 # Cleaning name to remove multiple white spaces, lower case string,
                 # remove JUNOS word, version between brakes (if present)
                 # and replacing spaces for dashes
@@ -221,7 +215,6 @@ class ShowVersion(ShowVersionSchema):
                 )
                 continue
 
-        print(show_version_dict.keys())
         # Check for empty input
         if 'junos-version' not in show_version_dict["software-information"].keys():
             return {}
