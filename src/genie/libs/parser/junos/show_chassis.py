@@ -256,9 +256,9 @@ class ShowChassisFirmwareSchema(MetaParser):
 } """
 
     def validate_chassis_firmware_list(value):
-        # Pass ospf3-interface list as value
+        # Pass firmware list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf3-interface is not a list')
+            raise SchemaTypeError('firmware is not a list')
         chassis_firmware_schema = Schema({
             "firmware-version": str,
                         "type": str
@@ -276,11 +276,10 @@ class ShowChassisFirmwareSchema(MetaParser):
             "chassis-module": {
                 "firmware": Use(validate_chassis_firmware_list),
                 "name": str
+                }
             }
         }
     }
-    }
-
 
 class ShowChassisFirmware(ShowChassisFirmwareSchema):
     """ Parser for:
@@ -295,14 +294,14 @@ class ShowChassisFirmware(ShowChassisFirmwareSchema):
         else:
             out = output
 
-        #FPC 0                    ROM        PC Bios
-        p0 = re.compile(r'^Part \s+Type\s+Version$')
+        #Part                     Type       Version
+        p0 = re.compile(r'^Part +Type +Version$')
 
         #FPC 0                    ROM        PC Bios
         p1 = re.compile(r'^(?P<name>\S+\s+\d+) +(?P<type>\S+) +(?P<firmware>\S+\s+\S+)$')
 
         #O/S        Version 19.2R1.8 by builder on 2019-06-21 17:52:23 UTC
-        p2 = re.compile(r'^(?P<type>\S+) +(?P<firmware>[A-Za-z .\d\-\:]+)$')
+        p2 = re.compile(r'^(?P<type>\S+) +(?P<firmware>[\s\S]+)$')
 
 
         ret_dict = {}

@@ -82,11 +82,11 @@ class TestShowChassisEnvironmentRoutingEngine(unittest.TestCase):
 
     golden_parsed_output = {
         "environment-component-information": {
-        "environment-component-item": {
-            "name": "Routing Engine 0",
-            "state": "Online Master"
+            "environment-component-item": {
+                "name": "Routing Engine 0",
+                "state": "Online Master"
+            }
         }
-    }
     }
 
     def test_empty(self):
@@ -118,22 +118,22 @@ class TestShowChassisFirmware(unittest.TestCase):
 
     golden_parsed_output = {
         "firmware-information": {
-        "chassis": {
-            "chassis-module": {
-                "firmware": [
-                    {
-                        "firmware-version": "PC Bios",
-                        "type": "ROM"
-                    },
-                    {
-                        "firmware-version": "Version 19.2R1.8 by builder on 2019-06-21 17:52:23 UTC",
-                        "type": "O/S"
-                    }
-                ],
-                "name": "FPC 0"
+            "chassis": {
+                "chassis-module": {
+                    "firmware": [
+                        {
+                            "firmware-version": "PC Bios",
+                            "type": "ROM"
+                        },
+                        {
+                            "firmware-version": "Version 19.2R1.8 by builder on 2019-06-21 17:52:23 UTC",
+                            "type": "O/S"
+                        }
+                    ],
+                    "name": "FPC 0"
+                }
             }
         }
-    }
     }
 
     def test_empty(self):
@@ -166,22 +166,22 @@ class TestShowChassisFirmwareNoForwarding(unittest.TestCase):
 
     golden_parsed_output = {
         "firmware-information": {
-        "chassis": {
-            "chassis-module": {
-                "firmware": [
-                    {
-                        "firmware-version": "PC Bios",
-                        "type": "ROM"
-                    },
-                    {
-                        "firmware-version": "Version 19.2R1.8 by builder on 2019-06-21 17:52:23 UTC",
-                        "type": "O/S"
-                    }
-                ],
-                "name": "FPC 0"
+            "chassis": {
+                "chassis-module": {
+                    "firmware": [
+                        {
+                            "firmware-version": "PC Bios",
+                            "type": "ROM"
+                        },
+                        {
+                            "firmware-version": "Version 19.2R1.8 by builder on 2019-06-21 17:52:23 UTC",
+                            "type": "O/S"
+                        }
+                    ],
+                    "name": "FPC 0"
+                }
             }
         }
-    }
         
     }
 

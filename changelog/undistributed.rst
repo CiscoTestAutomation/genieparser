@@ -119,6 +119,8 @@
         * show chassis firmware
     * Added ShowChassisFirmwareNoForwarding for:
         * show chassis firmware no-forwarding
+    * Added ShowChassisEnvironmentRoutingEngine for:
+        * show chassis environment routing-engine
 
 
 --------------------------------------------------------------------------------
