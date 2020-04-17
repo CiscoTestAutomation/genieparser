@@ -115,6 +115,10 @@
         * show pfe statistics traffic
     * Added ShowChassisFpcDetail for:
         * show chassis fpc detail
+    * Added ShowChassisFirmware for:
+        * show chassis firmware
+    * Added ShowChassisFirmwareNoForwarding for:
+        * show chassis firmware no-forwarding
 
 
 --------------------------------------------------------------------------------
