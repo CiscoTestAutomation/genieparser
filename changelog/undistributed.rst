@@ -119,6 +119,12 @@
         * show system users
     * Added ShowChassisFpcDetail for:
         * show chassis fpc detail
+    * Added ShowChassisFirmware for:
+        * show chassis firmware
+    * Added ShowChassisFirmwareNoForwarding for:
+        * show chassis firmware no-forwarding
+    * Added ShowChassisEnvironmentRoutingEngine for:
+        * show chassis environment routing-engine
 
 
 --------------------------------------------------------------------------------
