@@ -12,7 +12,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 from genie.libs.parser.junos.show_bgp import (ShowBgpGroupBrief,
                                               ShowBgpGroupDetail,
-                                              ShowBgpSummary)
+                                              ShowBgpSummary,
+                                              ShowBgpGroupSummary)
 
 
 class TestShowBgpGroupBrief(unittest.TestCase):
@@ -550,6 +551,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
             }
         }
     }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpGroupBrief(device=self.device)
@@ -561,6 +563,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
         obj = ShowBgpGroupBrief(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 class TestShowBgpGroupDetail(unittest.TestCase):
     """ Unit tests for:
@@ -1204,15 +1207,251 @@ class TestShowBgpGroupDetail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-class TestShowBgpSummary(unittest.TestCase):
+
+class TestShowBgpGroupSummary(unittest.TestCase):
     """ Unit tests for:
-            * show bgp summary
+            * show bgp group summary | no-more
     """
     maxDiff = None
     device = Device(name='aDevice')
 
     empty_output = {'execute.return_value': ''}
 
+    # show bgp group summary | no-more
+    golden_output = {'execute.return_value': '''
+    Group        Type       Peers     Established    Active/Received/Accepted/Damped
+    hktGCS002    Internal   1         1          
+      inet.0           : 0/682/682/0
+    v6_hktGCS002 Internal   1         1          
+      inet6.0          : 0/0/0/0
+    v4_RRC_72_TRIANGLE Internal 3     0          
+    v6_RRC_72_TRIANGLE Internal 2     0          
+    v6_RRC_72_SQUARE Internal 2       0          
+    v4_RRC_72_SQUARE Internal 2       0          
+    v4_Kentik    Internal   1         0          
+    v6_Kentik    Internal   1         0          
+    sggjbb001    External   1         0          
+    v6_sggjbb001 External   1         0          
+    sjkGCS001-EC11 External 1         1          
+      inet.0           : 682/684/684/0
+      inet.3           : 2/2/2/0
+    v6_sjkGCS001-EC11 External 1      1          
+      inet6.0          : 0/0/0/0
+    obpGCS001-WC11 External 1         0          
+    v6_obpGCS001-WC11 External 1      0          
+
+    Groups: 14 Peers: 19   External: 6    Internal: 13   Down peers: 15  Flaps: 359
+      inet.0           : 682/1366/1366/0 External: 682/684/684/0 Internal: 0/682/682/0
+      inet.3           : 2/2/2/0 External: 2/2/2/0 Internal: 0/0/0/0
+      inet6.0          : 0/0/0/0 External: 0/0/0/0 Internal: 0/0/0/0
+    '''}
+
+    golden_parsed_output = {
+        "bgp-group-information": {
+            "bgp-group": [
+                {
+                    "bgp-rib": [
+                        {
+                            "accepted-prefix-count": "682",
+                            "active-prefix-count": "0",
+                            "advertised-prefix-count": "0",
+                            "name": "inet.0",
+                            "received-prefix-count": "682",
+                        }
+                    ],
+                    "established-count": "1",
+                    "name": "hktGCS002",
+                    "peer-count": "1",
+                    "type": "Internal",
+                },
+                {
+                    "bgp-rib": [
+                        {
+                            "accepted-prefix-count": "0",
+                            "active-prefix-count": "0",
+                            "advertised-prefix-count": "0",
+                            "name": "inet6.0",
+                            "received-prefix-count": "0",
+                        }
+                    ],
+                    "established-count": "1",
+                    "name": "v6_hktGCS002",
+                    "peer-count": "1",
+                    "type": "Internal",
+                },
+                {
+                    "established-count": "0",
+                    "name": "v4_RRC_72_TRIANGLE",
+                    "peer-count": "3",
+                    "type": "Internal",
+                },
+                {
+                    "established-count": "0",
+                    "name": "v6_RRC_72_TRIANGLE",
+                    "peer-count": "2",
+                    "type": "Internal",
+                },
+                {
+                    "established-count": "0",
+                    "name": "v6_RRC_72_SQUARE",
+                    "peer-count": "2",
+                    "type": "Internal",
+                },
+                {
+                    "established-count": "0",
+                    "name": "v4_RRC_72_SQUARE",
+                    "peer-count": "2",
+                    "type": "Internal",
+                },
+                {
+                    "established-count": "0",
+                    "name": "v4_Kentik",
+                    "peer-count": "1",
+                    "type": "Internal",
+                },
+                {
+                    "established-count": "0",
+                    "name": "v6_Kentik",
+                    "peer-count": "1",
+                    "type": "Internal",
+                },
+                {
+                    "established-count": "0",
+                    "name": "sggjbb001",
+                    "peer-count": "1",
+                    "type": "External",
+                },
+                {
+                    "established-count": "0",
+                    "name": "v6_sggjbb001",
+                    "peer-count": "1",
+                    "type": "External",
+                },
+                {
+                    "bgp-rib": [
+                        {
+                            "accepted-prefix-count": "684",
+                            "active-prefix-count": "682",
+                            "advertised-prefix-count": "0",
+                            "name": "inet.0",
+                            "received-prefix-count": "684",
+                        },
+                        {
+                            "accepted-prefix-count": "2",
+                            "active-prefix-count": "2",
+                            "advertised-prefix-count": "0",
+                            "name": "inet.3",
+                            "received-prefix-count": "2",
+                        },
+                    ],
+                    "established-count": "1",
+                    "name": "sjkGCS001-EC11",
+                    "peer-count": "1",
+                    "type": "External",
+                },
+                {
+                    "bgp-rib": [
+                        {
+                            "accepted-prefix-count": "0",
+                            "active-prefix-count": "0",
+                            "advertised-prefix-count": "0",
+                            "name": "inet6.0",
+                            "received-prefix-count": "0",
+                        }
+                    ],
+                    "established-count": "1",
+                    "name": "v6_sjkGCS001-EC11",
+                    "peer-count": "1",
+                    "type": "External",
+                },
+                {
+                    "established-count": "0",
+                    "name": "obpGCS001-WC11",
+                    "peer-count": "1",
+                    "type": "External",
+                },
+                {
+                    "established-count": "0",
+                    "name": "v6_obpGCS001-WC11",
+                    "peer-count": "1",
+                    "type": "External",
+                },
+            ],
+            "bgp-information": {
+                "bgp-rib": [
+                    {
+                        "accepted-external-prefix-count": "684",
+                        "accepted-internal-prefix-count": "682",
+                        "accepted-prefix-count": "1366",
+                        "active-external-prefix-count": "682",
+                        "active-internal-prefix-count": "0",
+                        "active-prefix-count": "682",
+                        "name": "inet.0",
+                        "received-prefix-count": "1366",
+                        "suppressed-external-prefix-count": "0",
+                        "suppressed-internal-prefix-count": "0",
+                        "suppressed-prefix-count": "0",
+                        "total-external-prefix-count": "684",
+                        "total-internal-prefix-count": "682",
+                    },
+                    {
+                        "accepted-external-prefix-count": "2",
+                        "accepted-internal-prefix-count": "0",
+                        "accepted-prefix-count": "2",
+                        "active-external-prefix-count": "2",
+                        "active-internal-prefix-count": "0",
+                        "active-prefix-count": "2",
+                        "name": "inet.3",
+                        "received-prefix-count": "2",
+                        "suppressed-external-prefix-count": "0",
+                        "suppressed-internal-prefix-count": "0",
+                        "suppressed-prefix-count": "0",
+                        "total-external-prefix-count": "2",
+                        "total-internal-prefix-count": "0",
+                    },
+                    {
+                        "accepted-external-prefix-count": "0",
+                        "accepted-internal-prefix-count": "0",
+                        "accepted-prefix-count": "0",
+                        "active-external-prefix-count": "0",
+                        "active-internal-prefix-count": "0",
+                        "active-prefix-count": "0",
+                        "name": "inet6.0",
+                        "received-prefix-count": "0",
+                        "suppressed-external-prefix-count": "0",
+                        "suppressed-internal-prefix-count": "0",
+                        "suppressed-prefix-count": "0",
+                        "total-external-prefix-count": "0",
+                        "total-internal-prefix-count": "0",
+                    },
+                ],
+                "down-peer-count": "15",
+                "external-peer-count": "6",
+                "flap-count": "359",
+                "group-count": "14",
+                "internal-peer-count": "13",
+                "peer-count": "19",
+            },
+        },
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpGroupSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpGroupSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class TestShowBgpSummary(unittest.TestCase):
+    """ Unit tests for:
+            * show bgp summary
+    """
     # show bgp summary | no-more
     golden_output = {'execute.return_value': '''
         Threading mode: BGP I/O
@@ -1264,12 +1503,8 @@ class TestShowBgpSummary(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowBgpSummary(device=self.device)
         parsed_output = obj.parse()
-        import pprint
-        pprint.pprint(parsed_output)
-        import pdb
-        pdb.set_trace()
-
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 if __name__ == '__main__':
     unittest.main()
