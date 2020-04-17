@@ -12,7 +12,7 @@ from genie.metaparser.util.exceptions import (
 )
 
 # Parser
-from genie.libs.parser.junos.show_system import ShowSystemBuffer, ShowSystemStatistics
+from genie.libs.parser.junos.show_system import ShowSystemBuffer, ShowSystemStatistics, ShowSystemStatisticsNoForwarding
 
 # =========================================================
 # Unit test for show system buffer
@@ -3226,13 +3226,13 @@ class test_show_system_statistics_no_forwarding(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowSystemStatistics(device=self.device)
+        obj = ShowSystemStatisticsNoForwarding(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_golden_1(self):
         self.device = Mock(**self.golden_output_1)
-        obj = ShowSystemStatistics(device=self.device)
+        obj = ShowSystemStatisticsNoForwarding(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 

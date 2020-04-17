@@ -3837,4 +3837,5 @@ class ShowSystemStatisticsNoForwarding(ShowSystemStatistics):
             * show system statistics no-forwarding
     """
 
-    cli_command = "show system statistics"
+    cli_command = "show system statistics no-forwarding"
+
