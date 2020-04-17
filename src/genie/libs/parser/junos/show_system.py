@@ -2,6 +2,8 @@
 
 JunOS parsers for the following show commands:
     - 'show system buffers'
+    - 'show system statistics'
+    - 'show system statistics no-forwarding'
 """
 
 # python
@@ -3829,3 +3831,10 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
                     continue
 
         return ret_dict
+
+class ShowSystemStatisticsNoForwarding(ShowSystemStatistics):
+    """ Parser for:
+            * show system statistics no-forwarding
+    """
+
+    cli_command = "show system statistics"
