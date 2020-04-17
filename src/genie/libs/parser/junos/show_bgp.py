@@ -821,5 +821,180 @@ class ShowBgpSummarySchema(MetaParser):
     }
 
 
+class ShowBgpSummary(ShowBgpSummarySchema):
+    """
+    Parser for:
+        * show bgp summary
+    """
+    cli_command = 'show bgp summary'
+
+    def cli(self, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # ============================================================
+        # Regex Patterns
+        # ============================================================
+
+        # Threading mode: BGP I/O
+        p1 = re.compile(r'^Threading +mode: +(?P<bgp_thread_mode>[\S\s]+)$')
+
+        # Groups: 14 Peers: 19 Down peers: 15
+        p2 = re.compile(r'^Groups: +(?P<group_count>\d+) +Peers: '
+                        r'+(?P<peer_count>\d+) +Down +peers: '
+                        r'+(?P<down_peer_count>\d+)$')
+
+        # inet.0
+        # inet6.0
+        p3 = re.compile(r'^(?P<name>inet(\d+)?.\d)$')
+
+        # 1366        682          0          0          0          0
+        p4 = re.compile(r'^(?P<total_prefix_count>\d+) +(?P<active_prefix_count>\d+) +'
+                        r'(?P<suppressed_prefix_count>\d+) +(?P<history_prefix_count>\d+) +'
+                        r'(?P<damp_prefix_count>\d+) +(?P<pending_prefix_count>\d+)$')
+
+        # 27.85.216.179           65171          0          0       0       0 29w5d 22:42:36 Connect
+        # 2001:268:fb8f::11       65151          0          0       0       0 29w5d 22:42:36 Connect
+        p5 = re.compile(r'^(?P<peer_address>[\d\w:.]+) +(?P<peer_as>\d+) +'
+                        r'(?P<input_messages>\d+) +(?P<output_messages>\d+) +'
+                        r'(?P<route_queue_count>\d+) +(?P<flap_count>\d+) +'
+                        r'(?P<text>[\S\s]+) +(?P<peer_state>Active|Connect|Establ)$')
+
+        # inet.0: 682/684/684/0
+        p6 = re.compile(r'^(?P<name>inet(\d+)?\.\d+) *: +(?P<active_prefix_count>\d+)'
+                        r'\/(?P<received_prefix_count>\d+)\/(?P<accepted_prefix_count>\d+)'
+                        r'\/(?P<advertised_prefix_count>\d+)$')
+
+        # ============================================================
+        # Build Parsers
+        # ============================================================
+
+        parsed_dict = {}
+        bgp_info_dict = parsed_dict.setdefault('bgp-information', {})
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Threading mode: BGP I/O
+            # Groups: 14 Peers: 19 Down peers: 15
+            m = p1.match(line) or p2.match(line)
+            if m:
+                for group_key, group_value in m.groupdict().items():
+                    entry_key = group_key.replace('_', '-')
+                    bgp_info_dict[entry_key] = group_value
+
+                bgp_info_dict['bgp-peer'] = []
+                bgp_info_dict['bgp-rib'] = []
+                continue
+
+            # ------------------------------------------------------------
+            # Build
+            #     "bgp-rib": [
+            #         {
+            #         "accepted-external-prefix-count": str,
+            #         "accepted-internal-prefix-count": str,
+            #         "accepted-prefix-count": str,
+            #         "active-external-prefix-count": str,
+            #         "active-internal-prefix-count": str,
+            #         "active-prefix-count": str,
+            #         "bgp-rib-state": str,
+            #         "damped-prefix-count": str,
+            #         "history-prefix-count": str,
+            #         "name": str,
+            #         "pending-prefix-count": str,
+            #         "received-prefix-count": str,
+            #         "suppressed-external-prefix-count": str,
+            #         "suppressed-internal-prefix-count": str,
+            #         "suppressed-prefix-count": str,
+            #         "total-external-prefix-count": str,
+            #         "total-internal-prefix-count": str,
+            #         "total-prefix-count": str
+            #         }
+            #     ],
+            # ------------------------------------------------------------
+
+            # inet.0
+            # inet6.0
+            m = p3.match(line)
+            if m:
+                bgp_rib_dict = {}
+                bgp_rib_dict['name'] = m.groupdict()['name']
+                continue
+
+            # 1366        682          0          0          0          0
+            m = p4.match(line)
+            if m:
+                for key, value in m.groupdict().items():
+                    key = key.replace('_', '-')
+                    bgp_rib_dict[key] = value
+
+                bgp_info_dict['bgp-rib'].append(bgp_rib_dict)
+                continue
+
+            # ------------------------------------------------------------
+            # Build
+            #       "bgp-peer": [
+            #                     {
+            #                         "bgp-rib": [
+            #                             {
+            #                                 "accepted-prefix-count": str,
+            #                                 "active-prefix-count": str,
+            #                                 "name": str,
+            #                                 "received-prefix-count": str,
+            #                                 "suppressed-prefix-count": str,
+            #                             }
+            #                         ],
+            #                         "description": str,
+            #                         "elapsed-time": {
+            #                             "#text": str,
+            #                             "@junos:seconds": str,
+            #                         },
+            #                         "flap-count": str,
+            #                         "input-messages": str,
+            #                         "output-messages": str,
+            #                         "peer-address": str,
+            #                         "peer-as": str,
+            #                         "peer-state": str,
+            #                         "route-queue-count": str,
+            #                     }
+            #                 ],
+            # ------------------------------------------------------------
+
+            # 27.85.216.179           65171          0          0       0       0 29w5d 22:42:36 Connect
+            # 2001:268:fb8f::11       65151          0          0       0       0 29w5d 22:42:36 Connect
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                bgp_peer_dict = {}
+
+                for key, value in group.items():
+                    if key == 'text':
+                        bgp_peer_dict['elapsed-time'] = {'#text': value}
+                        continue
+                    key = key.replace('_', '_')
+                    bgp_peer_dict[key] = value
+
+                bgp_peer_dict['bgp-rib'] = []
+                continue
+
+            # inet.0: 682/684/684/0
+            m = p6.match(line)
+            if m:
+                bgp_peer_rib_dict = {}
+
+                for key, value in m.groupdict().items():
+                    key = key.replace('_', '-')
+                    bgp_peer_rib_dict[key] = value
+
+                bgp_peer_dict['bgp-rib'].append(bgp_peer_rib_dict)
+
+                continue
+
+        return parsed_dict
+
+
 
 
