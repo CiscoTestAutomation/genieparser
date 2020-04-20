@@ -11,7 +11,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.junos.show_route import (ShowRouteTable,
                                                 ShowRouteProtocol,
                                                 ShowRouteProtocolExtensive,
-                                                ShowRouteForwardingTableSummary)
+                                                ShowRouteForwardingTableSummary,
+                                                ShowRouteReceiveProtocol)
 
 '''
 Unit test for:
