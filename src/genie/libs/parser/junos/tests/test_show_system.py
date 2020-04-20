@@ -1608,7 +1608,9 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
 # =========================================================
 # Unit test for show system storage
 # =========================================================
-class test_show_system_storage(unittest.TestCase):
+class TestShowSystemStorage(unittest.TestCase):
+
+    maxDiff = None
 
     device = Device(name="aDevice")
 
