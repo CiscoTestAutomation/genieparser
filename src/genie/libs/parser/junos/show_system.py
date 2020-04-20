@@ -6,6 +6,7 @@ JunOS parsers for the following show commands:
     - 'show system queues no-forwarding'
     - 'show system buffers'
     - 'show system users'
+    - 'show system storage'
 """
 
 # python
