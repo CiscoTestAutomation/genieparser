@@ -629,3 +629,11 @@ class ShowSystemQueuesNoForwarding(ShowSystemQueues):
             * show system queues no-forwarding
     """
     cli_command = 'show system queues no-forwarding'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        return super().cli(output=out)
