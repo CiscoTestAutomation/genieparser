@@ -9,6 +9,7 @@ import warnings
 import logging
 import importlib
 import heapq
+import math
 
 from fuzzywuzzy import fuzz
 from genie.libs import parser
@@ -102,111 +103,176 @@ def get_parser(command, device):
                                 c=command, l=lookup._tokens)) from None
 
 def _fuzzy_regex_search_command(command):
-    # Tokenize command
+    # Preprocess
+    command = command.lstrip('^').rstrip('$')
+
+    # Fix command to remove extra spaces
+    command = ' '.join(filter(None, command.split()))
     tokens = command.split()
+    best_score = -math.inf
+    result = []
+    
+    for command, source in parser_data.items():
+        # Tokens and kwargs parameter must be non reference
+        match_result = _matches_fuzzy_regex(0, 0, tokens.copy(), command.split(), {})
 
-    valid_tokens = {}
+        # Explicit type check if it is not false
+        if match_result is not False: 
+            kwargs, score = match_result
+            entry = (command, source, kwargs)
 
-    # Get all possible valid tokens and prepare to compute their average
-    for key in filter(lambda item: '{' not in item, parser_data.keys()):
-        for index, key_token in enumerate(key.split()):
-            info = valid_tokens.setdefault(key_token, [0, 0])
+            if score > best_score:
+                # If we found a better match, discard everything and start new
+                result = [entry]
 
-            # First index is locality index sum
-            info[0] += index
+                best_score = score
+            elif score == best_score:
+                result.append(entry)  
 
-            # Second index is number of occurrance
-            info[1] += 1
+    return result
 
-    # Transform valid dictionary to valid key and its average locality index
-    valid_tokens = {
-        key: value[0] / value[1] for key, value in valid_tokens.items()
-    }
+def _matches_fuzzy_regex(i, j, tokens, command_tokens, kwargs, required_arguments=None, score=0):
+    command = ' '.join(command_tokens)
 
-    for index, token in enumerate(tokens):
-        # Token is not a regex expression
+    # Initialize by counting how many arguments this command needs
+    if required_arguments is None:
+        required_arguments = len(re.findall('{.*?}', command))
+
+    while i < len(tokens):
+        # If command token index is greater than its length, stop
+        if j >= len(command_tokens):
+            return False
+
+        token = tokens[i]
+
         if token.isalnum():
-            # If token is not valid, use fuzzy search to find best matching
-            if token not in valid_tokens:
-                heap = []
+            # Current token might be command or argument
+            if '{' in command_tokens[j]:
+                kwargs[re.search('{(.*)}', command_tokens[j]).groups()[0]] = token
 
-                for candidate, average in valid_tokens.items():
-                    # Skip tokens with poor locality sensitive ratio
-                    if fuzz.ratio(token, candidate) <= 30:
-                        continue
+                # Set current token to command token
+                # For future regex match, it should not consider argument
+                tokens[i] = command_tokens[j]
+            elif token == command_tokens[j]:
+                # Same token, assign perfect score
+                score += 100
+            elif not token == command_tokens[j]:
+                # Not matching, perform fuzzy search
+                # Give perfect score for prefix matching
+                if command_tokens[j].startswith(token):
+                    score += 100
+                else:
+                    # Locality sensitive score
+                    ratio = fuzz.ratio(token, command_tokens[j])
 
-                    # Push token score
-                    heapq.heappush(heap, (
-                        -fuzz.partial_ratio(token, candidate), (candidate, average)
-                    ))
-                
-                score = None
-                best_match = []
+                    # Have locality sensitive cut off 
+                    if ratio <= 30:
+                        return False
 
-                # Get best matching valid tokens
-                while len(heap) > 0:
-                    current = heap[0]
-
-                    if score is None or score == current[0]:
-                        score, item = heapq.heappop(heap)
-                        best_match.append(item)
-                    elif not score == current[0]:
-                        break 
-
-                if len(best_match) == 1:
-                    tokens[index] = best_match[0][0]
-                elif len(best_match) > 0:
-                    # If too ambiguous, attempt prefix trie matching
-                    trie = {}
-                    is_matched = False
-
-                    # Construct trie
-                    for match in best_match:
-                        current = trie
-                        for char in match[0]: 
-                            current = current.setdefault(char, {'*': []})
-                            current['*'].append(match)
+                    # Locality insensitive score
+                    partial_ratio = fuzz.partial_ratio(token, command_tokens[j])
                     
-                    # Get prefix matching result
-                    for char in token:
-                        if char in trie:
-                            trie = trie[char]
-                            is_matched = True
+                    # Cut off
+                    if fuzz.partial_ratio(token, command_tokens[j]) <= 30:
+                        return False
 
-                    # If found possible prefix matches, use closest locality
-                    if is_matched:
-                        trie['*'].sort(key=lambda x: abs(x[1] - index))
-                        
-                        # Replace token with closest
-                        tokens[index] = trie['*'][0][0]
+                    # Add partial ratio to score
+                    score += partial_ratio
+
+                # The two tokens are similar to each other, replace it with valid one
+                tokens[i] = command_tokens[j]
+
+            # Matches current, go to next token
+            i += 1
+            j += 1
+        else:
+            # Count number of regex tokens that got ate
+            skipped = 1
+
+            # Not a token, should be a regex expression
+            # Keep eating if next token is also regex
+            while i + 1 < len(tokens) and not tokens[i + 1].isalnum():
+                i += 1
+                skipped += 1
+
+            # Match current span with command
+            test = re.match(' '.join(tokens[:i + 1]), command)
+
+            if test:
+                # Expression matches command to end
+                if i + 1 == len(tokens): 
+                    # Return result if from start to end there are no arguments
+                    if all(not '{' in ct for ct in command_tokens[j:]):
+                        return kwargs, score
+                    else: 
+                        # Else in range we have another unspecified argument
+                        return False
+
+                # Perform command token lookahead
+                _, end = test.span()
+
+                if end == 0: 
+                    # If regex matched nothing, we stop because
+                    # expression = "d? a b c" search in "a b c"
+                    # expression = "a b d? c" search in "a b c"
+                    i += 1
+
+                # Span single command token
+                if abs(end - sum(len(ct) for ct in command_tokens[:j + 1])) <= i:
+                    if not '{' in command_tokens[j]:
+                        # Span single token if it is not argument
+                        i += 1
+                        j += 1
+
+                        continue
                     else:
-                        # Use regular locality matching
-                        if not is_matched:
-                            best_match.sort(key=lambda x: abs(x[1] - index))
-                            
-                            # Replace token with closest
-                            tokens[index] = best_match[0][0]
+                        # Faulty match
+                        return False
+                else:
+                    # Span multiple command tokens
+                    # Find which command token it spans up to
+                    current_sum = 0
+                    token_end = 0
 
-    results = []
-    expression = ' '.join(tokens)
+                    while current_sum + len(command_tokens[token_end]) <= end:
+                        current_sum += len(command_tokens[token_end])
+                        
+                        if current_sum < end:
+                            # Account for space 
+                            current_sum += 1
+                            token_end += 1
+                        else:
+                            break
 
-    # Append match to end for regex
-    if len(expression) > 0 and not expression[-1] == '$':
-        expression += '$'
+                    # Incrememt token index
+                    i += 1
+                
+                    # For matched range, perform submatches on next real token
+                    for subindex in range(j + skipped, token_end + 1):
+                        # Make sure items are passed by copies, not by reference
+                        submatch_result = _matches_fuzzy_regex(i, subindex, tokens.copy(), command_tokens.copy(), kwargs.copy(), required_arguments, score)
+                        
+                        # If any match is found, return true
+                        if submatch_result is not False:
+                            result_kwargs, score = submatch_result
 
-    # Exclude argument based parsers
-    for key, item in filter(lambda item: '{' not in item[0], parser_data.items()):
-        if re.match(expression, key):
-            results.append((key, item))
+                            # Result kwargs must match number of arguments this command requires
+                            if required_arguments == len(result_kwargs):
+                                return result_kwargs, score
 
-    if len(results) == 0:
-        # Ambiguous command or could not find parser
-        raise SyntaxError(
-            "Could not find unambiguous parser for '{}'. Try".format(command) +
-            " increasing the specificity of your command."
-        )
+                    # Fail to match
+                    return False
+            else:
+                # Failed to match regex
+                return False
 
-    return results
+    # Reached end of tokens
+    if len(command_tokens) == j:
+        # If command pointer is at end then it matches
+        return kwargs, score
+    else: 
+        # It doesn't match
+        return False
 
 def _fuzzy_search_command(command):
     ''' Performs fuzzy search for a command that most closely matches the input
