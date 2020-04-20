@@ -191,7 +191,7 @@ class TestShowSystemUsers(unittest.TestCase):
 #=========================================================
 # Unit test for show system commit
 #=========================================================
-class TestShowSystemCommmit(unittest.TestCase):
+class TestShowSystemCommit(unittest.TestCase):
 
     device = Device(name='aDevice')
 
