@@ -31,6 +31,8 @@
     * Added ShowDmvpn for
         * show dmvpn
         * show dmvpn interface {interface}
+    * Added ShowInventory in subdirectory 'C9300' for
+        * show inventory
 
 * NXOS
     * Added ShowIpRouteSummary for:
@@ -85,12 +87,10 @@
         * show arp
     * Added ShowArpNoMore for:
         * show arp | no-more
-<<<<<<< HEAD
     * Added ShowOspf3Overview for:
         * show ospf3 overview
     * Added ShowOspf3OverviewExtensive for:
         * show ospf3 overview extensive
-=======
     * Added ShowKrtState for:
         * show krt state
     * Added ShowKrtQueue for:
@@ -111,7 +111,6 @@
         * show system buffers
     * Added ShowPfeStatisticsTraffic for:
         * show pfe statistics traffic
->>>>>>> dev
 
 
 --------------------------------------------------------------------------------
