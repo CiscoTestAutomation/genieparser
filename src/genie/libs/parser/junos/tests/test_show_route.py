@@ -11,7 +11,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.junos.show_route import (ShowRouteTable,
                                                 ShowRouteProtocol,
                                                 ShowRouteProtocolExtensive,
-                                                ShowRouteReceiveProtocol)
+                                                ShowRouteForwardingTableSummary)
 
 '''
 Unit test for:
@@ -47179,6 +47179,270 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
             protocol='ospf',
             table='inet.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+
+'''
+Unit test for:
+    * show route forwarding-table summary
+'''
+class TestShowRouteForwardingTableSummary(unittest.TestCase):
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show route forwarding-table summary
+        Routing table: default.inet
+        Internet:
+        Enabled protocols: Bridging, 
+                user:         918 routes
+                perm:          5 routes
+                intf:         11 routes
+                dest:         21 routes
+
+        Routing table: __pfe_private__.inet
+        Internet:
+        Enabled protocols: Bridging, 
+                perm:          5 routes
+
+        Routing table: __juniper_services__.inet
+        Internet:
+        Enabled protocols: Bridging, 
+                perm:          5 routes
+                intf:          2 routes
+                dest:          3 routes
+
+        Routing table: __master.anon__.inet
+        Internet:
+        Enabled protocols: Bridging, Dual VLAN, 
+                perm:          5 routes
+
+        Routing table: default.iso
+        ISO:
+        Enabled protocols: Bridging, 
+                perm:          1 routes
+
+        Routing table: __master.anon__.iso
+        ISO:
+        Enabled protocols: Bridging, Dual VLAN, 
+                perm:          1 routes
+
+        Routing table: default.inet6
+        Internet6:
+        Enabled protocols: Bridging, 
+                user:         14 routes
+                perm:          6 routes
+                intf:         18 routes
+                dest:          7 routes
+
+        Routing table: __master.anon__.inet6
+        Internet6:
+        Enabled protocols: Bridging, Dual VLAN, 
+                perm:          6 routes
+
+        Routing table: default.mpls
+        MPLS:
+                user:         44 routes
+                perm:          1 routes
+
+        Routing table: __mpls-oam__.mpls
+        MPLS:
+        Enabled protocols: Bridging, Single VLAN, Dual VLAN, 
+                perm:          1 routes
+
+        Routing table: default-switch.bridge
+        VPLS:
+                perm:          1 routes
+
+        Routing table: default.dhcp-snooping
+        DHCP Snooping:
+                perm:          1 routes
+    '''}
+
+    golden_parsed_output = {
+        "forwarding-table-information": {
+            "route-table": [
+                {
+                    "address-family": "Internet",
+                    "enabled-protocols": "Bridging,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "918",
+                            "route-table-type": "user"
+                        },
+                        {
+                            "route-count": "5",
+                            "route-table-type": "perm"
+                        },
+                        {
+                            "route-count": "11",
+                            "route-table-type": "intf"
+                        },
+                        {
+                            "route-count": "21",
+                            "route-table-type": "dest"
+                        }
+                    ],
+                    "table-name": "default.inet"
+                },
+                {
+                    "address-family": "Internet",
+                    "enabled-protocols": "Bridging,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "5",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "__pfe_private__.inet"
+                },
+                {
+                    "address-family": "Internet",
+                    "enabled-protocols": "Bridging,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "5",
+                            "route-table-type": "perm"
+                        },
+                        {
+                            "route-count": "2",
+                            "route-table-type": "intf"
+                        },
+                        {
+                            "route-count": "3",
+                            "route-table-type": "dest"
+                        }
+                    ],
+                    "table-name": "__juniper_services__.inet"
+                },
+                {
+                    "address-family": "Internet",
+                    "enabled-protocols": "Bridging, Dual VLAN,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "5",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "__master.anon__.inet"
+                },
+                {
+                    "address-family": "ISO",
+                    "enabled-protocols": "Bridging,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "1",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "default.iso"
+                },
+                {
+                    "address-family": "ISO",
+                    "enabled-protocols": "Bridging, Dual VLAN,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "1",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "__master.anon__.iso"
+                },
+                {
+                    "address-family": "Internet6",
+                    "enabled-protocols": "Bridging,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "14",
+                            "route-table-type": "user"
+                        },
+                        {
+                            "route-count": "6",
+                            "route-table-type": "perm"
+                        },
+                        {
+                            "route-count": "18",
+                            "route-table-type": "intf"
+                        },
+                        {
+                            "route-count": "7",
+                            "route-table-type": "dest"
+                        }
+                    ],
+                    "table-name": "default.inet6"
+                },
+                {
+                    "address-family": "Internet6",
+                    "enabled-protocols": "Bridging, Dual VLAN,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "6",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "__master.anon__.inet6"
+                },
+                {
+                    "address-family": "MPLS",
+                    "route-table-summary": [
+                        {
+                            "route-count": "44",
+                            "route-table-type": "user"
+                        },
+                        {
+                            "route-count": "1",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "default.mpls"
+                },
+                {
+                    "address-family": "MPLS",
+                    "enabled-protocols": "Bridging, Single VLAN, Dual VLAN,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "1",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "__mpls-oam__.mpls"
+                },
+                {
+                    "address-family": "VPLS",
+                    "route-table-summary": [
+                        {
+                            "route-count": "1",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "default-switch.bridge"
+                },
+                {
+                    "address-family": "DHCP Snooping",
+                    "route-table-summary": [
+                        {
+                            "route-count": "1",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "default.dhcp-snooping"
+                }
+            ]
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRouteForwardingTableSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowRouteForwardingTableSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 '''
 Unit test for:

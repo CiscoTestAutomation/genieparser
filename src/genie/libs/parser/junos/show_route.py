@@ -9,7 +9,7 @@ JUNOS parsers for the following commands:
     * show route protocol {protocol} table {table}
     * show route protocol {protocol}
     * show route protocol {protocol} {ip_address}
-    * show route receive-protocol {protocol} {peer}
+    * show route forwarding-table summary
 '''
 
 import re
@@ -336,10 +336,11 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
         # 10.169.14.240/32  *[Static/5] 5w2d 15:42:25
         # *[OSPF3/10] 3w1d 17:03:23, metric 5
         # 0.0.0.0/0          *[OSPF/150/10] 3w3d 03:24:58, metric 101, tag 0
+        # 10.169.14.240/32  *[Static/5] 12:57:37
         p2 = re.compile(r'^((?P<rt_destination>\S+) +)?(?P<active_tag>[\*\+\-])?'
-                r'\[(?P<protocol>[\w\-]+)\/(?P<preference>\d+)'
-                r'(\/(?P<preference2>\d+))?\] +(?P<text>\S+ +\S+)'
-                r'(, +metric +(?P<metric>\d+))?(, +tag +(?P<rt_tag>\d+))?$')
+                r'\[(?P<protocol>[\w\-]+)\/(?P<preference>\d+)(\/(?P<preference2>\d+))?\] +'
+                r'(?P<text>\S+( +\S+)?)(, +metric +(?P<metric>\d+))?'
+                r'(, +tag +(?P<rt_tag>\d+))?$')
 
         # MultiRecv
         p2_1 = re.compile(r'^(?P<nh_type>MultiRecv)$')
@@ -600,7 +601,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                     Optional("current-active"): str,
                     Optional("inactive-reason"): str,
                     Optional("last-active"): str,
-                    "local-as": str,
+                    Optional("local-as"): str,
                     Optional("metric"): str,
                     Optional("nh"): Use(validate_nh_list),
                     "nh-address": str,
@@ -1035,6 +1036,132 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 group = m.groupdict()
                 text = tsi_dict.get('#text', '')
                 tsi_dict.update({'#text': '{}\n{}'.format(text, line)})
+                continue
+
+        return ret_dict
+    
+class ShowRouteForwardingTableSummarySchema(MetaParser):
+    """ Schema for:
+            * show route forwarding-table summary
+    """
+    # schema = {
+    #     Optional("@xmlns:junos"): str,
+    #     "forwarding-table-information": {
+    #         Optional("@xmlns"): str,
+    #         "route-table": [
+    #             {
+    #                 "address-family": str,
+    #                 "enabled-protocols": str,
+    #                 "route-table-summary": [
+    #                     {
+    #                         "route-count": str,
+    #                         "route-table-type": str
+    #                     }
+    #                 ],
+    #                 "table-name": str
+    #             }
+    #         ]
+    #     }
+    # }
+
+    def validate_route_table_list(value):
+        # Pass route-table list of dict in value
+        if not isinstance(value, list):
+            raise SchemaTypeError('route-table is not a list')
+        def validate_route_table_summary_list(value):
+            # Pass route-table-summary list of dict in value
+            if not isinstance(value, list):
+                raise SchemaTypeError('route-table-summary is not a list')
+            # Create route-table-summary Schema
+            route_table_summary_schema = Schema({
+                "route-count": str,
+                "route-table-type": str
+            })
+            # Validate each dictionary in list
+            for item in value:
+                route_table_summary_schema.validate(item)
+            return value
+        # Create route-table-summary Schema
+        route_table_schema = Schema({
+            "address-family": str,
+            Optional("enabled-protocols"): str,
+            "route-table-summary": Use(validate_route_table_summary_list),
+            "table-name": str
+        })
+        # Validate each dictionary in list
+        for item in value:
+            route_table_schema.validate(item)
+        return value
+    
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "forwarding-table-information": {
+            Optional("@xmlns"): str,
+            "route-table": Use(validate_route_table_list)
+        }
+    }
+
+class ShowRouteForwardingTableSummary(ShowRouteForwardingTableSummarySchema):
+    """ Parser for:
+            * show route forwarding-table summary
+    """
+    cli_command = 'show route forwarding-table summary'
+    
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        ret_dict = {}
+
+        # Routing table: default.inet
+        p1 = re.compile(r'^Routing +table: +(?P<table_name>\S+)$')
+
+        # Internet:
+        # DHCP Snooping:
+        p2 = re.compile(r'^(?P<address_family>\S+( +\S+)?):$')
+
+        # Enabled protocols: Bridging, 
+        p3 = re.compile(r'^Enabled +protocols: +(?P<enabled_protocols>[\S\s]+)$')
+
+        # perm:          1 routes
+        p4 = re.compile(r'^(?P<route_table_type>\S+): +(?P<route_count>\d+) +routes$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Routing table: default.inet
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                forwarding_table_information_dict = ret_dict.setdefault('forwarding-table-information', {})
+                route_table_list = forwarding_table_information_dict.setdefault('route-table', [])
+                route_table_dict = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                route_table_list.append(route_table_dict)
+                continue
+
+            # Internet:
+            # DHCP Snooping:
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                route_table_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # Enabled protocols: Bridging, 
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                route_table_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # perm:          1 routes
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                route_table_summary_list = route_table_dict.setdefault('route-table-summary', [])
+                route_table_summary_list.append({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
 
         return ret_dict
