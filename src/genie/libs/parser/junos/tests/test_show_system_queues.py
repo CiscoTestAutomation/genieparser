@@ -2,7 +2,7 @@
 #=========================================================
 # Unit test for show system queues
 #=========================================================
-class test_show_system_queues(unittest.TestCase):
+class TestShowSystemQueues(unittest.TestCase):
 
     device = Device(name='aDevice')
 
@@ -514,7 +514,7 @@ class test_show_system_queues(unittest.TestCase):
 #=========================================================
 # Unit test for show system queues no-forwarding
 #=========================================================
-class test_show_system_queues_no_forwarding(unittest.TestCase):
+class TestShowSystemQueuesNoForwarding(unittest.TestCase):
 
     device = Device(name='aDevice')
 
