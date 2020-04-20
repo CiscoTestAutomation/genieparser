@@ -11,7 +11,9 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.junos.show_route import (ShowRouteTable,
                                                 ShowRouteProtocol,
                                                 ShowRouteProtocolExtensive,
-                                                ShowRouteAdvertisingProtocol)
+                                                ShowRouteAdvertisingProtocol,
+                                                ShowRouteForwardingTableSummary,
+                                                ShowRouteReceiveProtocol)
 
 '''
 Unit test for:
@@ -47180,5 +47182,576 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
             table='inet.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
+
+'''
+Unit test for:
+    * show route forwarding-table summary
+'''
+class TestShowRouteForwardingTableSummary(unittest.TestCase):
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show route forwarding-table summary
+        Routing table: default.inet
+        Internet:
+        Enabled protocols: Bridging, 
+                user:         918 routes
+                perm:          5 routes
+                intf:         11 routes
+                dest:         21 routes
+
+        Routing table: __pfe_private__.inet
+        Internet:
+        Enabled protocols: Bridging, 
+                perm:          5 routes
+
+        Routing table: __juniper_services__.inet
+        Internet:
+        Enabled protocols: Bridging, 
+                perm:          5 routes
+                intf:          2 routes
+                dest:          3 routes
+
+        Routing table: __master.anon__.inet
+        Internet:
+        Enabled protocols: Bridging, Dual VLAN, 
+                perm:          5 routes
+
+        Routing table: default.iso
+        ISO:
+        Enabled protocols: Bridging, 
+                perm:          1 routes
+
+        Routing table: __master.anon__.iso
+        ISO:
+        Enabled protocols: Bridging, Dual VLAN, 
+                perm:          1 routes
+
+        Routing table: default.inet6
+        Internet6:
+        Enabled protocols: Bridging, 
+                user:         14 routes
+                perm:          6 routes
+                intf:         18 routes
+                dest:          7 routes
+
+        Routing table: __master.anon__.inet6
+        Internet6:
+        Enabled protocols: Bridging, Dual VLAN, 
+                perm:          6 routes
+
+        Routing table: default.mpls
+        MPLS:
+                user:         44 routes
+                perm:          1 routes
+
+        Routing table: __mpls-oam__.mpls
+        MPLS:
+        Enabled protocols: Bridging, Single VLAN, Dual VLAN, 
+                perm:          1 routes
+
+        Routing table: default-switch.bridge
+        VPLS:
+                perm:          1 routes
+
+        Routing table: default.dhcp-snooping
+        DHCP Snooping:
+                perm:          1 routes
+    '''}
+
+    golden_parsed_output = {
+        "forwarding-table-information": {
+            "route-table": [
+                {
+                    "address-family": "Internet",
+                    "enabled-protocols": "Bridging,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "918",
+                            "route-table-type": "user"
+                        },
+                        {
+                            "route-count": "5",
+                            "route-table-type": "perm"
+                        },
+                        {
+                            "route-count": "11",
+                            "route-table-type": "intf"
+                        },
+                        {
+                            "route-count": "21",
+                            "route-table-type": "dest"
+                        }
+                    ],
+                    "table-name": "default.inet"
+                },
+                {
+                    "address-family": "Internet",
+                    "enabled-protocols": "Bridging,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "5",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "__pfe_private__.inet"
+                },
+                {
+                    "address-family": "Internet",
+                    "enabled-protocols": "Bridging,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "5",
+                            "route-table-type": "perm"
+                        },
+                        {
+                            "route-count": "2",
+                            "route-table-type": "intf"
+                        },
+                        {
+                            "route-count": "3",
+                            "route-table-type": "dest"
+                        }
+                    ],
+                    "table-name": "__juniper_services__.inet"
+                },
+                {
+                    "address-family": "Internet",
+                    "enabled-protocols": "Bridging, Dual VLAN,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "5",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "__master.anon__.inet"
+                },
+                {
+                    "address-family": "ISO",
+                    "enabled-protocols": "Bridging,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "1",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "default.iso"
+                },
+                {
+                    "address-family": "ISO",
+                    "enabled-protocols": "Bridging, Dual VLAN,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "1",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "__master.anon__.iso"
+                },
+                {
+                    "address-family": "Internet6",
+                    "enabled-protocols": "Bridging,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "14",
+                            "route-table-type": "user"
+                        },
+                        {
+                            "route-count": "6",
+                            "route-table-type": "perm"
+                        },
+                        {
+                            "route-count": "18",
+                            "route-table-type": "intf"
+                        },
+                        {
+                            "route-count": "7",
+                            "route-table-type": "dest"
+                        }
+                    ],
+                    "table-name": "default.inet6"
+                },
+                {
+                    "address-family": "Internet6",
+                    "enabled-protocols": "Bridging, Dual VLAN,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "6",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "__master.anon__.inet6"
+                },
+                {
+                    "address-family": "MPLS",
+                    "route-table-summary": [
+                        {
+                            "route-count": "44",
+                            "route-table-type": "user"
+                        },
+                        {
+                            "route-count": "1",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "default.mpls"
+                },
+                {
+                    "address-family": "MPLS",
+                    "enabled-protocols": "Bridging, Single VLAN, Dual VLAN,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "1",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "__mpls-oam__.mpls"
+                },
+                {
+                    "address-family": "VPLS",
+                    "route-table-summary": [
+                        {
+                            "route-count": "1",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "default-switch.bridge"
+                },
+                {
+                    "address-family": "DHCP Snooping",
+                    "route-table-summary": [
+                        {
+                            "route-count": "1",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "default.dhcp-snooping"
+                }
+            ]
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRouteForwardingTableSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowRouteForwardingTableSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+'''
+Unit test for:
+    * show route receive-protocol {protocol} {peer}
+'''
+class TestShowRouteReceiveProtocol(unittest.TestCase):
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show route receive-protocol bgp 111.87.5.253
+        inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+        Prefix      Nexthop        MED     Lclpref    AS path
+        14.101.0.0/16           111.87.5.253         12003   120        (65151 65000) I
+        27.80.0.0/16            111.87.5.253         12003   120        (65151 65000) I
+        27.81.0.0/16            111.87.5.253         12003   120        (65151 65000) I
+        27.82.0.0/16            111.87.5.253         12003   120        (65151 65000) I
+        27.83.0.0/16            111.87.5.253         12003   120        (65151 65000) I
+        27.84.0.0/16            111.87.5.253         12003   120        (65151 65000) I
+        27.85.0.0/16            111.87.5.253         12003   120        (65151 65000) I
+        27.86.0.0/16            111.87.5.253         12003   120        (65151 65000) I
+        inet.3: 11 destinations, 11 routes (11 active, 0 holddown, 0 hidden)
+
+        mpls.0: 44 destinations, 44 routes (44 active, 0 holddown, 0 hidden)
+
+        inet6.0: 22 destinations, 23 routes (22 active, 0 holddown, 0 hidden)
+    '''}
+
+    golden_parsed_output = {
+        "route-information": {
+            "route-table": [
+                {
+                    "active-route-count": "929",
+                    "destination-count": "929",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": [
+                        {
+                            "rt-destination": "14.101.0.0/16",
+                            "rt-entry": {
+                                "as-path": "(65151 65000) I",
+                                "local-preference": "120",
+                                "med": "12003",
+                                "nh": {
+                                    "to": "111.87.5.253"
+                                },
+                                "protocol-name": "BGP"
+                            }
+                        },
+                        {
+                            "rt-destination": "27.80.0.0/16",
+                            "rt-entry": {
+                                "as-path": "(65151 65000) I",
+                                "local-preference": "120",
+                                "med": "12003",
+                                "nh": {
+                                    "to": "111.87.5.253"
+                                },
+                                "protocol-name": "BGP"
+                            }
+                        },
+                        {
+                            "rt-destination": "27.81.0.0/16",
+                            "rt-entry": {
+                                "as-path": "(65151 65000) I",
+                                "local-preference": "120",
+                                "med": "12003",
+                                "nh": {
+                                    "to": "111.87.5.253"
+                                },
+                                "protocol-name": "BGP"
+                            }
+                        },
+                        {
+                            "rt-destination": "27.82.0.0/16",
+                            "rt-entry": {
+                                "as-path": "(65151 65000) I",
+                                "local-preference": "120",
+                                "med": "12003",
+                                "nh": {
+                                    "to": "111.87.5.253"
+                                },
+                                "protocol-name": "BGP"
+                            }
+                        },
+                        {
+                            "rt-destination": "27.83.0.0/16",
+                            "rt-entry": {
+                                "as-path": "(65151 65000) I",
+                                "local-preference": "120",
+                                "med": "12003",
+                                "nh": {
+                                    "to": "111.87.5.253"
+                                },
+                                "protocol-name": "BGP"
+                            }
+                        },
+                        {
+                            "rt-destination": "27.84.0.0/16",
+                            "rt-entry": {
+                                "as-path": "(65151 65000) I",
+                                "local-preference": "120",
+                                "med": "12003",
+                                "nh": {
+                                    "to": "111.87.5.253"
+                                },
+                                "protocol-name": "BGP"
+                            }
+                        },
+                        {
+                            "rt-destination": "27.85.0.0/16",
+                            "rt-entry": {
+                                "as-path": "(65151 65000) I",
+                                "local-preference": "120",
+                                "med": "12003",
+                                "nh": {
+                                    "to": "111.87.5.253"
+                                },
+                                "protocol-name": "BGP"
+                            }
+                        },
+                        {
+                            "rt-destination": "27.86.0.0/16",
+                            "rt-entry": {
+                                "as-path": "(65151 65000) I",
+                                "local-preference": "120",
+                                "med": "12003",
+                                "nh": {
+                                    "to": "111.87.5.253"
+                                },
+                                "protocol-name": "BGP"
+                            }
+                        }
+                    ],
+                    "table-name": "inet.0",
+                    "total-route-count": "1615"
+                },
+                {
+                    "active-route-count": "11",
+                    "destination-count": "11",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "table-name": "inet.3",
+                    "total-route-count": "11"
+                },
+                {
+                    "active-route-count": "44",
+                    "destination-count": "44",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "table-name": "mpls.0",
+                    "total-route-count": "44"
+                },
+                {
+                    "active-route-count": "22",
+                    "destination-count": "22",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "table-name": "inet6.0",
+                    "total-route-count": "23"
+                }
+            ]
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRouteReceiveProtocol(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(
+                protocol='bgp',
+                peer='111.87.5.253'
+            )
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowRouteReceiveProtocol(device=self.device)
+        parsed_output = obj.parse(
+            protocol='bgp',
+            peer='111.87.5.253')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+'''
+Unit test for:
+    * show route advertising-protocol {protocol} {neighbor}
+'''
+class TestShowRouteAdvertisingProtocol(unittest.TestCase):
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show route advertising-protocol bgp 111.87.5.253
+
+        inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+        Prefix        Nexthop          MED     Lclpref    AS path
+        * 14.101.0.0/16           Self                 12003   120        (65151 65000) I
+        * 27.80.0.0/16            Self                 12003   120        (65151 65000) I
+        * 27.81.0.0/16            Self                 12003   120        (65151 65000) I
+        * 27.82.0.0/16            Self                 12003   120        (65151 65000) I
+        * 27.83.0.0/16            Self                 12003   120        (65151 65000) I
+    '''}
+
+    golden_parsed_output = {
+        "route-information": {
+            "route-table": {
+                "active-route-count": "929",
+                "destination-count": "929",
+                "hidden-route-count": "0",
+                "holddown-route-count": "0",
+                "rt": [
+                    {
+                        "rt-destination": "14.101.0.0/16",
+                        "rt-entry": {
+                            "active-tag": "*",
+                            "as-path": "(65151 65000) I",
+                            "bgp-metric-flags": "Nexthop Change",
+                            "local-preference": "120",
+                            "med": "12003",
+                            "nh": {
+                                "to": "Self"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "27.80.0.0/16",
+                        "rt-entry": {
+                            "active-tag": "*",
+                            "as-path": "(65151 65000) I",
+                            "bgp-metric-flags": "Nexthop Change",
+                            "local-preference": "120",
+                            "med": "12003",
+                            "nh": {
+                                "to": "Self"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "27.81.0.0/16",
+                        "rt-entry": {
+                            "active-tag": "*",
+                            "as-path": "(65151 65000) I",
+                            "bgp-metric-flags": "Nexthop Change",
+                            "local-preference": "120",
+                            "med": "12003",
+                            "nh": {
+                                "to": "Self"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "27.82.0.0/16",
+                        "rt-entry": {
+                            "active-tag": "*",
+                            "as-path": "(65151 65000) I",
+                            "bgp-metric-flags": "Nexthop Change",
+                            "local-preference": "120",
+                            "med": "12003",
+                            "nh": {
+                                "to": "Self"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "27.83.0.0/16",
+                        "rt-entry": {
+                            "active-tag": "*",
+                            "as-path": "(65151 65000) I",
+                            "bgp-metric-flags": "Nexthop Change",
+                            "local-preference": "120",
+                            "med": "12003",
+                            "nh": {
+                                "to": "Self"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    }
+                ],
+                "table-name": "inet.0",
+                "total-route-count": "1615"
+            }
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRouteAdvertisingProtocol(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(
+                protocol='bgp',
+                neighbor='111.87.5.253'
+            )
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowRouteAdvertisingProtocol(device=self.device)
+        parsed_output = obj.parse(
+            protocol='bgp',
+            neighbor='111.87.5.253')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+        
 if __name__ == '__main__':
     unittest.main()

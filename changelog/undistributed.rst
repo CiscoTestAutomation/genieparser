@@ -67,6 +67,10 @@
         * show bgp group detail
     * Added ShowBgpGroupDetailNoMore for:
         * show bgp group detail | no-more
+    * Added ShowBgpGroupSummary for:
+        * show bgp group summary
+    * Added ShowBgpGroupSummaryNoMore for:
+        * show bgp group summary | no-more
     * Added ShowOspfNeighbor for:
         * show ospf neighbor
     * Added ShowRouteProtocol for:
@@ -78,13 +82,17 @@
     * Added ShowOspf3Interface for:
         * show ospf3 interface
     * Added ShowOspf3Neighbor for:
-        * show ospf3 neighbor | no more
+        * show ospf3 neighbor
     * Added ShowOspf3NeighborExtensive for:
         * show ospf3 neighbor extensive
     * Added ShowArp for:
         * show arp
     * Added ShowArpNoMore for:
         * show arp | no-more
+    * Added ShowOspf3Overview for:
+        * show ospf3 overview
+    * Added ShowOspf3OverviewExtensive for:
+        * show ospf3 overview extensive
     * Added ShowKrtState for:
         * show krt state
     * Added ShowKrtQueue for:
@@ -103,6 +111,26 @@
         * show ospf3 interface extensive
     * Added ShowRouteAdvertisingProtocol for:
         * show route advertising-protocol {protocol} {neighbor}
+    * Added ShowRouteReceiveProtocol for:
+        * show route receive-protocol {protocol} {peer}
+    * Added ShowRouteForwardingTableSummary for:
+        * show route forwarding-table summary
+    * Added ShowOspf3DatabaseExtensive for:
+        * show ospf3 database extensive
+    * Added ShowSystemBuffer for:
+        * show system buffers
+    * Added ShowPfeStatisticsTraffic for:
+        * show pfe statistics traffic
+    * Added ShowSystemUsers for:
+        * show system users
+    * Added ShowChassisFpcDetail for:
+        * show chassis fpc detail
+    * Added ShowChassisFirmware for:
+        * show chassis firmware
+    * Added ShowChassisFirmwareNoForwarding for:
+        * show chassis firmware no-forwarding
+    * Added ShowChassisEnvironmentRoutingEngine for:
+        * show chassis environment routing-engine
 
 
 --------------------------------------------------------------------------------
@@ -167,6 +195,8 @@
     * Update ShowInventory:
         * Added regex to support various outputs.
 * NXOS
+    * Updated ShowAccessLists
+        * Update regex to support various outputs.
     * Updated ShowInterface
         * Update regex to cover both 'IP' and 'ip', both 'Rx' and 'RX'
         * Clean code and correctly assign values to the key 'enabled'
@@ -195,7 +225,11 @@
         * show interfaces {interface} terse
     * Update ShowInterfacesTerseInterface
         * show interfaces terse {interface}
-
+    * Update Ping
+        * only the keys are changed into Optional
+    * Update ShowRouteProtocol
+        * Update regex to support various output
+    
 --------------------------------------------------------------------------------
                                 common.py
 --------------------------------------------------------------------------------
