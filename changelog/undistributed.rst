@@ -123,8 +123,6 @@
         * show system commit
     * Added ShowSystemQueues for:
         * show system queues
-    * Added ShowSystemQueues for:
-        * show system queues
     * Added ShowSystemQueuesNoForwarding for:
         * show system queues no-forwarding
     * Added ShowPfeStatisticsTraffic for:
