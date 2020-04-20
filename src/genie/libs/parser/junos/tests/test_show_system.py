@@ -681,6 +681,8 @@ class TestShowSystemCommit(unittest.TestCase):
 #=========================================================
 class TestShowSystemQueues(unittest.TestCase):
 
+    maxDiff = None
+
     device = Device(name='aDevice')
 
     empty_output = {'execute.return_value': ''}
@@ -1192,6 +1194,8 @@ class TestShowSystemQueues(unittest.TestCase):
 # Unit test for show system queues no-forwarding
 #=========================================================
 class TestShowSystemQueuesNoForwarding(unittest.TestCase):
+
+    maxDiff = None
 
     device = Device(name='aDevice')
 
