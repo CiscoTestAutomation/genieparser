@@ -371,7 +371,7 @@ class ShowSystemUsers(ShowSystemUsersSchema):
                         r'(?P<user_count>\d+) +users, +load +averages: '
                         r'(?P<avg1>[\d\.]+), +(?P<avg2>[\d\.]+), +(?P<avg3>[\d\.]+)$')
 
-        #kddi     pts/0    10.1.0.1                          2:35AM      - -cl
+        #cisco     pts/0    10.1.0.1                          2:35AM      - -cl
         p2 = re.compile(r'^(?P<user>\S+)\s+(?P<tty>\S+)\s+'
                         r'(?P<from>[\d\.]+)\s+(?P<login>\S+)'
                         r'\s+(?P<idle>\S+)\s+(?P<what>\S+)$')
@@ -407,7 +407,7 @@ class ShowSystemUsers(ShowSystemUsersSchema):
 
                 continue
 
-            #kddi     pts/0    10.1.0.1                          2:35AM      - -cl
+            #cisco     pts/0    10.1.0.1                          2:35AM      - -cl
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -475,7 +475,7 @@ class ShowSystemCommit(ShowSystemCommitSchema):
         else:
             out = output
 
-        # 0   2020-03-05 16:04:34 UTC by kddi via cli
+        # 0   2020-03-05 16:04:34 UTC by cisco via cli
         p1 = re.compile(r'^(?P<sequence_number>\d+) +(?P<date_time>([\d\-]+) +'
         r'(([\d\:]+)) (\S+)) +by +(?P<user>\S+) +via +(?P<client>\S+)$')
 
@@ -484,7 +484,7 @@ class ShowSystemCommit(ShowSystemCommitSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 0   2020-03-05 16:04:34 UTC by kddi via cli
+            # 0   2020-03-05 16:04:34 UTC by cisco via cli
             m = p1.match(line)
             if m:
                 group = m.groupdict()
