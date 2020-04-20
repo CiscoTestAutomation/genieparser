@@ -17,7 +17,7 @@ from genie.libs.parser.junos.show_system import (ShowSystemBuffer,
 #=========================================================
 # Unit test for show system buffer
 #=========================================================
-class test_show_system_buffer(unittest.TestCase):
+class TestShowSystemBuffer(unittest.TestCase):
 
     device = Device(name='aDevice')
 
@@ -191,7 +191,7 @@ class TestShowSystemUsers(unittest.TestCase):
 #=========================================================
 # Unit test for show system commit
 #=========================================================
-class TestShowSystemBuffer(unittest.TestCase):
+class TestShowSystemCommmit(unittest.TestCase):
 
     device = Device(name='aDevice')
 
