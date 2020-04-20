@@ -11,8 +11,9 @@ from genie.libs.parser.iosxe.c9500.show_platform import ShowInventory
 
 class TestShowInventory(unittest.TestCase):
     maxDiff = None
+    device_empty = Device(name='empty')
     device = Device(name='c9300')
-    empty_output = {'execute.return_value':''}
+    empty_output = {'execute.return_value': ''}
 
     # show inventory
     golden_output = {'execute.return_value': '''
@@ -143,13 +144,17 @@ class TestShowInventory(unittest.TestCase):
     }
 
     def test_empty(self):
-        self.dev1 = Mock(**self.empty_output)
-        version_obj = ShowInventory(device=self.device)
+        self.device_empty = Mock(**self.empty_output)
+        version_obj = ShowInventory(device=self.device_empty)
         with self.assertRaises(SchemaEmptyParserError):
-            parsered_output = version_obj.parse()
+            parsed_output = version_obj.parse()
 
-    def test_show_platform_c9300(self):
+    def test_show_inventory_c9300(self):
         self.device = Mock(**self.golden_output)
         obj = ShowInventory(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+if __name__ == '__main__':
+    unittest.main()

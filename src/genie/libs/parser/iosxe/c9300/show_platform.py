@@ -45,8 +45,7 @@ class ShowInventory(ShowInventorySchema):
 
     def cli(self, output=None):
         if output is None:
-            cmd = self.cli_command
-            out = self.device.execute(cmd)
+            out = self.device.execute(self.cli_command)
         else:
             out = output
 
