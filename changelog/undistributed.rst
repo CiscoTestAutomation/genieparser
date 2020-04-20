@@ -125,6 +125,8 @@
         * show system commit
     * Added ShowSystemQueues for:
         * show system queues
+    # Added ShowSystemStorage for:
+        * show system storage
     * Added ShowSystemQueuesNoForwarding for:
         * show system queues no-forwarding
     * Added ShowPfeStatisticsTraffic for:
