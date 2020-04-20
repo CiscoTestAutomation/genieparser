@@ -1281,8 +1281,8 @@ class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
                 r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
                 r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
 
-        # * 14.101.0.0/16           Self                 12003   120        (65151 65000) I
-        # 14.101.0.0/16           111.87.5.253         12003   120        (65151 65000) I
+        # * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
+        # 10.220.0.0/16           10.189.5.253         12003   120        (65151 65000) I
         p2 = re.compile(r'^((?P<active_tag>\*) +)?(?P<rt_destination>\S+) +'
                 r'(?P<to>\S+) +(?P<med>\d+) +(?P<local_preference>\d+) +'
                 r'(?P<as_path>\([\S\s]+\) +\w+)$')
@@ -1300,8 +1300,8 @@ class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
                 route_table_list.append(route_table_dict)
                 continue
             
-            # * 14.101.0.0/16           Self                 12003   120        (65151 65000) I
-            # 14.101.0.0/16           111.87.5.253         12003   120        (65151 65000) I
+            # * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
+            # 10.220.0.0/16           10.189.5.253         12003   120        (65151 65000) I
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -1423,7 +1423,7 @@ class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
                 r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
                 r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
 
-        # * 14.101.0.0/16           Self                 12003   120        (65151 65000) I
+        # * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
         p2 = re.compile(r'^(?P<active_tag>\*) +(?P<rt_destination>\S+) +'
                 r'(?P<to>\S+) +(?P<med>\d+) +(?P<local_preference>\d+) +'
                 r'(?P<as_path>\([\S\s]+\) +\w+)$')
@@ -1440,7 +1440,7 @@ class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
                 route_table_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
             
-            # * 14.101.0.0/16           Self                 12003   120        (65151 65000) I
+            # * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
             m = p2.match(line)
             if m:
                 group = m.groupdict()
