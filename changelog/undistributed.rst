@@ -119,6 +119,8 @@
         * show ospf3 database extensive
     * Added ShowSystemBuffer for:
         * show system buffers
+    * Added ShowSystemCommit for:
+        * show system commit
     * Added ShowPfeStatisticsTraffic for:
         * show pfe statistics traffic
     * Added ShowSystemUsers for:
