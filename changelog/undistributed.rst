@@ -220,7 +220,7 @@
     * Update ShowInterfacesTerseInterface
         * show interfaces terse {interface}
     * Update Ping
-        * Update regex to support various output
+        * only the keys are changed into Optional
     * Update ShowRouteProtocol
         * Update regex to support various output
     
