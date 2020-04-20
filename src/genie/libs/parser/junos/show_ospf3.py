@@ -838,7 +838,6 @@ class ShowOspf3DatabaseExternalExtensive(ShowOspf3DatabaseExternalExtensiveSchem
         for line in out.splitlines():
             line = line.strip()
 
-
             # Extern      0.0.0.1          10.34.2.250     0x8000178e  1412  0x3c81  28
             m = p1.match(line)
             if m:
