@@ -47457,17 +47457,17 @@ class TestShowRouteReceiveProtocol(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
-        show route receive-protocol bgp 111.87.5.253
+        show route receive-protocol bgp 10.189.5.253
         inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
         Prefix      Nexthop        MED     Lclpref    AS path
-        14.101.0.0/16           111.87.5.253         12003   120        (65151 65000) I
-        27.80.0.0/16            111.87.5.253         12003   120        (65151 65000) I
-        27.81.0.0/16            111.87.5.253         12003   120        (65151 65000) I
-        27.82.0.0/16            111.87.5.253         12003   120        (65151 65000) I
-        27.83.0.0/16            111.87.5.253         12003   120        (65151 65000) I
-        27.84.0.0/16            111.87.5.253         12003   120        (65151 65000) I
-        27.85.0.0/16            111.87.5.253         12003   120        (65151 65000) I
-        27.86.0.0/16            111.87.5.253         12003   120        (65151 65000) I
+        10.220.0.0/16           10.189.5.253         12003   120        (65151 65000) I
+        10.229.0.0/16            10.189.5.253         12003   120        (65151 65000) I
+        10.189.0.0/16            10.189.5.253         12003   120        (65151 65000) I
+        10.151.0.0/16            10.189.5.253         12003   120        (65151 65000) I
+        10.115.0.0/16            10.189.5.253         12003   120        (65151 65000) I
+        10.81.0.0/16            10.189.5.253         12003   120        (65151 65000) I
+        10.49.0.0/16            10.189.5.253         12003   120        (65151 65000) I
+        10.19.0.0/16            10.189.5.253         12003   120        (65151 65000) I
         inet.3: 11 destinations, 11 routes (11 active, 0 holddown, 0 hidden)
 
         mpls.0: 44 destinations, 44 routes (44 active, 0 holddown, 0 hidden)
@@ -47485,97 +47485,97 @@ class TestShowRouteReceiveProtocol(unittest.TestCase):
                     "holddown-route-count": "0",
                     "rt": [
                         {
-                            "rt-destination": "14.101.0.0/16",
+                            "rt-destination": "10.220.0.0/16",
                             "rt-entry": {
                                 "as-path": "(65151 65000) I",
                                 "local-preference": "120",
                                 "med": "12003",
                                 "nh": {
-                                    "to": "111.87.5.253"
+                                    "to": "10.189.5.253"
                                 },
                                 "protocol-name": "BGP"
                             }
                         },
                         {
-                            "rt-destination": "27.80.0.0/16",
+                            "rt-destination": "10.229.0.0/16",
                             "rt-entry": {
                                 "as-path": "(65151 65000) I",
                                 "local-preference": "120",
                                 "med": "12003",
                                 "nh": {
-                                    "to": "111.87.5.253"
+                                    "to": "10.189.5.253"
                                 },
                                 "protocol-name": "BGP"
                             }
                         },
                         {
-                            "rt-destination": "27.81.0.0/16",
+                            "rt-destination": "10.189.0.0/16",
                             "rt-entry": {
                                 "as-path": "(65151 65000) I",
                                 "local-preference": "120",
                                 "med": "12003",
                                 "nh": {
-                                    "to": "111.87.5.253"
+                                    "to": "10.189.5.253"
                                 },
                                 "protocol-name": "BGP"
                             }
                         },
                         {
-                            "rt-destination": "27.82.0.0/16",
+                            "rt-destination": "10.151.0.0/16",
                             "rt-entry": {
                                 "as-path": "(65151 65000) I",
                                 "local-preference": "120",
                                 "med": "12003",
                                 "nh": {
-                                    "to": "111.87.5.253"
+                                    "to": "10.189.5.253"
                                 },
                                 "protocol-name": "BGP"
                             }
                         },
                         {
-                            "rt-destination": "27.83.0.0/16",
+                            "rt-destination": "10.115.0.0/16",
                             "rt-entry": {
                                 "as-path": "(65151 65000) I",
                                 "local-preference": "120",
                                 "med": "12003",
                                 "nh": {
-                                    "to": "111.87.5.253"
+                                    "to": "10.189.5.253"
                                 },
                                 "protocol-name": "BGP"
                             }
                         },
                         {
-                            "rt-destination": "27.84.0.0/16",
+                            "rt-destination": "10.81.0.0/16",
                             "rt-entry": {
                                 "as-path": "(65151 65000) I",
                                 "local-preference": "120",
                                 "med": "12003",
                                 "nh": {
-                                    "to": "111.87.5.253"
+                                    "to": "10.189.5.253"
                                 },
                                 "protocol-name": "BGP"
                             }
                         },
                         {
-                            "rt-destination": "27.85.0.0/16",
+                            "rt-destination": "10.49.0.0/16",
                             "rt-entry": {
                                 "as-path": "(65151 65000) I",
                                 "local-preference": "120",
                                 "med": "12003",
                                 "nh": {
-                                    "to": "111.87.5.253"
+                                    "to": "10.189.5.253"
                                 },
                                 "protocol-name": "BGP"
                             }
                         },
                         {
-                            "rt-destination": "27.86.0.0/16",
+                            "rt-destination": "10.19.0.0/16",
                             "rt-entry": {
                                 "as-path": "(65151 65000) I",
                                 "local-preference": "120",
                                 "med": "12003",
                                 "nh": {
-                                    "to": "111.87.5.253"
+                                    "to": "10.189.5.253"
                                 },
                                 "protocol-name": "BGP"
                             }
@@ -47618,7 +47618,7 @@ class TestShowRouteReceiveProtocol(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(
                 protocol='bgp',
-                peer='111.87.5.253'
+                peer='10.189.5.253'
             )
 
     def test_golden(self):
@@ -47626,7 +47626,7 @@ class TestShowRouteReceiveProtocol(unittest.TestCase):
         obj = ShowRouteReceiveProtocol(device=self.device)
         parsed_output = obj.parse(
             protocol='bgp',
-            peer='111.87.5.253')
+            peer='10.189.5.253')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 '''
@@ -47640,15 +47640,15 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
-        show route advertising-protocol bgp 111.87.5.253
+        show route advertising-protocol bgp 10.189.5.253
 
         inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
         Prefix        Nexthop          MED     Lclpref    AS path
-        * 14.101.0.0/16           Self                 12003   120        (65151 65000) I
-        * 27.80.0.0/16            Self                 12003   120        (65151 65000) I
-        * 27.81.0.0/16            Self                 12003   120        (65151 65000) I
-        * 27.82.0.0/16            Self                 12003   120        (65151 65000) I
-        * 27.83.0.0/16            Self                 12003   120        (65151 65000) I
+        * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
+        * 10.229.0.0/16            Self                 12003   120        (65151 65000) I
+        * 10.189.0.0/16            Self                 12003   120        (65151 65000) I
+        * 10.151.0.0/16            Self                 12003   120        (65151 65000) I
+        * 10.115.0.0/16            Self                 12003   120        (65151 65000) I
     '''}
 
     golden_parsed_output = {
@@ -47660,7 +47660,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
                 "holddown-route-count": "0",
                 "rt": [
                     {
-                        "rt-destination": "14.101.0.0/16",
+                        "rt-destination": "10.220.0.0/16",
                         "rt-entry": {
                             "active-tag": "*",
                             "as-path": "(65151 65000) I",
@@ -47674,7 +47674,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
                         }
                     },
                     {
-                        "rt-destination": "27.80.0.0/16",
+                        "rt-destination": "10.229.0.0/16",
                         "rt-entry": {
                             "active-tag": "*",
                             "as-path": "(65151 65000) I",
@@ -47688,7 +47688,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
                         }
                     },
                     {
-                        "rt-destination": "27.81.0.0/16",
+                        "rt-destination": "10.189.0.0/16",
                         "rt-entry": {
                             "active-tag": "*",
                             "as-path": "(65151 65000) I",
@@ -47702,7 +47702,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
                         }
                     },
                     {
-                        "rt-destination": "27.82.0.0/16",
+                        "rt-destination": "10.151.0.0/16",
                         "rt-entry": {
                             "active-tag": "*",
                             "as-path": "(65151 65000) I",
@@ -47716,7 +47716,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
                         }
                     },
                     {
-                        "rt-destination": "27.83.0.0/16",
+                        "rt-destination": "10.115.0.0/16",
                         "rt-entry": {
                             "active-tag": "*",
                             "as-path": "(65151 65000) I",
@@ -47742,7 +47742,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(
                 protocol='bgp',
-                neighbor='111.87.5.253'
+                neighbor='10.189.5.253'
             )
 
     def test_golden(self):
@@ -47750,7 +47750,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
         obj = ShowRouteAdvertisingProtocol(device=self.device)
         parsed_output = obj.parse(
             protocol='bgp',
-            neighbor='111.87.5.253')
+            neighbor='10.189.5.253')
         self.assertEqual(parsed_output, self.golden_parsed_output)
         
 if __name__ == '__main__':

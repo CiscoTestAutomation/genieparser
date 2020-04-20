@@ -121,6 +121,10 @@
         * show system buffers
     * Added ShowSystemCommit for:
         * show system commit
+    * Added ShowSystemQueues for:
+        * show system queues
+    * Added ShowSystemQueuesNoForwarding for:
+        * show system queues no-forwarding
     * Added ShowPfeStatisticsTraffic for:
         * show pfe statistics traffic
     * Added ShowSystemUsers for:
@@ -233,7 +237,7 @@
         * only the keys are changed into Optional
     * Update ShowRouteProtocol
         * Update regex to support various output
-    
+
 --------------------------------------------------------------------------------
                                 common.py
 --------------------------------------------------------------------------------
