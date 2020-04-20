@@ -259,3 +259,11 @@ class ShowSystemBufferNoForwarding(ShowSystemBuffer):
     """
 
     cli_command = "show system buffers no-forwarding"
+
+     def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        return super().cli(output=out)
