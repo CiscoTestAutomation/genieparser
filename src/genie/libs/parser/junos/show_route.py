@@ -9,6 +9,7 @@ JUNOS parsers for the following commands:
     * show route protocol {protocol} table {table}
     * show route protocol {protocol}
     * show route protocol {protocol} {ip_address}
+    * show route advertising-protocol {protocol} {ip_address}
     * show route forwarding-table summary
 '''
 
@@ -1314,6 +1315,144 @@ class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
                         rt_entry_dict.update({key.replace('_', '-'): v})
                 nh_dict = rt_entry_dict.setdefault('nh', {})
                 nh_dict.update({'to': group['to']})
+                rt_entry_dict.update({'protocol-name': protocol.upper()})
+                rt_list.append(rt_dict)
+
+        return ret_dict
+
+class ShowRouteAdvertisingProtocolSchema(MetaParser):
+    """ Schema for:
+            * show route advertising-protocol {protocol} {ip_address}
+    """
+    """
+        schema = {
+            Optional("@xmlns:junos"): str,
+            "route-information": {
+                Optional("@xmlns"): str,
+                "route-table": {
+                    "active-route-count": str,
+                    "destination-count": str,
+                    "hidden-route-count": str,
+                    "holddown-route-count": str,
+                    "rt": [
+                        {
+                            Optional("@junos:style"): str,
+                            "rt-destination": str,
+                            "rt-entry": {
+                                "active-tag": str,
+                                "as-path": str,
+                                "bgp-metric-flags": str,
+                                "local-preference": str,
+                                "med": str,
+                                "nh": {
+                                    "to": str
+                                },
+                                "protocol-name": str
+                            }
+                        }
+                    ],
+                    "table-name": str,
+                    "total-route-count": str
+                }
+            }
+        }
+    """
+
+    def validate_rt_list(value):
+        # Pass rt list of dict in value
+        if not isinstance(value, list):
+            raise SchemaTypeError('rt is not a list')
+        # Create rt entry Schema
+        entry_schema = Schema({
+            Optional("@junos:style"): str,
+            "rt-destination": str,
+            "rt-entry": {
+                "active-tag": str,
+                "as-path": str,
+                "bgp-metric-flags": str,
+                "local-preference": str,
+                "med": str,
+                "nh": {
+                    "to": str
+                },
+                "protocol-name": str
+            }
+        })
+        # Validate each dictionary in list
+        for item in value:
+            entry_schema.validate(item)
+        return value
+    
+    # Main schema
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "route-information": {
+            Optional("@xmlns"): str,
+            "route-table": {
+                "active-route-count": str,
+                "destination-count": str,
+                "hidden-route-count": str,
+                "holddown-route-count": str,
+                Optional('rt'): Use(validate_rt_list),
+                "table-name": str,
+                "total-route-count": str
+            }
+        }
+    }
+
+
+class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
+    """ Parser for:
+            * show route advertising-protocol {protocol} {neighbor}
+    """
+
+    cli_command = 'show route advertising-protocol {protocol} {neighbor}'
+    def cli(self, protocol, neighbor, output=None):
+        if not output:
+            cmd = self.cli_command.format(protocol=protocol,
+                    neighbor=neighbor)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        ret_dict = {}
+        
+        # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+        p1 = re.compile(r'^(?P<table_name>\S+): +(?P<destination_count>\d+) +'
+                r'destinations, +(?P<total_route_count>\d+) +routes +'
+                r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
+                r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
+
+        # * 14.101.0.0/16           Self                 12003   120        (65151 65000) I
+        p2 = re.compile(r'^(?P<active_tag>\*) +(?P<rt_destination>\S+) +'
+                r'(?P<to>\S+) +(?P<med>\d+) +(?P<local_preference>\d+) +'
+                r'(?P<as_path>\([\S\s]+\) +\w+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                route_table_dict = ret_dict.setdefault('route-information', {}). \
+                    setdefault('route-table', {})
+                route_table_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+            
+            # * 14.101.0.0/16           Self                 12003   120        (65151 65000) I
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                rt_list = route_table_dict.setdefault('rt', [])
+                rt_dict = {'rt-destination': group['rt_destination']}
+                rt_entry_dict = rt_dict.setdefault('rt-entry', {})
+                keys = ['active_tag', 'as_path', 'local_preference', 'med']
+                for key in keys:
+                    rt_entry_dict.update({key.replace('_', '-'): group[key]})
+                nh_dict = rt_entry_dict.setdefault('nh', {})
+                nh_dict.update({'to': group['to']})
+                rt_entry_dict.update({'bgp-metric-flags': 'Nexthop Change'})
                 rt_entry_dict.update({'protocol-name': protocol.upper()})
                 rt_list.append(rt_dict)
 
