@@ -74,7 +74,9 @@ class ShowSystemStorage(ShowSystemStorageSchema):
         ret_dict = {}
 
         # /dev/gpt/junos           20G       1.2G        17G        7%  /.mount
-        p1 = re.compile(r'^(?P<filesystem_name>\S+) +(?P<total_blocks>\S+) +(?P<used_blocks>\S+) +(?P<available_blocks>\S+) +(?P<used_percent>\S+) +(?P<mounted_on>\S+)$')
+        p1 = re.compile(r'^(?P<filesystem_name>\S+) +(?P<total_blocks>\S+) +'
+        r'(?P<used_blocks>\S+) +(?P<available_blocks>\S+) +(?P<used_percent>\S+)'
+        r' +(?P<mounted_on>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -83,7 +85,8 @@ class ShowSystemStorage(ShowSystemStorageSchema):
             m = p1.match(line)
             if m:
 
-                filesystem_list = ret_dict.setdefault("system-storage-information", {}).setdefault("filesystem", [])
+                filesystem_list = ret_dict.setdefault("system-storage-information", {})\
+                    .setdefault("filesystem", [])
 
                 group = m.groupdict()
                 entry = {
