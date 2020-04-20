@@ -67,12 +67,12 @@ class PingSchema(MetaParser):
             'address': str,
             'source': str,
             'data-bytes': int,
-            'result': Use(validate_ping_result_list),
+            Optional('result'): Use(validate_ping_result_list),
             'statistics': {
                 'send': int,
                 'received': int,
                 'loss-rate': int,
-                'round-trip': {
+                Optional('round-trip'): {
                     'min': str,
                     'avg': str,
                     'max': str,
@@ -115,6 +115,7 @@ class Ping(PingSchema):
                 r'time=(?P<time>\S+) +ms$')
 
         # 5 packets transmitted, 5 packets received, 0% packet loss
+        # 5 packets transmitted, 0 packets received, 100% packet loss
         p3 = re.compile(r'^(?P<send>\d+) +packets +transmitted, +'
                 r'(?P<received>\d+) packets +received, +'
                 r'(?P<loss_rate>\d+)\% +packet +loss$')

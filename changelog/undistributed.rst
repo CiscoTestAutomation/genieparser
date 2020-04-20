@@ -109,6 +109,12 @@
         * show ospf3 database external extensive
     * Added ShowOspf3InterfaceExtensive for:
         * show ospf3 interface extensive
+    * Added ShowRouteAdvertisingProtocol for:
+        * show route advertising-protocol {protocol} {neighbor}
+    * Added ShowRouteReceiveProtocol for:
+        * show route receive-protocol {protocol} {peer}
+    * Added ShowRouteForwardingTableSummary for:
+        * show route forwarding-table summary
     * Added ShowOspf3DatabaseExtensive for:
         * show ospf3 database extensive
     * Added ShowSystemBuffer for:
@@ -121,6 +127,12 @@
         * show system users
     * Added ShowChassisFpcDetail for:
         * show chassis fpc detail
+    * Added ShowChassisFirmware for:
+        * show chassis firmware
+    * Added ShowChassisFirmwareNoForwarding for:
+        * show chassis firmware no-forwarding
+    * Added ShowChassisEnvironmentRoutingEngine for:
+        * show chassis environment routing-engine
 
 
 --------------------------------------------------------------------------------
@@ -215,7 +227,11 @@
         * show interfaces {interface} terse
     * Update ShowInterfacesTerseInterface
         * show interfaces terse {interface}
-
+    * Update Ping
+        * only the keys are changed into Optional
+    * Update ShowRouteProtocol
+        * Update regex to support various output
+    
 --------------------------------------------------------------------------------
                                 common.py
 --------------------------------------------------------------------------------

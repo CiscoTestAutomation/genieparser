@@ -3,8 +3,9 @@
 
 Parser for the following show commands:
     * show ospf3 interface
-    * show ospf3 database
     * show ospf3 interface extensive
+    * show ospf3 database
+    * show ospf3 database extensive
     * show ospf3 database external extensive
     * show ospf3 overview
     * show ospf3 overview extensive

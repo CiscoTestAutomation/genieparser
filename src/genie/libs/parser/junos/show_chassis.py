@@ -3,6 +3,9 @@
 
 Parser for the following show commands:
     * show chassis fpc detail
+    * show chassis environment routing-engine
+    * show chassis firmware
+    * show chassis firmware no-forwarding
 '''
 # python
 import re
@@ -171,3 +174,191 @@ class ShowChassisFpcDetail(ShowChassisFpcDetailSchema):
                 continue
 
         return ret_dict
+
+class ShowChassisEnvironmentRoutingEngineSchema(MetaParser):
+
+    schema = {
+    Optional("@xmlns:junos"): str,
+    "environment-component-information": {
+        Optional("@xmlns"): str,
+        "environment-component-item": {
+            "name": str,
+            "state": str
+        }
+    }
+}
+
+
+class ShowChassisEnvironmentRoutingEngine(ShowChassisEnvironmentRoutingEngineSchema):
+    """ Parser for:
+    * show chassis environment routing-engine
+    """
+
+    cli_command = 'show chassis environment routing-engine'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        #Routing Engine 0 status:
+        p1 = re.compile(r'^(?P<name>[\S\s]+) +status:$')
+
+        #State                      Online Master
+        p2 = re.compile(r'^State +(?P<name>[\S\s]+)$')
+
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #Routing Engine 0 status:
+            m = p1.match(line)
+            if m:
+                ospf_area = ret_dict.setdefault("environment-component-information", {})\
+                    .setdefault("environment-component-item", {})
+                group = m.groupdict()
+
+                ospf_area.update({'name' : group['name']})
+                continue
+
+            #State                      Online Master
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_area.update({'state' : group['name']})
+                continue
+
+        return ret_dict
+
+
+class ShowChassisFirmwareSchema(MetaParser):
+
+    """ schema = {
+    Optional("@xmlns:junos"): str,
+    "firmware-information": {
+        Optional("@xmlns"): str,
+        "chassis": {
+            Optional("@junos:style"): str,
+            "chassis-module": {
+                "firmware": [
+                    {
+                        "firmware-version": str,
+                        "type": str
+                    }
+                ],
+                "name": str
+            }
+        }
+    }
+} """
+
+    def validate_chassis_firmware_list(value):
+        # Pass firmware list as value
+        if not isinstance(value, list):
+            raise SchemaTypeError('firmware is not a list')
+        chassis_firmware_schema = Schema({
+            "firmware-version": str,
+                        "type": str
+        })
+        # Validate each dictionary in list
+        for item in value:
+            chassis_firmware_schema.validate(item)
+        return value
+
+    schema = {
+        "firmware-information": {
+        Optional("@xmlns"): str,
+        "chassis": {
+            Optional("@junos:style"): str,
+            "chassis-module": {
+                "firmware": Use(validate_chassis_firmware_list),
+                "name": str
+                }
+            }
+        }
+    }
+
+class ShowChassisFirmware(ShowChassisFirmwareSchema):
+    """ Parser for:
+    * show chassis firmware
+    """
+
+    cli_command = 'show chassis firmware'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        #Part                     Type       Version
+        p0 = re.compile(r'^Part +Type +Version$')
+
+        #FPC 0                    ROM        PC Bios
+        p1 = re.compile(r'^(?P<name>\S+\s+\d+) +(?P<type>\S+) +(?P<firmware>\S+\s+\S+)$')
+
+        #O/S        Version 19.2R1.8 by builder on 2019-06-21 17:52:23 UTC
+        p2 = re.compile(r'^(?P<type>\S+) +(?P<firmware>[\s\S]+)$')
+
+
+        ret_dict = {}
+
+        for line in out.splitlines()[1:]:
+            line = line.strip()
+
+            #Part                     Type       Version
+            m = p0.match(line)
+            if m:
+                continue
+
+            #FPC 0                    ROM        PC Bios
+            m = p1.match(line)
+            if m:
+                
+                firmware_chassis_dict = ret_dict.setdefault("firmware-information", {})\
+                    .setdefault("chassis", {}).setdefault("chassis-module", {})
+
+                firmware_entry_list = firmware_chassis_dict.setdefault("firmware", [])
+
+                group = m.groupdict()
+                entry_dict = {}
+                entry_dict["firmware-version"] = group["firmware"]
+                entry_dict["type"] = group["type"]
+                
+                firmware_chassis_dict["name"] = group["name"]
+                firmware_entry_list.append(entry_dict)
+                continue
+
+            #O/S        Version 19.2R1.8 by builder on 2019-06-21 17:52:23 UTC
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict = {}
+                entry_dict["firmware-version"] = group["firmware"]
+                entry_dict["type"] = group["type"]
+
+                firmware_entry_list.append(entry_dict)
+                continue
+
+        return ret_dict
+
+
+class ShowChassisFirmwareNoForwarding(ShowChassisFirmware):
+    """ Parser for:
+            - show chassis firmware no-forwarding
+    """
+
+    cli_command = [
+        'show chassis firmware no-forwarding'
+    ]
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        return super().cli(output=out)
