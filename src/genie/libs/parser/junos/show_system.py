@@ -257,14 +257,14 @@ class ShowSystemBuffers(ShowSystemBuffersSchema):
         return ret_dict
 
 
-class ShowSystemBufferNoForwarding(ShowSystemBuffer):
+class ShowSystemBufferNoForwarding(ShowSystemBuffers):
     """ Parser for:
             - 'show system buffer no-forwarding'
     """
 
     cli_command = "show system buffers no-forwarding"
 
-     def cli(self, output=None):
+    def cli(self, output=None):
         if not output:
             out = self.device.execute(self.cli_command)
         else:
