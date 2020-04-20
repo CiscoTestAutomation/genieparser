@@ -191,7 +191,7 @@ class TestShowSystemUsers(unittest.TestCase):
 #=========================================================
 # Unit test for show system commit
 #=========================================================
-class test_show_system_commit(unittest.TestCase):
+class TestShowSystemBuffer(unittest.TestCase):
 
     device = Device(name='aDevice')
 
