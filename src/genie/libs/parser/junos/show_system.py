@@ -526,7 +526,14 @@ class ShowSystemQueuesSchema(MetaParser):
             },
             "protocol-queues-statistics": {
                 "protocol-queue": [
-                    {}
+                    {
+                        "max-octets-allowed": str,
+                        "max-packets-allowed": str,
+                        "name": str,
+                        "number-of-queue-drops": str,
+                        "octets-in-queue": str,
+                        "packets-in-queue": str
+                    }
                 ]
             }
         }
@@ -575,7 +582,8 @@ class ShowSystemQueues(ShowSystemQueuesSchema):
             out = output
 
         # lsi                             0        12500        0       41        0
-        p1 = re.compile(r'^(?P<name>\S+) +(?P<octets_in_queue>\d+) +(?P<max_octets_allowed>\d+) +(?P<packets_in_queue>\d+) +(?P<max_packets_allowed>\d+) +(?P<number_of_queue_drops>\d+)$')
+        p1 = re.compile(r'^(?P<name>\S+) +(?P<octets_in_queue>\d+) +(?P<max_octets_allowed>\d+)'
+            r' +(?P<packets_in_queue>\d+) +(?P<max_packets_allowed>\d+) +(?P<number_of_queue_drops>\d+)$')
 
         # input protocol              bytes          max  packets      max    drops
         p2 = re.compile(r'^input +protocol +bytes +max +packets +max +drops$')
@@ -592,9 +600,13 @@ class ShowSystemQueues(ShowSystemQueuesSchema):
                 group = m.groupdict()
 
                 if interface_flag:
-                    entry_list = ret_dict.setdefault("queues-statistics", {}).setdefault("interface-queues-statistics", {}).setdefault("interface-queue", [])
+                    entry_list = ret_dict.setdefault("queues-statistics", {})\
+                        .setdefault("interface-queues-statistics", {})\
+                            .setdefault("interface-queue", [])
                 else:
-                    entry_list = ret_dict.setdefault("queues-statistics", {}).setdefault("protocol-queues-statistics", {}).setdefault("protocol-queue", [])
+                    entry_list = ret_dict.setdefault("queues-statistics", {})\
+                        .setdefault("protocol-queues-statistics", {})\
+                            .setdefault("protocol-queue", [])
 
                 group = m.groupdict()
                 entry = {}
