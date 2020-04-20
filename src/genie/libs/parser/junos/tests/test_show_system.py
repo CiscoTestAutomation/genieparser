@@ -1682,7 +1682,6 @@ class TestShowSystemStorage(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden_1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
         obj = ShowSystemStorage(device=self.device)
         parsed_output = obj.parse()
