@@ -854,7 +854,7 @@ class ShowSystemCoreDumps(ShowSystemCoreDumpsSchema):
         # -rw-r--r--  1 root  wheel    1252383 Aug 8   2019 /var/crash/core.riot.mpc0.1565307741.1716.gz
         p1 = re.compile(r'^(?P<file_permissions>\S+) +(?P<file_links>\S+) +'
         r'(?P<file_owner>\S+)  +(?P<file_group>\S+) +(?P<file_size>\S+) +'
-        r'(?P<file_date>\S+ +\d+ +\d+) +(?P<file_name>\S+)$')
+            r'(?P<file_date>\S+ +\d+ +\d+) +(?P<file_name>\S+)$')
 
         # /var/tmp/*core*: No such file or directory
         p2 = re.compile(r'^(?P<output>\S+: +No +such +file +or +directory)$')
