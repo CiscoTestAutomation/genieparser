@@ -166,28 +166,35 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
         p1 = re.compile(r'^OSPF +database, +Area +(?P<ospf_area>[\d\.]+)$')
 
         # Router  *111.87.5.252     111.87.5.252     0x80001b9e  1801  0x22 0x1e2  120
-        p2 = re.compile(r'^(?P<lsa_type>[a-zA-Z]+)( *)(?P<lsa_id>\*?\d{1,3}(\.\d{1,3}){3})( +)(?P<advertising_router>\S+)( +)(?P<sequence_number>\S+)( +)(?P<age>\S+)( +)(?P<options>\S+)( +)(?P<checksum>\S+)( +)(?P<lsa_length>\S+)$')
+        p2 = re.compile(r'^(?P<lsa_type>[a-zA-Z]+)( *)(?P<lsa_id>\*?\d{1,3}(\.\d{1,3}){3})'
+            r'( +)(?P<advertising_router>\S+)( +)(?P<sequence_number>\S+)( +)(?P<age>\S+)'
+            r'( +)(?P<options>\S+)( +)(?P<checksum>\S+)( +)(?P<lsa_length>\S+)$')
 
         # bits 0x2, link count 8
         p3 = re.compile(r'^bits +(?P<bits>\S+), +link +count (?P<link_count>\d+)$')
 
         # id 111.87.5.253, data 111.87.5.93, Type PointToPoint (1)
-        p4 = re.compile(r'^id (?P<link_id>[\d\.]+), data (?P<link_data>[\d\.]+), Type (?P<link_type_name>\S+) \((?P<link_type_value>\S+)\)$')
+        p4 = re.compile(r'^id +(?P<link_id>[\d\.]+), +data +(?P<link_data>[\d\.]+)'
+            r', +Type +(?P<link_type_name>\S+) +\((?P<link_type_value>\S+)\)$')
 
         # Topology count: 0, Default metric: 5
-        p5 = re.compile(r'^Topology +count: (?P<ospf_topology_count>\d+), Default metric: (?P<metric>\d+)$')
+        p5 = re.compile(r'^Topology +count: +(?P<ospf_topology_count>\d+), +Default'
+            r' +metric: +(?P<metric>\d+)$')
 
         # Topology default (ID 0)
         p6 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\S+)\)$')
 
         # Type: PointToPoint, Node ID: 27.86.198.239
-        p7 = re.compile(r'^Type: +(?P<link_type_name>\S+), +Node +ID: +(?P<ospf_lsa_topology_link_node_id>[\d\.]+)$')
+        p7 = re.compile(r'^Type: +(?P<link_type_name>\S+), +Node +ID: +'
+            r'(?P<ospf_lsa_topology_link_node_id>[\d\.]+)$')
 
         # Metric: 1000, Bidirectional
-        p8 = re.compile(r'^Metric: +(?P<ospf_lsa_topology_link_metric>\d+), +(?P<ospf_lsa_topology_link_state>\S+)$')
+        p8 = re.compile(r'^Metric: +(?P<ospf_lsa_topology_link_metric>\d+), +'
+            r'(?P<ospf_lsa_topology_link_state>\S+)$')
 
         # RtrAddr (1), length 4:
-        p9 = re.compile(r'^(?P<tlv_type_name>[\s\S]+) +\((?P<tlv_type_value>\d+)\), +length +(?P<tlv_length>\d+):$')
+        p9 = re.compile(r'^(?P<tlv_type_name>[\s\S]+) +\((?P<tlv_type_value>\d+)\)'
+            r', +length +(?P<tlv_length>\d+):$')
 
         # 111.87.5.252
         p10 = re.compile(r'^(?P<formatted_tlv_data>\S+)$')
@@ -205,7 +212,8 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
         p14 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\S+)\)$')
 
         # Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
-        p15 = re.compile(r'^Type: +(?P<type_value>\d+), +Metric: +(?P<ospf_topology_metric>\d+), +Fwd +addr: +(?P<forward_address>[\d\.]+), +Tag: +(?P<tag>[\d\.]+)$')
+        p15 = re.compile(r'^Type: +(?P<type_value>\d+), +Metric: +(?P<ospf_topology_metric>\d+)'
+            r', +Fwd +addr: +(?P<forward_address>[\d\.]+), +Tag: +(?P<tag>[\d\.]+)$')
 
 
         ret_dict = {}
@@ -296,7 +304,8 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                 if m:
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                    ospf_lsa_topology = last_database.setdefault("ospf-router-lsa", {}).setdefault("ospf-lsa-topology", {})
+                    ospf_lsa_topology = last_database.setdefault("ospf-router-lsa", {})\
+                        .setdefault("ospf-lsa-topology", {})
 
                     group = m.groupdict()
                     entry = ospf_lsa_topology
@@ -311,7 +320,8 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                 if m:
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                    ospf_lsa_topology_list = last_database.setdefault("ospf-router-lsa", {}).setdefault("ospf-lsa-topology", {}).setdefault("ospf-lsa-topology-link", [])
+                    ospf_lsa_topology_list = last_database.setdefault("ospf-router-lsa", {})\
+                        .setdefault("ospf-lsa-topology", {}).setdefault("ospf-lsa-topology-link", [])
 
                     group = m.groupdict()
                     entry = {}
@@ -354,9 +364,17 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                         entry['formatted-tlv-data'] = ""
 
                     else:
-                        last_database.setdefault("ospf-opaque-area-lsa", {}).setdefault("te-subtlv", {}).setdefault("tlv-type-value",[]).append(group["tlv_type_value"])
-                        last_database.setdefault("ospf-opaque-area-lsa", {}).setdefault("te-subtlv", {}).setdefault("tlv-type-name",[]).append(group["tlv_type_name"])
-                        last_database.setdefault("ospf-opaque-area-lsa", {}).setdefault("te-subtlv", {}).setdefault("tlv-length",[]).append(group["tlv_length"])
+                        last_database.setdefault("ospf-opaque-area-lsa", {})\
+                            .setdefault("te-subtlv", {}).setdefault("tlv-type-value",[])\
+                                .append(group["tlv_type_value"])
+
+                        last_database.setdefault("ospf-opaque-area-lsa", {})\
+                            .setdefault("te-subtlv", {}).setdefault("tlv-type-name",[])\
+                                .append(group["tlv_type_name"])
+
+                        last_database.setdefault("ospf-opaque-area-lsa", {})\
+                            .setdefault("te-subtlv", {}).setdefault("tlv-length",[])\
+                                .append(group["tlv_length"])
 
                     continue
 
@@ -370,7 +388,9 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                     if "te-subtlv" not in last_database["ospf-opaque-area-lsa"]:
                         last_database["ospf-opaque-area-lsa"]["tlv-block"]["formatted-tlv-data"] = group["formatted_tlv_data"]
                     else:
-                        last_database.setdefault("ospf-opaque-area-lsa", {}).setdefault("te-subtlv", {}).setdefault("formatted-tlv-data",[]).append(group["formatted_tlv_data"])
+                        last_database.setdefault("ospf-opaque-area-lsa", {})\
+                            .setdefault("te-subtlv", {}).setdefault("formatted-tlv-data",[])\
+                                .append(group["formatted_tlv_data"])
 
                 # Priority 0, 1000Mbps
                 m = p11.match(line)
@@ -384,7 +404,8 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
 
                     if group["priority_number"] == "0":
 
-                        last_database.setdefault("ospf-opaque-area-lsa", {}).setdefault("te-subtlv", {}).setdefault("formatted-tlv-data",[]).append(line)
+                        last_database.setdefault("ospf-opaque-area-lsa", {})\
+                            .setdefault("te-subtlv", {}).setdefault("formatted-tlv-data",[]).append(line)
                     else:
 
                         last_database["ospf-opaque-area-lsa"]["te-subtlv"]["formatted-tlv-data"][-1] += line
@@ -401,7 +422,9 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                     if "te-subtlv" not in last_database["ospf-opaque-area-lsa"]:
                         last_database["ospf-opaque-area-lsa"]["formatted-tlv-data"] = group["formatted_tlv_data"]
                     else:
-                        last_database.setdefault("ospf-opaque-area-lsa", {}).setdefault("te-subtlv", {}).setdefault("formatted-tlv-data",[]).append(group["formatted_tlv_data"])
+                        last_database.setdefault("ospf-opaque-area-lsa", {})\
+                            .setdefault("te-subtlv", {}).setdefault("formatted-tlv-data",[])\
+                                .append(group["formatted_tlv_data"])
 
                     continue
 
@@ -412,7 +435,8 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                     group = m.groupdict()
 
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
-                    last_database.setdefault("ospf-external-lsa", {}).setdefault("address-mask", group['address_mask'])
+                    last_database.setdefault("ospf-external-lsa", {})\
+                        .setdefault("address-mask", group['address_mask'])
                     continue
 
                 m = p14.match(line)
@@ -421,8 +445,13 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
 
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                    last_database.setdefault("ospf-external-lsa", {}).setdefault("ospf-external-lsa-topology", {}).setdefault("ospf-topology-name", group["ospf_topology_name"])
-                    last_database.setdefault("ospf-external-lsa", {}).setdefault("ospf-external-lsa-topology", {}).setdefault("ospf-topology-id", group["ospf_topology_id"])
+                    last_database.setdefault("ospf-external-lsa", {})\
+                        .setdefault("ospf-external-lsa-topology", {})\
+                            .setdefault("ospf-topology-name", group["ospf_topology_name"])
+
+                    last_database.setdefault("ospf-external-lsa", {})\
+                        .setdefault("ospf-external-lsa-topology", {})\
+                            .setdefault("ospf-topology-id", group["ospf_topology_id"])
 
                     continue
 
@@ -430,10 +459,20 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                 if m:
                     group = m.groupdict()
 
-                    last_database.setdefault("ospf-external-lsa", {}).setdefault("ospf-external-lsa-topology", {}).setdefault("type-value", group["type_value"])
-                    last_database.setdefault("ospf-external-lsa", {}).setdefault("ospf-external-lsa-topology", {}).setdefault("ospf-topology-metric", group["ospf_topology_metric"])
-                    last_database.setdefault("ospf-external-lsa", {}).setdefault("ospf-external-lsa-topology", {}).setdefault("forward-address", group["forward_address"])
-                    last_database.setdefault("ospf-external-lsa", {}).setdefault("ospf-external-lsa-topology", {}).setdefault("tag", group["tag"])
+                    last_database.setdefault("ospf-external-lsa", {})\
+                        .setdefault("ospf-external-lsa-topology", {})\
+                            .setdefault("type-value", group["type_value"])
+                    last_database.setdefault("ospf-external-lsa", {})\
+                        .setdefault("ospf-external-lsa-topology", {})\
+                            .setdefault("ospf-topology-metric", group["ospf_topology_metric"])
+
+                    last_database.setdefault("ospf-external-lsa", {})\
+                        .setdefault("ospf-external-lsa-topology", {})\
+                            .setdefault("forward-address", group["forward_address"])
+
+                    last_database.setdefault("ospf-external-lsa", {})\
+                        .setdefault("ospf-external-lsa-topology", {})\
+                            .setdefault("tag", group["tag"])
 
                     continue
 
