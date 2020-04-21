@@ -10,23 +10,18 @@ from genie.libs.parser.utils.common import (
 
 class TestFuzzyRegexSearchCommand(unittest.TestCase):
     def test_search_normal_arguments(self):
-        for command, expected_source in parser_data.items(): 
-            arguments = re.findall('{(.*?)}', command)
+        for command in parser_data.keys():
+            wildcard = re.sub('{.*?}', '---', command)
             search = re.sub('{.*?}', 'argument', command)
-            expected_kwargs = {argument:'argument' for argument in arguments}
             results = _fuzzy_search_command(search, False)
-            is_found = False
-            for result in results:
-                found_command, source, kwargs = result
-                if source == expected_source and command == found_command:
-                    is_found = True
-                    self.assertDictEqual(kwargs, expected_kwargs, search)
-            self.assertTrue(is_found)
+            self.assertEqual(len(results), 1)
+            found_command, _, _ = results[0]
+            self.assertEqual(re.sub('{.*?}', '---', found_command), wildcard)
 
     def test_search_normal_arguments_with_regex(self):
         for command, expected_source in parser_data.items(): 
             arguments = re.findall('{(.*?)}', command)
-            search = re.sub('{.*?}', 'argument', command)
+            search = re.escape(re.sub('{.*?}', 'argument', command))
             expected_kwargs = {argument:'argument' for argument in arguments}
             results = _fuzzy_search_command(search, True)
             is_found = False
@@ -35,7 +30,8 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
                 if source == expected_source and command == found_command:
                     is_found = True
                     self.assertDictEqual(kwargs, expected_kwargs, search)
-            self.assertTrue(is_found)
+                    break
+            self.assertTrue(is_found, search)
 
     def test_special_command(self):
         results = _fuzzy_search_command('/dna/intent/api/v1/interface', False)
@@ -66,8 +62,8 @@ if __name__ == '__main__':
     # print(_fuzzy_search_command('\/dna\/intent\/api\/v1\/interface\/apcd', True)[0][0])
     # exit()
 
-    print([[*x] for x in _fuzzy_search_command(re.escape("show route ipv4 abc"), True)])
-
+    #print([[*x] for x in _fuzzy_search_command(re.escape("show route ipv4 abc"), True)])
+    unittest.main()
     exit()
     for command, expected_source in parser_data.items(): 
         if command.startswith('/mgmt'):

@@ -160,6 +160,10 @@ def _fuzzy_search_command(search, use_regex):
             elif score == best_score:
                 result.append(entry)
 
+    # Return only one instance if regex is not used
+    if not use_regex:
+        return [result[0]] if len(result) > 0 else []
+
     return result
 
 def _matches_fuzzy_regex(i, j, tokens, command_tokens, kwargs, use_regex, required_arguments=None, score=0):
