@@ -2450,6 +2450,9 @@ class ShowSystemStatistics(ShowSystemStatisticsSchema):
         p1 = re.compile(r"^(?P<state>\S+):$")
 
         # 265063785 packets sent
+        # 0 interface-restricted dad proxy duplicates
+        # 4214 IPv4->MPLS L3 packets received
+        # 5 LSP ping packets (ttl-expired/router alert)
         p2 = re.compile(
             r"^(?P<number_value>\d+) +(?P<key>([\w\-\'\>\,\/\.\<\s]|\([(\D+)\s]+\))+)$"
         )
