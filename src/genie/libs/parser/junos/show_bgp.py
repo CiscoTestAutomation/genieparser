@@ -871,8 +871,8 @@ class ShowBgpSummary(ShowBgpSummarySchema):
         # 'bgp-information': {
         #       'bgp-peer': []
         # ------------------------------------------------------------
-        # 27.85.216.179           65171          0          0       0       0 29w5d 22:42:36 Connect
-        # 2001:268:fb8f::11       65151          0          0       0       0 29w5d 22:42:36 Connect
+        # 10.49.216.179           65171          0          0       0       0 29w5d 22:42:36 Connect
+        # 2001:db8:eb18:ca45::11       65151          0          0       0       0 29w5d 22:42:36 Connect
         p5 = re.compile(r'^(?P<peer_address>[\d\w:.]+) +(?P<peer_as>\d+) +'
                         r'(?P<input_messages>\d+) +(?P<output_messages>\d+) +'
                         r'(?P<route_queue_count>\d+) +(?P<flap_count>\d+) +'
@@ -985,8 +985,8 @@ class ShowBgpSummary(ShowBgpSummarySchema):
             #                 ],
             # ------------------------------------------------------------
 
-            # 27.85.216.179           65171          0          0       0       0 29w5d 22:42:36 Connect
-            # 2001:268:fb8f::11       65151          0          0       0       0 29w5d 22:42:36 Connect
+            # 10.49.216.179           65171          0          0       0       0 29w5d 22:42:36 Connect
+            # 2001:db8:eb18:ca45::11       65151          0          0       0       0 29w5d 22:42:36 Connect
             m = p5.match(line)
             if m:
                 group = m.groupdict()
