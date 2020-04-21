@@ -488,7 +488,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetailSchema(MetaParser):
         if not isinstance(value, list):
             raise SchemaTypeError('ospf-database is not a list')
 
-        def validate_ospf_link(value): # not in use
+        def validate_ospf_link(value):
             if not isinstance(value, list):
                 raise SchemaTypeError('ospf-link is not a list')
             ospf_link_schema = Schema(
@@ -857,6 +857,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
 
             if self.lsa_type == "Extern":
 
+                # mask 255.255.255.255
                 m = p13.match(line)
                 if m:
                     group = m.groupdict()
@@ -866,6 +867,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                         .setdefault("address-mask", group['address_mask'])
                     continue
 
+                # Topology default (ID 0)
                 m = p14.match(line)
                 if m:
                     group = m.groupdict()
@@ -882,6 +884,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
 
                     continue
 
+                # Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
                 m = p15.match(line)
                 if m:
                     group = m.groupdict()
