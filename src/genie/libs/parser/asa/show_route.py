@@ -5,11 +5,11 @@ Parser for the following show commands:
 '''
 
 import re
-from netaddr import IPAddress
+
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, \
-                                                Any, \
-                                                Optional
+from genie.metaparser.util.schemaengine import Any, Optional
+from netaddr import IPAddress
+
 
 # =============================================
 # Schema for 'show route'
@@ -65,22 +65,31 @@ class ShowRouteSchema(MetaParser):
            o - ODR, P - periodic downloaded static route, + - replicated route
     """
     source_protocol_dict = {
-        'ospf' : ['O','IA','N1','N2','E1','E2'],
-        'odr' : ['o'],
-        'isis' : ['i','su','L1','L2','ia'],
-        'eigrp' : ['D','EX'],
-        'static' : ['S'],
-        'egp' : ['E'],
-        'mobile' : ['M'],
-        'local' : ['L'],
-        'connected' : ['C'],
-        'bgp' : ['B'],
-        'per-user static route': ['U'],
-        'rip' : ['R'],
-        'igrp': ['I'],
-        'replicated route': ['+'],
-        'periodic downloaded static route': ['P'],
-        'vpn': ['V']
+        'O': 'ospf',
+        'IA': 'ospf',
+        'N1': 'ospf',
+        'N2': 'ospf',
+        'E1': 'ospf',
+        'E2': 'ospf',
+        'o': 'odr',
+        'i': 'isis',
+        'su': 'isis',
+        'L1': 'isis',
+        'L2': 'isis',
+        'ia': 'isis',
+        'D': 'eigrp',
+        'EX': 'eigrp',
+        'S': 'static',
+        'E': 'egp',
+        'M': 'mobile',
+        'L': 'local',
+        'C': 'connected',
+        'B': 'bgp',
+        'U': 'per-user static route',
+        'R': 'rip',
+        'I': 'igrp',
+        '+': 'replicated route',
+        'V': 'periodic downloaded static route',
     }
 
 
@@ -102,229 +111,129 @@ class ShowRoute(ShowRouteSchema):
             out = output
 
         ret_dict = {}
-        routes = source_protocol = ''
-        index = 1
+        out = re.sub(r'(?ms)(Codes:.+?)replicated\sroute', '', out, re.MULTILINE)
+        r_routes = re.compile(r'(?:^\S{1,4})\s(?:.*)\r?\n(?:^\ +.*\r?\n)*', re.MULTILINE)  # All routes (split)
 
-        # S* 0.0.0.0 0.0.0.0 via 10.16.251.1, outside
-        # S 0.0.0.1 0.0.0.0 [10/5] via 10.16.255.1, outside
-        p1 = re.compile(
-            r'^\s*(?P<code>(?!is)(?!via)[\w\*]+)\s*(?P<network>\d+.\d+.\d+.\d+)\s*'
-            '(?P<subnet>\d+.\d+.\d+.\d+)\s*(\[(?P<route_preference>[\d\/]+)\])?\s*'
-            '(?P<route_check>[\S]*)\s*(?P<next_hop>\d+.\d+.\d+.\d+),\s*'
-            '(?P<context_name>[\S\s]+)$')
+        r_static = re.compile(
+            r'(?P<code>S|S\*)\s(?P<network>\S+)\s(?P<subnet>\S+)\s\[(?P<route_preference>[\d\/]+)\]'
+            r'\svia\s(?P<next_hop>\S+),\s(?P<context_name>\S+)')
 
-        # via 10.16.251.2, pod1000
-        p2 = re.compile(
-            r'^(?P<network>\d+.\d+.\d+.\d+)?\s*?(?P<route_check>[\S\s]*)\s'
-            '(?P<next_hop>\d+.\d+.\d+.\d+),\s*(?P<context_name>[\S\s]+)$')
+        r_connected_and_local = re.compile(
+            r'(?i)(?P<code>(C|L|S))[ ]+(?P<network>\S+)\s+(?P<subnet>\S+)\s+is\s+directly\s+connected,'
+            r'\s+(?P<context_name>\S+)')
 
-        # C 10.10.1.2 255.255.254.0 is directly connected, outside
-        p3 = re.compile(
-            r'^\s*(?P<code>(?!is)(?!via)[\w\*]+)\s*(?P<network>\d+.\d+.\d+.\d+)\s*'
-            '(?P<subnet>\d+.\d+.\d+.\d+)\s*(\[(?P<route_preference>[\d\/]+)\])?\s*'
-            '(?P<route_check>[\S\s]*)\s*,\s*(?P<context_name>[\S\s]+)$')
+        r_bgp = re.compile(
+            r'(?i)(?P<code>B)[ ]+(?P<network>\S+)\s+(?P<subnet>\S+)\s+\[(?P<route_preference>.*?)\]'
+            r'\s+via\s+(?P<next_hop>\S+),\s+(?P<age>\S+)')
 
-        # is directly connected, pod2002
-        # connected by VPN (advertised), admin
-        p4 = re.compile(
-            r'^(?P<route_check>[\S\s]*),\s*(?P<context_name>[\S\s]+)$')
+        r_vpn = re.compile(
+            r'(?P<code>V)\s(?P<network>\S+)\s(?P<subnet>\S+)\sconnected\sby\sVPN\s\(advertised\),\s'
+            r'(?P<context_name>\S+)')
 
-        # V 10.10.1.4 255.255.255.255
-        p5 = re.compile(
-            r'^\s*(?P<code>(?!is)(?!via)[\w\*]+)\s*(?P<network>\d+.\d+.\d+.\d+)\s*'
-            '(?P<subnet>\d+.\d+.\d+.\d+)\s*(\[(?P<route_preference>[\d\/]+)\])?\s*'
-            '(?P<context_name>\S+)?$')
+        r_ospf1 = re.compile(
+            r'(?P<type>O)\s(?P<code>\S+)\s(?P<network>\S+)\s(?P<subnet>\S+)\s\[(?P<route_preference>'
+            r'[\d\/]+)\]\svia\s(?P<next_hop>\S+),\s(?P<age>\S+),\s(?P<context_name>\S+)')
 
-        for line in out.splitlines():
-            line = line.strip()
+        r_ospf_eigrp = re.compile(
+            r'(?P<code>O|D)\s(?P<network>\S+)\s(?P<subnet>\S+)\s\[(?P<route_preference>[\d\/]+)\]\svia'
+            r'\s(?P<next_hop>\S+),\s(?P<age>\S+),\s(?P<context_name>\S+)')
 
-            # S* 0.0.0.0 0.0.0.0 via 10.16.251.1, outside
-            # S 0.0.0.1 0.0.0.0 [10/5] via 10.16.255.1, outside
-            m = p1.match(line)
+        r_ospf_nh = re.compile(r'(via\s+(?P<next_hop>\S+),\s(?P<age>\S+)\s+(?P<context_name>\S+))')
+        r_bgp_nh = re.compile(r'via\s+(?P<next_hop>\S+),\s(?P<age>\S+)')
+        r_static_nh = re.compile(r'via\s+(?P<next_hop>\S+),\s(?P<context_name>\S+)')
+
+        for line in r_routes.findall(out + "\n"):
+            index = 1
+
+            clean_line = ' '.join(line.split())
+            groups = dict()
+            next_hops = list()
+
+            """ static """
+            m = r_static.match(clean_line)
             if m:
                 groups = m.groupdict()
-                dict_ipv4 = ret_dict.setdefault('vrf', {}).setdefault('default', {}). \
+
+            """ connected and local """
+            m = r_connected_and_local.match(clean_line)
+            if m:
+                groups = m.groupdict()
+
+            """ bgp """
+            m = r_bgp.match(clean_line)
+            if m:
+                groups = m.groupdict()
+
+            """ osp1 """
+            m = r_ospf1.match(clean_line)
+            if m:
+                groups = m.groupdict()
+            else:
+                m = r_ospf_eigrp.match(clean_line)
+                if m:
+                    groups = m.groupdict()
+
+            """ vpn """
+            m = r_vpn.match(clean_line)
+            if m:
+                groups = m.groupdict()
+
+            dict_ipv4 = ret_dict.setdefault('vrf', {}).setdefault('default', {}). \
                 setdefault('address_family', {}).setdefault('ipv4', {}). \
                 setdefault('routes', {})
-                if 'via' in groups['route_check'] and groups['next_hop']:
-                    if groups['code']:
-                        code = groups['code']
-                        source_protocol_codes = groups['code'].strip()
-                        for key, val in super().source_protocol_dict.items():
-                            source_protocol_replaced = re.split \
-                            ('\*',source_protocol_codes)[0].strip()
-                            code = source_protocol_replaced
-                            if source_protocol_replaced in val:
-                                source_protocol = key
-                    if groups['network']:
-                        routes = groups['network']
-                        subnet = groups['subnet']
-                        if '0.0.0.0' == subnet:
-                            prefix_length = str(0)
-                        else:
-                            prefix_length = str(IPAddress(subnet).netmask_bits())
-                        combined_ip = routes+'/'+prefix_length
-                        dict_routes = dict_ipv4.setdefault(combined_ip, {})
-                        dict_routes.update({'active': True})
-                        dict_routes.update({'route': combined_ip})
-                        dict_routes.update({'source_protocol_codes': code})
-                        dict_routes.update({'source_protocol': source_protocol})
-                        if '*' in groups['code']:
-                            dict_routes.update({'candidate_default': True})
-                        else:
-                            dict_routes.update({'candidate_default': False})
-                        if groups['route_preference']:
-                            routepreference = groups['route_preference']                        
-                            if '/' in routepreference:
-                                route_preference = int(routepreference.split('/')[0])
-                                metric = int(routepreference.split('/')[1])
-                                dict_routes.update \
-                                ({'route_preference': route_preference})
-                                dict_routes.update({'metric': metric})
-                            else:
-                                dict_routes.update \
-                                ({'route_preference': int(routepreference)})
-                        if groups['next_hop']:
-                            if groups['network'] and groups['next_hop']:
-                                index = 1
-                            next_hop = groups['next_hop']
-                            outgoing_interface_name = groups['context_name']
-                            dict_next_hop = dict_routes.setdefault('next_hop', {}). \
-                            setdefault('next_hop_list', {}).setdefault(index, {})
-                            dict_next_hop.update({'index': index})
-                            dict_next_hop.update({'next_hop': next_hop})
-                            dict_next_hop.update \
-                            ({'outgoing_interface_name': outgoing_interface_name})
-                            index += 1
-                continue
 
-            # via 10.16.251.2, pod1000
-            m = p2.match(line)
-            if m:
-                groups = m.groupdict()
-                if 'via' in groups['route_check']:
-                    if groups['network'] and groups['next_hop']:
-                        index = 1
-                    next_hop = groups['next_hop']
-                    outgoing_interface_name = groups['context_name']
-                    dict_next_hop = dict_routes.setdefault('next_hop', {}). \
-                    setdefault('next_hop_list', {}).setdefault(index, {})
-                    dict_next_hop.update({'index': index})
-                    dict_next_hop.update({'next_hop': next_hop})
-                    dict_next_hop.update \
-                    ({'outgoing_interface_name': outgoing_interface_name})
-                    index += 1
-                continue
+            routes = groups['network']
+            subnet = groups['subnet']
+            prefix_length = str(IPAddress(subnet).netmask_bits())
 
-            # C 10.10.1.2 255.255.254.0 is directly connected, outside
-            m = p3.match(line)
-            if m:
-                groups = m.groupdict()
-                dict_ipv4 = ret_dict.setdefault('vrf', {}).setdefault('default', {}). \
-                setdefault('address_family', {}).setdefault('ipv4', {}). \
-                setdefault('routes', {})
-                if 'is directly' in groups['route_check']:
-                    if groups['code']:
-                        source_protocol_codes = groups['code'].strip()
-                        for key, val in super().source_protocol_dict.items():
-                            source_protocol_replaced = re.split \
-                            ('\*',source_protocol_codes)[0].strip()
-                            if source_protocol_replaced in val:
-                                source_protocol = key
-                    if groups['network']:
-                        routes = groups['network']
-                        subnet = groups['subnet']
-                        if '0.0.0.0' == subnet:
-                            prefix_length = str(0)
-                        else:
-                            prefix_length = str(IPAddress(subnet).netmask_bits())
-                        combined_ip = routes+'/'+prefix_length                    
-                        dict_routes = dict_ipv4.setdefault(combined_ip, {})
-                        dict_routes.update({'active': True})
-                        dict_routes.update({'route': combined_ip})
-                        dict_routes.update({'source_protocol_codes': groups['code']})
-                        dict_routes.update({'source_protocol': source_protocol})
-                        if '*' in groups['code']:
-                            dict_routes.update({'candidate_default': True})
-                        else:
-                            dict_routes.update({'candidate_default': False})
-                        if groups['route_preference']:
-                            routepreference = groups['route_preference']                        
-                            if '/' in routepreference:
-                                route_preference = int(routepreference.split('/')[0])
-                                metric = int(routepreference.split('/')[1])
-                                dict_routes.update \
-                                ({'route_preference': route_preference})
-                                dict_routes.update({'metric': metric})
-                            else:
-                                dict_routes.update \
-                                ({'route_preference': int(routepreference)})            
-                        outgoing_interface_name = groups['context_name']
-                        dict_via = dict_routes.setdefault('next_hop', {}). \
-                        setdefault('outgoing_interface_name', {}). \
-                        setdefault(outgoing_interface_name, {})
-                        dict_via.update \
-                        ({'outgoing_interface_name': outgoing_interface_name})
-                continue
+            prefix = routes + '/' + prefix_length
+            source_protocol = super().source_protocol_dict[groups['code'].strip('*')]
 
-            # is directly connected, pod2002
-            # connected by VPN (advertised), admin
-            m = p4.match(line)
-            if m:
-                groups = m.groupdict()
-                if 'is directly' in groups['route_check'] or 'connected by' \
-                in groups['route_check']:
-                    outgoing_interface_name = groups['context_name']
-                    dict_via = dict_routes.setdefault('next_hop', {}). \
-                    setdefault('outgoing_interface_name', {}). \
-                    setdefault(outgoing_interface_name, {})
-                    dict_via.update \
-                    ({'outgoing_interface_name': outgoing_interface_name})
-                continue
+            dict_routes = dict_ipv4.setdefault(prefix, {})
 
-            # V 10.10.1.4 255.255.255.255
-            m = p5.match(line)
-            if m:
-                groups = m.groupdict()
-                dict_ipv4 = ret_dict.setdefault('vrf', {}).setdefault('default', {}). \
-                setdefault('address_family', {}).setdefault('ipv4', {}). \
-                setdefault('routes', {})
-                if groups['network'] and groups['context_name'] is None:
-                    if groups['code']:
-                        source_protocol_codes = groups['code'].strip()
-                        for key, val in super().source_protocol_dict.items():
-                            source_protocol_replaced = re.split \
-                            ('\*',source_protocol_codes)[0].strip()
-                            if source_protocol_replaced in val:
-                                source_protocol = key
-                    if groups['network']:
-                        routes = groups['network']
-                        subnet = groups['subnet']
-                        if '0.0.0.0' == subnet:
-                            prefix_length = str(0)
-                        else:
-                            prefix_length = str(IPAddress(subnet).netmask_bits())
-                        combined_ip = routes+'/'+prefix_length                    
-                        dict_routes = dict_ipv4.setdefault(combined_ip, {})
-                        dict_routes.update({'active': True})
-                        dict_routes.update({'route': combined_ip})
-                        dict_routes.update({'source_protocol_codes': groups['code']})
-                        dict_routes.update({'source_protocol': source_protocol})
-                        if '*' in groups['code']:
-                            dict_routes.update({'candidate_default': True})
-                        else:
-                            dict_routes.update({'candidate_default': False})
-                        if groups['route_preference']:
-                            routepreference = groups['route_preference']                        
-                            if '/' in routepreference:
-                                route_preference = int(routepreference.split('/')[0])
-                                metric = int(routepreference.split('/')[1])
-                                dict_routes.update \
-                                ({'route_preference': route_preference})
-                                dict_routes.update({'metric': metric})
-                            else:
-                                dict_routes.update \
-                                ({'route_preference': int(routepreference)})
-                continue
+            if '*' in groups['code']:
+                dict_routes.update({'candidate_default': True})
+                groups['code'] = groups['code'].strip('*')
+            else:
+                dict_routes.update({'candidate_default': False})
+
+            dict_routes.update({'active': True})
+            dict_routes.update({'route': prefix})
+            dict_routes.update({'source_protocol_codes': groups['code']})
+            dict_routes.update({'source_protocol': source_protocol})
+
+            if "via" in clean_line and groups['code'] == 'S':
+                """ static"""
+                next_hops = [m.groupdict() for m in r_static_nh.finditer(clean_line)]
+
+            if "via" in clean_line and dict_routes['source_protocol'] == 'ospf':
+                """ ospf"""
+                next_hops = [m.groupdict() for m in r_ospf_nh.finditer(clean_line)]
+
+            if "via" in clean_line and groups['code'] == 'B':
+                """ bgp"""
+                next_hops = [m.groupdict() for m in r_bgp_nh.finditer(clean_line)]
+
+            if 'route_preference' in groups.keys():
+                if '/' in groups['route_preference']:
+                    route_preference, metric = map(int, groups['route_preference'].split('/'))
+                    dict_routes.update({'metric': metric})
+                else:
+                    route_preference = int(groups['route_preference'])
+                dict_routes.update({'route_preference': route_preference})
+            if not next_hops and groups.get('context_name'):
+                dict_next_hop = dict_routes.setdefault('next_hop', {})
+                dict_next_hop.update({'outgoing_interface_name': {
+                    groups['context_name']: {'outgoing_interface_name': groups['context_name']}
+                }})
+
+            for nh in next_hops:
+                dict_next_hop = dict_routes.setdefault('next_hop', {}).setdefault('next_hop_list', {}).setdefault(index,
+                                                                                                                  {})
+                dict_next_hop.update({'index': index})
+                dict_next_hop.update({'next_hop': nh.get('next_hop')})
+                if nh.get('context_name'):
+                    dict_next_hop.update({'outgoing_interface_name': nh.get('context_name')})
+                index += 1
 
         return ret_dict
