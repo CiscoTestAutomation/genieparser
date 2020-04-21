@@ -1898,7 +1898,6 @@ class TestShowSystemCoreDumps(unittest.TestCase):
     }
 
     def test_empty(self):
-        raise
         self.device = Mock(**self.empty_output)
         obj = ShowSystemCoreDumps(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
