@@ -598,7 +598,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             r'( +)(?P<options>\S+)( +)(?P<checksum>\S+)( +)(?P<lsa_length>\S+)$')
 
         # bits 0x2, link count 8
-        p3 = re.compile(r'^bits +(?P<bits>\S+), +link +count (?P<link_count>\d+)$')
+        p3 = re.compile(r'^bits +(?P<bits>\S+), +link +count +(?P<link_count>\d+)$')
 
         # id 111.87.5.253, data 111.87.5.93, Type PointToPoint (1)
         p4 = re.compile(r'^id +(?P<link_id>[\d\.]+), +data +(?P<link_data>[\d\.]+)'
