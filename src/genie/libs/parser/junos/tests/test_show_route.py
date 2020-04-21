@@ -47753,5 +47753,6 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
             neighbor='10.189.5.253')
         self.assertEqual(parsed_output, self.golden_parsed_output)
         
+
 if __name__ == '__main__':
     unittest.main()

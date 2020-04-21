@@ -3480,7 +3480,10 @@ class TestShowInventory(unittest.TestCase):
         parsed_output = inventory_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 55c51dc85a02f7b31a3a89d526623ef02d2bf8dd
 class TestShowPlatform(unittest.TestCase):
     dev1 = Device(name='empty')
     dev2 = Device(name='semi_empty')
