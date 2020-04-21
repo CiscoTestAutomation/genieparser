@@ -288,7 +288,6 @@ class ShowOspfInterfaceDetail(ShowOspfInterfaceDetailSchema):
             # Adj count: 4
             m = p3.match(line)
             if m:
-                state = "here"
                 group = m.groupdict()
                 intf_dict.update({'adj_count': int(group['adj_count'])})
                 continue
