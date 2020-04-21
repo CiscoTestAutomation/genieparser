@@ -18,7 +18,7 @@ from genie.libs.parser.junos.show_system import ShowSystemBuffers,\
     ShowSystemUsers, ShowSystemStorage
 
 # =========================================================
-# Unit test for show system buffer
+# Unit test for show system buffers
 #=========================================================
 class TestShowSystemBuffers(unittest.TestCase):
 
@@ -1690,7 +1690,7 @@ class TestShowSystemStorage(unittest.TestCase):
 
 
 #=========================================================
-# Unit test for show system buffer no-forwarding
+# Unit test for show system buffers no-forwarding
 #=========================================================
 class TestShowSystemBufferNoForwarding(unittest.TestCase):
 
