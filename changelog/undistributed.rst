@@ -31,6 +31,8 @@
     * Added ShowDmvpn for
         * show dmvpn
         * show dmvpn interface {interface}
+    * Added ShowInventory in subdirectory 'C9300' for
+        * show inventory
 
 * NXOS
     * Added ShowIpRouteSummary for:
@@ -111,12 +113,36 @@
         * show ospf3 database external extensive
     * Added ShowOspf3InterfaceExtensive for:
         * show ospf3 interface extensive
+    * Added ShowRouteAdvertisingProtocol for:
+        * show route advertising-protocol {protocol} {neighbor}
+    * Added ShowRouteReceiveProtocol for:
+        * show route receive-protocol {protocol} {peer}
+    * Added ShowRouteForwardingTableSummary for:
+        * show route forwarding-table summary
     * Added ShowOspf3DatabaseExtensive for:
         * show ospf3 database extensive
-    * Added ShowSystemBuffer for:
+    * Added ShowSystemBuffers for:
         * show system buffers
+    * Added ShowSystemBuffersNoForwarding for:
+        * show system buffers no-forwarding
+    * Added ShowSystemCommit for:
+        * show system commit
+    * Added ShowSystemQueues for:
+        * show system queues
+    # Added ShowSystemStorage for:
+        * show system storage
+    * Added ShowSystemQueuesNoForwarding for:
+        * show system queues no-forwarding
     * Added ShowPfeStatisticsTraffic for:
         * show pfe statistics traffic
+    * Added ShowSystemUpdate for:
+        * show system uptime
+    * Added ShowSystemUpdateNoForwarding for:
+        * show system uptime no-forwarding
+    * Added ShowSystemCoreDumps for:
+        * show system core-dumps
+    * Added ShowSystemCoreDumpsNoForwarding for:
+        * show system core-dumps no-forwarding
     * Added ShowSystemUsers for:
         * show system users
     * Added ShowChassisFpcDetail for:
@@ -127,6 +153,7 @@
         * show chassis firmware no-forwarding
     * Added ShowChassisEnvironmentRoutingEngine for:
         * show chassis environment routing-engine
+
 
 
 --------------------------------------------------------------------------------
@@ -190,6 +217,8 @@
         * Update regex to support various outputs.
     * Update ShowInventory:
         * Added regex to support various outputs.
+    * Update ShowIpInterface:
+        * Fixed the typo in the keys 'broadcast_address' and 'security_level'
 * NXOS
     * Updated ShowAccessLists
         * Update regex to support various outputs.
@@ -221,6 +250,10 @@
         * show interfaces {interface} terse
     * Update ShowInterfacesTerseInterface
         * show interfaces terse {interface}
+    * Update Ping
+        * only the keys are changed into Optional
+    * Update ShowRouteProtocol
+        * Update regex to support various output
 
 --------------------------------------------------------------------------------
                                 common.py

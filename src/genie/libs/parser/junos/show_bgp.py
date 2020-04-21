@@ -426,6 +426,7 @@ class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
                 for k, v in group.items():
                     entry = k.replace('_', '-')
                     bgp_information_dict.update({entry: v})
+
                 continue
             
             # 1366        682          0          0          0          0
@@ -486,6 +487,7 @@ class ShowBgpGroupBrief(ShowBgpGroupBriefSchema):
                 for k, v in group.items():
                     entry = k.replace('_', '-')
                     sub_dict.update({entry: v})
+
                 continue
 
             # Active prefixes:              0

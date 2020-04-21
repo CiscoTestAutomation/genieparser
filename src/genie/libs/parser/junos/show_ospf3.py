@@ -1,4 +1,3 @@
-
 ''' show_ospf3.py
 
 Parser for the following show commands:
@@ -73,6 +72,7 @@ class ShowOspf3Interface(ShowOspf3InterfaceSchema):
         p1 = re.compile(r'^(?P<interface_name>\S+) +(?P<ospf_interface_state>\S+)'
             r' +(?P<ospf_area>[0-9]{1,3}(\.[0-9]{1,3}){3}) +(?P<dr_id>[0-9]{1,3}'
             r'(\.[0-9]{1,3}){3}) +(?P<bdr_id>[0-9]{1,3}(\.[0-9]{1,3}){3}) +(?P<neighbor_count>\S+)$')
+
 
         ret_dict = {}
 
@@ -518,9 +518,11 @@ class ShowOspf3Database(ShowOspf3DatabaseSchema):
                     entry[entry_key] = group_value
 
                 entry_list.append(entry)
+
                 continue
 
         return ret_dict
+
 
 class ShowOspf3InterfaceExtensiveSchema(MetaParser):
     """ Schema for:
@@ -837,7 +839,6 @@ class ShowOspf3DatabaseExternalExtensive(ShowOspf3DatabaseExternalExtensiveSchem
 
         for line in out.splitlines():
             line = line.strip()
-
 
             # Extern      0.0.0.1          10.34.2.250     0x8000178e  1412  0x3c81  28
             m = p1.match(line)
@@ -1905,3 +1906,4 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
                 continue
 
         return ret_dict
+
