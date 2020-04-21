@@ -1637,7 +1637,7 @@ class ShowSystemStatisticsSchema(MetaParser):
 
         def icmp_histogram_list(value):
             if not isinstance(value, list):
-                raise SchemaTypeError("statistics is not a list")
+                raise SchemaTypeError("icmp-histogram is not a list")
             icmp_histogram_schema = Schema(
                 {
                     "destination-unreachable": str,
