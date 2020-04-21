@@ -1773,7 +1773,7 @@ class TestShowSystemBufferNoForwarding(unittest.TestCase):
 #=========================================================
 # Unit test for show system core-dumps
 #=========================================================
-class test_show_system_core_dumps(unittest.TestCase):
+class TestShowSystemCoreDumps(unittest.TestCase):
 
     device = Device(name='aDevice')
 
@@ -1911,7 +1911,7 @@ class test_show_system_core_dumps(unittest.TestCase):
 #=========================================================
 # Unit test for show system core-dumps no-forwarding
 #=========================================================
-class test_show_system_core_dumps_no_forwarding(unittest.TestCase):
+class TestShowSystemCoreDumpsNoForwarding(unittest.TestCase):
 
     device = Device(name='aDevice')
 
