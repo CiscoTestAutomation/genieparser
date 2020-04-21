@@ -3,18 +3,21 @@ from unittest.mock import Mock
 
 from pyats.topology import loader, Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
-from genie.libs.parser.junos.show_ospf_database_advertising_router_self_detail import ShowOspfDatabaseAdvertisingRouterSelfDetail
+from genie.libs.parser.junos.show_ospf_database_advertising_router_self_detail import (
+    ShowOspfDatabaseAdvertisingRouterSelfDetail,
+)
+
 
 class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
 
     maxDiff = None
 
-    device = Device(name='test-device')
+    device = Device(name="test-device")
 
-    empty_output = {'execute.return_value': ''}
+    empty_output = {"execute.return_value": ""}
 
-    golden_output = {'execute.return_value':
-    '''
+    golden_output = {
+        "execute.return_value": """
             show ospf database advertising-router self detail
 
             OSPF database, Area 0.0.0.8
@@ -259,17 +262,16 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
         Topology default (ID 0)
             Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
 
-    '''}
+    """
+    }
 
     golden_parsed_output = {
         "ospf-database-information": {
-            "ospf-area-header": {
-                "ospf-area": "0.0.0.8"
-            },
+            "ospf-area-header": {"ospf-area": "0.0.0.8"},
             "ospf-database": [
                 {
                     "advertising-router": "111.87.5.252",
-                    "age": "1810",
+                    "age": "1801",
                     "checksum": "0x1e2",
                     "lsa-id": "111.87.5.252",
                     "lsa-length": "120",
@@ -285,7 +287,15 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "link-type-name": "PointToPoint",
                                 "link-type-value": "1",
                                 "metric": "5",
-                                "ospf-topology-count": "0"
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "111.87.5.93",
+                                "link-id": "111.87.5.253",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "5",
+                                "ospf-topology-count": "0",
                             },
                             {
                                 "link-data": "255.255.255.252",
@@ -293,7 +303,15 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "link-type-name": "Stub",
                                 "link-type-value": "3",
                                 "metric": "5",
-                                "ospf-topology-count": "0"
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "111.87.5.92",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "5",
+                                "ospf-topology-count": "0",
                             },
                             {
                                 "link-data": "106.187.14.122",
@@ -301,7 +319,15 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "link-type-name": "PointToPoint",
                                 "link-type-value": "1",
                                 "metric": "100",
-                                "ospf-topology-count": "0"
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "106.187.14.122",
+                                "link-id": "106.187.14.240",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "100",
+                                "ospf-topology-count": "0",
                             },
                             {
                                 "link-data": "255.255.255.252",
@@ -309,7 +335,15 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "link-type-name": "Stub",
                                 "link-type-value": "3",
                                 "metric": "100",
-                                "ospf-topology-count": "0"
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "106.187.14.120",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "100",
+                                "ospf-topology-count": "0",
                             },
                             {
                                 "link-data": "27.86.198.25",
@@ -317,7 +351,15 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "link-type-name": "PointToPoint",
                                 "link-type-value": "1",
                                 "metric": "1000",
-                                "ospf-topology-count": "0"
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "27.86.198.25",
+                                "link-id": "27.86.198.239",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
                             },
                             {
                                 "link-data": "255.255.255.252",
@@ -325,7 +367,15 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "link-type-name": "Stub",
                                 "link-type-value": "3",
                                 "metric": "1000",
-                                "ospf-topology-count": "0"
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "27.86.198.24",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
                             },
                             {
                                 "link-data": "255.255.255.0",
@@ -333,7 +383,15 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "link-type-name": "Stub",
                                 "link-type-value": "3",
                                 "metric": "100",
-                                "ospf-topology-count": "0"
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.0",
+                                "link-id": "100.0.0.0",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "100",
+                                "ospf-topology-count": "0",
                             },
                             {
                                 "link-data": "255.255.255.255",
@@ -341,8 +399,16 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "link-type-name": "Stub",
                                 "link-type-value": "3",
                                 "metric": "0",
-                                "ospf-topology-count": "0"
-                            }
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "111.87.5.252",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "0",
+                                "ospf-topology-count": "0",
+                            },
                         ],
                         "ospf-lsa-topology": {
                             "ospf-lsa-topology-link": [
@@ -350,31 +416,31 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                     "link-type-name": "PointToPoint",
                                     "ospf-lsa-topology-link-metric": "1000",
                                     "ospf-lsa-topology-link-node-id": "27.86.198.239",
-                                    "ospf-lsa-topology-link-state": "Bidirectional"
+                                    "ospf-lsa-topology-link-state": "Bidirectional",
                                 },
                                 {
                                     "link-type-name": "PointToPoint",
                                     "ospf-lsa-topology-link-metric": "100",
                                     "ospf-lsa-topology-link-node-id": "106.187.14.240",
-                                    "ospf-lsa-topology-link-state": "Bidirectional"
+                                    "ospf-lsa-topology-link-state": "Bidirectional",
                                 },
                                 {
                                     "link-type-name": "PointToPoint",
                                     "ospf-lsa-topology-link-metric": "5",
                                     "ospf-lsa-topology-link-node-id": "111.87.5.253",
-                                    "ospf-lsa-topology-link-state": "Bidirectional"
-                                }
+                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                },
                             ],
                             "ospf-topology-id": "0",
-                            "ospf-topology-name": "default"
-                        }
+                            "ospf-topology-name": "default",
+                        },
                     },
                     "our-entry": True,
-                    "sequence-number": "0x80001b9e"
+                    "sequence-number": "0x80001b9e",
                 },
                 {
                     "advertising-router": "111.87.5.252",
-                    "age": "433",
+                    "age": "424",
                     "checksum": "0xd49a",
                     "lsa-id": "1.0.0.1",
                     "lsa-length": "28",
@@ -385,15 +451,15 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                             "formatted-tlv-data": "111.87.5.252",
                             "tlv-length": "4",
                             "tlv-type-name": "RtrAddr",
-                            "tlv-type-value": "1"
+                            "tlv-type-value": "1",
                         }
                     },
                     "our-entry": True,
-                    "sequence-number": "0x80001a15"
+                    "sequence-number": "0x80001a15",
                 },
                 {
                     "advertising-router": "111.87.5.252",
-                    "age": "162",
+                    "age": "153",
                     "checksum": "0x95cd",
                     "lsa-id": "1.0.0.3",
                     "lsa-length": "136",
@@ -409,9 +475,32 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "5",
                                 "1000Mbps",
                                 "1000Mbps",
-                                "Priority 0, 1000Mbps\n                          Priority 1, 1000Mbps\n                          Priority 2, 1000Mbps\n                          Priority 3, 1000Mbps\n                          Priority 4, 1000Mbps\n                          Priority 5, 1000Mbps\n                          Priority 6, 1000Mbps\n                          Priority 7, 1000Mbps",
-                                "Local 333, Remote 0",
-                                "0"
+                                "Priority "
+                                "0, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "1, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "2, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "3, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "4, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "5, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "6, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "7, "
+                                "1000Mbps\n",
+                                "Local " "333, " "Remote " "0",
+                                "0",
                             ],
                             "tlv-length": [
                                 "1",
@@ -423,7 +512,7 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "4",
                                 "32",
                                 "8",
-                                "4"
+                                "4",
                             ],
                             "tlv-type-name": [
                                 "Linktype",
@@ -435,7 +524,7 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "MaxRsvBW",
                                 "UnRsvBW",
                                 "LinkLocalRemoteIdentifier",
-                                "Color"
+                                "Color",
                             ],
                             "tlv-type-value": [
                                 "1",
@@ -447,22 +536,22 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "7",
                                 "8",
                                 "11",
-                                "9"
-                            ]
+                                "9",
+                            ],
                         },
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "112",
                             "tlv-type-name": "Link",
-                            "tlv-type-value": "2"
-                        }
+                            "tlv-type-value": "2",
+                        },
                     },
                     "our-entry": True,
-                    "sequence-number": "0x80000322"
+                    "sequence-number": "0x80000322",
                 },
                 {
                     "advertising-router": "111.87.5.252",
-                    "age": "2613",
+                    "age": "2604",
                     "checksum": "0xb804",
                     "lsa-id": "1.0.0.4",
                     "lsa-length": "136",
@@ -478,9 +567,32 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "100",
                                 "1000Mbps",
                                 "1000Mbps",
-                                "Priority 0, 1000Mbps\n                          Priority 1, 1000Mbps\n                          Priority 2, 1000Mbps\n                          Priority 3, 1000Mbps\n                          Priority 4, 1000Mbps\n                          Priority 5, 1000Mbps\n                          Priority 6, 1000Mbps\n                          Priority 7, 1000Mbps",
-                                "Local 334, Remote 0",
-                                "10"
+                                "Priority "
+                                "0, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "1, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "2, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "3, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "4, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "5, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "6, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "7, "
+                                "1000Mbps\n",
+                                "Local " "334, " "Remote " "0",
+                                "10",
                             ],
                             "tlv-length": [
                                 "1",
@@ -492,7 +604,7 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "4",
                                 "32",
                                 "8",
-                                "4"
+                                "4",
                             ],
                             "tlv-type-name": [
                                 "Linktype",
@@ -504,7 +616,7 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "MaxRsvBW",
                                 "UnRsvBW",
                                 "LinkLocalRemoteIdentifier",
-                                "Color"
+                                "Color",
                             ],
                             "tlv-type-value": [
                                 "1",
@@ -516,22 +628,22 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "7",
                                 "8",
                                 "11",
-                                "9"
-                            ]
+                                "9",
+                            ],
                         },
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "112",
                             "tlv-type-name": "Link",
-                            "tlv-type-value": "2"
-                        }
+                            "tlv-type-value": "2",
+                        },
                     },
                     "our-entry": True,
-                    "sequence-number": "0x800013e8"
+                    "sequence-number": "0x800013e8",
                 },
                 {
                     "advertising-router": "111.87.5.252",
-                    "age": "1514",
+                    "age": "1505",
                     "checksum": "0x79b5",
                     "lsa-id": "1.0.0.5",
                     "lsa-length": "136",
@@ -547,9 +659,32 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "1000",
                                 "1000Mbps",
                                 "1000Mbps",
-                                "Priority 0, 1000Mbps\n                          Priority 1, 1000Mbps\n                          Priority 2, 1000Mbps\n                          Priority 3, 1000Mbps\n                          Priority 4, 1000Mbps\n                          Priority 5, 1000Mbps\n                          Priority 6, 1000Mbps\n                          Priority 7, 1000Mbps",
-                                "Local 336, Remote 0",
-                                "2"
+                                "Priority "
+                                "0, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "1, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "2, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "3, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "4, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "5, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "6, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "7, "
+                                "1000Mbps\n",
+                                "Local " "336, " "Remote " "0",
+                                "2",
                             ],
                             "tlv-length": [
                                 "1",
@@ -561,7 +696,7 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "4",
                                 "32",
                                 "8",
-                                "4"
+                                "4",
                             ],
                             "tlv-type-name": [
                                 "Linktype",
@@ -573,7 +708,7 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "MaxRsvBW",
                                 "UnRsvBW",
                                 "LinkLocalRemoteIdentifier",
-                                "Color"
+                                "Color",
                             ],
                             "tlv-type-value": [
                                 "1",
@@ -585,80 +720,121 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "7",
                                 "8",
                                 "11",
-                                "9"
-                            ]
+                                "9",
+                            ],
                         },
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "112",
                             "tlv-type-name": "Link",
-                            "tlv-type-value": "2"
-                        }
+                            "tlv-type-value": "2",
+                        },
                     },
                     "our-entry": True,
-                    "sequence-number": "0x800001bb"
+                    "sequence-number": "0x800001bb",
                 },
                 {
                     "advertising-router": "111.87.5.252",
-                    "age": "973",
+                    "age": "964",
                     "checksum": "0xe5ef",
                     "lsa-id": "4.0.0.0",
                     "lsa-length": "44",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
                     "ospf-opaque-area-lsa": {
-                        "tlv-block": [
-                            {
-                                "formatted-tlv-data": "Algo (1), length 1:\n                            0",
-                                "tlv-length": "1",
-                                "tlv-type-name": "SR-Algorithm",
-                                "tlv-type-value": "8"
-                            },
-                            {
-                                "formatted-tlv-data": "Range Size (1), length 3:\n                            8000",
-                                "te-subtlv": {
-                                    "formatted-tlv-data": "Label (1), length 3:\n                                16000",
-                                    "tlv-length": "3",
-                                    "tlv-type-name": "SID/Label",
-                                    "tlv-type-value": "1"
-                                },
-                                "tlv-length": "12",
-                                "tlv-type-name": "SID/Label Range",
-                                "tlv-type-value": "9"
-                            }
-                        ]
+                        "te-subtlv": {
+                            "formatted-tlv-data": ["0", "8000", "16000"],
+                            "tlv-length": ["1", "12", "3", "3", "3"],
+                            "tlv-type-name": [
+                                "Algo",
+                                "SID/Label " "Range",
+                                "Range " "Size",
+                                "SID/Label",
+                                "Label",
+                            ],
+                            "tlv-type-value": ["1", "9", "1", "1", "1"],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "1",
+                            "tlv-type-name": "SR-Algorithm",
+                            "tlv-type-value": "8",
+                        },
                     },
                     "our-entry": True,
-                    "sequence-number": "0x80001a2a"
+                    "sequence-number": "0x80001a2a",
                 },
                 {
                     "advertising-router": "111.87.5.252",
-                    "age": "1810",
+                    "age": "1801",
                     "checksum": "0x8c7f",
                     "lsa-id": "7.0.0.1",
                     "lsa-length": "44",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
                     "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "32",
+                                "0",
+                                "0x40",
+                                "111.87.5.252",
+                                "0x00",
+                                "0",
+                                "0",
+                                "71",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "1",
+                                "1",
+                                "1",
+                                "32",
+                                "8",
+                                "1",
+                                "1",
+                                "1",
+                                "4",
+                            ],
+                            "tlv-type-name": [
+                                "Route " "Type",
+                                "Prefix " "Length",
+                                "AF",
+                                "Flags",
+                                "Prefix",
+                                "Prefix " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Algorithm",
+                                "SID",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "5",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
                         "tlv-block": {
-                            "formatted-tlv-data": "Route Type (1), length 1:\n                            1\n                          Prefix Length (2), length 1:\n                            32\n                          AF (3), length 1:\n                            0\n                          Flags (4),  length 1:\n                            0x40\n                          Prefix (5), length 32:\n                            111.87.5.252",
-                            "te-subtlv": {
-                                "formatted-tlv-data": "Flags (1), length 1:\n                                0x00\n                               MT ID (2), length 1:\n                                0\n                               Algorithm (3), length 1:\n                                0\n                               SID (4), length 4:\n                                71",
-                                "tlv-length": "8",
-                                "tlv-type-name": "Prefix Sid",
-                                "tlv-type-value": "2"
-                            },
+                            "formatted-tlv-data": "",
                             "tlv-length": "20",
-                            "tlv-type-name": "Extended Prefix",
-                            "tlv-type-value": "1"
-                        }
+                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-value": "1",
+                        },
                     },
                     "our-entry": True,
-                    "sequence-number": "0x80001b9e"
+                    "sequence-number": "0x80001b9e",
                 },
                 {
                     "advertising-router": "111.87.5.252",
-                    "age": "703",
+                    "age": "694",
                     "checksum": "0x7efa",
                     "lsa-id": "8.0.0.52",
                     "lsa-length": "60",
@@ -667,35 +843,77 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                     "ospf-opaque-area-lsa": {
                         "te-subtlv": {
                             "formatted-tlv-data": [
-                                "Flags (1), length 1:\n                                0xe0\n                              MT ID (2), length 1:\n                                 0\n                              Weight (3), length 1:\n                                 0\n                              Label (4), length 3:\n                                2567",
-                                "Flags (1), length 1:\n                                0x60\n                              MT ID (2), length 1:\n                                 0\n                              Weight (3), length 1:\n                                 0\n                              Label (4), length 3:\n                                2568"
+                                "1",
+                                "106.187.14.240",
+                                "106.187.14.122",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "2567",
+                                "0x60",
+                                "0",
+                                "0",
+                                "2568",
                             ],
                             "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
                                 "7",
-                                "7"
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
                             ],
                             "tlv-type-name": [
-                                "Adjacency Sid",
-                                "Adjacency Sid"
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
                             ],
                             "tlv-type-value": [
+                                "1",
                                 "2",
-                                "2"
-                            ]
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
                         },
                         "tlv-block": {
-                            "formatted-tlv-data": "Link Type (1), length 1:\n                         1\n                         Link Id (2), length 4:\n                         106.187.14.240\n                         Link Data (3), length 4:\n                         106.187.14.122",
+                            "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended Link",
-                            "tlv-type-value": "1"
-                        }
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
                     },
                     "our-entry": True,
-                    "sequence-number": "0x80000308"
+                    "sequence-number": "0x80000308",
                 },
                 {
                     "advertising-router": "111.87.5.252",
-                    "age": "1244",
+                    "age": "1235",
                     "checksum": "0x1839",
                     "lsa-id": "8.0.0.54",
                     "lsa-length": "60",
@@ -704,35 +922,77 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                     "ospf-opaque-area-lsa": {
                         "te-subtlv": {
                             "formatted-tlv-data": [
-                                "Flags (1), length 1:\n                                    0xe0\n                                  MT ID (2), length 1:\n                                     0\n                                  Weight (3), length 1:\n                                     0\n                                  Label (4), length 3:\n                                    28985",
-                                "Flags (1), length 1:\n                                    0x60\n                                  MT ID (2), length 1:\n                                     0\n                                  Weight (3), length 1:\n                                     0\n                                  Label (4), length 3:\n                                    28986"
+                                "1",
+                                "111.87.5.253",
+                                "111.87.5.93",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "28985",
+                                "0x60",
+                                "0",
+                                "0",
+                                "28986",
                             ],
                             "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
                                 "7",
-                                "7"
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
                             ],
                             "tlv-type-name": [
-                                "Adjacency Sid",
-                                "Adjacency Sid"
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
                             ],
                             "tlv-type-value": [
+                                "1",
                                 "2",
-                                "2"
-                            ]
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
                         },
                         "tlv-block": {
-                            "formatted-tlv-data": "Link Type (1), length 1:\n                             1\n                             Link Id (2), length 4:\n                             111.87.5.253\n                             Link Data (3), length 4:\n                             111.87.5.93",
+                            "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended Link",
-                            "tlv-type-value": "1"
-                        }
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
                     },
                     "our-entry": True,
-                    "sequence-number": "0x800002dc"
+                    "sequence-number": "0x800002dc",
                 },
                 {
                     "advertising-router": "111.87.5.252",
-                    "age": "2078",
+                    "age": "2069",
                     "checksum": "0x92eb",
                     "lsa-id": "8.0.0.55",
                     "lsa-length": "60",
@@ -741,35 +1001,77 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                     "ospf-opaque-area-lsa": {
                         "te-subtlv": {
                             "formatted-tlv-data": [
-                                "Flags (1), length 1:\n                                        0xe0\n                                      MT ID (2), length 1:\n                                         0\n                                      Weight (3), length 1:\n                                         0\n                                      Label (4), length 3:\n                                        167966",
-                                "Flags (1), length 1:\n                                        0x60\n                                      MT ID (2), length 1:\n                                         0\n                                      Weight (3), length 1:\n                                         0\n                                      Label (4), length 3:\n                                        167967"
+                                "1",
+                                "27.86.198.239",
+                                "27.86.198.25",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "167966",
+                                "0x60",
+                                "0",
+                                "0",
+                                "167967",
                             ],
                             "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
                                 "7",
-                                "7"
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
                             ],
                             "tlv-type-name": [
-                                "Adjacency Sid",
-                                "Adjacency Sid"
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
                             ],
                             "tlv-type-value": [
+                                "1",
                                 "2",
-                                "2"
-                            ]
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
                         },
                         "tlv-block": {
-                            "formatted-tlv-data": "Link Type (1), length 1:\n                                 1\n                                 Link Id (2), length 4:\n                                 27.86.198.239\n                                 Link Data (3), length 4:\n                                 27.86.198.25",
+                            "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended Link",
-                            "tlv-type-value": "1"
-                        }
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
                     },
                     "our-entry": True,
-                    "sequence-number": "0x800001bb"
+                    "sequence-number": "0x800001bb",
                 },
                 {
                     "advertising-router": "111.87.5.252",
-                    "age": "2345",
+                    "age": "2336",
                     "checksum": "0xc3fb",
                     "lsa-id": "106.187.14.240",
                     "lsa-length": "36",
@@ -783,15 +1085,15 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                             "ospf-topology-metric": "50",
                             "ospf-topology-name": "default",
                             "tag": "0.0.0.0",
-                            "type-value": "1"
-                        }
+                            "type-value": "1",
+                        },
                     },
                     "our-entry": True,
-                    "sequence-number": "0x80001a3a"
-                }
-            ]
+                    "sequence-number": "0x80001a3a",
+                },
+            ],
         }
-}
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -805,5 +1107,6 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

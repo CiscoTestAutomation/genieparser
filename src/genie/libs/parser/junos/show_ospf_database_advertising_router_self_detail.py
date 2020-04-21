@@ -379,6 +379,9 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                 if m:
                     group = m.groupdict()
 
+                    line.strip()
+                    line += '\n'
+
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
                     if group["priority_number"] == "0":
@@ -437,13 +440,8 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                     continue
 
         import pprint
-        print()
-        print()
-        print()
-        print()
-        pprint.pprint(ret_dict)
-        print()
-        print()
-        print()
+
+        logFile = open('/Users/adelph/git/file.txt', 'w')
+        pprint.pprint(ret_dict, logFile)
 
         return ret_dict
