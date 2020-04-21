@@ -503,16 +503,12 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
         
         ret_dict = {}
 
-        
-
         #OSPF database, Area 0.0.0.8
         p1 = re.compile(r'^OSPF database, Area +(?P<ospf_area>[\w\.\:\/]+)$')
 
         #Router   3.3.3.3          3.3.3.3          0x80004d2d    61  0x22 0xa127 2496
-        p2 = re.compile(r'^(?P<lsa_type>[a-zA-Z]+)+(\*+|\s+)'
-                        r'(?P<lsa_id>[\d\.\*]+)+(\s+)(?P<advertising_router>[\d\.]+)+'
-                        r'(\s+)(?P<sequence_number>\S+)(\s+)+(?P<age>\d+)(\s+)+'
-                        r'(?P<options>\S+)(\s+)+(?P<checksum>\S+)(\s+)+(?P<lsa_length>\d+)$')
+        #Router  *111.87.5.252     111.87.5.252     0x80001b9e  1608  0x22 0x1e2  120
+        p2 = re.compile(r'^(?P<lsa_type>[a-zA-Z]+) *(?P<our_entry>\*)?(?P<lsa_id>[\d\.]+) +(?P<advertising_router>[\d\.]+) +(?P<sequence_number>\S+) +(?P<age>\d+) +(?P<options>\S+) +(?P<checksum>\S+) +(?P<lsa_length>\d+)$')
         
         for line in out.splitlines():
             line = line.strip()
@@ -529,17 +525,17 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
                 continue
             
             #Router   3.3.3.3          3.3.3.3          0x80004d2d    61  0x22 0xa127 2496
+            #Router  *111.87.5.252     111.87.5.252     0x80001b9e  1608  0x22 0x1e2  120
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 ospf_entry_dict = {}
                 ospf_entry_dict['lsa-type'] = group['lsa_type']
-                if group['lsa_id'][0] == '*':
+                if group['our_entry'] == '*':
                     ospf_entry_dict['lsa-id'] = group['lsa_id'][1:]
                     ospf_entry_dict['our-entry'] = True
                 else:
                     ospf_entry_dict['lsa-id'] = group['lsa_id']
-                #ospf_entry_dict['lsa-id'] = group['lsa_id']
                 ospf_entry_dict['advertising-router'] = group['advertising_router']
                 ospf_entry_dict['sequence-number'] = group['sequence_number']
                 ospf_entry_dict['age'] = group['age']
@@ -607,23 +603,22 @@ class ShowOspfDatabaseSummary(ShowOspfDatabaseSummarySchema):
         p1 = re.compile(r'^Area +(?P<ospf_area1>[\w\.\/]+):$')
 
         #12 Router LSAs
-        p2 = re.compile(r'^(?P<area_value>\d+) (?P<area_name>\S+) LSAs$')
+        p2 = re.compile(r'^(?P<area_value>\d+) +(?P<area_name>\S+) LSAs$')
 
         #Externals:
         p3 = re.compile(r'^(?P<externals>\S+):$')
 
         #19 Extern LSAs
-        p4 = re.compile(r'^(?P<external_value>\d+) (?P<external_name>\S+) LSAs$')
+        p4 = re.compile(r'^(?P<external_value>\d+) +(?P<external_name>\S+) LSAs$')
 
         #Area 0.0.0.8:
         p5 = re.compile(r'^Area +(?P<ospf_area2>[\w\.\/]+):$')
 
         #Interface ge-0/0/3.0:
-        p6 = re.compile(r'^Interface (?P<interface>\S+):$')
+        p6 = re.compile(r'^Interface +(?P<interface>\S+):$')
 
         for line in out.splitlines():
             line = line.strip()
-            #import pdb; pdb.set_trace()
             #Area 0.0.0.8:
             m = p1.match(line)
             if m:
@@ -825,16 +820,15 @@ class ShowOspfDatabaseExternalExtensive(ShowOspfDatabaseExternalExtensiveSchema)
         
         ret_dict = {}
 
-
+        #OSPF AS SCOPE link state database        
+        p1 = re.compile(r'^(?P<external_heading>\AOSPF AS[\S\s]+)$')
+        
         #Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
-        p1 = re.compile(r'^(?P<external_heading>[a-zA-Z\s]+)$')
-
-        #OSPF AS SCOPE link state database
-        p2 = re.compile(r'^(?P<heading>[a-zA-Z\s]+)$')
+        p2 = re.compile(r'^(?P<heading>\AType +ID[\S\s]+)$')
 
         #Extern   0.0.0.0          59.128.2.251     0x800019e3  2728  0x22 0x6715  36
         p3 = re.compile(r'^(?P<lsa_type>\S+)\s+(?P<lsa_id>[\d+\.]+)\s+'
-                        r'(?P<advertising_router>[\d+\.]+)\s+(?P<sequence_number>[\S\.]+)'
+                        r'(?P<advertising_router>[\d+\.]+)\s+(?P<sequence_number>\S+)'
                         r'\s+(?P<age>\d+)\s+(?P<options>[\S]+)\s+(?P<checksum>[\S]+)'
                         r'\s+(?P<lsa_length>\d+)$')
 
@@ -850,7 +844,7 @@ class ShowOspfDatabaseExternalExtensive(ShowOspfDatabaseExternalExtensiveSchema)
                         r'Tag: +(?P<tag>[\w\.\/]+)$')
         
         #Aging timer 00:14:32
-        p7 = re.compile(r'^Aging timer +(?P<text>[\w\.\/\:]+)$')
+        p7 = re.compile(r'^Aging timer +(?P<text>[\w\:]+)$')
 
         #Installed 00:45:19 ago, expires in 00:14:32, sent 00:45:17 ago
         p8 = re.compile(r'^Installed +(?P<installed_time>[\w\.\/\:]+) ' 
@@ -863,9 +857,10 @@ class ShowOspfDatabaseExternalExtensive(ShowOspfDatabaseExternalExtensiveSchema)
                         r'+(?P<lsa_change_count>[\S]+)$')         
 
 
-        for line in out.splitlines():
+        for line in out.splitlines()[2:]:
             line = line.strip()
-            #Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+
+            #OSPF AS SCOPE link state database
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -874,16 +869,16 @@ class ShowOspfDatabaseExternalExtensive(ShowOspfDatabaseExternalExtensiveSchema)
                 ospf_database_entry_dict = {}
                 
                 ospf_database_entry_dict['@external-heading'] = group['external_heading']
-                p1 = re.compile(r'^empty$')
+                #p1 = re.compile(r'^empty$')
                 reset = True
                 continue
             
-            #OSPF AS SCOPE link state database
+            #Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len            
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 ospf_database_entry_dict['@heading'] = group['heading']
-                p2 = re.compile(r'^empty$')
+                #p2 = re.compile(r'^empty$')
                 continue
 
             #Extern   0.0.0.0          59.128.2.251     0x800019e3  2728  0x22 0x6715  36
@@ -944,8 +939,6 @@ class ShowOspfDatabaseExternalExtensive(ShowOspfDatabaseExternalExtensiveSchema)
                 ospf_database_info_list
                 ospf_db_ext_dict = {}
 
-                ospf_database_entry_dict
-
                 age_dict = ospf_db_ext_dict.setdefault('aging-timer', {})
                 exp_dict = ospf_db_ext_dict.setdefault('expiration-time', {})
                 inst_dict = ospf_db_ext_dict.setdefault('installation-time', {})
@@ -980,7 +973,7 @@ class ShowOspfDatabaseExternalExtensive(ShowOspfDatabaseExternalExtensiveSchema)
         return ret_dict
 
 
-class ShowOspfOspfOverviewSchema(MetaParser):
+class ShowOspfOverviewSchema(MetaParser):
     
     schema = {
     Optional("@xmlns:junos"): str,
@@ -1046,7 +1039,7 @@ class ShowOspfOspfOverviewSchema(MetaParser):
 Parser for:
     * show ospf overview
 '''
-class ShowOspfOspfOverview(ShowOspfOspfOverviewSchema):
+class ShowOspfOverview(ShowOspfOverviewSchema):
     cli_command = 'show ospf overview'
     def cli(self, output=None):
         if not output:
@@ -1111,7 +1104,6 @@ class ShowOspfOspfOverview(ShowOspfOspfOverviewSchema):
         p16 = re.compile(r'^Area border routers: +(?P<ospf_abr_count>\d+), '
                          r'AS boundary routers: +(?P<ospf_asbr_count>\d+)$')
 
-        
         #Up (in full state): 3
         p17 = re.compile(r'^Up \(in full state\): +(?P<ospf_nbr_up_count>\d+)$')
 
@@ -1125,7 +1117,7 @@ class ShowOspfOspfOverview(ShowOspfOspfOverviewSchema):
         p20 = re.compile(r'^Full SPF runs: +(?P<ospf_full_spf_count>\d+)$')
 
         #SPF delay: 0.200000 sec, SPF holddown: 2 sec, SPF rapid runs: 3
-        p21 = re.compile(r'^SPF delay: +(?P<ospf_spf_delay>[\w\.\:\/]+) sec, SPF holddown: '
+        p21 = re.compile(r'^SPF delay: +(?P<ospf_spf_delay>[\w\.]+) sec, SPF holddown: '
                          r'+(?P<ospf_spf_holddown>[\w\.]+) sec, SPF rapid runs: +'
                          r'(?P<ospf_spf_rapid_runs>[\w\.]+)$')
 
@@ -1323,7 +1315,7 @@ class ShowOspfOspfOverview(ShowOspfOspfOverviewSchema):
         
         return ret_dict 
 
-class ShowOspfOspfOverviewExtensive(ShowOspfOspfOverview):
+class ShowOspfOverviewExtensive(ShowOspfOverview):
     """ Parser for:
             - show ospf overview extensive
     """

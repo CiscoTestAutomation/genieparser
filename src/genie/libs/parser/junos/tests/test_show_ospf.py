@@ -18,8 +18,8 @@ from genie.libs.parser.junos.show_ospf import (ShowOspfInterface,
                                                ShowOspfDatabase,
                                                ShowOspfDatabaseSummary,
                                                ShowOspfDatabaseExternalExtensive,
-                                               ShowOspfOspfOverview,
-                                               ShowOspfOspfOverviewExtensive)
+                                               ShowOspfOverview,
+                                               ShowOspfOverviewExtensive)
 
 
 class test_show_ospf_interface(unittest.TestCase):
@@ -688,7 +688,7 @@ class TestShowOspfNeighbor(unittest.TestCase):
 
 class TestShowOspfDatabase(unittest.TestCase):
     """ Unit tests for:
-            * show ospf3 neighbor extensive
+            * show ospf database
     """
 
     device = Device(name='aDevice')
@@ -908,7 +908,7 @@ class TestShowOspfDatabase(unittest.TestCase):
                 "advertising-router": "111.87.5.252",
                 "age": "1608",
                 "checksum": "0x1e2",
-                "lsa-id": "111.87.5.252",
+                "lsa-id": "11.87.5.252",
                 "lsa-length": "120",
                 "lsa-type": "Router",
                 "options": "0x22",
@@ -1039,10 +1039,11 @@ class TestShowOspfDatabase(unittest.TestCase):
                 "advertising-router": "111.87.5.252",
                 "age": "231",
                 "checksum": "0xd49a",
-                "lsa-id": "1.0.0.1",
+                "lsa-id": ".0.0.1",
                 "lsa-length": "28",
                 "lsa-type": "OpaqArea",
                 "options": "0x22",
+                "our-entry": True,
                 "sequence-number": "0x80001a15"
             },
             {
@@ -1099,10 +1100,11 @@ class TestShowOspfDatabase(unittest.TestCase):
                 "advertising-router": "111.87.5.252",
                 "age": "2678",
                 "checksum": "0x97cc",
-                "lsa-id": "1.0.0.3",
+                "lsa-id": ".0.0.3",
                 "lsa-length": "136",
                 "lsa-type": "OpaqArea",
                 "options": "0x22",
+                "our-entry": True,
                 "sequence-number": "0x80000321"
             },
             {
@@ -1159,10 +1161,11 @@ class TestShowOspfDatabase(unittest.TestCase):
                 "advertising-router": "111.87.5.252",
                 "age": "2411",
                 "checksum": "0xb804",
-                "lsa-id": "1.0.0.4",
+                "lsa-id": ".0.0.4",
                 "lsa-length": "136",
                 "lsa-type": "OpaqArea",
                 "options": "0x22",
+                "our-entry": True,
                 "sequence-number": "0x800013e8"
             },
             {
@@ -1219,10 +1222,11 @@ class TestShowOspfDatabase(unittest.TestCase):
                 "advertising-router": "111.87.5.252",
                 "age": "1312",
                 "checksum": "0x79b5",
-                "lsa-id": "1.0.0.5",
+                "lsa-id": ".0.0.5",
                 "lsa-length": "136",
                 "lsa-type": "OpaqArea",
                 "options": "0x22",
+                "our-entry": True,
                 "sequence-number": "0x800001bb"
             },
             {
@@ -1389,10 +1393,11 @@ class TestShowOspfDatabase(unittest.TestCase):
                 "advertising-router": "111.87.5.252",
                 "age": "771",
                 "checksum": "0xe5ef",
-                "lsa-id": "4.0.0.0",
+                "lsa-id": ".0.0.0",
                 "lsa-length": "44",
                 "lsa-type": "OpaqArea",
                 "options": "0x22",
+                "our-entry": True,
                 "sequence-number": "0x80001a2a"
             },
             {
@@ -1479,10 +1484,11 @@ class TestShowOspfDatabase(unittest.TestCase):
                 "advertising-router": "111.87.5.252",
                 "age": "1608",
                 "checksum": "0x8c7f",
-                "lsa-id": "7.0.0.1",
+                "lsa-id": ".0.0.1",
                 "lsa-length": "44",
                 "lsa-type": "OpaqArea",
                 "options": "0x22",
+                "our-entry": True,
                 "sequence-number": "0x80001b9e"
             },
             {
@@ -1679,30 +1685,33 @@ class TestShowOspfDatabase(unittest.TestCase):
                 "advertising-router": "111.87.5.252",
                 "age": "501",
                 "checksum": "0x7efa",
-                "lsa-id": "8.0.0.52",
+                "lsa-id": ".0.0.52",
                 "lsa-length": "60",
                 "lsa-type": "OpaqArea",
                 "options": "0x22",
+                "our-entry": True,
                 "sequence-number": "0x80000308"
             },
             {
                 "advertising-router": "111.87.5.252",
                 "age": "1042",
                 "checksum": "0x1839",
-                "lsa-id": "8.0.0.54",
+                "lsa-id": ".0.0.54",
                 "lsa-length": "60",
                 "lsa-type": "OpaqArea",
                 "options": "0x22",
+                "our-entry": True,
                 "sequence-number": "0x800002dc"
             },
             {
                 "advertising-router": "111.87.5.252",
                 "age": "1876",
                 "checksum": "0x92eb",
-                "lsa-id": "8.0.0.55",
+                "lsa-id": ".0.0.55",
                 "lsa-length": "60",
                 "lsa-type": "OpaqArea",
                 "options": "0x22",
+                "our-entry": True,
                 "sequence-number": "0x800001bb"
             },
             {
@@ -1869,7 +1878,7 @@ class TestShowOspfDatabase(unittest.TestCase):
                 "advertising-router": "111.87.5.252",
                 "age": "2143",
                 "checksum": "0xc3fb",
-                "lsa-id": "106.187.14.240",
+                "lsa-id": "06.187.14.240",
                 "lsa-length": "36",
                 "lsa-type": "Extern",
                 "options": "0x22",
@@ -1966,6 +1975,9 @@ class TestShowOspfDatabase(unittest.TestCase):
 
 
 class TestShowOspfDatabaseSummary(unittest.TestCase):
+    """ Unit tests for:
+            * show ospf database summary
+    """
 
     device = Device(name='aDevice')
     maxDiff = None
@@ -2046,6 +2058,9 @@ class TestShowOspfDatabaseSummary(unittest.TestCase):
 
 
 class TestShowOspfDatabaseExternalExtensive(unittest.TestCase):
+    """ Unit tests for:
+            * show ospf database external extensive
+    """
 
     device = Device(name='aDevice')
     maxDiff = None
@@ -2195,8 +2210,8 @@ class TestShowOspfDatabaseExternalExtensive(unittest.TestCase):
         "ospf-database-information": {
         "ospf-database": [
             {
-                "@external-heading": "show ospf database external extensive",
-                "@heading": "OSPF AS SCOPE link state database",
+                "@external-heading": "OSPF AS SCOPE link state database",
+                "@heading": "Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len",
                 "advertising-router": "59.128.2.251",
                 "age": "2728",
                 "checksum": "0x6715",
@@ -2916,7 +2931,7 @@ class TestShowOspfDatabaseExternalExtensive(unittest.TestCase):
 
 
 
-class TestShowOspfOspfOverview(unittest.TestCase):
+class TestShowOspfOverview(unittest.TestCase):
     """ Unit tests for:
             * show ospf overview
     """
@@ -3015,17 +3030,17 @@ class TestShowOspfOspfOverview(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowOspfOspfOverview(device=self.device)
+        obj = ShowOspfOverview(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             obj.parse()
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        obj = ShowOspfOspfOverview(device=self.device)
+        obj = ShowOspfOverview(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-class TestShowOspfOspfOverviewExtensive(unittest.TestCase):
+class TestShowOspfOverviewExtensive(unittest.TestCase):
     """ Unit tests for:
             * show ospf overview extensive
     """
@@ -3036,7 +3051,7 @@ class TestShowOspfOspfOverviewExtensive(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
-        show ospf overview
+        show ospf overview extensive
         Instance: master
             Router ID: 111.87.5.252
             Route table index: 0
@@ -3123,13 +3138,13 @@ class TestShowOspfOspfOverviewExtensive(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowOspfOspfOverviewExtensive(device=self.device)
+        obj = ShowOspfOverviewExtensive(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             obj.parse()
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        obj = ShowOspfOspfOverviewExtensive(device=self.device)
+        obj = ShowOspfOverviewExtensive(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
