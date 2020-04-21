@@ -133,6 +133,8 @@
         * show pfe statistics traffic
     * Added ShowSystemStatistics for:
         * show system statistics
+    * Added ShowSystemStatisticsNoForwarding or:
+        * show system statistics no-forwarding
     * Added ShowSystemCoreDumps for:
         * show system core-dumps
     * Added ShowSystemCoreDumpsNoForwarding for:
