@@ -1466,30 +1466,30 @@ class TestShowBgpSummary(unittest.TestCase):
         inet6.0              
                                0          0          0          0          0          0
         Peer                     AS      InPkt     OutPkt    OutQ   Flaps Last Up/Dwn State|#Active/Received/Accepted/Damped...
-        27.85.216.179         65171          0          0       0       0 29w5d 22:42:36 Connect
-        106.187.14.240        65151     280414     221573       0     127 3w2d 4:19:15 Establ
+        10.49.216.179         65171          0          0       0       0 29w5d 22:42:36 Connect
+        10.169.14.240        65151     280414     221573       0     127 3w2d 4:19:15 Establ
           inet.0: 682/684/684/0
           inet.3: 2/2/2/0
-        106.187.14.249        65151          0          0       0       0 29w5d 22:42:36 Active
-        111.87.5.240          65171          0          0       0       0 29w5d 22:42:36 Connect
-        111.87.5.241          65171          0          0       0       0 29w5d 22:42:36 Connect
-        111.87.5.242          65171          0          0       0       0 29w5d 22:42:36 Active
-        111.87.5.243          65171          0          0       0       0 29w5d 22:42:36 Active
-        111.87.5.245          65171          0          0       0       0 29w5d 22:42:36 Active
-        111.87.5.253          65171     110832     172140       0      44 3w2d 4:18:45 Establ
+        10.169.14.249        65151          0          0       0       0 29w5d 22:42:36 Active
+        10.189.5.240          65171          0          0       0       0 29w5d 22:42:36 Connect
+        10.189.5.241          65171          0          0       0       0 29w5d 22:42:36 Connect
+        10.189.5.242          65171          0          0       0       0 29w5d 22:42:36 Active
+        10.189.5.243          65171          0          0       0       0 29w5d 22:42:36 Active
+        10.189.5.245          65171          0          0       0       0 29w5d 22:42:36 Active
+        10.189.5.253          65171     110832     172140       0      44 3w2d 4:18:45 Establ
           inet.0: 0/682/682/0
-        111.87.6.250          65181          0          0       0       0 29w5d 22:42:36 Active
-        2001:268:fa03:272::1:140       65171          0          0       0       0 29w5d 22:42:36 Connect
-        2001:268:fb8f::1       65151     218994     221571       0     133 3w2d 4:19:10 Establ
+        10.189.6.250          65181          0          0       0       0 29w5d 22:42:36 Active
+        2001:db8:6be:89bb::1:140       65171          0          0       0       0 29w5d 22:42:36 Connect
+        2001:db8:eb18:ca45::1       65151     218994     221571       0     133 3w2d 4:19:10 Establ
           inet6.0: 0/0/0/0
-        2001:268:fb8f::11       65151          0          0       0       0 29w5d 22:42:36 Connect
-        2001:268:fb90::7       65171          0          0       0       0 29w5d 22:42:36 Active
-        2001:268:fb90::8       65171          0          0       0       0 29w5d 22:42:36 Connect
-        2001:268:fb90::9       65171          0          0       0       0 29w5d 22:42:36 Connect
-        2001:268:fb90::a       65171          0          0       0       0 29w5d 22:42:36 Connect
-        2001:268:fb90::c       65171     110861     110862       0      55 3w2d 4:27:54 Establ
+        2001:db8:eb18:ca45::11       65151          0          0       0       0 29w5d 22:42:36 Connect
+        2001:db8:223c:ca45::7       65171          0          0       0       0 29w5d 22:42:36 Active
+        2001:db8:223c:ca45::8       65171          0          0       0       0 29w5d 22:42:36 Connect
+        2001:db8:223c:ca45::9       65171          0          0       0       0 29w5d 22:42:36 Connect
+        2001:db8:223c:ca45::a       65171          0          0       0       0 29w5d 22:42:36 Connect
+        2001:db8:223c:ca45::c       65171     110861     110862       0      55 3w2d 4:27:54 Establ
           inet6.0: 0/0/0/0
-        2001:268:fb91::1       65181          0          0       0       0 29w5d 22:42:36 Connect
+        2001:db8:5961:ca45::1       65181          0          0       0       0 29w5d 22:42:36 Connect
 
     '''}
 
@@ -1500,7 +1500,7 @@ class TestShowBgpSummary(unittest.TestCase):
             "bgp-peer": [
                 {
                     "flap-count": "0",
-                    "peer-address": "27.85.216.179",
+                    "peer-address": "10.49.216.179",
                     "route-queue-count": "0",
                     "elapsed-time": {"#text": "29w5d 22:42:36"},
                     "peer-as": "65171",
@@ -1510,7 +1510,7 @@ class TestShowBgpSummary(unittest.TestCase):
                 },
                 {
                     "flap-count": "127",
-                    "peer-address": "106.187.14.240",
+                    "peer-address": "10.169.14.240",
                     "route-queue-count": "0",
                     "elapsed-time": {"#text": "3w2d 4:19:15"},
                     "peer-as": "65151",
@@ -1536,7 +1536,7 @@ class TestShowBgpSummary(unittest.TestCase):
                 },
                 {
                     "flap-count": "0",
-                    "peer-address": "106.187.14.249",
+                    "peer-address": "10.169.14.249",
                     "route-queue-count": "0",
                     "elapsed-time": {"#text": "29w5d 22:42:36"},
                     "peer-as": "65151",
@@ -1546,7 +1546,7 @@ class TestShowBgpSummary(unittest.TestCase):
                 },
                 {
                     "flap-count": "0",
-                    "peer-address": "111.87.5.240",
+                    "peer-address": "10.189.5.240",
                     "route-queue-count": "0",
                     "elapsed-time": {"#text": "29w5d 22:42:36"},
                     "peer-as": "65171",
@@ -1556,7 +1556,7 @@ class TestShowBgpSummary(unittest.TestCase):
                 },
                 {
                     "flap-count": "0",
-                    "peer-address": "111.87.5.241",
+                    "peer-address": "10.189.5.241",
                     "route-queue-count": "0",
                     "elapsed-time": {"#text": "29w5d 22:42:36"},
                     "peer-as": "65171",
@@ -1566,7 +1566,7 @@ class TestShowBgpSummary(unittest.TestCase):
                 },
                 {
                     "flap-count": "0",
-                    "peer-address": "111.87.5.242",
+                    "peer-address": "10.189.5.242",
                     "route-queue-count": "0",
                     "elapsed-time": {"#text": "29w5d 22:42:36"},
                     "peer-as": "65171",
@@ -1576,7 +1576,7 @@ class TestShowBgpSummary(unittest.TestCase):
                 },
                 {
                     "flap-count": "0",
-                    "peer-address": "111.87.5.243",
+                    "peer-address": "10.189.5.243",
                     "route-queue-count": "0",
                     "elapsed-time": {"#text": "29w5d 22:42:36"},
                     "peer-as": "65171",
@@ -1586,7 +1586,7 @@ class TestShowBgpSummary(unittest.TestCase):
                 },
                 {
                     "flap-count": "0",
-                    "peer-address": "111.87.5.245",
+                    "peer-address": "10.189.5.245",
                     "route-queue-count": "0",
                     "elapsed-time": {"#text": "29w5d 22:42:36"},
                     "peer-as": "65171",
@@ -1596,7 +1596,7 @@ class TestShowBgpSummary(unittest.TestCase):
                 },
                 {
                     "flap-count": "44",
-                    "peer-address": "111.87.5.253",
+                    "peer-address": "10.189.5.253",
                     "route-queue-count": "0",
                     "elapsed-time": {"#text": "3w2d 4:18:45"},
                     "peer-as": "65171",
@@ -1615,7 +1615,7 @@ class TestShowBgpSummary(unittest.TestCase):
                 },
                 {
                     "flap-count": "0",
-                    "peer-address": "111.87.6.250",
+                    "peer-address": "10.189.6.250",
                     "route-queue-count": "0",
                     "elapsed-time": {"#text": "29w5d 22:42:36"},
                     "peer-as": "65181",
@@ -1625,7 +1625,7 @@ class TestShowBgpSummary(unittest.TestCase):
                 },
                 {
                     "flap-count": "0",
-                    "peer-address": "2001:268:fa03:272::1:140",
+                    "peer-address": "2001:db8:6be:89bb::1:140",
                     "route-queue-count": "0",
                     "elapsed-time": {"#text": "29w5d 22:42:36"},
                     "peer-as": "65171",
@@ -1635,7 +1635,7 @@ class TestShowBgpSummary(unittest.TestCase):
                 },
                 {
                     "flap-count": "133",
-                    "peer-address": "2001:268:fb8f::1",
+                    "peer-address": "2001:db8:eb18:ca45::1",
                     "route-queue-count": "0",
                     "elapsed-time": {"#text": "3w2d 4:19:10"},
                     "peer-as": "65151",
@@ -1654,7 +1654,7 @@ class TestShowBgpSummary(unittest.TestCase):
                 },
                 {
                     "flap-count": "0",
-                    "peer-address": "2001:268:fb8f::11",
+                    "peer-address": "2001:db8:eb18:ca45::11",
                     "route-queue-count": "0",
                     "elapsed-time": {"#text": "29w5d 22:42:36"},
                     "peer-as": "65151",
@@ -1664,7 +1664,7 @@ class TestShowBgpSummary(unittest.TestCase):
                 },
                 {
                     "flap-count": "0",
-                    "peer-address": "2001:268:fb90::7",
+                    "peer-address": "2001:db8:223c:ca45::7",
                     "route-queue-count": "0",
                     "elapsed-time": {"#text": "29w5d 22:42:36"},
                     "peer-as": "65171",
@@ -1674,7 +1674,7 @@ class TestShowBgpSummary(unittest.TestCase):
                 },
                 {
                     "flap-count": "0",
-                    "peer-address": "2001:268:fb90::8",
+                    "peer-address": "2001:db8:223c:ca45::8",
                     "route-queue-count": "0",
                     "elapsed-time": {"#text": "29w5d 22:42:36"},
                     "peer-as": "65171",
@@ -1684,7 +1684,7 @@ class TestShowBgpSummary(unittest.TestCase):
                 },
                 {
                     "flap-count": "0",
-                    "peer-address": "2001:268:fb90::9",
+                    "peer-address": "2001:db8:223c:ca45::9",
                     "route-queue-count": "0",
                     "elapsed-time": {"#text": "29w5d 22:42:36"},
                     "peer-as": "65171",
@@ -1694,7 +1694,7 @@ class TestShowBgpSummary(unittest.TestCase):
                 },
                 {
                     "flap-count": "0",
-                    "peer-address": "2001:268:fb90::a",
+                    "peer-address": "2001:db8:223c:ca45::a",
                     "route-queue-count": "0",
                     "elapsed-time": {"#text": "29w5d 22:42:36"},
                     "peer-as": "65171",
@@ -1704,7 +1704,7 @@ class TestShowBgpSummary(unittest.TestCase):
                 },
                 {
                     "flap-count": "55",
-                    "peer-address": "2001:268:fb90::c",
+                    "peer-address": "2001:db8:223c:ca45::c",
                     "route-queue-count": "0",
                     "elapsed-time": {"#text": "3w2d 4:27:54"},
                     "peer-as": "65171",
@@ -1723,7 +1723,7 @@ class TestShowBgpSummary(unittest.TestCase):
                 },
                 {
                     "flap-count": "0",
-                    "peer-address": "2001:268:fb91::1",
+                    "peer-address": "2001:db8:5961:ca45::1",
                     "route-queue-count": "0",
                     "elapsed-time": {"#text": "29w5d 22:42:36"},
                     "peer-as": "65181",
