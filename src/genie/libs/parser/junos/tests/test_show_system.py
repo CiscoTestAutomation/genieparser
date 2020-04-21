@@ -2094,7 +2094,7 @@ class TestShowSystemUptime(unittest.TestCase):
         },
         "protocols-started-time": {
             "date-time": {
-                "#text": "2019-08-29 09:03:25 UTC "
+                "#text": "2019-08-29 09:03:25 UTC"
             },
             "time-length": {
                 "#text": "29w6d 23:13"
@@ -2102,7 +2102,7 @@ class TestShowSystemUptime(unittest.TestCase):
         },
         "system-booted-time": {
             "date-time": {
-                "#text": "2019-08-29 09:02:22 UTC "
+                "#text": "2019-08-29 09:02:22 UTC"
             },
             "time-length": {
                 "#text": "29w6d 23:14"
@@ -2179,7 +2179,7 @@ class TestShowSystemUptimeNoForwarding(unittest.TestCase):
         },
         "protocols-started-time": {
             "date-time": {
-                "#text": "2019-08-29 09:03:25 UTC "
+                "#text": "2019-08-29 09:03:25 UTC"
             },
             "time-length": {
                 "#text": "29w6d 00:34"
@@ -2187,7 +2187,7 @@ class TestShowSystemUptimeNoForwarding(unittest.TestCase):
         },
         "system-booted-time": {
             "date-time": {
-                "#text": "2019-08-29 09:02:22 UTC "
+                "#text": "2019-08-29 09:02:22 UTC"
             },
             "time-length": {
                 "#text": "29w6d 00:35"

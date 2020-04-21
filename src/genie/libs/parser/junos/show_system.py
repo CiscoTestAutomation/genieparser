@@ -1011,20 +1011,18 @@ class ShowSystemUptime(ShowSystemUptimeSchema):
         ret_dict = {}
 
         #Current time: 2020-03-26 08:16:41 UTC
-        p1 = re.compile(r'^Current time: +(?P<current_time>[\S\s]+\S+)$')
+        p1 = re.compile(r'^Current time: +(?P<current_time>[\S\s]+)$')
 
         #Time Source:  LOCAL CLOCK 
         p2 = re.compile(r'^Time Source: +(?P<time_source>[\w\s\.]+)$')
 
         #System booted: 2019-08-29 09:02:22 UTC (29w6d 23:14 ago) 
-        p3 = re.compile(r'^System booted: +(?P<date_time>'
-                        r'[A-Za-z\t .\d\-\:]+)+\((?P<time_length>'
-                        r'\w+\s\d+\:\d+)\s+ago\)$')
+        p3 = re.compile(r'^System booted: +(?P<date_time>[\w\s\-\:]+) '
+                        r'+\((?P<time_length>[\w\s\:]+)\s+ago\)$')
 
         #Protocols started: 2019-08-29 09:03:25 UTC (29w6d 23:13 ago) 
-        p4 = re.compile(r'^Protocols started: +(?P<date_time>'
-                        r'[A-Za-z\t .\d\-\:]+)+\((?P<time_length>'
-                        r'\w+\s\d+\:\d+)\s+ago\)$')
+        p4 = re.compile(r'^Protocols started: +(?P<date_time>[\w\s\-\:]+) '
+                        r'+\((?P<time_length>[\w\s\:]+)\s+ago\)$')
 
         #Last configured: 2020-03-05 16:04:34 UTC (2w6d 16:12 ago) by kddi 
         p5 = re.compile(r'^Last configured: +(?P<date_time>'
