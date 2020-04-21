@@ -824,7 +824,6 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                 if m:
                     group = m.groupdict()
 
-                    line.strip()
                     line += '\n'
 
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
