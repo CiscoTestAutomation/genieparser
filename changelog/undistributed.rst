@@ -31,6 +31,8 @@
     * Added ShowDmvpn for
         * show dmvpn
         * show dmvpn interface {interface}
+    * Added ShowInventory in subdirectory 'C9300' for
+        * show inventory
 
 * NXOS
     * Added ShowIpRouteSummary for:
@@ -147,6 +149,7 @@
         * show chassis environment routing-engine
     * Added ShowOspfDatabaseAdvertisingRouterSelfDetailSchema for:
         * show ospf database advertising-router self detail
+
 
 
 --------------------------------------------------------------------------------
