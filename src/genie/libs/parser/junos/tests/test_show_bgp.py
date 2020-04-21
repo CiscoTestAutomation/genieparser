@@ -1493,7 +1493,278 @@ class TestShowBgpSummary(unittest.TestCase):
 
     '''}
 
-    # golden_parsed_output
+    golden_parsed_output = {
+        "bgp-information": {
+            "group-count": "14",
+            "peer-count": "19",
+            "bgp-peer": [
+                {
+                    "flap-count": "0",
+                    "peer-address": "27.85.216.179",
+                    "route-queue-count": "0",
+                    "elapsed-time": {"#text": "29w5d 22:42:36"},
+                    "peer-as": "65171",
+                    "output-messages": "0",
+                    "peer-state": "Connect",
+                    "input-messages": "0",
+                },
+                {
+                    "flap-count": "127",
+                    "peer-address": "106.187.14.240",
+                    "route-queue-count": "0",
+                    "elapsed-time": {"#text": "3w2d 4:19:15"},
+                    "peer-as": "65151",
+                    "output-messages": "221573",
+                    "bgp-rib": [
+                        {
+                            "received-prefix-count": "684",
+                            "active-prefix-count": "682",
+                            "name": "inet.0",
+                            "suppressed-prefix-count": "0",
+                            "accepted-prefix-count": "684",
+                        },
+                        {
+                            "received-prefix-count": "2",
+                            "active-prefix-count": "2",
+                            "name": "inet.3",
+                            "suppressed-prefix-count": "0",
+                            "accepted-prefix-count": "2",
+                        },
+                    ],
+                    "peer-state": "Establ",
+                    "input-messages": "280414",
+                },
+                {
+                    "flap-count": "0",
+                    "peer-address": "106.187.14.249",
+                    "route-queue-count": "0",
+                    "elapsed-time": {"#text": "29w5d 22:42:36"},
+                    "peer-as": "65151",
+                    "output-messages": "0",
+                    "peer-state": "Active",
+                    "input-messages": "0",
+                },
+                {
+                    "flap-count": "0",
+                    "peer-address": "111.87.5.240",
+                    "route-queue-count": "0",
+                    "elapsed-time": {"#text": "29w5d 22:42:36"},
+                    "peer-as": "65171",
+                    "output-messages": "0",
+                    "peer-state": "Connect",
+                    "input-messages": "0",
+                },
+                {
+                    "flap-count": "0",
+                    "peer-address": "111.87.5.241",
+                    "route-queue-count": "0",
+                    "elapsed-time": {"#text": "29w5d 22:42:36"},
+                    "peer-as": "65171",
+                    "output-messages": "0",
+                    "peer-state": "Connect",
+                    "input-messages": "0",
+                },
+                {
+                    "flap-count": "0",
+                    "peer-address": "111.87.5.242",
+                    "route-queue-count": "0",
+                    "elapsed-time": {"#text": "29w5d 22:42:36"},
+                    "peer-as": "65171",
+                    "output-messages": "0",
+                    "peer-state": "Active",
+                    "input-messages": "0",
+                },
+                {
+                    "flap-count": "0",
+                    "peer-address": "111.87.5.243",
+                    "route-queue-count": "0",
+                    "elapsed-time": {"#text": "29w5d 22:42:36"},
+                    "peer-as": "65171",
+                    "output-messages": "0",
+                    "peer-state": "Active",
+                    "input-messages": "0",
+                },
+                {
+                    "flap-count": "0",
+                    "peer-address": "111.87.5.245",
+                    "route-queue-count": "0",
+                    "elapsed-time": {"#text": "29w5d 22:42:36"},
+                    "peer-as": "65171",
+                    "output-messages": "0",
+                    "peer-state": "Active",
+                    "input-messages": "0",
+                },
+                {
+                    "flap-count": "44",
+                    "peer-address": "111.87.5.253",
+                    "route-queue-count": "0",
+                    "elapsed-time": {"#text": "3w2d 4:18:45"},
+                    "peer-as": "65171",
+                    "output-messages": "172140",
+                    "bgp-rib": [
+                        {
+                            "received-prefix-count": "682",
+                            "active-prefix-count": "0",
+                            "name": "inet.0",
+                            "suppressed-prefix-count": "0",
+                            "accepted-prefix-count": "682",
+                        }
+                    ],
+                    "peer-state": "Establ",
+                    "input-messages": "110832",
+                },
+                {
+                    "flap-count": "0",
+                    "peer-address": "111.87.6.250",
+                    "route-queue-count": "0",
+                    "elapsed-time": {"#text": "29w5d 22:42:36"},
+                    "peer-as": "65181",
+                    "output-messages": "0",
+                    "peer-state": "Active",
+                    "input-messages": "0",
+                },
+                {
+                    "flap-count": "0",
+                    "peer-address": "2001:268:fa03:272::1:140",
+                    "route-queue-count": "0",
+                    "elapsed-time": {"#text": "29w5d 22:42:36"},
+                    "peer-as": "65171",
+                    "output-messages": "0",
+                    "peer-state": "Connect",
+                    "input-messages": "0",
+                },
+                {
+                    "flap-count": "133",
+                    "peer-address": "2001:268:fb8f::1",
+                    "route-queue-count": "0",
+                    "elapsed-time": {"#text": "3w2d 4:19:10"},
+                    "peer-as": "65151",
+                    "output-messages": "221571",
+                    "bgp-rib": [
+                        {
+                            "received-prefix-count": "0",
+                            "active-prefix-count": "0",
+                            "name": "inet6.0",
+                            "suppressed-prefix-count": "0",
+                            "accepted-prefix-count": "0",
+                        }
+                    ],
+                    "peer-state": "Establ",
+                    "input-messages": "218994",
+                },
+                {
+                    "flap-count": "0",
+                    "peer-address": "2001:268:fb8f::11",
+                    "route-queue-count": "0",
+                    "elapsed-time": {"#text": "29w5d 22:42:36"},
+                    "peer-as": "65151",
+                    "output-messages": "0",
+                    "peer-state": "Connect",
+                    "input-messages": "0",
+                },
+                {
+                    "flap-count": "0",
+                    "peer-address": "2001:268:fb90::7",
+                    "route-queue-count": "0",
+                    "elapsed-time": {"#text": "29w5d 22:42:36"},
+                    "peer-as": "65171",
+                    "output-messages": "0",
+                    "peer-state": "Active",
+                    "input-messages": "0",
+                },
+                {
+                    "flap-count": "0",
+                    "peer-address": "2001:268:fb90::8",
+                    "route-queue-count": "0",
+                    "elapsed-time": {"#text": "29w5d 22:42:36"},
+                    "peer-as": "65171",
+                    "output-messages": "0",
+                    "peer-state": "Connect",
+                    "input-messages": "0",
+                },
+                {
+                    "flap-count": "0",
+                    "peer-address": "2001:268:fb90::9",
+                    "route-queue-count": "0",
+                    "elapsed-time": {"#text": "29w5d 22:42:36"},
+                    "peer-as": "65171",
+                    "output-messages": "0",
+                    "peer-state": "Connect",
+                    "input-messages": "0",
+                },
+                {
+                    "flap-count": "0",
+                    "peer-address": "2001:268:fb90::a",
+                    "route-queue-count": "0",
+                    "elapsed-time": {"#text": "29w5d 22:42:36"},
+                    "peer-as": "65171",
+                    "output-messages": "0",
+                    "peer-state": "Connect",
+                    "input-messages": "0",
+                },
+                {
+                    "flap-count": "55",
+                    "peer-address": "2001:268:fb90::c",
+                    "route-queue-count": "0",
+                    "elapsed-time": {"#text": "3w2d 4:27:54"},
+                    "peer-as": "65171",
+                    "output-messages": "110862",
+                    "bgp-rib": [
+                        {
+                            "received-prefix-count": "0",
+                            "active-prefix-count": "0",
+                            "name": "inet6.0",
+                            "suppressed-prefix-count": "0",
+                            "accepted-prefix-count": "0",
+                        }
+                    ],
+                    "peer-state": "Establ",
+                    "input-messages": "110861",
+                },
+                {
+                    "flap-count": "0",
+                    "peer-address": "2001:268:fb91::1",
+                    "route-queue-count": "0",
+                    "elapsed-time": {"#text": "29w5d 22:42:36"},
+                    "peer-as": "65181",
+                    "output-messages": "0",
+                    "peer-state": "Connect",
+                    "input-messages": "0",
+                },
+            ],
+            "bgp-rib": [
+                {
+                    "active-prefix-count": "682",
+                    "total-prefix-count": "1366",
+                    "name": "inet.0",
+                    "damped-prefix-count": "0",
+                    "suppressed-prefix-count": "0",
+                    "pending-prefix-count": "0",
+                    "history-prefix-count": "0",
+                },
+                {
+                    "active-prefix-count": "2",
+                    "total-prefix-count": "2",
+                    "name": "inet.3",
+                    "damped-prefix-count": "0",
+                    "suppressed-prefix-count": "0",
+                    "pending-prefix-count": "0",
+                    "history-prefix-count": "0",
+                },
+                {
+                    "active-prefix-count": "0",
+                    "total-prefix-count": "0",
+                    "name": "inet6.0",
+                    "damped-prefix-count": "0",
+                    "suppressed-prefix-count": "0",
+                    "pending-prefix-count": "0",
+                    "history-prefix-count": "0",
+                },
+            ],
+            "bgp-thread-mode": "BGP I/O",
+            "down-peer-count": "15",
+        },
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -1505,11 +1776,6 @@ class TestShowBgpSummary(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowBgpSummary(device=self.device)
         parsed_output = obj.parse()
-        import pprint
-        pprint.pprint(parsed_output)
-        import pdb
-        pdb.set_trace()
-
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 

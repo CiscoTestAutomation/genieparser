@@ -741,27 +741,6 @@ class ShowBgpSummarySchema(MetaParser):
         if not isinstance(value, list):
             raise SchemaTypeError('bgp-rib is not a list')
         bgp_rib_schema = Schema(
-            {
-                'accepted-prefix-count': str,
-                'active-prefix-count': str,
-                'name': str,
-                'received-prefix-count': str,
-                'suppressed-prefix-count': str
-            }
-        )
-
-        for item in value:
-            bgp_rib_schema.validate(item)
-        return value
-
-    def validate_bgp_peer_list(value):
-        if not isinstance(value, list):
-            raise SchemaTypeError('bgp-peer is not a list')
-
-        def validate_bgp_rib_list(value):
-            if not isinstance(value, list):
-                raise SchemaTypeError('bgp-rib is not a list')
-            bgp_rib_schema = Schema(
                 {
                     Optional("accepted-external-prefix-count"): str,
                     Optional("accepted-internal-prefix-count"): str,
@@ -784,13 +763,34 @@ class ShowBgpSummarySchema(MetaParser):
                 }
             )
 
+        for item in value:
+            bgp_rib_schema.validate(item)
+        return value
+
+    def validate_bgp_peer_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('bgp-peer is not a list')
+
+        def validate_bgp_peer_rib_list(value):
+            if not isinstance(value, list):
+                raise SchemaTypeError('bgp-rib of bgp-peer is not a list')
+            bgp_peer_rib_schema = Schema(
+                {
+                    'accepted-prefix-count': str,
+                    'active-prefix-count': str,
+                    'name': str,
+                    'received-prefix-count': str,
+                    'suppressed-prefix-count': str
+                }
+            )
+
             for item in value:
-                bgp_rib_schema.validate(item)
+                bgp_peer_rib_schema.validate(item)
             return value
 
         bgp_peer_schema = Schema(
             {
-                Optional('bgp-rib'): Use(validate_bgp_rib_list),
+                Optional('bgp-rib'): Use(validate_bgp_peer_rib_list),
                 Optional("description"): str,
                 "elapsed-time": {
                     "#text": str,
@@ -807,6 +807,7 @@ class ShowBgpSummarySchema(MetaParser):
         )
         for item in value:
             bgp_peer_schema.validate(item)
+        return value
 
     # Main schema
     schema = {
@@ -839,6 +840,10 @@ class ShowBgpSummary(ShowBgpSummarySchema):
         # Regex Patterns
         # ============================================================
 
+        # ------------------------------------------------------------
+        # p1, p2:
+        # 'bgp-information' dict
+        # ------------------------------------------------------------
         # Threading mode: BGP I/O
         p1 = re.compile(r'^Threading +mode: +(?P<bgp_thread_mode>[\S\s]+)$')
 
@@ -847,6 +852,11 @@ class ShowBgpSummary(ShowBgpSummarySchema):
                         r'+(?P<peer_count>\d+) +Down +peers: '
                         r'+(?P<down_peer_count>\d+)$')
 
+        # ------------------------------------------------------------
+        # p3, p4
+        # 'bgp-information': {
+        #       'bgp-rib': []
+        # ------------------------------------------------------------
         # inet.0
         # inet6.0
         p3 = re.compile(r'^(?P<name>inet(\d+)?.\d)$')
@@ -856,6 +866,11 @@ class ShowBgpSummary(ShowBgpSummarySchema):
                         r'(?P<suppressed_prefix_count>\d+) +(?P<history_prefix_count>\d+) +'
                         r'(?P<damped_prefix_count>\d+) +(?P<pending_prefix_count>\d+)$')
 
+        # ------------------------------------------------------------
+        # p5:
+        # 'bgp-information': {
+        #       'bgp-peer': []
+        # ------------------------------------------------------------
         # 27.85.216.179           65171          0          0       0       0 29w5d 22:42:36 Connect
         # 2001:268:fb8f::11       65151          0          0       0       0 29w5d 22:42:36 Connect
         p5 = re.compile(r'^(?P<peer_address>[\d\w:.]+) +(?P<peer_as>\d+) +'
@@ -863,10 +878,17 @@ class ShowBgpSummary(ShowBgpSummarySchema):
                         r'(?P<route_queue_count>\d+) +(?P<flap_count>\d+) +'
                         r'(?P<text>[\S\s]+) +(?P<peer_state>Active|Connect|Establ)$')
 
+        # ------------------------------------------------------------
+        # p6:
+        # 'bgp-information': {
+        #       'bgp-peer': [
+        #           {'bgp-rib': {}}
+        #       ]
+        # ------------------------------------------------------------
         # inet.0: 682/684/684/0
         p6 = re.compile(r'^(?P<name>inet(\d+)?\.\d+) *: +(?P<active_prefix_count>\d+)'
                         r'\/(?P<received_prefix_count>\d+)\/(?P<accepted_prefix_count>\d+)'
-                        r'\/(?P<advertised_prefix_count>\d+)$')
+                        r'\/(?P<suppressed_prefix_count>\d+)$')
 
         # ============================================================
         # Build Parsers
@@ -983,7 +1005,8 @@ class ShowBgpSummary(ShowBgpSummarySchema):
             # inet.0: 682/684/684/0
             m = p6.match(line)
             if m:
-                bgp_peer_dict['bgp-rib'] = []
+                if 'bgp-rib' not in bgp_peer_dict:
+                    bgp_peer_dict['bgp-rib'] = []
                 bgp_peer_rib_dict = {}
 
                 for key, value in m.groupdict().items():
@@ -991,8 +1014,6 @@ class ShowBgpSummary(ShowBgpSummarySchema):
                     bgp_peer_rib_dict[key] = value
 
                 bgp_peer_dict['bgp-rib'].append(bgp_peer_rib_dict)
-                import pdb
-                pdb.set_trace()
                 continue
 
         return parsed_dict
