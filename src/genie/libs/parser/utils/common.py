@@ -102,19 +102,25 @@ def get_parser(command, device):
                             "'{c}' under {l}".format(
                                 c=command, l=lookup._tokens)) from None
 
-def _fuzzy_regex_search_command(command):
-    # Preprocess
-    command = command.lstrip('^').rstrip('$')
+def _fuzzy_regex_search_command(search, use_regex):
+    # Perfect match should return 
+    if search in parser_data:
+        return [(search, parser_data[search], {})]
 
-    # Fix command to remove extra spaces
-    command = ' '.join(filter(None, command.split()))
-    tokens = command.split()
+    # Preprocess if regex
+    if use_regex:
+        search = search.lstrip('^').rstrip('$')
+
+    # Fix search to remove extra spaces
+    search = ' '.join(filter(None, search.split()))
+    tokens = search.split()
     best_score = -math.inf
     result = []
     
     for command, source in parser_data.items():
         # Tokens and kwargs parameter must be non reference
-        match_result = _matches_fuzzy_regex(0, 0, tokens.copy(), command.split(), {})
+        match_result = _matches_fuzzy_regex(0, 0, tokens.copy(),
+                                                command.split(), {}, use_regex)
 
         # Explicit type check if it is not false
         if match_result is not False: 
@@ -131,7 +137,7 @@ def _fuzzy_regex_search_command(command):
 
     return result
 
-def _matches_fuzzy_regex(i, j, tokens, command_tokens, kwargs, required_arguments=None, score=0):
+def _matches_fuzzy_regex(i, j, tokens, command_tokens, kwargs, use_regex, required_arguments=None, score=0):
     command = ' '.join(command_tokens)
 
     # Initialize by counting how many arguments this command needs
@@ -144,43 +150,95 @@ def _matches_fuzzy_regex(i, j, tokens, command_tokens, kwargs, required_argument
             return False
 
         token = tokens[i]
+        command_token = command_tokens[j]
 
-        if token.isalnum():
+        # Check if it is regex token
+        token_is_regular = True
+
+        if use_regex:
+            # Special case for `show lldp entry *`
+            if len(token) == 1 and token == '*':
+                token_is_regular = True
+            elif not token.isalnum():
+                # Remove escaped characters
+                candidate = token.replace('\/', '')
+                candidate = candidate.replace('"', '')
+                candidate = candidate.replace('-', '')
+                candidate = candidate.replace('\.', '')
+                candidate = candidate.replace('\|', '')
+
+                token_is_regular = candidate.isalnum()
+
+        if token_is_regular:
             # Current token might be command or argument
-            if '{' in command_tokens[j]:
-                kwargs[re.search('{(.*)}', command_tokens[j]).groups()[0]] = token
+            if '{' in command_token:
+                # Right strip for `<argument>"` case
+                argument_parameter = token.rstrip('"')
+
+                # Handle the edge case of argument not being a token
+                # When this is implemented there is only one case:
+                # /dna/intent/api/v1/interface/{interface}
+                if not command_token.startswith('{'):
+                    # Find before and after string
+                    groups = re.match('(.*){.*?}(.*)', command_token).groups()
+                    is_found = False
+
+                    if len(groups) == 2:
+                        start, end = groups
+
+                        # If we use regex, before and after must be escaped
+                        if use_regex:
+                            start = re.escape(start)
+                            end = re.escape(end)
+
+                        # Need to have perfect match with token
+                        if token.startswith(start) and token.endswith(end):
+                            # Escape again
+                            start = re.escape(start)
+                            end = re.escape(end)
+
+                            # Find the argument using the escaped start and end
+                            argument_parameter = re.match('{}(.*){}'.format(start, end), token).groups()[0]
+                            is_found = True
+                            score += 1
+
+                    if not is_found: 
+                        return False
+
+                kwargs[re.search('{(.*)}', command_token).groups()[0]] = argument_parameter
 
                 # Set current token to command token
                 # For future regex match, it should not consider argument
-                tokens[i] = command_tokens[j]
-            elif token == command_tokens[j]:
+                tokens[i] = command_token
+                score += 100 
+            elif token == command_token:
                 # Same token, assign perfect score
-                score += 100
-            elif not token == command_tokens[j]:
+                score += 101
+            elif not token == command_token:
                 # Not matching, perform fuzzy search
                 # Give perfect score for prefix matching
-                if command_tokens[j].startswith(token):
+                if command_token.startswith(token):
                     score += 100
                 else:
                     # Locality sensitive score
-                    ratio = fuzz.ratio(token, command_tokens[j])
+                    ratio = fuzz.ratio(token, command_token)
 
                     # Have locality sensitive cut off 
                     if ratio <= 30:
                         return False
 
                     # Locality insensitive score
-                    partial_ratio = fuzz.partial_ratio(token, command_tokens[j])
+                    partial_ratio = fuzz.partial_ratio(token, command_token)
                     
                     # Cut off
-                    if fuzz.partial_ratio(token, command_tokens[j]) <= 30:
+                    if partial_ratio <= 30:
                         return False
 
-                    # Add partial ratio to score
-                    score += partial_ratio
+                    # Add ratio to score
+                    score += ratio
 
                 # The two tokens are similar to each other, replace it with valid one
-                tokens[i] = command_tokens[j]
+                tokens[i] = command_token
 
             # Matches current, go to next token
             i += 1
@@ -219,7 +277,7 @@ def _matches_fuzzy_regex(i, j, tokens, command_tokens, kwargs, required_argument
 
                 # Span single command token
                 if abs(end - sum(len(ct) for ct in command_tokens[:j + 1])) <= i:
-                    if not '{' in command_tokens[j]:
+                    if not '{' in command_token:
                         # Span single token if it is not argument
                         i += 1
                         j += 1
@@ -250,7 +308,9 @@ def _matches_fuzzy_regex(i, j, tokens, command_tokens, kwargs, required_argument
                     # For matched range, perform submatches on next real token
                     for subindex in range(j + skipped, token_end + 1):
                         # Make sure items are passed by copies, not by reference
-                        submatch_result = _matches_fuzzy_regex(i, subindex, tokens.copy(), command_tokens.copy(), kwargs.copy(), required_arguments, score)
+                        submatch_result = _matches_fuzzy_regex(i, subindex, 
+                            tokens.copy(), command_tokens.copy(), kwargs.copy(),
+                            use_regex, required_arguments, score)
                         
                         # If any match is found, return true
                         if submatch_result is not False:
@@ -273,172 +333,6 @@ def _matches_fuzzy_regex(i, j, tokens, command_tokens, kwargs, required_argument
     else: 
         # It doesn't match
         return False
-
-def _fuzzy_search_command(command):
-    ''' Performs fuzzy search for a command that most closely matches the input
-
-        Args:
-            command (`str`): The command that needs to be matched
-
-        Returns:
-            The actual command string that most closely matches the input
-
-        Raises:
-            SyntaxError
-
-    '''
-    # If command is found then stop
-    if command in parser_data:
-        return command, parser_data[command], {}
-
-    # Tokenize the command
-    tokens = command.split()
-    token_length = len(tokens)
-
-    # Set search space to items with key tokens the same length as command
-    search = [
-        (key.split(), value) for key, value in 
-                filter(lambda item: len(item[0].split()) == token_length, 
-                                                        parser_data.items())]
-
-    # Store last token perfect matches to track specificity 
-    perfect_matches = []
-
-    # Process tokens one by one, fuzzy matching each one
-    for index, token in enumerate(tokens):
-        heap = []
-        wild_entries = []
-
-        for key_tokens, value in search:
-            current = key_tokens[index]
-            
-            # If current token is argument, bypass fuzzy match
-            if len(current) > 0 and current[0] == '{':
-                wild_entries.append((key_tokens, value))
-                continue
-
-            # If current token is partial argument, remove argument and perform
-            # perfect matching on base string
-            elif '{' in current:
-                left = current.split('{')
-                right = left[1].split('}')[1]
-                left = left[0]
-
-                if re.match(re.escape(left) + '.*' +  re.escape(right), token):
-                    if index + 1 == token_length:
-                        perfect_matches.append((key_tokens, value))
-                    else:
-                        
-                        # Also consider other matches
-                        heapq.heappush(heap, (-100, (key_tokens, value)))
-                
-            # Skip tokens with poor locality sensitive ratio
-            if not current.startswith(token) and fuzz.ratio(token, current) <= 30:
-                continue
-            
-            # If last token is perfect match, add to perfect matches
-            if token == current and index + 1 == token_length:
-                perfect_matches.append((key_tokens, value))
-            else:
-                # Update PQ with locality insensitive ratio
-                heapq.heappush(heap, (
-                    -fuzz.partial_ratio(token, current), (key_tokens, value)
-                ))
-
-        score = None
-        search = wild_entries
-
-        # Keep popping searches that has equal similarity ratio
-        # Add popped result back to search space
-        while len(heap) > 0: 
-            current = heap[0]
-
-            if score is None or score == current[0]:
-                score, item = heapq.heappop(heap)
-                search.append(item)
-            elif not score == current[0]:
-                break
-
-    match = None
-
-    if len(perfect_matches) > 0: 
-        match = perfect_matches[0]
-    elif len(search) == 1:
-        match = search[0]
-    else: 
-        # Ambiguous command or could not find parser
-        raise SyntaxError(
-            "Could not find unambiguous parser for '{}'. Try".format(command) +
-            " increasing the specificity of your command."
-        )
-
-    # Get kwargs from command if any
-    # Use regex search in case there is something before/after argument
-    kwargs = {}
-
-    for index, key in enumerate(match[0]):
-        if '{' in key:
-            kwargs[re.search('{(.*)}', key).groups()[0]] = tokens[index]
-
-    # Return actual command name, command data, and kwargs
-    return ' '.join(match[0]), match[1], kwargs
-
-def _find_command(command, data, device):
-    ratio = 0
-    max_lenght = 0
-    matches = None
-    for key in data:
-        if not '{' in key:
-            # Disregard the non regex ones
-            continue
-
-        # Okay... this is not optimal
-        patterns = re.findall('{.*?}', key)
-        len_normal_words = len(set(key.split()) - set(patterns))
-        reg = key
-
-        for pattern in patterns:
-            word = pattern.replace('{', '').replace('}', '')
-            new_pattern = r'(?P<{p}>\\S+)'.format(p=word) \
-                if word == 'vrf' \
-                   or word == 'rd' \
-                   or word == 'instance' \
-                   or word == 'vrf_type' \
-                   or word == 'feature' \
-                else '(?P<{p}>.*)'.format(p=word)
-            reg = re.sub(pattern, new_pattern, reg)
-        reg += '$'
-        # Convert | to \|, and ^ to \^
-        reg = reg.replace('|', '\|').replace('^', '\^')
-
-        match = re.match(reg, command)
-        if match:
-            
-            try:
-                order_list = device.custom.get('abstraction').get('order', [])
-            except AttributeError:
-                order_list = None
-            if order_list:
-                if getattr(device, order_list[0]) not in data[key].keys():
-                    continue
-            elif device.os not in data[key].keys():
-                continue
-            # Found a match!
-            lookup = Lookup.from_device(device, packages={'parser':parser})
-            # Check if all the tokens exists; take the farthest one
-            ret_data = data[key]
-            for token in lookup._tokens:
-                if token in ret_data:
-                    ret_data = ret_data[token]
-
-            if len_normal_words > max_lenght:
-                max_lenght = len_normal_words
-                matches = (ret_data, match.groupdict())
-
-    if matches:
-        return matches
-    
-    raise SyntaxError('Could not find a parser match')
 
 
 def _find_parser_cls(device, data):
