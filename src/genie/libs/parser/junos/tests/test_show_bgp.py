@@ -1448,5 +1448,6 @@ class TestShowBgpGroupSummary(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
+
 if __name__ == '__main__':
     unittest.main()

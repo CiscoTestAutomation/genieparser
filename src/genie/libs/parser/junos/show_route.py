@@ -274,6 +274,7 @@ class ShowRouteProtocolSchema(MetaParser):
                 rt_schema.validate(item)
             return value
 
+
         # Create RouteEntry Schema
         route_entry_schema = Schema({
                 "active-route-count": str,
@@ -321,12 +322,14 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
             else:
                 cmd = self.cli_command[0].format(
                     protocol=protocol)
+
             out = self.device.execute(cmd)
         else:
             out = output
 
         ret_dict = {}
         rt_destination = None
+
 
         # inet.0: 932 destinations, 1618 routes (932 active, 0 holddown, 0 hidden)
         p1 = re.compile(r'^(?P<table_name>\S+): +(?P<destination_count>\d+) +'
@@ -1457,3 +1460,4 @@ class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
                 rt_list.append(rt_dict)
 
         return ret_dict
+
