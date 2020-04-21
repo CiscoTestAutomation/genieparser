@@ -21,7 +21,6 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import (Any,
         Optional, Use, SchemaTypeError, Schema)
 
-from .show_ospf_database_advertising_router_self_detail import ShowOspfDatabaseAdvertisingRouterSelfDetail
 class ShowOspfInterfaceBriefSchema(MetaParser):
     """ Schema for:
             * show ospf interface brief
