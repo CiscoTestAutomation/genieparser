@@ -11,6 +11,7 @@ JunOs parsers for the following show commands:
     * show ospf interface instance {instance}
     * show ospf interface detail instance {instance}
     * show ospf interface {interface} detail instance {instance}
+    * show ospf database advertising-router self detail
 """
 
 # Python
