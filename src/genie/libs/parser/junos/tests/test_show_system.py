@@ -2051,7 +2051,7 @@ class TestShowSystemCoreDumpsNoForwarding(unittest.TestCase):
 # =========================================================
 # Unit test for show system statistics
 # =========================================================
-class test_show_system_statistics(unittest.TestCase):
+class TestShowSystemStatistics(unittest.TestCase):
 
     device = Device(name="aDevice")
 
@@ -3622,7 +3622,7 @@ class test_show_system_statistics(unittest.TestCase):
 # =========================================================
 # Unit test for show system statistics no-forwarding
 # =========================================================
-class test_show_system_statistics_no_forwarding(unittest.TestCase):
+class TestShowSystemStatisticsNoForwarding(unittest.TestCase):
 
     device = Device(name="aDevice")
 
