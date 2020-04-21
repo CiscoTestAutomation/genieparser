@@ -244,8 +244,6 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                 database_list.append(entry)
                 continue
 
-            # if not self.lsa_type == "Extern":
-            #     continue
 
             if self.lsa_type == "Router":
                  # bits 0x2, link count 8
@@ -439,9 +437,5 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
 
                     continue
 
-        import pprint
-
-        logFile = open('/Users/adelph/git/file.txt', 'w')
-        pprint.pprint(ret_dict, logFile)
 
         return ret_dict
