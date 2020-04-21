@@ -408,7 +408,7 @@ class ShowChassisHardwareSchema(MetaParser):
     def validate_inner_chassis_hardware_list(value):
         # Pass firmware list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('inner firmware is not a list')
+            raise SchemaTypeError('inner chassis hardware is not a list')
         chassis_inner_hardware_schema = Schema(
                         {
                             Optional("chassis-sub-sub-module"): {
@@ -434,7 +434,7 @@ class ShowChassisHardwareSchema(MetaParser):
     def validate_chassis_hardware_list(value):
         # Pass firmware list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('firmware is not a list')
+            raise SchemaTypeError('chassis hardware is not a list')
         chassis_hardware_schema = Schema({
             Optional("chassis-sub-module"): Use(ShowChassisHardware.validate_inner_chassis_hardware_list),
             Optional("description"): str,
@@ -475,32 +475,29 @@ class ShowChassisHardware(ShowChassisHardwareSchema):
         #Hardware inventory:
         p1 = re.compile(r'^Hardware +(?P<style>\S+):$')
 
-        #Item             Version  Part number  Serial number     Description
-        p2 = re.compile(r'^Item +Version +Part number +Serial number +Description$')
-
         #FPC 0                                                    Virtual FPC
-        p3 = re.compile(r'^(?P<name>(\S+\s\d+)) +(?P<description>\S+\s\S+)$')
+        p2 = re.compile(r'^(?P<name>(\S+\s\d+)) +(?P<description>\S+\s\S+)$')
 
         #Routing Engine 0                                         RE-VMX
-        p4 = re.compile(r'^(?P<name>\S+\s+\S+\s+\d+) +(?P<description>\S+)$')
+        p3 = re.compile(r'^(?P<name>\S+\s+\S+\s+\d+) +(?P<description>\S+)$')
 
         #CPU            Rev. 1.0 RIOT-LITE    BUILTIN
-        p5 = re.compile(r'^(?P<name>\S+) +(?P<version>[\S\.\d]+ [\S\.\d]+) '
+        p4 = re.compile(r'^(?P<name>\S+) +(?P<version>[\S\.\d]+ [\S\.\d]+) '
                         r'+(?P<part_number>[\S\-]+) +(?P<serial_number>\S+)$')
 
         #MIC 0                                                  Virtual
-        p6 = re.compile(r'^(?P<name>\S+ \d+) +(?P<description>\S+)$')
+        p5 = re.compile(r'^(?P<name>\S+ \d+) +(?P<description>\S+)$')
 
         #PIC 0                 BUILTIN      BUILTIN           Virtual
-        p7 = re.compile(r'^(?P<name>\S+ \d+) +(?P<part_number>\S+) '
+        p6 = re.compile(r'^(?P<name>\S+ \d+) +(?P<part_number>\S+) '
                         r'+(?P<serial_number>\S+) +(?P<description>\S+)$')
 
         #Chassis                                VM5D4C6B3599      VMX
-        p8 = re.compile(r'^(?P<name>\S+) +(?P<serial_number>\S+) '
+        p7 = re.compile(r'^(?P<name>\S+) +(?P<serial_number>\S+) '
                         r'+(?P<description>\S+)$')
 
         #Midplane
-        p9 = re.compile(r'^(?P<name>\S+)$')
+        p8 = re.compile(r'^(?P<name>\S+)$')
 
         ret_dict = {}
 
@@ -520,13 +517,8 @@ class ShowChassisHardware(ShowChassisHardwareSchema):
 
                 continue
 
-            #Item             Version  Part number  Serial number     Description
-            m = p2.match(line)
-            if m:
-                continue
-
             #FPC 0                                                    Virtual FPC
-            m = p3.match(line)
+            m = p2.match(line)
             if m:
                 group = m.groupdict()
                 if(group["name"] == "CB 0"):
@@ -542,7 +534,7 @@ class ShowChassisHardware(ShowChassisHardwareSchema):
                 continue
 
             #Routing Engine 0                                         RE-VMX
-            m = p4.match(line)
+            m = p3.match(line)
             if m:
                 group = m.groupdict()
                 entry_dict = {}
@@ -553,7 +545,7 @@ class ShowChassisHardware(ShowChassisHardwareSchema):
                 continue
 
             #CPU            Rev. 1.0 RIOT-LITE    BUILTIN
-            m = p5.match(line)
+            m = p4.match(line)
             if m:
                 group = m.groupdict()
                 chassis_inner_list = []
@@ -567,7 +559,7 @@ class ShowChassisHardware(ShowChassisHardwareSchema):
                 continue
 
             #MIC 0                                                  Virtual
-            m = p6.match(line)
+            m = p5.match(line)
             if m:
                 group = m.groupdict()
                 chassis_inner_dict2 = {}
@@ -576,7 +568,7 @@ class ShowChassisHardware(ShowChassisHardwareSchema):
                 continue
 
             #PIC 0                 BUILTIN      BUILTIN           Virtual
-            m = p7.match(line)
+            m = p6.match(line)
             if m:
                 group = m.groupdict()
                 chassis_inner_inner_dict = {}
@@ -594,7 +586,7 @@ class ShowChassisHardware(ShowChassisHardwareSchema):
                 continue
 
             #Chassis                                VM5D4C6B3599      VMX
-            m = p8.match(line)
+            m = p7.match(line)
             if m:
                 group = m.groupdict()
                 chassis_inventory_dict["description"] = group["description"]
@@ -603,7 +595,7 @@ class ShowChassisHardware(ShowChassisHardwareSchema):
                 continue
 
             #Midplane
-            m = p9.match(line)
+            m = p8.match(line)
             if m:
                 group = m.groupdict()
                 entry_dict = {}
@@ -660,7 +652,7 @@ class ShowChassisHardwareDetailSchema(MetaParser):
     def validate_inner_chassis_hardware_detail_list(value):
         # Pass firmware list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('inner firmware is not a list')
+            raise SchemaTypeError('inner chassis module is not a list')
         chassis_inner_hardware_schema = Schema(
                         {
                             Optional("chassis-sub-sub-module"): {
@@ -686,7 +678,7 @@ class ShowChassisHardwareDetailSchema(MetaParser):
     def validate_chassis_hardware_detail_list(value):
         # Pass firmware list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('firmware is not a list')
+            raise SchemaTypeError('chassis module is not a list')
         chassis_hardware_detail_schema = Schema({
             Optional("chassis-re-disk-module"): {
                         "description": str,
@@ -735,38 +727,35 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
         #Hardware inventory:
         p1 = re.compile(r'^Hardware +(?P<style>\S+):$')
 
-        #Item             Version  Part number  Serial number     Description
-        p2 = re.compile(r'^Item +Version +Part number +Serial number +Description$')
-
         #FPC 0                                                    Virtual FPC
-        p3 = re.compile(r'^(?P<name>(\S+\s\d+)) +(?P<description>\S+\s\S+)$')
+        p2 = re.compile(r'^(?P<name>(\S+\s\d+)) +(?P<description>\S+\s\S+)$')
 
         #Routing Engine 0                                         RE-VMX
-        p4 = re.compile(r'^(?P<name>\S+\s+\S+\s+\d+) +(?P<description>\S+)$')
+        p3 = re.compile(r'^(?P<name>\S+\s+\S+\s+\d+) +(?P<description>\S+)$')
 
         #cd0   27649 MB  VMware Virtual IDE Har 00000000000000000001 Hard Disk
-        p5 = re.compile(r'^(?P<name>\S+) +(?P<disk_size>\d+) '
+        p4 = re.compile(r'^(?P<name>\S+) +(?P<disk_size>\d+) '
                          r'+MB +(?P<model>\S+\s+\S+\s+\S+\s+\S+) '
                          r'+(?P<serial_number>\d+) +(?P<description>'
                          r'\S+\s+\S+)$')
 
         #CPU            Rev. 1.0 RIOT-LITE    BUILTIN
-        p6 = re.compile(r'^(?P<name>\S+) +(?P<version>[\S\.\d]+ [\S\.\d]+) '
+        p5 = re.compile(r'^(?P<name>\S+) +(?P<version>[\S\.\d]+ [\S\.\d]+) '
                         r'+(?P<part_number>[\S\-]+) +(?P<serial_number>\S+)$')
 
         #MIC 0                                                  Virtual
-        p7 = re.compile(r'^(?P<name>\S+ \d+) +(?P<description>\S+)$')
+        p6 = re.compile(r'^(?P<name>\S+ \d+) +(?P<description>\S+)$')
 
         #PIC 0                 BUILTIN      BUILTIN           Virtual
-        p8 = re.compile(r'^(?P<name>\S+ \d+) +(?P<part_number>\S+) '
+        p7 = re.compile(r'^(?P<name>\S+ \d+) +(?P<part_number>\S+) '
                         r'+(?P<serial_number>\S+) +(?P<description>\S+)$')
 
         #Chassis                                VM5D4C6B3599      VMX
-        p9 = re.compile(r'^(?P<name>\S+) +(?P<serial_number>\S+) '
+        p8 = re.compile(r'^(?P<name>\S+) +(?P<serial_number>\S+) '
                         r'+(?P<description>\S+)$')
 
         #Midplane
-        p10 = re.compile(r'^(?P<name>\S+)$')
+        p9 = re.compile(r'^(?P<name>\S+)$')
 
         ret_dict = {}
 
@@ -785,13 +774,8 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
 
                 continue
 
-            #Item             Version  Part number  Serial number     Description
-            m = p2.match(line)
-            if m:
-                continue
-
             #FPC 0                                                    Virtual FPC
-            m = p3.match(line)
+            m = p2.match(line)
             if m:
                 group = m.groupdict()
                 if(group["name"] == "CB 0"):
@@ -807,7 +791,7 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
                 continue
 
             #Routing Engine 0                                         RE-VMX
-            m = p4.match(line)
+            m = p3.match(line)
             if m:
                 group = m.groupdict()
                 entry_dict = {}
@@ -818,7 +802,7 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
                 continue
 
             #cd0   27649 MB  VMware Virtual IDE Har 00000000000000000001 Hard Disk
-            m = p5.match(line)
+            m = p4.match(line)
             if m:
                 group = m.groupdict()
                 re_disk_entry_dict = {}
@@ -833,7 +817,7 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
                 continue
 
             #CPU            Rev. 1.0 RIOT-LITE    BUILTIN
-            m = p6.match(line)
+            m = p5.match(line)
             if m:
                 group = m.groupdict()
                 chassis_inner_list = []
@@ -847,7 +831,7 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
                 continue
 
             #MIC 0                                                  Virtual
-            m = p7.match(line)
+            m = p6.match(line)
             if m:
                 group = m.groupdict()
                 chassis_inner_dict2 = {}
@@ -856,7 +840,7 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
                 continue
 
             #PIC 0                 BUILTIN      BUILTIN           Virtual
-            m = p8.match(line)
+            m = p7.match(line)
             if m:
                 group = m.groupdict()
                 chassis_inner_inner_dict = {}
@@ -874,7 +858,7 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
                 continue
 
             #Chassis                                VM5D4C6B3599      VMX
-            m = p9.match(line)
+            m = p8.match(line)
             if m:
                 group = m.groupdict()
                 chassis_inventory_dict["description"] = group["description"]
@@ -883,7 +867,7 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
                 continue
 
             #Midplane
-            m = p10.match(line)
+            m = p9.match(line)
             if m:
                 group = m.groupdict()
                 entry_dict = {}
@@ -971,7 +955,7 @@ class ShowChassisHardwareExtensiveSchema(MetaParser):
     def validate_inner_chassis_hardware_detail_list(value):
         # Pass firmware list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('inner firmware is not a list')
+            raise SchemaTypeError('inner chassis module is not a list')
         chassis_inner_hardware_schema = Schema(
                         {
                             Optional("chassis-sub-sub-module"): {
@@ -1011,7 +995,7 @@ class ShowChassisHardwareExtensiveSchema(MetaParser):
     def validate_chassis_hardware_extensive_list(value):
         # Pass firmware list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('firmware is not a list')
+            raise SchemaTypeError('chassis module is not a list')
         chassis_hardware_detail_schema = Schema({
             Optional("chassis-re-disk-module"): {
                         "description": str,
@@ -1088,21 +1072,18 @@ class ShowChassisHardwareExtensive(ShowChassisHardwareExtensiveSchema):
         #Hardware inventory:
         p1 = re.compile(r'^Hardware +(?P<style>\S+):$')
 
-        #Item             Version  Part number  Serial number     Description
-        p2 = re.compile(r'^Item +Version +Part number +Serial number +Description$')
-
         #Jedec Code:   0x7fb0            EEPROM Version:    0x02
-        p3 = re.compile(r'^Jedec Code: +(?P<jedec_code>\S+) '
+        p2 = re.compile(r'^Jedec Code: +(?P<jedec_code>\S+) '
                         r'+EEPROM Version: +(?P<eeprom_version>\S+)$')
 
         
         #S/N:               VM5D4C6B3599
-        p4 = re.compile(r'^S/N: +(?P<serial_number>\S+)$')
+        p3 = re.compile(r'^S/N: +(?P<serial_number>\S+)$')
 
         
 
         #Assembly ID:  0x0567            Assembly Version:  00.00
-        p5 = re.compile(r'^Assembly ID: +(?P<assembly_identifier>\S+) '
+        p4 = re.compile(r'^Assembly ID: +(?P<assembly_identifier>\S+) '
                         r'+Assembly Version: +(?P<assembly_version>\S+)$')
 
         
@@ -1110,59 +1091,59 @@ class ShowChassisHardwareExtensive(ShowChassisHardwareExtensiveSchema):
         
 
         #Date:         00-00-0000        Assembly Flags:    0x00
-        p6 = re.compile(r'^Date: +(?P<manufacture_date>\S+) +Assembly Flags: '
+        p5 = re.compile(r'^Date: +(?P<manufacture_date>\S+) +Assembly Flags: '
                         r'+(?P<assembly_flags>\S+)$')
 
         
 
         #ID: VMX
-        p7 = re.compile(r'^ID: +(?P<i2c_identifier>[\S\s]+)$')
+        p6 = re.compile(r'^ID: +(?P<i2c_identifier>[\S\s]+)$')
 
         
 
         #Board Information Record:
-        p8 = re.compile(r'^(?P<address_type>\ABoard Information Record):$')
+        p7 = re.compile(r'^(?P<address_type>\ABoard Information Record):$')
 
         
 
         #I2C Hex Data:
-        p9 = re.compile(r'^(?P<address_type>\AI2C Hex Data:)$')
+        p8 = re.compile(r'^(?P<address_type>\AI2C Hex Data:)$')
 
         
 
         #Address 0x00: 7f b0 02 00 fa 4e 01 00 52 65 76 2e 20 31 2e 30
-        p10 = re.compile(r'^(?P<address_info>\AAddress[\s\S]+)$')
+        p9 = re.compile(r'^(?P<address_info>\AAddress[\s\S]+)$')
 
 
 
         #FPC 0                                                    Virtual FPC
         #CB 0                                                     VMX SCB
-        p11 = re.compile(r'^(?P<name>(\S+\s\d+)) +(?P<description>\S+\s\S+)$')
+        p10 = re.compile(r'^(?P<name>(\S+\s\d+)) +(?P<description>\S+\s\S+)$')
 
 
 
 
         #Routing Engine 0                                         RE-VMX
-        p12 = re.compile(r'^(?P<name>\S+\s+\S+\s+\d+) +(?P<description>\S+)$')
+        p11 = re.compile(r'^(?P<name>\S+\s+\S+\s+\d+) +(?P<description>\S+)$')
 
 
 
         #cd0   27649 MB  VMware Virtual IDE Har 00000000000000000001 Hard Disk
-        p13 = re.compile(r'^(?P<name>\S+) +(?P<disk_size>\d+) '
+        p12 = re.compile(r'^(?P<name>\S+) +(?P<disk_size>\d+) '
                          r'+MB +(?P<model>\S+\s+\S+\s+\S+\s+\S+) '
                          r'+(?P<serial_number>\d+) +(?P<description>'
                          r'\S+\s+\S+)$')
 
         #CPU            Rev. 1.0 RIOT-LITE    BUILTIN
-        p14 = re.compile(r'^(?P<name>\S+) +(?P<version>[\S\.\d]+ '
+        p13 = re.compile(r'^(?P<name>\S+) +(?P<version>[\S\.\d]+ '
                          r'[\S\.\d]+) +(?P<part_number>[\S\-]+) +'
                          r'(?P<serial_number>\S+)$')
 
         #MIC 0                                                  Virtual
-        p15 = re.compile(r'^(?P<name>\S+ \d+) +(?P<description>\S+)$')
+        p14 = re.compile(r'^(?P<name>\S+ \d+) +(?P<description>\S+)$')
 
         #PIC 0                 BUILTIN      BUILTIN           Virtual
-        p16 = re.compile(r'^(?P<name>\S+ \d+) +(?P<part_number>\S+) '
+        p15 = re.compile(r'^(?P<name>\S+ \d+) +(?P<part_number>\S+) '
                          r'+(?P<serial_number>\S+) +(?P<description>\S+)$')
 
         
@@ -1171,11 +1152,11 @@ class ShowChassisHardwareExtensive(ShowChassisHardwareExtensiveSchema):
 
         
         #Chassis                                VM5D4C6B3599      VMX
-        p17 = re.compile(r'^(?P<name>\S+) +(?P<serial_number>\S+) +'
+        p16 = re.compile(r'^(?P<name>\S+) +(?P<serial_number>\S+) +'
                          r'(?P<description>\S+)$')
 
         #Midplane
-        p18 = re.compile(r'^(?P<name>\S+)$')
+        p17 = re.compile(r'^(?P<name>\S+)$')
 
         ret_dict = {}
 
@@ -1195,14 +1176,8 @@ class ShowChassisHardwareExtensive(ShowChassisHardwareExtensiveSchema):
 
                 continue
 
-            #Item             Version  Part number  Serial number     Description
-            m = p2.match(line)
-            if m:
-                continue
-
-
             #Jedec Code:   0x7fb0            EEPROM Version:    0x02
-            m = p3.match(line)
+            m = p2.match(line)
             if m:
                 group = m.groupdict()
                 i2c_dict = {}
@@ -1211,7 +1186,7 @@ class ShowChassisHardwareExtensive(ShowChassisHardwareExtensiveSchema):
                 continue
 
             #S/N:               VM5D4C6B3599
-            m = p4.match(line)
+            m = p3.match(line)
             if m:
                 group = m.groupdict()
                 i2c_dict["serial-number"] = group["serial_number"]
@@ -1220,7 +1195,7 @@ class ShowChassisHardwareExtensive(ShowChassisHardwareExtensiveSchema):
 
 
             #Assembly ID:  0x0567            Assembly Version:  00.00
-            m = p5.match(line)
+            m = p4.match(line)
             if m:
                 group = m.groupdict()
                 i2c_dict["assembly-identifier"] = group["assembly_identifier"]
@@ -1229,7 +1204,7 @@ class ShowChassisHardwareExtensive(ShowChassisHardwareExtensiveSchema):
 
 
             #Date:         00-00-0000        Assembly Flags:    0x00
-            m = p6.match(line)
+            m = p5.match(line)
             if m:
                 group = m.groupdict()
                 i2c_dict["manufacture-date"] = group["manufacture_date"]
@@ -1245,7 +1220,7 @@ class ShowChassisHardwareExtensive(ShowChassisHardwareExtensiveSchema):
 
 
             #ID: VMX
-            m = p7.match(line)
+            m = p6.match(line)
             if m:
                 group = m.groupdict()
                 i2c_dict["i2c-identifier"] = group["i2c_identifier"]
@@ -1253,7 +1228,7 @@ class ShowChassisHardwareExtensive(ShowChassisHardwareExtensiveSchema):
 
 
             #Board Information Record:
-            m = p8.match(line)
+            m = p7.match(line)
             if m:
                 group = m.groupdict()
                 complete_address = ""
@@ -1261,7 +1236,7 @@ class ShowChassisHardwareExtensive(ShowChassisHardwareExtensiveSchema):
                 continue
 
             #I2C Hex Data:
-            m = p9.match(line)
+            m = p8.match(line)
             if m:
                 group = m.groupdict()
                 complete_address = ""
@@ -1269,7 +1244,7 @@ class ShowChassisHardwareExtensive(ShowChassisHardwareExtensiveSchema):
                 continue
 
             #Address 0x00: 7f b0 02 00 fa 4e 01 00 52 65 76 2e 20 31 2e 30
-            m = p10.match(line)
+            m = p9.match(line)
             if m:
                 group = m.groupdict()
                 if(address_type == "Board Information Record"):
@@ -1277,12 +1252,10 @@ class ShowChassisHardwareExtensive(ShowChassisHardwareExtensiveSchema):
                 else:
                     complete_address += group["address_info"] + '\n' + ('    ')*5               
                 continue
-
-
             
 
             #FPC 0                                                    Virtual FPC
-            m = p11.match(line)
+            m = p10.match(line)
             if m:
                 group = m.groupdict()
                 if(group["name"] == "CB 0"):                  
@@ -1310,7 +1283,7 @@ class ShowChassisHardwareExtensive(ShowChassisHardwareExtensiveSchema):
                 continue
 
             #Routing Engine 0                                         RE-VMX
-            m = p12.match(line)
+            m = p11.match(line)
             if m:
                 group = m.groupdict()
                 i2c_dict["i2c-data"] = complete_address
@@ -1333,7 +1306,7 @@ class ShowChassisHardwareExtensive(ShowChassisHardwareExtensiveSchema):
                 continue
 
             #cd0   27649 MB  VMware Virtual IDE Har 00000000000000000001 Hard Disk
-            m = p13.match(line)
+            m = p12.match(line)
             if m:
                 group = m.groupdict()
                 i2c_dict["i2c-data"] = complete_address
@@ -1360,7 +1333,7 @@ class ShowChassisHardwareExtensive(ShowChassisHardwareExtensiveSchema):
                 continue
 
             #CPU            Rev. 1.0 RIOT-LITE    BUILTIN
-            m = p14.match(line)
+            m = p13.match(line)
             if m:
                 group = m.groupdict()
                 i2c_dict["i2c-data"] = complete_address
@@ -1384,7 +1357,7 @@ class ShowChassisHardwareExtensive(ShowChassisHardwareExtensiveSchema):
                 continue
 
             #MIC 0                                                  Virtual
-            m = p15.match(line)
+            m = p14.match(line)
             if m:
                 group = m.groupdict()
                 i2c_dict["i2c-data"] = complete_address
@@ -1408,7 +1381,7 @@ class ShowChassisHardwareExtensive(ShowChassisHardwareExtensiveSchema):
                 continue
 
             #PIC 0                 BUILTIN      BUILTIN           Virtual
-            m = p16.match(line)
+            m = p15.match(line)
             if m:
                 group = m.groupdict()
                 chassis_inner_inner_dict = {}
@@ -1440,7 +1413,7 @@ class ShowChassisHardwareExtensive(ShowChassisHardwareExtensiveSchema):
                 continue
 
             #Chassis                                VM5D4C6B3599      VMX
-            m = p17.match(line)
+            m = p16.match(line)
             if m:
                 group = m.groupdict()
                 current_item = group["name"]
@@ -1452,7 +1425,7 @@ class ShowChassisHardwareExtensive(ShowChassisHardwareExtensiveSchema):
                 continue
 
             #Midplane
-            m = p18.match(line)
+            m = p17.match(line)
             if m:
                 group = m.groupdict()
                 if(current_item == "CPU"):
