@@ -117,8 +117,10 @@
         * show route forwarding-table summary
     * Added ShowOspf3DatabaseExtensive for:
         * show ospf3 database extensive
-    * Added ShowSystemBuffer for:
+    * Added ShowSystemBuffers for:
         * show system buffers
+    * Added ShowSystemBuffersNoForwarding for:
+        * show system buffers no-forwarding
     * Added ShowSystemCommit for:
         * show system commit
     * Added ShowSystemQueues for:

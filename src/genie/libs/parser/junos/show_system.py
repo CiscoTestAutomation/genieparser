@@ -5,6 +5,7 @@ JunOS parsers for the following show commands:
     - 'show system queues'
     - 'show system queues no-forwarding'
     - 'show system buffers'
+    - 'show system buffers no-forwarding'
     - 'show system users'
     - 'show system storage'
 """
@@ -17,7 +18,7 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use
 from genie.metaparser.util.exceptions import SchemaTypeError
 
-class ShowSystemBufferSchema(MetaParser):
+class ShowSystemBuffersSchema(MetaParser):
     """ Schema for:
             - 'show system buffers'
     """
@@ -61,7 +62,7 @@ class ShowSystemBufferSchema(MetaParser):
     }
 
 
-class ShowSystemBuffer(ShowSystemBufferSchema):
+class ShowSystemBuffers(ShowSystemBuffersSchema):
     """ Parser for:
             - 'show system buffers'
     """
@@ -256,6 +257,22 @@ class ShowSystemBuffer(ShowSystemBufferSchema):
                 continue
 
         return ret_dict
+
+
+class ShowSystemBuffersNoForwarding(ShowSystemBuffers):
+    """ Parser for:
+            - 'show system buffers no-forwarding'
+    """
+
+    cli_command = "show system buffers no-forwarding"
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        return super().cli(output=out)
 
 class ShowSystemUsersSchema(MetaParser):
     """ Schema for:
