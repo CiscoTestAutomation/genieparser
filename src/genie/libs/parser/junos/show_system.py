@@ -5,7 +5,11 @@ JunOS parsers for the following show commands:
     - 'show system queues'
     - 'show system queues no-forwarding'
     - 'show system buffers'
+    - 'show system buffers no-forwarding'
+    - 'show system core-dumps'
+    - 'show system core-dumps no-forwarding'
     - 'show system users'
+    - 'show system storage'
 """
 
 # python
@@ -16,7 +20,7 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use
 from genie.metaparser.util.exceptions import SchemaTypeError
 
-class ShowSystemBufferSchema(MetaParser):
+class ShowSystemBuffersSchema(MetaParser):
     """ Schema for:
             - 'show system buffers'
     """
@@ -60,7 +64,7 @@ class ShowSystemBufferSchema(MetaParser):
     }
 
 
-class ShowSystemBuffer(ShowSystemBufferSchema):
+class ShowSystemBuffers(ShowSystemBuffersSchema):
     """ Parser for:
             - 'show system buffers'
     """
@@ -255,6 +259,22 @@ class ShowSystemBuffer(ShowSystemBufferSchema):
                 continue
 
         return ret_dict
+
+
+class ShowSystemBuffersNoForwarding(ShowSystemBuffers):
+    """ Parser for:
+            - 'show system buffers no-forwarding'
+    """
+
+    cli_command = "show system buffers no-forwarding"
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        return super().cli(output=out)
 
 class ShowSystemUsersSchema(MetaParser):
     """ Schema for:
@@ -630,6 +650,269 @@ class ShowSystemQueuesNoForwarding(ShowSystemQueues):
             * show system queues no-forwarding
     """
     cli_command = 'show system queues no-forwarding'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        return super().cli(output=out)
+
+
+class ShowSystemStorageSchema(MetaParser):
+    """ Schema for:
+            * show system storage
+    """
+
+    """
+    schema = {
+        "system-storage-information": {
+            "filesystem": [
+                {
+                    "available-blocks": {
+                        "#text": str
+                    },
+                    "filesystem-name": str,
+                    "mounted-on": str,
+                    "total-blocks": {
+                        "#text": str
+                    },
+                    "used-blocks": {
+                        "#text": str
+                    },
+                    "used-percent": str
+                }
+            ]
+        }
+    }
+    """
+
+    # Sub Schema filesystem
+    def validate_filesystem_list(value):
+        # Pass filesystem list as value
+        if not isinstance(value, list):
+            raise SchemaTypeError('filesystem is not a list')
+        filesystem_schema = Schema(
+            {
+                "available-blocks": {
+                    "junos:format": str
+                },
+                "filesystem-name": str,
+                "mounted-on": str,
+                "total-blocks": {
+                    Optional("#text"): str,
+                    "junos:format": str
+                },
+                "used-blocks": {
+                    "junos:format": str
+                },
+                "used-percent": str
+            })
+        # Validate each dictionary in list
+        for item in value:
+            filesystem_schema.validate(item)
+        return value
+
+    schema = {
+        "system-storage-information": {
+            "filesystem": Use(validate_filesystem_list)
+        }
+    }
+
+class ShowSystemStorage(ShowSystemStorageSchema):
+    """ Parser for:
+            * show system storage
+    """
+    cli_command = 'show system storage'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # /dev/gpt/junos           20G       1.2G        17G        7%  /.mount
+        p1 = re.compile(r'^(?P<filesystem_name>\S+) +(?P<total_blocks>\S+) +'
+        r'(?P<used_blocks>\S+) +(?P<available_blocks>\S+) +(?P<used_percent>\S+)'
+        r' +(?P<mounted_on>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # /dev/gpt/junos           20G       1.2G        17G        7%  /.mount
+            m = p1.match(line)
+            if m:
+
+                filesystem_list = ret_dict.setdefault("system-storage-information", {})\
+                    .setdefault("filesystem", [])
+
+                group = m.groupdict()
+                entry = {
+                    "available-blocks": {
+                        "junos:format": group["available_blocks"]
+                    },
+                    "filesystem-name": group["filesystem_name"],
+                    "mounted-on": group["mounted_on"],
+                    "total-blocks": {
+                        "junos:format": group["total_blocks"]
+                    },
+                    "used-blocks": {
+                        "junos:format": group["used_blocks"]
+                    },
+                    "used-percent": group["used_percent"]
+                }
+
+                filesystem_list.append(entry)
+                continue
+
+        return ret_dict
+
+
+class ShowSystemCoreDumpsSchema(MetaParser):
+    """ Schema for:
+            * show system core-dumps
+    """
+
+    '''
+    schema = {
+        "directory-list": {
+            "directory": {
+                "file-information": [
+                    {
+                        "file-date": {
+                            "#text": str,
+                            "junos:format": str
+                        },
+                        "file-group": str,
+                        "file-links": str,
+                        "file-name": str,
+                        "file-owner": str,
+                        "file-permissions": {
+                            "#text": str,
+                            "junos:format": str
+                        },
+                        "file-size": str
+                    }
+                ],
+                "output": "list",
+                "total-files": str
+            }
+        }
+    }
+    '''
+    # Sub Schema file-information
+    def validate_file_information_list(value):
+        # Pass file-information list as value
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-interface is not a list')
+        file_information_schema = Schema({
+                        "file-date": {
+                            Optional("#text"): str,
+                            "@junos:format": str
+                        },
+                        "file-group": str,
+                        "file-links": str,
+                        "file-name": str,
+                        "file-owner": str,
+                        "file-permissions": {
+                            Optional("#text"): str,
+                            "@junos:format": str
+                        },
+                        "file-size": str
+                    })
+        # Validate each dictionary in list
+        for item in value:
+            file_information_schema.validate(item)
+        return value
+
+    schema = {
+        "directory-list": {
+            "directory": {
+                "file-information": Use(validate_file_information_list),
+                "output": list,
+                "total-files": str
+            }
+        }
+    }
+
+
+class ShowSystemCoreDumps(ShowSystemCoreDumpsSchema):
+    """ Parser for:
+            * show system core-dumps
+    """
+    cli_command = 'show system core-dumps'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # -rw-r--r--  1 root  wheel    1252383 Aug 8   2019 /var/crash/core.riot.mpc0.1565307741.1716.gz
+        p1 = re.compile(r'^(?P<file_permissions>\S+) +(?P<file_links>\S+) +'
+        r'(?P<file_owner>\S+)  +(?P<file_group>\S+) +(?P<file_size>\S+) +'
+            r'(?P<file_date>\S+ +\d+ +\d+) +(?P<file_name>\S+)$')
+
+        # /var/tmp/*core*: No such file or directory
+        p2 = re.compile(r'^(?P<output>\S+: +No +such +file +or +directory)$')
+
+        # total files: 6
+        p3 = re.compile(r'^total +files: +(?P<total_files>\d)$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # -rw-r--r--  1 root  wheel    1252383 Aug 8   2019 /var/crash/core.riot.mpc0.1565307741.1716.gz
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                entry_list = ret_dict.setdefault("directory-list", {})\
+                    .setdefault("directory", {}).setdefault("file-information", [])
+                entry = {}
+                entry["file-date"] = {"@junos:format": group['file_date']}
+                entry["file-group"] = group['file_group']
+                entry["file-links"] = group['file_links']
+                entry["file-name"] = group['file_name']
+                entry["file-owner"] = group['file_owner']
+                entry["file-permissions"] = {"@junos:format": group['file_permissions']}
+                entry["file-size"] = group['file_size']
+
+                entry_list.append(entry)
+                continue
+
+            # /var/tmp/*core*: No such file or directory
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                entry_list = ret_dict.setdefault("directory-list", {})\
+                    .setdefault("directory", {}).setdefault("output", [])
+
+                entry_list.append(group['output'])
+                continue
+
+            # total files: 6
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict.setdefault("directory-list", {})\
+                    .setdefault("directory", {})
+
+                entry['total-files'] = group['total_files']
+                continue
+
+        return ret_dict
+
+class ShowSystemCoreDumpsNoForwarding(ShowSystemCoreDumps):
+    """ Parser for:
+            - 'show system core-dumps no-forwarding'
+    """
+
+    cli_command = "show system core-dumps no-forwarding"
 
     def cli(self, output=None):
         if not output:
