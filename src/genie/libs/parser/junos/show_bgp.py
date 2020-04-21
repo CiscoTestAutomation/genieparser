@@ -871,8 +871,8 @@ class ShowBgpSummary(ShowBgpSummarySchema):
         # 'bgp-information': {
         #       'bgp-peer': []
         # ------------------------------------------------------------
-        # 10.49.216.179           65171          0          0       0       0 29w5d 22:42:36 Connect
-        # 2001:db8:eb18:ca45::11       65151          0          0       0       0 29w5d 22:42:36 Connect
+        # 27.85.216.179           65171          0          0       0       0 29w5d 22:42:36 Connect
+        # 2001:268:fb8f::11       65151          0          0       0       0 29w5d 22:42:36 Connect
         p5 = re.compile(r'^(?P<peer_address>[\d\w:.]+) +(?P<peer_as>\d+) +'
                         r'(?P<input_messages>\d+) +(?P<output_messages>\d+) +'
                         r'(?P<route_queue_count>\d+) +(?P<flap_count>\d+) +'
@@ -895,7 +895,7 @@ class ShowBgpSummary(ShowBgpSummarySchema):
         # ============================================================
 
         parsed_dict = {}
-        bgp_info_dict = parsed_dict.setdefault('bgp-information', {})
+        bgp_info_dict = {'bgp-information': {}}
 
         for line in out.splitlines():
             line = line.strip()
@@ -985,8 +985,8 @@ class ShowBgpSummary(ShowBgpSummarySchema):
             #                 ],
             # ------------------------------------------------------------
 
-            # 10.49.216.179           65171          0          0       0       0 29w5d 22:42:36 Connect
-            # 2001:db8:eb18:ca45::11       65151          0          0       0       0 29w5d 22:42:36 Connect
+            # 27.85.216.179           65171          0          0       0       0 29w5d 22:42:36 Connect
+            # 2001:268:fb8f::11       65151          0          0       0       0 29w5d 22:42:36 Connect
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -1015,6 +1015,10 @@ class ShowBgpSummary(ShowBgpSummarySchema):
 
                 bgp_peer_dict['bgp-rib'].append(bgp_peer_rib_dict)
                 continue
+
+        # Handle the empty output
+        if bool(bgp_info_dict['bgp-information']):
+            parsed_dict.update(bgp_info_dict)
 
         return parsed_dict
 
