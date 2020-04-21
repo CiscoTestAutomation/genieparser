@@ -136,7 +136,8 @@ class ShowAccessLists(ShowAccessListsSchema):
         # IP access list acl_name
         # IP access list test22
         # IP access list NTP-ACL
-        p1_ip = re.compile(r'^IP +access +list +(?P<name>\S+)$')
+        # IPV4 ACL 1
+        p1_ip = re.compile(r'^((IP +access +list)|(IPV4 +ACL)) +(?P<name>\S+)$')
 
         # IPv6 access list ipv6_acl
         p1_ipv6 = re.compile(r'^IPv6 +access +list +(?P<name>\S+)$')
@@ -189,6 +190,7 @@ class ShowAccessLists(ShowAccessListsSchema):
             # IP access list acl_name
             # IP access list test22
             # IP access list NTP-ACL
+            # IPV4 ACL 1
             m_ip = p1_ip.match(line)
 
             # IPv6 access list ipv6_acl
