@@ -1877,7 +1877,7 @@ class ShowIpInterfaceSchema(MetaParser):
                             'ip': str,
                             Optional('prefix_length'): str,
                             Optional('secondary'): bool,
-                            Optional('broadcase_address'): str,
+                            Optional('broadcast_address'): str,
                         },
                     },
                     Optional('mtu'): int,
@@ -1890,7 +1890,7 @@ class ShowIpInterfaceSchema(MetaParser):
                     Optional('inbound_access_list'): str,
                     Optional('proxy_arp'): bool,
                     Optional('local_proxy_arp'): bool,
-                    Optional('sevurity_level'): str,
+                    Optional('security_level'): str,
                     Optional('split_horizon'): bool,
                     Optional('icmp'): {
                         Optional('redirects'): str,
@@ -2034,7 +2034,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
             p3 = re.compile(r'^Broadcast +address +is +(?P<address>[\w\.\:]+)$')
             m = p3.match(line)
             if m:
-                interface_dict[interface]['ipv4'][address]['broadcase_address'] = \
+                interface_dict[interface]['ipv4'][address]['broadcast_address'] = \
                     m.groupdict()['address']
                 continue
 
@@ -2163,7 +2163,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                              '(?P<level>\w+)$')
             m = p13.match(line)
             if m:
-                interface_dict[interface]['sevurity_level'] = m.groupdict()['level']
+                interface_dict[interface]['security_level'] = m.groupdict()['level']
                 continue
 
             # Split horizon is enabled
