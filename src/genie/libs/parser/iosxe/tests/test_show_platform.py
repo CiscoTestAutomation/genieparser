@@ -3206,7 +3206,7 @@ class TestShowInventory(unittest.TestCase):
         }
     }
 
-    golden_output_1 ={'execute.return_value':'''
+    golden_output_1 = {'execute.return_value': '''
     NAME: "Chassis", DESCR: "Cisco ISR4451 Chassis"
     PID: ISR4451-X/K9 , VID: V01 , SN: FGL172511Q5
 
@@ -3479,6 +3479,7 @@ class TestShowInventory(unittest.TestCase):
         inventory_obj = ShowInventory(device=self.device)
         parsed_output = inventory_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
 
 class TestShowPlatform(unittest.TestCase):
     dev1 = Device(name='empty')
