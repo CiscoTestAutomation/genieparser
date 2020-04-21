@@ -338,10 +338,10 @@ class ShowSystemUptime(ShowSystemUptimeSchema):
 
         
         #Current time: 2020-03-26 08:16:41 UTC
-        p1 = re.compile(r'^Current time: +(?P<current_time>[\d\-\s\:]+\S+)$')
+        p1 = re.compile(r'^Current time: +(?P<current_time>[\S\s]+\S+)$')
 
         #Time Source:  LOCAL CLOCK 
-        p2 = re.compile(r'^Time Source: +(?P<time_source>[A-Za-z\t .]+)$')
+        p2 = re.compile(r'^Time Source: +(?P<time_source>[\w\s\.]+)$')
 
         #System booted: 2019-08-29 09:02:22 UTC (29w6d 23:14 ago) 
         p3 = re.compile(r'^System booted: +(?P<date_time>'
