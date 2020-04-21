@@ -8,7 +8,6 @@ import sys
 import warnings
 import logging
 import importlib
-import heapq
 import math
 
 from fuzzywuzzy import fuzz
