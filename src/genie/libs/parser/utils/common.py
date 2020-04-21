@@ -70,13 +70,37 @@ def get_parser_exclude(command, device):
     except AttributeError:
         return []
 
-def get_parser(command, device):
+def get_parser(command, device, regex=False):
     '''From a show command and device, return parser class and kwargs if any'''
 
-    #TODO ADD FLAG FOR REGEX
-    regex = False
-    kwargs = {}
     lookup = Lookup.from_device(device, packages={'parser': parser})
+
+    results = _fuzzy_search_command(command, regex)
+
+    try:
+        order_list = device.custom.get('abstraction').get('order', [])
+    except AttributeError:
+        order_list = None
+
+    if order_list:
+        if getattr(device, order_list[0]) not in data[key].keys():
+            pass
+    elif device.os not in data[key].keys():
+        pass
+
+    # Found a match!
+    lookup = Lookup.from_device(device, packages={'parser':parser})
+    # Check if all the tokens exists; take the farthest one
+    ret_data = data[key]
+    for token in lookup._tokens:
+        if token in ret_data:
+            ret_data = ret_data[token]
+
+    if len_normal_words > max_lenght:
+        max_lenght = len_normal_words
+        matches = (ret_data, match.groupdict())
+
+
 
     if regex:
         data = _fuzzy_regex_search_command(command)
@@ -101,14 +125,16 @@ def get_parser(command, device):
                             "'{c}' under {l}".format(
                                 c=command, l=lookup._tokens)) from None
 
-def _fuzzy_regex_search_command(search, use_regex):
+def _fuzzy_search_command(search, use_regex):
     # Perfect match should return 
     if search in parser_data:
         return [(search, parser_data[search], {})]
 
     # Preprocess if regex
     if use_regex:
-        search = search.lstrip('^').rstrip('$')
+        search = search.lstrip('^').rstrip('$').replace(r'\ ', ' ').replace(
+            r'\-', '-').replace('\\"', '"').replace('\\,', ',').replace(
+            '\\\'', '\'').replace('\\*', '*').replace('\\:', ':').replace('\\^', '^')
 
     # Fix search to remove extra spaces
     search = ' '.join(filter(None, search.split()))
@@ -132,7 +158,7 @@ def _fuzzy_regex_search_command(search, use_regex):
 
                 best_score = score
             elif score == best_score:
-                result.append(entry)  
+                result.append(entry)
 
     return result
 
@@ -155,16 +181,25 @@ def _matches_fuzzy_regex(i, j, tokens, command_tokens, kwargs, use_regex, requir
         token_is_regular = True
 
         if use_regex:
-            # Special case for `show lldp entry *`
             if len(token) == 1 and token == '*':
+                # Special case for `show lldp entry *`
+                token_is_regular = True
+            elif len(token) == 2 and token == r'\|':
+                # Special case for `ps -ef | grep {grep}`
                 token_is_regular = True
             elif not token.isalnum():
                 # Remove escaped characters
-                candidate = token.replace('\/', '')
+                candidate = token.replace(r'\/', '')
                 candidate = candidate.replace('"', '')
+                candidate = candidate.replace(r'\^', '')
+                candidate = candidate.replace('\'', '')
                 candidate = candidate.replace('-', '')
-                candidate = candidate.replace('\.', '')
-                candidate = candidate.replace('\|', '')
+                candidate = candidate.replace('^', '')
+                candidate = candidate.replace('_', '')
+                candidate = candidate.replace(':', '')
+                candidate = candidate.replace(',', '')
+                candidate = candidate.replace(r'\.', '')
+                candidate = candidate.replace(r'\|', '')
 
                 token_is_regular = candidate.isalnum()
 
