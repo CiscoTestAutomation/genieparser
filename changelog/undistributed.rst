@@ -131,6 +131,10 @@
         * show system queues no-forwarding
     * Added ShowPfeStatisticsTraffic for:
         * show pfe statistics traffic
+    * Added ShowSystemCoreDumps for:
+        * show system core-dumps
+    * Added ShowSystemCoreDumpsNoForwarding for:
+        * show system core-dumps no-forwarding
     * Added ShowSystemUsers for:
         * show system users
     * Added ShowChassisFpcDetail for:
