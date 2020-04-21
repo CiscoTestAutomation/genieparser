@@ -791,10 +791,10 @@ class ShowBgpSummarySchema(MetaParser):
         bgp_peer_schema = Schema(
             {
                 Optional('bgp-rib'): Use(validate_bgp_rib_list),
-                "description": str,
+                Optional("description"): str,
                 "elapsed-time": {
                     "#text": str,
-                    "@junos:seconds": str,
+                    Optional("@junos:seconds"): str,
                 },
                 "flap-count": str,
                 "input-messages": str,
@@ -974,7 +974,7 @@ class ShowBgpSummary(ShowBgpSummarySchema):
                     if key == 'text':
                         bgp_peer_dict['elapsed-time'] = {'#text': value}
                         continue
-                    key = key.replace('_', '_')
+                    key = key.replace('_', '-')
                     bgp_peer_dict[key] = value
 
                 bgp_info_dict['bgp-peer'].append(bgp_peer_dict)
@@ -991,7 +991,8 @@ class ShowBgpSummary(ShowBgpSummarySchema):
                     bgp_peer_rib_dict[key] = value
 
                 bgp_peer_dict['bgp-rib'].append(bgp_peer_rib_dict)
-
+                import pdb
+                pdb.set_trace()
                 continue
 
         return parsed_dict
