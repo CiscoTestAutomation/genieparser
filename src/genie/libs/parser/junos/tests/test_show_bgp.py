@@ -551,6 +551,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
             }
         }
     }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpGroupBrief(device=self.device)
