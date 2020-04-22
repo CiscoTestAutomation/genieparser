@@ -4253,7 +4253,7 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
 
 class TestShowOspfInterfaceExtensive(unittest.TestCase):
     """ Unit tests for:
-            * show ospf neighbor
+            * show ospf interface extensive
     """
 
     device = Device(name='aDevice')
