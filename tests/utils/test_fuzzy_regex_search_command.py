@@ -210,6 +210,10 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0][0], 'show lldp entry *')
 
+        result = _fuzzy_search_command('p \\-', True)
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0][0], 'ps -ef')
+
         result = _fuzzy_search_command(re.escape('/dna'), True)
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0][0], '/dna/intent/api/v1/interface')

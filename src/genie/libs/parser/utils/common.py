@@ -78,7 +78,7 @@ def get_parser(command, device, regex=False):
     valid_results = []
     
     for result in results:
-        _, data, kwargs = result
+        found_command, data, kwargs = result
 
         try:
             order_list = device.custom.get('abstraction').get('order', [])
@@ -96,11 +96,14 @@ def get_parser(command, device, regex=False):
             if token in data:
                 data = data[token]
 
-        valid_results.append((_find_parser_cls(device, data), kwargs))
+        valid_results.append((found_command, _find_parser_cls(device, data), kwargs))
 
     if not valid_results:
         raise Exception("Could not find parser for "
                         "'{c}' under {l}".format(c=command, l=lookup._tokens))
+
+    if not regex:
+        return valid_results[0][1], valid_results[0][2]
 
     return valid_results
 
@@ -177,7 +180,7 @@ def _is_regular_token(token):
         candidate = candidate.replace(r'\.', '')
         candidate = candidate.replace(r'\|', '')
 
-        token_is_regular = candidate.isalnum()
+        token_is_regular = candidate.isalnum() or candidate == ''
     
     return token_is_regular
 
