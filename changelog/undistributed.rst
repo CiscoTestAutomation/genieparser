@@ -73,6 +73,8 @@
         * show bgp group summary
     * Added ShowBgpGroupSummaryNoMore for:
         * show bgp group summary | no-more
+    * Added ShowBgpSummary for:
+        * show bgp summary
     * Added ShowOspfNeighbor for:
         * show ospf neighbor
     * Added ShowRouteProtocol for:
@@ -91,6 +93,16 @@
         * show arp
     * Added ShowArpNoMore for:
         * show arp | no-more
+    * Added ShowOspfDatabase for:
+        * show ospf database 
+    * Added ShowOspfDatabaseSummary for:
+        * show ospf database summary
+    * Added ShowOspfDatabaseExternalExtensive for:
+        * show ospf database external extensive
+    * Added ShowOspfOverview for:
+        * show ospf overview
+    * Added ShowOspfOverviewExtensive for:
+        * show ospf overview extensive
     * Added ShowOspf3Overview for:
         * show ospf3 overview
     * Added ShowOspf3OverviewExtensive for:
@@ -151,6 +163,16 @@
         * show chassis firmware no-forwarding
     * Added ShowChassisEnvironmentRoutingEngine for:
         * show chassis environment routing-engine
+    * Added ShowChassisHardware for:
+        * show chassis hardware
+    * Added ShowChassisHardwareDetail for:
+        * show chassis hardware detail
+    * Added ShowChassisHardwareDetailNoForwarding for:
+        * show chassis hardware detail no-forwarding
+    * Added ShowChassisHardwareExtensive for:
+        * show chassis hardware extensive
+    * Added ShowChassisHardwareExtensiveNoForwarding for:
+        * show chassis hardware extensive no-forwarding
     * Added ShowOspfDatabaseAdvertisingRouterSelfDetailSchema for:
         * show ospf database advertising-router self detail
     * Added ShowOspfInterfaceExtensiveSchema for:
