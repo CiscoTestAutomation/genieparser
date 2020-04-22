@@ -1067,63 +1067,63 @@ class ShowOspfOverview(ShowOspfOverviewSchema):
         p5 = re.compile(r'^SPRING: +(?P<ospf_spring_enabled>\S+)$')
 
         #SRGB Start-Label : 16000, SRGB Index-Range : 8000
-        p6 = re.compile(r'^SRGB Start-Label : +(?P<ospf_srgb_start_label>\d+), SRGB Index-Range : '
+        p6 = re.compile(r'^SRGB +Start-Label : +(?P<ospf_srgb_start_label>\d+), SRGB +Index-Range : '
                         r'+(?P<ospf_srgb_index_range>\d+)$')
         
         #SRGB Block Allocation: Success
         p7 = re.compile(r'^SRGB Block Allocation: +(?P<ospf_srgb_allocation>\S+)$')
 
         #SRGB Start Index : 16000, SRGB Size : 8000, Label-Range: [ 16000, 23999 ]
-        p8 = re.compile(r'^SRGB Start Index : +(?P<ospf_srgb_start_index>\d+), SRGB Size : '
-                        r'+(?P<ospf_srgb_size>\d+), Label-Range: \[ +(?P<ospf_srgb_first_label>\d+), '
+        p8 = re.compile(r'^SRGB +Start +Index : +(?P<ospf_srgb_start_index>\d+), +SRGB Size : '
+                        r'+(?P<ospf_srgb_size>\d+), +Label-Range: \[ +(?P<ospf_srgb_first_label>\d+), '
                         r'+(?P<ospf_srgb_last_label>\d+) \]$')
         
         #Node Segments: Enabled
-        p9 = re.compile(r'^Node Segments: +(?P<ospf_node_segment_enabled>\S+)$')
+        p9 = re.compile(r'^Node +Segments: +(?P<ospf_node_segment_enabled>\S+)$')
 
         #Ipv4 Index : 71
-        p10 = re.compile(r'^Ipv4 Index : +(?P<ospf_node_segment_ipv4_index>\d+)$')
+        p10 = re.compile(r'^Ipv4 +Index : +(?P<ospf_node_segment_ipv4_index>\d+)$')
 
         #Post Convergence Backup: Enabled
-        p11 = re.compile(r'^Post Convergence Backup: +(?P<ospf_tilfa_enabled>\S+)$')
+        p11 = re.compile(r'^Post +Convergence +Backup: +(?P<ospf_tilfa_enabled>\S+)$')
 
         #Max labels: 3, Max spf: 100, Max Ecmp Backup: 1
-        p12 = re.compile(r'^Max labels: +(?P<ospf_tilfa_max_labels>\d+), '
-                         r'Max spf: +(?P<ospf_tilfa_max_spf>\d+), Max Ecmp Backup: '
+        p12 = re.compile(r'^Max +labels: +(?P<ospf_tilfa_max_labels>\d+), '
+                         r'Max +spf: +(?P<ospf_tilfa_max_spf>\d+), +Max +Ecmp +Backup: '
                          r'+(?P<ospf_tilfa_ecmp_backup>\d+)$')
 
         #Area: 0.0.0.8
         p13 = re.compile(r'^Area: +(?P<ospf_area>[\w\.\:\/]+)$')
 
         #Stub type: Not Stub
-        p14 = re.compile(r'^Stub type: +(?P<ospf_stub_type>[\S+\s]+)$')
+        p14 = re.compile(r'^Stub +type: +(?P<ospf_stub_type>[\S+\s]+)$')
 
         #Authentication Type: None
-        p15 = re.compile(r'^Authentication Type: +(?P<authentication_type>\S+)$')
+        p15 = re.compile(r'^Authentication +Type: +(?P<authentication_type>\S+)$')
 
         #Area border routers: 0, AS boundary routers: 7
-        p16 = re.compile(r'^Area border routers: +(?P<ospf_abr_count>\d+), '
-                         r'AS boundary routers: +(?P<ospf_asbr_count>\d+)$')
+        p16 = re.compile(r'^Area +border +routers: +(?P<ospf_abr_count>\d+), +'
+                         r'AS +boundary +routers: +(?P<ospf_asbr_count>\d+)$')
 
         #Up (in full state): 3
-        p17 = re.compile(r'^Up \(in full state\): +(?P<ospf_nbr_up_count>\d+)$')
+        p17 = re.compile(r'^Up +\(in full state\): +(?P<ospf_nbr_up_count>\d+)$')
 
         #Topology: default (ID 0)
         p18 = re.compile(r'^Topology: +(?P<ospf_topology_name>\S+) \(ID +(?P<ospf_topology_id>\d+)\)$')
 
         #Prefix export count: 1
-        p19 = re.compile(r'^Prefix export count: +(?P<ospf_prefix_export_count>\d+)$')
+        p19 = re.compile(r'^Prefix +export +count: +(?P<ospf_prefix_export_count>\d+)$')
 
         #Full SPF runs: 173416
-        p20 = re.compile(r'^Full SPF runs: +(?P<ospf_full_spf_count>\d+)$')
+        p20 = re.compile(r'^Full +SPF +runs: +(?P<ospf_full_spf_count>\d+)$')
 
         #SPF delay: 0.200000 sec, SPF holddown: 2 sec, SPF rapid runs: 3
-        p21 = re.compile(r'^SPF delay: +(?P<ospf_spf_delay>[\w\.]+) sec, SPF holddown: '
-                         r'+(?P<ospf_spf_holddown>[\w\.]+) sec, SPF rapid runs: +'
+        p21 = re.compile(r'^SPF +delay: +(?P<ospf_spf_delay>[\w\.]+) +sec, +SPF +holddown: '
+                         r'+(?P<ospf_spf_holddown>[\w\.]+) +sec, +SPF +rapid +runs: +'
                          r'(?P<ospf_spf_rapid_runs>[\w\.]+)$')
 
         #Backup SPF: Not Needed
-        p22 = re.compile(r'^Backup SPF: +(?P<ospf_backup_spf_status>[\S\s]+)$')
+        p22 = re.compile(r'^Backup +SPF: +(?P<ospf_backup_spf_status>[\S\s]+)$')
 
 
         for line in out.splitlines():
@@ -1321,9 +1321,7 @@ class ShowOspfOverviewExtensive(ShowOspfOverview):
             - show ospf overview extensive
     """
 
-    cli_command = [
-        'show ospf overview extensive'
-    ]
+    cli_command = 'show ospf overview extensive'
 
     def cli(self, output=None):
         if not output:
