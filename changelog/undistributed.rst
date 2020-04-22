@@ -149,6 +149,8 @@
         * show chassis environment routing-engine
     * Added ShowOspfDatabaseAdvertisingRouterSelfDetailSchema for:
         * show ospf database advertising-router self detail
+    * Added ShowOspfDatabaseExtensive for:
+        * show ospf database extensive
 
 
 
