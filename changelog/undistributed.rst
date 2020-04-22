@@ -153,6 +153,8 @@
         * show chassis environment routing-engine
     * Added ShowOspfDatabaseAdvertisingRouterSelfDetailSchema for:
         * show ospf database advertising-router self detail
+    * ShowTaskReplication for:
+        * show task replication
 
 
 
