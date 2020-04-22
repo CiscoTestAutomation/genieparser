@@ -93,6 +93,16 @@
         * show arp
     * Added ShowArpNoMore for:
         * show arp | no-more
+    * Added ShowOspfDatabase for:
+        * show ospf database 
+    * Added ShowOspfDatabaseSummary for:
+        * show ospf database summary
+    * Added ShowOspfDatabaseExternalExtensive for:
+        * show ospf database external extensive
+    * Added ShowOspfOverview for:
+        * show ospf overview
+    * Added ShowOspfOverviewExtensive for:
+        * show ospf overview extensive
     * Added ShowOspf3Overview for:
         * show ospf3 overview
     * Added ShowOspf3OverviewExtensive for:
