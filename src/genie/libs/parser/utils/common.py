@@ -74,56 +74,35 @@ def get_parser(command, device, regex=False):
     '''From a show command and device, return parser class and kwargs if any'''
 
     lookup = Lookup.from_device(device, packages={'parser': parser})
-
     results = _fuzzy_search_command(command, regex)
+    valid_results = []
+    
+    for result in results:
+        _, data, kwargs = result
 
-    try:
-        order_list = device.custom.get('abstraction').get('order', [])
-    except AttributeError:
-        order_list = None
+        try:
+            order_list = device.custom.get('abstraction').get('order', [])
+        except AttributeError:
+            order_list = None
 
-    if order_list:
-        if getattr(device, order_list[0]) not in data[key].keys():
-            pass
-    elif device.os not in data[key].keys():
-        pass
+        if order_list:
+            if getattr(device, order_list[0]) not in data:
+                continue
+        elif device.os not in data:
+            continue
 
-    # Found a match!
-    lookup = Lookup.from_device(device, packages={'parser':parser})
-    # Check if all the tokens exists; take the farthest one
-    ret_data = data[key]
-    for token in lookup._tokens:
-        if token in ret_data:
-            ret_data = ret_data[token]
-
-    if len_normal_words > max_lenght:
-        max_lenght = len_normal_words
-        matches = (ret_data, match.groupdict())
-
-
-
-    if regex:
-        data = _fuzzy_regex_search_command(command)
-        print("===================")
-        print([d[0] for d in data])
-        print("===================")
-        return
-    else:
-        command, data, kwargs = _fuzzy_search_command(command)
-        print(command)
-        print(kwargs)
-        return
+        # Check if all the tokens exists and take the farthest one
         for token in lookup._tokens:
             if token in data:
                 data = data[token]
-        try:
-            return _find_parser_cls(device, data), kwargs
-        except KeyError:
-            # Case when the show command is only found under one of
-            # the child level tokens
-            raise Exception("Could not find parser for "
-                            "'{c}' under {l}".format(
-                                c=command, l=lookup._tokens)) from None
+
+        valid_results.append((_find_parser_cls(device, data), kwargs))
+
+    if not valid_results:
+        raise Exception("Could not find parser for "
+                        "'{c}' under {l}".format(c=command, l=lookup._tokens))
+
+    return valid_results
 
 def _fuzzy_search_command(search, use_regex):
     # Perfect match should return 
@@ -134,21 +113,21 @@ def _fuzzy_search_command(search, use_regex):
     if use_regex:
         search = search.lstrip('^').rstrip('$').replace(r'\ ', ' ').replace(
             r'\-', '-').replace('\\"', '"').replace('\\,', ',').replace(
-            '\\\'', '\'').replace('\\*', '*').replace('\\:', ':').replace('\\^', '^')
+            '\\\'', '\'').replace('\\*', '*').replace('\\:', ':').replace(
+            '\\^', '^').replace('\\/', '/')
 
     # Fix search to remove extra spaces
     search = ' '.join(filter(None, search.split()))
     tokens = search.split()
     best_score = -math.inf
     result = []
-    
+
     for command, source in parser_data.items():
         # Tokens and kwargs parameter must be non reference
         match_result = _matches_fuzzy_regex(0, 0, tokens.copy(),
-                                                command.split(), {}, use_regex)
+                                                        command, {}, use_regex)
 
-        # Explicit type check if it is not false
-        if match_result is not False: 
+        if match_result: 
             kwargs, score = match_result
             entry = (command, source, kwargs)
 
@@ -161,13 +140,49 @@ def _fuzzy_search_command(search, use_regex):
                 result.append(entry)
 
     # Return only one instance if regex is not used
-    if not use_regex:
-        return [result[0]] if len(result) > 0 else []
+    # Check if any ambiguous commands
+    if not use_regex and len(result) > 1:
+        # If all results have the same argument positions but different names
+        # It should return the first result
+        if len(set(re.sub('{.*?}', '---', instance[0]) for instance in result)) == 1:
+            return [result[0]]
+        else:
+            # Search is ambiguous
+            raise Exception("\nSearch for '" + search +  "' is ambiguous. " + 
+                            "Please be more specific in your keywords.\n\n" +
+                            "Results matched:\n" + '\n'.join('> ' + i[0] for i in result))
 
     return result
 
-def _matches_fuzzy_regex(i, j, tokens, command_tokens, kwargs, use_regex, required_arguments=None, score=0):
-    command = ' '.join(command_tokens)
+def _is_regular_token(token):
+    token_is_regular = True
+
+    if len(token) == 1 and token == '*':
+        # Special case for `show lldp entry *`
+        token_is_regular = True
+    elif len(token) == 2 and token == r'\|':
+        # Special case for `ps -ef | grep {grep}`
+        token_is_regular = True
+    elif not token.isalnum():
+        # Remove escaped characters
+        candidate = token.replace('/', '')
+        candidate = candidate.replace('"', '')
+        candidate = candidate.replace(r'\^', '')
+        candidate = candidate.replace('\'', '')
+        candidate = candidate.replace('-', '')
+        candidate = candidate.replace('^', '')
+        candidate = candidate.replace('_', '')
+        candidate = candidate.replace(':', '')
+        candidate = candidate.replace(',', '')
+        candidate = candidate.replace(r'\.', '')
+        candidate = candidate.replace(r'\|', '')
+
+        token_is_regular = candidate.isalnum()
+    
+    return token_is_regular
+
+def _matches_fuzzy_regex(i, j, tokens, command, kwargs, use_regex, required_arguments=None, score=0):
+    command_tokens = command.split()
 
     # Initialize by counting how many arguments this command needs
     if required_arguments is None:
@@ -176,42 +191,21 @@ def _matches_fuzzy_regex(i, j, tokens, command_tokens, kwargs, use_regex, requir
     while i < len(tokens):
         # If command token index is greater than its length, stop
         if j >= len(command_tokens):
-            return False
+            return None
 
         token = tokens[i]
         command_token = command_tokens[j]
-
-        # Check if it is regex token
         token_is_regular = True
 
         if use_regex:
-            if len(token) == 1 and token == '*':
-                # Special case for `show lldp entry *`
-                token_is_regular = True
-            elif len(token) == 2 and token == r'\|':
-                # Special case for `ps -ef | grep {grep}`
-                token_is_regular = True
-            elif not token.isalnum():
-                # Remove escaped characters
-                candidate = token.replace(r'\/', '')
-                candidate = candidate.replace('"', '')
-                candidate = candidate.replace(r'\^', '')
-                candidate = candidate.replace('\'', '')
-                candidate = candidate.replace('-', '')
-                candidate = candidate.replace('^', '')
-                candidate = candidate.replace('_', '')
-                candidate = candidate.replace(':', '')
-                candidate = candidate.replace(',', '')
-                candidate = candidate.replace(r'\.', '')
-                candidate = candidate.replace(r'\|', '')
-
-                token_is_regular = candidate.isalnum()
+            # Check if it is nonregex token
+            token_is_regular = _is_regular_token(token)
 
         if token_is_regular:
             # Current token might be command or argument
             if '{' in command_token:
                 # Right strip for `<argument>"` case
-                argument_parameter = token.rstrip('"')
+                argument_parameter = token.rstrip('"').replace('\\', '')
 
                 # Handle the edge case of argument not being a token
                 # When this is implemented there is only one case:
@@ -224,24 +218,21 @@ def _matches_fuzzy_regex(i, j, tokens, command_tokens, kwargs, use_regex, requir
                     if len(groups) == 2:
                         start, end = groups
 
-                        # If we use regex, before and after must be escaped
-                        if use_regex:
-                            start = re.escape(start)
-                            end = re.escape(end)
-
                         # Need to have perfect match with token
                         if token.startswith(start) and token.endswith(end):
-                            # Escape again
+                            # Escape regex
                             start = re.escape(start)
                             end = re.escape(end)
 
                             # Find the argument using the escaped start and end
-                            argument_parameter = re.match('{}(.*){}'.format(start, end), token).groups()[0]
+                            argument_parameter = re.match('{}(.*){}'
+                                        .format(start, end), token).groups()[0]
+                        
                             is_found = True
                             score += 1
-
+                    
                     if not is_found: 
-                        return False
+                        return None
 
                 kwargs[re.search('{(.*)}', command_token).groups()[0]] = argument_parameter
 
@@ -250,27 +241,27 @@ def _matches_fuzzy_regex(i, j, tokens, command_tokens, kwargs, use_regex, requir
                 tokens[i] = command_token
                 score += 100 
             elif token == command_token:
-                # Same token, assign perfect score
-                score += 101
+                # Same token, assign higher score
+                score += 102
             elif not token == command_token:
                 # Not matching, perform fuzzy search
                 # Give perfect score for prefix matching
                 if command_token.startswith(token):
-                    score += 100
+                    score += 101
                 else:
                     # Locality sensitive score
                     ratio = fuzz.ratio(token, command_token)
 
                     # Have locality sensitive cut off 
                     if ratio <= 30:
-                        return False
+                        return None
 
                     # Locality insensitive score
                     partial_ratio = fuzz.partial_ratio(token, command_token)
                     
                     # Cut off
                     if partial_ratio <= 30:
-                        return False
+                        return None
 
                     # Add ratio to score
                     score += ratio
@@ -287,7 +278,7 @@ def _matches_fuzzy_regex(i, j, tokens, command_tokens, kwargs, use_regex, requir
 
             # Not a token, should be a regex expression
             # Keep eating if next token is also regex
-            while i + 1 < len(tokens) and not tokens[i + 1].isalnum():
+            while i + 1 < len(tokens) and not _is_regular_token(tokens[i + 1]):
                 i += 1
                 skipped += 1
 
@@ -295,26 +286,26 @@ def _matches_fuzzy_regex(i, j, tokens, command_tokens, kwargs, use_regex, requir
             test = re.match(' '.join(tokens[:i + 1]), command)
 
             if test:
+                # Perform command token lookahead
+                _, end = test.span()
+
                 # Expression matches command to end
-                if i + 1 == len(tokens): 
+                if i + 1 == len(tokens) and end == len(command): 
                     # Return result if from start to end there are no arguments
                     if all(not '{' in ct for ct in command_tokens[j:]):
                         return kwargs, score
                     else: 
                         # Else in range we have another unspecified argument
-                        return False
-
-                # Perform command token lookahead
-                _, end = test.span()
+                        return None
 
                 if end == 0: 
                     # If regex matched nothing, we stop because
                     # expression = "d? a b c" search in "a b c"
                     # expression = "a b d? c" search in "a b c"
-                    i += 1
+                    return None
 
                 # Span single command token
-                if abs(end - sum(len(ct) for ct in command_tokens[:j + 1])) <= i:
+                if abs(end - sum(len(ct) for ct in command_tokens[:j + 1]) - j) <= 1:
                     if not '{' in command_token:
                         # Span single token if it is not argument
                         i += 1
@@ -323,7 +314,7 @@ def _matches_fuzzy_regex(i, j, tokens, command_tokens, kwargs, use_regex, requir
                         continue
                     else:
                         # Faulty match
-                        return False
+                        return None
                 else:
                     # Span multiple command tokens
                     # Find which command token it spans up to
@@ -347,11 +338,11 @@ def _matches_fuzzy_regex(i, j, tokens, command_tokens, kwargs, use_regex, requir
                     for subindex in range(j + skipped, token_end + 1):
                         # Make sure items are passed by copies, not by reference
                         submatch_result = _matches_fuzzy_regex(i, subindex, 
-                            tokens.copy(), command_tokens.copy(), kwargs.copy(),
+                            tokens.copy(), command, kwargs.copy(),
                             use_regex, required_arguments, score)
                         
                         # If any match is found, return true
-                        if submatch_result is not False:
+                        if submatch_result:
                             result_kwargs, score = submatch_result
 
                             # Result kwargs must match number of arguments this command requires
@@ -359,10 +350,10 @@ def _matches_fuzzy_regex(i, j, tokens, command_tokens, kwargs, use_regex, requir
                                 return result_kwargs, score
 
                     # Fail to match
-                    return False
+                    return None
             else:
                 # Failed to match regex
-                return False
+                return None
 
     # Reached end of tokens
     if len(command_tokens) == j:
@@ -370,7 +361,7 @@ def _matches_fuzzy_regex(i, j, tokens, command_tokens, kwargs, use_regex, requir
         return kwargs, score
     else: 
         # It doesn't match
-        return False
+        return None
 
 
 def _find_parser_cls(device, data):
