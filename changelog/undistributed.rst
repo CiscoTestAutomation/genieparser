@@ -163,6 +163,16 @@
         * show chassis firmware no-forwarding
     * Added ShowChassisEnvironmentRoutingEngine for:
         * show chassis environment routing-engine
+    * Added ShowChassisHardware for:
+        * show chassis hardware
+    * Added ShowChassisHardwareDetail for:
+        * show chassis hardware detail
+    * Added ShowChassisHardwareDetailNoForwarding for:
+        * show chassis hardware detail no-forwarding
+    * Added ShowChassisHardwareExtensive for:
+        * show chassis hardware extensive
+    * Added ShowChassisHardwareExtensiveNoForwarding for:
+        * show chassis hardware extensive no-forwarding
     * Added ShowOspfDatabaseAdvertisingRouterSelfDetailSchema for:
         * show ospf database advertising-router self detail
 
