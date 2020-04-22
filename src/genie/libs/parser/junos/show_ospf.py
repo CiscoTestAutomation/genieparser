@@ -919,7 +919,7 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
                 "ospf-area": str
             },
             "ospf-database": [
-                {
+                    {
                     "advertising-router": str,
                     "age": str,
                     "checksum": str,
@@ -928,29 +928,87 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
                     "lsa-length": str,
                     "lsa-type": str,
                     "options": str,
-                    "ospf-router-lsa": {
-                        "bits": str,
-                        "link-count": str,
-                        "ospf-link": [
-                            {
-                                "link-data": str,
-                                "link-id": str,
-                                "link-type-name": str,
-                                "link-type-value": str,
-                                "metric": str,
-                                "ospf-topology-count": str
-                            }
-                        ],
+                    Optional("ospf-network-lsa"): {
+                        "address-mask": str,
+                        "attached-router": list,
                         "ospf-lsa-topology": {
-                            "ospf-lsa-topology-link": [
-                                {
-                                    "ospf-lsa-topology-link-metric": str,
-                                    "ospf-lsa-topology-link-node-id": str,
-                                    "ospf-lsa-topology-link-state": str
-                                }
-                            ],
+                            "ospf-lsa-topology-link": {
+                                "link-type-name": str,
+                                "ospf-lsa-topology-link-metric": str,
+                                "ospf-lsa-topology-link-node-id": str,
+                                "ospf-lsa-topology-link-state": str
+                            },
                             "ospf-topology-id": str,
                             "ospf-topology-name": str
+                        }
+                    },
+                    "ospf-database-extensive": {
+                        "aging-timer": {
+                            "#text": str
+                        },
+                        "expiration-time": {
+                            "#text": str
+                        },
+                        "installation-time": {
+                            "#text": str
+                        },
+                        Optional("generation-timer"): {
+                            "#text": str
+                        },
+                        Optional("lsa-change-count"): str,
+                        Optional("lsa-changed-time"): {
+                            "#text": str
+                        },
+                        Optional("send-time"): {
+                            "#text": str
+                        },
+                        Optional("database-entry-state"): str
+                    },
+                    Optional("ospf-router-lsa"): {
+                        "bits": str,
+                        "link-count": str,
+                        "ospf-link": {
+                            "link-data": str,
+                            "link-id": str,
+                            "link-type-name": str,
+                            "link-type-value": str,
+                            "metric": str,
+                            "ospf-topology-count": str
+                        },
+                        "ospf-lsa-topology": {
+                            "ospf-lsa-topology-link": {
+                                "link-type-name": str,
+                                "ospf-lsa-topology-link-metric": str,
+                                "ospf-lsa-topology-link-node-id": str,
+                                "ospf-lsa-topology-link-state": str
+                            },
+                            "ospf-topology-id": str,
+                            "ospf-topology-name": str
+                        }
+                    },
+                    Optional("ospf-opaque-area-lsa"): {
+                        "tlv-block": {
+                            "formatted-tlv-data": str,
+                            "tlv-length": str,
+                            "tlv-type-name": str,
+                            "tlv-type-value": str
+                        },
+                        Optional("te-subtlv"): {
+                            "formatted-tlv-data": list,
+                            "tlv-length": list,
+                            "tlv-type-name": list,
+                            "tlv-type-value": list
+                        }
+                    },
+                    Optional("ospf-external-lsa"): {
+                        "address-mask": str,
+                        "ospf-external-lsa-topology": {
+                            "forward-address": str,
+                            "ospf-topology-id": str,
+                            "ospf-topology-metric": str,
+                            "ospf-topology-name": str,
+                            "tag": str,
+                            "type-value": str
                         }
                     },
                     "sequence-number": str
