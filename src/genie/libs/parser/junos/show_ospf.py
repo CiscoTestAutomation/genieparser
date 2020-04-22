@@ -508,7 +508,10 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
 
         #Router   3.3.3.3          3.3.3.3          0x80004d2d    61  0x22 0xa127 2496
         #Router  *111.87.5.252     111.87.5.252     0x80001b9e  1608  0x22 0x1e2  120
-        p2 = re.compile(r'^(?P<lsa_type>[a-zA-Z]+) *(?P<our_entry>\*)?(?P<lsa_id>[\d\.]+) +(?P<advertising_router>[\d\.]+) +(?P<sequence_number>\S+) +(?P<age>\d+) +(?P<options>\S+) +(?P<checksum>\S+) +(?P<lsa_length>\d+)$')
+        p2 = re.compile(r'^(?P<lsa_type>[a-zA-Z]+) *(?P<our_entry>\*)'
+                        r'?(?P<lsa_id>[\d\.]+) +(?P<advertising_router>'
+                        r'[\d\.]+) +(?P<sequence_number>\S+) +(?P<age>\d+) '
+                        r'+(?P<options>\S+) +(?P<checksum>\S+) +(?P<lsa_length>\d+)$')
         
         for line in out.splitlines():
             line = line.strip()
@@ -603,13 +606,13 @@ class ShowOspfDatabaseSummary(ShowOspfDatabaseSummarySchema):
         p1 = re.compile(r'^Area +(?P<ospf_area1>[\w\.\/]+):$')
 
         #12 Router LSAs
-        p2 = re.compile(r'^(?P<area_value>\d+) +(?P<area_name>\S+) LSAs$')
+        p2 = re.compile(r'^(?P<area_value>\d+) +(?P<area_name>\S+) +LSAs$')
 
         #Externals:
         p3 = re.compile(r'^(?P<externals>\S+):$')
 
         #19 Extern LSAs
-        p4 = re.compile(r'^(?P<external_value>\d+) +(?P<external_name>\S+) LSAs$')
+        p4 = re.compile(r'^(?P<external_value>\d+) +(?P<external_name>\S+) +LSAs$')
 
         #Area 0.0.0.8:
         p5 = re.compile(r'^Area +(?P<ospf_area2>[\w\.\/]+):$')
@@ -869,7 +872,6 @@ class ShowOspfDatabaseExternalExtensive(ShowOspfDatabaseExternalExtensiveSchema)
                 ospf_database_entry_dict = {}
                 
                 ospf_database_entry_dict['@external-heading'] = group['external_heading']
-                #p1 = re.compile(r'^empty$')
                 reset = True
                 continue
             
@@ -878,7 +880,6 @@ class ShowOspfDatabaseExternalExtensive(ShowOspfDatabaseExternalExtensiveSchema)
             if m:
                 group = m.groupdict()
                 ospf_database_entry_dict['@heading'] = group['heading']
-                #p2 = re.compile(r'^empty$')
                 continue
 
             #Extern   0.0.0.0          59.128.2.251     0x800019e3  2728  0x22 0x6715  36

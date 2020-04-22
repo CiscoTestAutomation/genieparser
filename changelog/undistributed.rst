@@ -91,7 +91,6 @@
         * show arp
     * Added ShowArpNoMore for:
         * show arp | no-more
-<<<<<<< HEAD
     * Added ShowOspfDatabase for:
         * show ospf database 
     * Added ShowOspfDatabaseSummary for:
@@ -102,7 +101,6 @@
         * show ospf overview
     * Added ShowOspfOverviewExtensive for:
         * show ospf overview extensive
-=======
     * Added ShowOspf3Overview for:
         * show ospf3 overview
     * Added ShowOspf3OverviewExtensive for:
@@ -166,7 +164,6 @@
     * Added ShowOspfDatabaseAdvertisingRouterSelfDetailSchema for:
         * show ospf database advertising-router self detail
 
->>>>>>> dev
 
 
 --------------------------------------------------------------------------------

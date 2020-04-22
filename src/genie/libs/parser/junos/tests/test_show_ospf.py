@@ -3150,8 +3150,6 @@ class TestShowOspfOverviewExtensive(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
-
-
 class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
 
     maxDiff = None
