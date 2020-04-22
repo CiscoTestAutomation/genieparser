@@ -938,7 +938,7 @@ class ShowChassisHardwareExtensiveSchema(MetaParser):
                 "assembly-version": str,
                 "board-information-record": str,
                 "eeprom-version": str,
-                "i2c-data": str,
+                "i2c-data": list,
                 "i2c-identifier": str,
                 "i2c-version": str,
                 "jedec-code": str,
@@ -971,7 +971,7 @@ class ShowChassisHardwareExtensiveSchema(MetaParser):
                             "assembly-version": str,
                             "board-information-record": str,
                             "eeprom-version": str,
-                            Optional("i2c-data"): str,
+                            Optional("i2c-data"): list,
                             Optional("i2c-identifier"): Or(str, None),
                             "i2c-version": Or(str, None),
                             "jedec-code": str,
@@ -1012,7 +1012,7 @@ class ShowChassisHardwareExtensiveSchema(MetaParser):
                 "assembly-version": str,
                 "board-information-record": str,
                 "eeprom-version": str,
-                Optional("i2c-data"): str,
+                Optional("i2c-data"): list,
                 Optional("i2c-identifier"): Or(str, None),
                 "i2c-version": Or(str, None),
                 "jedec-code": str,
@@ -1042,7 +1042,7 @@ class ShowChassisHardwareExtensiveSchema(MetaParser):
                 "assembly-version": str,
                 "board-information-record": str,
                 "eeprom-version": str,
-                Optional("i2c-data"): str,
+                Optional("i2c-data"): list,
                 Optional("i2c-identifier"): Or(str, None),
                 "i2c-version": Or(str, None),
                 "jedec-code": str,
@@ -1239,7 +1239,7 @@ class ShowChassisHardwareExtensive(ShowChassisHardwareExtensiveSchema):
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                complete_address = ""
+                complete_address = []
                 address_type = group["address_type"]                
                 continue
 
@@ -1250,7 +1250,8 @@ class ShowChassisHardwareExtensive(ShowChassisHardwareExtensiveSchema):
                 if(address_type == "Board Information Record"):
                     i2c_dict["board-information-record"] = group["address_info"]
                 else:
-                    complete_address += group["address_info"] + '\n' + ('    ')*5               
+                    #complete_address += group["address_info"] + '\n' + ('    ')*5
+                    complete_address.append(group["address_info"])
                 continue
             
 

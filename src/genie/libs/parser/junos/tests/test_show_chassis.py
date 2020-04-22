@@ -602,7 +602,16 @@ class TestShowChassisHardwareExtensive(unittest.TestCase):
                             "assembly-version": "00.00",
                             "board-information-record": "Address 0x00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
                             "eeprom-version": "0x00",
-                            "i2c-data": "Address 0x00: 00 00 00 00 0b ab 00 00 00 00 00 00 00 00 00 00\n                    Address 0x10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    ",
+                            "i2c-data": [
+                                "Address 0x00: 00 00 00 00 0b ab 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
+                            ],
                             "i2c-identifier": "RE-VMX",
                             "i2c-version": None,
                             "jedec-code": "0x0000",
@@ -620,7 +629,16 @@ class TestShowChassisHardwareExtensive(unittest.TestCase):
                             "assembly-version": "00.00",
                             "board-information-record": "Address 0x00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
                             "eeprom-version": "0x00",
-                            "i2c-data": "Address 0x00: 7f b0 00 00 0b b5 00 00 00 00 00 00 00 00 00 00\n                    Address 0x10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    ",
+                            "i2c-data": [
+                                "Address 0x00: 7f b0 00 00 0b b5 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
+                            ],
                             "i2c-identifier": "VMX SCB",
                             "i2c-version": None,
                             "jedec-code": "0x7fb0",
@@ -646,7 +664,16 @@ class TestShowChassisHardwareExtensive(unittest.TestCase):
                                     "assembly-version": "00.00",
                                     "board-information-record": "Address 0x00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
                                     "eeprom-version": "0x00",
-                                    "i2c-data": "Address 0x00: 00 00 00 00 0a 7d 00 00 00 00 00 00 00 00 00 00\n                    Address 0x10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x70: 00 00 00 00 00 00 00 00 27 41 0f 08 83 80 f0 86\n                    ",
+                                    "i2c-data": [
+                                        "Address 0x00: 00 00 00 00 0a 7d 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x70: 00 00 00 00 00 00 00 00 27 41 0f 08 83 80 f0 86"
+                                    ],
                                     "i2c-identifier": "Virtual",
                                     "i2c-version": None,
                                     "jedec-code": "0x0000",
@@ -663,7 +690,16 @@ class TestShowChassisHardwareExtensive(unittest.TestCase):
                                     "assembly-version": "01.00",
                                     "board-information-record": "Address 0x00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
                                     "eeprom-version": "0x02",
-                                    "i2c-data": "Address 0x00: 7f b0 02 00 fa 4e 01 00 52 65 76 2e 20 31 2e 30\n                    Address 0x10: 00 00 00 00 52 49 4f 54 2d 4c 49 54 45 00 00 00\n                    Address 0x20: 42 55 49 4c 54 49 4e 00 00 00 00 00 01 12 08 07\n                    Address 0x30: dd 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    ",
+                                    "i2c-data": [
+                                        "Address 0x00: 7f b0 02 00 fa 4e 01 00 52 65 76 2e 20 31 2e 30",
+                                        "Address 0x10: 00 00 00 00 52 49 4f 54 2d 4c 49 54 45 00 00 00",
+                                        "Address 0x20: 42 55 49 4c 54 49 4e 00 00 00 00 00 01 12 08 07",
+                                        "Address 0x30: dd 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
+                                    ],
                                     "i2c-identifier": None,
                                     "i2c-version": "Rev. 1.0",
                                     "jedec-code": "0x7fb0",
@@ -684,7 +720,16 @@ class TestShowChassisHardwareExtensive(unittest.TestCase):
                             "assembly-version": "00.00",
                             "board-information-record": "Address 0x00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
                             "eeprom-version": "0x00",
-                            "i2c-data": "Address 0x00: 7f b0 00 00 0b aa 00 00 00 00 00 00 00 00 00 00\n                    Address 0x10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    ",
+                            "i2c-data": [
+                                "Address 0x00: 7f b0 00 00 0b aa 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
+                            ],
                             "i2c-identifier": "Virtual FPC",
                             "i2c-version": None,
                             "jedec-code": "0x7fb0",
@@ -702,7 +747,16 @@ class TestShowChassisHardwareExtensive(unittest.TestCase):
                     "assembly-version": "00.00",
                     "board-information-record": "Address 0x00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
                     "eeprom-version": "0x02",
-                    "i2c-data": "Address 0x00: 7f b0 02 ff 05 67 00 00 00 00 00 00 00 00 00 00\n                    Address 0x10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x20: 56 4d 35 44 34 43 36 42 33 35 39 39 00 00 00 00\n                    Address 0x30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    ",
+                    "i2c-data": [
+                        "Address 0x00: 7f b0 02 ff 05 67 00 00 00 00 00 00 00 00 00 00",
+                        "Address 0x10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                        "Address 0x20: 56 4d 35 44 34 43 36 42 33 35 39 39 00 00 00 00",
+                        "Address 0x30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                        "Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                        "Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                        "Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                        "Address 0x70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
+                    ],
                     "i2c-identifier": "VMX",
                     "i2c-version": None,
                     "jedec-code": "0x7fb0",
@@ -847,119 +901,164 @@ class TestShowChassisHardwareExtensiveNoForwarding(unittest.TestCase):
 
     golden_parsed_output = {
         "chassis-inventory": {
-        "chassis": {
-            "@junos:style": "inventory",
-            "chassis-module": [
-                {
-                    "name": "Midplane"
-                },
-                {
-                    "chassis-re-disk-module": {
-                        "description": "Hard Disk",
-                        "disk-size": "27649",
-                        "model": "VMware Virtual IDE Har",
-                        "name": "cd0",
-                        "serial-number": "00000000000000000001"
+            "chassis": {
+                "@junos:style": "inventory",
+                "chassis-module": [
+                    {
+                        "name": "Midplane"
                     },
-                    "description": "RE-VMX",
-                    "i2c-information": {
-                        "assembly-flags": "0x00",
-                        "assembly-identifier": "0x0bab",
-                        "assembly-version": "00.00",
-                        "board-information-record": "Address 0x00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
-                        "eeprom-version": "0x00",
-                        "i2c-data": "Address 0x00: 00 00 00 00 0b ab 00 00 00 00 00 00 00 00 00 00\n                    Address 0x10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    ",
-                        "i2c-identifier": "RE-VMX",
-                        "i2c-version": None,
-                        "jedec-code": "0x0000",
-                        "manufacture-date": "00-00-0000",
-                        "part-number": None,
-                        "serial-number": None
-                    },
-                    "name": "Routing Engine 0"
-                },
-                {
-                    "description": "VMX SCB",
-                    "i2c-information": {
-                        "assembly-flags": "0x00",
-                        "assembly-identifier": "0x0bb5",
-                        "assembly-version": "00.00",
-                        "board-information-record": "Address 0x00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
-                        "eeprom-version": "0x00",
-                        "i2c-data": "Address 0x00: 7f b0 00 00 0b b5 00 00 00 00 00 00 00 00 00 00\n                    Address 0x10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    ",
-                        "i2c-identifier": "VMX SCB",
-                        "i2c-version": None,
-                        "jedec-code": "0x7fb0",
-                        "manufacture-date": "00-00-0000",
-                        "part-number": None,
-                        "serial-number": None
-                    },
-                    "name": "CB 0"
-                },
-                {
-                    "chassis-sub-module": [
-                        {
-                            "chassis-sub-sub-module": {
-                                "description": "Virtual",
-                                "name": "PIC 0",
-                                "part-number": "BUILTIN",
-                                "serial-number": "BUILTIN"
-                            },
-                            "description": "Virtual",
-                            "i2c-information": {
-                                "assembly-flags": "0x00",
-                                "assembly-identifier": "0x0a7d",
-                                "assembly-version": "00.00",
-                                "board-information-record": "Address 0x00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
-                                "eeprom-version": "0x00",
-                                "i2c-data": "Address 0x00: 00 00 00 00 0a 7d 00 00 00 00 00 00 00 00 00 00\n                    Address 0x10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x70: 00 00 00 00 00 00 00 00 27 41 0f 08 83 80 f0 86\n                    ",
-                                "i2c-identifier": "Virtual",
-                                "i2c-version": None,
-                                "jedec-code": "0x0000",
-                                "manufacture-date": "00-00-0000",
-                                "part-number": None,
-                                "serial-number": None
-                            },
-                            "name": "MIC 0"
+                    {
+                        "chassis-re-disk-module": {
+                            "description": "Hard Disk",
+                            "disk-size": "27649",
+                            "model": "VMware Virtual IDE Har",
+                            "name": "cd0",
+                            "serial-number": "00000000000000000001"
                         },
-                        {
-                            "i2c-information": {
-                                "assembly-flags": "0x01",
-                                "assembly-identifier": "0xfa4e",
-                                "assembly-version": "01.00",
-                                "board-information-record": "Address 0x00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
-                                "eeprom-version": "0x02",
-                                "i2c-data": "Address 0x00: 7f b0 02 00 fa 4e 01 00 52 65 76 2e 20 31 2e 30\n                    Address 0x10: 00 00 00 00 52 49 4f 54 2d 4c 49 54 45 00 00 00\n                    Address 0x20: 42 55 49 4c 54 49 4e 00 00 00 00 00 01 12 08 07\n                    Address 0x30: dd 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    ",
-                                "i2c-identifier": None,
-                                "i2c-version": "Rev. 1.0",
-                                "jedec-code": "0x7fb0",
-                                "manufacture-date": "08-18-2013",
-                                "part-number": None,
-                                "serial-number": "BUILTIN"
-                            },
-                            "name": "CPU",
-                            "part-number": "RIOT-LITE",
-                            "serial-number": "BUILTIN",
-                            "version": "Rev. 1.0"
-                        }
-                    ],
-                    "description": "Virtual FPC",
-                    "i2c-information": {
-                        "assembly-flags": "0x00",
-                        "assembly-identifier": "0x0baa",
-                        "assembly-version": "00.00",
-                        "board-information-record": "Address 0x00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
-                        "eeprom-version": "0x00",
-                        "i2c-data": "Address 0x00: 7f b0 00 00 0b aa 00 00 00 00 00 00 00 00 00 00\n                    Address 0x10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    ",
-                        "i2c-identifier": "Virtual FPC",
-                        "i2c-version": None,
-                        "jedec-code": "0x7fb0",
-                        "manufacture-date": "00-00-0000",
-                        "part-number": None,
-                        "serial-number": None
+                        "description": "RE-VMX",
+                        "i2c-information": {
+                            "assembly-flags": "0x00",
+                            "assembly-identifier": "0x0bab",
+                            "assembly-version": "00.00",
+                            "board-information-record": "Address 0x00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                            "eeprom-version": "0x00",
+                            "i2c-data": [
+                                "Address 0x00: 00 00 00 00 0b ab 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
+                            ],
+                            "i2c-identifier": "RE-VMX",
+                            "i2c-version": None,
+                            "jedec-code": "0x0000",
+                            "manufacture-date": "00-00-0000",
+                            "part-number": None,
+                            "serial-number": None
+                        },
+                        "name": "Routing Engine 0"
                     },
-                    "name": "FPC 0"
-                }
+                    {
+                        "description": "VMX SCB",
+                        "i2c-information": {
+                            "assembly-flags": "0x00",
+                            "assembly-identifier": "0x0bb5",
+                            "assembly-version": "00.00",
+                            "board-information-record": "Address 0x00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                            "eeprom-version": "0x00",
+                            "i2c-data": [
+                                "Address 0x00: 7f b0 00 00 0b b5 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
+                            ],
+                            "i2c-identifier": "VMX SCB",
+                            "i2c-version": None,
+                            "jedec-code": "0x7fb0",
+                            "manufacture-date": "00-00-0000",
+                            "part-number": None,
+                            "serial-number": None
+                        },
+                        "name": "CB 0"
+                    },
+                    {
+                        "chassis-sub-module": [
+                            {
+                                "chassis-sub-sub-module": {
+                                    "description": "Virtual",
+                                    "name": "PIC 0",
+                                    "part-number": "BUILTIN",
+                                    "serial-number": "BUILTIN"
+                                },
+                                "description": "Virtual",
+                                "i2c-information": {
+                                    "assembly-flags": "0x00",
+                                    "assembly-identifier": "0x0a7d",
+                                    "assembly-version": "00.00",
+                                    "board-information-record": "Address 0x00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                    "eeprom-version": "0x00",
+                                    "i2c-data": [
+                                        "Address 0x00: 00 00 00 00 0a 7d 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x70: 00 00 00 00 00 00 00 00 27 41 0f 08 83 80 f0 86"
+                                    ],
+                                    "i2c-identifier": "Virtual",
+                                    "i2c-version": None,
+                                    "jedec-code": "0x0000",
+                                    "manufacture-date": "00-00-0000",
+                                    "part-number": None,
+                                    "serial-number": None
+                                },
+                                "name": "MIC 0"
+                            },
+                            {
+                                "i2c-information": {
+                                    "assembly-flags": "0x01",
+                                    "assembly-identifier": "0xfa4e",
+                                    "assembly-version": "01.00",
+                                    "board-information-record": "Address 0x00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                    "eeprom-version": "0x02",
+                                    "i2c-data": [
+                                        "Address 0x00: 7f b0 02 00 fa 4e 01 00 52 65 76 2e 20 31 2e 30",
+                                        "Address 0x10: 00 00 00 00 52 49 4f 54 2d 4c 49 54 45 00 00 00",
+                                        "Address 0x20: 42 55 49 4c 54 49 4e 00 00 00 00 00 01 12 08 07",
+                                        "Address 0x30: dd 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                        "Address 0x70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
+                                    ],
+                                    "i2c-identifier": None,
+                                    "i2c-version": "Rev. 1.0",
+                                    "jedec-code": "0x7fb0",
+                                    "manufacture-date": "08-18-2013",
+                                    "part-number": None,
+                                    "serial-number": "BUILTIN"
+                                },
+                                "name": "CPU",
+                                "part-number": "RIOT-LITE",
+                                "serial-number": "BUILTIN",
+                                "version": "Rev. 1.0"
+                            }
+                        ],
+                        "description": "Virtual FPC",
+                        "i2c-information": {
+                            "assembly-flags": "0x00",
+                            "assembly-identifier": "0x0baa",
+                            "assembly-version": "00.00",
+                            "board-information-record": "Address 0x00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                            "eeprom-version": "0x00",
+                            "i2c-data": [
+                                "Address 0x00: 7f b0 00 00 0b aa 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                                "Address 0x70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
+                            ],
+                            "i2c-identifier": "Virtual FPC",
+                            "i2c-version": None,
+                            "jedec-code": "0x7fb0",
+                            "manufacture-date": "00-00-0000",
+                            "part-number": None,
+                            "serial-number": None
+                        },
+                        "name": "FPC 0"
+                    }
             ],
             "description": "VMX",
             "i2c-information": {
@@ -968,7 +1067,16 @@ class TestShowChassisHardwareExtensiveNoForwarding(unittest.TestCase):
                 "assembly-version": "00.00",
                 "board-information-record": "Address 0x00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
                 "eeprom-version": "0x02",
-                "i2c-data": "Address 0x00: 7f b0 02 ff 05 67 00 00 00 00 00 00 00 00 00 00\n                    Address 0x10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x20: 56 4d 35 44 34 43 36 42 33 35 39 39 00 00 00 00\n                    Address 0x30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    Address 0x70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n                    ",
+                "i2c-data": [
+                    "Address 0x00: 7f b0 02 ff 05 67 00 00 00 00 00 00 00 00 00 00",
+                    "Address 0x10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                    "Address 0x20: 56 4d 35 44 34 43 36 42 33 35 39 39 00 00 00 00",
+                    "Address 0x30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                    "Address 0x40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                    "Address 0x50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                    "Address 0x60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                    "Address 0x70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
+                ],
                 "i2c-identifier": "VMX",
                 "i2c-version": None,
                 "jedec-code": "0x7fb0",
