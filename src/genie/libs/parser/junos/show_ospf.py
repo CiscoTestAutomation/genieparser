@@ -1157,7 +1157,7 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
         p1 = re.compile(r'^OSPF +database, +Area +(?P<ospf_area>[\d\.]+)$')
 
         # Router  *111.87.5.252     111.87.5.252     0x80001b9e  1801  0x22 0x1e2  120
-        p2 = re.compile(r'^(?P<lsa_type>[a-zA-Z]+)( *)(?P<lsa_id>\*?\d{1,3}(\.\d{1,3}){3})'
+        p2 = re.compile(r'^(?P<lsa_type>[a-zA-Z]+)( *)(?P<lsa_id>\*?[\d\.]+)'
             r'( +)(?P<advertising_router>\S+)( +)(?P<sequence_number>\S+)( +)(?P<age>\S+)'
             r'( +)(?P<options>\S+)( +)(?P<checksum>\S+)( +)(?P<lsa_length>\S+)$')
 
