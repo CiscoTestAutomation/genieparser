@@ -1536,6 +1536,8 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                             .setdefault("te-subtlv", {}).setdefault("formatted-tlv-data",[])\
                                 .append(group["formatted_tlv_data"])
 
+                    continue
+
                 # Priority 0, 1000Mbps
                 m = p11.match(line)
                 if m:
