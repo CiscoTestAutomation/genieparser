@@ -770,6 +770,18 @@ class ShowSystemStorage(ShowSystemStorageSchema):
 
         return ret_dict
 
+class ShowSystemStorageNoForwarding(ShowSystemStorage):
+    """ Parser for:
+            * show system storage no-forwarding
+    """
+    cli_command = 'show system storage no-forwarding'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        return super().cli(output=out)
 
 class ShowSystemCoreDumpsSchema(MetaParser):
     """ Schema for:
@@ -993,7 +1005,7 @@ class ShowSystemUptimeSchema(MetaParser):
 }
 
 
-    
+
 
 class ShowSystemUptime(ShowSystemUptimeSchema):
     """ Parser for:
@@ -1013,23 +1025,23 @@ class ShowSystemUptime(ShowSystemUptimeSchema):
         #Current time: 2020-03-26 08:16:41 UTC
         p1 = re.compile(r'^Current time: +(?P<current_time>[\S\s]+)$')
 
-        #Time Source:  LOCAL CLOCK 
+        #Time Source:  LOCAL CLOCK
         p2 = re.compile(r'^Time Source: +(?P<time_source>[\w\s\.]+)$')
 
-        #System booted: 2019-08-29 09:02:22 UTC (29w6d 23:14 ago) 
+        #System booted: 2019-08-29 09:02:22 UTC (29w6d 23:14 ago)
         p3 = re.compile(r'^System booted: +(?P<date_time>[\w\s\-\:]+) '
                         r'+\((?P<time_length>[\w\s\:]+)\s+ago\)$')
 
-        #Protocols started: 2019-08-29 09:03:25 UTC (29w6d 23:13 ago) 
+        #Protocols started: 2019-08-29 09:03:25 UTC (29w6d 23:13 ago)
         p4 = re.compile(r'^Protocols started: +(?P<date_time>[\w\s\-\:]+) '
                         r'+\((?P<time_length>[\w\s\:]+)\s+ago\)$')
 
-        #Last configured: 2020-03-05 16:04:34 UTC (2w6d 16:12 ago) by kddi 
+        #Last configured: 2020-03-05 16:04:34 UTC (2w6d 16:12 ago) by kddi
         p5 = re.compile(r'^Last configured: +(?P<date_time>'
                         r'[A-Za-z\t .\d\-\:]+)+\((?P<time_length>'
                         r'\w+\s\d+\:\d+) ago\) by (?P<user>\S+)$')
 
-        #8:16AM  up 209 days, 23:14, 5 users, load averages: 0.43, 0.43, 0.42 
+        #8:16AM  up 209 days, 23:14, 5 users, load averages: 0.43, 0.43, 0.42
         p6 = re.compile(r'^(?P<date_time>\d+\:\w+)\s+up\s+'
                         r'(?P<days>\d+)\s+days,\s+(?P<mins>'
                         r'[\w\:]+)[^,]*,\s+(?P<user_count>\d+)'
@@ -1058,7 +1070,7 @@ class ShowSystemUptime(ShowSystemUptimeSchema):
 
                 user_table_entry_list["current-time"] = current_time_dict
                 continue
-        
+
             #Time Source:  LOCAL CLOCK
             m = p2.match(line)
             if m:
