@@ -6,6 +6,9 @@ Parser for the following show commands:
     * show chassis environment routing-engine
     * show chassis firmware
     * show chassis firmware no-forwarding
+    * show chassis fpc
+    * show chassis routing-engine
+    * show chassis routing-engine no-forwarding
 '''
 # python
 import re
@@ -353,6 +356,460 @@ class ShowChassisFirmwareNoForwarding(ShowChassisFirmware):
 
     cli_command = [
         'show chassis firmware no-forwarding'
+    ]
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        return super().cli(output=out)
+
+
+class ShowChassisFpcSchema(MetaParser):
+
+    """ schema = {
+    Optional("@xmlns:junos"): str,
+    "fpc-information": {
+        Optional("@junos:style"): str,
+        Optional("@xmlns"): str,
+        "fpc": [
+            {
+                "cpu-15min-avg": str,
+                "cpu-1min-avg": str,
+                "cpu-5min-avg": str,
+                "cpu-interrupt": str,
+                "cpu-total": str,
+                "memory-buffer-utilization": str,
+                "memory-dram-size": str,
+                "memory-heap-utilization": str,
+                "slot": str,
+                "state": str,
+                "temperature": {
+                    "#text": str,
+                    Optional("@junos:celsius"): str
+                    }
+                }
+            ]
+        }
+    }
+    """
+    
+
+    def validate_chassis_fpc_list(value):
+        # Pass firmware list as value
+        if not isinstance(value, list):
+            raise SchemaTypeError('fpc is not a list')
+        chassis_fpc_schema = Schema({
+                Optional("cpu-15min-avg"): str,
+                Optional("cpu-1min-avg"): str,
+                Optional("cpu-5min-avg"): str,
+                Optional("cpu-interrupt"): str,
+                Optional("cpu-total"): str,
+                Optional("memory-buffer-utilization"): str,
+                Optional("memory-dram-size"): str,
+                Optional("memory-heap-utilization"): str,
+                "slot": str,
+                "state": str,
+                Optional("temperature"): {
+                    "#text": str,
+                    Optional("@junos:celsius"): str
+                }
+        })
+        # Validate each dictionary in list
+        for item in value:
+            chassis_fpc_schema.validate(item)
+        return value
+
+    schema = {
+    Optional("@xmlns:junos"): str,
+    "fpc-information": {
+        Optional("@junos:style"): str,
+        Optional("@xmlns"): str,
+        "fpc": Use(validate_chassis_fpc_list)
+        }
+    }
+
+class ShowChassisFpc(ShowChassisFpcSchema):
+    """ Parser for:
+    * show chassis fpc
+    """
+
+    cli_command = 'show chassis fpc'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        #0  Online           Testing   3         0        2      2      2    511        31          0
+        p1 = re.compile(r'^(?P<slot>\d+) +(?P<state>\S+) '
+                        r'+(?P<text>\S+) +(?P<cpu_total>\d+) '
+                        r'+(?P<cpu_interrupt>\d+) +(?P<cpu_1min>\d+) '
+                        r'+(?P<cpu_5min>\d+) +(?P<cpu_15min>\d+) +'
+                        r'(?P<dram>\d+) +(?P<heap>\d+) +(?P<buffer>\d+)$')
+
+        #2  Empty
+        p2 = re.compile(r'^(?P<slot>\d+) +(?P<state>\S+)$')
+
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #0  Online           Testing   3         0        2      2      2    511        31          0
+            m = p1.match(line)
+            if m:
+                
+                fpc_chassis_list = ret_dict.setdefault("fpc-information", {})\
+                    .setdefault("fpc", [])
+
+                group = m.groupdict()
+                fpc_entry_dict = {}
+                fpc_entry_dict["slot"] = group["slot"]
+                fpc_entry_dict["state"] = group["state"]
+
+                fpc_temp_dict = {}
+                fpc_temp_dict["#text"] = group["text"]
+                fpc_entry_dict["temperature"] = fpc_temp_dict
+
+                fpc_entry_dict["cpu-total"] = group["cpu_total"]
+                fpc_entry_dict["cpu-interrupt"] = group["cpu_interrupt"]
+
+                fpc_entry_dict["cpu-1min-avg"] = group["cpu_1min"]
+                fpc_entry_dict["cpu-5min-avg"] = group["cpu_5min"]
+                fpc_entry_dict["cpu-15min-avg"] = group["cpu_15min"]
+
+                fpc_entry_dict["memory-dram-size"] = group["dram"]
+                fpc_entry_dict["memory-heap-utilization"] = group["heap"]
+                fpc_entry_dict["memory-buffer-utilization"] = group["buffer"]
+
+                fpc_chassis_list.append(fpc_entry_dict)
+                continue
+
+            #2  Empty
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                fpc_entry_dict = {}
+                fpc_entry_dict["slot"] = group["slot"]
+                fpc_entry_dict["state"] = group["state"]
+
+                fpc_chassis_list.append(fpc_entry_dict)
+                continue
+
+        return ret_dict
+
+
+class ShowChassisRoutingEngineSchema(MetaParser):
+
+    schema = {
+    Optional("@xmlns:junos"): str,
+    "route-engine-information": {
+        Optional("@xmlns"): str,
+        "route-engine": {
+            "cpu-background-5sec": str,
+            "cpu-background-1min": str,
+            "cpu-background-5min": str,
+            "cpu-background-15min": str,
+            "cpu-idle-5sec": str,
+            "cpu-idle-1min": str,
+            "cpu-idle-5min": str,
+            "cpu-idle-15min": str,
+            "cpu-interrupt-5sec": str,
+            "cpu-interrupt-1min": str,
+            "cpu-interrupt-5min": str,
+            "cpu-interrupt-15min": str,
+            "cpu-system-5sec": str,
+            "cpu-system-1min": str,
+            "cpu-system-5min": str,
+            "cpu-system-15min": str,
+            "cpu-user-5sec": str,
+            "cpu-user-1min": str,
+            "cpu-user-5min": str,
+            "cpu-user-15min": str,
+            "last-reboot-reason": str,
+            "load-average-fifteen": str,
+            "load-average-five": str,
+            "load-average-one": str,
+            "mastership-priority": str,
+            "mastership-state": str,
+            "memory-buffer-utilization": str,
+            "memory-dram-size": str,
+            "memory-installed-size": str,
+            "model": str,
+            "slot": str,
+            "start-time": {
+                "#text": str,
+                Optional("@junos:seconds"): str
+            },
+            Optional("status"): str,
+            "up-time": {
+                "#text": str,
+                Optional("@junos:seconds"): str
+                }
+            }
+        }
+    }
+   
+
+class ShowChassisRoutingEngine(ShowChassisRoutingEngineSchema):
+    """ Parser for:
+    * show chassis routing-engine
+    """
+
+    cli_command = 'show chassis routing-engine'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        #Slot 0:
+        p1 = re.compile(r'^Slot +(?P<slot>\d+):$')
+
+        #Current state                  Master
+        p2 = re.compile(r'^Current state +(?P<mastership_state>\S+)$')
+
+        #Election priority              Master (default)
+        p3 = re.compile(r'^Election priority +(?P<mastership_priority>[\S\s]+)$')
+
+        #DRAM                      2002 MB (2048 MB installed)
+        p4 = re.compile(r'^DRAM +(?P<memory_dram_size>\S+\s\S+) +(?P<memory_installed_size>[\S\s\d]+)$')
+
+        #Memory utilization          19 percent
+        p5 = re.compile(r'^Memory utilization +(?P<memory_buffer_utilization>\d+) +percent$')
+
+        #5 sec CPU utilization:
+        p6 = re.compile(r'^(?P<state>\d+\s+\S+) +CPU utilization:$')
+
+        #User                       1 percent
+        p7 = re.compile(r'^User +(?P<user>\d+) +percent$')
+
+        #Background                 0 percent
+        p8 = re.compile(r'^Background +(?P<background>\d+) +percent$')
+
+        #Kernel                     1 percent
+        p9 = re.compile(r'^Kernel +(?P<system>\d+) +percent$')
+
+        #Interrupt                  0 percent
+        p10 = re.compile(r'^Interrupt +(?P<interrupt>\d+) +percent$')
+
+        #Idle                      98 percent
+        p11 = re.compile(r'^Idle +(?P<idle>\d+) +percent$')
+
+        #Model                          RE-VMX
+        p12 = re.compile(r'^Model +(?P<system>\S+)$')
+
+        #Start time                     2019-08-29 09:02:22 UTC
+        p13 = re.compile(r'^Start time +(?P<start_time>[\S\s\d\:]+)$')
+
+        #Uptime                         208 days, 23 hours, 14 minutes, 9 seconds
+        p14 = re.compile(r'^Uptime +(?P<uptime>[\S\s]+)$')
+
+        #Last reboot reason             Router rebooted after a normal shutdown.
+        p15 = re.compile(r'^Last reboot reason +(?P<last_reboot_reason>[\S\s]+)$')
+
+        #0.72       0.46       0.40
+        p16 = re.compile(r'^(?P<load_average_one>[\d\.]+) '
+                         r'+(?P<load_average_five>[\d\.]+) '
+                         r'+(?P<load_average_fifteen>[\d\.]+)$')
+
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #Slot 0:
+            m = p1.match(line)
+            if m:
+                current_state = " "
+                
+                route_engine_dict = ret_dict.setdefault("route-engine-information", {})\
+                    .setdefault("route-engine", {})
+
+                group = m.groupdict()
+                route_engine_entry_dict = {}
+
+                route_engine_dict["slot"] = group["slot"]
+                continue
+
+            #Current state                  Master
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                route_engine_dict["mastership-state"] = group["mastership_state"]
+                continue
+
+            #Election priority              Master (default)
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                route_engine_dict["mastership-priority"] = group["mastership_priority"]
+                continue
+
+            #DRAM                      2002 MB (2048 MB installed)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                route_engine_dict["memory-dram-size"] = group["memory_dram_size"]
+                route_engine_dict["memory-installed-size"] = group["memory_installed_size"]
+                continue
+
+            #Memory utilization          19 percent
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                route_engine_dict["memory-buffer-utilization"] = group["memory_buffer_utilization"]
+                continue
+
+            #5 sec CPU utilization:
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                current_state = group["state"]
+                continue
+            
+            #User                       1 percent
+            m = p7.match(line)
+            if m:
+                if(current_state == "5 sec"):
+                    tag = "-5sec"
+                elif(current_state == "1 min"):
+                    tag = "-1min"
+                elif(current_state == "5 min"):
+                    tag = "-5min"
+                else:
+                    tag = "-15min"
+
+                group = m.groupdict()
+                route_engine_dict["cpu-user"+tag] = group["user"]
+                continue
+
+            #Background                 0 percent
+            m = p8.match(line)
+            if m:
+                if(current_state == "5 sec"):
+                    tag = "-5sec"
+                elif(current_state == "1 min"):
+                    tag = "-1min"
+                elif(current_state == "5 min"):
+                    tag = "-5min"
+                else:
+                    tag = "-15min"
+
+                group = m.groupdict()
+                route_engine_dict["cpu-background"+tag] = group["background"]
+                continue
+
+            #Kernel                     1 percent
+            m = p9.match(line)
+            if m:
+                if(current_state == "5 sec"):
+                    tag = "-5sec"
+                elif(current_state == "1 min"):
+                    tag = "-1min"
+                elif(current_state == "5 min"):
+                    tag = "-5min"
+                else:
+                    tag = "-15min"
+
+                group = m.groupdict()
+                route_engine_dict["cpu-system"+tag] = group["system"]
+                continue
+
+            #Interrupt                  0 percent
+            m = p10.match(line)
+            if m:
+                if(current_state == "5 sec"):
+                    tag = "-5sec"
+                elif(current_state == "1 min"):
+                    tag = "-1min"
+                elif(current_state == "5 min"):
+                    tag = "-5min"
+                else:
+                    tag = "-15min"
+
+                group = m.groupdict()
+                route_engine_dict["cpu-interrupt"+tag] = group["interrupt"]
+                continue
+
+            #Idle                      98 percent
+            m = p11.match(line)
+            if m:
+                
+                if(current_state == "5 sec"):
+                    tag = "-5sec"
+                elif(current_state == "1 min"):
+                    tag = "-1min"
+                elif(current_state == "5 min"):
+                    tag = "-5min"
+                else:
+                    tag = "-15min"
+
+                group = m.groupdict()
+                route_engine_dict["cpu-idle"+tag] = group["idle"]
+                continue
+
+            #Model                          RE-VMX
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                route_engine_dict["model"] = group["system"]
+                continue
+
+            #Start time                     2019-08-29 09:02:22 UTC
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                start_time_dict = {}
+                start_time_dict["#text"] = group["start_time"]
+
+                route_engine_dict["start-time"] = start_time_dict
+                continue
+
+            #Uptime                         208 days, 23 hours, 14 minutes, 9 seconds
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                up_time_dict = {}
+                up_time_dict["#text"] = group["uptime"]
+
+                route_engine_dict["up-time"] = up_time_dict
+                continue
+
+            #Last reboot reason             Router rebooted after a normal shutdown.
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                route_engine_dict["last-reboot-reason"] = group["last_reboot_reason"]
+                continue
+
+            #0.72       0.46       0.40
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                route_engine_dict["load-average-one"] = group["load_average_one"]
+                route_engine_dict["load-average-five"] = group["load_average_five"]
+                route_engine_dict["load-average-fifteen"] = group["load_average_fifteen"]
+                continue
+
+
+        return ret_dict
+
+
+class ShowChassisRoutingEngineNoForwarding(ShowChassisRoutingEngine):
+    """ Parser for:
+            - show chassis routing-engine no-forwarding
+    """
+
+    cli_command = [
+        'show chassis routing-engine no-forwarding'
     ]
 
     def cli(self, output=None):

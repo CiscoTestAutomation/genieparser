@@ -151,6 +151,14 @@
         * show chassis firmware no-forwarding
     * Added ShowChassisEnvironmentRoutingEngine for:
         * show chassis environment routing-engine
+    * Added ShowChassisFpc for:
+        * show chassis fpc
+    * Added ShowChassisFpc for:
+        * show chassis routing-engine
+    * Added ShowChassisRoutingEngine for:
+        * show chassis routing-engine
+    * Added ShowChassisRoutingEngineNoForwarding for:
+        * show chassis routing-engine no-forwarding
 
 
 
