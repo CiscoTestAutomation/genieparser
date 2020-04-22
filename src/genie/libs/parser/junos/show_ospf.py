@@ -650,7 +650,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
         for line in out.splitlines():
             line = line.strip()
 
-            # # OSPF database, Area 0.0.0.8
+            # OSPF database, Area 0.0.0.8
             m = p1.match(line)
             if m:
                 ospf_area = ret_dict.setdefault("ospf-database-information", {}).setdefault("ospf-area-header", {})
@@ -659,7 +659,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                 ret_dict["ospf-database-information"]["ospf-area-header"]["ospf-area"] = group["ospf_area"]
                 continue
 
-            # # Router  *111.87.5.252     111.87.5.252     0x80001b9e  1801  0x22 0x1e2  120
+            # Router  *111.87.5.252     111.87.5.252     0x80001b9e  1801  0x22 0x1e2  120
             m = p2.match(line)
             if m:
                 database_list = ret_dict.setdefault("ospf-database-information", {}).setdefault("ospf-database", [])
@@ -726,7 +726,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                     ospf_link_list.append(entry)
                     continue
 
-                # # Topology default (ID 0)
+                # Topology default (ID 0)
                 m = p6.match(line)
                 if m:
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
@@ -742,7 +742,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
 
                     continue
 
-                # # Type: PointToPoint, Node ID: 27.86.198.239
+                # Type: PointToPoint, Node ID: 27.86.198.239
                 m = p7.match(line)
                 if m:
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
@@ -838,7 +838,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
 
                     continue
 
-                # # Local 336, Remote 0
+                # Local 336, Remote 0
                 m = p12.match(line)
                 if m:
                     group = m.groupdict()
@@ -1235,7 +1235,7 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # # OSPF database, Area 0.0.0.8
+            # OSPF database, Area 0.0.0.8
             m = p1.match(line)
             if m:
                 ospf_area = ret_dict.setdefault("ospf-database-information", {}).setdefault("ospf-area-header", {})
@@ -1244,7 +1244,7 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                 ret_dict["ospf-database-information"]["ospf-area-header"]["ospf-area"] = group["ospf_area"]
                 continue
 
-            # # Router  *111.87.5.252     111.87.5.252     0x80001b9e  1801  0x22 0x1e2  120
+            # Router  *111.87.5.252     111.87.5.252     0x80001b9e  1801  0x22 0x1e2  120
             m = p2.match(line)
             if m:
                 database_list = ret_dict.setdefault("ospf-database-information", {}).setdefault("ospf-database", [])
@@ -1310,7 +1310,7 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                     ospf_link_list.append(entry)
                     continue
 
-                # # Topology default (ID 0)
+                # Topology default (ID 0)
                 m = p6.match(line)
                 if m:
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
@@ -1326,7 +1326,7 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
 
                     continue
 
-                # # Type: PointToPoint, Node ID: 27.86.198.239
+                # Type: PointToPoint, Node ID: 27.86.198.239
                 m = p7.match(line)
                 if m:
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
@@ -1441,7 +1441,7 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
 
                     continue
 
-                # # Topology default (ID 0)
+                # Topology default (ID 0)
                 m = p6.match(line)
                 if m:
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
@@ -1457,7 +1457,7 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
 
                     continue
 
-                # # Type: PointToPoint, Node ID: 27.86.198.239
+                # Type: PointToPoint, Node ID: 27.86.198.239
                 m = p7.match(line)
                 if m:
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
@@ -1615,7 +1615,7 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
 
                     continue
 
-                # # Local 336, Remote 0
+                # Local 336, Remote 0
                 m = p12.match(line)
                 if m:
                     group = m.groupdict()
