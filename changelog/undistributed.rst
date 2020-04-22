@@ -133,6 +133,10 @@
         * show system queues no-forwarding
     * Added ShowPfeStatisticsTraffic for:
         * show pfe statistics traffic
+    * Added ShowSystemUpdate for:
+        * show system uptime
+    * Added ShowSystemUpdateNoForwarding for:
+        * show system uptime no-forwarding
     * Added ShowSystemCoreDumps for:
         * show system core-dumps
     * Added ShowSystemCoreDumpsNoForwarding for:
