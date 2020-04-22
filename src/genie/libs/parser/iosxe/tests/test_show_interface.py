@@ -16792,7 +16792,7 @@ class TestShowIpInterface(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
         "Vlan211": {
-            "sevurity_level": "default",
+            "security_level": "default",
             "ip_route_cache_flags": [
                  "CEF",
                  "Fast"
@@ -16821,7 +16821,7 @@ class TestShowIpInterface(unittest.TestCase):
                       "prefix_length": "24",
                       "ip": "192.168.76.1",
                       "secondary": False,
-                      "broadcase_address": "255.255.255.255"
+                      "broadcast_address": "255.255.255.255"
                  }
             },
             "ip_access_violation_accounting": False,
@@ -16844,7 +16844,7 @@ class TestShowIpInterface(unittest.TestCase):
             "ip_flow_switching": False
        },
        "GigabitEthernet0/0": {
-            "sevurity_level": "default",
+            "security_level": "default",
             'address_determined_by': 'setup command',
             "ip_route_cache_flags": [
                  "CEF",
@@ -16874,7 +16874,7 @@ class TestShowIpInterface(unittest.TestCase):
                       "prefix_length": "24",
                       "ip": "10.1.8.134",
                       "secondary": False,
-                      "broadcase_address": "255.255.255.255"
+                      "broadcast_address": "255.255.255.255"
                  }
             },
             "ip_access_violation_accounting": False,
@@ -16901,7 +16901,7 @@ class TestShowIpInterface(unittest.TestCase):
             "oper_status": "down"
        },
        "GigabitEthernet1/0/1": {
-            "sevurity_level": "default",
+            "security_level": "default",
             'address_determined_by': 'setup command',
             "ip_route_cache_flags": [
                  "CEF",
@@ -16930,7 +16930,7 @@ class TestShowIpInterface(unittest.TestCase):
                       "prefix_length": "24",
                       "ip": "10.1.1.1",
                       "secondary": False,
-                      "broadcase_address": "255.255.255.255"
+                      "broadcast_address": "255.255.255.255"
                  },
                  "10.2.2.2/24": {
                       "prefix_length": "24",
@@ -17174,7 +17174,7 @@ GigabitEthernet1 is up, line protocol is up
             ],
             "ip_cef_switching": True,
             "ip_fast_switching": True,
-            "sevurity_level": "default",
+            "security_level": "default",
             "directed_broadcast_forwarding": False,
             "proxy_arp": True,
             "ip_null_turbo_vector": True,
@@ -17190,7 +17190,7 @@ GigabitEthernet1 is up, line protocol is up
                 "172.16.1.243/24": {
                     "ip": "172.16.1.243",
                     "prefix_length": "24",
-                    "broadcase_address": "255.255.255.255",
+                    "broadcast_address": "255.255.255.255",
                     "secondary": False
                 }
             },
@@ -17219,7 +17219,7 @@ GigabitEthernet1 is up, line protocol is up
             'ip_route_cache_flags': ['CEF', 'Fast'],
             'ipv4': {
                 'dhcp_negotiated': {
-                    'broadcase_address': '255.255.255.255',
+                    'broadcast_address': '255.255.255.255',
                     'ip': 'dhcp_negotiated'}},
             'local_proxy_arp': False,
             'mtu': 1500,
@@ -17230,7 +17230,7 @@ GigabitEthernet1 is up, line protocol is up
             'proxy_arp': True,
             'router_discovery': False,
             'rtp_ip_header_compression': False,
-            'sevurity_level': 'default',
+            'security_level': 'default',
             'split_horizon': True,
             'tcp_ip_header_compression': False,
             'unicast_routing_topologies': {
