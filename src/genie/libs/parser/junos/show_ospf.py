@@ -1808,7 +1808,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
         return ret_dict
 
 class ShowOspfNeighborExtensiveSchema(MetaParser):
-	""" Schema for:
+    """ Schema for:
             * show ospf neighbor extensive
     """
 
@@ -1849,34 +1849,36 @@ class ShowOspfNeighborExtensiveSchema(MetaParser):
 }
 
 class ShowOspfNeighborExtensive(ShowOspfNeighborExtensiveSchema):
-	""" Parser for:
+    """ Parser for:
             * show ospf neighbor extensive
     """
-	cli_command = 'show ospf neighbor extensive'
+    cli_command = 'show ospf neighbor extensive'
 
-    # 111.87.5.94      ge-0/0/0.0             Full      111.87.5.253     128    39
-    p1 = re.compile(r'^(?P<neighbor_address>[\d\.]+) +(?P<interface_name>\S+) +(?P<ospf_neighbor_state>\S+) +(?P<neighbor_id>[\d\.]+) +(?P<neighbor_priority>\d+) +(?P<activity_timer>\d+)$')
 
-    # Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
-    p2 = re.compile(r'^Area +(?P<options>[\d\.]+), +opt +(?P<bdr_address>[\d\.]+), +DR +(?P<temp>[\.\d]+), +BDR +(?P<temp>[\.\d]+)$')
 
-    # Up 3w0d 16:50:35, adjacent 3w0d 16:50:35
-    p3 = re.compile(r'^Up +(?P<temp>\S+ +[\d:]+), +adjacent +(?P<temp>\S+ +[\d:]+)$')
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
-    # SPRING Adjacency Labels:
-    p4 = re.compile(r'^SPRING +Adjacency +Labels:$')
+        # 111.87.5.94      ge-0/0/0.0             Full      111.87.5.253     128    39
+        p1 = re.compile(r'^(?P<neighbor_address>[\d\.]+) +(?P<interface_name>\S+) +(?P<ospf_neighbor_state>\S+) +(?P<neighbor_id>[\d\.]+) +(?P<neighbor_priority>\d+) +(?P<activity_timer>\d+)$')
 
-    #     28985       BVL         Protected
-    p5 = re.compile(r'^(?P<temp>\d+) +(?P<temp>\S+) + (?P<temp>\S+)$')
+        # Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+        p2 = re.compile(r'^Area +(?P<ospf_area>[\d\.]+), +opt +(?P<options>\S+), +DR +(?P<dr_address>[\.\d]+), +BDR +(?P<bdr_address>[\.\d]+)$')
 
-    # Topology default (ID 0) -> Bidirectional
-    p6 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\d+)\) +-> +(?P<ospf_neighbor_topology_state>\S+)$')
+        # Up 3w0d 16:50:35, adjacent 3w0d 16:50:35
+        p3 = re.compile(r'^Up +(?P<neighbor_up_time>\S+ +[\d:]+), +adjacent +(?P<neighbor_adjacency_time>\S+ +[\d:]+)$')
 
-	def cli(self, output=None):
-		if not output:
-			out = self.device.execute(self.cli_command)
-		else:
-			out = output
+        # SPRING Adjacency Labels:
+        p4 = re.compile(r'^SPRING +Adjacency +Labels:$')
+
+        #     28985       BVL         Protected
+        p5 = re.compile(r'^(?P<temp1>\d+) +(?P<temp2>\S+) + (?P<temp3>\S+)$')
+
+        # Topology default (ID 0) -> Bidirectional
+        p6 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\d+)\) +-> +(?P<ospf_neighbor_topology_state>\S+)$')
 
         ret_dict = {}
 
@@ -1886,18 +1888,63 @@ class ShowOspfNeighborExtensive(ShowOspfNeighborExtensiveSchema):
             # 111.87.5.94      ge-0/0/0.0             Full      111.87.5.253     128    39
             m = p1.match(line)
             if m:
-                neighbor_list = ret_dict[]
+                neighbor_list = ret_dict.setdefault("ospf-neighbor-information", {}).setdefault("ospf-neighbor", [])
                 group = m.groupdict()
-                entity = {}
+                entry = {}
 
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                neighbor_list.append(entry)
+                continue
+
+            # Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+            m = p2.match(line)
+            if m:
+                last_neighbor = ret_dict["ospf-neighbor-information"]["ospf-neighbor"][-1]
+
+                entry = last_neighbor
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                continue
+
+            # Up 3w0d 16:50:35, adjacent 3w0d 16:50:35
             m = p3.match(line)
             if m:
-                last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
+                last_neighbor = ret_dict["ospf-neighbor-information"]["ospf-neighbor"][-1]
 
+                entry = last_neighbor
                 group = m.groupdict()
-                last_database.setdefault("ospf-router-lsa", {})
-                last_database["ospf-router-lsa"]["bits"] = group["bits"]
-                last_database["ospf-router-lsa"]["link-count"] = group["link_count"]
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                continue
+
+            # SPRING Adjacency Labels:
+            m = p4.match(line)
+            if m:
+                continue
+
+            #     28985       BVL         Protected
+            m = p5.match(line)
+            if m:
+                continue
+
+            # Topology default (ID 0) -> Bidirectional
+            m = p6.match(line)
+            if m:
+                last_neighbor = ret_dict["ospf-neighbor-information"]["ospf-neighbor"][-1]
+
+                entry = last_neighbor.setdefault("ospf-neighbor-topology", {})
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
 
                 continue
 
