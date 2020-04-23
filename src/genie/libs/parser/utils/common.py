@@ -93,7 +93,7 @@ def get_parser(command, device, regex=False):
             if token in data:
                 data = data[token]
 
-            valid_results.append((found_command, _find_parser_cls(device, data), kwargs))
+        valid_results.append((found_command, _find_parser_cls(device, data), kwargs))
 
     if not valid_results:
         raise Exception("Could not find parser for "
