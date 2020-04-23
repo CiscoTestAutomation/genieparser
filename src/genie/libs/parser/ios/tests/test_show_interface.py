@@ -884,7 +884,7 @@ class TestShowIpInterface(unittest.TestCase):
                "224.0.0.5",
                "224.0.0.6"
             ],
-            "sevurity_level": "default",
+            "security_level": "default",
             "split_horizon": True,
             "local_proxy_arp": False,
             "ip_flow_switching": False,
@@ -910,7 +910,7 @@ class TestShowIpInterface(unittest.TestCase):
                "192.168.154.1/24": {
                     "ip": "192.168.154.1",
                     "secondary": False,
-                    "broadcase_address": "255.255.255.255",
+                    "broadcast_address": "255.255.255.255",
                     "prefix_length": "24"
                }
             },
@@ -926,7 +926,7 @@ class TestShowIpInterface(unittest.TestCase):
                "192.168.154.1/24": {
                     "ip": "192.168.154.1",
                     "secondary": False,
-                    "broadcase_address": "255.255.255.255",
+                    "broadcast_address": "255.255.255.255",
                     "prefix_length": "24"
                }
             },
@@ -942,7 +942,7 @@ class TestShowIpInterface(unittest.TestCase):
             "ip_cef_switching_turbo_vector": True,
             "ip_null_turbo_vector": True,
             "router_discovery": False,
-            "sevurity_level": "default",
+            "security_level": "default",
             "split_horizon": True,
             "local_proxy_arp": False,
             "ip_flow_switching": False,
