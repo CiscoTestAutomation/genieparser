@@ -1571,14 +1571,17 @@ class ShowRouteSummary(ShowRouteSummarySchema):
             if m:
                 group = m.groupdict()
                 route_summary_information_dict = ret_dict.setdefault('route-summary-information', {})
-                route_summary_information_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                route_summary_information_dict.update({
+                    k.replace('_', '-'):v for k, v in group.items() 
+                    if v is not None})
                 continue
 
             # Router ID: 111.87.5.252
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                route_summary_information_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                route_summary_information_dict.update({k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None})
                 continue
 
             # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
@@ -1587,7 +1590,8 @@ class ShowRouteSummary(ShowRouteSummarySchema):
                 group = m.groupdict()
                 route_table = route_summary_information_dict. \
                     setdefault('route-table', [])
-                route_table_dict = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                route_table_dict = {k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None}
                 route_table.append(route_table_dict)
                 continue
             
@@ -1596,7 +1600,8 @@ class ShowRouteSummary(ShowRouteSummarySchema):
             if m:
                 group = m.groupdict()
                 protocols_list = route_table_dict.setdefault('protocols', [])
-                protocols_list.append({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                protocols_list.append({k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None})
                 continue
 
         return ret_dict
