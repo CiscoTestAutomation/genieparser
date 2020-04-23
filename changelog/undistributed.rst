@@ -94,7 +94,7 @@
     * Added ShowArpNoMore for:
         * show arp | no-more
     * Added ShowOspfDatabase for:
-        * show ospf database 
+        * show ospf database
     * Added ShowOspfDatabaseSummary for:
         * show ospf database summary
     * Added ShowOspfDatabaseExternalExtensive for:
@@ -175,6 +175,8 @@
         * show chassis hardware extensive no-forwarding
     * Added ShowOspfDatabaseAdvertisingRouterSelfDetailSchema for:
         * show ospf database advertising-router self detail
+    * ShowOspfNeighborExtensiveSchema
+        * show ospf neighbor extensive
 
 
 
