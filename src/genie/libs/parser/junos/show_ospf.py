@@ -1238,16 +1238,19 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
             # OSPF database, Area 0.0.0.8
             m = p1.match(line)
             if m:
-                ospf_area = ret_dict.setdefault("ospf-database-information", {}).setdefault("ospf-area-header", {})
+                ospf_area = ret_dict.setdefault("ospf-database-information", {})\
+                    .setdefault("ospf-area-header", {})
 
                 group = m.groupdict()
-                ret_dict["ospf-database-information"]["ospf-area-header"]["ospf-area"] = group["ospf_area"]
+                ret_dict["ospf-database-information"]["ospf-area-header"]["ospf-area"]\
+                     = group["ospf_area"]
                 continue
 
             # Router  *111.87.5.252     111.87.5.252     0x80001b9e  1801  0x22 0x1e2  120
             m = p2.match(line)
             if m:
-                database_list = ret_dict.setdefault("ospf-database-information", {}).setdefault("ospf-database", [])
+                database_list = ret_dict.setdefault("ospf-database-information", {})\
+                    .setdefault("ospf-database", [])
 
                 group = m.groupdict()
                 entry = {}
@@ -1282,7 +1285,8 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                 if m:
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                    ospf_link_list = last_database.setdefault("ospf-router-lsa", {}).setdefault("ospf-link", [])
+                    ospf_link_list = last_database.setdefault("ospf-router-lsa", {})\
+                        .setdefault("ospf-link", [])
 
                     group = m.groupdict()
                     entry = {}
@@ -1298,7 +1302,8 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                 if m:
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                    ospf_link_list = last_database.setdefault("ospf-router-lsa", {}).setdefault("ospf-link", [])
+                    ospf_link_list = last_database.setdefault("ospf-router-lsa", {})\
+                        .setdefault("ospf-link", [])
                     last_ospf_link = ospf_link_list[-1]
 
                     group = m.groupdict()
@@ -1349,7 +1354,8 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
                     group = m.groupdict()
-                    last_link = last_database["ospf-router-lsa"]["ospf-lsa-topology"]["ospf-lsa-topology-link"][-1]
+                    last_link = last_database["ospf-router-lsa"]["ospf-lsa-topology"]\
+                        ["ospf-lsa-topology-link"][-1]
 
                     group = m.groupdict()
                     entry = last_link
@@ -1379,14 +1385,20 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                 if m:
                     last_entry = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                    last_entry.setdefault("ospf-database-extensive", {}).setdefault("expiration-time", {})
-                    last_entry.setdefault("ospf-database-extensive", {}).setdefault("installation-time", {})
-                    last_entry.setdefault("ospf-database-extensive", {}).setdefault("send-time", {})
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("expiration-time", {})
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("installation-time", {})
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("send-time", {})
 
                     group = m.groupdict()
-                    last_entry["ospf-database-extensive"]["expiration-time"]["#text"] = group["expiration_time"]
-                    last_entry["ospf-database-extensive"]["installation-time"]["#text"] = group["installation_time"]
-                    last_entry["ospf-database-extensive"]["send-time"]["#text"] = group["send_time"]
+                    last_entry["ospf-database-extensive"]["expiration-time"]["#text"]\
+                     = group["expiration_time"]
+                    last_entry["ospf-database-extensive"]["installation-time"]["#text"]\
+                     = group["installation_time"]
+                    last_entry["ospf-database-extensive"]["send-time"]["#text"]\
+                     = group["send_time"]
 
                     continue
 
@@ -1437,7 +1449,8 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
 
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                    last_database.setdefault("ospf-network-lsa", {}).setdefault("attached-router", []).append(group['attached_router'])
+                    last_database.setdefault("ospf-network-lsa", {})\
+                        .setdefault("attached-router", []).append(group['attached_router'])
 
                     continue
 
@@ -1480,7 +1493,8 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
                     group = m.groupdict()
-                    last_link = last_database["ospf-network-lsa"]["ospf-lsa-topology"]["ospf-lsa-topology-link"][-1]
+                    last_link = last_database["ospf-network-lsa"]["ospf-lsa-topology"]\
+                        ["ospf-lsa-topology-link"][-1]
 
                     group = m.groupdict()
                     entry = last_link
@@ -1510,14 +1524,20 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                 if m:
                     last_entry = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                    last_entry.setdefault("ospf-database-extensive", {}).setdefault("expiration-time", {})
-                    last_entry.setdefault("ospf-database-extensive", {}).setdefault("installation-time", {})
-                    last_entry.setdefault("ospf-database-extensive", {}).setdefault("send-time", {})
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("expiration-time", {})
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("installation-time", {})
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("send-time", {})
 
                     group = m.groupdict()
-                    last_entry["ospf-database-extensive"]["expiration-time"]["#text"] = group["expiration_time"]
-                    last_entry["ospf-database-extensive"]["installation-time"]["#text"] = group["installation_time"]
-                    last_entry["ospf-database-extensive"]["send-time"]["#text"] = group["send_time"]
+                    last_entry["ospf-database-extensive"]["expiration-time"]\
+                        ["#text"] = group["expiration_time"]
+                    last_entry["ospf-database-extensive"]["installation-time"]\
+                        ["#text"] = group["installation_time"]
+                    last_entry["ospf-database-extensive"]["send-time"]\
+                        ["#text"] = group["send_time"]
 
                     continue
 
@@ -1526,12 +1546,14 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                 if m:
                     last_entry = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                    last_entry.setdefault("ospf-database-extensive", {}).setdefault("lsa-changed-time", {})
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("lsa-changed-time", {})
 
                     group = m.groupdict()
                     last_entry["ospf-database-extensive"]["lsa-changed-time"]["#text"]\
                         = group["lsa_changed_time"]
-                    last_entry["ospf-database-extensive"]["lsa-change-count"] = group["lsa_change_count"]
+                    last_entry["ospf-database-extensive"]["lsa-change-count"]\
+                         = group["lsa_change_count"]
 
                     continue
 
@@ -1544,9 +1566,8 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                         .setdefault("generation-timer", {})
 
                     group = m.groupdict()
-                    last_database["ospf-database-extensive"]["generation-timer"][
-                        "#text"
-                    ] = group["generation_timer"]
+                    last_database["ospf-database-extensive"]["generation-timer"]\
+                        ["#text"] = group["generation_timer"]
 
                     continue
 
@@ -1588,7 +1609,8 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
                     if "te-subtlv" not in last_database["ospf-opaque-area-lsa"]:
-                        last_database["ospf-opaque-area-lsa"]["tlv-block"]["formatted-tlv-data"] = group["formatted_tlv_data"]
+                        last_database["ospf-opaque-area-lsa"]["tlv-block"]\
+                            ["formatted-tlv-data"] = group["formatted_tlv_data"]
                     else:
                         last_database.setdefault("ospf-opaque-area-lsa", {})\
                             .setdefault("te-subtlv", {}).setdefault("formatted-tlv-data",[])\
@@ -1608,10 +1630,12 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                     if group["priority_number"] == "0":
 
                         last_database.setdefault("ospf-opaque-area-lsa", {})\
-                            .setdefault("te-subtlv", {}).setdefault("formatted-tlv-data",[]).append(line)
+                            .setdefault("te-subtlv", {}).setdefault("formatted-tlv-data",[])\
+                                .append(line)
                     else:
 
-                        last_database["ospf-opaque-area-lsa"]["te-subtlv"]["formatted-tlv-data"][-1] += line
+                        last_database["ospf-opaque-area-lsa"]["te-subtlv"]\
+                            ["formatted-tlv-data"][-1] += line
 
                     continue
 
@@ -1623,7 +1647,8 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
                     if "te-subtlv" not in last_database["ospf-opaque-area-lsa"]:
-                        last_database["ospf-opaque-area-lsa"]["formatted-tlv-data"] = group["formatted_tlv_data"]
+                        last_database["ospf-opaque-area-lsa"]["formatted-tlv-data"]\
+                             = group["formatted_tlv_data"]
                     else:
                         last_database.setdefault("ospf-opaque-area-lsa", {})\
                             .setdefault("te-subtlv", {}).setdefault("formatted-tlv-data",[])\
@@ -1651,14 +1676,20 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                 if m:
                     last_entry = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                    last_entry.setdefault("ospf-database-extensive", {}).setdefault("expiration-time", {})
-                    last_entry.setdefault("ospf-database-extensive", {}).setdefault("installation-time", {})
-                    last_entry.setdefault("ospf-database-extensive", {}).setdefault("send-time", {})
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("expiration-time", {})
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("installation-time", {})
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("send-time", {})
 
                     group = m.groupdict()
-                    last_entry["ospf-database-extensive"]["expiration-time"]["#text"] = group["expiration_time"]
-                    last_entry["ospf-database-extensive"]["installation-time"]["#text"] = group["installation_time"]
-                    last_entry["ospf-database-extensive"]["send-time"]["#text"] = group["send_time"]
+                    last_entry["ospf-database-extensive"]["expiration-time"]\
+                        ["#text"] = group["expiration_time"]
+                    last_entry["ospf-database-extensive"]["installation-time"]\
+                        ["#text"] = group["installation_time"]
+                    last_entry["ospf-database-extensive"]["send-time"]["#text"]\
+                     = group["send_time"]
 
                     continue
 
@@ -1762,14 +1793,20 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                 if m:
                     last_entry = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                    last_entry.setdefault("ospf-database-extensive", {}).setdefault("expiration-time", {})
-                    last_entry.setdefault("ospf-database-extensive", {}).setdefault("installation-time", {})
-                    last_entry.setdefault("ospf-database-extensive", {}).setdefault("send-time", {})
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("expiration-time", {})
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("installation-time", {})
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("send-time", {})
 
                     group = m.groupdict()
-                    last_entry["ospf-database-extensive"]["expiration-time"]["#text"] = group["expiration_time"]
-                    last_entry["ospf-database-extensive"]["installation-time"]["#text"] = group["installation_time"]
-                    last_entry["ospf-database-extensive"]["send-time"]["#text"] = group["send_time"]
+                    last_entry["ospf-database-extensive"]["expiration-time"]\
+                        ["#text"] = group["expiration_time"]
+                    last_entry["ospf-database-extensive"]["installation-time"]\
+                        ["#text"] = group["installation_time"]
+                    last_entry["ospf-database-extensive"]["send-time"]["#text"]\
+                     = group["send_time"]
 
                     continue
 
@@ -1783,7 +1820,8 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                     group = m.groupdict()
                     last_entry["ospf-database-extensive"]["lsa-changed-time"]["#text"]\
                         = group["lsa_changed_time"]
-                    last_entry["ospf-database-extensive"]["lsa-change-count"] = group["lsa_change_count"]
+                    last_entry["ospf-database-extensive"]["lsa-change-count"] = \
+                        group["lsa_change_count"]
 
                     continue
 
@@ -1796,9 +1834,8 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                         .setdefault("generation-timer", {})
 
                     group = m.groupdict()
-                    last_database["ospf-database-extensive"]["generation-timer"][
-                        "#text"
-                    ] = group["generation_timer"]
+                    last_database["ospf-database-extensive"]["generation-timer"]\
+                        ["#text"] = group["generation_timer"]
 
                     continue
 
