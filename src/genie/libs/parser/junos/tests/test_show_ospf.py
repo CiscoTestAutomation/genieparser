@@ -21,7 +21,8 @@ from genie.libs.parser.junos.show_ospf import (ShowOspfInterface,
                                                ShowOspfOverview,
                                                ShowOspfOverviewExtensive,
                                                ShowOspfDatabaseAdvertisingRouterSelfDetail,
-                                               ShowOspfNeighborExtensive)
+                                               ShowOspfNeighborExtensive,
+                                               ShowOspfNeighborDetail)
 
 
 class test_show_ospf_interface(unittest.TestCase):
@@ -4564,6 +4565,18 @@ class TestShowOspfNeighborDetail(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowOspfNeighborExtensive(device=self.device)
         parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspfNeighborDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_ospf_neighbor_instance_detail(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspfNeighborDetail(device=self.device)
+        parsed_output = obj.parse(neighbor='111.87.5.94')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
