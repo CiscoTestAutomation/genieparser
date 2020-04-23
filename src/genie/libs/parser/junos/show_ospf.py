@@ -25,7 +25,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import (Any, 
+from genie.metaparser.util.schemaengine import (Any,
         Optional, Use, SchemaTypeError, Schema, Or)
 
 class ShowOspfInterfaceBriefSchema(MetaParser):
@@ -500,7 +500,7 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        
+
         ret_dict = {}
 
         #OSPF database, Area 0.0.0.8
@@ -512,7 +512,7 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
                         r'?(?P<lsa_id>[\d\.]+) +(?P<advertising_router>'
                         r'[\d\.]+) +(?P<sequence_number>\S+) +(?P<age>\d+) '
                         r'+(?P<options>\S+) +(?P<checksum>\S+) +(?P<lsa_length>\d+)$')
-        
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -526,7 +526,7 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
                 ospf_database_info_dict2 = ospf_database_info_dict.setdefault('ospf-area-header', {})
                 ospf_database_info_dict2['ospf-area'] = group['ospf_area']
                 continue
-            
+
             #Router   3.3.3.3          3.3.3.3          0x80004d2d    61  0x22 0xa127 2496
             #Router  *111.87.5.252     111.87.5.252     0x80001b9e  1608  0x22 0x1e2  120
             m = p2.match(line)
@@ -581,7 +581,7 @@ class ShowOspfDatabaseSummarySchema(MetaParser):
         for item in value:
             neighbor_schema.validate(item)
         return value
-        
+
     schema = {
         'ospf-database-information': {
             'ospf-database-summary': Use(validate_neighbor_database_summary_list)
@@ -599,7 +599,7 @@ class ShowOspfDatabaseSummary(ShowOspfDatabaseSummarySchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        
+
         ret_dict = {}
 
         #Area 0.0.0.8:
@@ -635,16 +635,16 @@ class ShowOspfDatabaseSummary(ShowOspfDatabaseSummarySchema):
                 ospf_database_entry_value_list = []
                 ospf_database_entry_area_list = []
                 ospf_database_entry_intf_list = []
-                
+
                 ospf_database_entry_dict1['ospf-area'] = group['ospf_area1']
                 p1 = re.compile(r'^empty$')
                 continue
-            
+
             #12 Router LSAs
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                
+
                 ospf_database_entry_value_list.append(group['area_value'])
                 ospf_database_entry_name_list.append(group['area_name'])
                 continue
@@ -662,7 +662,7 @@ class ShowOspfDatabaseSummary(ShowOspfDatabaseSummarySchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                
+
                 ospf_database_entry_dict2['ospf-lsa-count'] = group['external_value']
                 ospf_database_entry_dict2['ospf-lsa-type'] = group['external_name']
                 continue
@@ -692,7 +692,7 @@ class ShowOspfDatabaseSummary(ShowOspfDatabaseSummarySchema):
         return ret_dict
 
 class ShowOspfDatabaseExternalExtensiveSchema(MetaParser):
-    
+
     """ schema = {
     Optional("@xmlns:junos"): str,
     "ospf-database-information": {
@@ -747,7 +747,7 @@ class ShowOspfDatabaseExternalExtensiveSchema(MetaParser):
         ]
     }
 } """
-    
+
     def validate_neighbor_database_external_extensive_list(value):
         if not isinstance(value, list):
             raise SchemaTypeError('ospf-database is not a list')
@@ -800,7 +800,7 @@ class ShowOspfDatabaseExternalExtensiveSchema(MetaParser):
         for item in value:
             neighbor_schema.validate(item)
         return value
-        
+
     schema = {
         Optional("@xmlns:junos"): str,
         'ospf-database-information': {
@@ -820,12 +820,12 @@ class ShowOspfDatabaseExternalExtensive(ShowOspfDatabaseExternalExtensiveSchema)
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        
+
         ret_dict = {}
 
-        #OSPF AS SCOPE link state database        
+        #OSPF AS SCOPE link state database
         p1 = re.compile(r'^(?P<external_heading>\AOSPF AS[\S\s]+)$')
-        
+
         #Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
         p2 = re.compile(r'^(?P<heading>\AType +ID[\S\s]+)$')
 
@@ -840,24 +840,24 @@ class ShowOspfDatabaseExternalExtensive(ShowOspfDatabaseExternalExtensiveSchema)
 
         #Topology default (ID 0)
         p5 = re.compile(r'^Topology (?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\d+)\)$')
-        
+
         #Type: 1, Metric: 1, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
         p6 = re.compile(r'^Type: +(?P<type_value>\d+), Metric: +(?P<ospf_topology_metric>\d+), '
                         r'Fwd addr: +(?P<forward_address>[\w\.\/]+), '
                         r'Tag: +(?P<tag>[\w\.\/]+)$')
-        
+
         #Aging timer 00:14:32
         p7 = re.compile(r'^Aging timer +(?P<text>[\w\:]+)$')
 
         #Installed 00:45:19 ago, expires in 00:14:32, sent 00:45:17 ago
-        p8 = re.compile(r'^Installed +(?P<installed_time>[\w\.\/\:]+) ' 
+        p8 = re.compile(r'^Installed +(?P<installed_time>[\w\.\/\:]+) '
                         r'ago, expires in +(?P<expired_time>[\w\.\/\:]+), '
                         r'sent +(?P<sent_time>[\w\.\/\:]+) ago$')
 
         #Last changed 30w0d 01:34:30 ago, Change count: 1
         p9 = re.compile(r'Last changed +(?P<installed_time>[\S]+) '
                         r'+(?P<installed_time2>[\S]+) ago, Change count: '
-                        r'+(?P<lsa_change_count>[\S]+)$')         
+                        r'+(?P<lsa_change_count>[\S]+)$')
 
 
         for line in out.splitlines()[2:]:
@@ -870,12 +870,12 @@ class ShowOspfDatabaseExternalExtensive(ShowOspfDatabaseExternalExtensiveSchema)
                 ospf_database_info_dict = ret_dict.setdefault('ospf-database-information', {})
                 ospf_database_info_list = ospf_database_info_dict.setdefault('ospf-database', [])
                 ospf_database_entry_dict = {}
-                
+
                 ospf_database_entry_dict['@external-heading'] = group['external_heading']
                 reset = True
                 continue
-            
-            #Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len            
+
+            #Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -975,7 +975,7 @@ class ShowOspfDatabaseExternalExtensive(ShowOspfDatabaseExternalExtensiveSchema)
 
 
 class ShowOspfOverviewSchema(MetaParser):
-    
+
     schema = {
     Optional("@xmlns:junos"): str,
     "ospf-overview-information": {
@@ -1033,8 +1033,8 @@ class ShowOspfOverviewSchema(MetaParser):
         }
     }
 }
-    
-  
+
+
 
 '''
 Parser for:
@@ -1047,13 +1047,13 @@ class ShowOspfOverview(ShowOspfOverviewSchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        
+
         ret_dict = {}
 
 
         #Instance: master
         p1 = re.compile(r'^Instance: +(?P<instance_name>\S+)$')
-        
+
         #Router ID: 111.87.5.252
         p2 = re.compile(r'^Router ID: +(?P<ospf_router_id>[\w\.\:\/]+)$')
 
@@ -1069,7 +1069,7 @@ class ShowOspfOverview(ShowOspfOverviewSchema):
         #SRGB Start-Label : 16000, SRGB Index-Range : 8000
         p6 = re.compile(r'^SRGB +Start-Label : +(?P<ospf_srgb_start_label>\d+), SRGB +Index-Range : '
                         r'+(?P<ospf_srgb_index_range>\d+)$')
-        
+
         #SRGB Block Allocation: Success
         p7 = re.compile(r'^SRGB Block Allocation: +(?P<ospf_srgb_allocation>\S+)$')
 
@@ -1077,7 +1077,7 @@ class ShowOspfOverview(ShowOspfOverviewSchema):
         p8 = re.compile(r'^SRGB +Start +Index : +(?P<ospf_srgb_start_index>\d+), +SRGB Size : '
                         r'+(?P<ospf_srgb_size>\d+), +Label-Range: \[ +(?P<ospf_srgb_first_label>\d+), '
                         r'+(?P<ospf_srgb_last_label>\d+) \]$')
-        
+
         #Node Segments: Enabled
         p9 = re.compile(r'^Node +Segments: +(?P<ospf_node_segment_enabled>\S+)$')
 
@@ -1137,7 +1137,7 @@ class ShowOspfOverview(ShowOspfOverviewSchema):
                     setdefault('ospf-overview', {})
                 ospf_entry_list['instance-name'] = group['instance_name']
                 continue
-            
+
             #Router ID: 111.87.5.252
             m = p2.match(line)
             if m:
@@ -1313,8 +1313,8 @@ class ShowOspfOverview(ShowOspfOverviewSchema):
                 ospf_entry_list['ospf-spring-overview'] = spring_dict
 
                 continue
-        
-        return ret_dict 
+
+        return ret_dict
 
 class ShowOspfOverviewExtensive(ShowOspfOverview):
     """ Parser for:
@@ -1803,6 +1803,103 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                             .setdefault("tag", group["tag"])
 
                     continue
+
+
+        return ret_dict
+
+class ShowOspfNeighborExtensiveSchema(MetaParser):
+	""" Schema for:
+            * show ospf neighbor extensive
+    """
+
+    def validate_ospf_neighbor_list(value):
+            if not isinstance(value, list):
+                raise SchemaTypeError('ospf-neighbor is not a list')
+            ospf_lsa_topology_ink_schema = Schema(
+                {
+                "activity-timer": str,
+                "adj-sid-list": str,
+                "bdr-address": str,
+                "dr-address": str,
+                "interface-name": str,
+                "neighbor-address": str,
+                "neighbor-adjacency-time": {
+                    "#text": str
+                },
+                "neighbor-id": str,
+                "neighbor-priority": str,
+                "neighbor-up-time": {},
+                "options": str,
+                "ospf-area": str,
+                "ospf-neighbor-state": str,
+                "ospf-neighbor-topology": {
+                    "ospf-neighbor-topology-state": str,
+                    "ospf-topology-id": str,
+                    "ospf-topology-name": str
+                }
+            })
+            for item in value:
+                ospf_lsa_topology_ink_schema.validate(item)
+            return value
+
+    schema = {
+    "ospf-neighbor-information": {
+        "ospf-neighbor": Use(validate_ospf_neighbor_list)
+    }
+}
+
+class ShowOspfNeighborExtensive(ShowOspfNeighborExtensiveSchema):
+	""" Parser for:
+            * show ospf neighbor extensive
+    """
+	cli_command = 'show ospf neighbor extensive'
+
+    # 111.87.5.94      ge-0/0/0.0             Full      111.87.5.253     128    39
+    p1 = re.compile(r'^(?P<neighbor_address>[\d\.]+) +(?P<interface_name>\S+) +(?P<ospf_neighbor_state>\S+) +(?P<neighbor_id>[\d\.]+) +(?P<neighbor_priority>\d+) +(?P<activity_timer>\d+)$')
+
+    # Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+    p2 = re.compile(r'^Area +(?P<options>[\d\.]+), +opt +(?P<bdr_address>[\d\.]+), +DR +(?P<temp>[\.\d]+), +BDR +(?P<temp>[\.\d]+)$')
+
+    # Up 3w0d 16:50:35, adjacent 3w0d 16:50:35
+    p3 = re.compile(r'^Up +(?P<temp>\S+ +[\d:]+), +adjacent +(?P<temp>\S+ +[\d:]+)$')
+
+    # SPRING Adjacency Labels:
+    p4 = re.compile(r'^SPRING +Adjacency +Labels:$')
+
+    #     28985       BVL         Protected
+    p5 = re.compile(r'^(?P<temp>\d+) +(?P<temp>\S+) + (?P<temp>\S+)$')
+
+    # Topology default (ID 0) -> Bidirectional
+    p6 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\d+)\) +-> +(?P<ospf_neighbor_topology_state>\S+)$')
+
+	def cli(self, output=None):
+		if not output:
+			out = self.device.execute(self.cli_command)
+		else:
+			out = output
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 111.87.5.94      ge-0/0/0.0             Full      111.87.5.253     128    39
+            m = p1.match(line)
+            if m:
+                neighbor_list = ret_dict[]
+                group = m.groupdict()
+                entity = {}
+
+            m = p3.match(line)
+            if m:
+                last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
+
+                group = m.groupdict()
+                last_database.setdefault("ospf-router-lsa", {})
+                last_database["ospf-router-lsa"]["bits"] = group["bits"]
+                last_database["ospf-router-lsa"]["link-count"] = group["link_count"]
+
+                continue
 
 
         return ret_dict
