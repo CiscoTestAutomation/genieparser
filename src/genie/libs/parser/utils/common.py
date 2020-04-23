@@ -73,23 +73,17 @@ def get_parser_exclude(command, device):
 def get_parser(command, device, regex=False):
     '''From a show command and device, return parser class and kwargs if any'''
 
+    try:
+        order_list = device.custom.get('abstraction').get('order', [])
+    except AttributeError:
+        order_list = None
+
     lookup = Lookup.from_device(device, packages={'parser': parser})
-    results = _fuzzy_search_command(command, regex)
+    results = _fuzzy_search_command(command, regex, device.os, order_list)
     valid_results = []
     
     for result in results:
         found_command, data, kwargs = result
-
-        try:
-            order_list = device.custom.get('abstraction').get('order', [])
-        except AttributeError:
-            order_list = None
-
-        if order_list:
-            if getattr(device, order_list[0]) not in data:
-                continue
-        elif device.os not in data:
-            continue
 
         # Check if all the tokens exists and take the farthest one
         for token in lookup._tokens:
@@ -107,7 +101,7 @@ def get_parser(command, device, regex=False):
 
     return valid_results
 
-def _fuzzy_search_command(search, use_regex):
+def _fuzzy_search_command(search, use_regex, os=None, order_list=None, device=None):
     # Perfect match should return 
     if search in parser_data:
         return [(search, parser_data[search], {})]
@@ -132,6 +126,13 @@ def _fuzzy_search_command(search, use_regex):
 
         if match_result: 
             kwargs, score = match_result
+            
+            if order_list and device and getattr(device, order_list[0]) not in source:
+                continue
+
+            if os and os not in source:
+                continue
+
             entry = (command, source, kwargs)
 
             if score > best_score:
