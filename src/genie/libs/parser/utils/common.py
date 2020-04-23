@@ -85,12 +85,15 @@ def get_parser(command, device, regex=False):
     for result in results:
         found_command, data, kwargs = result
 
+        if found_command == 'tokens':
+            continue
+
         # Check if all the tokens exists and take the farthest one
         for token in lookup._tokens:
             if token in data:
                 data = data[token]
 
-        valid_results.append((found_command, _find_parser_cls(device, data), kwargs))
+            valid_results.append((found_command, _find_parser_cls(device, data), kwargs))
 
     if not valid_results:
         raise Exception("Could not find parser for "
