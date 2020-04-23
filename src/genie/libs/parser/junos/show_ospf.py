@@ -1967,9 +1967,4 @@ class ShowOspfNeighborExtensive(ShowOspfNeighborExtensiveSchema):
 
                 continue
 
-        # import pprint
-        # # logFile = open('/Users/adelph/workshop/file.txt', 'w')
-        # # pprint.pprint(ret_dict, logFile)
-        # pprint.pprint(ret_dict)
-        # return {"abc":"123"}
         return ret_dict
