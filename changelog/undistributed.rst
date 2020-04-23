@@ -266,6 +266,8 @@
 * IOSXR
     * Update ShowBgpInstanceSummary
         * Update regex to support various output
+    * Update ShowRouteIpv4
+        * Update regex to support various output
 
 * IOS
     * Update ShowInterfaces
