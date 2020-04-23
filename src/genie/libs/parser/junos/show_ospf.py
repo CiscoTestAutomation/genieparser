@@ -1813,34 +1813,54 @@ class ShowOspfNeighborExtensiveSchema(MetaParser):
     """
 
     def validate_ospf_neighbor_list(value):
+
+        def validate_adjacency_labels_list(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('ospf-neighbor is not a list')
-            ospf_lsa_topology_ink_schema = Schema(
+                raise SchemaTypeError('ospf-link is not a list')
+            adjacency_labels_schema = Schema(
                 {
-                "activity-timer": str,
-                "adj-sid-list": str,
-                "bdr-address": str,
-                "dr-address": str,
-                "interface-name": str,
-                "neighbor-address": str,
-                "neighbor-adjacency-time": {
-                    "#text": str
+                'label': str,
+                'flags': str,
+                'adj-sid-type': str
                 },
-                "neighbor-id": str,
-                "neighbor-priority": str,
-                "neighbor-up-time": {},
-                "options": str,
-                "ospf-area": str,
-                "ospf-neighbor-state": str,
-                "ospf-neighbor-topology": {
-                    "ospf-neighbor-topology-state": str,
-                    "ospf-topology-id": str,
-                    "ospf-topology-name": str
-                }
-            })
+            )
             for item in value:
-                ospf_lsa_topology_ink_schema.validate(item)
+                adjacency_labels_schema.validate(item)
             return value
+
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-neighbor is not a list')
+        ospf_lsa_topology_ink_schema = Schema(
+            {
+            "activity-timer": str,
+            "adj-sid-list": {
+                'spring-adjacency-labels': Use(validate_adjacency_labels_list)
+            },
+            "bdr-address": str,
+            "dr-address": str,
+            "interface-name": str,
+            "neighbor-address": str,
+            "neighbor-adjacency-time": {
+                "#text": str
+            },
+            "neighbor-id": str,
+            "neighbor-priority": str,
+            "neighbor-up-time": {
+                "#text": str,
+                Optional("junos:seconds"): str,
+            },
+            "options": str,
+            "ospf-area": str,
+            "ospf-neighbor-state": str,
+            "ospf-neighbor-topology": {
+                "ospf-neighbor-topology-state": str,
+                "ospf-topology-id": str,
+                "ospf-topology-name": str
+            }
+        })
+        for item in value:
+            ospf_lsa_topology_ink_schema.validate(item)
+        return value
 
     schema = {
     "ospf-neighbor-information": {
@@ -1853,8 +1873,6 @@ class ShowOspfNeighborExtensive(ShowOspfNeighborExtensiveSchema):
             * show ospf neighbor extensive
     """
     cli_command = 'show ospf neighbor extensive'
-
-
 
     def cli(self, output=None):
         if not output:
@@ -1871,14 +1889,11 @@ class ShowOspfNeighborExtensive(ShowOspfNeighborExtensiveSchema):
         # Up 3w0d 16:50:35, adjacent 3w0d 16:50:35
         p3 = re.compile(r'^Up +(?P<neighbor_up_time>\S+ +[\d:]+), +adjacent +(?P<neighbor_adjacency_time>\S+ +[\d:]+)$')
 
-        # SPRING Adjacency Labels:
-        p4 = re.compile(r'^SPRING +Adjacency +Labels:$')
-
         #     28985       BVL         Protected
-        p5 = re.compile(r'^(?P<temp1>\d+) +(?P<temp2>\S+) + (?P<temp3>\S+)$')
+        p4 = re.compile(r'^(?P<label>\d+) +(?P<flags>\S+) + (?P<adj_sid_type>\S+)$')
 
         # Topology default (ID 0) -> Bidirectional
-        p6 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\d+)\) +-> +(?P<ospf_neighbor_topology_state>\S+)$')
+        p5 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\d+)\) +-> +(?P<ospf_neighbor_topology_state>\S+)$')
 
         ret_dict = {}
 
@@ -1919,24 +1934,28 @@ class ShowOspfNeighborExtensive(ShowOspfNeighborExtensiveSchema):
 
                 entry = last_neighbor
                 group = m.groupdict()
+
+                entry.setdefault("neighbor-up-time", {}).setdefault("#text", group["neighbor_up_time"])
+                entry.setdefault("neighbor-adjacency-time", {}).setdefault("#text", group["neighbor_adjacency_time"])
+
+                continue
+
+            #     28985       BVL         Protected
+            m = p4.match(line)
+            if m:
+                last_neighbor = ret_dict["ospf-neighbor-information"]["ospf-neighbor"][-1]
+
+                entry = {}
+                group = m.groupdict()
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_','-')
                     entry[entry_key] = group_value
 
-                continue
-
-            # SPRING Adjacency Labels:
-            m = p4.match(line)
-            if m:
-                continue
-
-            #     28985       BVL         Protected
-            m = p5.match(line)
-            if m:
+                last_neighbor.setdefault("adj-sid-list", {}).setdefault("spring-adjacency-labels", []).append(entry)
                 continue
 
             # Topology default (ID 0) -> Bidirectional
-            m = p6.match(line)
+            m = p5.match(line)
             if m:
                 last_neighbor = ret_dict["ospf-neighbor-information"]["ospf-neighbor"][-1]
 
@@ -1948,5 +1967,9 @@ class ShowOspfNeighborExtensive(ShowOspfNeighborExtensiveSchema):
 
                 continue
 
-
+        # import pprint
+        # # logFile = open('/Users/adelph/workshop/file.txt', 'w')
+        # # pprint.pprint(ret_dict, logFile)
+        # pprint.pprint(ret_dict)
+        # return {"abc":"123"}
         return ret_dict

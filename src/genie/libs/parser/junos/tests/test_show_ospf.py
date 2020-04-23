@@ -20,7 +20,8 @@ from genie.libs.parser.junos.show_ospf import (ShowOspfInterface,
                                                ShowOspfDatabaseExternalExtensive,
                                                ShowOspfOverview,
                                                ShowOspfOverviewExtensive,
-                                               ShowOspfDatabaseAdvertisingRouterSelfDetail)
+                                               ShowOspfDatabaseAdvertisingRouterSelfDetail,
+                                               ShowOspfNeighborExtensive)
 
 
 class test_show_ospf_interface(unittest.TestCase):
@@ -698,10 +699,10 @@ class TestShowOspfDatabase(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
-        show ospf database 
+        show ospf database
 
             OSPF database, Area 0.0.0.8
-        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len 
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
         Router   3.3.3.3          3.3.3.3          0x80004d2d    61  0x22 0xa127 2496
         Router   5.5.5.5          5.5.5.5          0x800019d7  1469  0x22 0xa1c   60
         Router   27.86.198.239    27.86.198.239    0x80000442   622  0x22 0x95bf  96
@@ -796,7 +797,7 @@ class TestShowOspfDatabase(unittest.TestCase):
         OpaqArea 8.0.8.74         106.162.196.241  0x80000030    35  0x20 0xdcd1  92
         OpaqArea 8.0.8.75         106.162.196.241  0x80000151   521  0x20 0xd4b0  92
             OSPF AS SCOPE link state database
-        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len 
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
         Extern   0.0.0.0          59.128.2.251     0x800019e3  2323  0x22 0x6715  36
         Extern   0.0.0.0          106.187.14.240   0x8000039e  1991  0x22 0x9fcc  36
         Extern   1.0.0.0          202.239.165.119  0x800019b0   928  0x20 0x3bc3  36
@@ -819,7 +820,7 @@ class TestShowOspfDatabase(unittest.TestCase):
     '''}
 
     golden_parsed_output = {
-            
+
     "ospf-database-information": {
         "ospf-area-header": {
             "ospf-area": "0.0.0.8"
@@ -1959,7 +1960,7 @@ class TestShowOspfDatabase(unittest.TestCase):
         ]
     }
 }
-    
+
 
 
     def test_empty(self):
@@ -2070,7 +2071,7 @@ class TestShowOspfDatabaseExternalExtensive(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         show ospf database external extensive
             OSPF AS SCOPE link state database
-        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len 
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
         Extern   0.0.0.0          59.128.2.251     0x800019e3  2728  0x22 0x6715  36
         mask 0.0.0.0
         Topology default (ID 0)
@@ -3026,7 +3027,7 @@ class TestShowOspfOverview(unittest.TestCase):
             }
         }
     }
-        
+
     }
 
     def test_empty(self):
@@ -4249,7 +4250,163 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+class TestShowOspfNeighborExtensive(unittest.TestCase):
+    """ Unit tests for:
+            * show ospf neighbor extensive
+    """
 
+    device = Device(name='aDevice')
+
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show ospf neighbor extensive
+        Address          Interface              State     ID               Pri  Dead
+        111.87.5.94      ge-0/0/0.0             Full      111.87.5.253     128    39
+        Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+        Up 3w0d 16:50:35, adjacent 3w0d 16:50:35
+        SPRING Adjacency Labels:
+
+            Label       Flags       Adj-Sid-Type
+
+            28985       BVL         Protected
+
+            28986       VL          UnProtected
+
+        Topology default (ID 0) -> Bidirectional
+        106.187.14.121   ge-0/0/1.0             Full      106.187.14.240   128    31
+        Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+        Up 3w2d 03:12:20, adjacent 3w2d 03:12:15
+        SPRING Adjacency Labels:
+
+            Label       Flags       Adj-Sid-Type
+
+            2567        BVL         Protected
+
+            2568        VL          UnProtected
+
+        Topology default (ID 0) -> Bidirectional
+        27.86.198.26     ge-0/0/2.0             Full      27.86.198.239      1    39
+        Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+        Up 1w5d 20:40:14, adjacent 1w5d 20:40:14
+        SPRING Adjacency Labels:
+
+            Label       Flags       Adj-Sid-Type
+
+            167966      BVL         Protected
+
+            167967      VL          UnProtected
+
+        Topology default (ID 0) -> Bidirectional
+    '''}
+
+    golden_parsed_output = {
+        "ospf-neighbor-information": {
+            "ospf-neighbor": [
+                {
+                    "activity-timer": "39",
+                    "adj-sid-list": {
+                        "spring-adjacency-labels": [
+                            {"adj-sid-type": "Protected", "flags": "BVL", "label": "28985"},
+                            {
+                                "adj-sid-type": "UnProtected",
+                                "flags": "VL",
+                                "label": "28986",
+                            },
+                        ]
+                    },
+                    "bdr-address": "0.0.0.0",
+                    "dr-address": "0.0.0.0",
+                    "interface-name": "ge-0/0/0.0",
+                    "neighbor-address": "111.87.5.94",
+                    "neighbor-adjacency-time": {"#text": "3w0d " "16:50:35"},
+                    "neighbor-id": "111.87.5.253",
+                    "neighbor-priority": "128",
+                    "neighbor-up-time": {"#text": "3w0d " "16:50:35"},
+                    "options": "0x52",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-neighbor-state": "Full",
+                    "ospf-neighbor-topology": {
+                        "ospf-neighbor-topology-state": "Bidirectional",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-name": "default",
+                    },
+                },
+                {
+                    "activity-timer": "31",
+                    "adj-sid-list": {
+                        "spring-adjacency-labels": [
+                            {"adj-sid-type": "Protected", "flags": "BVL", "label": "2567"},
+                            {"adj-sid-type": "UnProtected", "flags": "VL", "label": "2568"},
+                        ]
+                    },
+                    "bdr-address": "0.0.0.0",
+                    "dr-address": "0.0.0.0",
+                    "interface-name": "ge-0/0/1.0",
+                    "neighbor-address": "106.187.14.121",
+                    "neighbor-adjacency-time": {"#text": "3w2d " "03:12:15"},
+                    "neighbor-id": "106.187.14.240",
+                    "neighbor-priority": "128",
+                    "neighbor-up-time": {"#text": "3w2d " "03:12:20"},
+                    "options": "0x52",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-neighbor-state": "Full",
+                    "ospf-neighbor-topology": {
+                        "ospf-neighbor-topology-state": "Bidirectional",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-name": "default",
+                    },
+                },
+                {
+                    "activity-timer": "39",
+                    "adj-sid-list": {
+                        "spring-adjacency-labels": [
+                            {
+                                "adj-sid-type": "Protected",
+                                "flags": "BVL",
+                                "label": "167966",
+                            },
+                            {
+                                "adj-sid-type": "UnProtected",
+                                "flags": "VL",
+                                "label": "167967",
+                            },
+                        ]
+                    },
+                    "bdr-address": "0.0.0.0",
+                    "dr-address": "0.0.0.0",
+                    "interface-name": "ge-0/0/2.0",
+                    "neighbor-address": "27.86.198.26",
+                    "neighbor-adjacency-time": {"#text": "1w5d " "20:40:14"},
+                    "neighbor-id": "27.86.198.239",
+                    "neighbor-priority": "1",
+                    "neighbor-up-time": {"#text": "1w5d " "20:40:14"},
+                    "options": "0x52",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-neighbor-state": "Full",
+                    "ospf-neighbor-topology": {
+                        "ospf-neighbor-topology-state": "Bidirectional",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-name": "default",
+                    },
+                },
+            ]
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfNeighborExtensive(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspfNeighborExtensive(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()
