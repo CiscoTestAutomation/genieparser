@@ -177,6 +177,8 @@
         * show ospf database advertising-router self detail
     * ShowOspfNeighborExtensive
         * show ospf neighbor extensive
+    * ShowOspfNeighborDetail
+        * show ospf neighbor detail
 
 
 
