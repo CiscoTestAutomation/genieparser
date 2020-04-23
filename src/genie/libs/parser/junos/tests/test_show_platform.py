@@ -9,7 +9,7 @@ from pyats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # Parser
-from genie.libs.parser.junos.show_platform import FileList
+from genie.libs.parser.junos.show_platform import FileList, ShowVersion
 
 
 #==========================
@@ -93,6 +93,79 @@ class test_file_list(unittest.TestCase):
         obj = FileList(device=self.device)
         parsed_output = obj.parse(filename='filename999')
         self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+
+# ==========================
+# Unit test for 'show version'
+# ==========================
+class TestShowVersion(unittest.TestCase):
+    maxDiff = None
+
+    device = Device(name='aDevice')
+
+    golden_parsed_output = {
+        'software-information': {
+            'package-information': [
+                {
+                    'comment': 'EX  Software Suite [18.2R2-S1]',
+                    'name': 'ex-software-suite'
+                },
+                {
+                    'comment': 'FIPS mode utilities [18.2R2-S1]',
+                    'name': 'fips-mode-utilities'
+                },
+                {
+                    'comment': 'Crypto Software Suite [18.2R2-S1]',
+                    'name': 'crypto-software-suite'
+                },
+                {
+                    'comment': 'Online Documentation [18.2R2-S1]',
+                    'name': 'online-documentation'
+                },
+                {
+                    'comment': 'Phone-Home Software Suite [18.2R2-S1]',
+                    'name': 'phone-home-software-suite'
+                }
+            ],
+            'host-name': 'JunosHostname-1',
+            'product-model': 'ex4200-24p',
+            'product-name': 'ex4200-24p',
+            'junos-version': '18.2R2-S1'
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+        user2@JunosHostname-1> show version 
+        fpc0:
+        --------------------------------------------------------------------------
+        Hostname: JunosHostname-1
+        Model: ex4200-24p
+        Junos: 18.2R2-S1
+        JUNOS EX  Software Suite [18.2R2-S1]
+        JUNOS FIPS mode utilities [18.2R2-S1]
+        JUNOS Crypto Software Suite [18.2R2-S1]
+        JUNOS Online Documentation [18.2R2-S1]
+        JUNOS Phone-Home Software Suite [18.2R2-S1]
+
+        {master:0}
+        user1@JunosHostname-1> 
+        '''}
+
+    empty_output = {'execute.return_value': ''}
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowVersion(device=self.device)
+
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowVersion(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
 
 if __name__ == '__main__':
     unittest.main()

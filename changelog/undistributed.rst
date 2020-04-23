@@ -175,6 +175,8 @@
         * show chassis hardware extensive no-forwarding
     * Added ShowOspfDatabaseAdvertisingRouterSelfDetailSchema for:
         * show ospf database advertising-router self detail
+    * Added ShowVersion in show_platform.py for:
+        * show version
 
 
 
@@ -246,6 +248,7 @@
         * Update regex to support various outputs.
     * Updated ShowInterface
         * Update regex to cover both 'IP' and 'ip', both 'Rx' and 'RX'
+        * Update regex to support various outputs.
         * Clean code and correctly assign values to the key 'enabled'
     * Updated ShowIpRoute
         * Add keys into the schema, modify regex
