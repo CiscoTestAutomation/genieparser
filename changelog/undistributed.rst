@@ -175,7 +175,7 @@
         * show chassis hardware extensive no-forwarding
     * Added ShowOspfDatabaseAdvertisingRouterSelfDetailSchema for:
         * show ospf database advertising-router self detail
-    * ShowOspfNeighborExtensiveSchema
+    * ShowOspfNeighborExtensive
         * show ospf neighbor extensive
 
 
