@@ -1896,18 +1896,12 @@ class ShowOspfRouteBrief(ShowOspfRouteBriefSchema):
 
                 entry = {}
                 entry.setdefault("address-prefix", group['address_prefix'])
-
                 entry.setdefault("route-path-type", group['route_path_type'])
-
                 entry.setdefault("route-type", group['route_type'])
-
                 entry.setdefault("next-hop-type", group['next_hop_type'])
-
                 entry.setdefault("interface-cost", group['interface_cost'])
-
                 entry.setdefault("ospf-next-hop", {}).setdefault("next-hop-name", {})\
                         .setdefault("interface-name", group['interface_name'])
-
                 entry.setdefault("ospf-next-hop", {}).setdefault("next-hop-address", {})\
                         .setdefault("interface-address", group['interface_address'])
 
@@ -1942,21 +1936,14 @@ class ShowOspfRouteBrief(ShowOspfRouteBriefSchema):
 
                 entry = {}
                 entry.setdefault("address-prefix", group['address_prefix'])
-
                 entry.setdefault("route-path-type", group['route_path_type'])
-
                 entry.setdefault("route-type", group['route_type'])
-
                 entry.setdefault("next-hop-type", group['next_hop_type'])
-
                 entry.setdefault("interface-cost", group['interface_cost'])
-
                 entry.setdefault("ospf-next-hop", {}).setdefault("next-hop-name", {})\
                         .setdefault("interface-name", group['interface_name'])
-
                 route_list = ret_dict.setdefault("ospf-route-information", {})\
                     .setdefault("ospf-topology-route-table", {}).setdefault("ospf-route", [])
-
                 if self.address_prefix == group['address_prefix']:
                     ret_dict["ospf-route-information"]["ospf-topology-route-table"]["ospf-route"][-1]["ospf-route-entry"].append(entry)
                 else:
