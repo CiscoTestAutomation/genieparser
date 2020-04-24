@@ -77,7 +77,8 @@
         * show bgp summary
     * Added ShowOspfNeighbor for:
         * show ospf neighbor
-    * Added ShowRouteProtocol for:
+    * Added ShowRoute for:
+        * show route
         * show route protocol {protocol}
         * show route protocol {protocol} {ip_address}
         * show route protocol {protocol} table {table}
@@ -123,6 +124,8 @@
         * show ospf3 database external extensive
     * Added ShowOspf3InterfaceExtensive for:
         * show ospf3 interface extensive
+    * Added ShowRouteSummary for:
+        * show route summary
     * Added ShowRouteAdvertisingProtocol for:
         * show route advertising-protocol {protocol} {neighbor}
     * Added ShowRouteReceiveProtocol for:

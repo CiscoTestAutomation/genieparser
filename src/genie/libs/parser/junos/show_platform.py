@@ -192,7 +192,7 @@ class ShowVersion(ShowVersionSchema):
         # Hostname: myJunosDevice
         p3 = re.compile(r'^Hostname: +(?P<hostname>\S+)$')
 
-        # Packages
+        # JUNOS EX  Software Suite [18.2R2-S1]
         p4 = re.compile(r'^JUNOS +(?P<package>.*)$')
 
         show_version_dict["software-information"] = {}
