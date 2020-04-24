@@ -9,8 +9,12 @@ from pyats.topology import Device, loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 from genie.libs.parser.junos.show_route import (ShowRouteTable,
-                                                ShowRouteProtocol,
-                                                ShowRouteProtocolExtensive)
+                                                ShowRoute,
+                                                ShowRouteProtocolExtensive,
+                                                ShowRouteSummary,
+                                                ShowRouteAdvertisingProtocol,
+                                                ShowRouteForwardingTableSummary,
+                                                ShowRouteReceiveProtocol)
 
 '''
 Unit test for:
@@ -227,11 +231,12 @@ class test_show_route_table(unittest.TestCase):
 
 '''
 Unit test for:
+    * show route
     * show route protocol {protocol}
     * show route protocol {protocol} {ip_address}
     * show route protocol {protocol} table {table}
 '''
-class TestShowRouteProtocol(unittest.TestCase):
+class TestShowRoute(unittest.TestCase):
 
     device = Device(name='aDevice')
     maxDiff = None
@@ -11357,9 +11362,223 @@ class TestShowRouteProtocol(unittest.TestCase):
         }
     }
 
+    golden_output_5 = {'execute.return_value': '''
+        show route 
+
+        inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
+
+        0.0.0.0/0          *[OSPF/150/10] 3w3d 03:12:45, metric 101, tag 0
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.1.0.0/24         *[Direct/0] 29w6d 21:35:55
+                            >  via fxp0.0
+                            [OSPF/150/10] 3w3d 03:12:45, metric 20, tag 0
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.1.0.101/32       *[Local/0] 29w6d 21:35:55
+                            Local via fxp0.0
+        10.36.3.3/32         *[OSPF/10/10] 1w0d 15:44:41, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.16.0.0/30         *[OSPF/10/10] 3w0d 04:39:36, metric 1200
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.100.5.5/32         *[OSPF/10/10] 3w0d 04:39:36, metric 1201
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.220.0.0/16      *[BGP/170] 3w3d 03:12:24, MED 12003, localpref 120, from 10.169.14.240
+                            AS path: (65151 65000) I, validation-state: unverified
+                            >  to 10.169.14.121 via ge-0/0/1.0
+                            [BGP/170] 3w1d 16:51:06, MED 12003, localpref 120, from 10.189.5.253
+                            AS path: (65151 65000) I, validation-state: unverified
+                            >  to 10.189.5.94 via ge-0/0/0.0
+    '''}
+
+    golden_parsed_output_5 = {
+        "route-information": {
+            "route-table": [
+                {
+                    "active-route-count": "929",
+                    "destination-count": "929",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": [
+                        {
+                            "rt-destination": "0.0.0.0/0",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "3w3d 03:12:45"
+                                },
+                                "metric": "101",
+                                "nh": [
+                                    {
+                                        "to": "10.169.14.121",
+                                        "via": "ge-0/0/1.0"
+                                    }
+                                ],
+                                "preference": "150",
+                                "preference2": "10",
+                                "protocol-name": "OSPF",
+                                "rt-tag": "0"
+                            }
+                        },
+                        {
+                            "rt-destination": "10.1.0.0/24",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "29w6d 21:35:55"
+                                },
+                                "nh": [
+                                    {
+                                        "via": "fxp0.0"
+                                    }
+                                ],
+                                "preference": "0",
+                                "protocol-name": "Direct"
+                            }
+                        },
+                        {
+                            "rt-entry": {
+                                "age": {
+                                    "#text": "3w3d 03:12:45"
+                                },
+                                "metric": "20",
+                                "nh": [
+                                    {
+                                        "to": "10.169.14.121",
+                                        "via": "ge-0/0/1.0"
+                                    }
+                                ],
+                                "preference": "150",
+                                "preference2": "10",
+                                "protocol-name": "OSPF",
+                                "rt-tag": "0"
+                            }
+                        },
+                        {
+                            "rt-destination": "10.1.0.101/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "29w6d 21:35:55"
+                                },
+                                "nh": [
+                                    {
+                                        "nh-local-interface": "fxp0.0"
+                                    }
+                                ],
+                                "preference": "0",
+                                "protocol-name": "Local"
+                            }
+                        },
+                        {
+                            "rt-destination": "10.36.3.3/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "1w0d 15:44:41"
+                                },
+                                "metric": "1202",
+                                "nh": [
+                                    {
+                                        "to": "10.169.14.121",
+                                        "via": "ge-0/0/1.0"
+                                    }
+                                ],
+                                "preference": "10",
+                                "preference2": "10",
+                                "protocol-name": "OSPF"
+                            }
+                        },
+                        {
+                            "rt-destination": "10.16.0.0/30",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "3w0d 04:39:36"
+                                },
+                                "metric": "1200",
+                                "nh": [
+                                    {
+                                        "to": "10.169.14.121",
+                                        "via": "ge-0/0/1.0"
+                                    }
+                                ],
+                                "preference": "10",
+                                "preference2": "10",
+                                "protocol-name": "OSPF"
+                            }
+                        },
+                        {
+                            "rt-destination": "10.100.5.5/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "3w0d 04:39:36"
+                                },
+                                "metric": "1201",
+                                "nh": [
+                                    {
+                                        "to": "10.169.14.121",
+                                        "via": "ge-0/0/1.0"
+                                    }
+                                ],
+                                "preference": "10",
+                                "preference2": "10",
+                                "protocol-name": "OSPF"
+                            }
+                        },
+                        {
+                            "rt-destination": "10.220.0.0/16",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "3w3d 03:12:24"
+                                },
+                                "as-path": " (65151 65000) I",
+                                "learned-from": "10.169.14.240",
+                                "local-preference": "120",
+                                "med": "12003",
+                                "nh": [
+                                    {
+                                        "to": "10.169.14.121",
+                                        "via": "ge-0/0/1.0"
+                                    }
+                                ],
+                                "preference": "170",
+                                "protocol-name": "BGP",
+                                "validation-state": "unverified"
+                            }
+                        },
+                        {
+                            "rt-entry": {
+                                "age": {
+                                    "#text": "3w1d 16:51:06"
+                                },
+                                "as-path": " (65151 65000) I",
+                                "learned-from": "10.189.5.253",
+                                "local-preference": "120",
+                                "med": "12003",
+                                "nh": [
+                                    {
+                                        "to": "10.189.5.94",
+                                        "via": "ge-0/0/0.0"
+                                    }
+                                ],
+                                "preference": "170",
+                                "protocol-name": "BGP",
+                                "validation-state": "unverified"
+                            }
+                        }
+                    ],
+                    "table-name": "inet.0",
+                    "total-route-count": "1615"
+                }
+            ]
+        }
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowRouteProtocol(device=self.device)
+        obj = ShowRoute(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(
                 protocol='static',
@@ -11367,7 +11586,7 @@ class TestShowRouteProtocol(unittest.TestCase):
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        obj = ShowRouteProtocol(device=self.device)
+        obj = ShowRoute(device=self.device)
         parsed_output = obj.parse(
             protocol='static',
             ip_address='10.169.14.240/32')
@@ -11375,7 +11594,7 @@ class TestShowRouteProtocol(unittest.TestCase):
     
     def test_golden_2(self):
         self.device = Mock(**self.golden_output_2)
-        obj = ShowRouteProtocol(device=self.device)
+        obj = ShowRoute(device=self.device)
         parsed_output = obj.parse(
             protocol='static',
             ip_address='2001:db8:eb18:ca45::1')
@@ -11383,18 +11602,24 @@ class TestShowRouteProtocol(unittest.TestCase):
     
     def test_golden_3(self):
         self.device = Mock(**self.golden_output_3)
-        obj = ShowRouteProtocol(device=self.device)
+        obj = ShowRoute(device=self.device)
         parsed_output = obj.parse(
             protocol='ospf')
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
     def test_golden_4(self):
         self.device = Mock(**self.golden_output_4)
-        obj = ShowRouteProtocol(device=self.device)
+        obj = ShowRoute(device=self.device)
         parsed_output = obj.parse(
             protocol='ospf',
             table='inet.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
+    
+    def test_golden_5(self):
+        self.device = Mock(**self.golden_output_5)
+        obj = ShowRoute(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
 '''
 Unit test for:
@@ -47157,6 +47382,96 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
         }
     }
 
+    golden_output_3 = {'execute.return_value': '''
+        show route protocol ospf table inet.0 extensive 106.162.196.241
+
+        inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+        106.162.196.241/32 (1 entry, 1 announced)
+                State: <FlashAll>
+        TSI:
+        KRT in-kernel 106.162.196.241/32 -> {106.187.14.121}
+                *OSPF   Preference: 10/10
+                        Next hop type: Router, Next hop index: 613
+                        Address: 0xdfa7934
+                        Next-hop reference count: 458
+                        Next hop: 106.187.14.121 via ge-0/0/1.0 weight 0x1, selected
+                        Session Id: 0x141
+                        State: <Active Int>
+                        Local AS: 65171 
+                        Age: 6d 17:23:01 	Metric: 1201 
+                        Validation State: unverified 
+                        Area: 0.0.0.8
+                        Task: OSPF
+                        Announcement bits (2): 0-KRT 7-Resolve tree 3 
+                        AS path: I 
+    '''}
+
+    golden_parsed_output_3 = {
+        "route-information": {
+            "route-table": [
+                {
+                    "active-route-count": "929",
+                    "destination-count": "929",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": [
+                        {
+                            "rt-announced-count": "1",
+                            "rt-destination": "106.162.196.241/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "6d 17:23:01"
+                                },
+                                "announce-bits": "2",
+                                "announce-tasks": "0-KRT 7-Resolve tree 3",
+                                "as-path": "AS path: I",
+                                "bgp-path-attributes": {
+                                    "attr-as-path-effective": {
+                                        "aspath-effective-string": "AS path:",
+                                        "attr-value": "I"
+                                    }
+                                },
+                                "local-as": "65171",
+                                "metric": "1201",
+                                "nh": [
+                                    {
+                                        "nh-string": "Next hop",
+                                        "session": "141",
+                                        "to": "106.187.14.121",
+                                        "via": "ge-0/0/1.0",
+                                        "weight": "0x1"
+                                    }
+                                ],
+                                "nh-address": "0xdfa7934",
+                                "nh-index": "613",
+                                "nh-reference-count": "458",
+                                "nh-type": "Router",
+                                "preference": "10",
+                                "preference2": "10",
+                                "protocol-name": "OSPF",
+                                "rt-entry-state": "Active Int",
+                                "rt-ospf-area": "0.0.0.8",
+                                "task-name": "OSPF",
+                                "validation-state": "unverified"
+                            },
+                            "rt-entry-count": {
+                                "#text": "1",
+                                "@junos:format": "1 entry"
+                            },
+                            "rt-state": "FlashAll",
+                            "tsi": {
+                                "#text": "KRT in-kernel 106.162.196.241/32 -> {106.187.14.121}"
+                            }
+                        }
+                    ],
+                    "table-name": "inet.0",
+                    "total-route-count": "1615"
+                }
+            ]
+        }
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteProtocolExtensive(device=self.device)
@@ -47178,6 +47493,772 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
             protocol='ospf',
             table='inet.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+    
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowRouteProtocolExtensive(device=self.device)
+        parsed_output = obj.parse(
+            protocol='ospf',
+            table='inet.0',
+            destination='106.162.196.241')
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
+'''
+Unit test for:
+    * show route forwarding-table summary
+'''
+class TestShowRouteForwardingTableSummary(unittest.TestCase):
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show route forwarding-table summary
+        Routing table: default.inet
+        Internet:
+        Enabled protocols: Bridging, 
+                user:         918 routes
+                perm:          5 routes
+                intf:         11 routes
+                dest:         21 routes
+
+        Routing table: __pfe_private__.inet
+        Internet:
+        Enabled protocols: Bridging, 
+                perm:          5 routes
+
+        Routing table: __juniper_services__.inet
+        Internet:
+        Enabled protocols: Bridging, 
+                perm:          5 routes
+                intf:          2 routes
+                dest:          3 routes
+
+        Routing table: __master.anon__.inet
+        Internet:
+        Enabled protocols: Bridging, Dual VLAN, 
+                perm:          5 routes
+
+        Routing table: default.iso
+        ISO:
+        Enabled protocols: Bridging, 
+                perm:          1 routes
+
+        Routing table: __master.anon__.iso
+        ISO:
+        Enabled protocols: Bridging, Dual VLAN, 
+                perm:          1 routes
+
+        Routing table: default.inet6
+        Internet6:
+        Enabled protocols: Bridging, 
+                user:         14 routes
+                perm:          6 routes
+                intf:         18 routes
+                dest:          7 routes
+
+        Routing table: __master.anon__.inet6
+        Internet6:
+        Enabled protocols: Bridging, Dual VLAN, 
+                perm:          6 routes
+
+        Routing table: default.mpls
+        MPLS:
+                user:         44 routes
+                perm:          1 routes
+
+        Routing table: __mpls-oam__.mpls
+        MPLS:
+        Enabled protocols: Bridging, Single VLAN, Dual VLAN, 
+                perm:          1 routes
+
+        Routing table: default-switch.bridge
+        VPLS:
+                perm:          1 routes
+
+        Routing table: default.dhcp-snooping
+        DHCP Snooping:
+                perm:          1 routes
+    '''}
+
+    golden_parsed_output = {
+        "forwarding-table-information": {
+            "route-table": [
+                {
+                    "address-family": "Internet",
+                    "enabled-protocols": "Bridging,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "918",
+                            "route-table-type": "user"
+                        },
+                        {
+                            "route-count": "5",
+                            "route-table-type": "perm"
+                        },
+                        {
+                            "route-count": "11",
+                            "route-table-type": "intf"
+                        },
+                        {
+                            "route-count": "21",
+                            "route-table-type": "dest"
+                        }
+                    ],
+                    "table-name": "default.inet"
+                },
+                {
+                    "address-family": "Internet",
+                    "enabled-protocols": "Bridging,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "5",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "__pfe_private__.inet"
+                },
+                {
+                    "address-family": "Internet",
+                    "enabled-protocols": "Bridging,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "5",
+                            "route-table-type": "perm"
+                        },
+                        {
+                            "route-count": "2",
+                            "route-table-type": "intf"
+                        },
+                        {
+                            "route-count": "3",
+                            "route-table-type": "dest"
+                        }
+                    ],
+                    "table-name": "__juniper_services__.inet"
+                },
+                {
+                    "address-family": "Internet",
+                    "enabled-protocols": "Bridging, Dual VLAN,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "5",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "__master.anon__.inet"
+                },
+                {
+                    "address-family": "ISO",
+                    "enabled-protocols": "Bridging,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "1",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "default.iso"
+                },
+                {
+                    "address-family": "ISO",
+                    "enabled-protocols": "Bridging, Dual VLAN,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "1",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "__master.anon__.iso"
+                },
+                {
+                    "address-family": "Internet6",
+                    "enabled-protocols": "Bridging,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "14",
+                            "route-table-type": "user"
+                        },
+                        {
+                            "route-count": "6",
+                            "route-table-type": "perm"
+                        },
+                        {
+                            "route-count": "18",
+                            "route-table-type": "intf"
+                        },
+                        {
+                            "route-count": "7",
+                            "route-table-type": "dest"
+                        }
+                    ],
+                    "table-name": "default.inet6"
+                },
+                {
+                    "address-family": "Internet6",
+                    "enabled-protocols": "Bridging, Dual VLAN,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "6",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "__master.anon__.inet6"
+                },
+                {
+                    "address-family": "MPLS",
+                    "route-table-summary": [
+                        {
+                            "route-count": "44",
+                            "route-table-type": "user"
+                        },
+                        {
+                            "route-count": "1",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "default.mpls"
+                },
+                {
+                    "address-family": "MPLS",
+                    "enabled-protocols": "Bridging, Single VLAN, Dual VLAN,",
+                    "route-table-summary": [
+                        {
+                            "route-count": "1",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "__mpls-oam__.mpls"
+                },
+                {
+                    "address-family": "VPLS",
+                    "route-table-summary": [
+                        {
+                            "route-count": "1",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "default-switch.bridge"
+                },
+                {
+                    "address-family": "DHCP Snooping",
+                    "route-table-summary": [
+                        {
+                            "route-count": "1",
+                            "route-table-type": "perm"
+                        }
+                    ],
+                    "table-name": "default.dhcp-snooping"
+                }
+            ]
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRouteForwardingTableSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowRouteForwardingTableSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+'''
+Unit test for:
+    * show route receive-protocol {protocol} {peer}
+'''
+class TestShowRouteReceiveProtocol(unittest.TestCase):
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show route receive-protocol bgp 10.189.5.253
+        inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+        Prefix      Nexthop        MED     Lclpref    AS path
+        10.220.0.0/16           10.189.5.253         12003   120        (65151 65000) I
+        10.229.0.0/16            10.189.5.253         12003   120        (65151 65000) I
+        10.189.0.0/16            10.189.5.253         12003   120        (65151 65000) I
+        10.151.0.0/16            10.189.5.253         12003   120        (65151 65000) I
+        10.115.0.0/16            10.189.5.253         12003   120        (65151 65000) I
+        10.81.0.0/16            10.189.5.253         12003   120        (65151 65000) I
+        10.49.0.0/16            10.189.5.253         12003   120        (65151 65000) I
+        10.19.0.0/16            10.189.5.253         12003   120        (65151 65000) I
+        inet.3: 11 destinations, 11 routes (11 active, 0 holddown, 0 hidden)
+
+        mpls.0: 44 destinations, 44 routes (44 active, 0 holddown, 0 hidden)
+
+        inet6.0: 22 destinations, 23 routes (22 active, 0 holddown, 0 hidden)
+    '''}
+
+    golden_parsed_output = {
+        "route-information": {
+            "route-table": [
+                {
+                    "active-route-count": "929",
+                    "destination-count": "929",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": [
+                        {
+                            "rt-destination": "10.220.0.0/16",
+                            "rt-entry": {
+                                "as-path": "(65151 65000) I",
+                                "local-preference": "120",
+                                "med": "12003",
+                                "nh": {
+                                    "to": "10.189.5.253"
+                                },
+                                "protocol-name": "BGP"
+                            }
+                        },
+                        {
+                            "rt-destination": "10.229.0.0/16",
+                            "rt-entry": {
+                                "as-path": "(65151 65000) I",
+                                "local-preference": "120",
+                                "med": "12003",
+                                "nh": {
+                                    "to": "10.189.5.253"
+                                },
+                                "protocol-name": "BGP"
+                            }
+                        },
+                        {
+                            "rt-destination": "10.189.0.0/16",
+                            "rt-entry": {
+                                "as-path": "(65151 65000) I",
+                                "local-preference": "120",
+                                "med": "12003",
+                                "nh": {
+                                    "to": "10.189.5.253"
+                                },
+                                "protocol-name": "BGP"
+                            }
+                        },
+                        {
+                            "rt-destination": "10.151.0.0/16",
+                            "rt-entry": {
+                                "as-path": "(65151 65000) I",
+                                "local-preference": "120",
+                                "med": "12003",
+                                "nh": {
+                                    "to": "10.189.5.253"
+                                },
+                                "protocol-name": "BGP"
+                            }
+                        },
+                        {
+                            "rt-destination": "10.115.0.0/16",
+                            "rt-entry": {
+                                "as-path": "(65151 65000) I",
+                                "local-preference": "120",
+                                "med": "12003",
+                                "nh": {
+                                    "to": "10.189.5.253"
+                                },
+                                "protocol-name": "BGP"
+                            }
+                        },
+                        {
+                            "rt-destination": "10.81.0.0/16",
+                            "rt-entry": {
+                                "as-path": "(65151 65000) I",
+                                "local-preference": "120",
+                                "med": "12003",
+                                "nh": {
+                                    "to": "10.189.5.253"
+                                },
+                                "protocol-name": "BGP"
+                            }
+                        },
+                        {
+                            "rt-destination": "10.49.0.0/16",
+                            "rt-entry": {
+                                "as-path": "(65151 65000) I",
+                                "local-preference": "120",
+                                "med": "12003",
+                                "nh": {
+                                    "to": "10.189.5.253"
+                                },
+                                "protocol-name": "BGP"
+                            }
+                        },
+                        {
+                            "rt-destination": "10.19.0.0/16",
+                            "rt-entry": {
+                                "as-path": "(65151 65000) I",
+                                "local-preference": "120",
+                                "med": "12003",
+                                "nh": {
+                                    "to": "10.189.5.253"
+                                },
+                                "protocol-name": "BGP"
+                            }
+                        }
+                    ],
+                    "table-name": "inet.0",
+                    "total-route-count": "1615"
+                },
+                {
+                    "active-route-count": "11",
+                    "destination-count": "11",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "table-name": "inet.3",
+                    "total-route-count": "11"
+                },
+                {
+                    "active-route-count": "44",
+                    "destination-count": "44",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "table-name": "mpls.0",
+                    "total-route-count": "44"
+                },
+                {
+                    "active-route-count": "22",
+                    "destination-count": "22",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "table-name": "inet6.0",
+                    "total-route-count": "23"
+                }
+            ]
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRouteReceiveProtocol(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(
+                protocol='bgp',
+                peer='10.189.5.253'
+            )
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowRouteReceiveProtocol(device=self.device)
+        parsed_output = obj.parse(
+            protocol='bgp',
+            peer='10.189.5.253')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+'''
+Unit test for:
+    * show route advertising-protocol {protocol} {neighbor}
+'''
+class TestShowRouteAdvertisingProtocol(unittest.TestCase):
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show route advertising-protocol bgp 10.189.5.253
+
+        inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+        Prefix        Nexthop          MED     Lclpref    AS path
+        * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
+        * 10.229.0.0/16            Self                 12003   120        (65151 65000) I
+        * 10.189.0.0/16            Self                 12003   120        (65151 65000) I
+        * 10.151.0.0/16            Self                 12003   120        (65151 65000) I
+        * 10.115.0.0/16            Self                 12003   120        (65151 65000) I
+    '''}
+
+    golden_parsed_output = {
+        "route-information": {
+            "route-table": {
+                "active-route-count": "929",
+                "destination-count": "929",
+                "hidden-route-count": "0",
+                "holddown-route-count": "0",
+                "rt": [
+                    {
+                        "rt-destination": "10.220.0.0/16",
+                        "rt-entry": {
+                            "active-tag": "*",
+                            "as-path": "(65151 65000) I",
+                            "bgp-metric-flags": "Nexthop Change",
+                            "local-preference": "120",
+                            "med": "12003",
+                            "nh": {
+                                "to": "Self"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "10.229.0.0/16",
+                        "rt-entry": {
+                            "active-tag": "*",
+                            "as-path": "(65151 65000) I",
+                            "bgp-metric-flags": "Nexthop Change",
+                            "local-preference": "120",
+                            "med": "12003",
+                            "nh": {
+                                "to": "Self"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "10.189.0.0/16",
+                        "rt-entry": {
+                            "active-tag": "*",
+                            "as-path": "(65151 65000) I",
+                            "bgp-metric-flags": "Nexthop Change",
+                            "local-preference": "120",
+                            "med": "12003",
+                            "nh": {
+                                "to": "Self"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "10.151.0.0/16",
+                        "rt-entry": {
+                            "active-tag": "*",
+                            "as-path": "(65151 65000) I",
+                            "bgp-metric-flags": "Nexthop Change",
+                            "local-preference": "120",
+                            "med": "12003",
+                            "nh": {
+                                "to": "Self"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "10.115.0.0/16",
+                        "rt-entry": {
+                            "active-tag": "*",
+                            "as-path": "(65151 65000) I",
+                            "bgp-metric-flags": "Nexthop Change",
+                            "local-preference": "120",
+                            "med": "12003",
+                            "nh": {
+                                "to": "Self"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    }
+                ],
+                "table-name": "inet.0",
+                "total-route-count": "1615"
+            }
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRouteAdvertisingProtocol(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(
+                protocol='bgp',
+                neighbor='10.189.5.253'
+            )
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowRouteAdvertisingProtocol(device=self.device)
+        parsed_output = obj.parse(
+            protocol='bgp',
+            neighbor='10.189.5.253')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+'''
+Unit test for:
+    * show route summary
+'''
+class TestShowRouteSummary(unittest.TestCase):
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show route summary
+        Autonomous system number: 65171
+        Router ID: 10.189.5.252
+
+        inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+                    Direct:      6 routes,      6 active
+                    Local:      5 routes,      5 active
+                        OSPF:    236 routes,    234 active
+                        BGP:   1366 routes,    682 active
+                    Static:      1 routes,      1 active
+                        LDP:      1 routes,      1 active
+
+        inet.3: 11 destinations, 11 routes (11 active, 0 holddown, 0 hidden)
+                        BGP:      2 routes,      2 active
+                        LDP:      1 routes,      1 active
+                    L-OSPF:      8 routes,      8 active
+
+        mpls.0: 44 destinations, 44 routes (44 active, 0 holddown, 0 hidden)
+                        MPLS:      6 routes,      6 active
+                        LDP:     15 routes,     15 active
+                    L-OSPF:     23 routes,     23 active
+
+        inet6.0: 22 destinations, 23 routes (22 active, 0 holddown, 0 hidden)
+                    Direct:      4 routes,      4 active
+                    Local:      4 routes,      4 active
+                    OSPF3:     13 routes,     12 active
+                    Static:      1 routes,      1 active
+                    INET6:      1 routes,      1 active
+    '''}
+
+    golden_parsed_output = {
+        "route-summary-information": {
+            "as-number": "65171",
+            "route-table": [
+                {
+                    "active-route-count": "929",
+                    "destination-count": "929",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "protocols": [
+                        {
+                            "active-route-count": "6",
+                            "protocol-name": "Direct",
+                            "protocol-route-count": "6"
+                        },
+                        {
+                            "active-route-count": "5",
+                            "protocol-name": "Local",
+                            "protocol-route-count": "5"
+                        },
+                        {
+                            "active-route-count": "234",
+                            "protocol-name": "OSPF",
+                            "protocol-route-count": "236"
+                        },
+                        {
+                            "active-route-count": "682",
+                            "protocol-name": "BGP",
+                            "protocol-route-count": "1366"
+                        },
+                        {
+                            "active-route-count": "1",
+                            "protocol-name": "Static",
+                            "protocol-route-count": "1"
+                        },
+                        {
+                            "active-route-count": "1",
+                            "protocol-name": "LDP",
+                            "protocol-route-count": "1"
+                        }
+                    ],
+                    "table-name": "inet.0",
+                    "total-route-count": "1615"
+                },
+                {
+                    "active-route-count": "11",
+                    "destination-count": "11",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "protocols": [
+                        {
+                            "active-route-count": "2",
+                            "protocol-name": "BGP",
+                            "protocol-route-count": "2"
+                        },
+                        {
+                            "active-route-count": "1",
+                            "protocol-name": "LDP",
+                            "protocol-route-count": "1"
+                        },
+                        {
+                            "active-route-count": "8",
+                            "protocol-name": "L-OSPF",
+                            "protocol-route-count": "8"
+                        }
+                    ],
+                    "table-name": "inet.3",
+                    "total-route-count": "11"
+                },
+                {
+                    "active-route-count": "44",
+                    "destination-count": "44",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "protocols": [
+                        {
+                            "active-route-count": "6",
+                            "protocol-name": "MPLS",
+                            "protocol-route-count": "6"
+                        },
+                        {
+                            "active-route-count": "15",
+                            "protocol-name": "LDP",
+                            "protocol-route-count": "15"
+                        },
+                        {
+                            "active-route-count": "23",
+                            "protocol-name": "L-OSPF",
+                            "protocol-route-count": "23"
+                        }
+                    ],
+                    "table-name": "mpls.0",
+                    "total-route-count": "44"
+                },
+                {
+                    "active-route-count": "22",
+                    "destination-count": "22",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "protocols": [
+                        {
+                            "active-route-count": "4",
+                            "protocol-name": "Direct",
+                            "protocol-route-count": "4"
+                        },
+                        {
+                            "active-route-count": "4",
+                            "protocol-name": "Local",
+                            "protocol-route-count": "4"
+                        },
+                        {
+                            "active-route-count": "12",
+                            "protocol-name": "OSPF3",
+                            "protocol-route-count": "13"
+                        },
+                        {
+                            "active-route-count": "1",
+                            "protocol-name": "Static",
+                            "protocol-route-count": "1"
+                        },
+                        {
+                            "active-route-count": "1",
+                            "protocol-name": "INET6",
+                            "protocol-route-count": "1"
+                        }
+                    ],
+                    "table-name": "inet6.0",
+                    "total-route-count": "23"
+                }
+            ],
+            "router-id": "10.189.5.252"
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRouteSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowRouteSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+       
 if __name__ == '__main__':
     unittest.main()
