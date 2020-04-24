@@ -1037,7 +1037,7 @@ class ShowSystemUptime(ShowSystemUptimeSchema):
         p4 = re.compile(r'^Protocols started: +(?P<date_time>[\w\s\-\:]+) '
                         r'+\((?P<time_length>[\w\s\:]+)\s+ago\)$')
 
-        #Last configured: 2020-03-05 16:04:34 UTC (2w6d 16:12 ago) by kddi
+        #Last configured: 2020-03-05 16:04:34 UTC (2w6d 16:12 ago) by cisco
         p5 = re.compile(r'^Last configured: +(?P<date_time>'
                         r'[A-Za-z\t .\d\-\:]+)+\((?P<time_length>'
                         r'\w+\s\d+\:\d+) ago\) by (?P<user>\S+)$')
@@ -1113,7 +1113,7 @@ class ShowSystemUptime(ShowSystemUptimeSchema):
                 user_table_entry_list["protocols-started-time"] = current_protocol_dict
                 continue
 
-            #Last configured: 2020-03-05 16:04:34 UTC (2w6d 16:12 ago) by kddi
+            #Last configured: 2020-03-05 16:04:34 UTC (2w6d 16:12 ago) by cisco
             m = p5.match(line)
             if m:
                 group = m.groupdict()

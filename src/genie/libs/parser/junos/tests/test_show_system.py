@@ -2093,7 +2093,7 @@ class TestShowSystemUptime(unittest.TestCase):
         Time Source:  LOCAL CLOCK
         System booted: 2019-08-29 09:02:22 UTC (29w6d 23:14 ago)
         Protocols started: 2019-08-29 09:03:25 UTC (29w6d 23:13 ago)
-        Last configured: 2020-03-05 16:04:34 UTC (2w6d 16:12 ago) by kddi
+        Last configured: 2020-03-05 16:04:34 UTC (2w6d 16:12 ago) by cisco
         8:16AM  up 209 days, 23:14, 5 users, load averages: 0.43, 0.43, 0.42
     """
     }
@@ -2104,7 +2104,7 @@ class TestShowSystemUptime(unittest.TestCase):
             "last-configured-time": {
                 "date-time": {"#text": "2020-03-05 16:04:34 UTC "},
                 "time-length": {"#text": "2w6d 16:12"},
-                "user": "kddi",
+                "user": "cisco",
             },
             "protocols-started-time": {
                 "date-time": {"#text": "2019-08-29 09:03:25 UTC"},
@@ -2154,7 +2154,7 @@ class TestShowSystemUptimeNoForwarding(unittest.TestCase):
         Time Source:  LOCAL CLOCK
         System booted: 2019-08-29 09:02:22 UTC (29w6d 00:35 ago)
         Protocols started: 2019-08-29 09:03:25 UTC (29w6d 00:34 ago)
-        Last configured: 2020-03-05 16:04:34 UTC (2w5d 17:33 ago) by kddi
+        Last configured: 2020-03-05 16:04:34 UTC (2w5d 17:33 ago) by cisco
         9:38AM  up 209 days, 36 mins, 3 users, load averages: 0.29, 0.41, 0.38
     """
     }
@@ -2165,7 +2165,7 @@ class TestShowSystemUptimeNoForwarding(unittest.TestCase):
             "last-configured-time": {
                 "date-time": {"#text": "2020-03-05 16:04:34 UTC "},
                 "time-length": {"#text": "2w5d 17:33"},
-                "user": "kddi",
+                "user": "cisco",
             },
             "protocols-started-time": {
                 "date-time": {"#text": "2019-08-29 09:03:25 UTC"},
