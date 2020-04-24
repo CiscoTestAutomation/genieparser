@@ -10,7 +10,6 @@ import logging
 import importlib
 import math
 
-from fuzzywuzzy import fuzz
 from genie.libs import parser
 from genie.abstract import Lookup
 
@@ -164,13 +163,7 @@ def _fuzzy_search_command(search, use_regex, os=None, order_list=None, device=No
 def _is_regular_token(token):
     token_is_regular = True
 
-    if len(token) == 1 and token == '*':
-        # Special case for `show lldp entry *`
-        token_is_regular = True
-    elif len(token) == 2 and token == r'\|':
-        # Special case for `ps -ef | grep {grep}`
-        token_is_regular = True
-    elif not token.isalnum():
+    if not token.isalnum():
         # Remove escaped characters
         candidate = token.replace('/', '')
         candidate = candidate.replace('"', '')
@@ -205,8 +198,16 @@ def _matches_fuzzy_regex(i, j, tokens, command, kwargs, use_regex, required_argu
         token_is_regular = True
 
         if use_regex:
-            # Check if it is nonregex token
-            token_is_regular = _is_regular_token(token)
+            if token == '*':
+                # Special case for `show lldp entry *`
+                token_is_regular = True
+            else:
+                # Check if it is nonregex token
+                token_is_regular = _is_regular_token(token)
+
+            if token_is_regular: 
+               # Special case for `:\|Swap:`
+                token = token.replace(r'\|', '|')
 
         if token_is_regular:
             # Current token might be command or argument
@@ -251,30 +252,13 @@ def _matches_fuzzy_regex(i, j, tokens, command, kwargs, use_regex, required_argu
                 # Same token, assign higher score
                 score += 102
             elif not token == command_token:
-                # Not matching, perform fuzzy search
-                # Give perfect score for prefix matching
-                if command_token.startswith(token):
-                    score += 101
-                else:
-                    # Locality sensitive score
-                    ratio = fuzz.ratio(token, command_token)
-
-                    # Have locality sensitive cut off 
-                    if ratio <= 30:
-                        return None
-
-                    # Locality insensitive score
-                    partial_ratio = fuzz.partial_ratio(token, command_token)
-                    
-                    # Cut off
-                    if partial_ratio <= 30:
-                        return None
-
-                    # Add ratio to score
-                    score += ratio
+                # Not matching, check if prefix
+                if not command_token.startswith(token):
+                    return None
 
                 # The two tokens are similar to each other, replace it with valid one
                 tokens[i] = command_token
+                score += 101
 
             # Matches current, go to next token
             i += 1

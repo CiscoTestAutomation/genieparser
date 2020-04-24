@@ -55,13 +55,13 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
     def test_matching_simple(self):
         self.assertIsNotNone(_matches_fuzzy_regex(0, 0, 's v'.split(), 'show version', {}, False))
         self.assertIsNotNone(_matches_fuzzy_regex(0, 0, 'sh ver'.split(), 'show version', {}, False))
-        self.assertIsNotNone(_matches_fuzzy_regex(0, 0, 'sh ver'.split(), 'show version', {}, False))
-        self.assertIsNotNone(_matches_fuzzy_regex(0, 0, 'sh vison'.split(), 'show version', {}, False))
+        self.assertIsNotNone(_matches_fuzzy_regex(0, 0, 'show vers'.split(), 'show version', {}, False))
+        self.assertIsNotNone(_matches_fuzzy_regex(0, 0, 'sh version'.split(), 'show version', {}, False))
 
         self.assertIsNotNone(_matches_fuzzy_regex(0, 0, 's v'.split(), 'show version', {}, True))
         self.assertIsNotNone(_matches_fuzzy_regex(0, 0, 'sh ver'.split(), 'show version', {}, True))
-        self.assertIsNotNone(_matches_fuzzy_regex(0, 0, 'sh ver'.split(), 'show version', {}, True))
-        self.assertIsNotNone(_matches_fuzzy_regex(0, 0, 'sh vison'.split(), 'show version', {}, True))
+        self.assertIsNotNone(_matches_fuzzy_regex(0, 0, 'show vers'.split(), 'show version', {}, True))
+        self.assertIsNotNone(_matches_fuzzy_regex(0, 0, 'sh version'.split(), 'show version', {}, True))
 
     def test_matching_arguments(self):
         self.assertEqual(_matches_fuzzy_regex(0, 0, 'sh ver blue'.split(), 'show version {arg}', {}, False)[0], {'arg': 'blue'})
@@ -93,6 +93,9 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
 
         self.assertIsNone(_matches_fuzzy_regex(0, 0, '.*'.split(), 'show bgp instance all all summary', {}, False))
         self.assertIsNone(_matches_fuzzy_regex(0, 0, 'show bgp instance .* all all .*'.split(), 'show bgp instance all all summary', {}, False))
+        
+        self.assertIsNone(_matches_fuzzy_regex(0, 0, 'show abb ab'.split(), 'show abc ab', {}, False))
+        self.assertIsNone(_matches_fuzzy_regex(0, 0, 'ow abc ab'.split(), 'show abc ab', {}, False))
 
     def test_matching_negative_regex(self):
         self.assertIsNone(_matches_fuzzy_regex(0, 0, 'show a b .*'.split(), 'show a b c d', {}, False))
@@ -112,6 +115,7 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
         self.assertIsNone(_matches_fuzzy_regex(0, 0, 'sh .* inst x [a-z]*'.split(), 'show bgp instance all sessions', {}, True))
         self.assertIsNone(_matches_fuzzy_regex(0, 0, 'show [a-z]*'.split(), 'show a b c d c', {}, True))
         self.assertIsNone(_matches_fuzzy_regex(0, 0, 'show [ab]* ab'.split(), 'show ab', {}, True))
+        self.assertIsNone(_matches_fuzzy_regex(0, 0, 'show ac ab .*'.split(), 'show abc ab c', {}, True))
 
     def test_matching_regex(self):
         self.assertIsNotNone(_matches_fuzzy_regex(0, 0, 'show a b .* c'.split(), 'show a b c d c', {}, True))
@@ -153,23 +157,30 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
 
     def test_simple_fuzzy_search(self):
         self.assertEqual([i[0] for i in _fuzzy_search_command('sh ver', False)], ['show version'])
-        self.assertEqual([i[0] for i in _fuzzy_search_command('ps -', False)], ['ps -ef']) #BUG should be p -
-        self.assertEqual([i[0] for i in _fuzzy_search_command('sh ms int', False)], ['show mpls interfaces'])
+        self.assertEqual([i[0] for i in _fuzzy_search_command('p -', False)], ['ps -ef'])
+        self.assertEqual([i[0] for i in _fuzzy_search_command('sh mp int', False)], ['show mpls interfaces'])
         self.assertEqual([i[0] for i in _fuzzy_search_command('sh run int x', False)], ['show running-config interface {interface}'])
         self.assertEqual([i[0] for i in _fuzzy_search_command('s b i w x y a sum', False)], ['show bgp instance {instance} {vrf_type} {vrf} {address_family} summary'])
-        self.assertEqual([i[0] for i in _fuzzy_search_command('sh l2vn for bridge-domain r address loc x', False)], ['show l2vpn forwarding bridge-domain {bridge_domain} mac-address location {location}'])
+        self.assertEqual([i[0] for i in _fuzzy_search_command('sh l2v for bridge-domain r mac loc x', False)], ['show l2vpn forwarding bridge-domain {bridge_domain} mac-address location {location}'])
         self.assertEqual([i[0] for i in _fuzzy_search_command('s bundle', False)], ['show bundle'])
-        self.assertEqual([i[0] for i in _fuzzy_search_command('sh en int-label det loc x', False)], ['show evpn internal-label detail location {location}'])
+        self.assertEqual([i[0] for i in _fuzzy_search_command('sh e int det loc x', False)], ['show evpn internal-label detail location {location}'])
         self.assertEqual([i[0] for i in _fuzzy_search_command('sh l2 mac-learning type al loc wee', False)], ['show l2vpn mac-learning {mac_type} all location {location}'])
         self.assertEqual([i[0] for i in _fuzzy_search_command('/dna', False)], ['/dna/intent/api/v1/interface'])
         self.assertEqual([i[0] for i in _fuzzy_search_command('sh l ent *', False)], ['show lldp entry *'])
         self.assertEqual([i[0] for i in _fuzzy_search_command('sh run f | i af-group', False)], ['show run formal | i af-group'])
-        self.assertEqual([i[0] for i in _fuzzy_search_command('sh r ip4 abc', False)], ['show route ipv4 {protocol}'])
+        self.assertEqual([i[0] for i in _fuzzy_search_command('sh r ipv4 abc', False)], ['show route ipv4 {protocol}'])
 
     def test_simple_fuzzy_search_regex(self):
-        self.assertEqual([i[0] for i in _fuzzy_search_command('sh r ip4 abc', True)], ['show route ipv4 {protocol}', 'show route ipv4 {route}'])
+        self.assertEqual([i[0] for i in _fuzzy_search_command('sh r ipv4 abc', True)], ['show route ipv4 {protocol}', 'show route ipv4 {route}'])
         self.assertEqual([i[0] for i in _fuzzy_search_command('sh run x .*', True)], ["show running-config {pim} | sec '^i'"])
         self.assertEqual([i[0] for i in _fuzzy_search_command('sh .* inst w ser c .* m', True)], ["show lisp all instance-id {instance_id} service {service} rloc members"])
+        self.assertEqual([i[0] for i in _fuzzy_search_command('sh run int x', True)], ['show running-config interface {interface}'])
+        self.assertEqual([i[0] for i in _fuzzy_search_command('s b i w x y a sum', True)], ['show bgp instance {instance} {vrf_type} {vrf} {address_family} summary'])
+        self.assertEqual([i[0] for i in _fuzzy_search_command('sh l2v for bridge-domain r mac loc x', True)], ['show l2vpn forwarding bridge-domain {bridge_domain} mac-address location {location}'])
+        self.assertEqual([i[0] for i in _fuzzy_search_command('s bundle', True)], ['show bundle'])
+        self.assertEqual([i[0] for i in _fuzzy_search_command('sh e int det loc x', True)], ['show evpn internal-label detail location {location}'])
+        self.assertEqual([i[0] for i in _fuzzy_search_command('sh l2 mac-learning type al loc wee', True)], ['show l2vpn mac-learning {mac_type} all location {location}'])
+        self.assertEqual([i[0] for i in _fuzzy_search_command('\/dna', True)], ['/dna/intent/api/v1/interface'])
     
     def test_prefix_single_character_search(self):
         self.assertEqual(_fuzzy_search_command('s e ipv6 n d', False)[0][0], 'show eigrp ipv6 neighbors detail')
@@ -218,7 +229,7 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0][0], '/dna/intent/api/v1/interface')
 
-        result = _fuzzy_search_command(r'sh form s proc slot switch act R monitor \| inc Mem :\|Swap:', True)
+        result = _fuzzy_search_command(r'sh plat s proc slot switch act R monitor \| inc Mem :\|Swap:', True)
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0][0], 'show platform software process slot switch active R0 monitor | inc Mem :|Swap:')
         
