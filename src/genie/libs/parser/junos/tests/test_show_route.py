@@ -47384,6 +47384,96 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
         }
     }
 
+    golden_output_3 = {'execute.return_value': '''
+        show route protocol ospf table inet.0 extensive 10.169.196.241
+
+        inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+        10.169.196.241/32 (1 entry, 1 announced)
+                State: <FlashAll>
+        TSI:
+        KRT in-kernel 10.169.196.241/32 -> {10.169.14.121}
+                *OSPF   Preference: 10/10
+                        Next hop type: Router, Next hop index: 613
+                        Address: 0xdfa7934
+                        Next-hop reference count: 458
+                        Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
+                        Session Id: 0x141
+                        State: <Active Int>
+                        Local AS: 65171 
+                        Age: 6d 17:23:01 	Metric: 1201 
+                        Validation State: unverified 
+                        Area: 0.0.0.8
+                        Task: OSPF
+                        Announcement bits (2): 0-KRT 7-Resolve tree 3 
+                        AS path: I 
+    '''}
+
+    golden_parsed_output_3 = {
+        "route-information": {
+            "route-table": [
+                {
+                    "active-route-count": "929",
+                    "destination-count": "929",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": [
+                        {
+                            "rt-announced-count": "1",
+                            "rt-destination": "10.169.196.241/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "6d 17:23:01"
+                                },
+                                "announce-bits": "2",
+                                "announce-tasks": "0-KRT 7-Resolve tree 3",
+                                "as-path": "AS path: I",
+                                "bgp-path-attributes": {
+                                    "attr-as-path-effective": {
+                                        "aspath-effective-string": "AS path:",
+                                        "attr-value": "I"
+                                    }
+                                },
+                                "local-as": "65171",
+                                "metric": "1201",
+                                "nh": [
+                                    {
+                                        "nh-string": "Next hop",
+                                        "session": "141",
+                                        "to": "10.169.14.121",
+                                        "via": "ge-0/0/1.0",
+                                        "weight": "0x1"
+                                    }
+                                ],
+                                "nh-address": "0xdfa7934",
+                                "nh-index": "613",
+                                "nh-reference-count": "458",
+                                "nh-type": "Router",
+                                "preference": "10",
+                                "preference2": "10",
+                                "protocol-name": "OSPF",
+                                "rt-entry-state": "Active Int",
+                                "rt-ospf-area": "0.0.0.8",
+                                "task-name": "OSPF",
+                                "validation-state": "unverified"
+                            },
+                            "rt-entry-count": {
+                                "#text": "1",
+                                "@junos:format": "1 entry"
+                            },
+                            "rt-state": "FlashAll",
+                            "tsi": {
+                                "#text": "KRT in-kernel 10.169.196.241/32 -> {10.169.14.121}"
+                            }
+                        }
+                    ],
+                    "table-name": "inet.0",
+                    "total-route-count": "1615"
+                }
+            ]
+        }
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteProtocolExtensive(device=self.device)
@@ -47405,6 +47495,15 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
             protocol='ospf',
             table='inet.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+    
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowRouteProtocolExtensive(device=self.device)
+        parsed_output = obj.parse(
+            protocol='ospf',
+            table='inet.0',
+            destination='10.169.196.241')
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 '''
 Unit test for:
