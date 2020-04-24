@@ -238,7 +238,7 @@ class ShowFirewall(ShowFirewallSchema):
 class ShowFirewallCounterFilterSchema(MetaParser):
 
     """ Schema for:
-            * show firewall
+            * show firewall counter filter v6_local-access-control v6_last_policer
     """
 
     schema = {

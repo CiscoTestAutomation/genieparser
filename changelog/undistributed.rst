@@ -177,7 +177,7 @@
         * show ospf database advertising-router self detail
     * Added ShowFirewall for:
         * show firewall
-    * Added ShowFirewall for:
+    * Added ShowFirewallCounterFilter for:
         * show firewall counter filter v6_local-access-control v6_last_policer
 
 
