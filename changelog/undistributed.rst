@@ -73,9 +73,12 @@
         * show bgp group summary
     * Added ShowBgpGroupSummaryNoMore for:
         * show bgp group summary | no-more
+    * Added ShowBgpSummary for:
+        * show bgp summary
     * Added ShowOspfNeighbor for:
         * show ospf neighbor
-    * Added ShowRouteProtocol for:
+    * Added ShowRoute for:
+        * show route
         * show route protocol {protocol}
         * show route protocol {protocol} {ip_address}
         * show route protocol {protocol} table {table}
@@ -91,6 +94,16 @@
         * show arp
     * Added ShowArpNoMore for:
         * show arp | no-more
+    * Added ShowOspfDatabase for:
+        * show ospf database
+    * Added ShowOspfDatabaseSummary for:
+        * show ospf database summary
+    * Added ShowOspfDatabaseExternalExtensive for:
+        * show ospf database external extensive
+    * Added ShowOspfOverview for:
+        * show ospf overview
+    * Added ShowOspfOverviewExtensive for:
+        * show ospf overview extensive
     * Added ShowOspf3Overview for:
         * show ospf3 overview
     * Added ShowOspf3OverviewExtensive for:
@@ -111,6 +124,8 @@
         * show ospf3 database external extensive
     * Added ShowOspf3InterfaceExtensive for:
         * show ospf3 interface extensive
+    * Added ShowRouteSummary for:
+        * show route summary
     * Added ShowRouteAdvertisingProtocol for:
         * show route advertising-protocol {protocol} {neighbor}
     * Added ShowRouteReceiveProtocol for:
@@ -151,10 +166,22 @@
         * show chassis firmware no-forwarding
     * Added ShowChassisEnvironmentRoutingEngine for:
         * show chassis environment routing-engine
+    * Added ShowChassisHardware for:
+        * show chassis hardware
+    * Added ShowChassisHardwareDetail for:
+        * show chassis hardware detail
+    * Added ShowChassisHardwareDetailNoForwarding for:
+        * show chassis hardware detail no-forwarding
+    * Added ShowChassisHardwareExtensive for:
+        * show chassis hardware extensive
+    * Added ShowChassisHardwareExtensiveNoForwarding for:
+        * show chassis hardware extensive no-forwarding
     * Added ShowOspfDatabaseAdvertisingRouterSelfDetailSchema for:
         * show ospf database advertising-router self detail
     * Added ShowSnmpMibWalkSystem for:
         * show snmp mib walk system
+    * Added ShowVersion in show_platform.py for:
+        * show version
 
 
 
@@ -226,6 +253,7 @@
         * Update regex to support various outputs.
     * Updated ShowInterface
         * Update regex to cover both 'IP' and 'ip', both 'Rx' and 'RX'
+        * Update regex to support various outputs.
         * Clean code and correctly assign values to the key 'enabled'
     * Updated ShowIpRoute
         * Add keys into the schema, modify regex
@@ -241,6 +269,8 @@
 
 * IOSXR
     * Update ShowBgpInstanceSummary
+        * Update regex to support various output
+    * Update ShowRouteIpv4
         * Update regex to support various output
 
 * IOS
