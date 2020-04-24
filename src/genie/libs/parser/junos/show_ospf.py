@@ -535,10 +535,8 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
                 ospf_entry_dict = {}
                 ospf_entry_dict['lsa-type'] = group['lsa_type']
                 if group['our_entry'] == '*':
-                    ospf_entry_dict['lsa-id'] = group['lsa_id'][1:]
                     ospf_entry_dict['our-entry'] = True
-                else:
-                    ospf_entry_dict['lsa-id'] = group['lsa_id']
+                ospf_entry_dict['lsa-id'] = group['lsa_id']
                 ospf_entry_dict['advertising-router'] = group['advertising_router']
                 ospf_entry_dict['sequence-number'] = group['sequence_number']
                 ospf_entry_dict['age'] = group['age']
@@ -547,7 +545,7 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
                 ospf_entry_dict['lsa-length'] = group['lsa_length']
                 ospf_database_info_list.append(ospf_entry_dict)
                 continue
-
+                
         return ret_dict
 
 
