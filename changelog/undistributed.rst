@@ -187,6 +187,8 @@
         * show ospf database advertising-router self detail
     * Added ShowOspfDatabaseExtensive for:
         * show ospf database extensive
+    * ShowTaskReplication for:
+        * show task replication
     * Added ShowVersion in show_platform.py for:
         * show version
 
