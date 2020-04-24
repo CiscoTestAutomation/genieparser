@@ -94,6 +94,8 @@
         * show arp
     * Added ShowArpNoMore for:
         * show arp | no-more
+    * Added ShowArpNoResolve for:
+        * show arp no-resolve
     * Added ShowOspfDatabase for:
         * show ospf database
     * Added ShowOspfDatabaseSummary for:
@@ -115,6 +117,7 @@
     * Added ShowRouteProtocolExtensive for:
         * show route protocol {protocol} extensive
         * show route protocol {protocol} table {table} extensive
+        * show route protocol {protocol} table {table} extensive {destination}
     * Added ShowOspf3Database for:
         * show ospf3 database
     * Added Ping for:
@@ -124,6 +127,8 @@
         * show ospf3 database external extensive
     * Added ShowOspf3InterfaceExtensive for:
         * show ospf3 interface extensive
+    * Added ShowRouteInstanceDetail for:
+        * show route instance detail
     * Added ShowRouteSummary for:
         * show route summary
     * Added ShowRouteAdvertisingProtocol for:
@@ -142,8 +147,10 @@
         * show system commit
     * Added ShowSystemQueues for:
         * show system queues
-    # Added ShowSystemStorage for:
+    * Added ShowSystemStorage for:
         * show system storage
+    * Added ShowSystemStorageNoForwarding for:
+        * show system storage no-forwarding
     * Added ShowSystemQueuesNoForwarding for:
         * show system queues no-forwarding
     * Added ShowPfeStatisticsTraffic for:
