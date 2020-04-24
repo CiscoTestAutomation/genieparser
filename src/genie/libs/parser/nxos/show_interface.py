@@ -246,9 +246,10 @@ class ShowInterface(ShowInterfaceSchema):
         # MTU 1600 bytes, BW 768 Kbit, DLY 3330 usec
         # MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
         # MTU 1500 bytes, BW 1000000 Kbit
+        # MTU 600 bytes, BW 10000000 Kbit , DLY 10 usec
         p6 = re.compile(r'^MTU *(?P<mtu>[0-9]+) *bytes, *BW'
-                            ' *(?P<bandwidth>[0-9]+) *Kbit(, *DLY'
-                            ' *(?P<delay>[0-9]+) *usec)?,?$')     
+                        r' *(?P<bandwidth>[0-9]+) *Kbit( *, *DLY'
+                        r' *(?P<delay>[0-9]+) *usec)?,?$')
 
         # MTU 1500 bytes,  BW 40000000 Kbit,, BW 40000000 Kbit, DLY 10 usec
         p6_1 = re.compile(r'^MTU *(?P<mtu>[0-9]+) *bytes, *BW'
