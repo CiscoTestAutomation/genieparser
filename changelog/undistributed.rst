@@ -117,6 +117,7 @@
     * Added ShowRouteProtocolExtensive for:
         * show route protocol {protocol} extensive
         * show route protocol {protocol} table {table} extensive
+        * show route protocol {protocol} table {table} extensive {destination}
     * Added ShowOspf3Database for:
         * show ospf3 database
     * Added Ping for:
@@ -126,6 +127,8 @@
         * show ospf3 database external extensive
     * Added ShowOspf3InterfaceExtensive for:
         * show ospf3 interface extensive
+    * Added ShowRouteInstanceDetail for:
+        * show route instance detail
     * Added ShowRouteSummary for:
         * show route summary
     * Added ShowRouteAdvertisingProtocol for:
