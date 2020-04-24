@@ -94,6 +94,8 @@
         * show arp
     * Added ShowArpNoMore for:
         * show arp | no-more
+    * Added ShowArpNoResolve for:
+        * show arp no-resolve
     * Added ShowOspfDatabase for:
         * show ospf database 
     * Added ShowOspfDatabaseSummary for:
