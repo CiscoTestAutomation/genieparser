@@ -698,10 +698,10 @@ class TestShowOspfDatabase(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
-        show ospf database 
+        show ospf database
 
             OSPF database, Area 0.0.0.8
-        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len 
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
         Router   10.36.3.3          10.36.3.3          0x80004d2d    61  0x22 0xa127 2496
         Router   10.100.5.5          10.100.5.5          0x800019d7  1469  0x22 0xa1c   60
         Router   10.19.198.239    10.19.198.239    0x80000442   622  0x22 0x95bf  96
@@ -796,7 +796,7 @@ class TestShowOspfDatabase(unittest.TestCase):
         OpaqArea 10.64.8.74         10.169.196.241  0x80000030    35  0x20 0xdcd1  92
         OpaqArea 10.64.8.75         10.169.196.241  0x80000151   521  0x20 0xd4b0  92
             OSPF AS SCOPE link state database
-        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len 
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
         Extern   0.0.0.0          10.34.2.251     0x800019e3  2323  0x22 0x6715  36
         Extern   0.0.0.0          10.169.14.240   0x8000039e  1991  0x22 0x9fcc  36
         Extern   10.1.0.0          192.168.36.119  0x800019b0   928  0x20 0x3bc3  36
@@ -1957,7 +1957,7 @@ class TestShowOspfDatabase(unittest.TestCase):
         ]
     }
 }
-    
+
 
 
     def test_empty(self):
@@ -2068,7 +2068,7 @@ class TestShowOspfDatabaseExternalExtensive(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         show ospf database external extensive
             OSPF AS SCOPE link state database
-        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len 
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
         Extern   0.0.0.0          10.34.2.251     0x800019e3  2728  0x22 0x6715  36
         mask 0.0.0.0
         Topology default (ID 0)
@@ -3024,7 +3024,7 @@ class TestShowOspfOverview(unittest.TestCase):
             }
         }
     }
-        
+
     }
 
     def test_empty(self):

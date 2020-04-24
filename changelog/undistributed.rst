@@ -97,7 +97,7 @@
     * Added ShowArpNoResolve for:
         * show arp no-resolve
     * Added ShowOspfDatabase for:
-        * show ospf database 
+        * show ospf database
     * Added ShowOspfDatabaseSummary for:
         * show ospf database summary
     * Added ShowOspfDatabaseExternalExtensive for:
@@ -185,6 +185,8 @@
         * show chassis hardware extensive no-forwarding
     * Added ShowOspfDatabaseAdvertisingRouterSelfDetailSchema for:
         * show ospf database advertising-router self detail
+    * ShowTaskReplication for:
+        * show task replication
     * Added ShowVersion in show_platform.py for:
         * show version
 
