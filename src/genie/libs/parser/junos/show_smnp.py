@@ -1,4 +1,8 @@
+''' show_smnp.py
 
+JUNOS parsers for the following commands:
+    * show snmp mib walk system
+'''
 
 # Python
 import re
