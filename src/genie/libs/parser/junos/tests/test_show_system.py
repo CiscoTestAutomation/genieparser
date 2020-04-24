@@ -12,21 +12,31 @@ from genie.metaparser.util.exceptions import (
 )
 
 # Parser
-from genie.libs.parser.junos.show_system import ShowSystemBuffers,\
-    ShowSystemCommit, ShowSystemQueues, ShowSystemQueuesNoForwarding,\
-    ShowSystemUsers, ShowSystemBuffersNoForwarding,\
-    ShowSystemUsers, ShowSystemStorage,\
-    ShowSystemCoreDumps, ShowSystemCoreDumpsNoForwarding
+from genie.libs.parser.junos.show_system import (
+    ShowSystemUptime,
+    ShowSystemUptimeNoForwarding,
+    ShowSystemBuffers,
+    ShowSystemCommit,
+    ShowSystemQueues,
+    ShowSystemQueuesNoForwarding,
+    ShowSystemUsers,
+    ShowSystemBuffersNoForwarding,
+    ShowSystemUsers,
+    ShowSystemStorage,
+    ShowSystemCoreDumps,
+    ShowSystemCoreDumpsNoForwarding,
+    ShowSystemStorageNoForwarding
+)
 
 # =========================================================
 # Unit test for show system buffers
-#=========================================================
+# =========================================================
 class TestShowSystemBuffers(unittest.TestCase):
 
     device = Device(name="aDevice")
 
     maxDiff = None
-    empty_output = {'execute.return_value': ''}
+    empty_output = {"execute.return_value": ""}
 
     golden_parsed_output_1 = {
         "memory-statistics": {
@@ -98,84 +108,67 @@ class TestShowSystemBuffers(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 
-#=========================================================
+# =========================================================
 # Unit test for show system Users
-#=========================================================
+# =========================================================
 class TestShowSystemUsers(unittest.TestCase):
 
-    device = Device(name='aDevice')
+    device = Device(name="aDevice")
 
     maxDiff = None
 
-    empty_output = {'execute.return_value': ''}
+    empty_output = {"execute.return_value": ""}
 
-    golden_parsed_output_1 = {'execute.return_value': '''
+    golden_parsed_output_1 = {
+        "execute.return_value": """
         show system users
         9:38AM  up 209 days, 37 mins, 3 users, load averages: 0.28, 0.39, 0.37
         USER     TTY      FROM                              LOGIN@  IDLE WHAT
         cisco     pts/0    10.1.0.1                          2:35AM      - -cl
         cisco     pts/1    10.1.0.1                          8:31AM     56 -cl
         cisco     pts/2    10.1.0.1                          7:45AM      3 -cl
-        '''}
-
+        """
+    }
 
     golden_output_1 = {
         "system-users-information": {
-        "uptime-information": {
-            "active-user-count": {
-                "#text": "3"
-            },
-            "date-time": {
-                "#text": "9:38AM"
-            },
-            "load-average-1": "0.28",
-            "load-average-15": "0.39",
-            "load-average-5": "0.37",
-            "up-time": {
-                "#text": "209 days, 37 mins"
-            },
-            "user-table": {
-                "user-entry": [
-                    {
-                        "command": "-cl",
-                        "from": "10.1.0.1",
-                        "idle-time": {
-                            "#text": "-"
+            "uptime-information": {
+                "active-user-count": {"#text": "3"},
+                "date-time": {"#text": "9:38AM"},
+                "load-average-1": "0.28",
+                "load-average-15": "0.39",
+                "load-average-5": "0.37",
+                "up-time": {"#text": "209 days, 37 mins"},
+                "user-table": {
+                    "user-entry": [
+                        {
+                            "command": "-cl",
+                            "from": "10.1.0.1",
+                            "idle-time": {"#text": "-"},
+                            "login-time": {"#text": "2:35AM"},
+                            "tty": "pts/0",
+                            "user": "cisco",
                         },
-                        "login-time": {
-                            "#text": "2:35AM"
+                        {
+                            "command": "-cl",
+                            "from": "10.1.0.1",
+                            "idle-time": {"#text": "56"},
+                            "login-time": {"#text": "8:31AM"},
+                            "tty": "pts/1",
+                            "user": "cisco",
                         },
-                        "tty": "pts/0",
-                        "user": "cisco"
-                    },
-                    {
-                        "command": "-cl",
-                        "from": "10.1.0.1",
-                        "idle-time": {
-                            "#text": "56"
+                        {
+                            "command": "-cl",
+                            "from": "10.1.0.1",
+                            "idle-time": {"#text": "3"},
+                            "login-time": {"#text": "7:45AM"},
+                            "tty": "pts/2",
+                            "user": "cisco",
                         },
-                        "login-time": {
-                            "#text": "8:31AM"
-                        },
-                        "tty": "pts/1",
-                        "user": "cisco"
-                    },
-                    {
-                        "command": "-cl",
-                        "from": "10.1.0.1",
-                        "idle-time": {
-                            "#text": "3"
-                        },
-                        "login-time": {
-                            "#text": "7:45AM"
-                        },
-                        "tty": "pts/2",
-                        "user": "cisco"
-                    }
-                ]
+                    ]
+                },
             }
         }
-    }
     }
 
     def test_empty(self):
@@ -191,9 +184,9 @@ class TestShowSystemUsers(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_output_1)
 
 
-#=========================================================
+# =========================================================
 # Unit test for show system commit
-#=========================================================
+# =========================================================
 class TestShowSystemCommit(unittest.TestCase):
 
     device = Device(name="aDevice")
@@ -209,302 +202,302 @@ class TestShowSystemCommit(unittest.TestCase):
                     "client": "cli",
                     "date-time": {"#text": "2020-03-05 16:04:34 UTC",},
                     "sequence-number": "0",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-05 16:01:49 UTC",},
                     "sequence-number": "1",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-05 15:53:03 UTC",},
                     "sequence-number": "2",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-05 15:51:16 UTC",},
                     "sequence-number": "3",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-05 15:02:37 UTC",},
                     "sequence-number": "4",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-05 15:00:57 UTC",},
                     "sequence-number": "5",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-05 14:58:06 UTC",},
                     "sequence-number": "6",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-05 14:49:36 UTC",},
                     "sequence-number": "7",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-05 14:47:49 UTC",},
                     "sequence-number": "8",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-05 00:07:34 UTC",},
                     "sequence-number": "9",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-05 00:04:48 UTC",},
                     "sequence-number": "10",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-04 23:58:42 UTC",},
                     "sequence-number": "11",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-04 21:58:30 UTC",},
                     "sequence-number": "12",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-04 02:27:13 UTC",},
                     "sequence-number": "13",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-04 02:11:40 UTC",},
                     "sequence-number": "14",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-04 01:50:35 UTC",},
                     "sequence-number": "15",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-04 01:06:08 UTC",},
                     "sequence-number": "16",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-04 00:23:13 UTC",},
                     "sequence-number": "17",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 23:15:16 UTC",},
                     "sequence-number": "18",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 18:32:59 UTC",},
                     "sequence-number": "19",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 18:30:05 UTC",},
                     "sequence-number": "20",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 18:24:06 UTC",},
                     "sequence-number": "21",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 15:58:04 UTC",},
                     "sequence-number": "22",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 15:46:09 UTC",},
                     "sequence-number": "23",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 15:26:19 UTC",},
                     "sequence-number": "24",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 15:07:59 UTC",},
                     "sequence-number": "25",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 14:48:07 UTC",},
                     "sequence-number": "26",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 14:22:09 UTC",},
                     "sequence-number": "27",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 14:20:28 UTC",},
                     "sequence-number": "28",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 14:17:33 UTC",},
                     "sequence-number": "29",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 14:15:45 UTC",},
                     "sequence-number": "30",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 11:10:33 UTC",},
                     "sequence-number": "31",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 11:08:14 UTC",},
                     "sequence-number": "32",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 08:41:29 UTC",},
                     "sequence-number": "33",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 08:25:57 UTC",},
                     "sequence-number": "34",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 08:09:34 UTC",},
                     "sequence-number": "35",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 07:49:00 UTC",},
                     "sequence-number": "36",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 07:39:35 UTC",},
                     "sequence-number": "37",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 07:23:14 UTC",},
                     "sequence-number": "38",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 05:41:34 UTC",},
                     "sequence-number": "39",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-03 04:23:30 UTC",},
                     "sequence-number": "40",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-02 19:05:48 UTC",},
                     "sequence-number": "41",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-02 19:02:29 UTC",},
                     "sequence-number": "42",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-02 16:34:53 UTC",},
                     "sequence-number": "43",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-02 16:26:08 UTC",},
                     "sequence-number": "44",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-02 16:10:44 UTC",},
                     "sequence-number": "45",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-02 16:04:23 UTC",},
                     "sequence-number": "46",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-02 15:45:11 UTC",},
                     "sequence-number": "47",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-02 09:28:52 UTC",},
                     "sequence-number": "48",
-                    "user": "cisco"
+                    "user": "cisco",
                 },
                 {
                     "client": "cli",
                     "date-time": {"#text": "2020-03-02 08:42:26 UTC",},
                     "sequence-number": "49",
-                    "user": "cisco"
-                }
+                    "user": "cisco",
+                },
             ]
         }
     }
@@ -581,7 +574,7 @@ class TestShowSystemCommit(unittest.TestCase):
 
 # =========================================================
 # Unit test for show system queues
-#=========================================================
+# =========================================================
 class TestShowSystemQueues(unittest.TestCase):
 
     maxDiff = None
@@ -1093,16 +1086,16 @@ class TestShowSystemQueues(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 
-#=========================================================
+# =========================================================
 # Unit test for show system queues no-forwarding
-#=========================================================
+# =========================================================
 class TestShowSystemQueuesNoForwarding(unittest.TestCase):
 
     maxDiff = None
 
-    device = Device(name='aDevice')
+    device = Device(name="aDevice")
 
-    empty_output = {'execute.return_value': ''}
+    empty_output = {"execute.return_value": ""}
 
     golden_parsed_output_1 = {
         "queues-statistics": {
@@ -1114,7 +1107,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "lsi",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "0",
@@ -1122,7 +1115,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "dsc",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "0",
@@ -1130,7 +1123,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "lo0",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "12500",
@@ -1138,7 +1131,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "gre",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "12500",
@@ -1146,7 +1139,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "ipip",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "0",
@@ -1154,7 +1147,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "tap",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "12500",
@@ -1162,7 +1155,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "pime",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "12500",
@@ -1170,7 +1163,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "pimd",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "12500000",
@@ -1178,7 +1171,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "fxp0",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "12500000",
@@ -1186,7 +1179,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "em1",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "12500",
@@ -1194,7 +1187,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "mtun",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "0",
@@ -1202,7 +1195,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "demux0",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "12500000",
@@ -1210,7 +1203,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "cbp0",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "12500000",
@@ -1218,7 +1211,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "pip0",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "125000",
@@ -1226,7 +1219,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "pp0",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "12500000",
@@ -1234,7 +1227,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "irb",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "12500000",
@@ -1242,7 +1235,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "vtep",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "12500000",
@@ -1250,7 +1243,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "esi",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "12500000",
@@ -1258,7 +1251,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "rbeb",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "0",
@@ -1266,7 +1259,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "fti0",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "0",
@@ -1274,7 +1267,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "fti1",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "0",
@@ -1282,7 +1275,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "fti2",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "0",
@@ -1290,7 +1283,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "fti3",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "0",
@@ -1298,7 +1291,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "fti4",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "0",
@@ -1306,7 +1299,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "fti5",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "0",
@@ -1314,7 +1307,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "fti6",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "0",
@@ -1322,7 +1315,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "fti7",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "12500000",
@@ -1330,7 +1323,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "jsrv",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "0",
@@ -1338,7 +1331,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "lc-0/0/0",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "0",
@@ -1346,7 +1339,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "pfh-0/0/0",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "0",
@@ -1354,7 +1347,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "pfe-0/0/0",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "1250000",
@@ -1362,7 +1355,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "ge-0/0/0",
                         "number-of-queue-drops": "3",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "1250000",
@@ -1370,7 +1363,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "ge-0/0/1",
                         "number-of-queue-drops": "3",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "1250000",
@@ -1378,7 +1371,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "ge-0/0/2",
                         "number-of-queue-drops": "132",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "1250000",
@@ -1386,7 +1379,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "ge-0/0/3",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "1250000",
@@ -1394,7 +1387,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "ge-0/0/4",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "1250000",
@@ -1402,7 +1395,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "ge-0/0/5",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "1250000",
@@ -1410,7 +1403,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "ge-0/0/6",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "1250000",
@@ -1418,7 +1411,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "ge-0/0/7",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "1250000",
@@ -1426,7 +1419,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "ge-0/0/8",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "1250000",
@@ -1434,8 +1427,8 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "ge-0/0/9",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
-                    }
+                        "packets-in-queue": "0",
+                    },
                 ]
             },
             "protocol-queues-statistics": {
@@ -1446,7 +1439,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "splfwdq",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "1000000",
@@ -1454,7 +1447,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "splnetq",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "1000000",
@@ -1462,7 +1455,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "optionq",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "50000",
@@ -1470,7 +1463,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "icmpq",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "0",
@@ -1478,7 +1471,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "frlmiq",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "25000",
@@ -1486,7 +1479,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "spppintrq",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "0",
@@ -1494,7 +1487,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "atmctlpktq",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "0",
@@ -1502,7 +1495,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "atmoamq",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "1250000",
@@ -1510,7 +1503,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "tnpintrq",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "200000",
@@ -1518,7 +1511,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "tagintrq",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
+                        "packets-in-queue": "0",
                     },
                     {
                         "max-octets-allowed": "200000",
@@ -1526,15 +1519,15 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
                         "name": "tagfragq",
                         "number-of-queue-drops": "0",
                         "octets-in-queue": "0",
-                        "packets-in-queue": "0"
-                    }
+                        "packets-in-queue": "0",
+                    },
                 ]
-            }
+            },
         }
     }
 
-
-    golden_output_1 = {'execute.return_value': '''
+    golden_output_1 = {
+        "execute.return_value": """
                 show system queues
         output interface            bytes          max  packets      max    drops
         lsi                             0        12500        0       41        0
@@ -1590,7 +1583,7 @@ class TestShowSystemQueuesNoForwarding(unittest.TestCase):
         tnpintrq                        0      1250000        0     4166        0
         tagintrq                        0       200000        0      200        0
         tagfragq                        0       200000        0      200        0
-    '''
+    """
     }
 
     def test_empty(self):
@@ -1690,16 +1683,99 @@ class TestShowSystemStorage(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 
-#=========================================================
-# Unit test for show system buffers no-forwarding
-#=========================================================
-class TestShowSystemBufferNoForwarding(unittest.TestCase):
-
-    device = Device(name='aDevice')
+# =========================================================
+# Unit test for show system storage no-forwarding
+# =========================================================
+class TestShowSystemStorageNoForwarding(unittest.TestCase):
 
     maxDiff = None
 
-    empty_output = {'execute.return_value': ''}
+    device = Device(name="aDevice")
+
+    empty_output = {"execute.return_value": ""}
+
+    golden_parsed_output_1 = {
+        "system-storage-information": {
+            "filesystem": [
+                {
+                    "available-blocks": {"junos:format": "17G"},
+                    "filesystem-name": "/dev/gpt/junos",
+                    "mounted-on": "/.mount",
+                    "total-blocks": {"junos:format": "20G"},
+                    "used-blocks": {"junos:format": "1.2G"},
+                    "used-percent": "7%",
+                },
+                {
+                    "available-blocks": {"junos:format": "730M"},
+                    "filesystem-name": "/dev/gpt/config",
+                    "mounted-on": "/.mount/config",
+                    "total-blocks": {"junos:format": "793M"},
+                    "used-blocks": {"junos:format": "60K"},
+                    "used-percent": "0%",
+                },
+                {
+                    "available-blocks": {"junos:format": "6.3G"},
+                    "filesystem-name": "/dev/gpt/var",
+                    "mounted-on": "/.mount/var",
+                    "total-blocks": {"junos:format": "7.0G"},
+                    "used-blocks": {"junos:format": "117M"},
+                    "used-percent": "2%",
+                },
+                {
+                    "available-blocks": {"junos:format": "3.2G"},
+                    "filesystem-name": "tmpfs",
+                    "mounted-on": "/.mount/tmp",
+                    "total-blocks": {"junos:format": "3.2G"},
+                    "used-blocks": {"junos:format": "196K"},
+                    "used-percent": "0%",
+                },
+                {
+                    "available-blocks": {"junos:format": "333M"},
+                    "filesystem-name": "tmpfs",
+                    "mounted-on": "/.mount/mfs",
+                    "total-blocks": {"junos:format": "334M"},
+                    "used-blocks": {"junos:format": "748K"},
+                    "used-percent": "0%",
+                },
+            ]
+        }
+    }
+
+    golden_output_1 = {
+        "execute.return_value": """
+                show system storage no-forwarding
+        Filesystem              Size       Used      Avail  Capacity   Mounted on
+        /dev/gpt/junos           20G       1.2G        17G        7%  /.mount
+        /dev/gpt/config         793M        60K       730M        0%  /.mount/config
+        /dev/gpt/var            7.0G       117M       6.3G        2%  /.mount/var
+        tmpfs                   3.2G       196K       3.2G        0%  /.mount/tmp
+        tmpfs                   334M       748K       333M        0%  /.mount/mfs
+    """
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowSystemStorageNoForwarding(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowSystemStorageNoForwarding(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+
+# =========================================================
+# Unit test for show system buffers no-forwarding
+# =========================================================
+class TestShowSystemBufferNoForwarding(unittest.TestCase):
+
+    device = Device(name="aDevice")
+
+    maxDiff = None
+
+    empty_output = {"execute.return_value": ""}
 
     golden_parsed_output_1 = {
         "memory-statistics": {
@@ -1735,12 +1811,12 @@ class TestShowSystemBufferNoForwarding(unittest.TestCase):
             "total-jumbo-clusters-4k": "3",
             "total-jumbo-clusters-9k": "0",
             "total-mbuf-clusters": "1230",
-            "total-mbufs": "2730"
+            "total-mbufs": "2730",
         }
     }
 
-
-    golden_output_1 = {'execute.return_value': '''
+    golden_output_1 = {
+        "execute.return_value": """
         show system buffers no-forwarding
         588/2142/2730 mbufs in use (current/cache/total)
         516/714/1230/124756 mbuf clusters in use (current/cache/total/max)
@@ -1755,7 +1831,7 @@ class TestShowSystemBufferNoForwarding(unittest.TestCase):
         0 requests for sfbufs delayed
         0 requests for I/O initiated by sendfile
 
-    '''
+    """
     }
 
     def test_empty(self):
@@ -1770,114 +1846,91 @@ class TestShowSystemBufferNoForwarding(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
-#=========================================================
+
+# =========================================================
 # Unit test for show system core-dumps
-#=========================================================
+# =========================================================
 class TestShowSystemCoreDumps(unittest.TestCase):
 
-    device = Device(name='aDevice')
+    device = Device(name="aDevice")
 
     maxDiff = None
 
-    empty_output = {'execute.return_value': ''}
+    empty_output = {"execute.return_value": ""}
 
     golden_parsed_output_1 = {
         "directory-list": {
             "directory": {
                 "file-information": [
                     {
-                        "file-date": {
-                            "@junos:format": "Aug 8   2019"
-                        },
+                        "file-date": {"@junos:format": "Aug 8   2019"},
                         "file-group": "wheel",
                         "file-links": "1",
                         "file-name": "/var/crash/core.riot.mpc0.1565307741.1716.gz",
                         "file-owner": "root",
-                        "file-permissions": {
-                            "@junos:format": "-rw-r--r--"
-                        },
-                        "file-size": "1252383"
+                        "file-permissions": {"@junos:format": "-rw-r--r--"},
+                        "file-size": "1252383",
                     },
                     {
-                        "file-date": {
-                            "@junos:format": "Aug 8   2019"
-                        },
+                        "file-date": {"@junos:format": "Aug 8   2019"},
                         "file-group": "wheel",
                         "file-links": "1",
                         "file-name": "/var/crash/core.vmxt.mpc0.1565307747.1791.gz",
                         "file-owner": "root",
-                        "file-permissions": {
-                            "@junos:format": "-rw-r--r--"
-                        },
-                        "file-size": "4576464"
+                        "file-permissions": {"@junos:format": "-rw-r--r--"},
+                        "file-size": "4576464",
                     },
                     {
-                        "file-date": {
-                            "@junos:format": "Aug 15  2019"
-                        },
+                        "file-date": {"@junos:format": "Aug 15  2019"},
                         "file-group": "wheel",
                         "file-links": "1",
                         "file-name": "/var/crash/core.vmxt.mpc0.1565841060.1528.gz",
                         "file-owner": "root",
-                        "file-permissions": {
-                            "@junos:format": "-rw-r--r--"
-                        },
-                        "file-size": "1139316"
+                        "file-permissions": {"@junos:format": "-rw-r--r--"},
+                        "file-size": "1139316",
                     },
                     {
-                        "file-date": {
-                            "@junos:format": "Aug 15  2019"
-                        },
+                        "file-date": {"@junos:format": "Aug 15  2019"},
                         "file-group": "wheel",
                         "file-links": "1",
                         "file-name": "/var/crash/core.vmxt.mpc0.1565841991.4312.gz",
                         "file-owner": "root",
-                        "file-permissions": {
-                            "@junos:format": "-rw-r--r--"
-                        },
-                        "file-size": "1139249"
+                        "file-permissions": {"@junos:format": "-rw-r--r--"},
+                        "file-size": "1139249",
                     },
                     {
-                        "file-date": {
-                            "@junos:format": "Aug 15  2019"
-                        },
+                        "file-date": {"@junos:format": "Aug 15  2019"},
                         "file-group": "wheel",
                         "file-links": "1",
                         "file-name": "/var/crash/core.vmxt.mpc0.1565842608.6212.gz",
                         "file-owner": "root",
-                        "file-permissions": {
-                            "@junos:format": "-rw-r--r--"
-                        },
-                        "file-size": "1139299"
+                        "file-permissions": {"@junos:format": "-rw-r--r--"},
+                        "file-size": "1139299",
                     },
                     {
-                        "file-date": {
-                            "@junos:format": "Aug 15  2019"
-                        },
+                        "file-date": {"@junos:format": "Aug 15  2019"},
                         "file-group": "wheel",
                         "file-links": "1",
                         "file-name": "/var/crash/core.vmxt.mpc0.1565892564.3392.gz",
                         "file-owner": "root",
-                        "file-permissions": {
-                            "@junos:format": "-rw-r--r--"
-                        },
-                        "file-size": "1139321"
-                    }
+                        "file-permissions": {"@junos:format": "-rw-r--r--"},
+                        "file-size": "1139321",
+                    },
                 ],
                 "output": [
                     "/var/tmp/*core*: No such file or directory",
                     "/var/tmp/pics/*core*: No such file or directory",
                     "/var/crash/kernel.*: No such file or directory",
                     "/var/jails/rest-api/tmp/*core*: No such file or directory",
-                    "/tftpboot/corefiles/*core*: No such file or directory"
+                    "/tftpboot/corefiles/*core*: No such file or directory",
                 ],
-                "total-files": "6"
+                "total-files": "6",
             }
         }
     }
 
-
-    golden_output_1 = {'execute.return_value': '''
+    golden_output_1 = {
+        "execute.return_value": """
                 show system core-dumps
                 -rw-r--r--  1 root  wheel    1252383 Aug 8   2019 /var/crash/core.riot.mpc0.1565307741.1716.gz
                 -rw-r--r--  1 root  wheel    4576464 Aug 8   2019 /var/crash/core.vmxt.mpc0.1565307747.1791.gz
@@ -1892,7 +1945,7 @@ class TestShowSystemCoreDumps(unittest.TestCase):
                 /tftpboot/corefiles/*core*: No such file or directory
                 total files: 6
 
-    '''
+    """
     }
 
     def test_empty(self):
@@ -1908,114 +1961,90 @@ class TestShowSystemCoreDumps(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 
-#=========================================================
+# =========================================================
 # Unit test for show system core-dumps no-forwarding
-#=========================================================
+# =========================================================
 class TestShowSystemCoreDumpsNoForwarding(unittest.TestCase):
 
-    device = Device(name='aDevice')
+    device = Device(name="aDevice")
 
     maxDiff = None
 
-    empty_output = {'execute.return_value': ''}
+    empty_output = {"execute.return_value": ""}
 
     golden_parsed_output_1 = {
         "directory-list": {
             "directory": {
                 "file-information": [
                     {
-                        "file-date": {
-                            "@junos:format": "Aug 8   2019"
-                        },
+                        "file-date": {"@junos:format": "Aug 8   2019"},
                         "file-group": "wheel",
                         "file-links": "1",
                         "file-name": "/var/crash/core.riot.mpc0.1565307741.1716.gz",
                         "file-owner": "root",
-                        "file-permissions": {
-                            "@junos:format": "-rw-r--r--"
-                        },
-                        "file-size": "1252383"
+                        "file-permissions": {"@junos:format": "-rw-r--r--"},
+                        "file-size": "1252383",
                     },
                     {
-                        "file-date": {
-                            "@junos:format": "Aug 8   2019"
-                        },
+                        "file-date": {"@junos:format": "Aug 8   2019"},
                         "file-group": "wheel",
                         "file-links": "1",
                         "file-name": "/var/crash/core.vmxt.mpc0.1565307747.1791.gz",
                         "file-owner": "root",
-                        "file-permissions": {
-                            "@junos:format": "-rw-r--r--"
-                        },
-                        "file-size": "4576464"
+                        "file-permissions": {"@junos:format": "-rw-r--r--"},
+                        "file-size": "4576464",
                     },
                     {
-                        "file-date": {
-                            "@junos:format": "Aug 15  2019"
-                        },
+                        "file-date": {"@junos:format": "Aug 15  2019"},
                         "file-group": "wheel",
                         "file-links": "1",
                         "file-name": "/var/crash/core.vmxt.mpc0.1565841060.1528.gz",
                         "file-owner": "root",
-                        "file-permissions": {
-                            "@junos:format": "-rw-r--r--"
-                        },
-                        "file-size": "1139316"
+                        "file-permissions": {"@junos:format": "-rw-r--r--"},
+                        "file-size": "1139316",
                     },
                     {
-                        "file-date": {
-                            "@junos:format": "Aug 15  2019"
-                        },
+                        "file-date": {"@junos:format": "Aug 15  2019"},
                         "file-group": "wheel",
                         "file-links": "1",
                         "file-name": "/var/crash/core.vmxt.mpc0.1565841991.4312.gz",
                         "file-owner": "root",
-                        "file-permissions": {
-                            "@junos:format": "-rw-r--r--"
-                        },
-                        "file-size": "1139249"
+                        "file-permissions": {"@junos:format": "-rw-r--r--"},
+                        "file-size": "1139249",
                     },
                     {
-                        "file-date": {
-                            "@junos:format": "Aug 15  2019"
-                        },
+                        "file-date": {"@junos:format": "Aug 15  2019"},
                         "file-group": "wheel",
                         "file-links": "1",
                         "file-name": "/var/crash/core.vmxt.mpc0.1565842608.6212.gz",
                         "file-owner": "root",
-                        "file-permissions": {
-                            "@junos:format": "-rw-r--r--"
-                        },
-                        "file-size": "1139299"
+                        "file-permissions": {"@junos:format": "-rw-r--r--"},
+                        "file-size": "1139299",
                     },
                     {
-                        "file-date": {
-                            "@junos:format": "Aug 15  2019"
-                        },
+                        "file-date": {"@junos:format": "Aug 15  2019"},
                         "file-group": "wheel",
                         "file-links": "1",
                         "file-name": "/var/crash/core.vmxt.mpc0.1565892564.3392.gz",
                         "file-owner": "root",
-                        "file-permissions": {
-                            "@junos:format": "-rw-r--r--"
-                        },
-                        "file-size": "1139321"
-                    }
+                        "file-permissions": {"@junos:format": "-rw-r--r--"},
+                        "file-size": "1139321",
+                    },
                 ],
                 "output": [
                     "/var/tmp/*core*: No such file or directory",
                     "/var/tmp/pics/*core*: No such file or directory",
                     "/var/crash/kernel.*: No such file or directory",
                     "/var/jails/rest-api/tmp/*core*: No such file or directory",
-                    "/tftpboot/corefiles/*core*: No such file or directory"
+                    "/tftpboot/corefiles/*core*: No such file or directory",
                 ],
-                "total-files": "6"
+                "total-files": "6",
             }
         }
     }
 
-
-    golden_output_1 = {'execute.return_value': '''
+    golden_output_1 = {
+        "execute.return_value": """
                 show system core-dumps  no-forwarding
                 -rw-r--r--  1 root  wheel    1252383 Aug 8   2019 /var/crash/core.riot.mpc0.1565307741.1716.gz
                 -rw-r--r--  1 root  wheel    4576464 Aug 8   2019 /var/crash/core.vmxt.mpc0.1565307747.1791.gz
@@ -2030,7 +2059,7 @@ class TestShowSystemCoreDumpsNoForwarding(unittest.TestCase):
                 /tftpboot/corefiles/*core*: No such file or directory
                 total files: 6
 
-    '''
+    """
     }
 
     def test_empty(self):
@@ -2045,5 +2074,131 @@ class TestShowSystemCoreDumpsNoForwarding(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
-if __name__ == '__main__':
+
+# =========================================================
+# Unit test for show system buffer
+# =========================================================
+class TestShowSystemUptime(unittest.TestCase):
+
+    device = Device(name="aDevice")
+
+    maxDiff = None
+
+    empty_output = {"execute.return_value": ""}
+
+    golden_parsed_output_1 = {
+        "execute.return_value": """
+        show system uptime
+        Current time: 2020-03-26 08:16:41 UTC
+        Time Source:  LOCAL CLOCK
+        System booted: 2019-08-29 09:02:22 UTC (29w6d 23:14 ago)
+        Protocols started: 2019-08-29 09:03:25 UTC (29w6d 23:13 ago)
+        Last configured: 2020-03-05 16:04:34 UTC (2w6d 16:12 ago) by cisco
+        8:16AM  up 209 days, 23:14, 5 users, load averages: 0.43, 0.43, 0.42
+    """
+    }
+
+    golden_output_1 = {
+        "system-uptime-information": {
+            "current-time": {"date-time": {"#text": "2020-03-26 08:16:41 UTC"}},
+            "last-configured-time": {
+                "date-time": {"#text": "2020-03-05 16:04:34 UTC "},
+                "time-length": {"#text": "2w6d 16:12"},
+                "user": "cisco",
+            },
+            "protocols-started-time": {
+                "date-time": {"#text": "2019-08-29 09:03:25 UTC"},
+                "time-length": {"#text": "29w6d 23:13"},
+            },
+            "system-booted-time": {
+                "date-time": {"#text": "2019-08-29 09:02:22 UTC"},
+                "time-length": {"#text": "29w6d 23:14"},
+            },
+            "time-source": "LOCAL CLOCK",
+            "uptime-information": {
+                "active-user-count": {"#text": "5"},
+                "date-time": {"#text": "8:16AM"},
+                "load-average-1": "0.43",
+                "load-average-15": "0.43",
+                "load-average-5": "0.42",
+                "up-time": {"#text": "209 days, 23:14 mins,"},
+            },
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowSystemUptime(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_parsed_output_1)
+        obj = ShowSystemUptime(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_output_1)
+
+
+class TestShowSystemUptimeNoForwarding(unittest.TestCase):
+
+    device = Device(name="aDevice")
+
+    maxDiff = None
+
+    empty_output = {"execute.return_value": ""}
+
+    golden_parsed_output_1 = {
+        "execute.return_value": """
+        show system uptime no-forwarding
+        Current time: 2020-03-25 09:38:14 UTC
+        Time Source:  LOCAL CLOCK
+        System booted: 2019-08-29 09:02:22 UTC (29w6d 00:35 ago)
+        Protocols started: 2019-08-29 09:03:25 UTC (29w6d 00:34 ago)
+        Last configured: 2020-03-05 16:04:34 UTC (2w5d 17:33 ago) by cisco
+        9:38AM  up 209 days, 36 mins, 3 users, load averages: 0.29, 0.41, 0.38
+    """
+    }
+
+    golden_output_1 = {
+        "system-uptime-information": {
+            "current-time": {"date-time": {"#text": "2020-03-25 09:38:14 UTC"}},
+            "last-configured-time": {
+                "date-time": {"#text": "2020-03-05 16:04:34 UTC "},
+                "time-length": {"#text": "2w5d 17:33"},
+                "user": "cisco",
+            },
+            "protocols-started-time": {
+                "date-time": {"#text": "2019-08-29 09:03:25 UTC"},
+                "time-length": {"#text": "29w6d 00:34"},
+            },
+            "system-booted-time": {
+                "date-time": {"#text": "2019-08-29 09:02:22 UTC"},
+                "time-length": {"#text": "29w6d 00:35"},
+            },
+            "time-source": "LOCAL CLOCK",
+            "uptime-information": {
+                "active-user-count": {"#text": "3"},
+                "date-time": {"#text": "9:38AM"},
+                "load-average-1": "0.29",
+                "load-average-15": "0.41",
+                "load-average-5": "0.38",
+                "up-time": {"#text": "209 days, 36 mins,"},
+            },
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowSystemUptimeNoForwarding(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_parsed_output_1)
+        obj = ShowSystemUptimeNoForwarding(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_output_1)
+
+
+if __name__ == "__main__":
     unittest.main()

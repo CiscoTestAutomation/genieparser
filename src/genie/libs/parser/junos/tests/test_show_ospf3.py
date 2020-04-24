@@ -2778,7 +2778,5 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-
-
 if __name__ == '__main__':
     unittest.main()

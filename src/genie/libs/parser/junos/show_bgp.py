@@ -648,13 +648,12 @@ class ShowBgpGroupDetailNoMore(ShowBgpGroupDetail):
 
 class ShowBgpGroupSummary(ShowBgpGroupBrief):
     """
-    Schema for:
+    Parser for:
     * show bgp group summary
     """
     cli_command = 'show bgp group summary'
 
     def cli(self, output=None):
-
         if not output:
             out = self.device.execute(self.cli_command)
         else:
@@ -665,7 +664,7 @@ class ShowBgpGroupSummary(ShowBgpGroupBrief):
 
 class ShowBgpGroupSummaryNoMore(ShowBgpGroupSummary):
     """
-    Schema for:
+    Parser for:
     * show bgp group summary | no-more
     """
     cli_command = 'show bgp group summary | no-more'
@@ -676,5 +675,353 @@ class ShowBgpGroupSummaryNoMore(ShowBgpGroupSummary):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-
         return super().cli(output=out)
+
+
+class ShowBgpSummarySchema(MetaParser):
+    """
+        schema = {
+            "bgp-information": {
+                "bgp-peer": [
+                    {
+                        "bgp-rib": [
+                            {
+                                "accepted-prefix-count": str,
+                                "active-prefix-count": str,
+                                "name": str,
+                                "received-prefix-count": str,
+                                "suppressed-prefix-count": str,
+                            }
+                        ],
+                        "description": str,
+                        "elapsed-time": {
+                            "#text": str,
+                            "@junos:seconds": str,
+                        },
+                        "flap-count": str,
+                        "input-messages": str,
+                        "output-messages": str,
+                        "peer-address": str,
+                        "peer-as": str,
+                        "peer-state": str,
+                        "route-queue-count": str,
+                    }
+                ],
+                "bgp-rib": [
+                    {
+                    "accepted-external-prefix-count": str,
+                    "accepted-internal-prefix-count": str,
+                    "accepted-prefix-count": str,
+                    "active-external-prefix-count": str,
+                    "active-internal-prefix-count": str,
+                    "active-prefix-count": str,
+                    "bgp-rib-state": str,
+                    "damped-prefix-count": str,
+                    "history-prefix-count": str,
+                    "name": str,
+                    "pending-prefix-count": str,
+                    "received-prefix-count": str,
+                    "suppressed-external-prefix-count": str,
+                    "suppressed-internal-prefix-count": str,
+                    "suppressed-prefix-count": str,
+                    "total-external-prefix-count": str,
+                    "total-internal-prefix-count": str,
+                    "total-prefix-count": str
+                    }
+                ],
+                "bgp-thread-mode": str,
+                "down-peer-count": str,
+                "group-count": str,
+                "peer-count": str,
+            }
+        }
+
+    """
+    def validate_bgp_rib_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('bgp-rib is not a list')
+        bgp_rib_schema = Schema(
+                {
+                    Optional("accepted-external-prefix-count"): str,
+                    Optional("accepted-internal-prefix-count"): str,
+                    Optional("accepted-prefix-count"): str,
+                    Optional("active-external-prefix-count"): str,
+                    Optional("active-internal-prefix-count"): str,
+                    "active-prefix-count": str,
+                    Optional("bgp-rib-state"): str,
+                    "damped-prefix-count": str,
+                    "history-prefix-count": str,
+                    "name": str,
+                    "pending-prefix-count": str,
+                    Optional("received-prefix-count"): str,
+                    Optional("suppressed-external-prefix-count"): str,
+                    Optional("suppressed-internal-prefix-count"): str,
+                    "suppressed-prefix-count": str,
+                    Optional("total-external-prefix-count"): str,
+                    Optional("total-internal-prefix-count"): str,
+                    "total-prefix-count": str
+                }
+            )
+
+        for item in value:
+            bgp_rib_schema.validate(item)
+        return value
+
+    def validate_bgp_peer_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('bgp-peer is not a list')
+
+        def validate_bgp_peer_rib_list(value):
+            if not isinstance(value, list):
+                raise SchemaTypeError('bgp-rib of bgp-peer is not a list')
+            bgp_peer_rib_schema = Schema(
+                {
+                    'accepted-prefix-count': str,
+                    'active-prefix-count': str,
+                    'name': str,
+                    'received-prefix-count': str,
+                    'suppressed-prefix-count': str
+                }
+            )
+
+            for item in value:
+                bgp_peer_rib_schema.validate(item)
+            return value
+
+        bgp_peer_schema = Schema(
+            {
+                Optional('bgp-rib'): Use(validate_bgp_peer_rib_list),
+                Optional("description"): str,
+                "elapsed-time": {
+                    "#text": str,
+                    Optional("@junos:seconds"): str,
+                },
+                "flap-count": str,
+                "input-messages": str,
+                "output-messages": str,
+                "peer-address": str,
+                "peer-as": str,
+                "peer-state": str,
+                "route-queue-count": str,
+            }
+        )
+        for item in value:
+            bgp_peer_schema.validate(item)
+        return value
+
+    # Main schema
+    schema = {
+        "bgp-information": {
+            "bgp-peer": Use(validate_bgp_peer_list),
+            "bgp-rib": Use(validate_bgp_rib_list),
+            "bgp-thread-mode": str,
+            "down-peer-count": str,
+            "group-count": str,
+            "peer-count": str,
+        }
+    }
+
+
+class ShowBgpSummary(ShowBgpSummarySchema):
+    """
+    Parser for:
+        * show bgp summary
+    """
+    cli_command = 'show bgp summary'
+
+    def cli(self, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # ============================================================
+        # Regex Patterns
+        # ============================================================
+
+        # ------------------------------------------------------------
+        # p1, p2:
+        # 'bgp-information' dict
+        # ------------------------------------------------------------
+        # Threading mode: BGP I/O
+        p1 = re.compile(r'^Threading +mode: +(?P<bgp_thread_mode>[\S\s]+)$')
+
+        # Groups: 14 Peers: 19 Down peers: 15
+        p2 = re.compile(r'^Groups: +(?P<group_count>\d+) +Peers: '
+                        r'+(?P<peer_count>\d+) +Down +peers: '
+                        r'+(?P<down_peer_count>\d+)$')
+
+        # ------------------------------------------------------------
+        # p3, p4
+        # 'bgp-information': {
+        #       'bgp-rib': []
+        # ------------------------------------------------------------
+        # inet.0
+        # inet6.0
+        p3 = re.compile(r'^(?P<name>inet(\d+)?.\d)$')
+
+        # 1366        682          0          0          0          0
+        p4 = re.compile(r'^(?P<total_prefix_count>\d+) +(?P<active_prefix_count>\d+) +'
+                        r'(?P<suppressed_prefix_count>\d+) +(?P<history_prefix_count>\d+) +'
+                        r'(?P<damped_prefix_count>\d+) +(?P<pending_prefix_count>\d+)$')
+
+        # ------------------------------------------------------------
+        # p5:
+        # 'bgp-information': {
+        #       'bgp-peer': []
+        # ------------------------------------------------------------
+        # 10.49.216.179           65171          0          0       0       0 29w5d 22:42:36 Connect
+        # 2001:db8:eb18:ca45::11       65151          0          0       0       0 29w5d 22:42:36 Connect
+        p5 = re.compile(r'^(?P<peer_address>[\d\w:.]+) +(?P<peer_as>\d+) +'
+                        r'(?P<input_messages>\d+) +(?P<output_messages>\d+) +'
+                        r'(?P<route_queue_count>\d+) +(?P<flap_count>\d+) +'
+                        r'(?P<text>[\S\s]+) +(?P<peer_state>Active|Connect|Establ)$')
+
+        # ------------------------------------------------------------
+        # p6:
+        # 'bgp-information': {
+        #       'bgp-peer': [
+        #           {'bgp-rib': {}}
+        #       ]
+        # ------------------------------------------------------------
+        # inet.0: 682/684/684/0
+        p6 = re.compile(r'^(?P<name>inet(\d+)?\.\d+) *: +(?P<active_prefix_count>\d+)'
+                        r'\/(?P<received_prefix_count>\d+)\/(?P<accepted_prefix_count>\d+)'
+                        r'\/(?P<suppressed_prefix_count>\d+)$')
+
+        # ============================================================
+        # Build Parsers
+        # ============================================================
+
+        parsed_dict = {}
+        bgp_info_dict = {'bgp-information': {}}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Threading mode: BGP I/O
+            # Groups: 14 Peers: 19 Down peers: 15
+            m = p1.match(line) or p2.match(line)
+            if m:
+                for group_key, group_value in m.groupdict().items():
+                    entry_key = group_key.replace('_', '-')
+                    bgp_info_dict['bgp-information'][entry_key] = group_value
+
+                bgp_info_dict['bgp-information']['bgp-peer'] = []
+                bgp_info_dict['bgp-information']['bgp-rib'] = []
+                continue
+
+            # ------------------------------------------------------------
+            # Build
+            #     "bgp-rib": [
+            #         {
+            #         "accepted-external-prefix-count": str,
+            #         "accepted-internal-prefix-count": str,
+            #         "accepted-prefix-count": str,
+            #         "active-external-prefix-count": str,
+            #         "active-internal-prefix-count": str,
+            #         "active-prefix-count": str,
+            #         "bgp-rib-state": str,
+            #         "damped-prefix-count": str,
+            #         "history-prefix-count": str,
+            #         "name": str,
+            #         "pending-prefix-count": str,
+            #         "received-prefix-count": str,
+            #         "suppressed-external-prefix-count": str,
+            #         "suppressed-internal-prefix-count": str,
+            #         "suppressed-prefix-count": str,
+            #         "total-external-prefix-count": str,
+            #         "total-internal-prefix-count": str,
+            #         "total-prefix-count": str
+            #         }
+            #     ],
+            # ------------------------------------------------------------
+
+            # inet.0
+            # inet6.0
+            m = p3.match(line)
+            if m:
+                bgp_rib_dict = {}
+                bgp_rib_dict['name'] = m.groupdict()['name']
+                continue
+
+            # 1366        682          0          0          0          0
+            m = p4.match(line)
+            if m:
+                for key, value in m.groupdict().items():
+                    key = key.replace('_', '-')
+                    bgp_rib_dict[key] = value
+
+                bgp_info_dict['bgp-information']['bgp-rib'].append(bgp_rib_dict)
+                continue
+
+            # ------------------------------------------------------------
+            # Build
+            #       "bgp-peer": [
+            #                     {
+            #                         "bgp-rib": [
+            #                             {
+            #                                 "accepted-prefix-count": str,
+            #                                 "active-prefix-count": str,
+            #                                 "name": str,
+            #                                 "received-prefix-count": str,
+            #                                 "suppressed-prefix-count": str,
+            #                             }
+            #                         ],
+            #                         "description": str,
+            #                         "elapsed-time": {
+            #                             "#text": str,
+            #                             "@junos:seconds": str,
+            #                         },
+            #                         "flap-count": str,
+            #                         "input-messages": str,
+            #                         "output-messages": str,
+            #                         "peer-address": str,
+            #                         "peer-as": str,
+            #                         "peer-state": str,
+            #                         "route-queue-count": str,
+            #                     }
+            #                 ],
+            # ------------------------------------------------------------
+
+            # 10.49.216.179           65171          0          0       0       0 29w5d 22:42:36 Connect
+            # 2001:db8:eb18:ca45::11       65151          0          0       0       0 29w5d 22:42:36 Connect
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                bgp_peer_dict = {}
+
+                for key, value in group.items():
+                    if key == 'text':
+                        bgp_peer_dict['elapsed-time'] = {'#text': value}
+                        continue
+                    key = key.replace('_', '-')
+                    bgp_peer_dict[key] = value
+
+                bgp_info_dict['bgp-information']['bgp-peer'].append(bgp_peer_dict)
+                continue
+
+            # inet.0: 682/684/684/0
+            m = p6.match(line)
+            if m:
+                if 'bgp-rib' not in bgp_peer_dict:
+                    bgp_peer_dict['bgp-rib'] = []
+                bgp_peer_rib_dict = {}
+
+                for key, value in m.groupdict().items():
+                    key = key.replace('_', '-')
+                    bgp_peer_rib_dict[key] = value
+
+                bgp_peer_dict['bgp-rib'].append(bgp_peer_rib_dict)
+                continue
+
+        # Handle the empty output
+        if bool(bgp_info_dict['bgp-information']):
+            parsed_dict.update(bgp_info_dict)
+
+        return parsed_dict
+
+
+
+
