@@ -183,3 +183,66 @@ class ShowInterfacesTerseInterface(ShowInterfacesTerse):
             out = output
 
         return super().cli(output=out)
+
+class ShowInterfacesSchema(MetaParser):
+    """ Parser for:
+        'show interfaces'
+    """
+    schema = {}
+
+class ShowInterfaces(ShowInterfacesSchema):
+    cli_command = ['show interfaces']
+
+    def cli(self, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+        
+        ret_dict = {}
+
+        # Physical interface: ge-0/0/0, Enabled, Physical link is Up
+        p1 = re.compile(r'^Physical +interface: +\S+, +\S+, +Physical +link +is +\S+$')
+
+        # Interface index: 148, SNMP ifIndex: 526
+        p2 = re.compile(r'^Interface +index: +\d+, +SNMP +ifIndex: +\d+$')
+
+        # Description: none/100G/in/hktGCS002_ge-0/0/0
+        p3 = re.compile(r'^Description: +\S+$')
+
+        # Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
+        p4 = re.compile(r'^Link-level +type: +\S+, +MTU: +\d+, +MRU: +\d+, +(\S+) +mode, +Speed: +(\S+), +BPDU +Error: +\S+,$')
+
+        # Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        p5 = re.compile(r'^Loop +Detect +PDU +Error: +\S+, +Ethernet-Switching +Error: +\S+, +MAC-REWRITE +Error: +\S+, +Loopback: +\S+,$')
+
+        # Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
+        p6 = re.compile(r'^Source +filtering: +\S+, +Flow +control: +\S+, +Auto-negotiation: +\S+, +Remote +fault: +\S+$')
+
+        # Pad to minimum frame size: Disabled
+        p7 = re.compile(r'^Pad +to +minimum +frame +size: +\S+$')
+
+        # Device flags   : Present Running
+        p8 = re.compile(r'^Device +flags +: +[\S ]+$')
+
+        # Interface flags: SNMP-Traps Internal: 0x4000
+        p9 = re.compile(r'^Interface +flags: +\S+ +Internal: +\S+$')
+
+        # Link flags     : None
+        p10 = re.compile(r'^Link +flags +: +\S+$')
+
+        # CoS queues     : 8 supported, 8 maximum usable queues
+        p11 = re.compile(r'^CoS +queues +: +\d+ supported, +\d+ maximum +usable +queues$')
+
+        # Current address: 00:50:56:8d:c8:29, Hardware address: 00:50:56:8d:c8:29
+        p12 = re.compile(r'^Current +address: +\S+, +Hardware +address: +\S+$')
+
+        # Last flapped   : 2019-08-29 09:09:19 UTC (29w6d 18:56 ago)
+        p13 = re.compile(r'^Last +flapped +: +[\S ]+$')
+
+        # Input rate     : 2952 bps (5 pps)
+        p14 = re.compile(r'^Input +rate +: +\d+ +bps +\(\d+ +pps\)$')
+
+        p15 = re.compile(r'^Output +rate +: +\d+ +bps +\(\d+ +pps\)$')
+        return ret_dict
