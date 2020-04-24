@@ -77,7 +77,8 @@
         * show bgp summary
     * Added ShowOspfNeighbor for:
         * show ospf neighbor
-    * Added ShowRouteProtocol for:
+    * Added ShowRoute for:
+        * show route
         * show route protocol {protocol}
         * show route protocol {protocol} {ip_address}
         * show route protocol {protocol} table {table}

@@ -9,7 +9,7 @@ from pyats.topology import Device, loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 from genie.libs.parser.junos.show_route import (ShowRouteTable,
-                                                ShowRouteProtocol,
+                                                ShowRoute,
                                                 ShowRouteProtocolExtensive,
                                                 ShowRouteAdvertisingProtocol,
                                                 ShowRouteForwardingTableSummary,
@@ -230,11 +230,12 @@ class test_show_route_table(unittest.TestCase):
 
 '''
 Unit test for:
+    * show route
     * show route protocol {protocol}
     * show route protocol {protocol} {ip_address}
     * show route protocol {protocol} table {table}
 '''
-class TestShowRouteProtocol(unittest.TestCase):
+class TestShowRoute(unittest.TestCase):
 
     device = Device(name='aDevice')
     maxDiff = None
@@ -11360,9 +11361,223 @@ class TestShowRouteProtocol(unittest.TestCase):
         }
     }
 
+    golden_output_5 = {'execute.return_value': '''
+        show route 
+
+        inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
+
+        0.0.0.0/0          *[OSPF/150/10] 3w3d 03:12:45, metric 101, tag 0
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.1.0.0/24         *[Direct/0] 29w6d 21:35:55
+                            >  via fxp0.0
+                            [OSPF/150/10] 3w3d 03:12:45, metric 20, tag 0
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.1.0.101/32       *[Local/0] 29w6d 21:35:55
+                            Local via fxp0.0
+        10.36.3.3/32         *[OSPF/10/10] 1w0d 15:44:41, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.16.0.0/30         *[OSPF/10/10] 3w0d 04:39:36, metric 1200
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.100.5.5/32         *[OSPF/10/10] 3w0d 04:39:36, metric 1201
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.220.0.0/16      *[BGP/170] 3w3d 03:12:24, MED 12003, localpref 120, from 10.169.14.240
+                            AS path: (65151 65000) I, validation-state: unverified
+                            >  to 10.169.14.121 via ge-0/0/1.0
+                            [BGP/170] 3w1d 16:51:06, MED 12003, localpref 120, from 10.189.5.253
+                            AS path: (65151 65000) I, validation-state: unverified
+                            >  to 10.189.5.94 via ge-0/0/0.0
+    '''}
+
+    golden_parsed_output_5 = {
+        "route-information": {
+            "route-table": [
+                {
+                    "active-route-count": "929",
+                    "destination-count": "929",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": [
+                        {
+                            "rt-destination": "0.0.0.0/0",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "3w3d 03:12:45"
+                                },
+                                "metric": "101",
+                                "nh": [
+                                    {
+                                        "to": "10.169.14.121",
+                                        "via": "ge-0/0/1.0"
+                                    }
+                                ],
+                                "preference": "150",
+                                "preference2": "10",
+                                "protocol-name": "OSPF",
+                                "rt-tag": "0"
+                            }
+                        },
+                        {
+                            "rt-destination": "10.1.0.0/24",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "29w6d 21:35:55"
+                                },
+                                "nh": [
+                                    {
+                                        "via": "fxp0.0"
+                                    }
+                                ],
+                                "preference": "0",
+                                "protocol-name": "Direct"
+                            }
+                        },
+                        {
+                            "rt-entry": {
+                                "age": {
+                                    "#text": "3w3d 03:12:45"
+                                },
+                                "metric": "20",
+                                "nh": [
+                                    {
+                                        "to": "10.169.14.121",
+                                        "via": "ge-0/0/1.0"
+                                    }
+                                ],
+                                "preference": "150",
+                                "preference2": "10",
+                                "protocol-name": "OSPF",
+                                "rt-tag": "0"
+                            }
+                        },
+                        {
+                            "rt-destination": "10.1.0.101/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "29w6d 21:35:55"
+                                },
+                                "nh": [
+                                    {
+                                        "nh-local-interface": "fxp0.0"
+                                    }
+                                ],
+                                "preference": "0",
+                                "protocol-name": "Local"
+                            }
+                        },
+                        {
+                            "rt-destination": "10.36.3.3/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "1w0d 15:44:41"
+                                },
+                                "metric": "1202",
+                                "nh": [
+                                    {
+                                        "to": "10.169.14.121",
+                                        "via": "ge-0/0/1.0"
+                                    }
+                                ],
+                                "preference": "10",
+                                "preference2": "10",
+                                "protocol-name": "OSPF"
+                            }
+                        },
+                        {
+                            "rt-destination": "10.16.0.0/30",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "3w0d 04:39:36"
+                                },
+                                "metric": "1200",
+                                "nh": [
+                                    {
+                                        "to": "10.169.14.121",
+                                        "via": "ge-0/0/1.0"
+                                    }
+                                ],
+                                "preference": "10",
+                                "preference2": "10",
+                                "protocol-name": "OSPF"
+                            }
+                        },
+                        {
+                            "rt-destination": "10.100.5.5/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "3w0d 04:39:36"
+                                },
+                                "metric": "1201",
+                                "nh": [
+                                    {
+                                        "to": "10.169.14.121",
+                                        "via": "ge-0/0/1.0"
+                                    }
+                                ],
+                                "preference": "10",
+                                "preference2": "10",
+                                "protocol-name": "OSPF"
+                            }
+                        },
+                        {
+                            "rt-destination": "10.220.0.0/16",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "3w3d 03:12:24"
+                                },
+                                "as-path": " (65151 65000) I",
+                                "learned-from": "10.169.14.240",
+                                "local-preference": "120",
+                                "med": "12003",
+                                "nh": [
+                                    {
+                                        "to": "10.169.14.121",
+                                        "via": "ge-0/0/1.0"
+                                    }
+                                ],
+                                "preference": "170",
+                                "protocol-name": "BGP",
+                                "validation-state": "unverified"
+                            }
+                        },
+                        {
+                            "rt-entry": {
+                                "age": {
+                                    "#text": "3w1d 16:51:06"
+                                },
+                                "as-path": " (65151 65000) I",
+                                "learned-from": "10.189.5.253",
+                                "local-preference": "120",
+                                "med": "12003",
+                                "nh": [
+                                    {
+                                        "to": "10.189.5.94",
+                                        "via": "ge-0/0/0.0"
+                                    }
+                                ],
+                                "preference": "170",
+                                "protocol-name": "BGP",
+                                "validation-state": "unverified"
+                            }
+                        }
+                    ],
+                    "table-name": "inet.0",
+                    "total-route-count": "1615"
+                }
+            ]
+        }
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowRouteProtocol(device=self.device)
+        obj = ShowRoute(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(
                 protocol='static',
@@ -11370,7 +11585,7 @@ class TestShowRouteProtocol(unittest.TestCase):
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        obj = ShowRouteProtocol(device=self.device)
+        obj = ShowRoute(device=self.device)
         parsed_output = obj.parse(
             protocol='static',
             ip_address='10.169.14.240/32')
@@ -11378,7 +11593,7 @@ class TestShowRouteProtocol(unittest.TestCase):
     
     def test_golden_2(self):
         self.device = Mock(**self.golden_output_2)
-        obj = ShowRouteProtocol(device=self.device)
+        obj = ShowRoute(device=self.device)
         parsed_output = obj.parse(
             protocol='static',
             ip_address='2001:db8:eb18:ca45::1')
@@ -11386,18 +11601,24 @@ class TestShowRouteProtocol(unittest.TestCase):
     
     def test_golden_3(self):
         self.device = Mock(**self.golden_output_3)
-        obj = ShowRouteProtocol(device=self.device)
+        obj = ShowRoute(device=self.device)
         parsed_output = obj.parse(
             protocol='ospf')
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
     def test_golden_4(self):
         self.device = Mock(**self.golden_output_4)
-        obj = ShowRouteProtocol(device=self.device)
+        obj = ShowRoute(device=self.device)
         parsed_output = obj.parse(
             protocol='ospf',
             table='inet.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
+    
+    def test_golden_5(self):
+        self.device = Mock(**self.golden_output_5)
+        obj = ShowRoute(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
 '''
 Unit test for:
