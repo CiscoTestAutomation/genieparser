@@ -47383,18 +47383,18 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
     }
 
     golden_output_3 = {'execute.return_value': '''
-        show route protocol ospf table inet.0 extensive 106.162.196.241
+        show route protocol ospf table inet.0 extensive 10.169.196.241
 
         inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
-        106.162.196.241/32 (1 entry, 1 announced)
+        10.169.196.241/32 (1 entry, 1 announced)
                 State: <FlashAll>
         TSI:
-        KRT in-kernel 106.162.196.241/32 -> {106.187.14.121}
+        KRT in-kernel 10.169.196.241/32 -> {10.169.14.121}
                 *OSPF   Preference: 10/10
                         Next hop type: Router, Next hop index: 613
                         Address: 0xdfa7934
                         Next-hop reference count: 458
-                        Next hop: 106.187.14.121 via ge-0/0/1.0 weight 0x1, selected
+                        Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
                         Local AS: 65171 
@@ -47417,7 +47417,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                     "rt": [
                         {
                             "rt-announced-count": "1",
-                            "rt-destination": "106.162.196.241/32",
+                            "rt-destination": "10.169.196.241/32",
                             "rt-entry": {
                                 "active-tag": "*",
                                 "age": {
@@ -47438,7 +47438,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     {
                                         "nh-string": "Next hop",
                                         "session": "141",
-                                        "to": "106.187.14.121",
+                                        "to": "10.169.14.121",
                                         "via": "ge-0/0/1.0",
                                         "weight": "0x1"
                                     }
@@ -47461,7 +47461,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                             },
                             "rt-state": "FlashAll",
                             "tsi": {
-                                "#text": "KRT in-kernel 106.162.196.241/32 -> {106.187.14.121}"
+                                "#text": "KRT in-kernel 10.169.196.241/32 -> {10.169.14.121}"
                             }
                         }
                     ],
@@ -47500,7 +47500,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
         parsed_output = obj.parse(
             protocol='ospf',
             table='inet.0',
-            destination='106.162.196.241')
+            destination='10.169.196.241')
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 '''
