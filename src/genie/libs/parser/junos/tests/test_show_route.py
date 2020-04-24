@@ -47987,7 +47987,7 @@ class TestShowRouteSummary(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         show route summary
         Autonomous system number: 65171
-        Router ID: 111.87.5.252
+        Router ID: 10.189.5.252
 
         inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
                     Direct:      6 routes,      6 active
@@ -48145,7 +48145,7 @@ class TestShowRouteSummary(unittest.TestCase):
                     "total-route-count": "23"
                 }
             ],
-            "router-id": "111.87.5.252"
+            "router-id": "10.189.5.252"
         }
     }
 

@@ -1620,7 +1620,7 @@ class ShowRouteSummary(ShowRouteSummarySchema):
         # Autonomous system number: 65171
         p1 = re.compile(r'^Autonomous +system +number: +(?P<as_number>\d+)$')
 
-        # Router ID: 111.87.5.252
+        # Router ID: 10.189.5.252
         p2 = re.compile(r'^Router +ID: +(?P<router_id>\S+)$')
 
         # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
@@ -1646,7 +1646,7 @@ class ShowRouteSummary(ShowRouteSummarySchema):
                     if v is not None})
                 continue
 
-            # Router ID: 111.87.5.252
+            # Router ID: 10.189.5.252
             m = p2.match(line)
             if m:
                 group = m.groupdict()
