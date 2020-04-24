@@ -10,7 +10,7 @@ JunOS parsers for the following show commands:
     - 'show system core-dumps no-forwarding'
     - 'show system users'
     - 'show system storage'
-    - 'show system uptime no-forwarding'
+    - 'show system storage no-forwarding'
 """
 
 # python
