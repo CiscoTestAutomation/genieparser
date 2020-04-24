@@ -1553,7 +1553,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                 ospf_area = ret_dict.setdefault("ospf-database-information", {}).setdefault("ospf-area-header", {})
 
                 group = m.groupdict()
-                ret_dict["ospf-database-information"]["ospf-area-header"]["ospf-area"] = group["ospf_area"]
+                ospf_area["ospf-area"] = group["ospf_area"]
                 continue
 
             # Router  *10.189.5.252     10.189.5.252     0x80001b9e  1801  0x22 0x1e2  120
