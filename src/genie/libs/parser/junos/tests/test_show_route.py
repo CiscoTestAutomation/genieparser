@@ -48174,7 +48174,7 @@ class TestShowRouteInstanceDetail(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
-        show route instance detail | no-more 
+        show route instance detail
         master:
         Router ID: 10.189.5.252
         Type: forwarding        State: Active        
