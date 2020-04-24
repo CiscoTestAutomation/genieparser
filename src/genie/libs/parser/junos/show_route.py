@@ -350,7 +350,7 @@ class ShowRoute(ShowRouteSchema):
                 r'\((?P<active_route_count>\d+) +active, +(?P<holddown>\d+) +'
                 r'holddown, +(?P<hidden>\d+) +hidden\)$')
         
-        # 14.101.0.0/16      *[BGP/170] 3w3d 03:12:24, MED 12003, localpref 120, from 106.187.14.240
+        # 10.220.0.0/16      *[BGP/170] 3w3d 03:12:24, MED 12003, localpref 120, from 10.169.14.240
         # 10.169.14.240/32  *[Static/5] 5w2d 15:42:25
         # *[OSPF3/10] 3w1d 17:03:23, metric 5
         # 0.0.0.0/0          *[OSPF/150/10] 3w3d 03:24:58, metric 101, tag 0

@@ -11368,25 +11368,25 @@ class TestShowRoute(unittest.TestCase):
         + = Active Route, - = Last Active, * = Both
 
         0.0.0.0/0          *[OSPF/150/10] 3w3d 03:12:45, metric 101, tag 0
-                            >  to 106.187.14.121 via ge-0/0/1.0
-        1.0.0.0/24         *[Direct/0] 29w6d 21:35:55
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.1.0.0/24         *[Direct/0] 29w6d 21:35:55
                             >  via fxp0.0
                             [OSPF/150/10] 3w3d 03:12:45, metric 20, tag 0
-                            >  to 106.187.14.121 via ge-0/0/1.0
-        1.0.0.101/32       *[Local/0] 29w6d 21:35:55
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.1.0.101/32       *[Local/0] 29w6d 21:35:55
                             Local via fxp0.0
-        3.3.3.3/32         *[OSPF/10/10] 1w0d 15:44:41, metric 1202
-                            >  to 106.187.14.121 via ge-0/0/1.0
-        4.0.0.0/30         *[OSPF/10/10] 3w0d 04:39:36, metric 1200
-                            >  to 106.187.14.121 via ge-0/0/1.0
-        5.5.5.5/32         *[OSPF/10/10] 3w0d 04:39:36, metric 1201
-                            >  to 106.187.14.121 via ge-0/0/1.0
-        14.101.0.0/16      *[BGP/170] 3w3d 03:12:24, MED 12003, localpref 120, from 106.187.14.240
+        10.36.3.3/32         *[OSPF/10/10] 1w0d 15:44:41, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.16.0.0/30         *[OSPF/10/10] 3w0d 04:39:36, metric 1200
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.100.5.5/32         *[OSPF/10/10] 3w0d 04:39:36, metric 1201
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.220.0.0/16      *[BGP/170] 3w3d 03:12:24, MED 12003, localpref 120, from 10.169.14.240
                             AS path: (65151 65000) I, validation-state: unverified
-                            >  to 106.187.14.121 via ge-0/0/1.0
-                            [BGP/170] 3w1d 16:51:06, MED 12003, localpref 120, from 111.87.5.253
+                            >  to 10.169.14.121 via ge-0/0/1.0
+                            [BGP/170] 3w1d 16:51:06, MED 12003, localpref 120, from 10.189.5.253
                             AS path: (65151 65000) I, validation-state: unverified
-                            >  to 111.87.5.94 via ge-0/0/0.0
+                            >  to 10.189.5.94 via ge-0/0/0.0
     '''}
 
     golden_parsed_output_5 = {
@@ -11408,7 +11408,7 @@ class TestShowRoute(unittest.TestCase):
                                 "metric": "101",
                                 "nh": [
                                     {
-                                        "to": "106.187.14.121",
+                                        "to": "10.169.14.121",
                                         "via": "ge-0/0/1.0"
                                     }
                                 ],
@@ -11419,7 +11419,7 @@ class TestShowRoute(unittest.TestCase):
                             }
                         },
                         {
-                            "rt-destination": "1.0.0.0/24",
+                            "rt-destination": "10.1.0.0/24",
                             "rt-entry": {
                                 "active-tag": "*",
                                 "age": {
@@ -11442,7 +11442,7 @@ class TestShowRoute(unittest.TestCase):
                                 "metric": "20",
                                 "nh": [
                                     {
-                                        "to": "106.187.14.121",
+                                        "to": "10.169.14.121",
                                         "via": "ge-0/0/1.0"
                                     }
                                 ],
@@ -11453,7 +11453,7 @@ class TestShowRoute(unittest.TestCase):
                             }
                         },
                         {
-                            "rt-destination": "1.0.0.101/32",
+                            "rt-destination": "10.1.0.101/32",
                             "rt-entry": {
                                 "active-tag": "*",
                                 "age": {
@@ -11469,7 +11469,7 @@ class TestShowRoute(unittest.TestCase):
                             }
                         },
                         {
-                            "rt-destination": "3.3.3.3/32",
+                            "rt-destination": "10.36.3.3/32",
                             "rt-entry": {
                                 "active-tag": "*",
                                 "age": {
@@ -11478,7 +11478,7 @@ class TestShowRoute(unittest.TestCase):
                                 "metric": "1202",
                                 "nh": [
                                     {
-                                        "to": "106.187.14.121",
+                                        "to": "10.169.14.121",
                                         "via": "ge-0/0/1.0"
                                     }
                                 ],
@@ -11488,7 +11488,7 @@ class TestShowRoute(unittest.TestCase):
                             }
                         },
                         {
-                            "rt-destination": "4.0.0.0/30",
+                            "rt-destination": "10.16.0.0/30",
                             "rt-entry": {
                                 "active-tag": "*",
                                 "age": {
@@ -11497,7 +11497,7 @@ class TestShowRoute(unittest.TestCase):
                                 "metric": "1200",
                                 "nh": [
                                     {
-                                        "to": "106.187.14.121",
+                                        "to": "10.169.14.121",
                                         "via": "ge-0/0/1.0"
                                     }
                                 ],
@@ -11507,7 +11507,7 @@ class TestShowRoute(unittest.TestCase):
                             }
                         },
                         {
-                            "rt-destination": "5.5.5.5/32",
+                            "rt-destination": "10.100.5.5/32",
                             "rt-entry": {
                                 "active-tag": "*",
                                 "age": {
@@ -11516,7 +11516,7 @@ class TestShowRoute(unittest.TestCase):
                                 "metric": "1201",
                                 "nh": [
                                     {
-                                        "to": "106.187.14.121",
+                                        "to": "10.169.14.121",
                                         "via": "ge-0/0/1.0"
                                     }
                                 ],
@@ -11526,19 +11526,19 @@ class TestShowRoute(unittest.TestCase):
                             }
                         },
                         {
-                            "rt-destination": "14.101.0.0/16",
+                            "rt-destination": "10.220.0.0/16",
                             "rt-entry": {
                                 "active-tag": "*",
                                 "age": {
                                     "#text": "3w3d 03:12:24"
                                 },
                                 "as-path": " (65151 65000) I",
-                                "learned-from": "106.187.14.240",
+                                "learned-from": "10.169.14.240",
                                 "local-preference": "120",
                                 "med": "12003",
                                 "nh": [
                                     {
-                                        "to": "106.187.14.121",
+                                        "to": "10.169.14.121",
                                         "via": "ge-0/0/1.0"
                                     }
                                 ],
@@ -11553,12 +11553,12 @@ class TestShowRoute(unittest.TestCase):
                                     "#text": "3w1d 16:51:06"
                                 },
                                 "as-path": " (65151 65000) I",
-                                "learned-from": "111.87.5.253",
+                                "learned-from": "10.189.5.253",
                                 "local-preference": "120",
                                 "med": "12003",
                                 "nh": [
                                     {
-                                        "to": "111.87.5.94",
+                                        "to": "10.189.5.94",
                                         "via": "ge-0/0/0.0"
                                     }
                                 ],
