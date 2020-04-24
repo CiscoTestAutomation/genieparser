@@ -7,6 +7,8 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, \
     Any, \
     Optional
+
+
 # ====================================================
 #  schema for show route ipv4
 # ====================================================
@@ -76,6 +78,10 @@ class ShowRouteIpv4Schema(MetaParser):
         }
     }
 
+
+# ====================================================
+#  parser for show route ipv4
+# ====================================================
 class ShowRouteIpv4(ShowRouteIpv4Schema):
     cli_command = [
         'show route ipv4',
@@ -118,9 +124,9 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         'traffic engineering': ['t'],
     }
 
-
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
                     'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
+
     def cli(self, vrf=None, route=None, protocol=None, output=None):
         
         # Check if argument from device.parse is protocol or route
@@ -219,8 +225,10 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
         # 10.12.90.1, from 10.12.90.1, via GigabitEthernet0/0/0/0.90
         # 172.23.6.96, from 172.23.15.196
+        # 172.25.253.121, from 172.25.253.121, BGP external
         p11 = re.compile(r'^(?P<nexthop>\S+),\s+from\s+(?P<from>\S+)(, '
-                         r'+via\s+(?P<interface>\S+))?$')
+                         r'+via\s+(?P<interface>\S+))?'
+                         r'(, +BGP external)?$')
         
         # R2_xrv#show route ipv4
         # Routing Descriptor Blocks
@@ -581,10 +589,10 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         
         return ret_dict
 
+
 # ====================================================
 #  parser for show route ipv6
 # ====================================================
-
 class ShowRouteIpv6(ShowRouteIpv4Schema):
     """Parser for :
        show route ipv6
