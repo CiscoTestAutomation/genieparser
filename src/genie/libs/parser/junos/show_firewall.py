@@ -142,38 +142,36 @@ class ShowFirewall(ShowFirewallSchema):
                 if(filter_name == "catch_all"):
                     inner_filter_dict = {}
                     inner_list = []
-                    inner_filter_dict["counter-name"] = group["counter_name"]
-                    inner_filter_dict["byte-count"] = group["byte_count"]
-                    inner_filter_dict["packet-count"] = group["packet_count"]
+                    for group_key, group_value in group.items():
+                        entry_key = group_key.replace('_','-')
+                        inner_filter_dict[entry_key] = group_value
                     inner_list.append(inner_filter_dict)
                     outter_filter_dict["counter"] = inner_list
                     filter_information_list.append(outter_filter_dict)
 
                 elif(filter_name == "local-access-control"):
                     inner_filter_dict = {}
-                    inner_filter_dict["counter-name"] = group["counter_name"]
-                    inner_filter_dict["byte-count"] = group["byte_count"]
-                    inner_filter_dict["packet-count"] = group["packet_count"]
-
+                    for group_key, group_value in group.items():
+                        entry_key = group_key.replace('_','-')
+                        inner_filter_dict[entry_key] = group_value
                     inner_filter_list.append(inner_filter_dict)
                     if(group["counter_name"] == "traceroute-udp-deny-count"):
                         outter_filter_dict["counter"] = inner_filter_list
                 
                 elif(filter_name == "MINIMUM-RATE-POLICER"):
-                        policer_dict = {}
-                        policer_dict["policer-name"] = group["counter_name"]
-                        policer_dict["byte-count"] = group["byte_count"]
-                        policer_dict["packet-count"] = group["packet_count"]
-                        outter_filter_dict["policer"] = policer_dict
+                    policer_dict = {}
+                    policer_dict["policer-name"] = group["counter_name"]
+                    policer_dict["byte-count"] = group["byte_count"]
+                    policer_dict["packet-count"] = group["packet_count"]
+                    outter_filter_dict["policer"] = policer_dict
 
-                        filter_information_list.append(outter_filter_dict)
+                    filter_information_list.append(outter_filter_dict)
 
                 elif(filter_name == "v4_EXT_inbound"):
                     inner_filter_dict = {}
-                    inner_filter_dict["counter-name"] = group["counter_name"]
-                    inner_filter_dict["byte-count"] = group["byte_count"]
-                    inner_filter_dict["packet-count"] = group["packet_count"]
-
+                    for group_key, group_value in group.items():
+                        entry_key = group_key.replace('_','-')
+                        inner_filter_dict[entry_key] = group_value
                     inner_filter_list.append(inner_filter_dict)
                     if(group["counter_name"] == "deny-src-in"):
                         outter_filter_dict["counter"] = inner_filter_list
@@ -181,10 +179,9 @@ class ShowFirewall(ShowFirewallSchema):
 
                 elif(filter_name == "v4_toIPVPN_inbound"):
                     inner_filter_dict = {}
-                    inner_filter_dict["counter-name"] = group["counter_name"]
-                    inner_filter_dict["byte-count"] = group["byte_count"]
-                    inner_filter_dict["packet-count"] = group["packet_count"]
-
+                    for group_key, group_value in group.items():
+                        entry_key = group_key.replace('_','-')
+                        inner_filter_dict[entry_key] = group_value
                     inner_filter_list.append(inner_filter_dict)
                     if(group["counter_name"] == "deny-rsvp-in"):
                         outter_filter_dict["counter"] = inner_filter_list
@@ -192,10 +189,9 @@ class ShowFirewall(ShowFirewallSchema):
 
                 elif(filter_name == "v6_catch_all"):
                     inner_filter_dict = {}
-                    inner_filter_dict["counter-name"] = group["counter_name"]
-                    inner_filter_dict["byte-count"] = group["byte_count"]
-                    inner_filter_dict["packet-count"] = group["packet_count"]
-
+                    for group_key, group_value in group.items():
+                        entry_key = group_key.replace('_','-')
+                        inner_filter_dict[entry_key] = group_value
                     inner_filter_list.append(inner_filter_dict)
 
                     outter_filter_dict["counter"] = inner_filter_list
@@ -203,10 +199,9 @@ class ShowFirewall(ShowFirewallSchema):
                     
                 elif(filter_name == "v6_local-access-control"):
                     inner_filter_dict = {}
-                    inner_filter_dict["counter-name"] = group["counter_name"]
-                    inner_filter_dict["byte-count"] = group["byte_count"]
-                    inner_filter_dict["packet-count"] = group["packet_count"]
-
+                    for group_key, group_value in group.items():
+                        entry_key = group_key.replace('_','-')
+                        inner_filter_dict[entry_key] = group_value
                     inner_filter_list.append(inner_filter_dict)
                     if(group["counter_name"] == "v6_last_policer"):
                         outter_filter_dict["counter"] = inner_filter_list
@@ -279,8 +274,6 @@ class ShowFirewallCounterFilter(ShowFirewallCounterFilterSchema):
         #Policers:
         p3 = re.compile(r'^(?P<filter_name>\APolicers:)$')
         
-
-
         ret_dict = {}
 
         for line in out.splitlines():
