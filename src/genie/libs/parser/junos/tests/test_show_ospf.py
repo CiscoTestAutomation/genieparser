@@ -5469,8 +5469,6 @@ class TestShowOspfRouteBrief(unittest.TestCase):
         }
     }
 
-
-
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowOspfRouteBrief(device=self.device)
