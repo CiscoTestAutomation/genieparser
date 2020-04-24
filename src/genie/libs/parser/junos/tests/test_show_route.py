@@ -48176,7 +48176,7 @@ class TestShowRouteInstanceDetail(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         show route instance detail | no-more 
         master:
-        Router ID: 111.87.5.252
+        Router ID: 10.189.5.252
         Type: forwarding        State: Active        
         Tables:
             inet.0                 : 1615 routes (929 active, 0 holddown, 0 hidden)
@@ -48255,7 +48255,7 @@ class TestShowRouteInstanceDetail(unittest.TestCase):
                     ],
                     "instance-state": "Active",
                     "instance-type": "forwarding",
-                    "router-id": "111.87.5.252"
+                    "router-id": "10.189.5.252"
                 },
                 {
                     "instance-interface": [
