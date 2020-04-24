@@ -1,4 +1,3 @@
-
 # Python
 import unittest
 from unittest.mock import Mock
@@ -20,7 +19,8 @@ from genie.libs.parser.junos.show_ospf import (ShowOspfInterface,
                                                ShowOspfDatabaseExternalExtensive,
                                                ShowOspfOverview,
                                                ShowOspfOverviewExtensive,
-                                               ShowOspfDatabaseAdvertisingRouterSelfDetail)
+                                               ShowOspfDatabaseAdvertisingRouterSelfDetail,
+                                               ShowOspfDatabaseExtensive)
 
 
 class test_show_ospf_interface(unittest.TestCase):
@@ -29,35 +29,37 @@ class test_show_ospf_interface(unittest.TestCase):
             * show ospf interface {interface}
     """
 
-    device = Device(name='aDevice')
+    device = Device(name="aDevice")
 
-    empty_output = {'execute.return_value': ''}
+    empty_output = {"execute.return_value": ""}
 
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        "execute.return_value": """
     show ospf interface
     Interface           State   Area            DR ID           BDR ID          Nbrs
     ge-0/0/0.0          PtToPt  0.0.0.1         0.0.0.0         0.0.0.0            1
     ge-0/0/1.0          PtToPt  0.0.0.1         0.0.0.0         0.0.0.0            1
-    '''}
+    """
+    }
 
     golden_parsed_output = {
-        'instance': {
-            'master': {
-                'areas': {
-                    '0.0.0.1': {
-                        'interfaces': {
-                            'ge-0/0/0.0': {
-                                'state': 'PtToPt',
-                                'dr_id': '0.0.0.0',
-                                'bdr_id': '0.0.0.0',
-                                'nbrs_count': 1
+        "instance": {
+            "master": {
+                "areas": {
+                    "0.0.0.1": {
+                        "interfaces": {
+                            "ge-0/0/0.0": {
+                                "state": "PtToPt",
+                                "dr_id": "0.0.0.0",
+                                "bdr_id": "0.0.0.0",
+                                "nbrs_count": 1,
                             },
-                            'ge-0/0/1.0': {
-                                'state': 'PtToPt',
-                                'dr_id': '0.0.0.0',
-                                'bdr_id': '0.0.0.0',
-                                'nbrs_count': 1
-                            }
+                            "ge-0/0/1.0": {
+                                "state": "PtToPt",
+                                "dr_id": "0.0.0.0",
+                                "bdr_id": "0.0.0.0",
+                                "nbrs_count": 1,
+                            },
                         }
                     }
                 }
@@ -65,23 +67,25 @@ class test_show_ospf_interface(unittest.TestCase):
         }
     }
 
-    golden_output_interface = {'execute.return_value': '''
+    golden_output_interface = {
+        "execute.return_value": """
         show ospf interface ge-0/0/1.0
         Interface           State   Area            DR ID           BDR ID          Nbrs
         ge-0/0/1.0          PtToPt  0.0.0.1         0.0.0.0         0.0.0.0            1
-        '''}
+        """
+    }
 
     golden_parsed_output_interface = {
-        'instance': {
-            'master': {
-                'areas': {
-                    '0.0.0.1': {
-                        'interfaces': {
-                            'ge-0/0/1.0': {
-                                'state': 'PtToPt',
-                                'dr_id': '0.0.0.0',
-                                'bdr_id': '0.0.0.0',
-                                'nbrs_count': 1
+        "instance": {
+            "master": {
+                "areas": {
+                    "0.0.0.1": {
+                        "interfaces": {
+                            "ge-0/0/1.0": {
+                                "state": "PtToPt",
+                                "dr_id": "0.0.0.0",
+                                "bdr_id": "0.0.0.0",
+                                "nbrs_count": 1,
                             }
                         }
                     }
@@ -90,31 +94,33 @@ class test_show_ospf_interface(unittest.TestCase):
         }
     }
 
-    golden_output_instance = {'execute.return_value': '''
+    golden_output_instance = {
+        "execute.return_value": """
         show ospf interface instance master
         Interface           State   Area            DR ID           BDR ID          Nbrs
         ge-0/0/0.0          PtToPt  0.0.0.1         0.0.0.0         0.0.0.0            1
         ge-0/0/1.0          PtToPt  0.0.0.1         0.0.0.0         0.0.0.0            1
-        '''}
+        """
+    }
 
     golden_parsed_output_instance = {
-        'instance': {
-            'master': {
-                'areas': {
-                    '0.0.0.1': {
-                        'interfaces': {
-                            'ge-0/0/0.0': {
-                                'state': 'PtToPt',
-                                'dr_id': '0.0.0.0',
-                                'bdr_id': '0.0.0.0',
-                                'nbrs_count': 1
+        "instance": {
+            "master": {
+                "areas": {
+                    "0.0.0.1": {
+                        "interfaces": {
+                            "ge-0/0/0.0": {
+                                "state": "PtToPt",
+                                "dr_id": "0.0.0.0",
+                                "bdr_id": "0.0.0.0",
+                                "nbrs_count": 1,
                             },
-                            'ge-0/0/1.0': {
-                                'state': 'PtToPt',
-                                'dr_id': '0.0.0.0',
-                                'bdr_id': '0.0.0.0',
-                                'nbrs_count': 1
-                            }
+                            "ge-0/0/1.0": {
+                                "state": "PtToPt",
+                                "dr_id": "0.0.0.0",
+                                "bdr_id": "0.0.0.0",
+                                "nbrs_count": 1,
+                            },
                         }
                     }
                 }
@@ -137,13 +143,13 @@ class test_show_ospf_interface(unittest.TestCase):
     def test_show_ospf_interface_interface(self):
         self.device = Mock(**self.golden_output_interface)
         obj = ShowOspfInterface(device=self.device)
-        parsed_output = obj.parse(interface='ge-0/0/1.0')
+        parsed_output = obj.parse(interface="ge-0/0/1.0")
         self.assertEqual(parsed_output, self.golden_parsed_output_interface)
 
     def test_show_ospf_interface_instance(self):
         self.device = Mock(**self.golden_output_instance)
         obj = ShowOspfInterface(device=self.device)
-        parsed_output = obj.parse(instance='master')
+        parsed_output = obj.parse(instance="master")
         self.assertEqual(parsed_output, self.golden_parsed_output_instance)
 
 
@@ -154,27 +160,29 @@ class test_show_ospf_interface_brief(unittest.TestCase):
             * show ospf interface {interface} brief
     """
 
-    device = Device(name='aDevice')
+    device = Device(name="aDevice")
 
-    empty_output = {'execute.return_value': ''}
+    empty_output = {"execute.return_value": ""}
 
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        "execute.return_value": """
     show ospf interface brief
     Interface           State   Area            DR ID           BDR ID          Nbrs
     ge-0/0/2.0          BDR     0.0.0.1         10.16.2.2         10.64.4.4            5
-    '''}
+    """
+    }
 
     golden_parsed_output = {
-        'instance': {
-            'master': {
-                'areas': {
-                    '0.0.0.1': {
-                        'interfaces': {
-                            'ge-0/0/2.0': {
-                                'state': 'BDR',
-                                'dr_id': '10.16.2.2',
-                                'bdr_id': '10.64.4.4',
-                                'nbrs_count': 5,
+        "instance": {
+            "master": {
+                "areas": {
+                    "0.0.0.1": {
+                        "interfaces": {
+                            "ge-0/0/2.0": {
+                                "state": "BDR",
+                                "dr_id": "10.16.2.2",
+                                "bdr_id": "10.64.4.4",
+                                "nbrs_count": 5,
                             },
                         },
                     },
@@ -183,44 +191,46 @@ class test_show_ospf_interface_brief(unittest.TestCase):
         },
     }
 
-    golden_output_master = {'execute.return_value': '''
+    golden_output_master = {
+        "execute.return_value": """
     show ospf interface brief instance master
     Interface           State   Area            DR ID           BDR ID          Nbrs
     ge-0/0/4.0          BDR     0.0.0.4         10.64.4.4         192.168.10.22    2
     ge-0/0/5.0          BDR     0.0.0.4         10.16.2.2         10.16.2.2          3
     ge-0/0/6.0          DR      0.0.0.4         10.64.4.4         192.168.10.22    4
     lo1.0               DR      0.0.0.4         10.16.2.2         0.0.0.0          0
-    '''}
+    """
+    }
 
     golden_parsed_output_master = {
-    'instance': {
-        'master': {
-            'areas': {
-                '0.0.0.4': {
-                    'interfaces': {
-                        'ge-0/0/4.0': {
-                            'state': 'BDR',
-                            'dr_id': '10.64.4.4',
-                            'bdr_id': '192.168.10.22',
-                            'nbrs_count': 2,
+        "instance": {
+            "master": {
+                "areas": {
+                    "0.0.0.4": {
+                        "interfaces": {
+                            "ge-0/0/4.0": {
+                                "state": "BDR",
+                                "dr_id": "10.64.4.4",
+                                "bdr_id": "192.168.10.22",
+                                "nbrs_count": 2,
                             },
-                        'ge-0/0/5.0': {
-                            'state': 'BDR',
-                            'dr_id': '10.16.2.2',
-                            'bdr_id': '10.16.2.2',
-                            'nbrs_count': 3,
+                            "ge-0/0/5.0": {
+                                "state": "BDR",
+                                "dr_id": "10.16.2.2",
+                                "bdr_id": "10.16.2.2",
+                                "nbrs_count": 3,
                             },
-                        'ge-0/0/6.0': {
-                            'state': 'DR',
-                            'dr_id': '10.64.4.4',
-                            'bdr_id': '192.168.10.22',
-                            'nbrs_count': 4,
+                            "ge-0/0/6.0": {
+                                "state": "DR",
+                                "dr_id": "10.64.4.4",
+                                "bdr_id": "192.168.10.22",
+                                "nbrs_count": 4,
                             },
-                        'lo1.0': {
-                            'state': 'DR',
-                            'dr_id': '10.16.2.2',
-                            'bdr_id': '0.0.0.0',
-                            'nbrs_count': 0,
+                            "lo1.0": {
+                                "state": "DR",
+                                "dr_id": "10.16.2.2",
+                                "bdr_id": "0.0.0.0",
+                                "nbrs_count": 0,
                             },
                         },
                     },
@@ -229,23 +239,25 @@ class test_show_ospf_interface_brief(unittest.TestCase):
         },
     }
 
-    golden_output_interface = {'execute.return_value': '''
+    golden_output_interface = {
+        "execute.return_value": """
     show ospf interface ge-0/0/4.0 brief
     Interface           State   Area            DR ID           BDR ID          Nbrs
     ge-0/0/4.0          PtToPt  0.0.0.1         10.16.2.1         10.64.2.4            1
-    '''}
+    """
+    }
 
     golden_parsed_output_interface = {
-        'instance': {
-            'master': {
-                'areas': {
-                    '0.0.0.1': {
-                        'interfaces': {
-                            'ge-0/0/4.0': {
-                                'state': 'PtToPt',
-                                'dr_id': '10.16.2.1',
-                                'bdr_id': '10.64.2.4',
-                                'nbrs_count': 1,
+        "instance": {
+            "master": {
+                "areas": {
+                    "0.0.0.1": {
+                        "interfaces": {
+                            "ge-0/0/4.0": {
+                                "state": "PtToPt",
+                                "dr_id": "10.16.2.1",
+                                "bdr_id": "10.64.2.4",
+                                "nbrs_count": 1,
                             },
                         },
                     },
@@ -269,13 +281,13 @@ class test_show_ospf_interface_brief(unittest.TestCase):
     def test_show_ospf_interface_brief_instance_master(self):
         self.device = Mock(**self.golden_output_master)
         obj = ShowOspfInterfaceBrief(device=self.device)
-        parsed_output = obj.parse(instance='master')
+        parsed_output = obj.parse(instance="master")
         self.assertEqual(parsed_output, self.golden_parsed_output_master)
 
     def test_show_ospf_interface_interface_brief(self):
         self.device = Mock(**self.golden_output_interface)
         obj = ShowOspfInterfaceBrief(device=self.device)
-        parsed_output = obj.parse(interface='ge-0/0/4.0')
+        parsed_output = obj.parse(interface="ge-0/0/4.0")
         self.assertEqual(parsed_output, self.golden_parsed_output_interface)
 
 
@@ -285,11 +297,12 @@ class test_show_ospf_interface_detail(unittest.TestCase):
             * show ospf interface {interface} detail
     """
 
-    device = Device(name='aDevice')
+    device = Device(name="aDevice")
 
-    empty_output = {'execute.return_value': ''}
+    empty_output = {"execute.return_value": ""}
 
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        "execute.return_value": """
     show ospf interface detail
     Interface           State   Area            DR ID           BDR ID          Nbrs
     ge-0/0/0.0          PtToPt  0.0.0.1         0.0.0.0         0.0.0.0            1
@@ -308,78 +321,69 @@ class test_show_ospf_interface_detail(unittest.TestCase):
       Protection type: Post Convergence
       Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 100
       Topology default (ID 0) -> Cost: 100
-    '''}
+    """
+    }
 
     golden_parsed_output = {
-        'instance': {
-            'master': {
-                'areas': {
-                    '0.0.0.1': {
-                        'interfaces': {
-                            'ge-0/0/0.0': {
-                                'state': 'PtToPt',
-                                'dr_id': '0.0.0.0',
-                                'bdr_id': '0.0.0.0',
-                                'nbrs_count': 1,
-                                'type': 'P2P',
-                                'address': '172.16.94.1',
-                                'mask': '255.255.255.0',
-                                'mtu': 500,
-                                'cost': 50,
-                                'adj_count': 1,
-                                'hello': 10,
-                                'dead': 20,
-                                'rexmit': 10,
-                                'ospf_stub_type': 'Not Stub',
-                                'authentication_type': 'None',
-                                'ospf_interface': {
-                                    'protection_type': 'Post Convergence',
-                                    'tilfa': {
-                                        'prot_link': 'Enabled',
-                                        'prot_fate': 'No',
-                                        'prot_srlg': 'No',
-                                        'prot_node': 50
+        "instance": {
+            "master": {
+                "areas": {
+                    "0.0.0.1": {
+                        "interfaces": {
+                            "ge-0/0/0.0": {
+                                "state": "PtToPt",
+                                "dr_id": "0.0.0.0",
+                                "bdr_id": "0.0.0.0",
+                                "nbrs_count": 1,
+                                "type": "P2P",
+                                "address": "172.16.94.1",
+                                "mask": "255.255.255.0",
+                                "mtu": 500,
+                                "cost": 50,
+                                "adj_count": 1,
+                                "hello": 10,
+                                "dead": 20,
+                                "rexmit": 10,
+                                "ospf_stub_type": "Not Stub",
+                                "authentication_type": "None",
+                                "ospf_interface": {
+                                    "protection_type": "Post Convergence",
+                                    "tilfa": {
+                                        "prot_link": "Enabled",
+                                        "prot_fate": "No",
+                                        "prot_srlg": "No",
+                                        "prot_node": 50,
                                     },
-                                    'topology': {
-                                        'default': {
-                                            'id': 0,
-                                            'metric': 50
-                                        }
-                                    }
-                                }
+                                    "topology": {"default": {"id": 0, "metric": 50}},
+                                },
                             },
-                            'ge-0/0/1.0': {
-                                'state': 'PtToPt',
-                                'dr_id': '0.0.0.0',
-                                'bdr_id': '0.0.0.0',
-                                'nbrs_count': 1,
-                                'type': 'P2P',
-                                'address': '172.16.94.1',
-                                'mask': '255.255.255.0',
-                                'mtu': 500,
-                                'cost': 100,
-                                'adj_count': 1,
-                                'hello': 10,
-                                'dead': 10,
-                                'rexmit': 5,
-                                'ospf_stub_type': 'Not Stub',
-                                'authentication_type': 'None',
-                                'ospf_interface': {
-                                    'protection_type': 'Post Convergence',
-                                    'tilfa': {
-                                        'prot_link': 'Enabled',
-                                        'prot_fate': 'No',
-                                        'prot_srlg': 'No',
-                                        'prot_node': 100
+                            "ge-0/0/1.0": {
+                                "state": "PtToPt",
+                                "dr_id": "0.0.0.0",
+                                "bdr_id": "0.0.0.0",
+                                "nbrs_count": 1,
+                                "type": "P2P",
+                                "address": "172.16.94.1",
+                                "mask": "255.255.255.0",
+                                "mtu": 500,
+                                "cost": 100,
+                                "adj_count": 1,
+                                "hello": 10,
+                                "dead": 10,
+                                "rexmit": 5,
+                                "ospf_stub_type": "Not Stub",
+                                "authentication_type": "None",
+                                "ospf_interface": {
+                                    "protection_type": "Post Convergence",
+                                    "tilfa": {
+                                        "prot_link": "Enabled",
+                                        "prot_fate": "No",
+                                        "prot_srlg": "No",
+                                        "prot_node": 100,
                                     },
-                                    'topology': {
-                                        'default': {
-                                            'id': 0,
-                                            'metric': 100
-                                        }
-                                    }
-                                }
-                            }
+                                    "topology": {"default": {"id": 0, "metric": 100}},
+                                },
+                            },
                         }
                     }
                 }
@@ -387,7 +391,8 @@ class test_show_ospf_interface_detail(unittest.TestCase):
         }
     }
 
-    golden_output_interface = {'execute.return_value': '''
+    golden_output_interface = {
+        "execute.return_value": """
     show ospf interface ge-0/0/1.0 detail
     Interface           State   Area            DR ID           BDR ID          Nbrs
     ge-0/0/1.0          PtToPt  0.0.0.1         0.0.0.0         0.0.0.0            1
@@ -398,45 +403,41 @@ class test_show_ospf_interface_detail(unittest.TestCase):
       Protection type: Post Convergence
       Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 100
       Topology default (ID 0) -> Cost: 100
-    '''}
+    """
+    }
 
     golden_parsed_output_interface = {
-        'instance': {
-            'master': {
-                'areas': {
-                    '0.0.0.1': {
-                        'interfaces': {
-                            'ge-0/0/1.0': {
-                                'state': 'PtToPt',
-                                'dr_id': '0.0.0.0',
-                                'bdr_id': '0.0.0.0',
-                                'nbrs_count': 1,
-                                'type': 'P2P',
-                                'address': '172.16.94.1',
-                                'mask': '255.255.255.0',
-                                'mtu': 500,
-                                'cost': 100,
-                                'adj_count': 1,
-                                'hello': 10,
-                                'dead': 10,
-                                'rexmit': 5,
-                                'ospf_stub_type': 'Not Stub',
-                                'authentication_type': 'None',
-                                'ospf_interface': {
-                                    'protection_type': 'Post Convergence',
-                                    'tilfa': {
-                                        'prot_link': 'Enabled',
-                                        'prot_fate': 'No',
-                                        'prot_srlg': 'No',
-                                        'prot_node': 100
+        "instance": {
+            "master": {
+                "areas": {
+                    "0.0.0.1": {
+                        "interfaces": {
+                            "ge-0/0/1.0": {
+                                "state": "PtToPt",
+                                "dr_id": "0.0.0.0",
+                                "bdr_id": "0.0.0.0",
+                                "nbrs_count": 1,
+                                "type": "P2P",
+                                "address": "172.16.94.1",
+                                "mask": "255.255.255.0",
+                                "mtu": 500,
+                                "cost": 100,
+                                "adj_count": 1,
+                                "hello": 10,
+                                "dead": 10,
+                                "rexmit": 5,
+                                "ospf_stub_type": "Not Stub",
+                                "authentication_type": "None",
+                                "ospf_interface": {
+                                    "protection_type": "Post Convergence",
+                                    "tilfa": {
+                                        "prot_link": "Enabled",
+                                        "prot_fate": "No",
+                                        "prot_srlg": "No",
+                                        "prot_node": 100,
                                     },
-                                    'topology': {
-                                        'default': {
-                                            'id': 0,
-                                            'metric': 100
-                                        }
-                                    }
-                                }
+                                    "topology": {"default": {"id": 0, "metric": 100}},
+                                },
                             }
                         }
                     }
@@ -445,7 +446,8 @@ class test_show_ospf_interface_detail(unittest.TestCase):
         }
     }
 
-    golden_output_instance = {'execute.return_value': '''
+    golden_output_instance = {
+        "execute.return_value": """
         show ospf interface detail instance master
         Interface           State   Area            DR ID           BDR ID          Nbrs
         ge-0/0/0.0          PtToPt  0.0.0.1         0.0.0.0         0.0.0.0            1
@@ -464,78 +466,69 @@ class test_show_ospf_interface_detail(unittest.TestCase):
           Protection type: Post Convergence
           Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 100
           Topology default (ID 0) -> Cost: 100
-        '''}
+        """
+    }
 
     golden_parsed_output_instance = {
-        'instance': {
-            'master': {
-                'areas': {
-                    '0.0.0.1': {
-                        'interfaces': {
-                            'ge-0/0/0.0': {
-                                'state': 'PtToPt',
-                                'dr_id': '0.0.0.0',
-                                'bdr_id': '0.0.0.0',
-                                'nbrs_count': 1,
-                                'type': 'P2P',
-                                'address': '172.16.94.1',
-                                'mask': '255.255.255.0',
-                                'mtu': 500,
-                                'cost': 50,
-                                'adj_count': 1,
-                                'hello': 10,
-                                'dead': 20,
-                                'rexmit': 10,
-                                'ospf_stub_type': 'Not Stub',
-                                'authentication_type': 'None',
-                                'ospf_interface': {
-                                    'protection_type': 'Post Convergence',
-                                    'tilfa': {
-                                        'prot_link': 'Enabled',
-                                        'prot_fate': 'No',
-                                        'prot_srlg': 'No',
-                                        'prot_node': 50
+        "instance": {
+            "master": {
+                "areas": {
+                    "0.0.0.1": {
+                        "interfaces": {
+                            "ge-0/0/0.0": {
+                                "state": "PtToPt",
+                                "dr_id": "0.0.0.0",
+                                "bdr_id": "0.0.0.0",
+                                "nbrs_count": 1,
+                                "type": "P2P",
+                                "address": "172.16.94.1",
+                                "mask": "255.255.255.0",
+                                "mtu": 500,
+                                "cost": 50,
+                                "adj_count": 1,
+                                "hello": 10,
+                                "dead": 20,
+                                "rexmit": 10,
+                                "ospf_stub_type": "Not Stub",
+                                "authentication_type": "None",
+                                "ospf_interface": {
+                                    "protection_type": "Post Convergence",
+                                    "tilfa": {
+                                        "prot_link": "Enabled",
+                                        "prot_fate": "No",
+                                        "prot_srlg": "No",
+                                        "prot_node": 50,
                                     },
-                                    'topology': {
-                                        'default': {
-                                            'id': 0,
-                                            'metric': 50
-                                        }
-                                    }
-                                }
+                                    "topology": {"default": {"id": 0, "metric": 50}},
+                                },
                             },
-                            'ge-0/0/1.0': {
-                                'state': 'PtToPt',
-                                'dr_id': '0.0.0.0',
-                                'bdr_id': '0.0.0.0',
-                                'nbrs_count': 1,
-                                'type': 'P2P',
-                                'address': '172.16.94.1',
-                                'mask': '255.255.255.0',
-                                'mtu': 500,
-                                'cost': 100,
-                                'adj_count': 1,
-                                'hello': 10,
-                                'dead': 10,
-                                'rexmit': 5,
-                                'ospf_stub_type': 'Not Stub',
-                                'authentication_type': 'None',
-                                'ospf_interface': {
-                                    'protection_type': 'Post Convergence',
-                                    'tilfa': {
-                                        'prot_link': 'Enabled',
-                                        'prot_fate': 'No',
-                                        'prot_srlg': 'No',
-                                        'prot_node': 100
+                            "ge-0/0/1.0": {
+                                "state": "PtToPt",
+                                "dr_id": "0.0.0.0",
+                                "bdr_id": "0.0.0.0",
+                                "nbrs_count": 1,
+                                "type": "P2P",
+                                "address": "172.16.94.1",
+                                "mask": "255.255.255.0",
+                                "mtu": 500,
+                                "cost": 100,
+                                "adj_count": 1,
+                                "hello": 10,
+                                "dead": 10,
+                                "rexmit": 5,
+                                "ospf_stub_type": "Not Stub",
+                                "authentication_type": "None",
+                                "ospf_interface": {
+                                    "protection_type": "Post Convergence",
+                                    "tilfa": {
+                                        "prot_link": "Enabled",
+                                        "prot_fate": "No",
+                                        "prot_srlg": "No",
+                                        "prot_node": 100,
                                     },
-                                    'topology': {
-                                        'default': {
-                                            'id': 0,
-                                            'metric': 100
-                                        }
-                                    }
-                                }
-                            }
+                                    "topology": {"default": {"id": 0, "metric": 100}},
+                                },
+                            },
                         }
                     }
                 }
@@ -543,7 +536,8 @@ class test_show_ospf_interface_detail(unittest.TestCase):
         }
     }
 
-    golden_output_interface_instance = {'execute.return_value': '''
+    golden_output_interface_instance = {
+        "execute.return_value": """
         show ospf interface ge-0/0/1.0 detail instance master
         Interface           State   Area            DR ID           BDR ID          Nbrs
         ge-0/0/1.0          PtToPt  0.0.0.1         0.0.0.0         0.0.0.0            1
@@ -554,45 +548,41 @@ class test_show_ospf_interface_detail(unittest.TestCase):
           Protection type: Post Convergence
           Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 100
           Topology default (ID 0) -> Cost: 100
-        '''}
+        """
+    }
 
     golden_parsed_output_interface_instance = {
-        'instance': {
-            'master': {
-                'areas': {
-                    '0.0.0.1': {
-                        'interfaces': {
-                            'ge-0/0/1.0': {
-                                'state': 'PtToPt',
-                                'dr_id': '0.0.0.0',
-                                'bdr_id': '0.0.0.0',
-                                'nbrs_count': 1,
-                                'type': 'P2P',
-                                'address': '172.16.94.1',
-                                'mask': '255.255.255.0',
-                                'mtu': 500,
-                                'cost': 100,
-                                'adj_count': 1,
-                                'hello': 10,
-                                'dead': 10,
-                                'rexmit': 5,
-                                'ospf_stub_type': 'Not Stub',
-                                'authentication_type': 'None',
-                                'ospf_interface': {
-                                    'protection_type': 'Post Convergence',
-                                    'tilfa': {
-                                        'prot_link': 'Enabled',
-                                        'prot_fate': 'No',
-                                        'prot_srlg': 'No',
-                                        'prot_node': 100
+        "instance": {
+            "master": {
+                "areas": {
+                    "0.0.0.1": {
+                        "interfaces": {
+                            "ge-0/0/1.0": {
+                                "state": "PtToPt",
+                                "dr_id": "0.0.0.0",
+                                "bdr_id": "0.0.0.0",
+                                "nbrs_count": 1,
+                                "type": "P2P",
+                                "address": "172.16.94.1",
+                                "mask": "255.255.255.0",
+                                "mtu": 500,
+                                "cost": 100,
+                                "adj_count": 1,
+                                "hello": 10,
+                                "dead": 10,
+                                "rexmit": 5,
+                                "ospf_stub_type": "Not Stub",
+                                "authentication_type": "None",
+                                "ospf_interface": {
+                                    "protection_type": "Post Convergence",
+                                    "tilfa": {
+                                        "prot_link": "Enabled",
+                                        "prot_fate": "No",
+                                        "prot_srlg": "No",
+                                        "prot_node": 100,
                                     },
-                                    'topology': {
-                                        'default': {
-                                            'id': 0,
-                                            'metric': 100
-                                        }
-                                    }
-                                }
+                                    "topology": {"default": {"id": 0, "metric": 100}},
+                                },
                             }
                         }
                     }
@@ -616,62 +606,69 @@ class test_show_ospf_interface_detail(unittest.TestCase):
     def test_show_ospf_interface_interface_detail(self):
         self.device = Mock(**self.golden_output_interface)
         obj = ShowOspfInterfaceDetail(device=self.device)
-        parsed_output = obj.parse(interface='ge-0/0/1.0')
+        parsed_output = obj.parse(interface="ge-0/0/1.0")
         self.assertEqual(parsed_output, self.golden_parsed_output_interface)
 
     def test_show_ospf_interface_detail_instance(self):
         self.device = Mock(**self.golden_output_instance)
         obj = ShowOspfInterfaceDetail(device=self.device)
-        parsed_output = obj.parse(instance='master')
+        parsed_output = obj.parse(instance="master")
         self.assertEqual(parsed_output, self.golden_parsed_output_instance)
 
     def test_show_ospf_interface_detail_interface_instance(self):
         self.device = Mock(**self.golden_output_interface_instance)
         obj = ShowOspfInterfaceDetail(device=self.device)
-        parsed_output = obj.parse(interface='ge-0/0/1.0', instance='master')
+        parsed_output = obj.parse(interface="ge-0/0/1.0", instance="master")
         self.assertEqual(parsed_output, self.golden_parsed_output_interface_instance)
+
 
 class TestShowOspfNeighbor(unittest.TestCase):
     """ Unit tests for:
             * show ospf neighbor
     """
 
-    device = Device(name='aDevice')
+    device = Device(name="aDevice")
 
-    empty_output = {'execute.return_value': ''}
+    empty_output = {"execute.return_value": ""}
 
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        "execute.return_value": """
         show ospf neighbor
         Address          Interface              State     ID               Pri  Dead
         10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    32
         10.169.14.121   ge-0/0/1.0             Full      10.169.14.240   128    33
         10.19.198.26     ge-0/0/2.0             Full      10.19.198.239      1    33
-        '''}
+        """
+    }
 
     golden_parsed_output = {
-        'ospf-neighbor-information': {
-            'ospf-neighbor': [
+        "ospf-neighbor-information": {
+            "ospf-neighbor": [
                 {
-                    'neighbor-address': '10.189.5.94',
-                    'interface-name': 'ge-0/0/0.0',
-                    'ospf-neighbor-state': 'Full',
-                    'neighbor-id': '10.189.5.253',
-                    'neighbor-priority': '128',
-                    'activity-timer': '32'},
+                    "neighbor-address": "10.189.5.94",
+                    "interface-name": "ge-0/0/0.0",
+                    "ospf-neighbor-state": "Full",
+                    "neighbor-id": "10.189.5.253",
+                    "neighbor-priority": "128",
+                    "activity-timer": "32",
+                },
                 {
-                    'neighbor-address': '10.169.14.121',
-                    'interface-name': 'ge-0/0/1.0',
-                    'ospf-neighbor-state': 'Full',
-                    'neighbor-id': '10.169.14.240',
-                    'neighbor-priority': '128',
-                    'activity-timer': '33'},
+                    "neighbor-address": "10.169.14.121",
+                    "interface-name": "ge-0/0/1.0",
+                    "ospf-neighbor-state": "Full",
+                    "neighbor-id": "10.169.14.240",
+                    "neighbor-priority": "128",
+                    "activity-timer": "33",
+                },
                 {
-                    'neighbor-address': '10.19.198.26',
-                    'interface-name': 'ge-0/0/2.0',
-                    'ospf-neighbor-state': 'Full',
-                    'neighbor-id': '10.19.198.239',
-                    'neighbor-priority': '1', 'activity-timer': '33'
-                }],
+                    "neighbor-address": "10.19.198.26",
+                    "interface-name": "ge-0/0/2.0",
+                    "ospf-neighbor-state": "Full",
+                    "neighbor-id": "10.19.198.239",
+                    "neighbor-priority": "1",
+                    "activity-timer": "33",
+                },
+            ],
         },
     }
 
@@ -4248,6 +4245,6350 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
+class TestShowOspfDatabaseExtensive(unittest.TestCase):
 
-if __name__ == '__main__':
+    maxDiff = None
+
+    device = Device(name="test-device")
+
+    empty_output = {"execute.return_value": ""}
+
+    golden_output = {
+        "execute.return_value":
+        """
+        show ospf database extensive
+
+            OSPF database, Area 0.0.0.8
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+        Router   10.36.3.3          10.36.3.3          0x80004d2d   352  0x22 0xa127 2496
+        bits 0x0, link count 206
+        id 10.36.3.3, data 255.255.255.255, Type Stub (3)
+            Topology count: 0, Default metric: 1
+        id 192.168.220.0, data 255.255.255.255, Type Stub (3)
+            Topology count: 0, Default metric: 1
+        id 192.168.220.4, data 255.255.255.255, Type Stub (3)
+            Topology count: 0, Default metric: 1
+        id 192.168.220.1, data 255.255.255.255, Type Stub (3)
+            Topology count: 0, Default metric: 1
+        id 192.168.220.2, data 255.255.255.255, Type Stub (3)
+            Topology count: 0, Default metric: 1
+        id 192.168.220.3, data 255.255.255.255, Type Stub (3)
+            Topology count: 0, Default metric: 1
+        id 10.169.196.241, data 192.168.111.1, Type PointToPoint (1)
+            Topology count: 0, Default metric: 1
+        id 192.168.111.0, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 1
+        id 10.169.196.241, data 192.168.4.1, Type PointToPoint (1)
+            Topology count: 0, Default metric: 1
+        id 192.168.4.0, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 1
+        Topology default (ID 0)
+            Type: PointToPoint, Node ID: 10.169.196.241
+            Metric: 1, Bidirectional
+        Aging timer 00:54:08
+        Installed 00:05:44 ago, expires in 00:54:08, sent 00:05:42 ago
+        Last changed 1d 02:16:03 ago, Change count: 69
+        Router   10.100.5.5          10.100.5.5          0x800019d7  1760  0x22 0xa1c   60
+        bits 0x0, link count 3
+        id 10.100.5.5, data 255.255.255.255, Type Stub (3)
+            Topology count: 0, Default metric: 1
+        id 10.34.2.250, data 10.16.0.2, Type PointToPoint (1)
+            Topology count: 0, Default metric: 1
+        id 10.16.0.0, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 1
+        Topology default (ID 0)
+            Type: PointToPoint, Node ID: 10.34.2.250
+            Metric: 1, Bidirectional
+        Aging timer 00:30:40
+        Installed 00:29:13 ago, expires in 00:30:40, sent 00:29:11 ago
+        Last changed 4w6d 19:31:25 ago, Change count: 38
+        Router   10.19.198.239    10.19.198.239    0x80000442   913  0x22 0x95bf  96
+        bits 0x0, link count 6
+        id 10.19.198.239, data 255.255.255.255, Type Stub (3)
+            Topology count: 0, Default metric: 1
+        id 10.189.5.253, data 10.19.198.30, Type PointToPoint (1)
+            Topology count: 0, Default metric: 1000
+        id 10.19.198.28, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 1000
+        id 10.189.5.252, data 10.19.198.26, Type PointToPoint (1)
+            Topology count: 0, Default metric: 1000
+        id 10.19.198.24, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 1000
+        id 10.15.0.0, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 1
+        Topology default (ID 0)
+            Type: PointToPoint, Node ID: 10.189.5.252
+            Metric: 1000, Bidirectional
+            Type: PointToPoint, Node ID: 10.189.5.253
+            Metric: 1000, Bidirectional
+        Aging timer 00:44:47
+        Installed 00:15:12 ago, expires in 00:44:47, sent 00:15:10 ago
+        Last changed 1w0d 19:55:00 ago, Change count: 45
+        Router   10.34.2.250     10.34.2.250     0x8000205a  1027  0x22 0x26f6 144
+        bits 0x2, link count 10
+        id 10.34.2.251, data 10.34.2.201, Type PointToPoint (1)
+            Topology count: 0, Default metric: 5
+        id 10.34.2.200, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 5
+        id 10.169.14.240, data 10.169.14.158, Type PointToPoint (1)
+            Topology count: 0, Default metric: 100
+        id 10.169.14.156, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 100
+        id 10.169.196.241, data 10.169.196.213, Type PointToPoint (1)
+            Topology count: 0, Default metric: 1000
+        id 10.169.196.212, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 1000
+        id 10.100.5.5, data 10.16.0.1, Type PointToPoint (1)
+            Topology count: 0, Default metric: 1000
+        id 10.16.0.0, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 1000
+        id 192.168.220.0, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 1000
+        id 10.34.2.250, data 255.255.255.255, Type Stub (3)
+            Topology count: 0, Default metric: 0
+        Topology default (ID 0)
+            Type: PointToPoint, Node ID: 10.100.5.5
+            Metric: 1000, Bidirectional
+            Type: PointToPoint, Node ID: 10.169.196.241
+            Metric: 1000, Bidirectional
+            Type: PointToPoint, Node ID: 10.169.14.240
+            Metric: 100, Bidirectional
+            Type: PointToPoint, Node ID: 10.34.2.251
+            Metric: 5, Bidirectional
+        Aging timer 00:42:53
+        Installed 00:17:01 ago, expires in 00:42:53, sent 00:16:59 ago
+        Last changed 2w0d 00:51:24 ago, Change count: 1911
+        Router   10.34.2.251     10.34.2.251     0x80001dde   858  0x22 0x1022 108
+        bits 0x2, link count 7
+        id 10.34.2.250, data 10.34.2.202, Type PointToPoint (1)
+            Topology count: 0, Default metric: 5
+        id 10.34.2.200, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 5
+        id 10.169.14.241, data 10.169.14.34, Type PointToPoint (1)
+            Topology count: 0, Default metric: 120
+        id 10.169.14.32, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 120
+        id 10.169.196.241, data 10.169.196.217, Type PointToPoint (1)
+            Topology count: 0, Default metric: 1000
+        id 10.169.196.216, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 1000
+        id 10.34.2.251, data 255.255.255.255, Type Stub (3)
+            Topology count: 0, Default metric: 0
+        Topology default (ID 0)
+            Type: PointToPoint, Node ID: 10.169.196.241
+            Metric: 1000, Bidirectional
+            Type: PointToPoint, Node ID: 10.169.14.241
+            Metric: 120, Bidirectional
+            Type: PointToPoint, Node ID: 10.34.2.250
+            Metric: 5, Bidirectional
+        Aging timer 00:45:42
+        Installed 00:14:09 ago, expires in 00:45:42, sent 00:14:07 ago
+        Last changed 2w0d 00:51:22 ago, Change count: 1258
+        OpaqArea 10.1.0.4          10.34.2.250     0x8000029e  1718  0x22 0x1e4  136
+        Opaque LSA
+        Link (2), length 112:
+            Linktype (1), length 1:
+            1
+            LinkID (2), length 4:
+            10.169.14.240
+            LocIfAdr (3), length 4:
+            10.169.14.158
+            RemIfAdr (4), length 4:
+            10.169.14.157
+            TEMetric (5), length 4:
+            100
+            MaxBW (6), length 4:
+            1000Mbps
+            MaxRsvBW (7), length 4:
+            1000Mbps
+            UnRsvBW (8), length 32:
+                Priority 0, 1000Mbps
+                Priority 1, 1000Mbps
+                Priority 2, 1000Mbps
+                Priority 3, 1000Mbps
+                Priority 4, 1000Mbps
+                Priority 5, 1000Mbps
+                Priority 6, 1000Mbps
+                Priority 7, 1000Mbps
+            LinkLocalRemoteIdentifier (11), length 8:
+            Local 334, Remote 0
+            Color (9), length 4:
+            4
+        Aging timer 00:31:21
+        Installed 00:28:32 ago, expires in 00:31:22, sent 00:28:30 ago
+        Last changed 3w0d 08:18:02 ago, Change count: 5
+        OpaqArea 10.1.0.4          10.34.2.251     0x80000299  1517  0x22 0x29c0 136
+        Opaque LSA
+        Link (2), length 112:
+            Linktype (1), length 1:
+            1
+            LinkID (2), length 4:
+            10.169.14.241
+            LocIfAdr (3), length 4:
+            10.169.14.34
+            RemIfAdr (4), length 4:
+            10.169.14.33
+            TEMetric (5), length 4:
+            90
+            MaxBW (6), length 4:
+            1000Mbps
+            MaxRsvBW (7), length 4:
+            1000Mbps
+            UnRsvBW (8), length 32:
+                Priority 0, 1000Mbps
+                Priority 1, 1000Mbps
+                Priority 2, 1000Mbps
+                Priority 3, 1000Mbps
+                Priority 4, 1000Mbps
+                Priority 5, 1000Mbps
+                Priority 6, 1000Mbps
+                Priority 7, 1000Mbps
+            LinkLocalRemoteIdentifier (11), length 8:
+            Local 334, Remote 0
+            Color (9), length 4:
+            6
+        Aging timer 00:34:43
+        Installed 00:25:08 ago, expires in 00:34:43, sent 00:25:06 ago
+        Last changed 3w0d 08:09:50 ago, Change count: 1
+        OpaqArea 10.1.0.4          10.169.14.240   0x800003f8  1529  0x22 0xb606 136
+        Opaque LSA
+        Link (2), length 112:
+            Linktype (1), length 1:
+            1
+            LinkID (2), length 4:
+            10.189.5.252
+            LocIfAdr (3), length 4:
+            10.169.14.121
+            RemIfAdr (4), length 4:
+            10.169.14.122
+            TEMetric (5), length 4:
+            100
+            MaxBW (6), length 4:
+            1000Mbps
+            MaxRsvBW (7), length 4:
+            1000Mbps
+            UnRsvBW (8), length 32:
+                Priority 0, 1000Mbps
+                Priority 1, 1000Mbps
+                Priority 2, 1000Mbps
+                Priority 3, 1000Mbps
+                Priority 4, 1000Mbps
+                Priority 5, 1000Mbps
+                Priority 6, 1000Mbps
+                Priority 7, 1000Mbps
+            LinkLocalRemoteIdentifier (11), length 8:
+            Local 334, Remote 0
+            Color (9), length 4:
+            10
+        Aging timer 00:34:31
+        Installed 00:25:26 ago, expires in 00:34:31, sent 00:25:24 ago
+        Last changed 3w3d 07:23:05 ago, Change count: 6
+        OpaqArea 10.1.0.4          10.169.14.241   0x800013fe  2418  0x22 0x694d 136
+        Opaque LSA
+        Link (2), length 112:
+            Linktype (1), length 1:
+            1
+            LinkID (2), length 4:
+            10.189.5.253
+            LocIfAdr (3), length 4:
+            10.169.14.129
+            RemIfAdr (4), length 4:
+            10.169.14.130
+            TEMetric (5), length 4:
+            70
+            MaxBW (6), length 4:
+            1000Mbps
+            MaxRsvBW (7), length 4:
+            1000Mbps
+            UnRsvBW (8), length 32:
+                Priority 0, 1000Mbps
+                Priority 1, 1000Mbps
+                Priority 2, 1000Mbps
+                Priority 3, 1000Mbps
+                Priority 4, 1000Mbps
+                Priority 5, 1000Mbps
+                Priority 6, 1000Mbps
+                Priority 7, 1000Mbps
+            LinkLocalRemoteIdentifier (11), length 8:
+            Local 334, Remote 0
+            Color (9), length 4:
+            6
+        Aging timer 00:19:42
+        Installed 00:40:12 ago, expires in 00:19:42, sent 00:40:10 ago
+        Last changed 3w3d 07:23:04 ago, Change count: 35
+        OpaqArea*10.1.0.4          10.189.5.252     0x800013e8  2702  0x22 0xb804 136
+        Opaque LSA
+        Link (2), length 112:
+            Linktype (1), length 1:
+            1
+            LinkID (2), length 4:
+            10.169.14.240
+            LocIfAdr (3), length 4:
+            10.169.14.122
+            RemIfAdr (4), length 4:
+            10.169.14.121
+            TEMetric (5), length 4:
+            100
+            MaxBW (6), length 4:
+            1000Mbps
+            MaxRsvBW (7), length 4:
+            1000Mbps
+            UnRsvBW (8), length 32:
+                Priority 0, 1000Mbps
+                Priority 1, 1000Mbps
+                Priority 2, 1000Mbps
+                Priority 3, 1000Mbps
+                Priority 4, 1000Mbps
+                Priority 5, 1000Mbps
+                Priority 6, 1000Mbps
+                Priority 7, 1000Mbps
+            LinkLocalRemoteIdentifier (11), length 8:
+            Local 334, Remote 0
+            Color (9), length 4:
+            10
+        Gen timer 00:00:19
+        Aging timer 00:14:58
+        Installed 00:45:02 ago, expires in 00:14:58, sent 00:45:00 ago
+        Last changed 3w3d 07:23:03 ago, Change count: 3, Ours, TE Link ID: 2147483652
+        OpaqArea 10.1.0.4          10.189.5.253     0x80000f9c   209  0x22 0x4cd0 136
+        Opaque LSA
+        Link (2), length 112:
+            Linktype (1), length 1:
+            1
+            LinkID (2), length 4:
+            10.169.14.241
+            LocIfAdr (3), length 4:
+            10.169.14.130
+            RemIfAdr (4), length 4:
+            10.169.14.129
+            TEMetric (5), length 4:
+            70
+            MaxBW (6), length 4:
+            1000Mbps
+            MaxRsvBW (7), length 4:
+            1000Mbps
+            UnRsvBW (8), length 32:
+                Priority 0, 1000Mbps
+                Priority 1, 1000Mbps
+                Priority 2, 1000Mbps
+                Priority 3, 1000Mbps
+                Priority 4, 1000Mbps
+                Priority 5, 1000Mbps
+                Priority 6, 1000Mbps
+                Priority 7, 1000Mbps
+            LinkLocalRemoteIdentifier (11), length 8:
+            Local 334, Remote 0
+            Color (9), length 4:
+            6
+        Aging timer 00:56:31
+        Installed 00:03:26 ago, expires in 00:56:31, sent 00:03:24 ago
+        Last changed 3w3d 07:23:04 ago, Change count: 15
+        OpaqArea 10.1.0.5          10.34.2.250     0x800001b5   580  0x22 0x5e9d 136
+        Opaque LSA
+        Link (2), length 112:
+            Linktype (1), length 1:
+            1
+            LinkID (2), length 4:
+            10.169.196.241
+            LocIfAdr (3), length 4:
+            10.169.196.213
+            RemIfAdr (4), length 4:
+            10.169.196.214
+            TEMetric (5), length 4:
+            1000
+            MaxBW (6), length 4:
+            1000Mbps
+            MaxRsvBW (7), length 4:
+            1000Mbps
+            UnRsvBW (8), length 32:
+                Priority 0, 1000Mbps
+                Priority 1, 1000Mbps
+                Priority 2, 1000Mbps
+                Priority 3, 1000Mbps
+                Priority 4, 1000Mbps
+                Priority 5, 1000Mbps
+                Priority 6, 1000Mbps
+                Priority 7, 1000Mbps
+            LinkLocalRemoteIdentifier (11), length 8:
+            Local 337, Remote 0
+            Color (9), length 4:
+            2
+        Aging timer 00:50:20
+        Installed 00:09:34 ago, expires in 00:50:20, sent 00:09:32 ago
+        Last changed 2w0d 00:51:24 ago, Change count: 1
+        OpaqArea 10.49.0.1          10.100.5.5          0x800019ac  1760  0x20 0x6c5a  44
+        Opaque LSA
+        Extended Prefix (1), length 20:
+            Route Type (1), length 1:
+                1
+            Prefix Length (2), length 1:
+                32
+            AF (3), length 1:
+                0
+            Flags (4),  length 1:
+                0x40
+            Prefix (5), length 32:
+                10.100.5.5
+            Prefix Sid (2), length 8:
+            Flags (1), length 1:
+                0x00
+            MT ID (2), length 1:
+                0
+            Algorithm (3), length 1:
+                0
+            SID (4), length 4:
+                1000
+        Aging timer 00:30:40
+        Installed 00:29:13 ago, expires in 00:30:40, sent 00:29:11 ago
+        Last changed 21w5d 22:48:11 ago, Change count: 1
+        OpaqArea 10.49.0.1          10.34.2.250     0x80001fa9  1027  0x22 0x7fa7  44
+        Opaque LSA
+        Extended Prefix (1), length 20:
+            Route Type (1), length 1:
+                1
+            Prefix Length (2), length 1:
+                32
+            AF (3), length 1:
+                0
+            Flags (4),  length 1:
+                0x40
+            Prefix (5), length 32:
+                10.34.2.250
+            Prefix Sid (2), length 8:
+            Flags (1), length 1:
+                0x00
+            MT ID (2), length 1:
+                0
+            Algorithm (3), length 1:
+                0
+            SID (4), length 4:
+                61
+        Aging timer 00:42:53
+        Installed 00:17:01 ago, expires in 00:42:53, sent 00:16:59 ago
+        Last changed 30w0d 01:32:34 ago, Change count: 1
+        OpaqArea 10.49.0.1          10.34.2.251     0x80001cfb   858  0x22 0x6ce   44
+        Opaque LSA
+        Extended Prefix (1), length 20:
+            Route Type (1), length 1:
+                1
+            Prefix Length (2), length 1:
+                32
+            AF (3), length 1:
+                0
+            Flags (4),  length 1:
+                0x40
+            Prefix (5), length 32:
+                10.34.2.251
+            Prefix Sid (2), length 8:
+            Flags (1), length 1:
+                0x00
+            MT ID (2), length 1:
+                0
+            Algorithm (3), length 1:
+                0
+            SID (4), length 4:
+                62
+        Aging timer 00:45:42
+        Installed 00:14:09 ago, expires in 00:45:42, sent 00:14:07 ago
+        Last changed 30w0d 01:32:36 ago, Change count: 1
+        OpaqArea 10.49.0.1          10.169.14.240   0x80001bc2   173  0x22 0x97ab  44
+        Opaque LSA
+        Extended Prefix (1), length 20:
+            Route Type (1), length 1:
+                1
+            Prefix Length (2), length 1:
+                32
+            AF (3), length 1:
+                0
+            Flags (4),  length 1:
+                0x40
+            Prefix (5), length 32:
+                10.169.14.240
+            Prefix Sid (2), length 8:
+            Flags (1), length 1:
+                0x00
+            MT ID (2), length 1:
+                0
+            Algorithm (3), length 1:
+                0
+            SID (4), length 4:
+                51
+        Aging timer 00:57:06
+        Installed 00:02:50 ago, expires in 00:57:07, sent 00:02:48 ago
+        Last changed 30w0d 01:32:37 ago, Change count: 1
+        OpaqArea 10.49.0.1          10.169.14.241   0x80001f67  1759  0x22 0x6433  44
+        Opaque LSA
+        Extended Prefix (1), length 20:
+            Route Type (1), length 1:
+                1
+            Prefix Length (2), length 1:
+                32
+            AF (3), length 1:
+                0
+            Flags (4),  length 1:
+                0x40
+            Prefix (5), length 32:
+                10.169.14.241
+            Prefix Sid (2), length 8:
+            Flags (1), length 1:
+                0x00
+            MT ID (2), length 1:
+                0
+            Algorithm (3), length 1:
+                0
+            SID (4), length 4:
+                52
+        Aging timer 00:30:41
+        Installed 00:29:13 ago, expires in 00:30:41, sent 00:29:11 ago
+        Last changed 30w0d 01:32:36 ago, Change count: 1
+        OpaqArea*10.49.0.1          10.189.5.252     0x80001b9e  1899  0x22 0x8c7f  44
+        Opaque LSA
+        Extended Prefix (1), length 20:
+            Route Type (1), length 1:
+                1
+            Prefix Length (2), length 1:
+                32
+            AF (3), length 1:
+                0
+            Flags (4),  length 1:
+                0x40
+            Prefix (5), length 32:
+                10.189.5.252
+            Prefix Sid (2), length 8:
+            Flags (1), length 1:
+                0x00
+            MT ID (2), length 1:
+                0
+            Algorithm (3), length 1:
+                0
+            SID (4), length 4:
+                71
+        Gen timer 00:18:20
+        Aging timer 00:28:20
+        Installed 00:31:39 ago, expires in 00:28:21, sent 00:31:37 ago
+        Last changed 30w0d 01:46:13 ago, Change count: 1, Ours, TE Link ID: 0
+        OpaqArea 10.49.0.1          10.189.5.253     0x80001b04  1980  0x22 0xe3bf  44
+        Opaque LSA
+        Extended Prefix (1), length 20:
+            Route Type (1), length 1:
+                1
+            Prefix Length (2), length 1:
+                32
+            AF (3), length 1:
+                0
+            Flags (4),  length 1:
+                0x40
+            Prefix (5), length 32:
+                10.189.5.253
+            Prefix Sid (2), length 8:
+            Flags (1), length 1:
+                0x00
+            MT ID (2), length 1:
+                0
+            Algorithm (3), length 1:
+                0
+            SID (4), length 4:
+                72
+        Aging timer 00:26:59
+        Installed 00:32:57 ago, expires in 00:27:00, sent 00:32:55 ago
+        Last changed 30w0d 01:32:43 ago, Change count: 1
+        OpaqArea 10.64.0.1          10.34.2.250     0x800004f9   367  0x22 0x39a3  60
+        Opaque LSA
+        Extended Link (1), length 36:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.34.2.251
+            Link Data (3), length 4:
+            10.34.2.201
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                142149
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                142150
+        Aging timer 00:53:53
+        Installed 00:06:01 ago, expires in 00:53:53, sent 00:05:59 ago
+        Last changed 2w0d 00:50:30 ago, Change count: 285
+        OpaqArea 10.64.0.1          10.169.14.241   0x80000311  1016  0x22 0x7002  60
+        Opaque LSA
+        Extended Link (1), length 36:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.169.14.240
+            Link Data (3), length 4:
+            10.169.14.18
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                37408
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                37409
+        Aging timer 00:43:04
+        Installed 00:16:50 ago, expires in 00:43:04, sent 00:16:48 ago
+        Last changed 2w6d 19:46:47 ago, Change count: 50
+        OpaqArea 10.64.0.1          10.189.5.253     0x8000030a  2521  0x22 0x6915  60
+        Opaque LSA
+        Extended Link (1), length 36:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.169.14.241
+            Link Data (3), length 4:
+            10.169.14.130
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                1912
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                1913
+        Aging timer 00:17:59
+        Installed 00:41:58 ago, expires in 00:17:59, sent 00:41:56 ago
+        Last changed 2w6d 20:01:45 ago, Change count: 31
+        OpaqArea 10.64.0.2          10.169.14.241   0x80000305   790  0x22 0x7271  60
+        Opaque LSA
+        Extended Link (1), length 36:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.189.5.253
+            Link Data (3), length 4:
+            10.169.14.129
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                1647
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                1648
+        Aging timer 00:46:49
+        Installed 00:13:04 ago, expires in 00:46:50, sent 00:13:02 ago
+        Last changed 2w6d 18:58:08 ago, Change count: 47
+        OpaqArea 10.64.0.3          10.169.14.241   0x8000029a   565  0x22 0x7248  60
+        Opaque LSA
+        Extended Link (1), length 36:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.34.2.251
+            Link Data (3), length 4:
+            10.169.14.33
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                1649
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                1650
+        Aging timer 00:50:35
+        Installed 00:09:19 ago, expires in 00:50:35, sent 00:09:17 ago
+        Last changed 2w6d 18:14:24 ago, Change count: 7
+        OpaqArea 10.64.0.3          10.189.5.253     0x800002db   947  0x22 0x34eb  60
+        Opaque LSA
+        Extended Link (1), length 36:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.189.5.252
+            Link Data (3), length 4:
+            10.189.5.94
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                13988
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                13989
+        Aging timer 00:44:13
+        Installed 00:15:44 ago, expires in 00:44:13, sent 00:15:42 ago
+        Last changed 2w0d 00:43:19 ago, Change count: 17
+        OpaqArea 10.64.0.4          10.189.5.253     0x800001bb  2251  0x22 0x31be  60
+        Opaque LSA
+        Extended Link (1), length 36:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.19.198.239
+            Link Data (3), length 4:
+            10.19.198.29
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                102794
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                102795
+        Aging timer 00:22:29
+        Installed 00:37:28 ago, expires in 00:22:29, sent 00:37:26 ago
+        Last changed 2w0d 00:51:02 ago, Change count: 1
+        OpaqArea 10.64.0.6          10.100.5.5          0x800019bf  1760  0x20 0x4de2  56
+        Opaque LSA
+        Extended Link (1), length 32:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.34.2.250
+            Link Data (3), length 4:
+            10.16.0.2
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                24000
+            Invalid (32768), length 4:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                24000
+        Aging timer 00:30:40
+        Installed 00:29:13 ago, expires in 00:30:40, sent 00:29:11 ago
+        Last changed 21w5d 22:48:11 ago, Change count: 1
+        OpaqArea 10.64.0.7          10.34.2.250     0x8000046b  2871  0x22 0xb9a6  48
+        Opaque LSA
+        Extended Link (1), length 24:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.100.5.5
+            Link Data (3), length 4:
+            10.16.0.1
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                207722
+        Aging timer 00:12:09
+        Installed 00:47:45 ago, expires in 00:12:09, sent 00:47:43 ago
+        Last changed 2w0d 00:42:10 ago, Change count: 123
+        OpaqArea 10.64.0.7          10.34.2.251     0x800004de  1297  0x22 0x6a96  60
+        Opaque LSA
+        Extended Link (1), length 36:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.34.2.250
+            Link Data (3), length 4:
+            10.34.2.202
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                112778
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                112779
+        Aging timer 00:38:23
+        Installed 00:21:28 ago, expires in 00:38:23, sent 00:21:26 ago
+        Last changed 2w6d 19:46:37 ago, Change count: 243
+        OpaqArea 10.64.0.17         10.19.198.239    0x8000025d   913  0x20 0xb34a 104
+        Opaque LSA
+        Extended Link (1), length 80:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.189.5.252
+            Link Data (3), length 4:
+            10.19.198.26
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                1730
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                1729
+            Invalid (8), length 4:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                1729
+            Invalid (32768), length 4:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                1729
+            Invalid (9), length 8:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                1729
+            Invalid (32769), length 12:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                1729
+        Aging timer 00:44:47
+        Installed 00:15:12 ago, expires in 00:44:47, sent 00:15:10 ago
+        Last changed 2w0d 00:51:03 ago, Change count: 2
+        OpaqArea 10.64.0.17         10.169.196.241  0x8000025d   812  0x20 0x3e3c 104
+        Opaque LSA
+        Extended Link (1), length 80:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.34.2.250
+            Link Data (3), length 4:
+            10.169.196.214
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                223815
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                223843
+            Invalid (8), length 4:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                223843
+            Invalid (32768), length 4:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                223843
+            Invalid (9), length 8:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                223843
+            Invalid (32769), length 12:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                223843
+        Aging timer 00:46:27
+        Installed 00:13:25 ago, expires in 00:46:28, sent 00:13:23 ago
+        Last changed 2w0d 00:51:24 ago, Change count: 2
+        OpaqArea 10.64.0.18         10.19.198.239    0x8000025d   913  0x20 0xb938 104
+        Opaque LSA
+        Extended Link (1), length 80:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.189.5.253
+            Link Data (3), length 4:
+            10.19.198.30
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                1728
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                1727
+            Invalid (8), length 4:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                1727
+            Invalid (32768), length 4:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                1727
+            Invalid (9), length 8:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                1727
+            Invalid (32769), length 12:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                1727
+        Aging timer 00:44:47
+        Installed 00:15:12 ago, expires in 00:44:47, sent 00:15:10 ago
+        Last changed 2w0d 00:51:02 ago, Change count: 2
+        OpaqArea 10.64.0.18         10.169.196.241  0x8000025d   812  0x20 0x6fdb 104
+        Opaque LSA
+        Extended Link (1), length 80:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.34.2.251
+            Link Data (3), length 4:
+            10.169.196.218
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                223844
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                223845
+            Invalid (8), length 4:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                223845
+            Invalid (32768), length 4:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                223845
+            Invalid (9), length 8:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                223845
+            Invalid (32769), length 12:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                223845
+        Aging timer 00:46:27
+        Installed 00:13:25 ago, expires in 00:46:28, sent 00:13:23 ago
+        Last changed 2w0d 00:51:22 ago, Change count: 2
+        OpaqArea 10.64.0.31         10.34.2.251     0x8000029b   114  0x22 0xe70a  60
+        Opaque LSA
+        Extended Link (1), length 36:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.169.14.241
+            Link Data (3), length 4:
+            10.169.14.34
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                15022
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                15023
+        Aging timer 00:58:06
+        Installed 00:01:47 ago, expires in 00:58:06, sent 00:01:45 ago
+        Last changed 2w0d 00:43:41 ago, Change count: 8
+        OpaqArea 10.64.0.32         10.34.2.251     0x800001b5  1078  0x22 0xe396  60
+        Opaque LSA
+        Extended Link (1), length 36:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.169.196.241
+            Link Data (3), length 4:
+            10.169.196.217
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                259074
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                259075
+        Aging timer 00:42:02
+        Installed 00:17:50 ago, expires in 00:42:02, sent 00:17:48 ago
+        Last changed 2w0d 00:51:22 ago, Change count: 1
+        OpaqArea 10.64.0.37         10.34.2.250     0x8000029b  1949  0x22 0xffb8  60
+        Opaque LSA
+        Extended Link (1), length 36:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.169.14.240
+            Link Data (3), length 4:
+            10.169.14.158
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                143642
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                143643
+        Aging timer 00:27:31
+        Installed 00:32:23 ago, expires in 00:27:31, sent 00:32:21 ago
+        Last changed 2w0d 00:27:01 ago, Change count: 7
+        OpaqArea 10.64.0.38         10.34.2.250     0x800001b5  1257  0x22 0x71b3  60
+        Opaque LSA
+        Extended Link (1), length 36:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.169.196.241
+            Link Data (3), length 4:
+            10.169.196.213
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                358249
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                358250
+        Aging timer 00:39:02
+        Installed 00:20:51 ago, expires in 00:39:03, sent 00:20:49 ago
+        Last changed 2w0d 00:51:24 ago, Change count: 1
+        OpaqArea*10.64.0.52         10.189.5.252     0x80000308   792  0x22 0x7efa  60
+        Opaque LSA
+        Extended Link (1), length 36:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.169.14.240
+            Link Data (3), length 4:
+            10.169.14.122
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                2567
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                2568
+        Gen timer 00:36:39
+        Aging timer 00:46:48
+        Installed 00:13:12 ago, expires in 00:46:48, sent 00:13:10 ago
+        Last changed 2w0d 00:37:11 ago, Change count: 25, Ours, TE Link ID: 0
+        OpaqArea*10.64.0.54         10.189.5.252     0x800002dc  1333  0x22 0x1839  60
+        Opaque LSA
+        Extended Link (1), length 36:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.189.5.253
+            Link Data (3), length 4:
+            10.189.5.93
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                28985
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                28986
+        Gen timer 00:27:30
+        Aging timer 00:37:47
+        Installed 00:22:13 ago, expires in 00:37:47, sent 00:22:11 ago
+        Last changed 2w0d 00:46:13 ago, Change count: 26, Ours, TE Link ID: 0
+        OpaqArea*10.64.0.55         10.189.5.252     0x800001bb  2167  0x22 0x92eb  60
+        Opaque LSA
+        Extended Link (1), length 36:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.19.198.239
+            Link Data (3), length 4:
+            10.19.198.25
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                167966
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                167967
+        Gen timer 00:09:20
+        Aging timer 00:23:53
+        Installed 00:36:07 ago, expires in 00:23:53, sent 00:36:05 ago
+        Last changed 2w0d 00:51:03 ago, Change count: 1, Ours, TE Link ID: 0
+        OpaqArea 10.64.0.57         10.169.14.240   0x80000303  1378  0x22 0x7544  60
+        Opaque LSA
+        Extended Link (1), length 36:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.169.14.241
+            Link Data (3), length 4:
+            10.169.14.17
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                379383
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                379384
+        Aging timer 00:37:01
+        Installed 00:22:55 ago, expires in 00:37:02, sent 00:22:53 ago
+        Last changed 2w6d 19:46:52 ago, Change count: 57
+        OpaqArea 10.64.0.59         10.169.14.240   0x800002f4  1680  0x22 0x6d12  60
+        Opaque LSA
+        Extended Link (1), length 36:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.189.5.252
+            Link Data (3), length 4:
+            10.169.14.121
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                25
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                26
+        Aging timer 00:32:00
+        Installed 00:27:57 ago, expires in 00:32:00, sent 00:27:55 ago
+        Last changed 3w1d 08:43:52 ago, Change count: 52
+        OpaqArea 10.64.0.60         10.169.14.240   0x8000028b  1228  0x22 0x4f1a  60
+        Opaque LSA
+        Extended Link (1), length 36:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.34.2.250
+            Link Data (3), length 4:
+            10.169.14.157
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0xe0
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                207596
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                207597
+        Aging timer 00:39:32
+        Installed 00:20:25 ago, expires in 00:39:32, sent 00:20:23 ago
+        Last changed 2w6d 18:58:13 ago, Change count: 6
+        OpaqArea 10.64.8.74         10.169.196.241  0x80000030   326  0x20 0xdcd1  92
+        Opaque LSA
+        Extended Link (1), length 68:
+            Link Type (1), length 1:
+            1
+            Link Id (2), length 4:
+            10.36.3.3
+            Link Data (3), length 4:
+            192.168.111.2
+            Adjacency Sid (2), length 7:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                223852
+            Invalid (8), length 4:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                223852
+            Invalid (32768), length 4:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                223852
+            Invalid (9), length 8:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                223852
+            Invalid (32769), length 12:
+                Flags (1), length 1:
+                0x60
+                MT ID (2), length 1:
+                0
+                Weight (3), length 1:
+                0
+                Label (4), length 3:
+                223852
+        Aging timer 00:54:34
+        Installed 00:05:21 ago, expires in 00:54:34, sent 00:05:19 ago
+        Last changed 1d 02:16:03 ago, Change count: 1
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+        Extern   0.0.0.0          10.34.2.251     0x800019e3  2614  0x22 0x6715  36
+        mask 0.0.0.0
+        Topology default (ID 0)
+            Type: 1, Metric: 1, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:16:26
+        Installed 00:43:25 ago, expires in 00:16:26, sent 00:43:23 ago
+        Last changed 30w0d 01:32:36 ago, Change count: 1
+        Extern   0.0.0.0          10.169.14.240   0x8000039e  2282  0x22 0x9fcc  36
+        mask 0.0.0.0
+        Topology default (ID 0)
+            Type: 1, Metric: 1, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:21:57
+        Installed 00:37:59 ago, expires in 00:21:58, sent 00:37:57 ago
+        Last changed 4w2d 05:46:52 ago, Change count: 1
+        Extern   10.1.0.0          192.168.36.119  0x800019b0  1219  0x20 0x3bc3  36
+        mask 255.255.255.0
+        Topology default (ID 0)
+            Type: 2, Metric: 20, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:39:41
+        Installed 00:20:15 ago, expires in 00:39:41, sent 00:20:13 ago
+        Last changed 21w6d 00:04:15 ago, Change count: 1
+        Extern   10.1.0.0          192.168.36.120  0x800019b1   791  0x20 0x33c9  36
+        mask 255.255.255.0
+        Topology default (ID 0)
+            Type: 2, Metric: 20, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:46:49
+        Installed 00:13:07 ago, expires in 00:46:49, sent 00:13:05 ago
+        Last changed 21w6d 00:04:43 ago, Change count: 1
+        Extern   10.174.132.237    10.169.14.240   0x8000039e  2132  0x22 0xf161  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:24:28
+        Installed 00:35:29 ago, expires in 00:24:28, sent 00:35:27 ago
+        Last changed 4w2d 05:46:49 ago, Change count: 1
+        Extern   10.34.2.250     10.169.14.240   0x80000288  2734  0x22 0x473e  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
+        Aging timer 00:14:26
+        Installed 00:45:31 ago, expires in 00:14:26, sent 00:45:29 ago
+        Last changed 3w0d 08:49:51 ago, Change count: 1
+        Extern   10.34.2.250     10.169.14.241   0x80000298  2637  0x22 0x2153  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
+        Aging timer 00:16:03
+        Installed 00:43:51 ago, expires in 00:16:03, sent 00:43:49 ago
+        Last changed 3w0d 08:09:51 ago, Change count: 1
+        Extern   10.34.2.251     10.169.14.240   0x80000289   475  0x22 0x3b48  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
+        Aging timer 00:52:05
+        Installed 00:07:52 ago, expires in 00:52:05, sent 00:07:50 ago
+        Last changed 3w0d 08:49:56 ago, Change count: 1
+        Extern   192.168.100.0    10.169.14.240   0x800002da  1077  0x22 0xfb51  36
+        mask 255.255.255.128
+        Topology default (ID 0)
+            Type: 1, Metric: 31900, Fwd addr: 0.0.0.0, Tag: 10.76.212.52
+        Aging timer 00:42:03
+        Installed 00:17:54 ago, expires in 00:42:03, sent 00:17:52 ago
+        Last changed 2w6d 18:58:13 ago, Change count: 75
+        Extern   192.168.100.252  10.169.14.240   0x800002d9   927  0x22 0x19b8  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 31900, Fwd addr: 0.0.0.0, Tag: 10.76.212.52
+        Aging timer 00:44:33
+        Installed 00:15:24 ago, expires in 00:44:33, sent 00:15:22 ago
+        Last changed 2w6d 18:58:13 ago, Change count: 75
+    """
+    }
+
+    golden_parsed_output = {
+        "ospf-database-information": {
+            "ospf-area-header": {"ospf-area": "0.0.0.8"},
+            "ospf-database": [
+                {
+                    "advertising-router": "10.36.3.3",
+                    "age": "352",
+                    "checksum": "0xa127",
+                    "lsa-id": "10.36.3.3",
+                    "lsa-length": "2496",
+                    "lsa-type": "Router",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:54:08"},
+                        "expiration-time": {"#text": "00:54:08"},
+                        "installation-time": {"#text": "00:05:44"},
+                        "lsa-change-count": "69",
+                        "lsa-changed-time": {"#text": "1d " "02:16:03"},
+                        "send-time": {"#text": "00:05:42"},
+                    },
+                    "ospf-router-lsa": {
+                        "bits": "0x0",
+                        "link-count": "206",
+                        "ospf-link": [
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "10.36.3.3",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "10.36.3.3",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "192.168.220.0",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "192.168.220.0",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "192.168.220.4",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "192.168.220.4",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "192.168.220.1",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "192.168.220.1",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "192.168.220.2",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "192.168.220.2",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "192.168.220.3",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "192.168.220.3",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "192.168.111.1",
+                                "link-id": "10.169.196.241",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "192.168.111.1",
+                                "link-id": "10.169.196.241",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "192.168.111.0",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "192.168.111.0",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "192.168.4.1",
+                                "link-id": "10.169.196.241",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "192.168.4.1",
+                                "link-id": "10.169.196.241",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "192.168.4.0",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "192.168.4.0",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                        ],
+                        "ospf-lsa-topology": {
+                            "ospf-lsa-topology-link": [
+                                {
+                                    "link-type-name": "PointToPoint",
+                                    "ospf-lsa-topology-link-metric": "1",
+                                    "ospf-lsa-topology-link-node-id": "10.169.196.241",
+                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                }
+                            ],
+                            "ospf-topology-id": "0",
+                            "ospf-topology-name": "default",
+                        },
+                    },
+                    "sequence-number": "0x80004d2d",
+                },
+                {
+                    "advertising-router": "10.100.5.5",
+                    "age": "1760",
+                    "checksum": "0xa1c",
+                    "lsa-id": "10.100.5.5",
+                    "lsa-length": "60",
+                    "lsa-type": "Router",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:30:40"},
+                        "expiration-time": {"#text": "00:30:40"},
+                        "installation-time": {"#text": "00:29:13"},
+                        "lsa-change-count": "38",
+                        "lsa-changed-time": {"#text": "4w6d " "19:31:25"},
+                        "send-time": {"#text": "00:29:11"},
+                    },
+                    "ospf-router-lsa": {
+                        "bits": "0x0",
+                        "link-count": "3",
+                        "ospf-link": [
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "10.100.5.5",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "10.100.5.5",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "10.16.0.2",
+                                "link-id": "10.34.2.250",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "10.16.0.2",
+                                "link-id": "10.34.2.250",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.16.0.0",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.16.0.0",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                        ],
+                        "ospf-lsa-topology": {
+                            "ospf-lsa-topology-link": [
+                                {
+                                    "link-type-name": "PointToPoint",
+                                    "ospf-lsa-topology-link-metric": "1",
+                                    "ospf-lsa-topology-link-node-id": "10.34.2.250",
+                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                }
+                            ],
+                            "ospf-topology-id": "0",
+                            "ospf-topology-name": "default",
+                        },
+                    },
+                    "sequence-number": "0x800019d7",
+                },
+                {
+                    "advertising-router": "10.19.198.239",
+                    "age": "913",
+                    "checksum": "0x95bf",
+                    "lsa-id": "10.19.198.239",
+                    "lsa-length": "96",
+                    "lsa-type": "Router",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:44:47"},
+                        "expiration-time": {"#text": "00:44:47"},
+                        "installation-time": {"#text": "00:15:12"},
+                        "lsa-change-count": "45",
+                        "lsa-changed-time": {"#text": "1w0d " "19:55:00"},
+                        "send-time": {"#text": "00:15:10"},
+                    },
+                    "ospf-router-lsa": {
+                        "bits": "0x0",
+                        "link-count": "6",
+                        "ospf-link": [
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "10.19.198.239",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "10.19.198.239",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "10.19.198.30",
+                                "link-id": "10.189.5.253",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "10.19.198.30",
+                                "link-id": "10.189.5.253",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.19.198.28",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.19.198.28",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "10.19.198.26",
+                                "link-id": "10.189.5.252",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "10.19.198.26",
+                                "link-id": "10.189.5.252",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.19.198.24",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.19.198.24",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.15.0.0",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.15.0.0",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                        ],
+                        "ospf-lsa-topology": {
+                            "ospf-lsa-topology-link": [
+                                {
+                                    "link-type-name": "PointToPoint",
+                                    "ospf-lsa-topology-link-metric": "1000",
+                                    "ospf-lsa-topology-link-node-id": "10.189.5.252",
+                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                },
+                                {
+                                    "link-type-name": "PointToPoint",
+                                    "ospf-lsa-topology-link-metric": "1000",
+                                    "ospf-lsa-topology-link-node-id": "10.189.5.253",
+                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                },
+                            ],
+                            "ospf-topology-id": "0",
+                            "ospf-topology-name": "default",
+                        },
+                    },
+                    "sequence-number": "0x80000442",
+                },
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "1027",
+                    "checksum": "0x26f6",
+                    "lsa-id": "10.34.2.250",
+                    "lsa-length": "144",
+                    "lsa-type": "Router",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:42:53"},
+                        "expiration-time": {"#text": "00:42:53"},
+                        "installation-time": {"#text": "00:17:01"},
+                        "lsa-change-count": "1911",
+                        "lsa-changed-time": {"#text": "2w0d " "00:51:24"},
+                        "send-time": {"#text": "00:16:59"},
+                    },
+                    "ospf-router-lsa": {
+                        "bits": "0x2",
+                        "link-count": "10",
+                        "ospf-link": [
+                            {
+                                "link-data": "10.34.2.201",
+                                "link-id": "10.34.2.251",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "5",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "10.34.2.201",
+                                "link-id": "10.34.2.251",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "5",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.34.2.200",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "5",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.34.2.200",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "5",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "10.169.14.158",
+                                "link-id": "10.169.14.240",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "100",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "10.169.14.158",
+                                "link-id": "10.169.14.240",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "100",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.169.14.156",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "100",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.169.14.156",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "100",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "10.169.196.213",
+                                "link-id": "10.169.196.241",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "10.169.196.213",
+                                "link-id": "10.169.196.241",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.169.196.212",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.169.196.212",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "10.16.0.1",
+                                "link-id": "10.100.5.5",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "10.16.0.1",
+                                "link-id": "10.100.5.5",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.16.0.0",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.16.0.0",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "192.168.220.0",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "192.168.220.0",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "10.34.2.250",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "0",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "10.34.2.250",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "0",
+                                "ospf-topology-count": "0",
+                            },
+                        ],
+                        "ospf-lsa-topology": {
+                            "ospf-lsa-topology-link": [
+                                {
+                                    "link-type-name": "PointToPoint",
+                                    "ospf-lsa-topology-link-metric": "1000",
+                                    "ospf-lsa-topology-link-node-id": "10.100.5.5",
+                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                },
+                                {
+                                    "link-type-name": "PointToPoint",
+                                    "ospf-lsa-topology-link-metric": "1000",
+                                    "ospf-lsa-topology-link-node-id": "10.169.196.241",
+                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                },
+                                {
+                                    "link-type-name": "PointToPoint",
+                                    "ospf-lsa-topology-link-metric": "100",
+                                    "ospf-lsa-topology-link-node-id": "10.169.14.240",
+                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                },
+                                {
+                                    "link-type-name": "PointToPoint",
+                                    "ospf-lsa-topology-link-metric": "5",
+                                    "ospf-lsa-topology-link-node-id": "10.34.2.251",
+                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                },
+                            ],
+                            "ospf-topology-id": "0",
+                            "ospf-topology-name": "default",
+                        },
+                    },
+                    "sequence-number": "0x8000205a",
+                },
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "858",
+                    "checksum": "0x1022",
+                    "lsa-id": "10.34.2.251",
+                    "lsa-length": "108",
+                    "lsa-type": "Router",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:45:42"},
+                        "expiration-time": {"#text": "00:45:42"},
+                        "installation-time": {"#text": "00:14:09"},
+                        "lsa-change-count": "1258",
+                        "lsa-changed-time": {"#text": "2w0d " "00:51:22"},
+                        "send-time": {"#text": "00:14:07"},
+                    },
+                    "ospf-router-lsa": {
+                        "bits": "0x2",
+                        "link-count": "7",
+                        "ospf-link": [
+                            {
+                                "link-data": "10.34.2.202",
+                                "link-id": "10.34.2.250",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "5",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "10.34.2.202",
+                                "link-id": "10.34.2.250",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "5",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.34.2.200",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "5",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.34.2.200",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "5",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "10.169.14.34",
+                                "link-id": "10.169.14.241",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "120",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "10.169.14.34",
+                                "link-id": "10.169.14.241",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "120",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.169.14.32",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "120",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.169.14.32",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "120",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "10.169.196.217",
+                                "link-id": "10.169.196.241",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "10.169.196.217",
+                                "link-id": "10.169.196.241",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.169.196.216",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.169.196.216",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1000",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "10.34.2.251",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "0",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "10.34.2.251",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "0",
+                                "ospf-topology-count": "0",
+                            },
+                        ],
+                        "ospf-lsa-topology": {
+                            "ospf-lsa-topology-link": [
+                                {
+                                    "link-type-name": "PointToPoint",
+                                    "ospf-lsa-topology-link-metric": "1000",
+                                    "ospf-lsa-topology-link-node-id": "10.169.196.241",
+                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                },
+                                {
+                                    "link-type-name": "PointToPoint",
+                                    "ospf-lsa-topology-link-metric": "120",
+                                    "ospf-lsa-topology-link-node-id": "10.169.14.241",
+                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                },
+                                {
+                                    "link-type-name": "PointToPoint",
+                                    "ospf-lsa-topology-link-metric": "5",
+                                    "ospf-lsa-topology-link-node-id": "10.34.2.250",
+                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                },
+                            ],
+                            "ospf-topology-id": "0",
+                            "ospf-topology-name": "default",
+                        },
+                    },
+                    "sequence-number": "0x80001dde",
+                },
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "1718",
+                    "checksum": "0x1e4",
+                    "lsa-id": "10.1.0.4",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:31:21"},
+                        "expiration-time": {"#text": "00:31:22"},
+                        "installation-time": {"#text": "00:28:32"},
+                        "lsa-change-count": "5",
+                        "lsa-changed-time": {"#text": "3w0d " "08:18:02"},
+                        "send-time": {"#text": "00:28:30"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.169.14.240",
+                                "10.169.14.158",
+                                "10.169.14.157",
+                                "100",
+                                "1000Mbps",
+                                "1000Mbps",
+                                "Priority "
+                                "0, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "1, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "2, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "3, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "4, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "5, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "6, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "7, "
+                                "1000Mbps\n",
+                                "Local " "334, " "Remote " "0",
+                                "4",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "4",
+                                "4",
+                                "4",
+                                "4",
+                                "32",
+                                "8",
+                                "4",
+                            ],
+                            "tlv-type-name": [
+                                "Linktype",
+                                "LinkID",
+                                "LocIfAdr",
+                                "RemIfAdr",
+                                "TEMetric",
+                                "MaxBW",
+                                "MaxRsvBW",
+                                "UnRsvBW",
+                                "LinkLocalRemoteIdentifier",
+                                "Color",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "5",
+                                "6",
+                                "7",
+                                "8",
+                                "11",
+                                "9",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "112",
+                            "tlv-type-name": "Link",
+                            "tlv-type-value": "2",
+                        },
+                    },
+                    "sequence-number": "0x8000029e",
+                },
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "1517",
+                    "checksum": "0x29c0",
+                    "lsa-id": "10.1.0.4",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:34:43"},
+                        "expiration-time": {"#text": "00:34:43"},
+                        "installation-time": {"#text": "00:25:08"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "3w0d " "08:09:50"},
+                        "send-time": {"#text": "00:25:06"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.169.14.241",
+                                "10.169.14.34",
+                                "10.169.14.33",
+                                "90",
+                                "1000Mbps",
+                                "1000Mbps",
+                                "Priority "
+                                "0, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "1, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "2, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "3, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "4, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "5, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "6, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "7, "
+                                "1000Mbps\n",
+                                "Local " "334, " "Remote " "0",
+                                "6",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "4",
+                                "4",
+                                "4",
+                                "4",
+                                "32",
+                                "8",
+                                "4",
+                            ],
+                            "tlv-type-name": [
+                                "Linktype",
+                                "LinkID",
+                                "LocIfAdr",
+                                "RemIfAdr",
+                                "TEMetric",
+                                "MaxBW",
+                                "MaxRsvBW",
+                                "UnRsvBW",
+                                "LinkLocalRemoteIdentifier",
+                                "Color",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "5",
+                                "6",
+                                "7",
+                                "8",
+                                "11",
+                                "9",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "112",
+                            "tlv-type-name": "Link",
+                            "tlv-type-value": "2",
+                        },
+                    },
+                    "sequence-number": "0x80000299",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "1529",
+                    "checksum": "0xb606",
+                    "lsa-id": "10.1.0.4",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:34:31"},
+                        "expiration-time": {"#text": "00:34:31"},
+                        "installation-time": {"#text": "00:25:26"},
+                        "lsa-change-count": "6",
+                        "lsa-changed-time": {"#text": "3w3d " "07:23:05"},
+                        "send-time": {"#text": "00:25:24"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.189.5.252",
+                                "10.169.14.121",
+                                "10.169.14.122",
+                                "100",
+                                "1000Mbps",
+                                "1000Mbps",
+                                "Priority "
+                                "0, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "1, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "2, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "3, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "4, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "5, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "6, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "7, "
+                                "1000Mbps\n",
+                                "Local " "334, " "Remote " "0",
+                                "10",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "4",
+                                "4",
+                                "4",
+                                "4",
+                                "32",
+                                "8",
+                                "4",
+                            ],
+                            "tlv-type-name": [
+                                "Linktype",
+                                "LinkID",
+                                "LocIfAdr",
+                                "RemIfAdr",
+                                "TEMetric",
+                                "MaxBW",
+                                "MaxRsvBW",
+                                "UnRsvBW",
+                                "LinkLocalRemoteIdentifier",
+                                "Color",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "5",
+                                "6",
+                                "7",
+                                "8",
+                                "11",
+                                "9",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "112",
+                            "tlv-type-name": "Link",
+                            "tlv-type-value": "2",
+                        },
+                    },
+                    "sequence-number": "0x800003f8",
+                },
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "2418",
+                    "checksum": "0x694d",
+                    "lsa-id": "10.1.0.4",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:19:42"},
+                        "expiration-time": {"#text": "00:19:42"},
+                        "installation-time": {"#text": "00:40:12"},
+                        "lsa-change-count": "35",
+                        "lsa-changed-time": {"#text": "3w3d " "07:23:04"},
+                        "send-time": {"#text": "00:40:10"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.189.5.253",
+                                "10.169.14.129",
+                                "10.169.14.130",
+                                "70",
+                                "1000Mbps",
+                                "1000Mbps",
+                                "Priority "
+                                "0, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "1, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "2, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "3, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "4, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "5, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "6, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "7, "
+                                "1000Mbps\n",
+                                "Local " "334, " "Remote " "0",
+                                "6",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "4",
+                                "4",
+                                "4",
+                                "4",
+                                "32",
+                                "8",
+                                "4",
+                            ],
+                            "tlv-type-name": [
+                                "Linktype",
+                                "LinkID",
+                                "LocIfAdr",
+                                "RemIfAdr",
+                                "TEMetric",
+                                "MaxBW",
+                                "MaxRsvBW",
+                                "UnRsvBW",
+                                "LinkLocalRemoteIdentifier",
+                                "Color",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "5",
+                                "6",
+                                "7",
+                                "8",
+                                "11",
+                                "9",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "112",
+                            "tlv-type-name": "Link",
+                            "tlv-type-value": "2",
+                        },
+                    },
+                    "sequence-number": "0x800013fe",
+                },
+                {
+                    "advertising-router": "10.189.5.252",
+                    "age": "2702",
+                    "checksum": "0xb804",
+                    "lsa-id": "10.1.0.4",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:14:58"},
+                        "expiration-time": {"#text": "00:14:58"},
+                        "generation-timer": {"#text": "00:00:19"},
+                        "installation-time": {"#text": "00:45:02"},
+                        "lsa-change-count": "3",
+                        "lsa-changed-time": {"#text": "3w3d " "07:23:03"},
+                        "send-time": {"#text": "00:45:00"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.169.14.240",
+                                "10.169.14.122",
+                                "10.169.14.121",
+                                "100",
+                                "1000Mbps",
+                                "1000Mbps",
+                                "Priority "
+                                "0, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "1, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "2, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "3, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "4, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "5, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "6, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "7, "
+                                "1000Mbps\n",
+                                "Local " "334, " "Remote " "0",
+                                "10",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "4",
+                                "4",
+                                "4",
+                                "4",
+                                "32",
+                                "8",
+                                "4",
+                            ],
+                            "tlv-type-name": [
+                                "Linktype",
+                                "LinkID",
+                                "LocIfAdr",
+                                "RemIfAdr",
+                                "TEMetric",
+                                "MaxBW",
+                                "MaxRsvBW",
+                                "UnRsvBW",
+                                "LinkLocalRemoteIdentifier",
+                                "Color",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "5",
+                                "6",
+                                "7",
+                                "8",
+                                "11",
+                                "9",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "112",
+                            "tlv-type-name": "Link",
+                            "tlv-type-value": "2",
+                        },
+                    },
+                    "our-entry": True,
+                    "sequence-number": "0x800013e8",
+                },
+                {
+                    "advertising-router": "10.189.5.253",
+                    "age": "209",
+                    "checksum": "0x4cd0",
+                    "lsa-id": "10.1.0.4",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:56:31"},
+                        "expiration-time": {"#text": "00:56:31"},
+                        "installation-time": {"#text": "00:03:26"},
+                        "lsa-change-count": "15",
+                        "lsa-changed-time": {"#text": "3w3d " "07:23:04"},
+                        "send-time": {"#text": "00:03:24"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.169.14.241",
+                                "10.169.14.130",
+                                "10.169.14.129",
+                                "70",
+                                "1000Mbps",
+                                "1000Mbps",
+                                "Priority "
+                                "0, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "1, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "2, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "3, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "4, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "5, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "6, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "7, "
+                                "1000Mbps\n",
+                                "Local " "334, " "Remote " "0",
+                                "6",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "4",
+                                "4",
+                                "4",
+                                "4",
+                                "32",
+                                "8",
+                                "4",
+                            ],
+                            "tlv-type-name": [
+                                "Linktype",
+                                "LinkID",
+                                "LocIfAdr",
+                                "RemIfAdr",
+                                "TEMetric",
+                                "MaxBW",
+                                "MaxRsvBW",
+                                "UnRsvBW",
+                                "LinkLocalRemoteIdentifier",
+                                "Color",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "5",
+                                "6",
+                                "7",
+                                "8",
+                                "11",
+                                "9",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "112",
+                            "tlv-type-name": "Link",
+                            "tlv-type-value": "2",
+                        },
+                    },
+                    "sequence-number": "0x80000f9c",
+                },
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "580",
+                    "checksum": "0x5e9d",
+                    "lsa-id": "10.1.0.5",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:50:20"},
+                        "expiration-time": {"#text": "00:50:20"},
+                        "installation-time": {"#text": "00:09:34"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "2w0d " "00:51:24"},
+                        "send-time": {"#text": "00:09:32"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.169.196.241",
+                                "10.169.196.213",
+                                "10.169.196.214",
+                                "1000",
+                                "1000Mbps",
+                                "1000Mbps",
+                                "Priority "
+                                "0, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "1, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "2, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "3, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "4, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "5, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "6, "
+                                "1000Mbps\n"
+                                "Priority "
+                                "7, "
+                                "1000Mbps\n",
+                                "Local " "337, " "Remote " "0",
+                                "2",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "4",
+                                "4",
+                                "4",
+                                "4",
+                                "32",
+                                "8",
+                                "4",
+                            ],
+                            "tlv-type-name": [
+                                "Linktype",
+                                "LinkID",
+                                "LocIfAdr",
+                                "RemIfAdr",
+                                "TEMetric",
+                                "MaxBW",
+                                "MaxRsvBW",
+                                "UnRsvBW",
+                                "LinkLocalRemoteIdentifier",
+                                "Color",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "5",
+                                "6",
+                                "7",
+                                "8",
+                                "11",
+                                "9",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "112",
+                            "tlv-type-name": "Link",
+                            "tlv-type-value": "2",
+                        },
+                    },
+                    "sequence-number": "0x800001b5",
+                },
+                {
+                    "advertising-router": "10.100.5.5",
+                    "age": "1760",
+                    "checksum": "0x6c5a",
+                    "lsa-id": "10.49.0.1",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:30:40"},
+                        "expiration-time": {"#text": "00:30:40"},
+                        "installation-time": {"#text": "00:29:13"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "21w5d " "22:48:11"},
+                        "send-time": {"#text": "00:29:11"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "32",
+                                "0",
+                                "0x40",
+                                "10.100.5.5",
+                                "0x00",
+                                "0",
+                                "0",
+                                "1000",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "1",
+                                "1",
+                                "1",
+                                "32",
+                                "8",
+                                "1",
+                                "1",
+                                "1",
+                                "4",
+                            ],
+                            "tlv-type-name": [
+                                "Route " "Type",
+                                "Prefix " "Length",
+                                "AF",
+                                "Flags",
+                                "Prefix",
+                                "Prefix " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Algorithm",
+                                "SID",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "5",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "20",
+                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x800019ac",
+                },
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "1027",
+                    "checksum": "0x7fa7",
+                    "lsa-id": "10.49.0.1",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:42:53"},
+                        "expiration-time": {"#text": "00:42:53"},
+                        "installation-time": {"#text": "00:17:01"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "30w0d " "01:32:34"},
+                        "send-time": {"#text": "00:16:59"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "32",
+                                "0",
+                                "0x40",
+                                "10.34.2.250",
+                                "0x00",
+                                "0",
+                                "0",
+                                "61",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "1",
+                                "1",
+                                "1",
+                                "32",
+                                "8",
+                                "1",
+                                "1",
+                                "1",
+                                "4",
+                            ],
+                            "tlv-type-name": [
+                                "Route " "Type",
+                                "Prefix " "Length",
+                                "AF",
+                                "Flags",
+                                "Prefix",
+                                "Prefix " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Algorithm",
+                                "SID",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "5",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "20",
+                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x80001fa9",
+                },
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "858",
+                    "checksum": "0x6ce",
+                    "lsa-id": "10.49.0.1",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:45:42"},
+                        "expiration-time": {"#text": "00:45:42"},
+                        "installation-time": {"#text": "00:14:09"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "30w0d " "01:32:36"},
+                        "send-time": {"#text": "00:14:07"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "32",
+                                "0",
+                                "0x40",
+                                "10.34.2.251",
+                                "0x00",
+                                "0",
+                                "0",
+                                "62",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "1",
+                                "1",
+                                "1",
+                                "32",
+                                "8",
+                                "1",
+                                "1",
+                                "1",
+                                "4",
+                            ],
+                            "tlv-type-name": [
+                                "Route " "Type",
+                                "Prefix " "Length",
+                                "AF",
+                                "Flags",
+                                "Prefix",
+                                "Prefix " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Algorithm",
+                                "SID",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "5",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "20",
+                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x80001cfb",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "173",
+                    "checksum": "0x97ab",
+                    "lsa-id": "10.49.0.1",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:57:06"},
+                        "expiration-time": {"#text": "00:57:07"},
+                        "installation-time": {"#text": "00:02:50"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "30w0d " "01:32:37"},
+                        "send-time": {"#text": "00:02:48"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "32",
+                                "0",
+                                "0x40",
+                                "10.169.14.240",
+                                "0x00",
+                                "0",
+                                "0",
+                                "51",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "1",
+                                "1",
+                                "1",
+                                "32",
+                                "8",
+                                "1",
+                                "1",
+                                "1",
+                                "4",
+                            ],
+                            "tlv-type-name": [
+                                "Route " "Type",
+                                "Prefix " "Length",
+                                "AF",
+                                "Flags",
+                                "Prefix",
+                                "Prefix " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Algorithm",
+                                "SID",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "5",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "20",
+                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x80001bc2",
+                },
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "1759",
+                    "checksum": "0x6433",
+                    "lsa-id": "10.49.0.1",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:30:41"},
+                        "expiration-time": {"#text": "00:30:41"},
+                        "installation-time": {"#text": "00:29:13"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "30w0d " "01:32:36"},
+                        "send-time": {"#text": "00:29:11"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "32",
+                                "0",
+                                "0x40",
+                                "10.169.14.241",
+                                "0x00",
+                                "0",
+                                "0",
+                                "52",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "1",
+                                "1",
+                                "1",
+                                "32",
+                                "8",
+                                "1",
+                                "1",
+                                "1",
+                                "4",
+                            ],
+                            "tlv-type-name": [
+                                "Route " "Type",
+                                "Prefix " "Length",
+                                "AF",
+                                "Flags",
+                                "Prefix",
+                                "Prefix " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Algorithm",
+                                "SID",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "5",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "20",
+                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x80001f67",
+                },
+                {
+                    "advertising-router": "10.189.5.252",
+                    "age": "1899",
+                    "checksum": "0x8c7f",
+                    "lsa-id": "10.49.0.1",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:28:20"},
+                        "expiration-time": {"#text": "00:28:21"},
+                        "generation-timer": {"#text": "00:18:20"},
+                        "installation-time": {"#text": "00:31:39"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "30w0d " "01:46:13"},
+                        "send-time": {"#text": "00:31:37"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "32",
+                                "0",
+                                "0x40",
+                                "10.189.5.252",
+                                "0x00",
+                                "0",
+                                "0",
+                                "71",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "1",
+                                "1",
+                                "1",
+                                "32",
+                                "8",
+                                "1",
+                                "1",
+                                "1",
+                                "4",
+                            ],
+                            "tlv-type-name": [
+                                "Route " "Type",
+                                "Prefix " "Length",
+                                "AF",
+                                "Flags",
+                                "Prefix",
+                                "Prefix " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Algorithm",
+                                "SID",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "5",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "20",
+                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "our-entry": True,
+                    "sequence-number": "0x80001b9e",
+                },
+                {
+                    "advertising-router": "10.189.5.253",
+                    "age": "1980",
+                    "checksum": "0xe3bf",
+                    "lsa-id": "10.49.0.1",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:26:59"},
+                        "expiration-time": {"#text": "00:27:00"},
+                        "installation-time": {"#text": "00:32:57"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "30w0d " "01:32:43"},
+                        "send-time": {"#text": "00:32:55"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "32",
+                                "0",
+                                "0x40",
+                                "10.189.5.253",
+                                "0x00",
+                                "0",
+                                "0",
+                                "72",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "1",
+                                "1",
+                                "1",
+                                "32",
+                                "8",
+                                "1",
+                                "1",
+                                "1",
+                                "4",
+                            ],
+                            "tlv-type-name": [
+                                "Route " "Type",
+                                "Prefix " "Length",
+                                "AF",
+                                "Flags",
+                                "Prefix",
+                                "Prefix " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Algorithm",
+                                "SID",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "5",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "20",
+                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x80001b04",
+                },
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "367",
+                    "checksum": "0x39a3",
+                    "lsa-id": "10.64.0.1",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:53:53"},
+                        "expiration-time": {"#text": "00:53:53"},
+                        "installation-time": {"#text": "00:06:01"},
+                        "lsa-change-count": "285",
+                        "lsa-changed-time": {"#text": "2w0d " "00:50:30"},
+                        "send-time": {"#text": "00:05:59"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.34.2.251",
+                                "10.34.2.201",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "142149",
+                                "0x60",
+                                "0",
+                                "0",
+                                "142150",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "36",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x800004f9",
+                },
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "1016",
+                    "checksum": "0x7002",
+                    "lsa-id": "10.64.0.1",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:43:04"},
+                        "expiration-time": {"#text": "00:43:04"},
+                        "installation-time": {"#text": "00:16:50"},
+                        "lsa-change-count": "50",
+                        "lsa-changed-time": {"#text": "2w6d " "19:46:47"},
+                        "send-time": {"#text": "00:16:48"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.169.14.240",
+                                "10.169.14.18",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "37408",
+                                "0x60",
+                                "0",
+                                "0",
+                                "37409",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "36",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x80000311",
+                },
+                {
+                    "advertising-router": "10.189.5.253",
+                    "age": "2521",
+                    "checksum": "0x6915",
+                    "lsa-id": "10.64.0.1",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:17:59"},
+                        "expiration-time": {"#text": "00:17:59"},
+                        "installation-time": {"#text": "00:41:58"},
+                        "lsa-change-count": "31",
+                        "lsa-changed-time": {"#text": "2w6d " "20:01:45"},
+                        "send-time": {"#text": "00:41:56"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.169.14.241",
+                                "10.169.14.130",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "1912",
+                                "0x60",
+                                "0",
+                                "0",
+                                "1913",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "36",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x8000030a",
+                },
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "790",
+                    "checksum": "0x7271",
+                    "lsa-id": "10.64.0.2",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:46:49"},
+                        "expiration-time": {"#text": "00:46:50"},
+                        "installation-time": {"#text": "00:13:04"},
+                        "lsa-change-count": "47",
+                        "lsa-changed-time": {"#text": "2w6d " "18:58:08"},
+                        "send-time": {"#text": "00:13:02"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.189.5.253",
+                                "10.169.14.129",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "1647",
+                                "0x60",
+                                "0",
+                                "0",
+                                "1648",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "36",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x80000305",
+                },
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "565",
+                    "checksum": "0x7248",
+                    "lsa-id": "10.64.0.3",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:50:35"},
+                        "expiration-time": {"#text": "00:50:35"},
+                        "installation-time": {"#text": "00:09:19"},
+                        "lsa-change-count": "7",
+                        "lsa-changed-time": {"#text": "2w6d " "18:14:24"},
+                        "send-time": {"#text": "00:09:17"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.34.2.251",
+                                "10.169.14.33",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "1649",
+                                "0x60",
+                                "0",
+                                "0",
+                                "1650",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "36",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x8000029a",
+                },
+                {
+                    "advertising-router": "10.189.5.253",
+                    "age": "947",
+                    "checksum": "0x34eb",
+                    "lsa-id": "10.64.0.3",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:44:13"},
+                        "expiration-time": {"#text": "00:44:13"},
+                        "installation-time": {"#text": "00:15:44"},
+                        "lsa-change-count": "17",
+                        "lsa-changed-time": {"#text": "2w0d " "00:43:19"},
+                        "send-time": {"#text": "00:15:42"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.189.5.252",
+                                "10.189.5.94",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "13988",
+                                "0x60",
+                                "0",
+                                "0",
+                                "13989",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "36",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x800002db",
+                },
+                {
+                    "advertising-router": "10.189.5.253",
+                    "age": "2251",
+                    "checksum": "0x31be",
+                    "lsa-id": "10.64.0.4",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:22:29"},
+                        "expiration-time": {"#text": "00:22:29"},
+                        "installation-time": {"#text": "00:37:28"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "2w0d " "00:51:02"},
+                        "send-time": {"#text": "00:37:26"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.19.198.239",
+                                "10.19.198.29",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "102794",
+                                "0x60",
+                                "0",
+                                "0",
+                                "102795",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "36",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x800001bb",
+                },
+                {
+                    "advertising-router": "10.100.5.5",
+                    "age": "1760",
+                    "checksum": "0x4de2",
+                    "lsa-id": "10.64.0.6",
+                    "lsa-length": "56",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:30:40"},
+                        "expiration-time": {"#text": "00:30:40"},
+                        "installation-time": {"#text": "00:29:13"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "21w5d " "22:48:11"},
+                        "send-time": {"#text": "00:29:11"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.34.2.250",
+                                "10.16.0.2",
+                                "0x60",
+                                "0",
+                                "0",
+                                "24000",
+                                "0x60",
+                                "0",
+                                "0",
+                                "24000",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "4",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "32768",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "32",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x800019bf",
+                },
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "2871",
+                    "checksum": "0xb9a6",
+                    "lsa-id": "10.64.0.7",
+                    "lsa-length": "48",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:12:09"},
+                        "expiration-time": {"#text": "00:12:09"},
+                        "installation-time": {"#text": "00:47:45"},
+                        "lsa-change-count": "123",
+                        "lsa-changed-time": {"#text": "2w0d " "00:42:10"},
+                        "send-time": {"#text": "00:47:43"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.100.5.5",
+                                "10.16.0.1",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "207722",
+                            ],
+                            "tlv-length": ["1", "4", "4", "7", "1", "1", "1", "3"],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": ["1", "2", "3", "2", "1", "2", "3", "4"],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "24",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x8000046b",
+                },
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "1297",
+                    "checksum": "0x6a96",
+                    "lsa-id": "10.64.0.7",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:38:23"},
+                        "expiration-time": {"#text": "00:38:23"},
+                        "installation-time": {"#text": "00:21:28"},
+                        "lsa-change-count": "243",
+                        "lsa-changed-time": {"#text": "2w6d " "19:46:37"},
+                        "send-time": {"#text": "00:21:26"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.34.2.250",
+                                "10.34.2.202",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "112778",
+                                "0x60",
+                                "0",
+                                "0",
+                                "112779",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "36",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x800004de",
+                },
+                {
+                    "advertising-router": "10.19.198.239",
+                    "age": "913",
+                    "checksum": "0xb34a",
+                    "lsa-id": "10.64.0.17",
+                    "lsa-length": "104",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:44:47"},
+                        "expiration-time": {"#text": "00:44:47"},
+                        "installation-time": {"#text": "00:15:12"},
+                        "lsa-change-count": "2",
+                        "lsa-changed-time": {"#text": "2w0d " "00:51:03"},
+                        "send-time": {"#text": "00:15:10"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.189.5.252",
+                                "10.19.198.26",
+                                "0x60",
+                                "0",
+                                "0",
+                                "1730",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "1729",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "1729",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "1729",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "1729",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "1729",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "4",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "4",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "8",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "12",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "8",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "32768",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "9",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "32769",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "80",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x8000025d",
+                },
+                {
+                    "advertising-router": "10.169.196.241",
+                    "age": "812",
+                    "checksum": "0x3e3c",
+                    "lsa-id": "10.64.0.17",
+                    "lsa-length": "104",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:46:27"},
+                        "expiration-time": {"#text": "00:46:28"},
+                        "installation-time": {"#text": "00:13:25"},
+                        "lsa-change-count": "2",
+                        "lsa-changed-time": {"#text": "2w0d " "00:51:24"},
+                        "send-time": {"#text": "00:13:23"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.34.2.250",
+                                "10.169.196.214",
+                                "0x60",
+                                "0",
+                                "0",
+                                "223815",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "223843",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "223843",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "223843",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "223843",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "223843",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "4",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "4",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "8",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "12",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "8",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "32768",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "9",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "32769",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "80",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x8000025d",
+                },
+                {
+                    "advertising-router": "10.19.198.239",
+                    "age": "913",
+                    "checksum": "0xb938",
+                    "lsa-id": "10.64.0.18",
+                    "lsa-length": "104",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:44:47"},
+                        "expiration-time": {"#text": "00:44:47"},
+                        "installation-time": {"#text": "00:15:12"},
+                        "lsa-change-count": "2",
+                        "lsa-changed-time": {"#text": "2w0d " "00:51:02"},
+                        "send-time": {"#text": "00:15:10"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.189.5.253",
+                                "10.19.198.30",
+                                "0x60",
+                                "0",
+                                "0",
+                                "1728",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "1727",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "1727",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "1727",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "1727",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "1727",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "4",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "4",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "8",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "12",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "8",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "32768",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "9",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "32769",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "80",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x8000025d",
+                },
+                {
+                    "advertising-router": "10.169.196.241",
+                    "age": "812",
+                    "checksum": "0x6fdb",
+                    "lsa-id": "10.64.0.18",
+                    "lsa-length": "104",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:46:27"},
+                        "expiration-time": {"#text": "00:46:28"},
+                        "installation-time": {"#text": "00:13:25"},
+                        "lsa-change-count": "2",
+                        "lsa-changed-time": {"#text": "2w0d " "00:51:22"},
+                        "send-time": {"#text": "00:13:23"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.34.2.251",
+                                "10.169.196.218",
+                                "0x60",
+                                "0",
+                                "0",
+                                "223844",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "223845",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "223845",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "223845",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "223845",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "223845",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "4",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "4",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "8",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "12",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "8",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "32768",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "9",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "32769",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "80",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x8000025d",
+                },
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "114",
+                    "checksum": "0xe70a",
+                    "lsa-id": "10.64.0.31",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:58:06"},
+                        "expiration-time": {"#text": "00:58:06"},
+                        "installation-time": {"#text": "00:01:47"},
+                        "lsa-change-count": "8",
+                        "lsa-changed-time": {"#text": "2w0d " "00:43:41"},
+                        "send-time": {"#text": "00:01:45"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.169.14.241",
+                                "10.169.14.34",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "15022",
+                                "0x60",
+                                "0",
+                                "0",
+                                "15023",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "36",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x8000029b",
+                },
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "1078",
+                    "checksum": "0xe396",
+                    "lsa-id": "10.64.0.32",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:42:02"},
+                        "expiration-time": {"#text": "00:42:02"},
+                        "installation-time": {"#text": "00:17:50"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "2w0d " "00:51:22"},
+                        "send-time": {"#text": "00:17:48"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.169.196.241",
+                                "10.169.196.217",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "259074",
+                                "0x60",
+                                "0",
+                                "0",
+                                "259075",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "36",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x800001b5",
+                },
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "1949",
+                    "checksum": "0xffb8",
+                    "lsa-id": "10.64.0.37",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:27:31"},
+                        "expiration-time": {"#text": "00:27:31"},
+                        "installation-time": {"#text": "00:32:23"},
+                        "lsa-change-count": "7",
+                        "lsa-changed-time": {"#text": "2w0d " "00:27:01"},
+                        "send-time": {"#text": "00:32:21"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.169.14.240",
+                                "10.169.14.158",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "143642",
+                                "0x60",
+                                "0",
+                                "0",
+                                "143643",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "36",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x8000029b",
+                },
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "1257",
+                    "checksum": "0x71b3",
+                    "lsa-id": "10.64.0.38",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:39:02"},
+                        "expiration-time": {"#text": "00:39:03"},
+                        "installation-time": {"#text": "00:20:51"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "2w0d " "00:51:24"},
+                        "send-time": {"#text": "00:20:49"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.169.196.241",
+                                "10.169.196.213",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "358249",
+                                "0x60",
+                                "0",
+                                "0",
+                                "358250",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "36",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x800001b5",
+                },
+                {
+                    "advertising-router": "10.189.5.252",
+                    "age": "792",
+                    "checksum": "0x7efa",
+                    "lsa-id": "10.64.0.52",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:46:48"},
+                        "expiration-time": {"#text": "00:46:48"},
+                        "generation-timer": {"#text": "00:36:39"},
+                        "installation-time": {"#text": "00:13:12"},
+                        "lsa-change-count": "25",
+                        "lsa-changed-time": {"#text": "2w0d " "00:37:11"},
+                        "send-time": {"#text": "00:13:10"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.169.14.240",
+                                "10.169.14.122",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "2567",
+                                "0x60",
+                                "0",
+                                "0",
+                                "2568",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "36",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "our-entry": True,
+                    "sequence-number": "0x80000308",
+                },
+                {
+                    "advertising-router": "10.189.5.252",
+                    "age": "1333",
+                    "checksum": "0x1839",
+                    "lsa-id": "10.64.0.54",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:37:47"},
+                        "expiration-time": {"#text": "00:37:47"},
+                        "generation-timer": {"#text": "00:27:30"},
+                        "installation-time": {"#text": "00:22:13"},
+                        "lsa-change-count": "26",
+                        "lsa-changed-time": {"#text": "2w0d " "00:46:13"},
+                        "send-time": {"#text": "00:22:11"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.189.5.253",
+                                "10.189.5.93",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "28985",
+                                "0x60",
+                                "0",
+                                "0",
+                                "28986",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "36",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "our-entry": True,
+                    "sequence-number": "0x800002dc",
+                },
+                {
+                    "advertising-router": "10.189.5.252",
+                    "age": "2167",
+                    "checksum": "0x92eb",
+                    "lsa-id": "10.64.0.55",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:23:53"},
+                        "expiration-time": {"#text": "00:23:53"},
+                        "generation-timer": {"#text": "00:09:20"},
+                        "installation-time": {"#text": "00:36:07"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "2w0d " "00:51:03"},
+                        "send-time": {"#text": "00:36:05"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.19.198.239",
+                                "10.19.198.25",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "167966",
+                                "0x60",
+                                "0",
+                                "0",
+                                "167967",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "36",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "our-entry": True,
+                    "sequence-number": "0x800001bb",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "1378",
+                    "checksum": "0x7544",
+                    "lsa-id": "10.64.0.57",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:37:01"},
+                        "expiration-time": {"#text": "00:37:02"},
+                        "installation-time": {"#text": "00:22:55"},
+                        "lsa-change-count": "57",
+                        "lsa-changed-time": {"#text": "2w6d " "19:46:52"},
+                        "send-time": {"#text": "00:22:53"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.169.14.241",
+                                "10.169.14.17",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "379383",
+                                "0x60",
+                                "0",
+                                "0",
+                                "379384",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "36",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x80000303",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "1680",
+                    "checksum": "0x6d12",
+                    "lsa-id": "10.64.0.59",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:32:00"},
+                        "expiration-time": {"#text": "00:32:00"},
+                        "installation-time": {"#text": "00:27:57"},
+                        "lsa-change-count": "52",
+                        "lsa-changed-time": {"#text": "3w1d " "08:43:52"},
+                        "send-time": {"#text": "00:27:55"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.189.5.252",
+                                "10.169.14.121",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "25",
+                                "0x60",
+                                "0",
+                                "0",
+                                "26",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "36",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x800002f4",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "1228",
+                    "checksum": "0x4f1a",
+                    "lsa-id": "10.64.0.60",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:39:32"},
+                        "expiration-time": {"#text": "00:39:32"},
+                        "installation-time": {"#text": "00:20:25"},
+                        "lsa-change-count": "6",
+                        "lsa-changed-time": {"#text": "2w6d " "18:58:13"},
+                        "send-time": {"#text": "00:20:23"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.34.2.250",
+                                "10.169.14.157",
+                                "0xe0",
+                                "0",
+                                "0",
+                                "207596",
+                                "0x60",
+                                "0",
+                                "0",
+                                "207597",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "36",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x8000028b",
+                },
+                {
+                    "advertising-router": "10.169.196.241",
+                    "age": "326",
+                    "checksum": "0xdcd1",
+                    "lsa-id": "10.64.8.74",
+                    "lsa-length": "92",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:54:34"},
+                        "expiration-time": {"#text": "00:54:34"},
+                        "installation-time": {"#text": "00:05:21"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "1d " "02:16:03"},
+                        "send-time": {"#text": "00:05:19"},
+                    },
+                    "ospf-opaque-area-lsa": {
+                        "te-subtlv": {
+                            "formatted-tlv-data": [
+                                "1",
+                                "10.36.3.3",
+                                "192.168.111.2",
+                                "0x60",
+                                "0",
+                                "0",
+                                "223852",
+                                "0x60",
+                                "0",
+                                "0",
+                                "223852",
+                                "0x60",
+                                "0",
+                                "0",
+                                "223852",
+                                "0x60",
+                                "0",
+                                "0",
+                                "223852",
+                                "0x60",
+                                "0",
+                                "0",
+                                "223852",
+                            ],
+                            "tlv-length": [
+                                "1",
+                                "4",
+                                "4",
+                                "7",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "4",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "4",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "8",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "12",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                            ],
+                            "tlv-type-name": [
+                                "Link " "Type",
+                                "Link " "Id",
+                                "Link " "Data",
+                                "Adjacency " "Sid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT " "ID",
+                                "Weight",
+                                "Label",
+                            ],
+                            "tlv-type-value": [
+                                "1",
+                                "2",
+                                "3",
+                                "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "8",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "32768",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "9",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "32769",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                            ],
+                        },
+                        "tlv-block": {
+                            "formatted-tlv-data": "",
+                            "tlv-length": "68",
+                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x80000030",
+                },
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "2614",
+                    "checksum": "0x6715",
+                    "lsa-id": "0.0.0.0",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:16:26"},
+                        "expiration-time": {"#text": "00:16:26"},
+                        "installation-time": {"#text": "00:43:25"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "30w0d " "01:32:36"},
+                        "send-time": {"#text": "00:43:23"},
+                    },
+                    "ospf-external-lsa": {
+                        "address-mask": "0.0.0.0",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "1",
+                            "ospf-topology-name": "default",
+                            "tag": "0.0.0.0",
+                            "type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x800019e3",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "2282",
+                    "checksum": "0x9fcc",
+                    "lsa-id": "0.0.0.0",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:21:57"},
+                        "expiration-time": {"#text": "00:21:58"},
+                        "installation-time": {"#text": "00:37:59"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "4w2d " "05:46:52"},
+                        "send-time": {"#text": "00:37:57"},
+                    },
+                    "ospf-external-lsa": {
+                        "address-mask": "0.0.0.0",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "1",
+                            "ospf-topology-name": "default",
+                            "tag": "0.0.0.0",
+                            "type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x8000039e",
+                },
+                {
+                    "advertising-router": "192.168.36.119",
+                    "age": "1219",
+                    "checksum": "0x3bc3",
+                    "lsa-id": "10.1.0.0",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x20",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:39:41"},
+                        "expiration-time": {"#text": "00:39:41"},
+                        "installation-time": {"#text": "00:20:15"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "21w6d " "00:04:15"},
+                        "send-time": {"#text": "00:20:13"},
+                    },
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.0",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "20",
+                            "ospf-topology-name": "default",
+                            "tag": "0.0.0.0",
+                            "type-value": "2",
+                        },
+                    },
+                    "sequence-number": "0x800019b0",
+                },
+                {
+                    "advertising-router": "192.168.36.120",
+                    "age": "791",
+                    "checksum": "0x33c9",
+                    "lsa-id": "10.1.0.0",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x20",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:46:49"},
+                        "expiration-time": {"#text": "00:46:49"},
+                        "installation-time": {"#text": "00:13:07"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "21w6d " "00:04:43"},
+                        "send-time": {"#text": "00:13:05"},
+                    },
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.0",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "20",
+                            "ospf-topology-name": "default",
+                            "tag": "0.0.0.0",
+                            "type-value": "2",
+                        },
+                    },
+                    "sequence-number": "0x800019b1",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "2132",
+                    "checksum": "0xf161",
+                    "lsa-id": "10.174.132.237",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:24:28"},
+                        "expiration-time": {"#text": "00:24:28"},
+                        "installation-time": {"#text": "00:35:29"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "4w2d " "05:46:49"},
+                        "send-time": {"#text": "00:35:27"},
+                    },
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.255",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "50",
+                            "ospf-topology-name": "default",
+                            "tag": "0.0.0.0",
+                            "type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x8000039e",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "2734",
+                    "checksum": "0x473e",
+                    "lsa-id": "10.34.2.250",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:14:26"},
+                        "expiration-time": {"#text": "00:14:26"},
+                        "installation-time": {"#text": "00:45:31"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "3w0d " "08:49:51"},
+                        "send-time": {"#text": "00:45:29"},
+                    },
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.255",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "50",
+                            "ospf-topology-name": "default",
+                            "tag": "10.166.34.12",
+                            "type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x80000288",
+                },
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "2637",
+                    "checksum": "0x2153",
+                    "lsa-id": "10.34.2.250",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:16:03"},
+                        "expiration-time": {"#text": "00:16:03"},
+                        "installation-time": {"#text": "00:43:51"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "3w0d " "08:09:51"},
+                        "send-time": {"#text": "00:43:49"},
+                    },
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.255",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "50",
+                            "ospf-topology-name": "default",
+                            "tag": "10.166.34.12",
+                            "type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x80000298",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "475",
+                    "checksum": "0x3b48",
+                    "lsa-id": "10.34.2.251",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:52:05"},
+                        "expiration-time": {"#text": "00:52:05"},
+                        "installation-time": {"#text": "00:07:52"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "3w0d " "08:49:56"},
+                        "send-time": {"#text": "00:07:50"},
+                    },
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.255",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "50",
+                            "ospf-topology-name": "default",
+                            "tag": "10.166.34.12",
+                            "type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x80000289",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "1077",
+                    "checksum": "0xfb51",
+                    "lsa-id": "192.168.100.0",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:42:03"},
+                        "expiration-time": {"#text": "00:42:03"},
+                        "installation-time": {"#text": "00:17:54"},
+                        "lsa-change-count": "75",
+                        "lsa-changed-time": {"#text": "2w6d " "18:58:13"},
+                        "send-time": {"#text": "00:17:52"},
+                    },
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.128",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "31900",
+                            "ospf-topology-name": "default",
+                            "tag": "10.76.212.52",
+                            "type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x800002da",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "927",
+                    "checksum": "0x19b8",
+                    "lsa-id": "192.168.100.252",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:44:33"},
+                        "expiration-time": {"#text": "00:44:33"},
+                        "installation-time": {"#text": "00:15:24"},
+                        "lsa-change-count": "75",
+                        "lsa-changed-time": {"#text": "2w6d " "18:58:13"},
+                        "send-time": {"#text": "00:15:22"},
+                    },
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.255",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "31900",
+                            "ospf-topology-name": "default",
+                            "tag": "10.76.212.52",
+                            "type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x800002d9",
+                },
+            ],
+        }
+    }
+
+
+
+    def test_empty(self):
+        pass
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfDatabaseExtensive(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        pass
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspfDatabaseExtensive(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+if __name__ == "__main__":
     unittest.main()
