@@ -1267,7 +1267,8 @@ class ShowOspfOverview(ShowOspfOverviewSchema):
             m = p17.match(line)
             if m:
                 group = m.groupdict()
-                ospf_area_entry_dict.setdefault('ospf-nbr-overview', {"ospf-nbr-up-count":group['ospf_nbr_up_count']})
+                ospf_area_entry_dict.setdefault('ospf-nbr-overview',\
+                     {"ospf-nbr-up-count":group['ospf_nbr_up_count']})
                 continue
 
             #Topology: default (ID 0)
@@ -1283,7 +1284,8 @@ class ShowOspfOverview(ShowOspfOverviewSchema):
             m = p19.match(line)
             if m:
                 group = m.groupdict()
-                ospf_topology_entry_dict.update({'ospf-prefix-export-count': group['ospf_prefix_export_count']})
+                ospf_topology_entry_dict\
+                    .update({'ospf-prefix-export-count': group['ospf_prefix_export_count']})
                 continue
 
             #Full SPF runs: 1934
@@ -1533,7 +1535,8 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
         p13 = re.compile(r'^mask +(?P<address_mask>[\d\.]+)$')
 
         # Topology default (ID 0)
-        p14 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\S+)\)$')
+        p14 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +'
+            r'\(ID +(?P<ospf_topology_id>\S+)\)$')
 
         # Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
         p15 = re.compile(r'^Type: +(?P<type_value>\d+), +Metric: +(?P<ospf_topology_metric>\d+)'
@@ -1550,7 +1553,8 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             # OSPF database, Area 0.0.0.8
             m = p1.match(line)
             if m:
-                ospf_area = ret_dict.setdefault("ospf-database-information", {}).setdefault("ospf-area-header", {})
+                ospf_area = ret_dict.setdefault("ospf-database-information", {})\
+                    .setdefault("ospf-area-header", {})
 
                 group = m.groupdict()
                 ospf_area["ospf-area"] = group["ospf_area"]
@@ -1559,7 +1563,8 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
             # Router  *10.189.5.252     10.189.5.252     0x80001b9e  1801  0x22 0x1e2  120
             m = p2.match(line)
             if m:
-                database_list = ret_dict.setdefault("ospf-database-information", {}).setdefault("ospf-database", [])
+                database_list = ret_dict.setdefault("ospf-database-information", {})\
+                    .setdefault("ospf-database", [])
 
                 group = m.groupdict()
                 entry = {}
@@ -1595,7 +1600,8 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                 if m:
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                    ospf_link_list = last_database.setdefault("ospf-router-lsa", {}).setdefault("ospf-link", [])
+                    ospf_link_list = last_database.setdefault("ospf-router-lsa", {})\
+                        .setdefault("ospf-link", [])
 
                     group = m.groupdict()
                     entry = {}
@@ -1611,7 +1617,8 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                 if m:
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                    ospf_link_list = last_database.setdefault("ospf-router-lsa", {}).setdefault("ospf-link", [])
+                    ospf_link_list = last_database.setdefault("ospf-router-lsa", {})\
+                        .setdefault("ospf-link", [])
                     last_ospf_link = ospf_link_list[-1]
 
                     group = m.groupdict()
