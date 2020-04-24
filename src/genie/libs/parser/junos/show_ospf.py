@@ -1952,8 +1952,4 @@ class ShowOspfRouteBrief(ShowOspfRouteBriefSchema):
                 self.address_prefix = group['address_prefix']
                 continue
 
-        import pprint
-        logFile = open('/Users/adelph/workshop/file.txt', 'w')
-        pprint.pprint(ret_dict, logFile)
-
         return ret_dict
