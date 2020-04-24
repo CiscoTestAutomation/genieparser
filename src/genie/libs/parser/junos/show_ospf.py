@@ -506,8 +506,8 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
         #OSPF database, Area 0.0.0.8
         p1 = re.compile(r'^OSPF database, Area +(?P<ospf_area>[\w\.\:\/]+)$')
 
-        #Router   3.3.3.3          3.3.3.3          0x80004d2d    61  0x22 0xa127 2496
-        #Router  *111.87.5.252     111.87.5.252     0x80001b9e  1608  0x22 0x1e2  120
+        #Router   10.36.3.3          10.36.3.3          0x80004d2d    61  0x22 0xa127 2496
+        #Router  *10.189.5.252     10.189.5.252     0x80001b9e  1608  0x22 0x1e2  120
         p2 = re.compile(r'^(?P<lsa_type>[a-zA-Z]+) *(?P<our_entry>\*)'
                         r'?(?P<lsa_id>[\d\.]+) +(?P<advertising_router>'
                         r'[\d\.]+) +(?P<sequence_number>\S+) +(?P<age>\d+) '
@@ -527,8 +527,8 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
                 ospf_database_info_dict2['ospf-area'] = group['ospf_area']
                 continue
 
-            #Router   3.3.3.3          3.3.3.3          0x80004d2d    61  0x22 0xa127 2496
-            #Router  *111.87.5.252     111.87.5.252     0x80001b9e  1608  0x22 0x1e2  120
+            #Router   10.36.3.3          10.36.3.3          0x80004d2d    61  0x22 0xa127 2496
+            #Router  *10.189.5.252     10.189.5.252     0x80001b9e  1608  0x22 0x1e2  120
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -829,7 +829,7 @@ class ShowOspfDatabaseExternalExtensive(ShowOspfDatabaseExternalExtensiveSchema)
         #Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
         p2 = re.compile(r'^(?P<heading>\AType +ID[\S\s]+)$')
 
-        #Extern   0.0.0.0          59.128.2.251     0x800019e3  2728  0x22 0x6715  36
+        #Extern   0.0.0.0          10.34.2.251     0x800019e3  2728  0x22 0x6715  36
         p3 = re.compile(r'^(?P<lsa_type>\S+)\s+(?P<lsa_id>[\d+\.]+)\s+'
                         r'(?P<advertising_router>[\d+\.]+)\s+(?P<sequence_number>\S+)'
                         r'\s+(?P<age>\d+)\s+(?P<options>[\S]+)\s+(?P<checksum>[\S]+)'
@@ -882,7 +882,7 @@ class ShowOspfDatabaseExternalExtensive(ShowOspfDatabaseExternalExtensiveSchema)
                 ospf_database_entry_dict['@heading'] = group['heading']
                 continue
 
-            #Extern   0.0.0.0          59.128.2.251     0x800019e3  2728  0x22 0x6715  36
+            #Extern   0.0.0.0          10.34.2.251     0x800019e3  2728  0x22 0x6715  36
             m = p3.match(line)
             if m:
                 if reset:
@@ -1054,7 +1054,7 @@ class ShowOspfOverview(ShowOspfOverviewSchema):
         #Instance: master
         p1 = re.compile(r'^Instance: +(?P<instance_name>\S+)$')
 
-        #Router ID: 111.87.5.252
+        #Router ID: 10.189.5.252
         p2 = re.compile(r'^Router ID: +(?P<ospf_router_id>[\w\.\:\/]+)$')
 
         #Route table index: 0
@@ -1138,7 +1138,7 @@ class ShowOspfOverview(ShowOspfOverviewSchema):
                 ospf_entry_list['instance-name'] = group['instance_name']
                 continue
 
-            #Router ID: 111.87.5.252
+            #Router ID: 10.189.5.252
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -1491,7 +1491,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
         # OSPF database, Area 0.0.0.8
         p1 = re.compile(r'^OSPF +database, +Area +(?P<ospf_area>[\d\.]+)$')
 
-        # Router  *111.87.5.252     111.87.5.252     0x80001b9e  1801  0x22 0x1e2  120
+        # Router  *10.189.5.252     10.189.5.252     0x80001b9e  1801  0x22 0x1e2  120
         p2 = re.compile(r'^(?P<lsa_type>[a-zA-Z]+)( *)(?P<lsa_id>\*?[\d\.]+)'
             r'( +)(?P<advertising_router>\S+)( +)(?P<sequence_number>\S+)( +)(?P<age>\S+)'
             r'( +)(?P<options>\S+)( +)(?P<checksum>\S+)( +)(?P<lsa_length>\S+)$')
@@ -1499,7 +1499,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
         # bits 0x2, link count 8
         p3 = re.compile(r'^bits +(?P<bits>\S+), +link +count +(?P<link_count>\d+)$')
 
-        # id 111.87.5.253, data 111.87.5.93, Type PointToPoint (1)
+        # id 10.189.5.253, data 10.189.5.93, Type PointToPoint (1)
         p4 = re.compile(r'^id +(?P<link_id>[\d\.]+), +data +(?P<link_data>[\d\.]+)'
             r', +Type +(?P<link_type_name>\S+) +\((?P<link_type_value>\S+)\)$')
 
@@ -1510,7 +1510,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
         # Topology default (ID 0)
         p6 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\S+)\)$')
 
-        # Type: PointToPoint, Node ID: 27.86.198.239
+        # Type: PointToPoint, Node ID: 10.19.198.239
         p7 = re.compile(r'^Type: +(?P<link_type_name>\S+), +Node +ID: +'
             r'(?P<ospf_lsa_topology_link_node_id>[\d\.]+)$')
 
@@ -1522,7 +1522,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
         p9 = re.compile(r'^(?P<tlv_type_name>[\s\S]+) +\((?P<tlv_type_value>\d+)\)'
             r', +length +(?P<tlv_length>\d+):$')
 
-        # 111.87.5.252
+        # 10.189.5.252
         p10 = re.compile(r'^(?P<formatted_tlv_data>\S+)$')
 
         # Priority 0, 1000Mbps
@@ -1558,7 +1558,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
                 ret_dict["ospf-database-information"]["ospf-area-header"]["ospf-area"] = group["ospf_area"]
                 continue
 
-            # # Router  *111.87.5.252     111.87.5.252     0x80001b9e  1801  0x22 0x1e2  120
+            # # Router  *10.189.5.252     10.189.5.252     0x80001b9e  1801  0x22 0x1e2  120
             m = p2.match(line)
             if m:
                 database_list = ret_dict.setdefault("ospf-database-information", {}).setdefault("ospf-database", [])
@@ -1592,7 +1592,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
 
                     continue
 
-                # id 111.87.5.253, data 111.87.5.93, Type PointToPoint (1)
+                # id 10.189.5.253, data 10.189.5.93, Type PointToPoint (1)
                 m = p4.match(line)
                 if m:
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
@@ -1641,7 +1641,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
 
                     continue
 
-                # # Type: PointToPoint, Node ID: 27.86.198.239
+                # # Type: PointToPoint, Node ID: 10.19.198.239
                 m = p7.match(line)
                 if m:
                     last_database = ret_dict["ospf-database-information"]["ospf-database"][-1]
@@ -1704,7 +1704,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(ShowOspfDatabaseAdvertisingRou
 
                     continue
 
-                # 111.87.5.252
+                # 10.189.5.252
                 m = p10.match(line)
                 if m:
                     group = m.groupdict()
