@@ -4256,6 +4256,8 @@ class TestShowOspfInterfaceExtensive(unittest.TestCase):
             * show ospf interface extensive
     """
 
+    maxDiff = None
+
     device = Device(name='aDevice')
 
     empty_output = {'execute.return_value': ''}
