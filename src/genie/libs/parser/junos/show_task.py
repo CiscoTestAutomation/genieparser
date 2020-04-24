@@ -52,14 +52,16 @@ class ShowTaskReplication(ShowTaskReplicationSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict.setdefault("task-replication-state",{}).setdefault("task-gres-state", group["task_gres_state"])
+                ret_dict.setdefault("task-replication-state",{})\
+                    .setdefault("task-gres-state", group["task_gres_state"])
                 continue
 
             # RE mode: Master
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict.setdefault("task-replication-state",{}).setdefault("task-re-mode", group["task_re_mode"])
+                ret_dict.setdefault("task-replication-state",{})\
+                    .setdefault("task-re-mode", group["task_re_mode"])
                 continue
 
         return ret_dict
