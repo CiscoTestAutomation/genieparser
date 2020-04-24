@@ -12,10 +12,10 @@
     * Added ShowControllersNpuInterfaceInstanceLocation for:
         * show controllers npu {npu} interface {interface} instance {instance} location {location}
     * Added ShowControllersFiaDiagshellDiagEgrCalendarsLocation for:
-        * show controllers fia diagshell {diagshell} "diag egr_calendars" location {location} 
+        * show controllers fia diagshell {diagshell} "diag egr_calendars" location {location}
     * Added ShowControllersFiaDiagshellDiagCosqQpairEgpMap for:
         * show controllers fia diagshell 0 "diag cosq qpair egq map" location all
-    * Added ShowInstallSummary for 
+    * Added ShowInstallSummary for
         * show install summary
 
 * IOSXE
@@ -31,6 +31,8 @@
     * Added ShowDmvpn for
         * show dmvpn
         * show dmvpn interface {interface}
+    * Added ShowInventory in subdirectory 'C9300' for
+        * show inventory
 
 * NXOS
     * Added ShowIpRouteSummary for:
@@ -39,7 +41,7 @@
     * Added ShowInterfaceStatus for:
         * show interface status
         * show interface {interface} status
-* ASA 
+* ASA
     * Added ShowVPNSessionDBSummary for:
         * show vpn-sessiondb summary
     * Added ShowVPNLoadBalancing for:
@@ -67,18 +69,85 @@
         * show bgp group detail
     * Added ShowBgpGroupDetailNoMore for:
         * show bgp group detail | no-more
+    * Added ShowBgpGroupSummary for:
+        * show bgp group summary
+    * Added ShowBgpGroupSummaryNoMore for:
+        * show bgp group summary | no-more
     * Added ShowOspfNeighbor for:
         * show ospf neighbor
     * Added ShowRouteProtocol for:
+        * show route protocol {protocol}
         * show route protocol {protocol} {ip_address}
+        * show route protocol {protocol} table {table}
     * Added ShowRouteProtocolNoMore for:
         * show route protocol {protocol} {ip_address} | no-more
     * Added ShowOspf3Interface for:
         * show ospf3 interface
+    * Added ShowOspf3Neighbor for:
+        * show ospf3 neighbor
+    * Added ShowOspf3NeighborExtensive for:
+        * show ospf3 neighbor extensive
     * Added ShowArp for:
         * show arp
     * Added ShowArpNoMore for:
         * show arp | no-more
+    * Added ShowOspf3Overview for:
+        * show ospf3 overview
+    * Added ShowOspf3OverviewExtensive for:
+        * show ospf3 overview extensive
+    * Added ShowKrtState for:
+        * show krt state
+    * Added ShowKrtQueue for:
+        * show krt queue
+    * Added ShowRouteProtocolExtensive for:
+        * show route protocol {protocol} extensive
+        * show route protocol {protocol} table {table} extensive
+    * Added ShowOspf3Database for:
+        * show ospf3 database
+    * Added Ping for:
+        * ping {addr}
+        * ping {addr} count {count}
+    * Added ShowOspf3DatabaseExternalExtensive for:
+        * show ospf3 database external extensive
+    * Added ShowOspf3InterfaceExtensive for:
+        * show ospf3 interface extensive
+    * Added ShowRouteAdvertisingProtocol for:
+        * show route advertising-protocol {protocol} {neighbor}
+    * Added ShowRouteReceiveProtocol for:
+        * show route receive-protocol {protocol} {peer}
+    * Added ShowRouteForwardingTableSummary for:
+        * show route forwarding-table summary
+    * Added ShowOspf3DatabaseExtensive for:
+        * show ospf3 database extensive
+    * Added ShowSystemBuffers for:
+        * show system buffers
+    * Added ShowSystemBuffersNoForwarding for:
+        * show system buffers no-forwarding
+    * Added ShowSystemCommit for:
+        * show system commit
+    * Added ShowSystemQueues for:
+        * show system queues
+    # Added ShowSystemStorage for:
+        * show system storage
+    * Added ShowSystemQueuesNoForwarding for:
+        * show system queues no-forwarding
+    * Added ShowPfeStatisticsTraffic for:
+        * show pfe statistics traffic
+    * Added ShowSystemCoreDumps for:
+        * show system core-dumps
+    * Added ShowSystemCoreDumpsNoForwarding for:
+        * show system core-dumps no-forwarding
+    * Added ShowSystemUsers for:
+        * show system users
+    * Added ShowChassisFpcDetail for:
+        * show chassis fpc detail
+    * Added ShowChassisFirmware for:
+        * show chassis firmware
+    * Added ShowChassisFirmwareNoForwarding for:
+        * show chassis firmware no-forwarding
+    * Added ShowChassisEnvironmentRoutingEngine for:
+        * show chassis environment routing-engine
+
 
 
 --------------------------------------------------------------------------------
@@ -142,7 +211,11 @@
         * Update regex to support various outputs.
     * Update ShowInventory:
         * Added regex to support various outputs.
+    * Update ShowIpInterface:
+        * Fixed the typo in the keys 'broadcast_address' and 'security_level'
 * NXOS
+    * Updated ShowAccessLists
+        * Update regex to support various outputs.
     * Updated ShowInterface
         * Update regex to cover both 'IP' and 'ip', both 'Rx' and 'RX'
         * Clean code and correctly assign values to the key 'enabled'
@@ -153,7 +226,7 @@
     * Update ShowIpInterfaceVrfAll
         * Changed wccp_* keys to be optional from mandatory to support new output
     * Update ShowPlatformInternalHalPolicyRedirdst:
-        * Changed keys rewrite_mac, rewrite_vnid, outgoing_l2_ifindex, 
+        * Changed keys rewrite_mac, rewrite_vnid, outgoing_l2_ifindex,
             outgoing_ifname, packets_hash as optional
     * Update ShowSystemInternalSysmgrServiceName:
         * Enhanced 'tag' key to support more output
@@ -162,7 +235,7 @@
     * Update ShowBgpInstanceSummary
         * Update regex to support various output
 
-* IOS 
+* IOS
     * Update ShowInterfaces
         * Update regex to support various output
 * JUNOS
@@ -171,6 +244,10 @@
         * show interfaces {interface} terse
     * Update ShowInterfacesTerseInterface
         * show interfaces terse {interface}
+    * Update Ping
+        * only the keys are changed into Optional
+    * Update ShowRouteProtocol
+        * Update regex to support various output
 
 --------------------------------------------------------------------------------
                                 common.py
