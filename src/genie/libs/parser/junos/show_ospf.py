@@ -1880,6 +1880,7 @@ class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
             r', +Mask: +(?P<address_mask>[\d\.]+), +MTU: +(?P<mtu>\d+), +Cost: +(?P<interface_cost>\d+)$')
 
         # Adj count: 1
+        # Adj count: 0, Passive
         p3 = re.compile(r'^Adj +count: +(?P<adj_count>\d+)(, +(?P<passive>\S+))?$')
 
         # Hello: 10, Dead: 40, ReXmit: 5, Not Stub
@@ -1898,6 +1899,7 @@ class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
             r'(?P<ospf_interface_tilfa_prot_fate>\S+), +Node +cost: +(?P<ospf_interface_tilfa_prot_node>\S+)$')
 
         # Topology default (ID 0) -> Cost: 5
+        # Topology default (ID 0) -> Passive, Cost: 100
         p8 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\d+)\)'
         r' +->(?P<ospf_topology_passive> +Passive,)? +Cost: +(?P<ospf_topology_metric>\d+)$')
 
