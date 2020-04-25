@@ -21,7 +21,6 @@ from genie.libs.parser.junos.show_ospf import (ShowOspfInterface,
                                                ShowOspfOverview,
                                                ShowOspfOverviewExtensive,
                                                ShowOspfDatabaseAdvertisingRouterSelfDetail,
-                                               ShowOspfInterfaceExtensive,
 )
 
 
