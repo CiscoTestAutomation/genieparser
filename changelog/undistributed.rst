@@ -77,7 +77,8 @@
         * show bgp summary
     * Added ShowOspfNeighbor for:
         * show ospf neighbor
-    * Added ShowRouteProtocol for:
+    * Added ShowRoute for:
+        * show route
         * show route protocol {protocol}
         * show route protocol {protocol} {ip_address}
         * show route protocol {protocol} table {table}
@@ -93,8 +94,10 @@
         * show arp
     * Added ShowArpNoMore for:
         * show arp | no-more
+    * Added ShowArpNoResolve for:
+        * show arp no-resolve
     * Added ShowOspfDatabase for:
-        * show ospf database 
+        * show ospf database
     * Added ShowOspfDatabaseSummary for:
         * show ospf database summary
     * Added ShowOspfDatabaseExternalExtensive for:
@@ -114,6 +117,7 @@
     * Added ShowRouteProtocolExtensive for:
         * show route protocol {protocol} extensive
         * show route protocol {protocol} table {table} extensive
+        * show route protocol {protocol} table {table} extensive {destination}
     * Added ShowOspf3Database for:
         * show ospf3 database
     * Added Ping for:
@@ -123,6 +127,10 @@
         * show ospf3 database external extensive
     * Added ShowOspf3InterfaceExtensive for:
         * show ospf3 interface extensive
+    * Added ShowRouteInstanceDetail for:
+        * show route instance detail
+    * Added ShowRouteSummary for:
+        * show route summary
     * Added ShowRouteAdvertisingProtocol for:
         * show route advertising-protocol {protocol} {neighbor}
     * Added ShowRouteReceiveProtocol for:
@@ -139,8 +147,10 @@
         * show system commit
     * Added ShowSystemQueues for:
         * show system queues
-    # Added ShowSystemStorage for:
+    * Added ShowSystemStorage for:
         * show system storage
+    * Added ShowSystemStorageNoForwarding for:
+        * show system storage no-forwarding
     * Added ShowSystemQueuesNoForwarding for:
         * show system queues no-forwarding
     * Added ShowPfeStatisticsTraffic for:
@@ -177,6 +187,12 @@
         * show ospf database advertising-router self detail
     * Added ShowOspfInterfaceExtensiveSchema for:
         * show ospf interface extensive
+    * Added ShowOspfDatabaseExtensive for:
+        * show ospf database extensive
+    * ShowTaskReplication for:
+        * show task replication
+    * Added ShowVersion in show_platform.py for:
+        * show version
 
 
 
@@ -248,6 +264,7 @@
         * Update regex to support various outputs.
     * Updated ShowInterface
         * Update regex to cover both 'IP' and 'ip', both 'Rx' and 'RX'
+        * Update regex to support various outputs.
         * Clean code and correctly assign values to the key 'enabled'
     * Updated ShowIpRoute
         * Add keys into the schema, modify regex
@@ -263,6 +280,8 @@
 
 * IOSXR
     * Update ShowBgpInstanceSummary
+        * Update regex to support various output
+    * Update ShowRouteIpv4
         * Update regex to support various output
 
 * IOS

@@ -15,16 +15,16 @@ from genie.libs.parser.iosxr.show_routing import (ShowRouteIpv4,
 # ============================================
 # unit test for 'show route ipv4'
 # =============================================
-
-
 class TestShowRouteIpv4(unittest.TestCase):
     """
        unit test for show route ipv4
     """
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
+
+    # show route ipv4
     golden_output_1 = {'execute.return_value': '''
-        RP/0/0/CPU0:R2_xrv#show route ipv4
+
         Wed Dec  6 15:18:18.928 UTC
 
         Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
@@ -213,8 +213,8 @@ class TestShowRouteIpv4(unittest.TestCase):
         },
     }
 
+    # show route ipv4
     golden_output_2 = {'execute.return_value': '''
-        show route ipv4
 
         Fri Sep 27 17:00:03.303 EDT
 
@@ -326,8 +326,8 @@ class TestShowRouteIpv4(unittest.TestCase):
         }
     }
 
+    # show route vrf all ipv4
     golden_output_2_with_vrf = {'execute.return_value': '''
-        RP/0/RP0/CPU0:PE1#show route vrf all ipv4
 
         VRF: VRF501
 
@@ -539,9 +539,8 @@ class TestShowRouteIpv4(unittest.TestCase):
         },
     }
 
+    # show route vrf VRF1 ipv4
     golden_output_3_with_vrf = {'execute.return_value': '''
-        show route vrf VRF1 ipv4
-
         Thu Sep  5 14:14:08.981 UTC
 
         Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
@@ -826,8 +825,8 @@ class TestShowRouteIpv4(unittest.TestCase):
         },
     }
 
+    # show route ipv4 10.23.90.0/24
     golden_output_5 = {'execute.return_value': '''
-        show route ipv4 10.23.90.0/24
         Tue Oct 29 21:03:37.089 UTC
 
         Routing entry for 10.23.90.0/24
@@ -917,8 +916,8 @@ class TestShowRouteIpv4(unittest.TestCase):
         },
     }
 
+    # show route vrf VRF1 ipv4 local
     golden_output_7 = {'execute.return_value': '''
-        show route vrf VRF1 ipv4 local
         Tue Oct 29 21:32:17.082 UTC
 
         L    10.16.2.2/32 is directly connected, 3w4d, Loopback300
@@ -1071,8 +1070,8 @@ class TestShowRouteIpv4(unittest.TestCase):
         },
     }
 
+    # show route vrf VRF1 ipv4 10.23.120.2/32
     golden_output_8 = {'execute.return_value': '''
-        show route vrf VRF1 ipv4 10.23.120.2/32
         Tue Oct 29 21:45:11.042 UTC
 
         Routing entry for 10.23.120.2/32
@@ -1189,9 +1188,8 @@ class TestShowRouteIpv4(unittest.TestCase):
         },
     }
 
-    golden_output_10 = {'execute.return_value': '''
-        RP/0/RSP0/CPU0:GENIE-TEST#show route vrf qattwd ipv4 0.0.0.0/0                     
-                                                                                                
+    # show route vrf qattwd ipv4 0.0.0.0/0
+    golden_output_10 = {'execute.return_value': '''                                                                             
         Routing entry for 0.0.0.0/0                                                             
         Known via "bgp 65001", distance 200, metric 10, candidate default path                
         Tag 10584, type internal                                                              
@@ -1247,8 +1245,8 @@ class TestShowRouteIpv4(unittest.TestCase):
         }
     }
 
+    # sh route vrf L:192
     golden_output_11 = {'execute.return_value': '''
-        RP/0/RP0/CPU0:xrv_rtr1#sh route vrf L:192
         Thu Feb 6 00:29:44.865 UTC
         
         Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
@@ -1291,6 +1289,58 @@ class TestShowRouteIpv4(unittest.TestCase):
                 },
                 'last_resort': {
                     'gateway': 'not set'
+                },
+            },
+        },
+    }
+
+    # show route vrf HIPTV ipv4 172.25.254.37/32
+    golden_output_12 = {'execute.return_value': '''
+    Wed Apr 22 16:38:25.274 EDT
+    
+    Routing entry for 172.25.254.37/32
+    Known via "bgp 7992", distance 20, metric 0
+    Tag 65525, type external
+    Installed Feb 6 13:12:22.999 for 10w6d
+    Routing Descriptor Blocks
+    172.25.253.121, from 172.25.253.121, BGP external
+    Route metric is 0
+    No advertising protos.
+    '''}
+
+    golden_parsed_output_12 = {
+        'vrf': {
+            'HIPTV': {
+                'address_family': {
+                    'ipv4': {
+                        'routes': {
+                            '172.25.254.37/32': {
+                                'known_via': 'bgp 7992',
+                                'ip': '172.25.254.37',
+                                'metric': 0,
+                                'installed': {
+                                    'date': 'Feb 6 13:12:22.999',
+                                    'for': '10w6d',
+                                },
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'metric': 0,
+                                            'next_hop': '172.25.253.121',
+                                            'from': '172.25.253.121',
+                                        },
+                                    },
+                                },
+                                'active': True,
+                                'distance': 20,
+                                'route': '172.25.254.37/32',
+                                'mask': '32',
+                                'tag': '65525',
+                                'type': 'external',
+                            },
+                        },
+                    },
                 },
             },
         },
@@ -1385,6 +1435,14 @@ class TestShowRouteIpv4(unittest.TestCase):
         obj = ShowRouteIpv4(device=self.device)
         parsed_output = obj.parse(vrf='L:192')
         self.assertEqual(parsed_output, self.golden_parsed_output_11)
+
+    def test_show_route_12(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_12)
+        obj = ShowRouteIpv4(device=self.device)
+        parsed_output = obj.parse(vrf='HIPTV', route='172.25.254.37/32')
+        self.assertEqual(parsed_output, self.golden_parsed_output_12)
+
 
 # ============================================
 # unit test for 'show route ipv6'
