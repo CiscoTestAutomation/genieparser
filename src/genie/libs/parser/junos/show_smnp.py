@@ -64,7 +64,8 @@ class ShowSnmpMibWalkSystem(ShowSnmpMibWalkSystemSchema):
             if m:
                 group = m.groupdict()
 
-                snmp_object_list = ret_dict.setdefault("snmp-object-information", {}).setdefault("snmp-object",[])
+                snmp_object_list = ret_dict.setdefault("snmp-object-information", {})\
+                    .setdefault("snmp-object",[])
 
                 entry = {}
                 entry['name'] = group['name']
