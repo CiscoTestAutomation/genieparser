@@ -579,7 +579,7 @@ class ShowChassisRoutingEngine(ShowChassisRoutingEngineSchema):
         p3 = re.compile(r'^Election priority +(?P<mastership_priority>[\S\s]+)$')
 
         #DRAM                      2002 MB (2048 MB installed)
-        p4 = re.compile(r'^DRAM +(?P<memory_dram_size>\S+\s\S+) +(?P<memory_installed_size>[\S\s\d]+)$')
+        p4 = re.compile(r'^DRAM +(?P<memory_dram_size>\S+\s\S+) +(?P<memory_installed_size>[\S\s]+)$')
 
         #Memory utilization          19 percent
         p5 = re.compile(r'^Memory utilization +(?P<memory_buffer_utilization>\d+) +percent$')
@@ -606,7 +606,7 @@ class ShowChassisRoutingEngine(ShowChassisRoutingEngineSchema):
         p12 = re.compile(r'^Model +(?P<system>\S+)$')
 
         #Start time                     2019-08-29 09:02:22 UTC
-        p13 = re.compile(r'^Start time +(?P<start_time>[\S\s\d\:]+)$')
+        p13 = re.compile(r'^Start time +(?P<start_time>[\S\s]+)$')
 
         #Uptime                         208 days, 23 hours, 14 minutes, 9 seconds
         p14 = re.compile(r'^Uptime +(?P<uptime>[\S\s]+)$')
@@ -673,20 +673,12 @@ class ShowChassisRoutingEngine(ShowChassisRoutingEngineSchema):
             if m:
                 group = m.groupdict()
                 current_state = group["state"]
+                tag = '-'+group["state"].replace(' ','')
                 continue
             
             #User                       1 percent
             m = p7.match(line)
             if m:
-                if(current_state == "5 sec"):
-                    tag = "-5sec"
-                elif(current_state == "1 min"):
-                    tag = "-1min"
-                elif(current_state == "5 min"):
-                    tag = "-5min"
-                else:
-                    tag = "-15min"
-
                 group = m.groupdict()
                 route_engine_dict["cpu-user"+tag] = group["user"]
                 continue
@@ -694,15 +686,6 @@ class ShowChassisRoutingEngine(ShowChassisRoutingEngineSchema):
             #Background                 0 percent
             m = p8.match(line)
             if m:
-                if(current_state == "5 sec"):
-                    tag = "-5sec"
-                elif(current_state == "1 min"):
-                    tag = "-1min"
-                elif(current_state == "5 min"):
-                    tag = "-5min"
-                else:
-                    tag = "-15min"
-
                 group = m.groupdict()
                 route_engine_dict["cpu-background"+tag] = group["background"]
                 continue
@@ -710,15 +693,6 @@ class ShowChassisRoutingEngine(ShowChassisRoutingEngineSchema):
             #Kernel                     1 percent
             m = p9.match(line)
             if m:
-                if(current_state == "5 sec"):
-                    tag = "-5sec"
-                elif(current_state == "1 min"):
-                    tag = "-1min"
-                elif(current_state == "5 min"):
-                    tag = "-5min"
-                else:
-                    tag = "-15min"
-
                 group = m.groupdict()
                 route_engine_dict["cpu-system"+tag] = group["system"]
                 continue
@@ -726,15 +700,6 @@ class ShowChassisRoutingEngine(ShowChassisRoutingEngineSchema):
             #Interrupt                  0 percent
             m = p10.match(line)
             if m:
-                if(current_state == "5 sec"):
-                    tag = "-5sec"
-                elif(current_state == "1 min"):
-                    tag = "-1min"
-                elif(current_state == "5 min"):
-                    tag = "-5min"
-                else:
-                    tag = "-15min"
-
                 group = m.groupdict()
                 route_engine_dict["cpu-interrupt"+tag] = group["interrupt"]
                 continue
@@ -742,16 +707,6 @@ class ShowChassisRoutingEngine(ShowChassisRoutingEngineSchema):
             #Idle                      98 percent
             m = p11.match(line)
             if m:
-                
-                if(current_state == "5 sec"):
-                    tag = "-5sec"
-                elif(current_state == "1 min"):
-                    tag = "-1min"
-                elif(current_state == "5 min"):
-                    tag = "-5min"
-                else:
-                    tag = "-15min"
-
                 group = m.groupdict()
                 route_engine_dict["cpu-idle"+tag] = group["idle"]
                 continue
