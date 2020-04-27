@@ -2987,7 +2987,7 @@ class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
             r'(?P<neighbor_count>\d+)$')
 
         # Type: P2P, Address: 111.87.5.93, Mask: 255.255.255.252, MTU: 1500, Cost: 5
-        p2 = re.compile(r'^Type: +(?P<interface_type>\S+), +Address: +(?P<interface_address>[\d\.]+)'
+        p2 = re.compile(r'^Type: +(?P<interface_type>\S+), +Address: +(?P<interface_address>[\w\.\:]+)'
         r', +Mask: +(?P<address_mask>[\d\.]+), +MTU: +(?P<mtu>\d+), +Cost: +(?P<interface_cost>\d+)$')
 
         # Adj count: 1
