@@ -3166,4 +3166,4 @@ class ShowOspfNeighborDetail(ShowOspfNeighborExtensive):
         else:
             out = output
 
-        return super().cli(output=out)
+        return super().cli(output=out, neighbor=neighbor)
