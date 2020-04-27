@@ -1,6 +1,5 @@
 import unittest
 from unittest.mock import Mock
-import genie.gre
 
 # ATS
 from pyats.topology import Device
@@ -218,6 +217,163 @@ class test_show_ip_route(unittest.TestCase):
                                        [170/345856] via 10.9.193.98, 2w1d, esavpn
     '''}
 
+    golden_parsed_output_2 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'routes': {
+                            '20.54.68.0/24': {
+                                'candidate_default': False,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.9.193.99',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '10.9.193.98',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                    },
+                                },
+                                'date': '2w1d',
+                                'active': True,
+                                'source_protocol_codes': 'D EX',
+                                'metric': 345856,
+                                'source_protocol': 'ospf',
+                                'route': '20.54.68.0/24',
+                                'route_preference': 170,
+                            },
+                            '20.54.67.0/24': {
+                                'candidate_default': False,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.9.193.99',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '10.9.193.98',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                    },
+                                },
+                                'date': '2w1d',
+                                'active': True,
+                                'source_protocol_codes': 'D EX',
+                                'metric': 345856,
+                                'source_protocol': 'ospf',
+                                'route': '20.54.67.0/24',
+                                'route_preference': 170,
+                            },
+                            '20.54.70.0/24': {
+                                'candidate_default': False,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.9.193.99',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '10.9.193.98',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                    },
+                                },
+                                'date': '2w1d',
+                                'active': True,
+                                'source_protocol_codes': 'D EX',
+                                'metric': 345856,
+                                'source_protocol': 'ospf',
+                                'route': '20.54.70.0/24',
+                                'route_preference': 170,
+                            },
+                            '20.54.65.0/24': {
+                                'candidate_default': False,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '20.54.64.35',
+                                            'outgoing_interface_name': 'inside',
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '20.54.64.34',
+                                            'outgoing_interface_name': 'inside',
+                                        },
+                                    },
+                                },
+                                'date': '7w0d',
+                                'active': True,
+                                'source_protocol_codes': 'O',
+                                'metric': 20,
+                                'source_protocol': 'ospf',
+                                'route': '20.54.65.0/24',
+                                'route_preference': 110,
+                            },
+                            '20.54.69.0/24': {
+                                'candidate_default': False,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '20.54.64.35',
+                                            'outgoing_interface_name': 'inside',
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '20.54.64.34',
+                                            'outgoing_interface_name': 'inside',
+                                        },
+                                    },
+                                },
+                                'date': '7w0d',
+                                'active': True,
+                                'source_protocol_codes': 'O',
+                                'metric': 20,
+                                'source_protocol': 'ospf',
+                                'route': '20.54.69.0/24',
+                                'route_preference': 110,
+                            },
+                            '20.54.71.0/24': {
+                                'candidate_default': False,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.9.193.99',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '10.9.193.98',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                    },
+                                },
+                                'date': '2w1d',
+                                'active': True,
+                                'source_protocol_codes': 'D EX',
+                                'metric': 345856,
+                                'source_protocol': 'ospf',
+                                'route': '20.54.71.0/24',
+                                'route_preference': 170,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRoute(device=self.device)
@@ -233,14 +389,9 @@ class test_show_ip_route(unittest.TestCase):
     def test_golden_2(self):
         self.device = Mock(**self.golden_output_2)
         route_obj = ShowRoute(device=self.device)
-        import re; re.reset();
         parsed_output = route_obj.parse()
-        print(re.colour_output());
-        re.reset()
-        import pdb
-        pdb.set_trace()
-
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
 
 if __name__ == '__main__':
     unittest.main()
