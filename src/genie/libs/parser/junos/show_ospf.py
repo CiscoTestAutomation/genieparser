@@ -3040,7 +3040,8 @@ class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
             # Type: P2P, Address: 111.87.5.93, Mask: 255.255.255.252, MTU: 1500, Cost: 5
             m = p2.match(line)
             if m:
-                last_interface = ret_dict["ospf-interface-information"]["ospf-interface"][-1]
+                last_interface = ret_dict["ospf-interface-information"]\
+                    ["ospf-interface"][-1]
                 group = m.groupdict()
                 entry = last_interface
                 for group_key, group_value in group.items():
@@ -3051,7 +3052,8 @@ class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
             # Adj count: 1
             m = p3.match(line)
             if m:
-                last_interface = ret_dict["ospf-interface-information"]["ospf-interface"][-1]
+                last_interface = ret_dict["ospf-interface-information"]\
+                    ["ospf-interface"][-1]
                 group = m.groupdict()
                 entry = last_interface
                 entry['adj-count'] = group['adj_count']
@@ -3064,7 +3066,8 @@ class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
             # Hello: 10, Dead: 40, ReXmit: 5, Not Stub
             m = p4.match(line)
             if m:
-                last_interface = ret_dict["ospf-interface-information"]["ospf-interface"][-1]
+                last_interface = ret_dict["ospf-interface-information"]\
+                    ["ospf-interface"][-1]
                 group = m.groupdict()
                 entry = last_interface
                 for group_key, group_value in group.items():
@@ -3075,7 +3078,8 @@ class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
             # Auth type: None
             m = p5.match(line)
             if m:
-                last_interface = ret_dict["ospf-interface-information"]["ospf-interface"][-1]
+                last_interface = ret_dict["ospf-interface-information"]\
+                    ["ospf-interface"][-1]
                 group = m.groupdict()
                 entry = last_interface
                 for group_key, group_value in group.items():
@@ -3086,7 +3090,8 @@ class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
             # Protection type: Post Convergence
             m = p6.match(line)
             if m:
-                last_interface = ret_dict["ospf-interface-information"]["ospf-interface"][-1]
+                last_interface = ret_dict["ospf-interface-information"]\
+                    ["ospf-interface"][-1]
                 group = m.groupdict()
                 entry = last_interface
                 for group_key, group_value in group.items():
@@ -3097,7 +3102,8 @@ class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
             # Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 100
             m = p7.match(line)
             if m:
-                last_interface = ret_dict["ospf-interface-information"]["ospf-interface"][-1]
+                last_interface = ret_dict["ospf-interface-information"]\
+                    ["ospf-interface"][-1]
                 group = m.groupdict()
                 entry = last_interface
                 for group_key, group_value in group.items():
@@ -3108,7 +3114,8 @@ class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
             # Topology default (ID 0) -> Cost: 5
             m = p8.match(line)
             if m:
-                last_interface = ret_dict["ospf-interface-information"]["ospf-interface"][-1]
+                last_interface = ret_dict["ospf-interface-information"]\
+                    ["ospf-interface"][-1]
                 group = m.groupdict()
                 entry = last_interface
                 entry = entry.setdefault('ospf-interface-topology', {})
@@ -3125,7 +3132,8 @@ class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
             # DR addr: 111.87.5.252, Priority: 128
             m = p9.match(line)
             if m:
-                last_interface = ret_dict["ospf-interface-information"]["ospf-interface"][-1]
+                last_interface = ret_dict["ospf-interface-information"]\
+                    ["ospf-interface"][-1]
                 group = m.groupdict()
                 entry = last_interface
                 for group_key, group_value in group.items():
