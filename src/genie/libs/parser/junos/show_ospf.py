@@ -2720,7 +2720,8 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                 if m:
                     last_entry = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                    last_entry.setdefault("ospf-database-extensive", {}).setdefault("lsa-changed-time", {})
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("lsa-changed-time", {})
 
                     group = m.groupdict()
                     last_entry["ospf-database-extensive"]["lsa-changed-time"]["#text"]\
@@ -2986,7 +2987,7 @@ class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
 
         # Type: P2P, Address: 111.87.5.93, Mask: 255.255.255.252, MTU: 1500, Cost: 5
         p2 = re.compile(r'^Type: +(?P<interface_type>\S+), +Address: +(?P<interface_address>[\d\.]+)'
-            r', +Mask: +(?P<address_mask>[\d\.]+), +MTU: +(?P<mtu>\d+), +Cost: +(?P<interface_cost>\d+)$')
+        r', +Mask: +(?P<address_mask>[\d\.]+), +MTU: +(?P<mtu>\d+), +Cost: +(?P<interface_cost>\d+)$')
 
         # Adj count: 1
         # Adj count: 0, Passive
@@ -3005,7 +3006,8 @@ class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
         # Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 100
         p7 = re.compile(r'^Post +convergence +protection: +(?P<ospf_interface_tilfa_prot_link>\S+)'
             r', +Fate +sharing: +(?P<ospf_interface_tilfa_prot_srlg>\S+), +SRLG: +'
-            r'(?P<ospf_interface_tilfa_prot_fate>\S+), +Node +cost: +(?P<ospf_interface_tilfa_prot_node>\S+)$')
+            r'(?P<ospf_interface_tilfa_prot_fate>\S+), +Node +cost: +'
+            r'(?P<ospf_interface_tilfa_prot_node>\S+)$')
 
         # Topology default (ID 0) -> Cost: 5
         # Topology default (ID 0) -> Passive, Cost: 100
@@ -3013,7 +3015,8 @@ class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
         r' +->(?P<ospf_topology_passive> +Passive,)? +Cost: +(?P<ospf_topology_metric>\d+)$')
 
         # DR addr: 111.87.5.252, Priority: 128
-        p9 = re.compile(r'^DR +addr: +(?P<dr_address>[\d\.]+), +Priority: +(?P<router_priority>\d+)$')
+        p9 = re.compile(r'^DR +addr: +(?P<dr_address>[\d\.]+), +Priority: +'
+            r'(?P<router_priority>\d+)$')
 
         ret_dict = {}
 
