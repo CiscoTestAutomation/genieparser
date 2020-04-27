@@ -19,6 +19,7 @@ JunOs parsers for the following show commands:
     * show ospf overview extensive
     * show ospf database advertising-router self detail
     * show ospf neighbor extensive
+    * show ospf neighbor detail
     * show ospf interface extensive
 """
 
@@ -2986,7 +2987,7 @@ class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
             r' +(?P<ospf_area>[\d\.]+) +(?P<dr_id>[\d\.]+) +(?P<bdr_id>[\d\.]+) +'
             r'(?P<neighbor_count>\d+)$')
 
-        # Type: P2P, Address: 111.87.5.93, Mask: 255.255.255.252, MTU: 1500, Cost: 5
+        # Type: P2P, Address: 10.189.5.93, Mask: 255.255.255.252, MTU: 1500, Cost: 5
         p2 = re.compile(r'^Type: +(?P<interface_type>\S+), +Address: +(?P<interface_address>[\w\.\:]+)'
         r', +Mask: +(?P<address_mask>[\d\.]+), +MTU: +(?P<mtu>\d+), +Cost: +(?P<interface_cost>\d+)$')
 
@@ -3015,7 +3016,7 @@ class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
         p8 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\d+)\)'
         r' +->(?P<ospf_topology_passive> +Passive,)? +Cost: +(?P<ospf_topology_metric>\d+)$')
 
-        # DR addr: 111.87.5.252, Priority: 128
+        # DR addr: 10.189.5.252, Priority: 128
         p9 = re.compile(r'^DR +addr: +(?P<dr_address>[\d\.]+), +Priority: +'
             r'(?P<router_priority>\d+)$')
 
@@ -3038,7 +3039,7 @@ class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
                 interface_list.append(entry)
                 continue
 
-            # Type: P2P, Address: 111.87.5.93, Mask: 255.255.255.252, MTU: 1500, Cost: 5
+            # Type: P2P, Address: 10.189.5.93, Mask: 255.255.255.252, MTU: 1500, Cost: 5
             m = p2.match(line)
             if m:
                 last_interface = ret_dict["ospf-interface-information"]\
@@ -3130,7 +3131,7 @@ class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
 
                 continue
 
-            # DR addr: 111.87.5.252, Priority: 128
+            # DR addr: 10.189.5.252, Priority: 128
             m = p9.match(line)
             if m:
                 last_interface = ret_dict["ospf-interface-information"]\
@@ -3144,3 +3145,17 @@ class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
                 continue
 
         return ret_dict
+
+class ShowOspfNeighborDetail(ShowOspfNeighborExtensive):
+    """ Parser for:
+            * show ospf neighbor detail
+    """
+    cli_command = 'show ospf neighbor detail'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        return super().cli(output=out)
