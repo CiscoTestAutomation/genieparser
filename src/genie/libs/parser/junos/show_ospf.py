@@ -1969,16 +1969,3 @@ class ShowOspfNeighborExtensive(ShowOspfNeighborExtensiveSchema):
 
         return ret_dict
 
-class ShowOspfNeighborDetail(ShowOspfNeighborExtensive):
-    """ Parser for:
-            * show ospf neighbor detail
-    """
-    cli_command = 'show ospf neighbor detail'
-
-    def cli(self, output=None):
-        if not output:
-            out = self.device.execute(self.cli_command[0])
-        else:
-            out = output
-
-        return super().cli(output=out)
