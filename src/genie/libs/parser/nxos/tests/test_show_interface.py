@@ -5034,10 +5034,10 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
 
     golden_output_6 = {'execute.return_value': '''
     Vlan300, Interface status: protocol-up/link-up/admin-up, iod: 7,
-      IP address: 20.5.65.2, IP subnet: 20.5.65.0/24 route-preference: 0, tag: 0
-      IP address: 20.5.69.2, IP subnet: 20.5.69.0/24 secondary route-preference: 0, tag: 0
-      IP address: 20.5.72.2, IP subnet: 20.5.72.0/24 secondary route-preference: 0, tag: 0
-      IP address: 20.5.77.2, IP subnet: 20.5.77.0/24 secondary route-preference: 0, tag: 0
+      IP address: 10.115.65.2, IP subnet: 10.115.65.0/24 route-preference: 0, tag: 0
+      IP address: 10.115.69.2, IP subnet: 10.115.69.0/24 secondary route-preference: 0, tag: 0
+      IP address: 10.115.72.2, IP subnet: 10.115.72.0/24 secondary route-preference: 0, tag: 0
+      IP address: 10.115.77.2, IP subnet: 10.115.77.0/24 secondary route-preference: 0, tag: 0
       IP broadcast address: 255.255.255.255
       IP multicast groups locally joined:
           224.0.0.102
@@ -5083,18 +5083,18 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             'icmp_unreachable': 'disabled',
             'local_proxy_arp': 'disabled',
             'ipv4': {
-                '20.5.77.2/24': {
+                '10.115.77.2/24': {
                     'broadcast_address': '255.255.255.255',
-                    'ip_subnet': '20.5.77.0',
-                    'ip': '20.5.77.2',
+                    'ip_subnet': '10.115.77.0',
+                    'ip': '10.115.77.2',
                     'route_preference': '0',
                     'prefix_length': '24',
                     'route_tag': '0',
                     'secondary': True,
                 },
-                '20.5.69.2/24': {
-                    'ip_subnet': '20.5.69.0',
-                    'ip': '20.5.69.2',
+                '10.115.69.2/24': {
+                    'ip_subnet': '10.115.69.0',
+                    'ip': '10.115.69.2',
                     'route_preference': '0',
                     'prefix_length': '24',
                     'route_tag': '0',
@@ -5142,17 +5142,17 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                     'broadcast_bytes_sent': 0,
                     'labeled_bytes_forwarded': 0,
                 },
-                '20.5.72.2/24': {
-                    'ip_subnet': '20.5.72.0',
-                    'ip': '20.5.72.2',
+                '10.115.72.2/24': {
+                    'ip_subnet': '10.115.72.0',
+                    'ip': '10.115.72.2',
                     'route_preference': '0',
                     'prefix_length': '24',
                     'route_tag': '0',
                     'secondary': True,
                 },
-                '20.5.65.2/24': {
-                    'ip_subnet': '20.5.65.0',
-                    'ip': '20.5.65.2',
+                '10.115.65.2/24': {
+                    'ip_subnet': '10.115.65.0',
+                    'ip': '10.115.65.2',
                     'route_tag': '0',
                     'route_preference': '0',
                     'prefix_length': '24',

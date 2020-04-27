@@ -1305,7 +1305,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 continue
 
             # IP address: 192.168.106.1, IP subnet: 192.168.106.0/24 route-preference: 0, tag: 0
-            # IP address: 20.5.69.2, IP subnet: 20.5.69.0/24 secondary route-preference: 0, tag: 0
+            # IP address: 10.115.69.2, IP subnet: 10.115.69.0/24 secondary route-preference: 0, tag: 0
             p3_1 = re.compile(r'^\s*IP *address: *(?P<ip>[0-9\.]+), *IP *subnet: '
                               r'*(?P<ip_subnet>[a-z0-9\.]+)\/(?P<prefix_length>[0-9\,]+)'
                               r'(\s*(?P<secondary>secondary)\s*)?(?: *route-preference: *'
