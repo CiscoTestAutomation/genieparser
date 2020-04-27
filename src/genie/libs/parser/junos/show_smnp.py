@@ -20,7 +20,6 @@ class ShowSnmpMibWalkSystemSchema(MetaParser):
 
     # Sub Schema snmp-object
     def validate_snmp_object_list(value):
-        # Pass interface-queue list as value
         if not isinstance(value, list):
             raise SchemaTypeError('snmp-object is not a list')
         snmp_object_schema = Schema({
