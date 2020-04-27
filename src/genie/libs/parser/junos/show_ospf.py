@@ -18,6 +18,7 @@ JunOs parsers for the following show commands:
     * show ospf overview
     * show ospf overview extensive
     * show ospf database advertising-router self detail
+    * show ospf neighbor extensive
 """
 
 # Python
