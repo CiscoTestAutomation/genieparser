@@ -10,7 +10,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                              SchemaMissingKeyError
 
 # Parser
-from genie.libs.parser.junos.show_pfe import ShowPfeStatisticsTraffic
+from genie.libs.parser.junos.show_pfe import ShowPfeStatisticsTraffic,\
+    ShowPfeStatisticsIpIcmp
 
 #=========================================================
 # Unit test for show pfe statistics traffic
@@ -141,6 +142,80 @@ class test_show_pfe_statistics_traffic(unittest.TestCase):
     def test_golden_1(self):
         self.device = Mock(**self.golden_output_1)
         obj = ShowPfeStatisticsTraffic(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+#=========================================================
+# Unit test for show pfe statistics ip icmp
+#=========================================================
+class TestShowPfeStatisticsIpIcmp(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    maxDiff = None
+
+    golden_parsed_output_1 = {'pfe-statistics': {'icmp-discards': {'bad-dest-addresses': '0',
+                                      'bad-source-addresses': '0',
+                                      'icmp-errors': '0',
+                                      'ip-fragments': '0',
+                                      'multicasts': '0'},
+                    'icmp-errors': {'bad-input-interface': '0',
+                                    'invalid-icmp-type': '0',
+                                    'invalid-protocol': '0',
+                                    'runts': '0',
+                                    'throttled-icmps': '575',
+                                    'unknown-unreachables': '0',
+                                    'unprocessed-redirects': '0',
+                                    'unsupported-icmp-type': '0'},
+                    'icmp-statistics': {'icmp-option-handoffs': '0',
+                                        'mtu-exceeded': '0',
+                                        'network-unreachables': '311',
+                                        'redirects': '0',
+                                        'requests': '246259',
+                                        'ttl-captured': '0',
+                                        'ttl-expired': '245373'}}}
+
+
+    golden_output_1 = {'execute.return_value': '''
+                show pfe statistics ip icmp
+            ICMP Statistics:
+                246259 requests
+                    311 network unreachables
+                245373 ttl expired
+                    0 ttl captured
+                    0 redirects
+                    0 mtu exceeded
+                    0 icmp/option handoffs
+
+            ICMP Errors:
+                    0 unknown unreachables
+                    0 unsupported ICMP type
+                    0 unprocessed redirects
+                    0 invalid ICMP type
+                    0 invalid protocol
+                    0 bad input interface
+                    575 throttled icmps
+                    0 runts
+
+            ICMP Discards:
+                    0 multicasts
+                    0 bad source addresses
+                    0 bad dest addresses
+                    0 IP fragments
+                    0 ICMP errors
+
+    '''
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowPfeStatisticsIpIcmp(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowPfeStatisticsIpIcmp(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 

@@ -702,6 +702,8 @@ class ShowPfeStatisticsIpIcmp(ShowPfeStatisticsIpIcmpSchema):
     """
     cli_command = 'show pfe statistics ip icmp'
 
+    state = None
+
     def cli(self, output=None):
         if not output:
             out = self.device.execute(self.cli_command)
@@ -709,3 +711,99 @@ class ShowPfeStatisticsIpIcmp(ShowPfeStatisticsIpIcmpSchema):
             out = output
 
         ret_dict = {}
+
+        #         ICMP Statistics:
+        p1 = re.compile(r'^(?P<state>[\S\s]+):$')
+
+        #       246259 requests
+        #          311 network unreachables
+        p2 = re.compile(r'^(?P<value>\d+) +(?P<key>[\S\s]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #         ICMP Statistics:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                self.state = group['state']
+                continue
+
+            if self.state == "ICMP Statistics":
+
+                schemaMap = {
+                    "requests": "requests",
+                    "network_unreachables": "network-unreachables",
+                    "ttl_expired": "ttl-expired",
+                    "ttl_captured": "ttl-captured",
+                    "redirects": "redirects",
+                    "mtu_exceeded": "mtu-exceeded",
+                    "icmp/option_handoffs": "icmp-option-handoffs",
+                }
+
+                #       246259 requests
+                #          311 network unreachables
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()
+                    value = group['value']
+                    key = group['key']
+                    key = key.replace(' ','_')
+
+                    if key in schemaMap:
+                        schemaKey = schemaMap[key]
+                        ret_dict.setdefault("pfe-statistics", {}).setdefault("icmp-statistics", {}).setdefault(schemaKey, value)
+                    continue
+
+            if self.state == "ICMP Errors":
+
+                schemaMap = {
+                    "unknown_unreachables": "unknown-unreachables",
+                    "unsupported_ICMP_type": "unsupported-icmp-type",
+                    "unprocessed_redirects": "unprocessed-redirects",
+                    "invalid_ICMP_type": "invalid-icmp-type",
+                    "invalid_protocol": "invalid-protocol",
+                    "bad_input_interface": "bad-input-interface",
+                    "throttled_icmps": "throttled-icmps",
+                    "runts": "runts"
+                }
+
+                #       246259 requests
+                #          311 network unreachables
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()
+                    value = group['value']
+                    key = group['key']
+                    key = key.replace(' ','_')
+
+                    if key in schemaMap:
+                        schemaKey = schemaMap[key]
+                        ret_dict.setdefault("pfe-statistics", {}).setdefault("icmp-errors", {}).setdefault(schemaKey, value)
+                    continue
+
+            if self.state == "ICMP Discards":
+
+                schemaMap = {
+                    "multicasts": "multicasts",
+                    "bad_source_addresses": "bad-source-addresses",
+                    "bad_dest_addresses": "bad-dest-addresses",
+                    "IP_fragments": "ip-fragments",
+                    "ICMP_errors": "icmp-errors",
+                }
+
+                #       246259 requests
+                #          311 network unreachables
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()
+                    value = group['value']
+                    key = group['key']
+                    key = key.replace(' ','_')
+
+                    if key in schemaMap:
+                        schemaKey = schemaMap[key]
+                        ret_dict.setdefault("pfe-statistics", {}).setdefault("icmp-discards", {}).setdefault(schemaKey, value)
+                    continue
+
+        return ret_dict
