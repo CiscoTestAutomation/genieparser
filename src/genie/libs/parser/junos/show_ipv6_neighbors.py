@@ -80,7 +80,7 @@ class ShowIpv6Neighbors(ShowIpv6NeighborsSchema):
 
         ret_dict = {}
 
-        #2001:268:fb8f:1f::1           00:50:56:8d:72:bd  reachable   28    yes  no      ge-0/0/1.0
+        #2001:db8:eb18:6337::1           00:50:56:ff:00:4b  reachable   28    yes  no      ge-0/0/1.0
         p1 = re.compile(r'^(?P<ipv6_nd_neighbor_address>[\w:]+) '
                         r'+(?P<ipv6_nd_neighbor_l2_address>[\w:]+) '
                         r'+(?P<ipv6_nd_state>\S+) +(?P<ipv6_nd_expire>\d+) '
@@ -93,7 +93,7 @@ class ShowIpv6Neighbors(ShowIpv6NeighborsSchema):
         for line in out.splitlines():
             line = line.strip()
             
-            #2001:268:fb8f:1f::1           00:50:56:8d:72:bd  reachable   28    yes  no      ge-0/0/1.0
+            #2001:db8:eb18:6337::1           00:50:56:ff:00:4b  reachable   28    yes  no      ge-0/0/1.0
             m = p1.match(line)
             if m:
                 group = m.groupdict()
