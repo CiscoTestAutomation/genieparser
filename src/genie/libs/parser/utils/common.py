@@ -208,6 +208,7 @@ class Common():
                    'Ten': 'TenGigabitEthernet',
                    'Tw': 'TwoGigabitEthernet',
                    'Two': 'TwoGigabitEthernet',
+                   'Twe': 'TwentyFiveGigE',
                    'mgmt': 'mgmt',
                    'Vl': 'Vlan',
                    'Tu': 'Tunnel',
