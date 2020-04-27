@@ -2744,3 +2744,165 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                     continue
 
         return ret_dict
+
+class ShowOspfNeighborExtensiveSchema(MetaParser):
+    """ Schema for:
+            * show ospf neighbor extensive
+    """
+
+    def validate_ospf_neighbor_list(value):
+
+        def validate_adjacency_labels_list(value):
+            if not isinstance(value, list):
+                raise SchemaTypeError('ospf-link is not a list')
+            adjacency_labels_schema = Schema(
+                {
+                'label': str,
+                'flags': str,
+                'adj-sid-type': str
+                },
+            )
+            for item in value:
+                adjacency_labels_schema.validate(item)
+            return value
+
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-neighbor is not a list')
+        ospf_lsa_topology_ink_schema = Schema(
+            {
+            "activity-timer": str,
+            "adj-sid-list": {
+                'spring-adjacency-labels': Use(validate_adjacency_labels_list)
+            },
+            "bdr-address": str,
+            "dr-address": str,
+            "interface-name": str,
+            "neighbor-address": str,
+            "neighbor-adjacency-time": {
+                "#text": str
+            },
+            "neighbor-id": str,
+            "neighbor-priority": str,
+            "neighbor-up-time": {
+                "#text": str,
+                Optional("junos:seconds"): str,
+            },
+            "options": str,
+            "ospf-area": str,
+            "ospf-neighbor-state": str,
+            "ospf-neighbor-topology": {
+                "ospf-neighbor-topology-state": str,
+                "ospf-topology-id": str,
+                "ospf-topology-name": str
+            }
+        })
+        for item in value:
+            ospf_lsa_topology_ink_schema.validate(item)
+        return value
+
+    schema = {
+    "ospf-neighbor-information": {
+        "ospf-neighbor": Use(validate_ospf_neighbor_list)
+    }
+}
+
+class ShowOspfNeighborExtensive(ShowOspfNeighborExtensiveSchema):
+    """ Parser for:
+            * show ospf neighbor extensive
+    """
+    cli_command = 'show ospf neighbor extensive'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # 111.87.5.94      ge-0/0/0.0             Full      111.87.5.253     128    39
+        p1 = re.compile(r'^(?P<neighbor_address>[\d\.]+) +(?P<interface_name>\S+) +(?P<ospf_neighbor_state>\S+) +(?P<neighbor_id>[\d\.]+) +(?P<neighbor_priority>\d+) +(?P<activity_timer>\d+)$')
+
+        # Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+        p2 = re.compile(r'^Area +(?P<ospf_area>[\d\.]+), +opt +(?P<options>\S+), +DR +(?P<dr_address>[\.\d]+), +BDR +(?P<bdr_address>[\.\d]+)$')
+
+        # Up 3w0d 16:50:35, adjacent 3w0d 16:50:35
+        p3 = re.compile(r'^Up +(?P<neighbor_up_time>\S+ +[\d:]+), +adjacent +(?P<neighbor_adjacency_time>\S+ +[\d:]+)$')
+
+        #     28985       BVL         Protected
+        p4 = re.compile(r'^(?P<label>\d+) +(?P<flags>\S+) + (?P<adj_sid_type>\S+)$')
+
+        # Topology default (ID 0) -> Bidirectional
+        p5 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\d+)\) +-> +(?P<ospf_neighbor_topology_state>\S+)$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 111.87.5.94      ge-0/0/0.0             Full      111.87.5.253     128    39
+            m = p1.match(line)
+            if m:
+                neighbor_list = ret_dict.setdefault("ospf-neighbor-information", {}).setdefault("ospf-neighbor", [])
+                group = m.groupdict()
+                entry = {}
+
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                neighbor_list.append(entry)
+                continue
+
+            # Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+            m = p2.match(line)
+            if m:
+                last_neighbor = ret_dict["ospf-neighbor-information"]["ospf-neighbor"][-1]
+
+                entry = last_neighbor
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                continue
+
+            # Up 3w0d 16:50:35, adjacent 3w0d 16:50:35
+            m = p3.match(line)
+            if m:
+                last_neighbor = ret_dict["ospf-neighbor-information"]["ospf-neighbor"][-1]
+
+                entry = last_neighbor
+                group = m.groupdict()
+
+                entry.setdefault("neighbor-up-time", {}).setdefault("#text", group["neighbor_up_time"])
+                entry.setdefault("neighbor-adjacency-time", {}).setdefault("#text", group["neighbor_adjacency_time"])
+
+                continue
+
+            #     28985       BVL         Protected
+            m = p4.match(line)
+            if m:
+                last_neighbor = ret_dict["ospf-neighbor-information"]["ospf-neighbor"][-1]
+
+                entry = {}
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                last_neighbor.setdefault("adj-sid-list", {}).setdefault("spring-adjacency-labels", []).append(entry)
+                continue
+
+            # Topology default (ID 0) -> Bidirectional
+            m = p5.match(line)
+            if m:
+                last_neighbor = ret_dict["ospf-neighbor-information"]["ospf-neighbor"][-1]
+
+                entry = last_neighbor.setdefault("ospf-neighbor-topology", {})
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                continue
+
+        return ret_dict
