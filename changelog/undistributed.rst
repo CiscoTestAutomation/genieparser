@@ -191,6 +191,7 @@
         * show ospf neighbor extensive
     * ShowOspfNeighborDetail
         * show ospf neighbor detail
+        * show ospf neighbor {neighbor} detail
     * Added ShowSnmpMibWalkSystem for:
         * show snmp mib walk system
     * Added ShowFirewall for:
