@@ -2817,7 +2817,7 @@ class ShowOspfNeighborExtensive(ShowOspfNeighborExtensiveSchema):
     """
     cli_command = 'show ospf neighbor extensive'
 
-    def cli(self, output=None):
+    def cli(self, output=None, neighbor=None):
         if not output:
             out = self.device.execute(self.cli_command)
         else:
