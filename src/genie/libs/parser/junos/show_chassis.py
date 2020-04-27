@@ -6,17 +6,14 @@ Parser for the following show commands:
     * show chassis environment routing-engine
     * show chassis firmware
     * show chassis firmware no-forwarding
-<<<<<<< HEAD
     * show chassis fpc
     * show chassis routing-engine
     * show chassis routing-engine no-forwarding
-=======
     * show chassis hardware
     * show chassis hardware detail
     * show chassis hardware detail no-forwarding
     * show chassis hardware extensive
     * show chassis hardware extensive no-forwarding
->>>>>>> dev
 '''
 # python
 import re
