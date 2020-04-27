@@ -2915,3 +2915,220 @@ class ShowOspfNeighborExtensive(ShowOspfNeighborExtensiveSchema):
                 continue
 
         return ret_dict
+
+class ShowOspfInterfaceExtensiveSchema(MetaParser):
+    """ Schema for:
+            * show ospf interface extensive
+    """
+
+    def validate_ospf_interface_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-interface is not a list')
+        neighbor_schema = Schema({
+                "address-mask": str,
+                "adj-count": str,
+                "authentication-type": str,
+                "bdr-id": str,
+                "dead-interval": str,
+                "dr-id": str,
+                "hello-interval": str,
+                "interface-address": str,
+                "interface-cost": str,
+                "interface-name": str,
+                "interface-type": str,
+                "mtu": str,
+                "neighbor-count": str,
+                "ospf-area": str,
+                "ospf-interface-protection-type": str,
+                "ospf-interface-state": str,
+                Optional("ospf-interface-tilfa-prot-fate"): str,
+                Optional("ospf-interface-tilfa-prot-link"): str,
+                Optional("ospf-interface-tilfa-prot-node"): str,
+                Optional("ospf-interface-tilfa-prot-srlg"): str,
+                Optional("passive"): str,
+                Optional("dr-address"): str,
+                Optional("router-priority"): str,
+                "ospf-interface-topology": {
+                    "ospf-topology-id": str,
+                    "ospf-topology-metric": str,
+                    "ospf-topology-name": str,
+                    Optional("ospf-topology-passive"): bool,
+                },
+                "ospf-stub-type": str,
+                "retransmit-interval": str
+            })
+        for item in value:
+            neighbor_schema.validate(item)
+        return value
+
+    schema = {
+        "ospf-interface-information": {
+            "ospf-interface": Use(validate_ospf_interface_list),
+        }
+    }
+
+class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
+    """ Parser for:
+            * show ospf interface extensive
+    """
+    cli_command = 'show ospf interface extensive'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # ge-0/0/0.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
+        p1 = re.compile(r'^(?P<interface_name>\S+) +(?P<ospf_interface_state>\S+)'
+            r' +(?P<ospf_area>[\d\.]+) +(?P<dr_id>[\d\.]+) +(?P<bdr_id>[\d\.]+) +'
+            r'(?P<neighbor_count>\d+)$')
+
+        # Type: P2P, Address: 111.87.5.93, Mask: 255.255.255.252, MTU: 1500, Cost: 5
+        p2 = re.compile(r'^Type: +(?P<interface_type>\S+), +Address: +(?P<interface_address>[\d\.]+)'
+            r', +Mask: +(?P<address_mask>[\d\.]+), +MTU: +(?P<mtu>\d+), +Cost: +(?P<interface_cost>\d+)$')
+
+        # Adj count: 1
+        # Adj count: 0, Passive
+        p3 = re.compile(r'^Adj +count: +(?P<adj_count>\d+)(, +(?P<passive>\S+))?$')
+
+        # Hello: 10, Dead: 40, ReXmit: 5, Not Stub
+        p4 = re.compile(r'^Hello: +(?P<hello_interval>\d+), +Dead: +(?P<dead_interval>\d+)'
+            r', +ReXmit: +(?P<retransmit_interval>\d+), +(?P<ospf_stub_type>.+)$')
+
+        # Auth type: None
+        p5 = re.compile(r'^Auth +type: +(?P<authentication_type>\S+)$')
+
+        # Protection type: Post Convergence
+        p6 = re.compile(r'^Protection +type: +(?P<ospf_interface_protection_type>.+)$')
+
+        # Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 100
+        p7 = re.compile(r'^Post +convergence +protection: +(?P<ospf_interface_tilfa_prot_link>\S+)'
+            r', +Fate +sharing: +(?P<ospf_interface_tilfa_prot_srlg>\S+), +SRLG: +'
+            r'(?P<ospf_interface_tilfa_prot_fate>\S+), +Node +cost: +(?P<ospf_interface_tilfa_prot_node>\S+)$')
+
+        # Topology default (ID 0) -> Cost: 5
+        # Topology default (ID 0) -> Passive, Cost: 100
+        p8 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\d+)\)'
+        r' +->(?P<ospf_topology_passive> +Passive,)? +Cost: +(?P<ospf_topology_metric>\d+)$')
+
+        # DR addr: 111.87.5.252, Priority: 128
+        p9 = re.compile(r'^DR +addr: +(?P<dr_address>[\d\.]+), +Priority: +(?P<router_priority>\d+)$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # ge-0/0/0.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
+            m = p1.match(line)
+            if m:
+                interface_list = ret_dict.setdefault("ospf-interface-information", {})\
+                    .setdefault("ospf-interface", [])
+                group = m.groupdict()
+                entry = {}
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                interface_list.append(entry)
+                continue
+
+            # Type: P2P, Address: 111.87.5.93, Mask: 255.255.255.252, MTU: 1500, Cost: 5
+            m = p2.match(line)
+            if m:
+                last_interface = ret_dict["ospf-interface-information"]["ospf-interface"][-1]
+                group = m.groupdict()
+                entry = last_interface
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+                continue
+
+            # Adj count: 1
+            m = p3.match(line)
+            if m:
+                last_interface = ret_dict["ospf-interface-information"]["ospf-interface"][-1]
+                group = m.groupdict()
+                entry = last_interface
+                entry['adj-count'] = group['adj_count']
+
+                if group['passive']:
+                    entry['passive'] = group['passive']
+
+                continue
+
+            # Hello: 10, Dead: 40, ReXmit: 5, Not Stub
+            m = p4.match(line)
+            if m:
+                last_interface = ret_dict["ospf-interface-information"]["ospf-interface"][-1]
+                group = m.groupdict()
+                entry = last_interface
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+                continue
+
+            # Auth type: None
+            m = p5.match(line)
+            if m:
+                last_interface = ret_dict["ospf-interface-information"]["ospf-interface"][-1]
+                group = m.groupdict()
+                entry = last_interface
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+                continue
+
+            # Protection type: Post Convergence
+            m = p6.match(line)
+            if m:
+                last_interface = ret_dict["ospf-interface-information"]["ospf-interface"][-1]
+                group = m.groupdict()
+                entry = last_interface
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+                continue
+
+            # Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 100
+            m = p7.match(line)
+            if m:
+                last_interface = ret_dict["ospf-interface-information"]["ospf-interface"][-1]
+                group = m.groupdict()
+                entry = last_interface
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+                continue
+
+            # Topology default (ID 0) -> Cost: 5
+            m = p8.match(line)
+            if m:
+                last_interface = ret_dict["ospf-interface-information"]["ospf-interface"][-1]
+                group = m.groupdict()
+                entry = last_interface
+                entry = entry.setdefault('ospf-interface-topology', {})
+
+                entry['ospf-topology-name'] = group['ospf_topology_name']
+                entry['ospf-topology-id'] = group['ospf_topology_id']
+                entry['ospf-topology-metric'] = group['ospf_topology_metric']
+
+                if group['ospf_topology_passive']:
+                    entry['ospf-topology-passive'] = True
+
+                continue
+
+            # DR addr: 111.87.5.252, Priority: 128
+            m = p9.match(line)
+            if m:
+                last_interface = ret_dict["ospf-interface-information"]["ospf-interface"][-1]
+                group = m.groupdict()
+                entry = last_interface
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                continue
+
+        return ret_dict
