@@ -4557,15 +4557,9 @@ class TestShowOspfNeighborDetail(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowOspfNeighborExtensive(device=self.device)
+        obj = ShowOspfNeighborDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             obj.parse()
-
-    def test_golden(self):
-        self.device = Mock(**self.golden_output)
-        obj = ShowOspfNeighborExtensive(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
