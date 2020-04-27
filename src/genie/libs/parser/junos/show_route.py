@@ -1,14 +1,19 @@
 ''' show_route.py
 
 JUNOS parsers for the following commands:
-
     * show route table {table}
     * show route table {table} {prefix}
+    * show route
     * show route protocol {protocol} extensive
     * show route protocol {protocol} table {table} extensive
     * show route protocol {protocol} table {table}
     * show route protocol {protocol}
     * show route protocol {protocol} {ip_address}
+    * show route instance detail
+    * show route protocol {protocol} table {table} extensive {destination}
+    * show route advertising-protocol {protocol} {ip_address}
+    * show route forwarding-table summary
+    * show route summary
 '''
 
 import re
@@ -171,7 +176,7 @@ class ShowRouteTable(ShowRouteTableSchema):
         
         return parsed_output
 
-class ShowRouteProtocolSchema(MetaParser):
+class ShowRouteSchema(MetaParser):
     """ Schema for:
             * show route protocol {protocol} {ip_address}
     """
@@ -238,8 +243,10 @@ class ShowRouteProtocolSchema(MetaParser):
                 nh_schema = Schema({
                             Optional("mpls-label"): str,
                             Optional("selected-next-hop"): str,
-                            "to": str,
-                            "via": str
+                            Optional("nh-local-interface"): str,
+                            Optional("nh-table"): str,
+                            Optional("to"): str,
+                            Optional("via"): str
                         })
                 # Validate each dictionary in list
                 for item in value:
@@ -249,28 +256,35 @@ class ShowRouteProtocolSchema(MetaParser):
             # Create rt-list Entry Schema
             rt_schema = Schema({
                     Optional("@junos:style"): str,
-                    "rt-destination": str,
+                    Optional("rt-destination"): str,
                     "rt-entry": {
                         Optional("active-tag"): str,
                         "age": {
                             "#text": str,
                             Optional("@junos:seconds"): str
                         },
-                        Optional("nh"): Use(validate_nh_list),
-                        "preference": str,
-                        "protocol-name": str,
-                        Optional("metric"): str,
-                        Optional('nh-type'): str,
-                        Optional('rt-tag'): str,
+                        Optional('as-path'): str,
                         Optional("current-active"): str,
                         Optional("last-active"): str,
+                        Optional("learned-from"): str,
+                        Optional("local-preference"): str,
+                        Optional("med"): str,
+                        Optional("metric"): str,
+                        Optional("metric2"): str,
+                        Optional("nh"): Use(validate_nh_list),
+                        Optional('nh-type'): str,
+                        "preference": str,
                         Optional("preference2"): str,
+                        "protocol-name": str,
+                        Optional('rt-tag'): str,
+                        Optional("validation-state"): str
                     }
                 })
             # Validate each dictionary in list
             for item in value:
                 rt_schema.validate(item)
             return value
+
 
         # Create RouteEntry Schema
         route_entry_schema = Schema({
@@ -296,29 +310,35 @@ class ShowRouteProtocolSchema(MetaParser):
         }
     }
 
-class ShowRouteProtocol(ShowRouteProtocolSchema):
+class ShowRoute(ShowRouteSchema):
     """ Parser for:
+            * show route
             * show route protocol {protocol} {ip_address}
             * show route protocol {protocol}
             * show route protocol {protocol} table {table}
     """
-    cli_command = ['show route protocol {protocol}',
+    cli_command = [
+                    'show route',
+                    'show route protocol {protocol}',
                     'show route protocol {protocol} {ip_address}',
                     'show route protocol {protocol} table {table}']
 
-    def cli(self, protocol, ip_address=None, table=None, output=None):
+    def cli(self, protocol=None, ip_address=None, table=None, output=None):
         if not output:
             if ip_address:
-                cmd = self.cli_command[1].format(
+                cmd = self.cli_command[2].format(
                     protocol=protocol,
                     ip_address=ip_address)
             elif table:
-                cmd = self.cli_command[2].format(
+                cmd = self.cli_command[3].format(
                     protocol=protocol,
                     table=table)
-            else:
-                cmd = self.cli_command[0].format(
+            elif protocol:
+                cmd = self.cli_command[1].format(
                     protocol=protocol)
+            else:
+                cmd = self.cli_command[0]
+
             out = self.device.execute(cmd)
         else:
             out = output
@@ -326,28 +346,46 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
         ret_dict = {}
         rt_destination = None
 
+
         # inet.0: 932 destinations, 1618 routes (932 active, 0 holddown, 0 hidden)
         p1 = re.compile(r'^(?P<table_name>\S+): +(?P<destination_count>\d+) +'
                 r'destinations, +(?P<total_route_count>\d+) +routes +'
                 r'\((?P<active_route_count>\d+) +active, +(?P<holddown>\d+) +'
                 r'holddown, +(?P<hidden>\d+) +hidden\)$')
         
+        # 10.220.0.0/16      *[BGP/170] 3w3d 03:12:24, MED 12003, localpref 120, from 10.169.14.240
         # 10.169.14.240/32  *[Static/5] 5w2d 15:42:25
         # *[OSPF3/10] 3w1d 17:03:23, metric 5
         # 0.0.0.0/0          *[OSPF/150/10] 3w3d 03:24:58, metric 101, tag 0
+        # 167963             *[LDP/9] 1w6d 20:41:01, metric 1, metric2 100, tag 65000500
         p2 = re.compile(r'^((?P<rt_destination>\S+) +)?(?P<active_tag>[\*\+\-])?'
                 r'\[(?P<protocol>[\w\-]+)\/(?P<preference>\d+)'
                 r'(\/(?P<preference2>\d+))?\] +(?P<text>\S+ +\S+)'
-                r'(, +metric +(?P<metric>\d+))?(, +tag +(?P<rt_tag>\d+))?$')
+                r'(, +metric +(?P<metric>\d+))?(, +metric2 +(?P<metric2>\d+))?'
+                r'(, +tag +(?P<rt_tag>\d+))?(, +MED +(?P<med>\w+))?'
+                r'(, +localpref +(?P<local_preference>\d+))?'
+                r'(, +from +(?P<learned_from>\S+))?$')
 
         # MultiRecv
         p2_1 = re.compile(r'^(?P<nh_type>MultiRecv)$')
         
         # >  to 10.169.14.121 via ge-0/0/1.0
-        p3 = re.compile(r'^(\> +)?to +(?P<to>\S+) +via +(?P<via>\S+)(, +(?P<mpls_label>[\S\s]+))?$')
+        p3 = re.compile(r'^(\> +)?(to +(?P<to>\S+) +)?via +(?P<via>\S+)'
+                r'(, +(?P<mpls_label>[\S\s]+))?$')
+        
+        # Local via fxp0.0
+        p3_1 = re.compile(r'^Local +via +(?P<nh_local_interface>\S+)$')
+
+        # AS path: (65151 65000) I, validation-state: unverified
+        # AS path: I
+        p4 = re.compile(r'AS +path:(?P<as_path>( +\([\S\s]+\))? +\S+)'
+                r'(, validation-state: +(?P<validation_state>\S+))?$')
+        
+        # to table inet.0
+        p5 = re.compile(r'^to +table +(?P<nh_table>\S+)$')
 
         # 2001:db8:eb18:ca45::1/128
-        p4 = re.compile(r'^(?P<rt_destination>[\w:\/]+)$')
+        pIP = re.compile(r'^(?P<rt_destination>[\w:\/]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -387,7 +425,11 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
                 preference2 = group['preference2']
                 text = group['text']
                 metric = group['metric']
+                metric2 = group['metric2']
                 rt_tag = group['rt_tag']
+                learned_from = group['learned_from']
+                local_preference = group['local_preference']
+                med = group['med']
                 rt_list = route_table_dict.setdefault('rt', [])
                 rt_dict = {}
                 rt_list.append(rt_dict)
@@ -400,8 +442,16 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
                     rt_entry_dict.update({'preference2': preference2})
                 if metric:
                     rt_entry_dict.update({'metric': metric})
+                if metric2:
+                    rt_entry_dict.update({'metric2': metric2})
                 if rt_tag:
                     rt_entry_dict.update({'rt-tag': rt_tag})
+                if learned_from:
+                    rt_entry_dict.update({'learned-from': learned_from})
+                if local_preference:
+                    rt_entry_dict.update({'local-preference': local_preference})
+                if med:
+                    rt_entry_dict.update({'med': med})
                 age_dict = rt_entry_dict.setdefault('age', {})
                 age_dict.update({'#text': text})
                 rt_dict.update({'rt-entry': rt_entry_dict})
@@ -425,18 +475,46 @@ class ShowRouteProtocol(ShowRouteProtocolSchema):
                 nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 nh_list.append(nh_dict)
                 continue
+
+            # Local via fxp0.0
+            m = p3_1.match(line)
+            if m:
+                group = m.groupdict()
+                nh_list = rt_entry_dict.setdefault('nh', [])
+                nh_dict = {}
+                nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                nh_list.append(nh_dict)
+                continue
             
-            # 2001:db8:eb18:ca45::1/128
+            # AS path: (65151 65000) I, validation-state: unverified
+            # AS path: I
             m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                rt_entry_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+            
+            # to table inet.0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                nh_list = rt_entry_dict.setdefault('nh', [])
+                nh_dict = {}
+                nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                nh_list.append(nh_dict)
+                continue
+
+            # 2001:db8:eb18:ca45::1/128
+            m = pIP.match(line)
             if m:
                 group = m.groupdict()
                 rt_destination = group['rt_destination']
                 continue
         return ret_dict
 
-class ShowRouteProtocolNoMore(ShowRouteProtocol):
+class ShowRouteProtocolNoMore(ShowRoute):
     """ Parser for:
-            * show route protocol static {ip_address} | no-more
+            * show route protocol {protocol} {ip_address} | no-more
     """
     cli_command = 'show route protocol {protocol} {ip_address} | no-more'
     def cli(self, protocol, ip_address, output=None):
@@ -599,7 +677,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                     Optional("current-active"): str,
                     Optional("inactive-reason"): str,
                     Optional("last-active"): str,
-                    "local-as": str,
+                    Optional("local-as"): str,
                     Optional("metric"): str,
                     Optional("nh"): Use(validate_nh_list),
                     "nh-address": str,
@@ -660,13 +738,20 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
     """ Parser for:
             * show route protocol {protocol} extensive
             * show route protocol {protocol} table {table} extensive
+            * show route protocol {protocol} table {table} extensive {destination}
     """
 
     cli_command = ['show route protocol {protocol} extensive',
-                    'show route protocol {protocol} table {table} extensive']
-    def cli(self, protocol, table=None, output=None):
+                    'show route protocol {protocol} table {table} extensive',
+                    'show route protocol {protocol} table {table} extensive {destination}']
+    def cli(self, protocol, table=None, destination=None, output=None):
         if not output:
-            if table:
+            if table and destination:
+                cmd = self.cli_command[2].format(
+                    protocol=protocol,
+                    table=table,
+                    destination=destination)
+            elif table:
                 cmd = self.cli_command[1].format(
                     protocol=protocol,
                     table=table)
@@ -1036,4 +1121,743 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 tsi_dict.update({'#text': '{}\n{}'.format(text, line)})
                 continue
 
+        return ret_dict
+    
+class ShowRouteForwardingTableSummarySchema(MetaParser):
+    """ Schema for:
+            * show route forwarding-table summary
+    """
+    # schema = {
+    #     Optional("@xmlns:junos"): str,
+    #     "forwarding-table-information": {
+    #         Optional("@xmlns"): str,
+    #         "route-table": [
+    #             {
+    #                 "address-family": str,
+    #                 "enabled-protocols": str,
+    #                 "route-table-summary": [
+    #                     {
+    #                         "route-count": str,
+    #                         "route-table-type": str
+    #                     }
+    #                 ],
+    #                 "table-name": str
+    #             }
+    #         ]
+    #     }
+    # }
+
+    def validate_route_table_list(value):
+        # Pass route-table list of dict in value
+        if not isinstance(value, list):
+            raise SchemaTypeError('route-table is not a list')
+        def validate_route_table_summary_list(value):
+            # Pass route-table-summary list of dict in value
+            if not isinstance(value, list):
+                raise SchemaTypeError('route-table-summary is not a list')
+            # Create route-table-summary Schema
+            route_table_summary_schema = Schema({
+                "route-count": str,
+                "route-table-type": str
+            })
+            # Validate each dictionary in list
+            for item in value:
+                route_table_summary_schema.validate(item)
+            return value
+        # Create route-table-summary Schema
+        route_table_schema = Schema({
+            "address-family": str,
+            Optional("enabled-protocols"): str,
+            "route-table-summary": Use(validate_route_table_summary_list),
+            "table-name": str
+        })
+        # Validate each dictionary in list
+        for item in value:
+            route_table_schema.validate(item)
+        return value
+    
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "forwarding-table-information": {
+            Optional("@xmlns"): str,
+            "route-table": Use(validate_route_table_list)
+        }
+    }
+
+class ShowRouteForwardingTableSummary(ShowRouteForwardingTableSummarySchema):
+    """ Parser for:
+            * show route forwarding-table summary
+    """
+    cli_command = 'show route forwarding-table summary'
+    
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        ret_dict = {}
+
+        # Routing table: default.inet
+        p1 = re.compile(r'^Routing +table: +(?P<table_name>\S+)$')
+
+        # Internet:
+        # DHCP Snooping:
+        p2 = re.compile(r'^(?P<address_family>\S+( +\S+)?):$')
+
+        # Enabled protocols: Bridging, 
+        p3 = re.compile(r'^Enabled +protocols: +(?P<enabled_protocols>[\S\s]+)$')
+
+        # perm:          1 routes
+        p4 = re.compile(r'^(?P<route_table_type>\S+): +(?P<route_count>\d+) +routes$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Routing table: default.inet
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                forwarding_table_information_dict = ret_dict.setdefault('forwarding-table-information', {})
+                route_table_list = forwarding_table_information_dict.setdefault('route-table', [])
+                route_table_dict = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                route_table_list.append(route_table_dict)
+                continue
+
+            # Internet:
+            # DHCP Snooping:
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                route_table_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # Enabled protocols: Bridging, 
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                route_table_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # perm:          1 routes
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                route_table_summary_list = route_table_dict.setdefault('route-table-summary', [])
+                route_table_summary_list.append({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+        return ret_dict
+
+class ShowRouteReceiveProtocolSchema(MetaParser):
+    """ Schema for:
+            * show route receive-protocol {protocol} {peer}
+    """
+    """
+        schema = {
+            Optional("@xmlns:junos"): str,
+            "route-information": {
+                Optional("@xmlns"): str,
+                "route-table": [
+                    {
+                        "active-route-count": str,
+                        "destination-count": str,
+                        "hidden-route-count": str,
+                        "holddown-route-count": str,
+                        "rt": [
+                            {
+                                Optional("@junos:style"): str,
+                                "rt-destination": str,
+                                "rt-entry": {
+                                    "active-tag": str,
+                                    "as-path": str,
+                                    "local-preference": str,
+                                    "med": str,
+                                    "nh": {
+                                        "to": str
+                                    },
+                                    "protocol-name": str
+                                }
+                            }
+                        ],
+                        "table-name": str,
+                        "total-route-count": str
+                    }
+                ]
+            }
+        }
+    """
+
+    def validate_route_table_list(value):
+        # Pass route-table list of dict in value
+        if not isinstance(value, list):
+            raise SchemaTypeError('route-table is not a list')
+        
+        def validate_rt_list(value):
+            # Pass rt list of dict in value
+            if not isinstance(value, list):
+                raise SchemaTypeError('rt is not a list')
+            # Create rt entry Schema
+            rt_entry_schema = Schema({
+                Optional("@junos:style"): str,
+                "rt-destination": str,
+                "rt-entry": {
+                    Optional("active-tag"): str,
+                    "as-path": str,
+                    "local-preference": str,
+                    "med": str,
+                    "nh": {
+                        "to": str
+                    },
+                    "protocol-name": str
+                }
+            })
+            # Validate each dictionary in list
+            for item in value:
+                rt_entry_schema.validate(item)
+            return value
+
+        # Create route-table entry Schema
+        route_table_schema = Schema({
+            "active-route-count": str,
+            "destination-count": str,
+            "hidden-route-count": str,
+            "holddown-route-count": str,
+            Optional("rt"): Use(validate_rt_list),
+            "table-name": str,
+            "total-route-count": str
+        })
+        # Validate each dictionary in list
+        for item in value:
+            route_table_schema.validate(item)
+        return value
+    
+    # Main Schema
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "route-information": {
+            Optional("@xmlns"): str,
+            "route-table": Use(validate_route_table_list)
+        }
+    }
+
+class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
+    """ Parser for:
+            * show route receive-protocol {protocol} {peer}
+    """
+
+    cli_command = 'show route receive-protocol {protocol} {peer}'
+    def cli(self, protocol, peer, output=None):
+        if not output:
+            cmd = self.cli_command.format(protocol=protocol,
+                    peer=peer)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        ret_dict = {}
+        
+        # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+        p1 = re.compile(r'^(?P<table_name>\S+): +(?P<destination_count>\d+) +'
+                r'destinations, +(?P<total_route_count>\d+) +routes +'
+                r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
+                r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
+
+        # * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
+        # 10.220.0.0/16           10.189.5.253         12003   120        (65151 65000) I
+        p2 = re.compile(r'^((?P<active_tag>\*) +)?(?P<rt_destination>\S+) +'
+                r'(?P<to>\S+) +(?P<med>\d+) +(?P<local_preference>\d+) +'
+                r'(?P<as_path>\([\S\s]+\) +\w+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                route_table_list = ret_dict.setdefault('route-information', {}). \
+                    setdefault('route-table', [])
+                route_table_dict = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                route_table_list.append(route_table_dict)
+                continue
+            
+            # * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
+            # 10.220.0.0/16           10.189.5.253         12003   120        (65151 65000) I
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                rt_list = route_table_dict.setdefault('rt', [])
+                rt_dict = {'rt-destination': group['rt_destination']}
+                rt_entry_dict = rt_dict.setdefault('rt-entry', {})
+                keys = ['active_tag', 'as_path', 'local_preference', 'med']
+                for key in keys:
+                    v = group[key]
+                    if v:
+                        rt_entry_dict.update({key.replace('_', '-'): v})
+                nh_dict = rt_entry_dict.setdefault('nh', {})
+                nh_dict.update({'to': group['to']})
+                rt_entry_dict.update({'protocol-name': protocol.upper()})
+                rt_list.append(rt_dict)
+
+        return ret_dict
+
+class ShowRouteAdvertisingProtocolSchema(MetaParser):
+    """ Schema for:
+            * show route advertising-protocol {protocol} {ip_address}
+    """
+    """
+        schema = {
+            Optional("@xmlns:junos"): str,
+            "route-information": {
+                Optional("@xmlns"): str,
+                "route-table": {
+                    "active-route-count": str,
+                    "destination-count": str,
+                    "hidden-route-count": str,
+                    "holddown-route-count": str,
+                    "rt": [
+                        {
+                            Optional("@junos:style"): str,
+                            "rt-destination": str,
+                            "rt-entry": {
+                                "active-tag": str,
+                                "as-path": str,
+                                "bgp-metric-flags": str,
+                                "local-preference": str,
+                                "med": str,
+                                "nh": {
+                                    "to": str
+                                },
+                                "protocol-name": str
+                            }
+                        }
+                    ],
+                    "table-name": str,
+                    "total-route-count": str
+                }
+            }
+        }
+    """
+
+    def validate_rt_list(value):
+        # Pass rt list of dict in value
+        if not isinstance(value, list):
+            raise SchemaTypeError('rt is not a list')
+        # Create rt entry Schema
+        entry_schema = Schema({
+            Optional("@junos:style"): str,
+            "rt-destination": str,
+            "rt-entry": {
+                "active-tag": str,
+                "as-path": str,
+                "bgp-metric-flags": str,
+                "local-preference": str,
+                "med": str,
+                "nh": {
+                    "to": str
+                },
+                "protocol-name": str
+            }
+        })
+        # Validate each dictionary in list
+        for item in value:
+            entry_schema.validate(item)
+        return value
+    
+    # Main schema
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "route-information": {
+            Optional("@xmlns"): str,
+            "route-table": {
+                "active-route-count": str,
+                "destination-count": str,
+                "hidden-route-count": str,
+                "holddown-route-count": str,
+                Optional('rt'): Use(validate_rt_list),
+                "table-name": str,
+                "total-route-count": str
+            }
+        }
+    }
+
+
+class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
+    """ Parser for:
+            * show route advertising-protocol {protocol} {neighbor}
+    """
+
+    cli_command = 'show route advertising-protocol {protocol} {neighbor}'
+    def cli(self, protocol, neighbor, output=None):
+        if not output:
+            cmd = self.cli_command.format(protocol=protocol,
+                    neighbor=neighbor)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        ret_dict = {}
+        
+        # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+        p1 = re.compile(r'^(?P<table_name>\S+): +(?P<destination_count>\d+) +'
+                r'destinations, +(?P<total_route_count>\d+) +routes +'
+                r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
+                r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
+
+        # * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
+        p2 = re.compile(r'^(?P<active_tag>\*) +(?P<rt_destination>\S+) +'
+                r'(?P<to>\S+) +(?P<med>\d+) +(?P<local_preference>\d+) +'
+                r'(?P<as_path>\([\S\s]+\) +\w+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                route_table_dict = ret_dict.setdefault('route-information', {}). \
+                    setdefault('route-table', {})
+                route_table_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+            
+            # * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                rt_list = route_table_dict.setdefault('rt', [])
+                rt_dict = {'rt-destination': group['rt_destination']}
+                rt_entry_dict = rt_dict.setdefault('rt-entry', {})
+                keys = ['active_tag', 'as_path', 'local_preference', 'med']
+                for key in keys:
+                    rt_entry_dict.update({key.replace('_', '-'): group[key]})
+                nh_dict = rt_entry_dict.setdefault('nh', {})
+                nh_dict.update({'to': group['to']})
+                rt_entry_dict.update({'bgp-metric-flags': 'Nexthop Change'})
+                rt_entry_dict.update({'protocol-name': protocol.upper()})
+                rt_list.append(rt_dict)
+
+        return ret_dict
+
+class ShowRouteSummarySchema(MetaParser):
+    """ Schema for:
+            * show route summary
+    """
+    # schema = {
+    #     Optional("@xmlns:junos"): str,
+    #     "route-summary-information": {
+    #         Optional("@xmlns"): str,
+    #         "as-number": str,
+    #         "route-table": [
+    #             {
+    #                 "active-route-count": str,
+    #                 "destination-count": str,
+    #                 "hidden-route-count": str,
+    #                 "holddown-route-count": str,
+    #                 "protocols": [
+    #                     {
+    #                         "active-route-count": str,
+    #                         "protocol-name": str,
+    #                         "protocol-route-count": str
+    #                     }
+    #                 ],
+    #                 "table-name": str,
+    #                 "total-route-count": str
+    #             }
+    #         ],
+    #         "router-id": str
+    #     }
+    # }
+
+    def validate_route_table_list(value):
+        # Pass route-table list of dict in value
+        if not isinstance(value, list):
+            raise SchemaTypeError('route-table is not a list')
+        def validate_protocols_list(value):
+            # Pass protocols list of dict in value
+            if not isinstance(value, list):
+                raise SchemaTypeError('protocols is not a list')
+            # Create protocols Schema
+            protocols_schema = Schema({
+                "active-route-count": str,
+                "protocol-name": str,
+                "protocol-route-count": str
+            })
+            # Validate each dictionary in list
+            for item in value:
+                protocols_schema.validate(item)
+            return value
+        # Create route-table Schema
+        route_table_schema = Schema({
+            "active-route-count": str,
+            "destination-count": str,
+            "hidden-route-count": str,
+            "holddown-route-count": str,
+            "protocols": Use(validate_protocols_list),
+            "table-name": str,
+            "total-route-count": str
+        })
+        # Validate each dictionary in list
+        for item in value:
+            route_table_schema.validate(item)
+        return value
+
+    # Main Schema
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "route-summary-information": {
+            Optional("@xmlns"): str,
+            "as-number": str,
+            "route-table": Use(validate_route_table_list),
+            "router-id": str
+        }
+    }
+
+class ShowRouteSummary(ShowRouteSummarySchema):
+    """ Parser for:
+            * show route summary
+    """
+    cli_command = 'show route summary'
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        ret_dict = {}
+
+        # Autonomous system number: 65171
+        p1 = re.compile(r'^Autonomous +system +number: +(?P<as_number>\d+)$')
+
+        # Router ID: 10.189.5.252
+        p2 = re.compile(r'^Router +ID: +(?P<router_id>\S+)$')
+
+        # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+        p3 = re.compile(r'^(?P<table_name>\S+): +(?P<destination_count>\d+) +'
+                r'destinations, +(?P<total_route_count>\d+) +routes +'
+                r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
+                r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
+        
+        #  Direct:      6 routes,      6 active
+        p4 = re.compile(r'^(?P<protocol_name>\S+): +(?P<protocol_route_count>\d+) +'
+                r'routes, +(?P<active_route_count>\d+) +\w+$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Autonomous system number: 65171
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                route_summary_information_dict = ret_dict.setdefault('route-summary-information', {})
+                route_summary_information_dict.update({
+                    k.replace('_', '-'):v for k, v in group.items() 
+                    if v is not None})
+                continue
+
+            # Router ID: 10.189.5.252
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                route_summary_information_dict.update({k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                route_table = route_summary_information_dict. \
+                    setdefault('route-table', [])
+                route_table_dict = {k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None}
+                route_table.append(route_table_dict)
+                continue
+            
+            #  Direct:      6 routes,      6 active
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                protocols_list = route_table_dict.setdefault('protocols', [])
+                protocols_list.append({k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+        return ret_dict
+
+class ShowRouteInstanceDetailSchema(MetaParser):
+    """ Schema for:
+            * show route instance detail
+    """
+    # schema = {
+    #     Optional("@xmlns:junos"): str,
+    #     "instance-information": {
+    #         Optional("@junos:style"): str,
+    #         Optional("@xmlns"): str,
+    #         "instance-core": [
+    #             {
+    #                 "instance-interface": [
+    #                     {
+    #                         "interface-name": str
+    #                     }
+    #                 ],
+    #                 "instance-name": str,
+    #                 "instance-rib": [
+    #                     {
+    #                         "irib-active-count": str,
+    #                         "irib-hidden-count": str,
+    #                         "irib-holddown-count": str,
+    #                         "irib-name": str,
+    #                         "irib-route-count": str
+    #                     }
+    #                 ],
+    #                 "instance-state": str,
+    #                 "instance-type": str,
+    #                 "router-id": str
+    #             }
+    #         ]
+    #     }
+    # }
+
+    def validate_instance_core_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('instance-core is not a list')
+        def validate_instance_rib_list(value):
+            if not isinstance(value, list):
+                raise SchemaTypeError('instance-rib is not a list')
+            instance_rib_schema = Schema({
+                        "irib-active-count": str,
+                        "irib-hidden-count": str,
+                        "irib-holddown-count": str,
+                        "irib-name": str,
+                        "irib-route-count": str
+                    })
+            # Validate each dictionary in list
+            for item in value:
+                instance_rib_schema.validate(item)
+            return value
+        def validate_interface_name_list(value):
+            if not isinstance(value, list):
+                raise SchemaTypeError('interface-name is not a list')
+            instance_rib_schema = Schema({
+                    "interface-name": str
+                })
+            # Validate each dictionary in list
+            for item in value:
+                instance_rib_schema.validate(item)
+            return value
+        instance_core_schema = Schema({
+            Optional("instance-interface"): Use(validate_interface_name_list),
+            "instance-name": str,
+            Optional("instance-rib"): Use(validate_instance_rib_list),
+            Optional("instance-state"): str,
+            Optional("instance-type"): str,
+            Optional("router-id"): str
+        })
+        # Validate each dictionary in list
+        for item in value:
+            instance_core_schema.validate(item)
+        return value
+    
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "instance-information": {
+            Optional("@junos:style"): str,
+            Optional("@xmlns"): str,
+            "instance-core": Use(validate_instance_core_list)
+        }
+    }
+
+class ShowRouteInstanceDetail(ShowRouteInstanceDetailSchema):
+    """ Parser for:
+            * show route instance detail
+    """
+    cli_command = 'show route instance detail'
+    
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+        # Router ID: 0.0.0.0
+        p1 = re.compile(r'^Router +ID: +(?P<router_id>\S+)$')
+
+        # Type: forwarding        State: Active        
+        p2 = re.compile(r'^Type: +(?P<instance_type>\S+) +State: +(?P<instance_state>\S+)$')
+
+        # Tables:
+        p3 = re.compile(r'^Tables:$')
+
+        # Interfaces:
+        p4 = re.compile(r'^Interfaces:$')
+
+        # inet.0                 : 1615 routes (929 active, 0 holddown, 0 hidden)
+        # __juniper_private1__.inet.0: 6 routes (5 active, 0 holddown, 0 hidden)
+        p5 = re.compile(r'^(?P<irib_name>\S+) *: +(?P<irib_route_count>\d+) +'
+                r'routes +\((?P<irib_active_count>\d+) +active, +'
+                r'(?P<irib_holddown_count>\d+) +holddown, +'
+                r'(?P<irib_hidden_count>\d+) +hidden\)$')
+
+        # master:
+        p6 = re.compile(r'^(?P<instance_name>\S+):$')
+
+        # pfh-0/0/0.16383
+        p7 = re.compile(r'^(?P<interface_name>\S+)$')
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Router ID: 0.0.0.0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                instance_core_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # Type: forwarding        State: Active        
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                instance_core_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # Tables:
+            m = p3.match(line)
+            if m:
+                continue
+
+            # Interfaces:
+            m = p4.match(line)
+            if m:
+                instance_interface_list = instance_core_dict.setdefault('instance-interface', [])
+                continue
+
+            # inet.0                 : 1615 routes (929 active, 0 holddown, 0 hidden)
+            # __juniper_private1__.inet.0: 6 routes (5 active, 0 holddown, 0 hidden)
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                instance_rib_list = instance_core_dict.setdefault('instance-rib', [])
+                instance_rib_list.append({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # master:
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                instance_core_list = ret_dict.setdefault('instance-information', {}). \
+                    setdefault('instance-core', [])
+                instance_core_dict = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                instance_core_list.append(instance_core_dict)
+                continue
+
+            # pfh-0/0/0.16383
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                instance_interface_list.append({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
         return ret_dict
