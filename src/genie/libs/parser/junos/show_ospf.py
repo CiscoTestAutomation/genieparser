@@ -18,6 +18,9 @@ JunOs parsers for the following show commands:
     * show ospf overview
     * show ospf overview extensive
     * show ospf database advertising-router self detail
+    * show ospf neighbor extensive
+    * show ospf neighbor detail
+    * show ospf interface extensive
 """
 
 # Python
@@ -2719,7 +2722,8 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                 if m:
                     last_entry = ret_dict["ospf-database-information"]["ospf-database"][-1]
 
-                    last_entry.setdefault("ospf-database-extensive", {}).setdefault("lsa-changed-time", {})
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("lsa-changed-time", {})
 
                     group = m.groupdict()
                     last_entry["ospf-database-extensive"]["lsa-changed-time"]["#text"]\
@@ -2744,3 +2748,414 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                     continue
 
         return ret_dict
+
+class ShowOspfNeighborExtensiveSchema(MetaParser):
+    """ Schema for:
+            * show ospf neighbor extensive
+    """
+
+    def validate_ospf_neighbor_list(value):
+
+        def validate_adjacency_labels_list(value):
+            if not isinstance(value, list):
+                raise SchemaTypeError('adjacency labels is not a list')
+            adjacency_labels_schema = Schema(
+                {
+                'label': str,
+                'flags': str,
+                'adj-sid-type': str
+                },
+            )
+            for item in value:
+                adjacency_labels_schema.validate(item)
+            return value
+
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-neighbor is not a list')
+        ospf_lsa_topology_ink_schema = Schema(
+            {
+            "activity-timer": str,
+            "adj-sid-list": {
+                'spring-adjacency-labels': Use(validate_adjacency_labels_list)
+            },
+            "bdr-address": str,
+            "dr-address": str,
+            "interface-name": str,
+            "neighbor-address": str,
+            "neighbor-adjacency-time": {
+                "#text": str
+            },
+            "neighbor-id": str,
+            "neighbor-priority": str,
+            "neighbor-up-time": {
+                "#text": str,
+                Optional("junos:seconds"): str,
+            },
+            "options": str,
+            "ospf-area": str,
+            "ospf-neighbor-state": str,
+            "ospf-neighbor-topology": {
+                "ospf-neighbor-topology-state": str,
+                "ospf-topology-id": str,
+                "ospf-topology-name": str
+            }
+        })
+        for item in value:
+            ospf_lsa_topology_ink_schema.validate(item)
+        return value
+
+    schema = {
+    "ospf-neighbor-information": {
+        "ospf-neighbor": Use(validate_ospf_neighbor_list)
+    }
+}
+
+class ShowOspfNeighborExtensive(ShowOspfNeighborExtensiveSchema):
+    """ Parser for:
+            * show ospf neighbor extensive
+    """
+    cli_command = 'show ospf neighbor extensive'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # 10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    39
+        p1 = re.compile(r'^(?P<neighbor_address>[\d\.]+) +(?P<interface_name>\S+)'
+            r' +(?P<ospf_neighbor_state>\S+) +(?P<neighbor_id>[\d\.]+) +'
+            r'(?P<neighbor_priority>\d+) +(?P<activity_timer>\d+)$')
+
+        # Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+        p2 = re.compile(r'^Area +(?P<ospf_area>[\d\.]+), +opt +(?P<options>\S+),'
+            r' +DR +(?P<dr_address>[\.\d]+), +BDR +(?P<bdr_address>[\.\d]+)$')
+
+        # Up 3w0d 16:50:35, adjacent 3w0d 16:50:35
+        p3 = re.compile(r'^Up +(?P<neighbor_up_time>\S+ +[\d:]+), +adjacent +'
+            r'(?P<neighbor_adjacency_time>\S+ +[\d:]+)$')
+
+        #     28985       BVL         Protected
+        p4 = re.compile(r'^(?P<label>\d+) +(?P<flags>\S+) + (?P<adj_sid_type>\S+)$')
+
+        # Topology default (ID 0) -> Bidirectional
+        p5 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\d+)\)'
+            r' +-> +(?P<ospf_neighbor_topology_state>\S+)$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    39
+            m = p1.match(line)
+            if m:
+                neighbor_list = ret_dict.setdefault("ospf-neighbor-information", {})\
+                    .setdefault("ospf-neighbor", [])
+                group = m.groupdict()
+                entry = {}
+
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                neighbor_list.append(entry)
+                continue
+
+            # Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+            m = p2.match(line)
+            if m:
+                last_neighbor = ret_dict["ospf-neighbor-information"]["ospf-neighbor"][-1]
+
+                entry = last_neighbor
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                continue
+
+            # Up 3w0d 16:50:35, adjacent 3w0d 16:50:35
+            m = p3.match(line)
+            if m:
+                last_neighbor = ret_dict["ospf-neighbor-information"]["ospf-neighbor"][-1]
+
+                entry = last_neighbor
+                group = m.groupdict()
+
+                entry.setdefault("neighbor-up-time", {}).setdefault("#text", group["neighbor_up_time"])
+                entry.setdefault("neighbor-adjacency-time", {})\
+                    .setdefault("#text", group["neighbor_adjacency_time"])
+
+                continue
+
+            #     28985       BVL         Protected
+            m = p4.match(line)
+            if m:
+                last_neighbor = ret_dict["ospf-neighbor-information"]["ospf-neighbor"][-1]
+
+                entry = {}
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                last_neighbor.setdefault("adj-sid-list", {})\
+                    .setdefault("spring-adjacency-labels", []).append(entry)
+                continue
+
+            # Topology default (ID 0) -> Bidirectional
+            m = p5.match(line)
+            if m:
+                last_neighbor = ret_dict["ospf-neighbor-information"]["ospf-neighbor"][-1]
+
+                entry = last_neighbor.setdefault("ospf-neighbor-topology", {})
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                continue
+
+        return ret_dict
+
+class ShowOspfInterfaceExtensiveSchema(MetaParser):
+    """ Schema for:
+            * show ospf interface extensive
+    """
+
+    def validate_ospf_interface_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-interface is not a list')
+        neighbor_schema = Schema({
+                "address-mask": str,
+                "adj-count": str,
+                "authentication-type": str,
+                "bdr-id": str,
+                "dead-interval": str,
+                "dr-id": str,
+                "hello-interval": str,
+                "interface-address": str,
+                "interface-cost": str,
+                "interface-name": str,
+                "interface-type": str,
+                "mtu": str,
+                "neighbor-count": str,
+                "ospf-area": str,
+                "ospf-interface-protection-type": str,
+                "ospf-interface-state": str,
+                Optional("ospf-interface-tilfa-prot-fate"): str,
+                Optional("ospf-interface-tilfa-prot-link"): str,
+                Optional("ospf-interface-tilfa-prot-node"): str,
+                Optional("ospf-interface-tilfa-prot-srlg"): str,
+                Optional("passive"): str,
+                Optional("dr-address"): str,
+                Optional("router-priority"): str,
+                "ospf-interface-topology": {
+                    "ospf-topology-id": str,
+                    "ospf-topology-metric": str,
+                    "ospf-topology-name": str,
+                    Optional("ospf-topology-passive"): bool,
+                },
+                "ospf-stub-type": str,
+                "retransmit-interval": str
+            })
+        for item in value:
+            neighbor_schema.validate(item)
+        return value
+
+    schema = {
+        "ospf-interface-information": {
+            "ospf-interface": Use(validate_ospf_interface_list),
+        }
+    }
+
+class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
+    """ Parser for:
+            * show ospf interface extensive
+    """
+    cli_command = 'show ospf interface extensive'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # ge-0/0/0.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
+        p1 = re.compile(r'^(?P<interface_name>\S+) +(?P<ospf_interface_state>\S+)'
+            r' +(?P<ospf_area>[\d\.]+) +(?P<dr_id>[\d\.]+) +(?P<bdr_id>[\d\.]+) +'
+            r'(?P<neighbor_count>\d+)$')
+
+        # Type: P2P, Address: 10.189.5.93, Mask: 255.255.255.252, MTU: 1500, Cost: 5
+        p2 = re.compile(r'^Type: +(?P<interface_type>\S+), +Address: +(?P<interface_address>[\w\.\:]+)'
+        r', +Mask: +(?P<address_mask>[\d\.]+), +MTU: +(?P<mtu>\d+), +Cost: +(?P<interface_cost>\d+)$')
+
+        # Adj count: 1
+        # Adj count: 0, Passive
+        p3 = re.compile(r'^Adj +count: +(?P<adj_count>\d+)(, +(?P<passive>\S+))?$')
+
+        # Hello: 10, Dead: 40, ReXmit: 5, Not Stub
+        p4 = re.compile(r'^Hello: +(?P<hello_interval>\d+), +Dead: +(?P<dead_interval>\d+)'
+            r', +ReXmit: +(?P<retransmit_interval>\d+), +(?P<ospf_stub_type>.+)$')
+
+        # Auth type: None
+        p5 = re.compile(r'^Auth +type: +(?P<authentication_type>\S+)$')
+
+        # Protection type: Post Convergence
+        p6 = re.compile(r'^Protection +type: +(?P<ospf_interface_protection_type>.+)$')
+
+        # Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 100
+        p7 = re.compile(r'^Post +convergence +protection: +(?P<ospf_interface_tilfa_prot_link>\S+)'
+            r', +Fate +sharing: +(?P<ospf_interface_tilfa_prot_srlg>\S+), +SRLG: +'
+            r'(?P<ospf_interface_tilfa_prot_fate>\S+), +Node +cost: +'
+            r'(?P<ospf_interface_tilfa_prot_node>\S+)$')
+
+        # Topology default (ID 0) -> Cost: 5
+        # Topology default (ID 0) -> Passive, Cost: 100
+        p8 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\d+)\)'
+        r' +->(?P<ospf_topology_passive> +Passive,)? +Cost: +(?P<ospf_topology_metric>\d+)$')
+
+        # DR addr: 10.189.5.252, Priority: 128
+        p9 = re.compile(r'^DR +addr: +(?P<dr_address>[\d\.]+), +Priority: +'
+            r'(?P<router_priority>\d+)$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # ge-0/0/0.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
+            m = p1.match(line)
+            if m:
+                interface_list = ret_dict.setdefault("ospf-interface-information", {})\
+                    .setdefault("ospf-interface", [])
+                group = m.groupdict()
+                entry = {}
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                interface_list.append(entry)
+                continue
+
+            # Type: P2P, Address: 10.189.5.93, Mask: 255.255.255.252, MTU: 1500, Cost: 5
+            m = p2.match(line)
+            if m:
+                last_interface = ret_dict["ospf-interface-information"]\
+                    ["ospf-interface"][-1]
+                group = m.groupdict()
+                entry = last_interface
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+                continue
+
+            # Adj count: 1
+            m = p3.match(line)
+            if m:
+                last_interface = ret_dict["ospf-interface-information"]\
+                    ["ospf-interface"][-1]
+                group = m.groupdict()
+                entry = last_interface
+                entry['adj-count'] = group['adj_count']
+
+                if group['passive']:
+                    entry['passive'] = group['passive']
+
+                continue
+
+            # Hello: 10, Dead: 40, ReXmit: 5, Not Stub
+            m = p4.match(line)
+            if m:
+                last_interface = ret_dict["ospf-interface-information"]\
+                    ["ospf-interface"][-1]
+                group = m.groupdict()
+                entry = last_interface
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+                continue
+
+            # Auth type: None
+            m = p5.match(line)
+            if m:
+                last_interface = ret_dict["ospf-interface-information"]\
+                    ["ospf-interface"][-1]
+                group = m.groupdict()
+                entry = last_interface
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+                continue
+
+            # Protection type: Post Convergence
+            m = p6.match(line)
+            if m:
+                last_interface = ret_dict["ospf-interface-information"]\
+                    ["ospf-interface"][-1]
+                group = m.groupdict()
+                entry = last_interface
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+                continue
+
+            # Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 100
+            m = p7.match(line)
+            if m:
+                last_interface = ret_dict["ospf-interface-information"]\
+                    ["ospf-interface"][-1]
+                group = m.groupdict()
+                entry = last_interface
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+                continue
+
+            # Topology default (ID 0) -> Cost: 5
+            m = p8.match(line)
+            if m:
+                last_interface = ret_dict["ospf-interface-information"]\
+                    ["ospf-interface"][-1]
+                group = m.groupdict()
+                entry = last_interface
+                entry = entry.setdefault('ospf-interface-topology', {})
+
+                entry['ospf-topology-name'] = group['ospf_topology_name']
+                entry['ospf-topology-id'] = group['ospf_topology_id']
+                entry['ospf-topology-metric'] = group['ospf_topology_metric']
+
+                if group['ospf_topology_passive']:
+                    entry['ospf-topology-passive'] = True
+
+                continue
+
+            # DR addr: 10.189.5.252, Priority: 128
+            m = p9.match(line)
+            if m:
+                last_interface = ret_dict["ospf-interface-information"]\
+                    ["ospf-interface"][-1]
+                group = m.groupdict()
+                entry = last_interface
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+
+                continue
+
+        return ret_dict
+
+class ShowOspfNeighborDetail(ShowOspfNeighborExtensive):
+    """ Parser for:
+            * show ospf neighbor detail
+    """
+    cli_command = 'show ospf neighbor detail'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        return super().cli(output=out)

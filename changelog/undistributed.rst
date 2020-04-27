@@ -185,6 +185,14 @@
         * show chassis hardware extensive no-forwarding
     * Added ShowOspfDatabaseAdvertisingRouterSelfDetailSchema for:
         * show ospf database advertising-router self detail
+    * Added ShowOspfInterfaceExtensiveSchema for:
+        * show ospf interface extensive
+    * ShowOspfNeighborExtensive
+        * show ospf neighbor extensive
+    * ShowOspfNeighborDetail
+        * show ospf neighbor detail
+    * Added ShowSnmpMibWalkSystem for:
+        * show snmp mib walk system
     * Added ShowFirewall for:
         * show firewall
     * Added ShowFirewallCounterFilter for:

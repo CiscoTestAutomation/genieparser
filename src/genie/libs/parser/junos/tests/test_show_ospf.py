@@ -20,7 +20,10 @@ from genie.libs.parser.junos.show_ospf import (ShowOspfInterface,
                                                ShowOspfOverview,
                                                ShowOspfOverviewExtensive,
                                                ShowOspfDatabaseAdvertisingRouterSelfDetail,
-                                               ShowOspfDatabaseExtensive)
+                                               ShowOspfDatabaseExtensive,
+                                               ShowOspfNeighborExtensive,
+                                               ShowOspfInterfaceExtensive,
+                                               ShowOspfNeighborDetail)
 
 
 class test_show_ospf_interface(unittest.TestCase):
@@ -10589,6 +10592,536 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+class TestShowOspfNeighborExtensive(unittest.TestCase):
+    """ Unit tests for:
+            * show ospf neighbor extensive
+    """
+
+    device = Device(name='aDevice')
+
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show ospf neighbor extensive
+        Address          Interface              State     ID               Pri  Dead
+        10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    39
+        Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+        Up 3w0d 16:50:35, adjacent 3w0d 16:50:35
+        SPRING Adjacency Labels:
+
+            Label       Flags       Adj-Sid-Type
+
+            28985       BVL         Protected
+
+            28986       VL          UnProtected
+
+        Topology default (ID 0) -> Bidirectional
+        10.169.14.121   ge-0/0/1.0             Full      10.169.14.240   128    31
+        Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+        Up 3w2d 03:12:20, adjacent 3w2d 03:12:15
+        SPRING Adjacency Labels:
+
+            Label       Flags       Adj-Sid-Type
+
+            2567        BVL         Protected
+
+            2568        VL          UnProtected
+
+        Topology default (ID 0) -> Bidirectional
+        10.19.198.26     ge-0/0/2.0             Full      10.19.198.239      1    39
+        Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+        Up 1w5d 20:40:14, adjacent 1w5d 20:40:14
+        SPRING Adjacency Labels:
+
+            Label       Flags       Adj-Sid-Type
+
+            167966      BVL         Protected
+
+            167967      VL          UnProtected
+
+        Topology default (ID 0) -> Bidirectional
+    '''}
+
+    golden_parsed_output = {
+        "ospf-neighbor-information": {
+            "ospf-neighbor": [
+                {
+                    "activity-timer": "39",
+                    "adj-sid-list": {
+                        "spring-adjacency-labels": [
+                            {"adj-sid-type": "Protected", "flags": "BVL", "label": "28985"},
+                            {
+                                "adj-sid-type": "UnProtected",
+                                "flags": "VL",
+                                "label": "28986",
+                            },
+                        ]
+                    },
+                    "bdr-address": "0.0.0.0",
+                    "dr-address": "0.0.0.0",
+                    "interface-name": "ge-0/0/0.0",
+                    "neighbor-address": "10.189.5.94",
+                    "neighbor-adjacency-time": {"#text": "3w0d " "16:50:35"},
+                    "neighbor-id": "10.189.5.253",
+                    "neighbor-priority": "128",
+                    "neighbor-up-time": {"#text": "3w0d " "16:50:35"},
+                    "options": "0x52",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-neighbor-state": "Full",
+                    "ospf-neighbor-topology": {
+                        "ospf-neighbor-topology-state": "Bidirectional",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-name": "default",
+                    },
+                },
+                {
+                    "activity-timer": "31",
+                    "adj-sid-list": {
+                        "spring-adjacency-labels": [
+                            {"adj-sid-type": "Protected", "flags": "BVL", "label": "2567"},
+                            {"adj-sid-type": "UnProtected", "flags": "VL", "label": "2568"},
+                        ]
+                    },
+                    "bdr-address": "0.0.0.0",
+                    "dr-address": "0.0.0.0",
+                    "interface-name": "ge-0/0/1.0",
+                    "neighbor-address": "10.169.14.121",
+                    "neighbor-adjacency-time": {"#text": "3w2d " "03:12:15"},
+                    "neighbor-id": "10.169.14.240",
+                    "neighbor-priority": "128",
+                    "neighbor-up-time": {"#text": "3w2d " "03:12:20"},
+                    "options": "0x52",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-neighbor-state": "Full",
+                    "ospf-neighbor-topology": {
+                        "ospf-neighbor-topology-state": "Bidirectional",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-name": "default",
+                    },
+                },
+                {
+                    "activity-timer": "39",
+                    "adj-sid-list": {
+                        "spring-adjacency-labels": [
+                            {
+                                "adj-sid-type": "Protected",
+                                "flags": "BVL",
+                                "label": "167966",
+                            },
+                            {
+                                "adj-sid-type": "UnProtected",
+                                "flags": "VL",
+                                "label": "167967",
+                            },
+                        ]
+                    },
+                    "bdr-address": "0.0.0.0",
+                    "dr-address": "0.0.0.0",
+                    "interface-name": "ge-0/0/2.0",
+                    "neighbor-address": "10.19.198.26",
+                    "neighbor-adjacency-time": {"#text": "1w5d " "20:40:14"},
+                    "neighbor-id": "10.19.198.239",
+                    "neighbor-priority": "1",
+                    "neighbor-up-time": {"#text": "1w5d " "20:40:14"},
+                    "options": "0x52",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-neighbor-state": "Full",
+                    "ospf-neighbor-topology": {
+                        "ospf-neighbor-topology-state": "Bidirectional",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-name": "default",
+                    },
+                },
+            ]
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfNeighborExtensive(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspfNeighborExtensive(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+class TestShowOspfInterfaceExtensive(unittest.TestCase):
+    """ Unit tests for:
+            * show ospf interface extensive
+    """
+
+    maxDiff = None
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+                show ospf interface extensive
+        Interface           State   Area            DR ID           BDR ID          Nbrs
+        ge-0/0/0.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
+        Type: P2P, Address: 10.189.5.93, Mask: 255.255.255.252, MTU: 1500, Cost: 5
+        Adj count: 1
+        Hello: 10, Dead: 40, ReXmit: 5, Not Stub
+        Auth type: None
+        Protection type: Post Convergence
+        Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 100
+        Topology default (ID 0) -> Cost: 5
+        ge-0/0/1.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
+        Type: P2P, Address: 10.169.14.122, Mask: 255.255.255.252, MTU: 1500, Cost: 100
+        Adj count: 1
+        Hello: 10, Dead: 40, ReXmit: 5, Not Stub
+        Auth type: None
+        Protection type: Post Convergence
+        Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 100
+        Topology default (ID 0) -> Cost: 100
+        ge-0/0/2.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
+        Type: P2P, Address: 10.19.198.25, Mask: 255.255.255.252, MTU: 1500, Cost: 1000
+        Adj count: 1
+        Hello: 10, Dead: 40, ReXmit: 5, Not Stub
+        Auth type: None
+        Protection type: Post Convergence
+        Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 100
+        Topology default (ID 0) -> Cost: 1000
+        ge-0/0/3.0          DRother 0.0.0.8         0.0.0.0         0.0.0.0            0
+        Type: LAN, Address: 10.55.0.254, Mask: 255.255.255.0, MTU: 1500, Cost: 100
+        Adj count: 0, Passive
+        Hello: 10, Dead: 40, ReXmit: 5, Not Stub
+        Auth type: None
+        Protection type: None
+        Topology default (ID 0) -> Passive, Cost: 100
+        lo0.0               DR      0.0.0.8         10.189.5.252    0.0.0.0            0
+        Type: LAN, Address: 10.189.5.252, Mask: 255.255.255.255, MTU: 65535, Cost: 0
+        DR addr: 10.189.5.252, Priority: 128
+        Adj count: 0
+        Hello: 10, Dead: 40, ReXmit: 5, Not Stub
+        Auth type: None
+        Protection type: None
+        Topology default (ID 0) -> Cost: 0
+        '''}
+
+    golden_parsed_output = {
+        "ospf-interface-information": {
+            "ospf-interface": [
+                {
+                    "address-mask": "255.255.255.252",
+                    "adj-count": "1",
+                    "authentication-type": "None",
+                    "bdr-id": "0.0.0.0",
+                    "dead-interval": "40",
+                    "dr-id": "0.0.0.0",
+                    "hello-interval": "10",
+                    "interface-address": "10.189.5.93",
+                    "interface-cost": "5",
+                    "interface-name": "ge-0/0/0.0",
+                    "interface-type": "P2P",
+                    "mtu": "1500",
+                    "neighbor-count": "1",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-interface-protection-type": "Post Convergence",
+                    "ospf-interface-state": "PtToPt",
+                    "ospf-interface-tilfa-prot-fate": "No",
+                    "ospf-interface-tilfa-prot-link": "Enabled",
+                    "ospf-interface-tilfa-prot-node": "100",
+                    "ospf-interface-tilfa-prot-srlg": "No",
+                    "ospf-interface-topology": {
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "5",
+                        "ospf-topology-name": "default"
+                    },
+                    "ospf-stub-type": "Not Stub",
+                    "retransmit-interval": "5"
+                },
+                {
+                    "address-mask": "255.255.255.252",
+                    "adj-count": "1",
+                    "authentication-type": "None",
+                    "bdr-id": "0.0.0.0",
+                    "dead-interval": "40",
+                    "dr-id": "0.0.0.0",
+                    "hello-interval": "10",
+                    "interface-address": "10.169.14.122",
+                    "interface-cost": "100",
+                    "interface-name": "ge-0/0/1.0",
+                    "interface-type": "P2P",
+                    "mtu": "1500",
+                    "neighbor-count": "1",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-interface-protection-type": "Post Convergence",
+                    "ospf-interface-state": "PtToPt",
+                    "ospf-interface-tilfa-prot-fate": "No",
+                    "ospf-interface-tilfa-prot-link": "Enabled",
+                    "ospf-interface-tilfa-prot-node": "100",
+                    "ospf-interface-tilfa-prot-srlg": "No",
+                    "ospf-interface-topology": {
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "100",
+                        "ospf-topology-name": "default"
+                    },
+                    "ospf-stub-type": "Not Stub",
+                    "retransmit-interval": "5"
+                },
+                {
+                    "address-mask": "255.255.255.252",
+                    "adj-count": "1",
+                    "authentication-type": "None",
+                    "bdr-id": "0.0.0.0",
+                    "dead-interval": "40",
+                    "dr-id": "0.0.0.0",
+                    "hello-interval": "10",
+                    "interface-address": "10.19.198.25",
+                    "interface-cost": "1000",
+                    "interface-name": "ge-0/0/2.0",
+                    "interface-type": "P2P",
+                    "mtu": "1500",
+                    "neighbor-count": "1",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-interface-protection-type": "Post Convergence",
+                    "ospf-interface-state": "PtToPt",
+                    "ospf-interface-tilfa-prot-fate": "No",
+                    "ospf-interface-tilfa-prot-link": "Enabled",
+                    "ospf-interface-tilfa-prot-node": "100",
+                    "ospf-interface-tilfa-prot-srlg": "No",
+                    "ospf-interface-topology": {
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "1000",
+                        "ospf-topology-name": "default"
+                    },
+                    "ospf-stub-type": "Not Stub",
+                    "retransmit-interval": "5"
+                },
+                {
+                    "address-mask": "255.255.255.0",
+                    "adj-count": "0",
+                    "authentication-type": "None",
+                    "bdr-id": "0.0.0.0",
+                    "dead-interval": "40",
+                    "dr-id": "0.0.0.0",
+                    "hello-interval": "10",
+                    "interface-address": "10.55.0.254",
+                    "interface-cost": "100",
+                    "interface-name": "ge-0/0/3.0",
+                    "interface-type": "LAN",
+                    "mtu": "1500",
+                    "neighbor-count": "0",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-interface-protection-type": "None",
+                    "ospf-interface-state": "DRother",
+                    "ospf-interface-topology": {
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "100",
+                        "ospf-topology-name": "default",
+                        "ospf-topology-passive": True
+                    },
+                    "ospf-stub-type": "Not Stub",
+                    "passive": "Passive",
+                    "retransmit-interval": "5"
+                },
+                {
+                    "address-mask": "255.255.255.255",
+                    "adj-count": "0",
+                    "authentication-type": "None",
+                    "bdr-id": "0.0.0.0",
+                    "dead-interval": "40",
+                    "dr-address": "10.189.5.252",
+                    "dr-id": "10.189.5.252",
+                    "hello-interval": "10",
+                    "interface-address": "10.189.5.252",
+                    "interface-cost": "0",
+                    "interface-name": "lo0.0",
+                    "interface-type": "LAN",
+                    "mtu": "65535",
+                    "neighbor-count": "0",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-interface-protection-type": "None",
+                    "ospf-interface-state": "DR",
+                    "ospf-interface-topology": {
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "0",
+                        "ospf-topology-name": "default"
+                    },
+                    "ospf-stub-type": "Not Stub",
+                    "retransmit-interval": "5",
+                    "router-priority": "128"
+                }
+            ]
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfInterfaceExtensive(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspfInterfaceExtensive(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+class TestShowOspfNeighborDetail(unittest.TestCase):
+    """ Unit tests for:
+            * show ospf neighbor detail
+    """
+
+    device = Device(name='aDevice')
+
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show ospf neighbor detail
+        Address          Interface              State     ID               Pri  Dead
+        10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    39
+        Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+        Up 3w0d 16:50:35, adjacent 3w0d 16:50:35
+        SPRING Adjacency Labels:
+
+            Label       Flags       Adj-Sid-Type
+
+            28985       BVL         Protected
+
+            28986       VL          UnProtected
+
+        Topology default (ID 0) -> Bidirectional
+        10.169.14.121   ge-0/0/1.0             Full      10.169.14.240   128    31
+        Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+        Up 3w2d 03:12:20, adjacent 3w2d 03:12:15
+        SPRING Adjacency Labels:
+
+            Label       Flags       Adj-Sid-Type
+
+            2567        BVL         Protected
+
+            2568        VL          UnProtected
+
+        Topology default (ID 0) -> Bidirectional
+        10.19.198.26     ge-0/0/2.0             Full      10.19.198.239      1    39
+        Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+        Up 1w5d 20:40:14, adjacent 1w5d 20:40:14
+        SPRING Adjacency Labels:
+
+            Label       Flags       Adj-Sid-Type
+
+            167966      BVL         Protected
+
+            167967      VL          UnProtected
+
+        Topology default (ID 0) -> Bidirectional
+    '''}
+
+    golden_parsed_output = {
+        "ospf-neighbor-information": {
+            "ospf-neighbor": [
+                {
+                    "activity-timer": "39",
+                    "adj-sid-list": {
+                        "spring-adjacency-labels": [
+                            {"adj-sid-type": "Protected", "flags": "BVL", "label": "28985"},
+                            {
+                                "adj-sid-type": "UnProtected",
+                                "flags": "VL",
+                                "label": "28986",
+                            },
+                        ]
+                    },
+                    "bdr-address": "0.0.0.0",
+                    "dr-address": "0.0.0.0",
+                    "interface-name": "ge-0/0/0.0",
+                    "neighbor-address": "10.189.5.94",
+                    "neighbor-adjacency-time": {"#text": "3w0d " "16:50:35"},
+                    "neighbor-id": "10.189.5.253",
+                    "neighbor-priority": "128",
+                    "neighbor-up-time": {"#text": "3w0d " "16:50:35"},
+                    "options": "0x52",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-neighbor-state": "Full",
+                    "ospf-neighbor-topology": {
+                        "ospf-neighbor-topology-state": "Bidirectional",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-name": "default",
+                    },
+                },
+                {
+                    "activity-timer": "31",
+                    "adj-sid-list": {
+                        "spring-adjacency-labels": [
+                            {"adj-sid-type": "Protected", "flags": "BVL", "label": "2567"},
+                            {"adj-sid-type": "UnProtected", "flags": "VL", "label": "2568"},
+                        ]
+                    },
+                    "bdr-address": "0.0.0.0",
+                    "dr-address": "0.0.0.0",
+                    "interface-name": "ge-0/0/1.0",
+                    "neighbor-address": "10.169.14.121",
+                    "neighbor-adjacency-time": {"#text": "3w2d " "03:12:15"},
+                    "neighbor-id": "10.169.14.240",
+                    "neighbor-priority": "128",
+                    "neighbor-up-time": {"#text": "3w2d " "03:12:20"},
+                    "options": "0x52",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-neighbor-state": "Full",
+                    "ospf-neighbor-topology": {
+                        "ospf-neighbor-topology-state": "Bidirectional",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-name": "default",
+                    },
+                },
+                {
+                    "activity-timer": "39",
+                    "adj-sid-list": {
+                        "spring-adjacency-labels": [
+                            {
+                                "adj-sid-type": "Protected",
+                                "flags": "BVL",
+                                "label": "167966",
+                            },
+                            {
+                                "adj-sid-type": "UnProtected",
+                                "flags": "VL",
+                                "label": "167967",
+                            },
+                        ]
+                    },
+                    "bdr-address": "0.0.0.0",
+                    "dr-address": "0.0.0.0",
+                    "interface-name": "ge-0/0/2.0",
+                    "neighbor-address": "10.19.198.26",
+                    "neighbor-adjacency-time": {"#text": "1w5d " "20:40:14"},
+                    "neighbor-id": "10.19.198.239",
+                    "neighbor-priority": "1",
+                    "neighbor-up-time": {"#text": "1w5d " "20:40:14"},
+                    "options": "0x52",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-neighbor-state": "Full",
+                    "ospf-neighbor-topology": {
+                        "ospf-neighbor-topology-state": "Bidirectional",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-name": "default",
+                    },
+                },
+            ]
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfNeighborDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspfNeighborDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == "__main__":
     unittest.main()
