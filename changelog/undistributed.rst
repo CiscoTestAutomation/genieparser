@@ -187,12 +187,22 @@
         * show ospf database advertising-router self detail
     * Added ShowOspfInterfaceExtensiveSchema for:
         * show ospf interface extensive
+    * ShowOspfNeighborExtensive
+        * show ospf neighbor extensive
+    * Added ShowSnmpMibWalkSystem for:
+        * show snmp mib walk system
+    * Added ShowFirewall for:
+        * show firewall
+    * Added ShowFirewallCounterFilter for:
+        * show firewall counter filter v6_local-access-control v6_last_policer
     * Added ShowOspfDatabaseExtensive for:
         * show ospf database extensive
     * ShowTaskReplication for:
         * show task replication
     * Added ShowVersion in show_platform.py for:
         * show version
+    * Added ShowIpv6Neighbors for:
+        * show ipv6 neighbors
 
 
 
