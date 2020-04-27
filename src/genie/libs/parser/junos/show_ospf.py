@@ -20,6 +20,7 @@ JunOs parsers for the following show commands:
     * show ospf database advertising-router self detail
     * show ospf neighbor extensive
     * show ospf neighbor detail
+    * show ospf neighbor {neighbor} detail
     * show ospf interface extensive
 """
 
