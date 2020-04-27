@@ -109,8 +109,8 @@ class ShowRoute(ShowRouteSchema):
 
         # S* 0.0.0.0 0.0.0.0 via 10.16.251.1, outside
         # S 0.0.0.1 0.0.0.0 [10/5] via 10.16.255.1, outside
-        # O        20.54.65.0 255.255.255.0 [110/20] via 20.54.64.35, 7w0d, inside
-        # D EX     20.54.70.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
+        # O        10.121.65.0 255.255.255.0 [110/20] via 10.121.64.35, 7w0d, inside
+        # D EX     10.121.70.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
         p1 = re.compile(r'^(?P<code>(?!is)(?!via)[\w\*]+)\s*'
                         r'(?P<code2>[A-Z]+)?\s*'
                         r'(?P<network>\d+.\d+.\d+.\d+)\s*'
@@ -120,7 +120,7 @@ class ShowRoute(ShowRouteSchema):
                         r'((?P<date>[\w\d]+),)?\s*(?P<context_name>[\S\s]+)$')
 
         # via 10.16.251.2, pod1000
-        # [110/20] via 20.54.64.34, 7w0d, inside
+        # [110/20] via 10.121.64.34, 7w0d, inside
         p2 = re.compile(r'^(?P<network>\d+.\d+.\d+.\d+)?'
                         r'(\[(?P<route_preference>[\d\/]+)\])?\s*?'
                         r'(?P<route_check>[\S\s]*)\s'
@@ -149,8 +149,8 @@ class ShowRoute(ShowRouteSchema):
 
             # S* 0.0.0.0 0.0.0.0 via 10.16.251.1, outside
             # S 0.0.0.1 0.0.0.0 [10/5] via 10.16.255.1, outside
-            # O        20.54.65.0 255.255.255.0 [110/20] via 20.54.64.35, 7w0d, inside
-            # D EX     20.54.68.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
+            # O        10.121.65.0 255.255.255.0 [110/20] via 10.121.64.35, 7w0d, inside
+            # D EX     10.121.68.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -220,7 +220,7 @@ class ShowRoute(ShowRouteSchema):
                 continue
 
             # via 10.16.251.2, pod1000
-            # [110/20] via 20.54.64.34, 7w0d, inside
+            # [110/20] via 10.121.64.34, 7w0d, inside
             m = p2.match(line)
             if m:
                 groups = m.groupdict()

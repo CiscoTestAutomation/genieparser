@@ -203,17 +203,17 @@ class test_show_ip_route(unittest.TestCase):
 
     golden_output_2 = {'execute.return_value': '''
     
-    O        20.54.65.0 255.255.255.0 [110/20] via 20.54.64.35, 7w0d, inside
-                                       [110/20] via 20.54.64.34, 7w0d, inside
-    D EX     20.54.67.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
+    O        10.121.65.0 255.255.255.0 [110/20] via 10.121.64.35, 7w0d, inside
+                                       [110/20] via 10.121.64.34, 7w0d, inside
+    D EX     10.121.67.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
                                        [170/345856] via 10.9.193.98, 2w1d, esavpn
-    D EX     20.54.68.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
+    D EX     10.121.68.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
                                        [170/345856] via 10.9.193.98, 2w1d, esavpn
-    O        20.54.69.0 255.255.255.0 [110/20] via 20.54.64.35, 7w0d, inside
-                                       [110/20] via 20.54.64.34, 7w0d, inside
-    D EX     20.54.70.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
+    O        10.121.69.0 255.255.255.0 [110/20] via 10.121.64.35, 7w0d, inside
+                                       [110/20] via 10.121.64.34, 7w0d, inside
+    D EX     10.121.70.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
                                        [170/345856] via 10.9.193.98, 2w1d, esavpn
-    D EX     20.54.71.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
+    D EX     10.121.71.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
                                        [170/345856] via 10.9.193.98, 2w1d, esavpn
     '''}
 
@@ -223,7 +223,7 @@ class test_show_ip_route(unittest.TestCase):
                 'address_family': {
                     'ipv4': {
                         'routes': {
-                            '20.54.68.0/24': {
+                            '10.121.68.0/24': {
                                 'candidate_default': False,
                                 'next_hop': {
                                     'next_hop_list': {
@@ -244,10 +244,10 @@ class test_show_ip_route(unittest.TestCase):
                                 'source_protocol_codes': 'D EX',
                                 'metric': 345856,
                                 'source_protocol': 'ospf',
-                                'route': '20.54.68.0/24',
+                                'route': '10.121.68.0/24',
                                 'route_preference': 170,
                             },
-                            '20.54.67.0/24': {
+                            '10.121.67.0/24': {
                                 'candidate_default': False,
                                 'next_hop': {
                                     'next_hop_list': {
@@ -268,10 +268,10 @@ class test_show_ip_route(unittest.TestCase):
                                 'source_protocol_codes': 'D EX',
                                 'metric': 345856,
                                 'source_protocol': 'ospf',
-                                'route': '20.54.67.0/24',
+                                'route': '10.121.67.0/24',
                                 'route_preference': 170,
                             },
-                            '20.54.70.0/24': {
+                            '10.121.70.0/24': {
                                 'candidate_default': False,
                                 'next_hop': {
                                     'next_hop_list': {
@@ -292,21 +292,21 @@ class test_show_ip_route(unittest.TestCase):
                                 'source_protocol_codes': 'D EX',
                                 'metric': 345856,
                                 'source_protocol': 'ospf',
-                                'route': '20.54.70.0/24',
+                                'route': '10.121.70.0/24',
                                 'route_preference': 170,
                             },
-                            '20.54.65.0/24': {
+                            '10.121.65.0/24': {
                                 'candidate_default': False,
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '20.54.64.35',
+                                            'next_hop': '10.121.64.35',
                                             'outgoing_interface_name': 'inside',
                                         },
                                         2: {
                                             'index': 2,
-                                            'next_hop': '20.54.64.34',
+                                            'next_hop': '10.121.64.34',
                                             'outgoing_interface_name': 'inside',
                                         },
                                     },
@@ -316,21 +316,21 @@ class test_show_ip_route(unittest.TestCase):
                                 'source_protocol_codes': 'O',
                                 'metric': 20,
                                 'source_protocol': 'ospf',
-                                'route': '20.54.65.0/24',
+                                'route': '10.121.65.0/24',
                                 'route_preference': 110,
                             },
-                            '20.54.69.0/24': {
+                            '10.121.69.0/24': {
                                 'candidate_default': False,
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '20.54.64.35',
+                                            'next_hop': '10.121.64.35',
                                             'outgoing_interface_name': 'inside',
                                         },
                                         2: {
                                             'index': 2,
-                                            'next_hop': '20.54.64.34',
+                                            'next_hop': '10.121.64.34',
                                             'outgoing_interface_name': 'inside',
                                         },
                                     },
@@ -340,10 +340,10 @@ class test_show_ip_route(unittest.TestCase):
                                 'source_protocol_codes': 'O',
                                 'metric': 20,
                                 'source_protocol': 'ospf',
-                                'route': '20.54.69.0/24',
+                                'route': '10.121.69.0/24',
                                 'route_preference': 110,
                             },
-                            '20.54.71.0/24': {
+                            '10.121.71.0/24': {
                                 'candidate_default': False,
                                 'next_hop': {
                                     'next_hop_list': {
@@ -364,7 +364,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'source_protocol_codes': 'D EX',
                                 'metric': 345856,
                                 'source_protocol': 'ospf',
-                                'route': '20.54.71.0/24',
+                                'route': '10.121.71.0/24',
                                 'route_preference': 170,
                             },
                         },
