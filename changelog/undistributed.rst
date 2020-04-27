@@ -195,6 +195,8 @@
         * show task replication
     * Added ShowVersion in show_platform.py for:
         * show version
+    * Added ShowIpv6Neighbors for:
+        * show ipv6 neighbors
 
 
 
