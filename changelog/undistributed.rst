@@ -185,6 +185,10 @@
         * show chassis hardware extensive no-forwarding
     * Added ShowOspfDatabaseAdvertisingRouterSelfDetailSchema for:
         * show ospf database advertising-router self detail
+    * Added ShowFirewall for:
+        * show firewall
+    * Added ShowFirewallCounterFilter for:
+        * show firewall counter filter v6_local-access-control v6_last_policer
     * Added ShowOspfDatabaseExtensive for:
         * show ospf database extensive
     * ShowTaskReplication for:
