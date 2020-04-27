@@ -97,7 +97,7 @@
     * Added ShowArpNoResolve for:
         * show arp no-resolve
     * Added ShowOspfDatabase for:
-        * show ospf database 
+        * show ospf database
     * Added ShowOspfDatabaseSummary for:
         * show ospf database summary
     * Added ShowOspfDatabaseExternalExtensive for:
@@ -147,8 +147,10 @@
         * show system commit
     * Added ShowSystemQueues for:
         * show system queues
-    # Added ShowSystemStorage for:
+    * Added ShowSystemStorage for:
         * show system storage
+    * Added ShowSystemStorageNoForwarding for:
+        * show system storage no-forwarding
     * Added ShowSystemQueuesNoForwarding for:
         * show system queues no-forwarding
     * Added ShowPfeStatisticsTraffic for:
@@ -183,6 +185,14 @@
         * show chassis hardware extensive no-forwarding
     * Added ShowOspfDatabaseAdvertisingRouterSelfDetailSchema for:
         * show ospf database advertising-router self detail
+    * Added ShowFirewall for:
+        * show firewall
+    * Added ShowFirewallCounterFilter for:
+        * show firewall counter filter v6_local-access-control v6_last_policer
+    * Added ShowOspfDatabaseExtensive for:
+        * show ospf database extensive
+    * ShowTaskReplication for:
+        * show task replication
     * Added ShowVersion in show_platform.py for:
         * show version
 
