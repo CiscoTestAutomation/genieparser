@@ -11,6 +11,7 @@ from genie.metaparser.util.schemaengine import Schema, \
                                                 Any, \
                                                 Optional
 
+
 # =============================================
 # Schema for 'show route'
 # =============================================
@@ -96,7 +97,7 @@ class ShowRoute(ShowRouteSchema):
 
     def cli(self, output=None):
         if output is None:
-            # excute command to get output
+            # execute command to get output
             out = self.device.execute(self.cli_command)
         else:
             out = output

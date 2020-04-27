@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import Mock
+import genie.gre
 
 # ATS
 from pyats.topology import Device
@@ -9,6 +10,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 
 from genie.libs.parser.asa.show_route import ShowRoute
 
+
 # ============================================
 # unit test for 'show route'
 # =============================================
@@ -17,6 +19,7 @@ class test_show_ip_route(unittest.TestCase):
        unit test for show route
     '''
     device = Device(name='aDevice')
+    maxDiff = None
     empty_output = {'execute.return_value': ''}
  
     golden_parsed_output = {
@@ -199,6 +202,22 @@ class test_show_ip_route(unittest.TestCase):
                                 is directly connected, pod3000
           '''}
 
+    golden_output_2 = {'execute.return_value': '''
+    
+    O        20.54.65.0 255.255.255.0 [110/20] via 20.54.64.35, 7w0d, inside
+                                       [110/20] via 20.54.64.34, 7w0d, inside
+    D EX     20.54.67.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
+                                       [170/345856] via 10.9.193.98, 2w1d, esavpn
+    D EX     20.54.68.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
+                                       [170/345856] via 10.9.193.98, 2w1d, esavpn
+    O        20.54.69.0 255.255.255.0 [110/20] via 20.54.64.35, 7w0d, inside
+                                       [110/20] via 20.54.64.34, 7w0d, inside
+    D EX     20.54.70.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
+                                       [170/345856] via 10.9.193.98, 2w1d, esavpn
+    D EX     20.54.71.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
+                                       [170/345856] via 10.9.193.98, 2w1d, esavpn
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRoute(device=self.device)
@@ -206,11 +225,22 @@ class test_show_ip_route(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         route_obj = ShowRoute(device=self.device)
         parsed_output = route_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        route_obj = ShowRoute(device=self.device)
+        import re; re.reset();
+        parsed_output = route_obj.parse()
+        print(re.colour_output());
+        re.reset()
+        import pdb
+        pdb.set_trace()
+
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 if __name__ == '__main__':
     unittest.main()
