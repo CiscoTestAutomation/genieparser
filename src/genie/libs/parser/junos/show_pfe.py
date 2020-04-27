@@ -2,6 +2,7 @@
 
 JunOs parsers for the following show commands:
     * show pfe statistics traffic
+    * show pfe statistics ip icmp
 """
 
 # Python
@@ -658,3 +659,53 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                 continue
 
         return ret_dict
+
+class ShowPfeStatisticsIpIcmpSchema(MetaParser):
+    """ Schema for:
+            * show pfe statistics ip icmp
+    """
+
+    schema = {
+        "pfe-statistics": {
+            "icmp-statistics": {
+                "requests": str,
+                "network-unreachables": str,
+                "ttl-expired": str,
+                "ttl-captured": str,
+                "redirects": str,
+                "mtu-exceeded": str,
+                "icmp-option-handoffs": str,
+            },
+            "icmp-errors": {
+                "unknown-unreachables": str,
+                "unsupported-icmp-type": str,
+                "unprocessed-redirects": str,
+                "invalid-icmp-type": str,
+                "invalid-protocol": str,
+                "bad-input-interface": str,
+                "throttled-icmps": str,
+                "runts": str,
+            },
+            "icmp-discards": {
+                "multicasts": str,
+                "bad-source-addresses": str,
+                "bad-dest-addresses": str,
+                "ip-fragments": str,
+                "icmp-errors": str,
+            },
+        }
+    }
+
+class ShowPfeStatisticsIpIcmp(ShowPfeStatisticsIpIcmpSchema):
+    """ Parser for:
+            * show pfe statistics ip icmp
+    """
+    cli_command = 'show pfe statistics ip icmp'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
