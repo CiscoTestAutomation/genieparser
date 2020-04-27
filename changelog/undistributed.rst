@@ -187,6 +187,8 @@
         * show ospf database advertising-router self detail
     * ShowOspfNeighborExtensive
         * show ospf neighbor extensive
+    * Added ShowSnmpMibWalkSystem for:
+        * show snmp mib walk system
     * Added ShowFirewall for:
         * show firewall
     * Added ShowFirewallCounterFilter for:
@@ -197,6 +199,8 @@
         * show task replication
     * Added ShowVersion in show_platform.py for:
         * show version
+    * Added ShowIpv6Neighbors for:
+        * show ipv6 neighbors
 
 
 

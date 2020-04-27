@@ -2819,7 +2819,7 @@ class ShowOspfNeighborExtensive(ShowOspfNeighborExtensiveSchema):
         else:
             out = output
 
-        # 111.87.5.94      ge-0/0/0.0             Full      111.87.5.253     128    39
+        # 10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    39
         p1 = re.compile(r'^(?P<neighbor_address>[\d\.]+) +(?P<interface_name>\S+)'
             r' +(?P<ospf_neighbor_state>\S+) +(?P<neighbor_id>[\d\.]+) +'
             r'(?P<neighbor_priority>\d+) +(?P<activity_timer>\d+)$')
@@ -2844,7 +2844,7 @@ class ShowOspfNeighborExtensive(ShowOspfNeighborExtensiveSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 111.87.5.94      ge-0/0/0.0             Full      111.87.5.253     128    39
+            # 10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    39
             m = p1.match(line)
             if m:
                 neighbor_list = ret_dict.setdefault("ospf-neighbor-information", {})\

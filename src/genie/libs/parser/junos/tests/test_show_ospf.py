@@ -10604,7 +10604,7 @@ class TestShowOspfNeighborExtensive(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         show ospf neighbor extensive
         Address          Interface              State     ID               Pri  Dead
-        111.87.5.94      ge-0/0/0.0             Full      111.87.5.253     128    39
+        10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    39
         Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
         Up 3w0d 16:50:35, adjacent 3w0d 16:50:35
         SPRING Adjacency Labels:
@@ -10616,7 +10616,7 @@ class TestShowOspfNeighborExtensive(unittest.TestCase):
             28986       VL          UnProtected
 
         Topology default (ID 0) -> Bidirectional
-        106.187.14.121   ge-0/0/1.0             Full      106.187.14.240   128    31
+        10.169.14.121   ge-0/0/1.0             Full      10.169.14.240   128    31
         Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
         Up 3w2d 03:12:20, adjacent 3w2d 03:12:15
         SPRING Adjacency Labels:
@@ -10628,7 +10628,7 @@ class TestShowOspfNeighborExtensive(unittest.TestCase):
             2568        VL          UnProtected
 
         Topology default (ID 0) -> Bidirectional
-        27.86.198.26     ge-0/0/2.0             Full      27.86.198.239      1    39
+        10.19.198.26     ge-0/0/2.0             Full      10.19.198.239      1    39
         Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
         Up 1w5d 20:40:14, adjacent 1w5d 20:40:14
         SPRING Adjacency Labels:
@@ -10660,9 +10660,9 @@ class TestShowOspfNeighborExtensive(unittest.TestCase):
                     "bdr-address": "0.0.0.0",
                     "dr-address": "0.0.0.0",
                     "interface-name": "ge-0/0/0.0",
-                    "neighbor-address": "111.87.5.94",
+                    "neighbor-address": "10.189.5.94",
                     "neighbor-adjacency-time": {"#text": "3w0d " "16:50:35"},
-                    "neighbor-id": "111.87.5.253",
+                    "neighbor-id": "10.189.5.253",
                     "neighbor-priority": "128",
                     "neighbor-up-time": {"#text": "3w0d " "16:50:35"},
                     "options": "0x52",
@@ -10685,9 +10685,9 @@ class TestShowOspfNeighborExtensive(unittest.TestCase):
                     "bdr-address": "0.0.0.0",
                     "dr-address": "0.0.0.0",
                     "interface-name": "ge-0/0/1.0",
-                    "neighbor-address": "106.187.14.121",
+                    "neighbor-address": "10.169.14.121",
                     "neighbor-adjacency-time": {"#text": "3w2d " "03:12:15"},
-                    "neighbor-id": "106.187.14.240",
+                    "neighbor-id": "10.169.14.240",
                     "neighbor-priority": "128",
                     "neighbor-up-time": {"#text": "3w2d " "03:12:20"},
                     "options": "0x52",
@@ -10718,9 +10718,9 @@ class TestShowOspfNeighborExtensive(unittest.TestCase):
                     "bdr-address": "0.0.0.0",
                     "dr-address": "0.0.0.0",
                     "interface-name": "ge-0/0/2.0",
-                    "neighbor-address": "27.86.198.26",
+                    "neighbor-address": "10.19.198.26",
                     "neighbor-adjacency-time": {"#text": "1w5d " "20:40:14"},
-                    "neighbor-id": "27.86.198.239",
+                    "neighbor-id": "10.19.198.239",
                     "neighbor-priority": "1",
                     "neighbor-up-time": {"#text": "1w5d " "20:40:14"},
                     "options": "0x52",
