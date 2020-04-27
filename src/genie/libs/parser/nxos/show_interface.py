@@ -1136,6 +1136,7 @@ class ShowIpInterfaceVrfAllSchema(MetaParser):
         },
     }   
 
+
 # ===================================
 # Parser for 'show interface vrf all'
 # ===================================
@@ -1239,7 +1240,6 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                         if re.match('^\d+.\d+.\d+.\d+\/\d+', key):
                             address = key
                 continue
-                
 
             # Unnumbered interfaces of loopback0: first iod 46
             p2_1 = re.compile(r'^\s*Unnumbered +interfaces +of +(?P<unnumbered_intf>[\w\.\/]+): *'
@@ -1251,7 +1251,8 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
             # Ethernet2/11:
             # mti18: tunnel-te11: tunnel-te12:
-            p2_2 = re.compile(r'(([E|e]thernet|[L|l]oopback|[T|t]unnel|[V|v]lan|mti|[t|T]unnel-te|[p|P]ort-channel)[\d\/\.]+):')
+            p2_2 = re.compile(r'(([E|e]thernet|[L|l]oopback|[T|t]unnel|'
+                              r'[V|v]lan|mti|[t|T]unnel-te|[p|P]ort-channel)[\d\/\.]+):')
             m = p2_2.findall(line)
             if m and unnumbered_intf:
                 temp_intf = []
@@ -1304,18 +1305,20 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 continue
 
             # IP address: 192.168.106.1, IP subnet: 192.168.106.0/24 route-preference: 0, tag: 0
-            p3_1 = re.compile(r'^\s*IP *address: *(?P<ip>[0-9\.]+), *IP'
-                               ' *subnet: *(?P<ip_subnet>[a-z0-9\.]+)\/'
-                               '(?P<prefix_length>[0-9\,]+)(?: *route-preference:'
-                               ' *(?P<route_preference>[0-9]+),)?(?: *tag:'
-                               ' *(?P<route_tag>[0-9]+))?$')
+            # IP address: 20.5.69.2, IP subnet: 20.5.69.0/24 secondary route-preference: 0, tag: 0
+            p3_1 = re.compile(r'^\s*IP *address: *(?P<ip>[0-9\.]+), *IP *subnet: '
+                              r'*(?P<ip_subnet>[a-z0-9\.]+)\/(?P<prefix_length>[0-9\,]+)'
+                              r'(\s*(?P<secondary>secondary)\s*)?(?: *route-preference: *'
+                              r'(?P<route_preference>[0-9]+),)?'
+                              r'(?: *tag: *(?P<route_tag>[0-9]+))?$')
             m = p3_1.match(line)
             if m:
-                ip = m.groupdict()['ip']
-                ip_subnet = m.groupdict()['ip_subnet']
-                prefix_length = m.groupdict()['prefix_length']
-                route_tag = m.groupdict()['route_tag']
-                route_preference = m.groupdict()['route_preference']
+                group = m.groupdict()
+                ip = group['ip']
+                ip_subnet = group['ip_subnet']
+                prefix_length = group['prefix_length']
+                route_tag = group['route_tag']
+                route_preference = group['route_preference']
 
                 address = ip + '/' + prefix_length
 
@@ -1346,6 +1349,9 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     if route_preference:
                         ip_interface_vrf_all_dict[intf]['ipv4'][address]\
                         ['route_preference'] = route_preference
+
+                    if group['secondary']:
+                        ip_interface_vrf_all_dict[intf]['ipv4'][address]['secondary'] = True
                 continue
             
             # IP address: none
