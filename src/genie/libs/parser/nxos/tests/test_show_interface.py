@@ -1,5 +1,3 @@
-import genie.gre
-
 # Python
 import unittest
 from unittest.mock import Mock
