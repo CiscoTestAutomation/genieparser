@@ -2755,7 +2755,7 @@ class ShowOspfNeighborExtensiveSchema(MetaParser):
 
         def validate_adjacency_labels_list(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('ospf-link is not a list')
+                raise SchemaTypeError('adjacency labels is not a list')
             adjacency_labels_schema = Schema(
                 {
                 'label': str,
@@ -2820,19 +2820,24 @@ class ShowOspfNeighborExtensive(ShowOspfNeighborExtensiveSchema):
             out = output
 
         # 111.87.5.94      ge-0/0/0.0             Full      111.87.5.253     128    39
-        p1 = re.compile(r'^(?P<neighbor_address>[\d\.]+) +(?P<interface_name>\S+) +(?P<ospf_neighbor_state>\S+) +(?P<neighbor_id>[\d\.]+) +(?P<neighbor_priority>\d+) +(?P<activity_timer>\d+)$')
+        p1 = re.compile(r'^(?P<neighbor_address>[\d\.]+) +(?P<interface_name>\S+)'
+            r' +(?P<ospf_neighbor_state>\S+) +(?P<neighbor_id>[\d\.]+) +'
+            r'(?P<neighbor_priority>\d+) +(?P<activity_timer>\d+)$')
 
         # Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
-        p2 = re.compile(r'^Area +(?P<ospf_area>[\d\.]+), +opt +(?P<options>\S+), +DR +(?P<dr_address>[\.\d]+), +BDR +(?P<bdr_address>[\.\d]+)$')
+        p2 = re.compile(r'^Area +(?P<ospf_area>[\d\.]+), +opt +(?P<options>\S+),'
+            r' +DR +(?P<dr_address>[\.\d]+), +BDR +(?P<bdr_address>[\.\d]+)$')
 
         # Up 3w0d 16:50:35, adjacent 3w0d 16:50:35
-        p3 = re.compile(r'^Up +(?P<neighbor_up_time>\S+ +[\d:]+), +adjacent +(?P<neighbor_adjacency_time>\S+ +[\d:]+)$')
+        p3 = re.compile(r'^Up +(?P<neighbor_up_time>\S+ +[\d:]+), +adjacent +'
+            r'(?P<neighbor_adjacency_time>\S+ +[\d:]+)$')
 
         #     28985       BVL         Protected
         p4 = re.compile(r'^(?P<label>\d+) +(?P<flags>\S+) + (?P<adj_sid_type>\S+)$')
 
         # Topology default (ID 0) -> Bidirectional
-        p5 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\d+)\) +-> +(?P<ospf_neighbor_topology_state>\S+)$')
+        p5 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\d+)\)'
+            r' +-> +(?P<ospf_neighbor_topology_state>\S+)$')
 
         ret_dict = {}
 
@@ -2842,7 +2847,8 @@ class ShowOspfNeighborExtensive(ShowOspfNeighborExtensiveSchema):
             # 111.87.5.94      ge-0/0/0.0             Full      111.87.5.253     128    39
             m = p1.match(line)
             if m:
-                neighbor_list = ret_dict.setdefault("ospf-neighbor-information", {}).setdefault("ospf-neighbor", [])
+                neighbor_list = ret_dict.setdefault("ospf-neighbor-information", {})\
+                    .setdefault("ospf-neighbor", [])
                 group = m.groupdict()
                 entry = {}
 
@@ -2875,7 +2881,8 @@ class ShowOspfNeighborExtensive(ShowOspfNeighborExtensiveSchema):
                 group = m.groupdict()
 
                 entry.setdefault("neighbor-up-time", {}).setdefault("#text", group["neighbor_up_time"])
-                entry.setdefault("neighbor-adjacency-time", {}).setdefault("#text", group["neighbor_adjacency_time"])
+                entry.setdefault("neighbor-adjacency-time", {})\
+                    .setdefault("#text", group["neighbor_adjacency_time"])
 
                 continue
 
@@ -2890,7 +2897,8 @@ class ShowOspfNeighborExtensive(ShowOspfNeighborExtensiveSchema):
                     entry_key = group_key.replace('_','-')
                     entry[entry_key] = group_value
 
-                last_neighbor.setdefault("adj-sid-list", {}).setdefault("spring-adjacency-labels", []).append(entry)
+                last_neighbor.setdefault("adj-sid-list", {})\
+                    .setdefault("spring-adjacency-labels", []).append(entry)
                 continue
 
             # Topology default (ID 0) -> Bidirectional
