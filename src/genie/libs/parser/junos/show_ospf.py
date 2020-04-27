@@ -19,6 +19,7 @@ JunOs parsers for the following show commands:
     * show ospf overview extensive
     * show ospf database advertising-router self detail
     * show ospf neighbor extensive
+    * show ospf neighbor detail
     * show ospf interface extensive
 """
 
@@ -3144,3 +3145,17 @@ class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
                 continue
 
         return ret_dict
+
+class ShowOspfNeighborDetail(ShowOspfNeighborExtensive):
+    """ Parser for:
+            * show ospf neighbor detail
+    """
+    cli_command = 'show ospf neighbor detail'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        return super().cli(output=out)
