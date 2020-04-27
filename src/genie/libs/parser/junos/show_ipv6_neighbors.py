@@ -113,11 +113,6 @@ class ShowIpv6Neighbors(ShowIpv6NeighborsSchema):
                 ret_dict.setdefault('ipv6-nd-information', {}).\
                     setdefault('ipv6-nd-total', total_entries)
                 continue
-
-        import json
-        json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
-        f = open("dict.txt","w")
-        f.write(json_data)
-        f.close()
+                
         return ret_dict
 
