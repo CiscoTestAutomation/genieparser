@@ -171,14 +171,6 @@ def _fuzzy_search_command(search, fuzzy, os=None, order_list=None,
     if not fuzzy and len(result) > 1:
         # If all results have the same argument positions but different names
         # It should return the first result
-
-        # check if the result regex match the search
-        for instance in result:
-            s = re.sub('{.*?}', '(.*)', instance[0])
-            p =re.compile(s)
-            if p.match(search):
-                return [instance]
-
         if len(set(re.sub('{.*?}', '---', instance[0]) 
                                                 for instance in result)) == 1:
             return [result[0]]
