@@ -1702,10 +1702,10 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
             # Encapsulating to proxy ETR Encap-IID 3
             m = p6.match(line)
             if m:
-                encap_dict['encap_to_petr'] = True
+                mapping_dict['encap_to_petr'] = True
                 encap_to_petr_iid = m.groupdict()['encap_to_petr_iid']
                 if encap_to_petr_iid:
-                    encap_dict['encap_to_petr_iid'] = encap_to_petr_iid
+                    mapping_dict['encap_to_petr_iid'] = encap_to_petr_iid
                 continue
 
         return parsed_dict
@@ -1979,6 +1979,7 @@ class ShowLispServiceSummarySchema(MetaParser):
                                 'interface': str,
                                 'db_size': int,
                                 'db_no_route': int,
+                                Optional('rloc_status'): str,
                                 'cache_size': int,
                                 'incomplete': str,
                                 'cache_idle': str,
@@ -2052,15 +2053,15 @@ class ShowLispServiceSummary(ShowLispServiceSummarySchema):
         # EID VRF name             (.IID)  size  route   size  plete  Idle  Role
         # red                   LISP0.101     1      0      2   0.0%  0.0%  ITR-ETR
         # blue                  LISP0.102     1      0      1   0.0%    0%  ITR-ETR
-        # blue                  LISP0.102@    1      0      1   0.0%    0%  ITR-ETR
-        # blue                  LISP0.102*    1      0      1   0.0%    0%  ITR-ETR
+        # blue                  LISP0.102     1@     0      1   0.0%    0%  ITR-ETR
+        # blue                  LISP0.102     1*     0      1   0.0%    0%  ITR-ETR
         p4_1 = re.compile(r'(?P<vrf>(\S+)) +(?P<interface>(\S+))\.(?P<iid>(\d+))'
-                         '(?P<rloc_status>[@\*])? +(?P<db_size>(\d+)) +(?P<db_no_route>(\d+))'
+                         ' +(?P<db_size>(\d+))(?P<rloc_status>(\W))? +(?P<db_no_route>(\d+))'
                          ' +(?P<cache_size>(\d+)) +(?P<incomplete>(\S+))'
                          ' +(?P<cache_idle>(\S+)) +(?P<role>(\S+))$')
 
         p4_2 = re.compile(r'(?P<interface>(\S+))\.(?P<iid>(\d+))'
-                         '(?P<rloc_status>[@\*])? +(?P<db_size>(\d+)) +(?P<db_no_route>(\d+))'
+                         ' +(?P<db_size>(\d+))(?P<rloc_status>(\W))? +(?P<db_no_route>(\d+))'
                          ' +(?P<cache_size>(\d+)) +(?P<incomplete>(\S+))'
                          ' +(?P<cache_idle>(\S+)) +(?P<role>(\S+))$')
 
@@ -2133,6 +2134,8 @@ class ShowLispServiceSummary(ShowLispServiceSummarySchema):
                             setdefault(group['iid'], {})
                 vni_dict['interface'] = group['interface'] + '.' + group['iid']
                 vni_dict['db_size'] = int(group['db_size'])
+                if 'rloc_status' in group.keys():
+                    vni_dict['rloc_status'] = group['rloc_status']
                 vni_dict['db_no_route'] = int(group['db_no_route'])
                 vni_dict['cache_size'] = int(group['cache_size'])
                 vni_dict['incomplete'] = group['incomplete']
