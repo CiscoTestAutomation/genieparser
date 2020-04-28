@@ -219,6 +219,8 @@
     * Updated ShowVpnSessiondbSuper:
         * Added keys to the schema
         * Updated regex to support output in show vpn-sessiondb anyconnect
+    * Updated ShowRoute
+        * Updated regex and modified parser class to support various device outputs.
 
 * IOSXE
     * Updated ShowMplsForwardingTable:
