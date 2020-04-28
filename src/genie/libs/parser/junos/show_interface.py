@@ -251,7 +251,4 @@ class ShowInterfacesDescriptions(ShowInterfacesDescriptionsSchema):
                 entry_list.append(entry)
                 continue
 
-        import pprint
-        pprint.pprint(ret_dict)
-
         return ret_dict
