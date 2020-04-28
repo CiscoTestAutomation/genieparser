@@ -665,32 +665,35 @@ class ShowPfeRouteSummarySchema(MetaParser):
     """
 
     schema = {
-        'route-summary':{
-            'slot-number': str,
-            'ipv4-route-tables':[{
-                'index': str,
-                'routes': str,
-                'size': str
-            }],
-            'mpls-route-tables':[{
-                'index': str,
-                'routes': str,
-                'size': str
-            }],
-            'ipv6-route-tables':[{
-                'index': str,
-                'routes': str,
-                'size': str
-            }],
-            'clnp-route-tables':[{
-                'index': str,
-                'routes': str,
-                'size': str
-            }],
-            'dhcp-snooping-route-tables':[{
-                'index': str,
-                'routes': str,
-                'size': str
-            }],
+        'slot': {
+            Any(): {
+            'route-tables': {
+                'ipv4': [{
+                    'index': str,
+                    'routes': str,
+                    'size': str
+                }],
+                'mpls': [{
+                    'index': str,
+                    'routes': str,
+                    'size': str
+                }],
+                'ipv6': [{
+                    'index': str,
+                    'routes': str,
+                    'size': str
+                }],
+                'clnp': [{
+                    'index': str,
+                    'routes': str,
+                    'size': str
+                }],
+                'dhcp': [{
+                    'index': str,
+                    'routes': str,
+                    'size': str
+                }],
+                }
+            }
         }
     }
