@@ -285,7 +285,7 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
                                         .format(start, end), token).groups()[0]
 
                             is_found = True
-                            score += 101
+                            score += 102
                     
                     if not is_found:
                         return None
@@ -295,8 +295,8 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
                     i += 1
                     j += 1
                     
-                    # Plus 100 once to favor nongreedy argument fit
-                    score += 100
+                    # Plus 101 once to favor nongreedy argument fit
+                    score += 101
 
                     # If argument is any of these, argument can only be 1 token
                     # Else argument can be up to 2 tokens
@@ -343,7 +343,7 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
                     return None
             elif token == command_token:
                 # Same token, assign higher score
-                score += 102
+                score += 103
             elif not token == command_token:
                 # Not matching, check if prefix
                 if not command_token.startswith(token):
