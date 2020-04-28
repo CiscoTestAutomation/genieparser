@@ -367,5 +367,3 @@ class TestShowInterfacesDescriptions(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
-# vim: ft=python et sw=4
