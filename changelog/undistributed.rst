@@ -205,6 +205,8 @@
         * show version
     * Added ShowIpv6Neighbors for:
         * show ipv6 neighbors
+    * Added ShowLacpInterfacesInstance for:
+        * show lacp interfaces {interface}
 
 
 
