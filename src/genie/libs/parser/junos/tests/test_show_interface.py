@@ -8,7 +8,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
 from genie.libs.parser.junos.show_interface import (ShowInterfacesTerse,
-                                                    ShowInterfacesTerseMatch)
+                                                    ShowInterfacesTerseMatch,
+                                                    ShowInterfacesDescriptions)
 
 #############################################################################
 # unitest For show interfaces terse [| match <interface>]
@@ -16,9 +17,9 @@ from genie.libs.parser.junos.show_interface import (ShowInterfacesTerse,
 
 class test_show_interfaces_terse(unittest.TestCase):
     device = Device(name='aDevice')
-    
+
     empty_output = {'execute.return_value': ''}
-    
+
     golden_parsed_output = {
          'em1': {'admin_state': 'up',
                  'enabled': True,
@@ -121,47 +122,47 @@ class test_show_interfaces_terse(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': '''
-        root@junos_vmx1> show interfaces terse 
+        root@junos_vmx1> show interfaces terse
         Interface               Admin Link Proto    Local                 Remote
         ge-0/0/0                up    up
-        ge-0/0/0.0              up    up   inet     10.0.1.1/24     
+        ge-0/0/0.0              up    up   inet     10.0.1.1/24
                                            multiservice
         lc-0/0/0                up    up
-        lc-0/0/0.32769          up    up   vpls    
+        lc-0/0/0.32769          up    up   vpls
         pfe-0/0/0               up    up
-        pfe-0/0/0.16383         up    up   inet    
-                                           inet6   
+        pfe-0/0/0.16383         up    up   inet
+                                           inet6
         pfh-0/0/0               up    up
-        pfh-0/0/0.16383         up    up   inet    
-        pfh-0/0/0.16384         up    up   inet    
+        pfh-0/0/0.16383         up    up   inet
+        pfh-0/0/0.16384         up    up   inet
         ge-0/0/1                up    up
-        ge-0/0/1.0              up    up   inet     10.0.2.1/24     
+        ge-0/0/1.0              up    up   inet     10.0.2.1/24
                                            multiservice
         ge-0/0/2                up    down
         em1                     up    up
-        em1.0                   up    up   inet     10.0.0.4/8      
-                                                    172.16.64.1/2     
-                                                    172.16.64.4/2     
+        em1.0                   up    up   inet     10.0.0.4/8
+                                                    172.16.64.1/2
+                                                    172.16.64.4/2
                                            inet6    fe80::250:56ff:fe82:ba52/64
                                                     2001:db8:8d82:0:a::4/64
-                                           tnp      0x4  
+                                           tnp      0x4
         fxp0                    up    up
         fxp0.0                  up    up   inet     172.25.192.114/24
         lo0.0                   up    up   inet     10.1.1.1            --> 0/0
                                                     10.11.11.11         --> 0/0
         lo0.16384               up    up   inet     127.0.0.1           --> 0/0
-        lo0.16385               up    up   inet  
+        lo0.16385               up    up   inet
     '''
     }
 
     golden_output_interface = {'execute.return_value': """
     root@junos_vmx1 > show interfaces em1.0 terse
-    em1.0                   up    up   inet     10.0.0.4/8      
-                                                    172.16.64.1/2     
-                                                    172.16.64.4/2     
+    em1.0                   up    up   inet     10.0.0.4/8
+                                                    172.16.64.1/2
+                                                    172.16.64.4/2
                                            inet6    fe80::250:56ff:fe82:ba52/64
                                                     2001:db8:8d82:0:a::4/64
-                                           tnp      0x4 
+                                           tnp      0x4
     """}
 
     golden_parsed_output_interface = {
@@ -236,7 +237,7 @@ class test_show_interfaces_terse_match(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': '''
-        root@junos_vmx1> show interfaces terse | match fxp0 
+        root@junos_vmx1> show interfaces terse | match fxp0
         fxp0                    up    up
         fxp0.0                  up    up   inet     172.25.192.114/24
     '''}
@@ -250,6 +251,50 @@ class test_show_interfaces_terse_match(unittest.TestCase):
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         interface_obj = ShowInterfacesTerseMatch(device=self.device)
+        parsed_output = interface_obj.parse(interface='fxp0')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+class TestShowInterfacesDescriptions(unittest.TestCase):
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    maxDiff = None
+
+    golden_parsed_output = {'interface-information': {'physical-interface': [{'admin-status': 'Admin',
+                                                   'description': 'Description',
+                                                   'name': 'Interface',
+                                                   'oper-status': 'Link'},
+                                                  {'admin-status': 'up',
+                                                   'description': 'none/100G/in/hktGCS002_ge-0/0/0',
+                                                   'name': 'ge-0/0/0',
+                                                   'oper-status': 'up'},
+                                                  {'admin-status': 'up',
+                                                   'description': 'YW7079/9.6G/BB/sjkGCS001-EC11_xe-0/1/5[SJC]_Area8_Cost100',
+                                                   'name': 'ge-0/0/1',
+                                                   'oper-status': 'up'},
+                                                  {'admin-status': 'up',
+                                                   'description': 've-hkgasr01_Gi2[DefaultCost1000]',
+                                                   'name': 'ge-0/0/2',
+                                                   'oper-status': 'up'}]}}
+
+    golden_output = {'execute.return_value': '''
+        show interfaces descriptions
+        Interface       Admin Link Description
+        ge-0/0/0        up    up   none/100G/in/hktGCS002_ge-0/0/0
+        ge-0/0/1        up    up   YW7079/9.6G/BB/sjkGCS001-EC11_xe-0/1/5[SJC]_Area8_Cost100
+        ge-0/0/2        up    up   ve-hkgasr01_Gi2[DefaultCost1000]
+    '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        interface_obj = ShowInterfacesDescriptions(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            interface_obj.parse(interface='fxp0')
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        interface_obj = ShowInterfacesDescriptions(device=self.device)
         parsed_output = interface_obj.parse(interface='fxp0')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 

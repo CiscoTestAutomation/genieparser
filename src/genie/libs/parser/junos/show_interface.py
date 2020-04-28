@@ -5,6 +5,7 @@ JunOS parsers for the following show commands:
     * show interfaces terse | match <interface>
     * show interfaces terse {interface}
     * show interfaces {interface} terse
+    * show interfaces descriptions
 """
 
 # python
@@ -12,8 +13,8 @@ import re
 
 # metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
-                                         
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use, SchemaTypeError
+
 # import parser utils
 from genie.libs.parser.utils.common import Common
 
@@ -77,14 +78,14 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
 
         # Interface               Admin Link Proto    Local                 Remote
         # lo0.0                   up    up   inet     10.1.1.1            --> 0/0
-        # em1.0                   up    up   inet     10.0.0.4/8      
+        # em1.0                   up    up   inet     10.0.0.4/8
         # fxp0                    up    up
         p1 =  re.compile(r'^(?P<interface>\S+) +(?P<admin_state>\w+) +(?P<link_state>\w+) *'
                           '(?P<protocol>\S+)? *(?P<local>[\w\.\:\/]+)?( *'
                           '[\-\>]+? *(?P<remote>[\w\.\:\/]+))?$')
 
 
-        #                                             172.16.64.1/2       
+        #                                             172.16.64.1/2
         #                                    inet6    fe80::250:56ff:fe82:ba52/64
         #                                             2001:db8:8d82:0:a::4/64
         #                                    tnp      0x4
@@ -127,7 +128,7 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
                 continue
 
 
-            #                                             172.16.64.1/2       
+            #                                             172.16.64.1/2
             #                                    inet6    fe80::250:56ff:fe82:ba52/64
             #                                             2001:db8:8d82:0:a::4/64
             #                                    tnp      0x4
@@ -183,3 +184,74 @@ class ShowInterfacesTerseInterface(ShowInterfacesTerse):
             out = output
 
         return super().cli(output=out)
+
+class ShowInterfacesDescriptionsSchema(MetaParser):
+    """ Schema for:
+            * show interfaces descriptions
+    """
+    def validate_physical_interface_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('physical-interface is not a list')
+        entry_schema = Schema(
+            {
+                "admin-status": str,
+                "description": str,
+                "name": str,
+                "oper-status": str
+            }
+        )
+        for item in value:
+            entry_schema.validate(item)
+        return value
+
+    schema = {
+        "interface-information": {
+            "physical-interface": Use(validate_physical_interface_list)
+        }
+    }
+
+class ShowInterfacesDescriptions(ShowInterfacesDescriptionsSchema):
+    """ Parser for:
+            * show interfaces descriptions
+    """
+    cli_command = 'show interfaces descriptions'
+
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Interface       Admin Link Description
+        p1 = re.compile(r'^Interface +Admin +Link +Description$')
+
+        # ge-0/0/0        up    up   none/100G/in/hktGCS002_ge-0/0/0
+        p2 = re.compile(r'^(?P<name>\S+) +(?P<admin_status>\S+) +(?P<oper_status>\S+) +(?P<description>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Interface       Admin Link Description
+            m = p1.match(line)
+            if m:
+                continue
+
+            # ge-0/0/0        up    up   none/100G/in/hktGCS002_ge-0/0/0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                entry_list = ret_dict.setdefault("interface-information", {}).setdefault("physical-interface", [])
+                entry = {}
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+                entry_list.append(entry)
+                continue
+
+        import pprint
+        pprint.pprint(ret_dict)
+
+        return ret_dict
