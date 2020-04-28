@@ -658,3 +658,39 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                 continue
 
         return ret_dict
+
+class ShowPfeRouteSummarySchema(MetaParser):
+    """ Schema for:
+            * show pfe route summary
+    """
+
+    schema = {
+        'route-summary':{
+            'slot-number': str,
+            'ipv4-route-tables':[{
+                'index': str,
+                'routes': str,
+                'size': str
+            }],
+            'mpls-route-tables':[{
+                'index': str,
+                'routes': str,
+                'size': str
+            }],
+            'ipv6-route-tables':[{
+                'index': str,
+                'routes': str,
+                'size': str
+            }],
+            'clnp-route-tables':[{
+                'index': str,
+                'routes': str,
+                'size': str
+            }],
+            'dhcp-snooping-route-tables':[{
+                'index': str,
+                'routes': str,
+                'size': str
+            }],
+        }
+    }
