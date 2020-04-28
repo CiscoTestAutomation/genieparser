@@ -243,6 +243,31 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # Input rate     : 2952 bps (5 pps)
         p14 = re.compile(r'^Input +rate +: +\d+ +bps +\(\d+ +pps\)$')
-
+        
+        # Output rate    : 3080 bps (3 pps)
         p15 = re.compile(r'^Output +rate +: +\d+ +bps +\(\d+ +pps\)$')
+        
+        # Active alarms  : None
+        p16 = re.compile(r'^Active +alarms *: +(?P<active_alarms>\S+)$')
+
+        # Active defects : None
+        p17 = re.compile(r'^Active +defects *: +(?P<active_defects>\S+)$')
+        
+        # PCS statistics                      Seconds
+        p18 = re.compile(r'^PCS +statistics +Seconds$')
+
+        # Bit errors                             0
+        p19 = re.compile(r'^Bit +errors +\d+$')
+
+        # Errored blocks                         0
+        p20 = re.compile(r'^Errored +blocks +\d+$')
+
+        p21 = re.compile(r'^Ethernet +FEC +statistics +Errors$')
+
+        p22 = re.compile(r'^FEC +\S+ +Errors( +Rate)? +\d+$')
+
+        p23 = re.compile(r'^Interface +transmit +statistics: +\S+$')
+
+        p24 = re.compile(r'Logical +interface +\S+ +\(Index +\d+\) +\(SNMP +ifIndex +\d+\)$')
+
         return ret_dict
