@@ -6,27 +6,29 @@ from unittest.mock import Mock
 from pyats.topology import Device
 
 # Metaparset
-from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
-                                             SchemaMissingKeyError
+from genie.metaparser.util.exceptions import (
+    SchemaEmptyParserError,
+    SchemaMissingKeyError,
+)
 
 # Parser
-from genie.libs.parser.junos.show_pfe import ShowPfeStatisticsTraffic, ShowPfeRouteSummary
+from genie.libs.parser.junos.show_pfe import (
+    ShowPfeStatisticsTraffic,
+    ShowPfeRouteSummary,
+)
 
-#=========================================================
+# =========================================================
 # Unit test for show pfe statistics traffic
-#=========================================================
+# =========================================================
 class test_show_pfe_statistics_traffic(unittest.TestCase):
 
-    device = Device(name='aDevice')
-    empty_output = {'execute.return_value': ''}
+    device = Device(name="aDevice")
+    empty_output = {"execute.return_value": ""}
     maxDiff = None
 
     golden_parsed_output_1 = {
         "pfe-statistics": {
-            "pfe-chip-statistics": {
-                "input-checksum": "0",
-                "output-mtu": "0"
-            },
+            "pfe-chip-statistics": {"input-checksum": "0", "output-mtu": "0"},
             "pfe-hardware-discard-statistics": {
                 "bad-route-discard": "962415",
                 "bits-to-test-discard": "0",
@@ -39,7 +41,7 @@ class test_show_pfe_statistics_traffic(unittest.TestCase):
                 "stack-underflow-discard": "0",
                 "tcp-header-error-discard": "0",
                 "timeout-discard": "0",
-                "truncated-key-discard": "0"
+                "truncated-key-discard": "0",
             },
             "pfe-local-protocol-statistics": {
                 "arp-count": "56818",
@@ -55,7 +57,7 @@ class test_show_pfe_statistics_traffic(unittest.TestCase):
                 "ospf3-hello-count": "4146329",
                 "ppp-lcp-ncp-count": "0",
                 "rsvp-hello-count": "7040269",
-                "unknown-count": "0"
+                "unknown-count": "0",
             },
             "pfe-local-traffic-statistics": {
                 "hardware-input-drops": "0",
@@ -65,7 +67,7 @@ class test_show_pfe_statistics_traffic(unittest.TestCase):
                 "software-input-high-drops": "0",
                 "software-input-low-drops": "0",
                 "software-input-medium-drops": "0",
-                "software-output-low-drops": "0"
+                "software-output-low-drops": "0",
             },
             "pfe-traffic-statistics": {
                 "input-pps": "14",
@@ -75,13 +77,13 @@ class test_show_pfe_statistics_traffic(unittest.TestCase):
                 "pfe-fabric-output": "0",
                 "pfe-fabric-output-pps": "0",
                 "pfe-input-packets": "763584752",
-                "pfe-output-packets": "728623201"
-            }
+                "pfe-output-packets": "728623201",
+            },
         }
     }
 
-
-    golden_output_1 = {'execute.return_value': '''
+    golden_output_1 = {
+        "execute.return_value": """
                 show pfe statistics traffic
         Packet Forwarding Engine traffic statistics:
             Input  packets:            763584752                   14 pps
@@ -129,7 +131,7 @@ class test_show_pfe_statistics_traffic(unittest.TestCase):
             Input Checksum             :                    0
             Output MTU                 :                    0
 
-    '''
+    """
     }
 
     def test_empty(self):
@@ -144,63 +146,52 @@ class test_show_pfe_statistics_traffic(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
-#=========================================================
+
+# =========================================================
 # Unit test for show pfe statistics traffic
-#=========================================================
+# =========================================================
 class TestShowPfeRouteSummary(unittest.TestCase):
 
-    device = Device(name='aDevice')
-    empty_output = {'execute.return_value': ''}
+    device = Device(name="aDevice")
+    empty_output = {"execute.return_value": ""}
     maxDiff = None
 
-    golden_parsed_output_1 = {'slot': {'0': {'route-tables': {'CLNP': [{'index': 'Default',
-                                           'routes': '1',
-                                           'size': '136'},
-                                          {'index': '5',
-                                           'routes': '1',
-                                           'size': '136'}],
-                                 'DHCP-Snooping': [{'index': 'Default',
-                                                    'routes': '1',
-                                                    'size': '136'}],
-                                 'IPv4': [{'index': 'Default',
-                                           'routes': '944',
-                                           'size': '132156'},
-                                          {'index': '1',
-                                           'routes': '9',
-                                           'size': '1256'},
-                                          {'index': '2',
-                                           'routes': '8',
-                                           'size': '1116'},
-                                          {'index': '3',
-                                           'routes': '5',
-                                           'size': '696'},
-                                          {'index': '4',
-                                           'routes': '9',
-                                           'size': '1256'},
-                                          {'index': '5',
-                                           'routes': '5',
-                                           'size': '696'},
-                                          {'index': '36736',
-                                           'routes': '5',
-                                           'size': '696'}],
-                                 'IPv6': [{'index': 'Default',
-                                           'routes': '39',
-                                           'size': '5824'},
-                                          {'index': '1',
-                                           'routes': '6',
-                                           'size': '872'},
-                                          {'index': '5',
-                                           'routes': '6',
-                                           'size': '872'}],
-                                 'MPLS': [{'index': 'Default',
-                                           'routes': '45',
-                                           'size': '6296'},
-                                          {'index': '6',
-                                           'routes': '1',
-                                           'size': '136'}]}}}}
+    golden_parsed_output_1 = {
+        "slot": {
+            "0": {
+                "route-tables": {
+                    "CLNP": [
+                        {"index": "Default", "routes": "1", "size": "136"},
+                        {"index": "5", "routes": "1", "size": "136"},
+                    ],
+                    "DHCP-Snooping": [
+                        {"index": "Default", "routes": "1", "size": "136"}
+                    ],
+                    "IPv4": [
+                        {"index": "Default", "routes": "944", "size": "132156"},
+                        {"index": "1", "routes": "9", "size": "1256"},
+                        {"index": "2", "routes": "8", "size": "1116"},
+                        {"index": "3", "routes": "5", "size": "696"},
+                        {"index": "4", "routes": "9", "size": "1256"},
+                        {"index": "5", "routes": "5", "size": "696"},
+                        {"index": "36736", "routes": "5", "size": "696"},
+                    ],
+                    "IPv6": [
+                        {"index": "Default", "routes": "39", "size": "5824"},
+                        {"index": "1", "routes": "6", "size": "872"},
+                        {"index": "5", "routes": "6", "size": "872"},
+                    ],
+                    "MPLS": [
+                        {"index": "Default", "routes": "45", "size": "6296"},
+                        {"index": "6", "routes": "1", "size": "136"},
+                    ],
+                }
+            }
+        }
+    }
 
-
-    golden_output_1 = {'execute.return_value': '''
+    golden_output_1 = {
+        "execute.return_value": """
             show pfe route summary
 
             Slot 0
@@ -240,7 +231,7 @@ class TestShowPfeRouteSummary(unittest.TestCase):
             Index         Routes     Size(b)
             --------  ----------  ----------
             Default            1         136
-    '''
+    """
     }
 
     def test_empty(self):
@@ -255,5 +246,6 @@ class TestShowPfeRouteSummary(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()
