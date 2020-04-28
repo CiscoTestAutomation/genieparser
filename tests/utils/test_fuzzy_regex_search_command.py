@@ -139,6 +139,11 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
         self.assertIsNone(_matches_fuzzy(0, 0, 
                                 'ow abc ab'.split(), 'show abc ab', {}, False))
 
+        self.assertIsNone(_matches_fuzzy(0, 0, 
+                            'show abb ab xd'.split(), 'show {ww}', {}, False))
+        self.assertIsNone(_matches_fuzzy(0, 0, 
+                    'show show x abb ab xd'.split(), '{x} abb {wx}', {}, False))
+
     def test_matching_negative_regex(self):
         self.assertIsNone(_matches_fuzzy(0, 0, 
                             'show a b .*'.split(), 'show a b c d', {}, False))
@@ -159,7 +164,7 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
         self.assertIsNone(_matches_fuzzy(0, 0, 'show .* a f'.split(), 
                                                     'show a {a} c', {}, True))
         self.assertIsNone(_matches_fuzzy(0, 0, 'show .* a f .*'.split(), 
-                                                    'show a {a} {d}', {}, True))
+                                                'show a {vrf} {vrf}', {}, True))
         self.assertIsNone(_matches_fuzzy(0, 0, 'show .* a.* c'.split(), 
                                                     'show a {a} c', {}, True))
         self.assertIsNone(_matches_fuzzy(0, 0, 'show .* a b c'.split(), 
@@ -257,7 +262,7 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
         self.assertEqual([i[0] for i in 
                     _fuzzy_search_command('sh ver', False)], ['show version'])
         self.assertEqual([i[0] for i in 
-                            _fuzzy_search_command('p -', False)], ['ps -ef'])
+                            _fuzzy_search_command('p -ef', False)], ['ps -ef'])
         self.assertEqual([i[0] for i in 
                         _fuzzy_search_command('sh mp int', False)], 
                                                     ['show mpls interfaces'])
@@ -332,7 +337,7 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
                                         'show evpn ethernet-segment private')
         self.assertEqual(len(_fuzzy_search_command('s e (ipv4|ipv6) n d',
                                                                     True)), 2)
-        self.assertEqual(len(_fuzzy_search_command('s e .* p', True)), 2)
+        self.assertEqual(len(_fuzzy_search_command('s e .* p', True)), 7)
 
     def test_negative_prefix_search(self):
         self.assertEqual(_fuzzy_search_command('s e e x w p', True), [])
@@ -364,7 +369,7 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0][0], 'show lldp entry *')
 
-        result = _fuzzy_search_command('p \\-', True)
+        result = _fuzzy_search_command('p \\-ef', True)
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0][0], 'ps -ef')
 
@@ -394,6 +399,41 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
 
         with self.assertRaises(Exception):
             _fuzzy_search_command('sh c', False)
+
+    def test_single_argument(self):
+        self.assertEqual(_matches_fuzzy(0, 0, 'a b c d'.split(), 
+                                    'a b c {vrf}', {}, True)[0], {'vrf': 'd'})
+        self.assertEqual(_matches_fuzzy(0, 0, 'a b c d'.split(), 
+                                    'a {vrf} c d', {}, True)[0], {'vrf': 'b'})
+        self.assertEqual(_matches_fuzzy(0, 0, 'a b c d'.split(), 
+                                    '{vrf} b {rd} {instance}', {}, True)[0], 
+                                    {'vrf': 'a', 'rd': 'c', 'instance': 'd'})
+        self.assertEqual(_matches_fuzzy(0, 0, 'abc .* bdc ef'.split(), 
+                        'abcd www www {vrf} ef', {}, True)[0], {'vrf': 'bdc'})
+        self.assertEqual(_matches_fuzzy(0, 0, 'a .* w .* p .* v'.split(), 
+                            'a b c {vrf} e f {instance} h v', {}, True)[0], 
+                                                {'vrf': 'w', 'instance': 'p'})
+        self.assertEqual(_matches_fuzzy(0, 0, 'abc fileA fileB'.split(), 
+                            'abcdef {fileA} {fileB}', {}, True)[0], 
+                                        {'fileA': 'fileA', 'fileB': 'fileB'})
+
+    def test_double_argument(self):
+        self.assertEqual(_matches_fuzzy(0, 0, 'a b c d'.split(), 
+                                    'a b c {w}', {}, True)[0], {'w': 'd'})
+        self.assertEqual(_matches_fuzzy(0, 0, 'a b c d e'.split(), 
+                                    'a b c {w}', {}, True)[0], {'w': 'd e'})
+        self.assertEqual(_matches_fuzzy(0, 0, 's b vpnv4 unicast a s'.split(), 
+                            'show bgp {stuff} all summary', {}, True)[0], 
+                                        {'stuff': 'vpnv4 unicast'})
+        self.assertEqual(_matches_fuzzy(0, 0, 'a a b b'.split(), 
+                            '{a} {b}', {}, True)[0], {'a': 'a a', 'b': 'b b'})
+        self.assertEqual(_matches_fuzzy(0, 0, 'w x y z z'.split(), 
+                    'w x y {a} {vrf}', {}, True)[0], {'a': 'z', 'vrf': 'z'})
+        self.assertEqual(_matches_fuzzy(0, 0, 'w x y z z z'.split(), 
+                    'w x y {a} {vrf}', {}, True)[0], {'a': 'z z', 'vrf': 'z'})
+        self.assertEqual(_matches_fuzzy(0, 0, 'w x y a b c'.split(), 
+                    'w x y {a} {b} {c}', {}, True)[0], 
+                                                {'a': 'a', 'b': 'b', 'c': 'c'})
 
 if __name__ == '__main__':
     unittest.main()
