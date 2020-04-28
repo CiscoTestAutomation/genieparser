@@ -82,10 +82,14 @@ class ShowLacpInterfacesInstance(ShowLacpInterfacesInstanceSchema):
         p1 = re.compile(r'^Aggregated +interface: +(?P<aggregate_name>\S+)$')
 
         #     xe-3/0/1       Actor    No    No   Yes  Yes  Yes   Yes     Fast    Active
-        p2 = re.compile(r'^(?P<name>\S+) +(?P<lacp_role>\S+) +(?P<lacp_expired>\S+) +(?P<lacp_defaulted>\S+) +(?P<lacp_distributing>\S+) +(?P<lacp_collecting>\S+) +(?P<lacp_synchronization>\S+) +(?P<lacp_aggregation>\S+) +(?P<lacp_timeout>\S+) +(?P<lacp_activity>\S+)$')
+        p2 = re.compile(r'^(?P<name>\S+) +(?P<lacp_role>\S+) +(?P<lacp_expired>\S+)'
+            r' +(?P<lacp_defaulted>\S+) +(?P<lacp_distributing>\S+) +(?P<lacp_collecting>\S+)'
+            r' +(?P<lacp_synchronization>\S+) +(?P<lacp_aggregation>\S+) +(?P<lacp_timeout>\S+)'
+            r' +(?P<lacp_activity>\S+)$')
 
         #     xe-3/0/1                  Current   Fast periodic Collecting distributing
-        p3 = re.compile(r'^(?P<name>\S+) +(?P<lacp_receive_state>\S+) +(?P<lacp_transmit_state>\S+ +\S+) +(?P<lacp_mux_state>\S+ +\S+)$')
+        p3 = re.compile(r'^(?P<name>\S+) +(?P<lacp_receive_state>\S+) +'
+        r'(?P<lacp_transmit_state>\S+ +\S+) +(?P<lacp_mux_state>\S+ +\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -94,14 +98,19 @@ class ShowLacpInterfacesInstance(ShowLacpInterfacesInstanceSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict.setdefault("lacp-interface-information-list", {}).setdefault("lacp-interface-information", {}).setdefault("lag-lacp-header", {}).setdefault("aggregate-name", group['aggregate_name'])
+                ret_dict.setdefault("lacp-interface-information-list", {})\
+                    .setdefault("lacp-interface-information", {})\
+                        .setdefault("lag-lacp-header", {})\
+                            .setdefault("aggregate-name", group['aggregate_name'])
                 continue
 
             #     xe-3/0/1       Actor    No    No   Yes  Yes  Yes   Yes     Fast    Active
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                entry_list = ret_dict.setdefault("lacp-interface-information-list", {}).setdefault("lacp-interface-information", {}).setdefault("lag-lacp-state", [])
+                entry_list = ret_dict.setdefault("lacp-interface-information-list", {})\
+                    .setdefault("lacp-interface-information", {})\
+                        .setdefault("lag-lacp-state", [])
                 entry = {}
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_','-')
@@ -113,7 +122,9 @@ class ShowLacpInterfacesInstance(ShowLacpInterfacesInstanceSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                entry_list = ret_dict.setdefault("lacp-interface-information-list", {}).setdefault("lacp-interface-information", {}).setdefault("lag-lacp-protocol", [])
+                entry_list = ret_dict.setdefault("lacp-interface-information-list", {})\
+                    .setdefault("lacp-interface-information", {})\
+                        .setdefault("lag-lacp-protocol", [])
                 entry = {}
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_','-')
