@@ -171,6 +171,14 @@ def _fuzzy_search_command(search, fuzzy, os=None, order_list=None,
     if not fuzzy and len(result) > 1:
         # If all results have the same argument positions but different names
         # It should return the first result
+
+        # Check if the result regex match the search
+        for instance in result:
+            s = re.sub('{.*?}', '(.*)', instance[0])
+            p =re.compile(s)
+            if p.match(search):
+                return [instance]
+
         if len(set(re.sub('{.*?}', '---', instance[0]) 
                                                 for instance in result)) == 1:
             return [result[0]]
@@ -261,9 +269,6 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
         if token_is_regular:
             # Current token might be command or argument
             if '{' in command_token:
-                # Right strip for `<argument>"` case
-                argument_parameter = token.rstrip('"').replace('\\', '')
-
                 # Handle the edge case of argument not being a token
                 # When this is implemented there is only one case:
                 # /dna/intent/api/v1/interface/{interface}
@@ -282,23 +287,68 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
                             end = re.escape(end)
 
                             # Find the argument using the escaped start and end
-                            argument_parameter = re.match('{}(.*){}'
+                            kwargs[
+                                re.search('{(.*)}', command_token).groups()[0]
+                            ] = re.match('{}(.*){}'
                                         .format(start, end), token).groups()[0]
-                        
+
                             is_found = True
-                            score += 1
+                            score += 103
                     
-                    if not is_found: 
+                    if not is_found:
                         return None
+                else:
+                    argument_key = re.search('{(.*)}', 
+                                                    command_token).groups()[0]
+                    i += 1
+                    j += 1
+                    
+                    # Plus 101 once to favor nongreedy argument fit
+                    score += 100
 
-                kwargs[
-                    re.search('{(.*)}', command_token).groups()[0]
-                ] = argument_parameter
+                    # If argument is any of these, argument can only be 1 token
+                    # Else argument can be up to 2 tokens
+                    endpoint = i + 1 \
+                        if argument_key == 'vrf' \
+                            or argument_key == 'rd' \
+                            or argument_key == 'instance' \
+                            or argument_key == 'vrf_type' \
+                            or argument_key == 'feature' \
+                            or argument_key == 'fileA' \
+                            or argument_key == 'fileB' \
+                        else i + 2
 
-                # Set current token to command token
-                # For future regex match, it should not consider argument
-                tokens[i] = command_token
-                score += 100 
+                    # Try out ways we can assign search tokens into argument
+                    for index in range(i, endpoint):
+                        if index > len(tokens):
+                            return None
+
+                        # Make sure not to use regex expression as argument
+                        if index > i: 
+                            if fuzzy and not _is_regular_token(tokens[
+                                                                    index - 1]): 
+                                return None
+
+                        # Currently spanned argument
+                        argument_value = ' '.join(tokens[i - 1:index]).rstrip(
+                                                        '"').replace('\\', '')
+                        
+                        # Delete the extra tokens if spanning more than one
+                        tokens_copy = tokens[:i] + tokens[index:]
+                        tokens_copy[i - 1] = command_token
+                        kwargs_copy = kwargs.copy()
+                        kwargs_copy.setdefault(argument_key, argument_value)
+                        
+                        result = _matches_fuzzy(i, j, tokens_copy, command,
+                                kwargs_copy, fuzzy, required_arguments, score)
+                            
+                        if result:
+                            result_kwargs, score = result
+
+                            if len(result_kwargs) == required_arguments:
+                                    return result_kwargs, score
+
+                    return None
             elif token == command_token:
                 # Same token, assign higher score
                 score += 102
@@ -309,7 +359,7 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
 
                 # The two tokens are similar to each other, replace
                 tokens[i] = command_token
-                score += 101
+                score += 100
 
             # Matches current, go to next token
             i += 1
