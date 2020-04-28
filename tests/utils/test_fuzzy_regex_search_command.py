@@ -337,7 +337,7 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
                                         'show evpn ethernet-segment private')
         self.assertEqual(len(_fuzzy_search_command('s e (ipv4|ipv6) n d',
                                                                     True)), 2)
-        self.assertEqual(len(_fuzzy_search_command('s e .* p', True)), 2)
+        self.assertEqual(len(_fuzzy_search_command('s e \| .* p', True)), 1)
 
     def test_negative_prefix_search(self):
         self.assertEqual(_fuzzy_search_command('s e e x w p', True), [])
@@ -400,6 +400,9 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
         with self.assertRaises(Exception):
             _fuzzy_search_command('sh c', False)
 
+        with self.assertRaises(Exception):
+            _fuzzy_search_command('s i r', False)
+
     def test_single_argument(self):
         self.assertEqual(_matches_fuzzy(0, 0, 'a b c d'.split(), 
                                     'a b c {vrf}', {}, True)[0], {'vrf': 'd'})
@@ -436,7 +439,7 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
                                                 {'a': 'a', 'b': 'b', 'c': 'c'})
     
     def test_resolve_argument(self):
-        result = _fuzzy_search_command('show ip prefix-list detail', True)
+        result = _fuzzy_search_command('show ip prefix-list detail', False)
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0][0], 'show {af} prefix-list detail')
     

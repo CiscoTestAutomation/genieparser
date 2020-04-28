@@ -171,6 +171,14 @@ def _fuzzy_search_command(search, fuzzy, os=None, order_list=None,
     if not fuzzy and len(result) > 1:
         # If all results have the same argument positions but different names
         # It should return the first result
+
+        # Check if the result regex match the search
+        for instance in result:
+            s = re.sub('{.*?}', '(.*)', instance[0])
+            p =re.compile(s)
+            if p.match(search):
+                return [instance]
+
         if len(set(re.sub('{.*?}', '---', instance[0]) 
                                                 for instance in result)) == 1:
             return [result[0]]
@@ -285,7 +293,7 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
                                         .format(start, end), token).groups()[0]
 
                             is_found = True
-                            score += 102
+                            score += 103
                     
                     if not is_found:
                         return None
@@ -296,7 +304,7 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
                     j += 1
                     
                     # Plus 101 once to favor nongreedy argument fit
-                    score += 101
+                    score += 100
 
                     # If argument is any of these, argument can only be 1 token
                     # Else argument can be up to 2 tokens
@@ -343,7 +351,7 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
                     return None
             elif token == command_token:
                 # Same token, assign higher score
-                score += 103
+                score += 102
             elif not token == command_token:
                 # Not matching, check if prefix
                 if not command_token.startswith(token):
