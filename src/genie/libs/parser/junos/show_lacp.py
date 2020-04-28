@@ -81,11 +81,9 @@ class ShowLacpInterfacesInstance(ShowLacpInterfacesInstanceSchema):
         # Aggregated interface: ae4
         p1 = re.compile(r'^Aggregated +interface: +(?P<aggregate_name>\S+)$')
 
-        #     LACP state:       Role   Exp   Def  Dist  Col  Syn  Aggr  Timeout  Activity
         #     xe-3/0/1       Actor    No    No   Yes  Yes  Yes   Yes     Fast    Active
         p2 = re.compile(r'^(?P<name>\S+) +(?P<lacp_role>\S+) +(?P<lacp_expired>\S+) +(?P<lacp_defaulted>\S+) +(?P<lacp_distributing>\S+) +(?P<lacp_collecting>\S+) +(?P<lacp_synchronization>\S+) +(?P<lacp_aggregation>\S+) +(?P<lacp_timeout>\S+) +(?P<lacp_activity>\S+)$')
-        #     xe-3/0/1     Partner    No    No   Yes  Yes  Yes   Yes     Fast    Active
-        #     LACP protocol:        Receive State  Transmit State          Mux State
+
         #     xe-3/0/1                  Current   Fast periodic Collecting distributing
         p3 = re.compile(r'^(?P<name>\S+) +(?P<lacp_receive_state>\S+) +(?P<lacp_transmit_state>\S+ +\S+) +(?P<lacp_mux_state>\S+ +\S+)$')
 
