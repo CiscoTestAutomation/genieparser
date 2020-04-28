@@ -80,3 +80,12 @@ class TestShowKrtState(unittest.TestCase):
         obj = ShowLacpInterfacesInstance(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_instance(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowLacpInterfacesInstance(device=self.device)
+        parsed_output = obj.parse(interface="ae4")
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+if __name__ == '__main__':
+    unittest.main()

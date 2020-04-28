@@ -68,11 +68,15 @@ class ShowLacpInterfacesInstance(ShowLacpInterfacesInstanceSchema):
     """ Parser for:
             * show lacp interfaces {interface}
     """
-    cli_command = 'show lacp interfaces {interface}'
+    cli_command = ['show lacp interfaces',
+                    'show lacp interfaces {interface}']
 
     def cli(self, output=None, interface=None):
         if not output:
-            out = self.device.execute(self.cli_command)
+            if not interface:
+                out = self.device.execute(self.cli_command[0])
+            else:
+                out = self.device.execute(self.cli_command[1].format(interface=interface))
         else:
             out = output
 
