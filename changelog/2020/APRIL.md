@@ -273,8 +273,7 @@
         * Added regex to support various outputs.
     * Update ShowIpInterface:
         * Fixed the typo in the keys 'broadcast_address' and 'security_level'
-    * Update ShowIpRoute:
-        * Fixed regex for VRF name, now supports the '-' character in name.
+
 * NXOS
     * Updated ShowAccessLists
         * Update regex to support various outputs.
