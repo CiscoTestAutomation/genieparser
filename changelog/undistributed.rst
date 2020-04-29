@@ -205,6 +205,8 @@
         * show version
     * Added ShowIpv6Neighbors for:
         * show ipv6 neighbors
+    * Added ShowLogFilename for:
+        * show log {filename}
 
 
 

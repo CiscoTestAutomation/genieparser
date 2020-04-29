@@ -28,7 +28,7 @@ class ShowLogFilename(ShowLogFilenameSchema):
     cli_command = 'show log {filename}'
 
     def cli(self, output=None, filename=None):
-        if not output:
+        if not output and not filename:
             out = self.device.execute(self.cli_command)
         else:
             out = output
