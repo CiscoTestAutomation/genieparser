@@ -273,6 +273,7 @@
         * Added regex to support various outputs.
     * Update ShowIpInterface:
         * Fixed the typo in the keys 'broadcast_address' and 'security_level'
+
 * NXOS
     * Updated ShowAccessLists
         * Update regex to support various outputs.
