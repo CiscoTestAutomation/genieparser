@@ -15,6 +15,7 @@ from genie.metaparser.util.schemaengine import (Any,
 
 class ShowLacpInterfacesInstanceSchema(MetaParser):
     """ Schema for:
+            * show lacp interfaces
             * show lacp interfaces {interface}
     """
     def validate_lag_lacp_state_list(value):
