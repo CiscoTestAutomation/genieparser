@@ -675,6 +675,8 @@ class ShowIpRoute(ShowIpRouteSchema):
         else:
             out = output
 
+        if not cmd:
+            cmd = 'ipv4'
         af = 'ipv6' if 'v6' in cmd else 'ipv4'
         result_dict = {}
 
