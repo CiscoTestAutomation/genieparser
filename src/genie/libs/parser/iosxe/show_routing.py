@@ -261,7 +261,7 @@ class ShowIpRoute(ShowIpRouteSchema):
 
             next_hop = interface = updated = metrics = route_preference = ""
             # Routing Table: VRF1
-            p1 = re.compile(r'^Routing Table: +(?P<vrf>[\w]+)$')
+            p1 = re.compile(r'^Routing Table: +(?P<vrf>[\w?-]+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
