@@ -18,7 +18,7 @@ class ShowLogFilenameSchema(MetaParser):
     """
 
     schema = {
-        "file-content": str
+        "file-content": list
     }
 
 class ShowLogFilename(ShowLogFilenameSchema):
@@ -35,13 +35,23 @@ class ShowLogFilename(ShowLogFilenameSchema):
 
         ret_dict = {}
 
+        # show log messages
+        p1 = re.compile(r'^show +log')
+
         for line in out.splitlines():
             line = line.strip()
 
-            file_contents = ret_dict.setdefault("file-content", "")
-            file_contents += line+"\n"
-            ret_dict['file-content'] = file_contents
+            if not line:
+                continue
+
+            m = p1.match(line)
+            if m:
+                continue
+
+            file_contents = ret_dict.setdefault("file-content", [])
+            file_contents.append(line)
 
         import pprint
         pprint.pprint(ret_dict)
+
         return ret_dict
