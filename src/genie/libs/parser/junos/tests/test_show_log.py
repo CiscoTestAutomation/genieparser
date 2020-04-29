@@ -175,5 +175,5 @@ class TestShowLogFilename(unittest.TestCase):
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowLogFilename(device=self.device)
-        parsed_output = obj.parse()
+        parsed_output = obj.parse(filename="messages")
         self.assertEqual(parsed_output, self.golden_parsed_output)
