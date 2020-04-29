@@ -11,6 +11,7 @@ from genie.metaparser.util.schemaengine import Schema, \
                                                 Any, \
                                                 Optional
 
+
 # =============================================
 # Schema for 'show route'
 # =============================================
@@ -29,6 +30,7 @@ class ShowRouteSchema(MetaParser):
                                 Optional('subnet'): str,
                                 'route': str,
                                 Optional('active'): bool,
+                                Optional('date'): str,
                                 Optional('route_preference'): int,
                                 Optional('metric'): int,
                                 Optional('source_protocol'): str,
@@ -96,7 +98,7 @@ class ShowRoute(ShowRouteSchema):
 
     def cli(self, output=None):
         if output is None:
-            # excute command to get output
+            # execute command to get output
             out = self.device.execute(self.cli_command)
         else:
             out = output
@@ -107,16 +109,23 @@ class ShowRoute(ShowRouteSchema):
 
         # S* 0.0.0.0 0.0.0.0 via 10.16.251.1, outside
         # S 0.0.0.1 0.0.0.0 [10/5] via 10.16.255.1, outside
-        p1 = re.compile(
-            r'^\s*(?P<code>(?!is)(?!via)[\w\*]+)\s*(?P<network>\d+.\d+.\d+.\d+)\s*'
-            '(?P<subnet>\d+.\d+.\d+.\d+)\s*(\[(?P<route_preference>[\d\/]+)\])?\s*'
-            '(?P<route_check>[\S]*)\s*(?P<next_hop>\d+.\d+.\d+.\d+),\s*'
-            '(?P<context_name>[\S\s]+)$')
+        # O        10.121.65.0 255.255.255.0 [110/20] via 10.121.64.35, 7w0d, inside
+        # D EX     10.121.70.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
+        p1 = re.compile(r'^(?P<code>(?!is)(?!via)[\w\*]+)\s*'
+                        r'(?P<code2>[A-Z]+)?\s*'
+                        r'(?P<network>\d+.\d+.\d+.\d+)\s*'
+                        r'(?P<subnet>\d+.\d+.\d+.\d+)\s*'
+                        r'(\[(?P<route_preference>[\d\/]+)\])?\s*'
+                        r'(?P<route_check>[\S]*)\s*(?P<next_hop>\d+.\d+.\d+.\d+),\s*'
+                        r'((?P<date>[\w\d]+),)?\s*(?P<context_name>[\S\s]+)$')
 
         # via 10.16.251.2, pod1000
-        p2 = re.compile(
-            r'^(?P<network>\d+.\d+.\d+.\d+)?\s*?(?P<route_check>[\S\s]*)\s'
-            '(?P<next_hop>\d+.\d+.\d+.\d+),\s*(?P<context_name>[\S\s]+)$')
+        # [110/20] via 10.121.64.34, 7w0d, inside
+        p2 = re.compile(r'^(?P<network>\d+.\d+.\d+.\d+)?'
+                        r'(\[(?P<route_preference>[\d\/]+)\])?\s*?'
+                        r'(?P<route_check>[\S\s]*)\s'
+                        r'(?P<next_hop>\d+.\d+.\d+.\d+),\s*'
+                        r'((?P<date>[\d\w]+)?,)?\s*(?P<context_name>[\S\s]+)$')
 
         # C 10.10.1.2 255.255.254.0 is directly connected, outside
         p3 = re.compile(
@@ -140,22 +149,30 @@ class ShowRoute(ShowRouteSchema):
 
             # S* 0.0.0.0 0.0.0.0 via 10.16.251.1, outside
             # S 0.0.0.1 0.0.0.0 [10/5] via 10.16.255.1, outside
+            # O        10.121.65.0 255.255.255.0 [110/20] via 10.121.64.35, 7w0d, inside
+            # D EX     10.121.68.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
                 dict_ipv4 = ret_dict.setdefault('vrf', {}).setdefault('default', {}). \
-                setdefault('address_family', {}).setdefault('ipv4', {}). \
-                setdefault('routes', {})
+                    setdefault('address_family', {}).setdefault('ipv4', {}). \
+                    setdefault('routes', {})
+
                 if 'via' in groups['route_check'] and groups['next_hop']:
                     if groups['code']:
                         code = groups['code']
-                        source_protocol_codes = groups['code'].strip()
+
+                        code2 = groups['code2']
+                        if code2:
+                            code = '{} {}'.format(code, code2)
+
+                        source_protocol_codes = code.strip()
                         for key, val in super().source_protocol_dict.items():
-                            source_protocol_replaced = re.split \
-                            ('\*',source_protocol_codes)[0].strip()
+                            source_protocol_replaced = re.split('\*',source_protocol_codes)[0].strip()
                             code = source_protocol_replaced
                             if source_protocol_replaced in val:
                                 source_protocol = key
+
                     if groups['network']:
                         routes = groups['network']
                         subnet = groups['subnet']
@@ -169,6 +186,10 @@ class ShowRoute(ShowRouteSchema):
                         dict_routes.update({'route': combined_ip})
                         dict_routes.update({'source_protocol_codes': code})
                         dict_routes.update({'source_protocol': source_protocol})
+
+                        if groups['date']:
+                            dict_routes.update({'date': groups['date']})
+
                         if '*' in groups['code']:
                             dict_routes.update({'candidate_default': True})
                         else:
@@ -199,6 +220,7 @@ class ShowRoute(ShowRouteSchema):
                 continue
 
             # via 10.16.251.2, pod1000
+            # [110/20] via 10.121.64.34, 7w0d, inside
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
