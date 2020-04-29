@@ -15,7 +15,6 @@ from genie.metaparser.util.schemaengine import (Any,
 
 class ShowLacpInterfacesInstanceSchema(MetaParser):
     """ Schema for:
-            * show lacp interfaces
             * show lacp interfaces {interface}
     """
     def validate_lag_lacp_state_list(value):
@@ -69,15 +68,11 @@ class ShowLacpInterfacesInstance(ShowLacpInterfacesInstanceSchema):
     """ Parser for:
             * show lacp interfaces {interface}
     """
-    cli_command = ['show lacp interfaces',
-                    'show lacp interfaces {interface}']
+    cli_command = ['show lacp interfaces {interface}']
 
     def cli(self, output=None, interface=None):
         if not output:
-            if not interface:
-                out = self.device.execute(self.cli_command[0])
-            else:
-                out = self.device.execute(self.cli_command[1].format(interface=interface))
+            out = self.device.execute(self.cli_command[0].format(interface=interface))
         else:
             out = output
 

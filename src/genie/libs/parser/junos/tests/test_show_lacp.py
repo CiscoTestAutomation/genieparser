@@ -7,7 +7,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.junos.show_lacp import ShowLacpInterfacesInstance
 
 
-class TestShowKrtState(unittest.TestCase):
+class TestShowLacpInterfacesInstance(unittest.TestCase):
 
     device = Device(name="aDevice")
 
@@ -74,12 +74,6 @@ class TestShowKrtState(unittest.TestCase):
         obj = ShowLacpInterfacesInstance(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             obj.parse()
-
-    def test_golden(self):
-        self.device = Mock(**self.golden_output)
-        obj = ShowLacpInterfacesInstance(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_golden_instance(self):
         self.device = Mock(**self.golden_output)
