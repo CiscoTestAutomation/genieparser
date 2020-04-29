@@ -13,7 +13,6 @@
     * Added ShowOspfNeighborDetail for:
         * show ospf neighbor {neighbor} detail
     * Added ShowLacpInterfacesInstance for:
-        * show lacp interfaces
         * show lacp interfaces {interface}
     * Added ShowLogFilename for:
         * show log {filename}
