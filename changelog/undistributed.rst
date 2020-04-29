@@ -12,6 +12,9 @@
 * JUNOS
     * Added ShowLogFilename for:
         * show log {filename}
+* JUNOS
+    * Added ShowOspfNeighborDetail for:
+        * show ospf neighbor {neighbor} detail
 
 --------------------------------------------------------------------------------
                                 Fix
