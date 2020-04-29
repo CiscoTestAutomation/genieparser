@@ -210,7 +210,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         # Platform: cisco WS_C6506_E,  Capabilities: Router Switch-6506 IGMP
         # Platform: cisco WS-C6506-E,  Capabilities: Router Switch_6506 IGMP
         # Platform: Meraki MV21 Cloud Managed Indoor HD Dom
-        platf_cap_re = re.compile(r'Platform:\s+(?P<platform>[\w +(\-|\_\/)]+)'
+        platf_cap_re = re.compile(r'Platform:\s+(?P<platform>[\w +(\-|\_\/:)]+)'
                                    '(\,\s*Capabilities:\s+(?P<capabilities>[\w\s\-]+))?$')
 
         # Interface: GigabitEthernet0/0,  Port ID (outgoing port): mgmt0
