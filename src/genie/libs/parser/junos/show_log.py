@@ -51,7 +51,4 @@ class ShowLogFilename(ShowLogFilenameSchema):
             file_contents = ret_dict.setdefault("file-content", [])
             file_contents.append(line)
 
-        import pprint
-        pprint.pprint(ret_dict)
-
         return ret_dict
