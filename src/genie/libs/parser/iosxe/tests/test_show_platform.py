@@ -1071,7 +1071,49 @@ class TestShowVersion(unittest.TestCase):
         }
     }
 
+    golden_output_c6807 = {'execute.return_value': '''
+    Cisco IOS Software, s6t64 Software (s6t64-IPSERVICESK9_NPE-M), Version 15.5(1)SY4, RELEASE SOFTWARE (fc4)
+    Technical Support: http://www.cisco.com/techsupport
+    Copyright (c) 1986-2019 by Cisco Systems, Inc.
+    Compiled Mon 02-Sep-19 08:47 by prod_rel_team
     
+    ROM: System Bootstrap, Version 15.3(04r)SYS, RELEASE SOFTWARE
+    
+    BS-SEAT--1-1 uptime is 23 weeks, 21 hours, 39 minutes
+    Uptime for this control processor is 23 weeks, 21 hours, 32 minutes
+    System returned to ROM by power-on
+    System restarted at 15:42:36 CET Mon Nov 18 2019
+    System image file is "bootdisk:s6t64-ipservicesk9_npe-mz.SPA.155-1.SY4.bin"
+    Last reload reason: power-on
+    
+    This product contains cryptographic features and is subject to United
+    States and local country laws governing import, export, transfer and
+    use. Delivery of Cisco cryptographic products does not imply
+    third-party authority to import, export, distribute or use encryption.
+    Importers, exporters, distributors and users are responsible for
+    compliance with U.S. and local country laws. By using this product you
+    agree to comply with applicable laws and regulations. If you are unable
+    to comply with U.S. and local laws, return this product immediately.
+    
+    A summary of U.S. laws governing Cisco cryptographic products may be found at:
+    http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+    
+    If you require further assistance please contact us by sending email to
+    export@cisco.com.
+    
+    Cisco C6807-XL ( Intel(R) Core(TM) i3-3227U CPU @ 2.50GHz ) processor (revision ) with 2879470K/524288K bytes of memory.
+    Processor board ID FGE23105KD4
+    Processor signature 0xA9060300
+    Last reset from power-on
+    63 Virtual Ethernet interfaces
+    97 Gigabit Ethernet interfaces
+    144 Ten Gigabit Ethernet interfaces
+    4 Forty Gigabit Ethernet interfaces
+    3735536K bytes of USB Flash bootdisk (Read/Write)
+    
+    Configuration register is 0x2102
+    '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.dev1)
@@ -1125,6 +1167,19 @@ class TestShowVersion(unittest.TestCase):
         obj = ShowVersion(device=self.dev_1)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden_6807(self):
+        self.maxDiff = None
+        self.dev_1 = Mock(**self.golden_output_c6807)
+        obj = ShowVersion(device=self.dev_1)
+        parsed_output = obj.parse()
+        import pprint
+        pprint.pprint(parsed_output)
+        import pdb
+        pdb.set_trace()
+
+        self.assertEqual(parsed_output, self.golden_parsed_output_c6807)
+
 
 class TestDir(unittest.TestCase):
     dev1 = Device(name='empty')
