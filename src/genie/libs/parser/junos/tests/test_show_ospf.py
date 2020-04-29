@@ -11123,5 +11123,11 @@ class TestShowOspfNeighborDetail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-if __name__ == "__main__":
+    def test_show_ospf_neighbor_instance_detail(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspfNeighborDetail(device=self.device)
+        parsed_output = obj.parse(neighbor='10.189.5.94')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+if __name__ == '__main__':
     unittest.main()
