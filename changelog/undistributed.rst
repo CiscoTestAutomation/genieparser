@@ -27,3 +27,6 @@
     * Updated ShowIpStaticRouteMulticast:
         * Change key 'address_family' into Optional
 
+* LINUX
+    * Fixed Ifconfig parser issues.
+
