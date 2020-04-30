@@ -35,9 +35,9 @@ class TestShowLacpInterfacesInterface(unittest.TestCase):
                 "lag-lacp-header": {"aggregate-name": "ae4"},
                 "lag-lacp-protocol": [
                     {
-                        "lacp-mux-state": "Collecting " "distributing",
+                        "lacp-mux-state": "Collecting distributing",
                         "lacp-receive-state": "Current",
-                        "lacp-transmit-state": "Fast " "periodic",
+                        "lacp-transmit-state": "Fast periodic",
                         "name": "xe-3/0/1",
                     }
                 ],
