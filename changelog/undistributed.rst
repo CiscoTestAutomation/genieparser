@@ -10,11 +10,17 @@
 --------------------------------------------------------------------------------
 
 * JUNOS
-    * Added ShowLogFilename for:
-        * show log {filename}
-* JUNOS
     * Added ShowOspfNeighborDetail for:
         * show ospf neighbor {neighbor} detail
+    * Added ShowLogFilename for:
+        * show log {filename}
+    * Added ShowVersionDetail for:
+        * show version detail
+    * Added ShowVersionInvokeOnAllRoutingEngines for:
+        * show version invoke-on all-routing-engines
+    * Added ShowVersionDetailNoForarding for:
+        * show version detail no-forwarding
+
 
 --------------------------------------------------------------------------------
                                 Fix
