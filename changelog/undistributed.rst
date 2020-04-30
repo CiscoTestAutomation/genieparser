@@ -12,7 +12,7 @@
 * JUNOS
     * Added ShowOspfNeighborDetail for:
         * show ospf neighbor {neighbor} detail
-    * Added ShowLacpInterfacesInstance for:
+    * Added ShowLacpInterfacesInterface for:
         * show lacp interfaces {interface}
     * Added ShowLogFilename for:
         * show log {filename}
