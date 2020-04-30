@@ -4,10 +4,12 @@ from unittest.mock import Mock
 from pyats.topology import Device
 from pyats.topology import loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
-from genie.libs.parser.junos.show_lacp import ShowLacpInterfacesInstance
+from genie.libs.parser.junos.show_lacp import ShowLacpInterfacesInterface
 
-
-class TestShowLacpInterfacesInstance(unittest.TestCase):
+""" Unittest for:
+        * show lacp interfaces {interface}
+"""
+class TestShowLacpInterfacesInterface(unittest.TestCase):
 
     device = Device(name="aDevice")
 
@@ -71,13 +73,13 @@ class TestShowLacpInterfacesInstance(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowLacpInterfacesInstance(device=self.device)
+        obj = ShowLacpInterfacesInterface(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             obj.parse()
 
     def test_golden_instance(self):
         self.device = Mock(**self.golden_output)
-        obj = ShowLacpInterfacesInstance(device=self.device)
+        obj = ShowLacpInterfacesInterface(device=self.device)
         parsed_output = obj.parse(interface="ae4")
         self.assertEqual(parsed_output, self.golden_parsed_output)
 

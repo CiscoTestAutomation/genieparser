@@ -13,7 +13,7 @@ from genie.metaparser.util.schemaengine import (Any,
         Optional, Use, SchemaTypeError, Schema)
 
 
-class ShowLacpInterfacesInstanceSchema(MetaParser):
+class ShowLacpInterfacesInterfaceSchema(MetaParser):
     """ Schema for:
             * show lacp interfaces {interface}
     """
@@ -64,7 +64,7 @@ class ShowLacpInterfacesInstanceSchema(MetaParser):
     }
 
 
-class ShowLacpInterfacesInstance(ShowLacpInterfacesInstanceSchema):
+class ShowLacpInterfacesInterface(ShowLacpInterfacesInterfaceSchema):
     """ Parser for:
             * show lacp interfaces {interface}
     """
