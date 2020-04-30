@@ -6,7 +6,7 @@ from pyats.topology import loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.junos.show_lacp import ShowLacpInterfacesInterface
 
-""" Unittest for:
+""" TestCase for:
         * show lacp interfaces {interface}
 """
 class TestShowLacpInterfacesInterface(unittest.TestCase):
