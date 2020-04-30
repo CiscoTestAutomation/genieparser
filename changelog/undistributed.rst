@@ -19,6 +19,10 @@
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
+
+* IOSXE
+    * Fixed ShowDmvpn not executing the command properly on device
+
 * NXOS
     * Updated ShowIpStaticRouteMulticast:
         * Change key 'address_family' into Optional
