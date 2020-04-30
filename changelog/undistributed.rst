@@ -15,6 +15,8 @@
 * JUNOS
     * Added ShowOspfNeighborDetail for:
         * show ospf neighbor {neighbor} detail
+    * Added ShowBgpNeighbor for:
+        * show bgp neighbor
 
 --------------------------------------------------------------------------------
                                 Fix

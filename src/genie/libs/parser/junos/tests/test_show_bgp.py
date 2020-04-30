@@ -1749,7 +1749,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
     golden_output = {
         "execute.return_value": """
         show bgp neighbor
-        Peer: 27.85.216.179 AS 65171   Local: 111.87.5.252 AS 65171
+        Peer: 10.49.216.179 AS 65171   Local: 10.189.5.252 AS 65171
         Description: v4_Kentik
         Group: v4_Kentik             Routing-Instance: master
         Forwarding routing-instance: master
@@ -1759,11 +1759,11 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Export: [ v4_Kentik_NO-DEFAULT ] Import: [ 11 ]
         Options: <Preference LocalAddress HoldTime LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
-        Local Address: 111.87.5.252 Holdtime: 720 Preference: 170
+        Local Address: 10.189.5.252 Holdtime: 720 Preference: 170
         Graceful Shutdown Receiver local-preference: 0
         Number of flaps: 0
 
-        Peer: 106.187.14.240+60606 AS 65151 Local: 111.87.5.252+179 AS 65171
+        Peer: 10.169.14.240+60606 AS 65151 Local: 10.189.5.252+179 AS 65171
         Description: sjkGCS001-EC11
         Group: sjkGCS001-EC11        Routing-Instance: master
         Forwarding routing-instance: master
@@ -1775,13 +1775,13 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Options: <GracefulShutdownRcv>
         Authentication key is configured
         Address families configured: inet-unicast inet-labeled-unicast
-        Local Address: 111.87.5.252 Holdtime: 30 Preference: 170
+        Local Address: 10.189.5.252 Holdtime: 30 Preference: 170
         Graceful Shutdown Receiver local-preference: 0
         Number of flaps: 127
         Last flap event: HoldTime
         Error: 'Hold Timer Expired Error' Sent: 156 Recv: 17
         Error: 'Cease' Sent: 0 Recv: 6
-        Peer ID: 106.187.14.240  Local ID: 111.87.5.252      Active Holdtime: 30
+        Peer ID: 10.169.14.240  Local ID: 10.189.5.252      Active Holdtime: 30
         Keepalive Interval: 10         Group index: 10   Peer index: 0    SNMP index: 15
         I/O Session Thread: bgpio-0 State: Enabled
         BFD: disabled, down
@@ -1824,7 +1824,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Output Queue[1]: 0            (inet.0, inet-unicast)
         Output Queue[2]: 0            (inet.3, inet-labeled-unicast)
 
-        Peer: 106.187.14.249 AS 65151  Local: 111.87.5.252 AS 65171
+        Peer: 10.169.14.249 AS 65151  Local: 10.189.5.252 AS 65171
         Description: obpGCS001-WC11
         Group: obpGCS001-WC11        Routing-Instance: master
         Forwarding routing-instance: master
@@ -1835,11 +1835,11 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Options: <Multihop Preference LocalAddress HoldTime AuthKey Ttl LogUpDown PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
-        Local Address: 111.87.5.252 Holdtime: 30 Preference: 170
+        Local Address: 10.189.5.252 Holdtime: 30 Preference: 170
         Graceful Shutdown Receiver local-preference: 0
         Number of flaps: 0
 
-        Peer: 111.87.5.240+179 AS 65171 Local: 111.87.5.252 AS 65171
+        Peer: 10.189.5.240+179 AS 65171 Local: 10.189.5.252 AS 65171
         Description: cm-hkm003
         Group: v4_RRC_72_SQUARE      Routing-Instance: master
         Forwarding routing-instance: master
@@ -1850,11 +1850,11 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Options: <Preference LocalAddress HoldTime AuthKey LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
-        Local Address: 111.87.5.252 Holdtime: 60 Preference: 170
+        Local Address: 10.189.5.252 Holdtime: 60 Preference: 170
         Graceful Shutdown Receiver local-preference: 0
         Number of flaps: 0
 
-        Peer: 111.87.5.241+179 AS 65171 Local: 111.87.5.252 AS 65171
+        Peer: 10.189.5.241+179 AS 65171 Local: 10.189.5.252 AS 65171
         Description: cm-hkm004
         Group: v4_RRC_72_SQUARE      Routing-Instance: master
         Forwarding routing-instance: master
@@ -1865,11 +1865,11 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Options: <Preference LocalAddress HoldTime AuthKey LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
-        Local Address: 111.87.5.252 Holdtime: 60 Preference: 170
+        Local Address: 10.189.5.252 Holdtime: 60 Preference: 170
         Graceful Shutdown Receiver local-preference: 0
         Number of flaps: 0
 
-        Peer: 111.87.5.242 AS 65171    Local: 111.87.5.252 AS 65171
+        Peer: 10.189.5.242 AS 65171    Local: 10.189.5.252 AS 65171
         Description: cm-hkt003
         Group: v4_RRC_72_TRIANGLE    Routing-Instance: master
         Forwarding routing-instance: master
@@ -1880,11 +1880,11 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Options: <Preference LocalAddress HoldTime AuthKey LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
-        Local Address: 111.87.5.252 Holdtime: 60 Preference: 170
+        Local Address: 10.189.5.252 Holdtime: 60 Preference: 170
         Graceful Shutdown Receiver local-preference: 0
         Number of flaps: 0
 
-        Peer: 111.87.5.243 AS 65171    Local: 111.87.5.252 AS 65171
+        Peer: 10.189.5.243 AS 65171    Local: 10.189.5.252 AS 65171
         Description: cm-hkt004
         Group: v4_RRC_72_TRIANGLE    Routing-Instance: master
         Forwarding routing-instance: master
@@ -1895,11 +1895,11 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Options: <Preference LocalAddress HoldTime AuthKey LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
-        Local Address: 111.87.5.252 Holdtime: 60 Preference: 170
+        Local Address: 10.189.5.252 Holdtime: 60 Preference: 170
         Graceful Shutdown Receiver local-preference: 0
         Number of flaps: 0
 
-        Peer: 111.87.5.245 AS 65171    Local: 111.87.5.252 AS 65171
+        Peer: 10.189.5.245 AS 65171    Local: 10.189.5.252 AS 65171
         Description: lg-hkt001
         Group: v4_RRC_72_TRIANGLE    Routing-Instance: master
         Forwarding routing-instance: master
@@ -1910,11 +1910,11 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Options: <Preference LocalAddress HoldTime AuthKey LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
-        Local Address: 111.87.5.252 Holdtime: 60 Preference: 170
+        Local Address: 10.189.5.252 Holdtime: 60 Preference: 170
         Graceful Shutdown Receiver local-preference: 0
         Number of flaps: 0
 
-        Peer: 111.87.5.253+179 AS 65171 Local: 111.87.5.252+60144 AS 65171
+        Peer: 10.189.5.253+179 AS 65171 Local: 10.189.5.252+60144 AS 65171
         Description: hktGCS002
         Group: hktGCS002             Routing-Instance: master
         Forwarding routing-instance: master
@@ -1925,13 +1925,13 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Options: <Preference LocalAddress HoldTime AuthKey LogUpDown PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
-        Local Address: 111.87.5.252 Holdtime: 60 Preference: 170
+        Local Address: 10.189.5.252 Holdtime: 60 Preference: 170
         Graceful Shutdown Receiver local-preference: 0
         Number of flaps: 44
         Last flap event: RecvNotify
         Error: 'Hold Timer Expired Error' Sent: 18 Recv: 36
         Error: 'Cease' Sent: 10 Recv: 2
-        Peer ID: 111.87.5.253    Local ID: 111.87.5.252      Active Holdtime: 60
+        Peer ID: 10.189.5.253    Local ID: 10.189.5.252      Active Holdtime: 60
         Keepalive Interval: 20         Group index: 0    Peer index: 0    SNMP index: 0
         I/O Session Thread: bgpio-0 State: Enabled
         BFD: disabled, down
@@ -1962,7 +1962,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Output messages: Total 171942 Updates 61307   Refreshes 0     Octets 5078640
         Output Queue[1]: 0            (inet.0, inet-unicast)
 
-        Peer: 111.87.6.250 AS 65181    Local: 111.87.5.252 AS 65171
+        Peer: 10.189.6.250 AS 65181    Local: 10.189.5.252 AS 65171
         Description: sggjbb001
         Group: sggjbb001             Routing-Instance: master
         Forwarding routing-instance: master
@@ -1973,11 +1973,11 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Options: <Multihop Preference LocalAddress HoldTime AuthKey Ttl LogUpDown PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
-        Local Address: 111.87.5.252 Holdtime: 30 Preference: 170
+        Local Address: 10.189.5.252 Holdtime: 30 Preference: 170
         Graceful Shutdown Receiver local-preference: 0
         Number of flaps: 0
 
-        Peer: 2001:268:fa03:272::1:140+179 AS 65171 Local: 2001:268:fb90::b AS 65171
+        Peer: 2001:db8:6be:89bb::1:140+179 AS 65171 Local: 2001:db8:223c:ca45::b AS 65171
         Description: v6_Kentik
         Group: v6_Kentik             Routing-Instance: master
         Forwarding routing-instance: master
@@ -1987,11 +1987,11 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Export: [ v6_Kentik_NO-DEFAULT ] Import: [ 11 ]
         Options: <Preference LocalAddress HoldTime LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
-        Local Address: 2001:268:fb90::b Holdtime: 720 Preference: 170
+        Local Address: 2001:db8:223c:ca45::b Holdtime: 720 Preference: 170
         Graceful Shutdown Receiver local-preference: 0
         Number of flaps: 0
 
-        Peer: 2001:268:fb8f::1+179 AS 65151 Local: 2001:268:fb90::b+63754 AS 65171
+        Peer: 2001:db8:eb18:ca45::1+179 AS 65151 Local: 2001:db8:223c:ca45::b+63754 AS 65171
         Description: sjkGCS001-EC11
         Group: v6_sjkGCS001-EC11     Routing-Instance: master
         Forwarding routing-instance: master
@@ -2002,13 +2002,13 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Options: <Multihop Preference LocalAddress HoldTime AuthKey Ttl LogUpDown PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
-        Local Address: 2001:268:fb90::b Holdtime: 30 Preference: 170
+        Local Address: 2001:db8:223c:ca45::b Holdtime: 30 Preference: 170
         Graceful Shutdown Receiver local-preference: 0
         Number of flaps: 133
         Last flap event: HoldTime
         Error: 'Hold Timer Expired Error' Sent: 171 Recv: 24
         Error: 'Cease' Sent: 0 Recv: 5
-        Peer ID: 106.187.14.240  Local ID: 111.87.5.252      Active Holdtime: 30
+        Peer ID: 10.169.14.240  Local ID: 10.189.5.252      Active Holdtime: 30
         Keepalive Interval: 10         Group index: 11   Peer index: 0    SNMP index: 16
         I/O Session Thread: bgpio-0 State: Enabled
         BFD: disabled, down
@@ -2039,7 +2039,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Output messages: Total 221174 Updates 0       Refreshes 0     Octets 4202317
         Output Queue[3]: 0            (inet6.0, inet6-unicast)
 
-        Peer: 2001:268:fb8f::11 AS 65151 Local: 2001:268:fb90::b AS 65171
+        Peer: 2001:db8:eb18:ca45::11 AS 65151 Local: 2001:db8:223c:ca45::b AS 65171
         Description: obpGCS001-WC11
         Group: v6_obpGCS001-WC11     Routing-Instance: master
         Forwarding routing-instance: master
@@ -2050,11 +2050,11 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Options: <Multihop Preference LocalAddress HoldTime AuthKey Ttl LogUpDown PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
-        Local Address: 2001:268:fb90::b Holdtime: 30 Preference: 170
+        Local Address: 2001:db8:223c:ca45::b Holdtime: 30 Preference: 170
         Graceful Shutdown Receiver local-preference: 0
         Number of flaps: 0
 
-        Peer: 2001:268:fb90::7 AS 65171 Local: 2001:268:fb90::b AS 65171
+        Peer: 2001:db8:223c:ca45::7 AS 65171 Local: 2001:db8:223c:ca45::b AS 65171
         Description: cm-hkt003
         Group: v6_RRC_72_TRIANGLE    Routing-Instance: master
         Forwarding routing-instance: master
@@ -2065,11 +2065,11 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Options: <Preference LocalAddress HoldTime AuthKey LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
-        Local Address: 2001:268:fb90::b Holdtime: 60 Preference: 170
+        Local Address: 2001:db8:223c:ca45::b Holdtime: 60 Preference: 170
         Graceful Shutdown Receiver local-preference: 0
         Number of flaps: 0
 
-        Peer: 2001:268:fb90::8+179 AS 65171 Local: 2001:268:fb90::b AS 65171
+        Peer: 2001:db8:223c:ca45::8+179 AS 65171 Local: 2001:db8:223c:ca45::b AS 65171
         Description: cm-hkt004
         Group: v6_RRC_72_TRIANGLE    Routing-Instance: master
         Forwarding routing-instance: master
@@ -2080,11 +2080,11 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Options: <Preference LocalAddress HoldTime AuthKey LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
-        Local Address: 2001:268:fb90::b Holdtime: 60 Preference: 170
+        Local Address: 2001:db8:223c:ca45::b Holdtime: 60 Preference: 170
         Graceful Shutdown Receiver local-preference: 0
         Number of flaps: 0
 
-        Peer: 2001:268:fb90::9 AS 65171 Local: 2001:268:fb90::b AS 65171
+        Peer: 2001:db8:223c:ca45::9 AS 65171 Local: 2001:db8:223c:ca45::b AS 65171
         Description: cm-hkm003
         Group: v6_RRC_72_SQUARE      Routing-Instance: master
         Forwarding routing-instance: master
@@ -2095,11 +2095,11 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Options: <Preference LocalAddress HoldTime AuthKey LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
-        Local Address: 2001:268:fb90::b Holdtime: 60 Preference: 170
+        Local Address: 2001:db8:223c:ca45::b Holdtime: 60 Preference: 170
         Graceful Shutdown Receiver local-preference: 0
         Number of flaps: 0
 
-        Peer: 2001:268:fb90::a+179 AS 65171 Local: 2001:268:fb90::b AS 65171
+        Peer: 2001:db8:223c:ca45::a+179 AS 65171 Local: 2001:db8:223c:ca45::b AS 65171
         Description: cm-hkm004
         Group: v6_RRC_72_SQUARE      Routing-Instance: master
         Forwarding routing-instance: master
@@ -2110,11 +2110,11 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Options: <Preference LocalAddress HoldTime AuthKey LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
-        Local Address: 2001:268:fb90::b Holdtime: 60 Preference: 170
+        Local Address: 2001:db8:223c:ca45::b Holdtime: 60 Preference: 170
         Graceful Shutdown Receiver local-preference: 0
         Number of flaps: 0
 
-        Peer: 2001:268:fb90::c+60268 AS 65171 Local: 2001:268:fb90::b+179 AS 65171
+        Peer: 2001:db8:223c:ca45::c+60268 AS 65171 Local: 2001:db8:223c:ca45::b+179 AS 65171
         Description: hktGCS002
         Group: v6_hktGCS002          Routing-Instance: master
         Forwarding routing-instance: master
@@ -2125,13 +2125,13 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Options: <Preference LocalAddress HoldTime AuthKey LogUpDown PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
-        Local Address: 2001:268:fb90::b Holdtime: 60 Preference: 170
+        Local Address: 2001:db8:223c:ca45::b Holdtime: 60 Preference: 170
         Graceful Shutdown Receiver local-preference: 0
         Number of flaps: 55
         Last flap event: HoldTime
         Error: 'Hold Timer Expired Error' Sent: 27 Recv: 40
         Error: 'Cease' Sent: 16 Recv: 0
-        Peer ID: 111.87.5.253    Local ID: 111.87.5.252      Active Holdtime: 60
+        Peer ID: 10.189.5.253    Local ID: 10.189.5.252      Active Holdtime: 60
         Keepalive Interval: 20         Group index: 1    Peer index: 0    SNMP index: 1
         I/O Session Thread: bgpio-0 State: Enabled
         BFD: disabled, down
@@ -2157,12 +2157,12 @@ class TestShowBgpNeighbor(unittest.TestCase):
             Accepted prefixes:            0
             Suppressed due to damping:    0
             Advertised prefixes:          0
-        Last traffic (seconds): Received 6    Sent 5    Checked 1999683
+        Last traffic (seconds): Received 6    Sent 5    Checked 16510983
         Input messages:  Total 110662 Updates 1       Refreshes 0     Octets 2102633
         Output messages: Total 110664 Updates 0       Refreshes 0     Octets 2102627
         Output Queue[3]: 0            (inet6.0, inet6-unicast)
 
-        Peer: 2001:268:fb91::1 AS 65181 Local: 2001:268:fb90::b AS 65171
+        Peer: 2001:db8:5961:ca45::1 AS 65181 Local: 2001:db8:223c:ca45::b AS 65171
         Description: sggjbb001
         Group: v6_sggjbb001          Routing-Instance: master
         Forwarding routing-instance: master
@@ -2173,7 +2173,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Options: <Multihop Preference LocalAddress HoldTime AuthKey Ttl LogUpDown PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
-        Local Address: 2001:268:fb90::b Holdtime: 30 Preference: 170
+        Local Address: 2001:db8:223c:ca45::b Holdtime: 30 Preference: 170
         Graceful Shutdown Receiver local-preference: 0
         Number of flaps: 0
     """
@@ -2198,7 +2198,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "gshut-recv-local-preference": "0",
                         "holdtime": "720",
                         "import-policy": "11",
-                        "local-address": "111.87.5.252",
+                        "local-address": "10.189.5.252",
                         "preference": "170",
                     },
                     "description": "v4_Kentik",
@@ -2206,9 +2206,9 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "last-error": "None",
                     "last-event": "Start",
                     "last-state": "Idle",
-                    "local-address": "111.87.5.252",
+                    "local-address": "10.189.5.252",
                     "local-as": "65171",
-                    "peer-address": "27.85.216.179",
+                    "peer-address": "10.49.216.179",
                     "peer-as": "65171",
                     "peer-cfg-rti": "master",
                     "peer-flags": "",
@@ -2256,7 +2256,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "HKG-EC_AddMED))",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "30",
-                        "local-address": "111.87.5.252",
+                        "local-address": "10.189.5.252",
                         "preference": "170",
                     },
                     "bgp-output-queue": [
@@ -2320,7 +2320,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "last-received": "3",
                     "last-sent": "3",
                     "last-state": "OpenConfirm",
-                    "local-address": "111.87.5.252+179",
+                    "local-address": "10.189.5.252+179",
                     "local-as": "65171",
                     "local-ext-nh-color-nlri": "inet-unicast",
                     "nlri-type": "inet-labeled-unicast",
@@ -2332,7 +2332,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "output-updates": "0",
                     "peer-4byte-as-capability-advertised": "65151",
                     "peer-addpath-not-supported": True,
-                    "peer-address": "106.187.14.240+60606",
+                    "peer-address": "10.169.14.240+60606",
                     "peer-as": "65151",
                     "peer-cfg-rti": "master",
                     "peer-end-of-rib-received": "inet-unicast " "inet-labeled-unicast",
@@ -2376,7 +2376,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "HKG-WC_AddMED))",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "30",
-                        "local-address": "111.87.5.252",
+                        "local-address": "10.189.5.252",
                         "preference": "170",
                     },
                     "description": "obpGCS001-WC11",
@@ -2384,9 +2384,9 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "last-error": "None",
                     "last-event": "Start",
                     "last-state": "Idle",
-                    "local-address": "111.87.5.252",
+                    "local-address": "10.189.5.252",
                     "local-as": "65171",
-                    "peer-address": "106.187.14.249",
+                    "peer-address": "10.169.14.249",
                     "peer-as": "65151",
                     "peer-cfg-rti": "master",
                     "peer-flags": "",
@@ -2413,7 +2413,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "gshut-recv-local-preference": "0",
                         "holdtime": "60",
                         "import-policy": "REJ_LONG_ASPATH",
-                        "local-address": "111.87.5.252",
+                        "local-address": "10.189.5.252",
                         "preference": "170",
                     },
                     "description": "cm-hkm003",
@@ -2421,9 +2421,9 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "last-error": "None",
                     "last-event": "ConnectRetry",
                     "last-state": "Active",
-                    "local-address": "111.87.5.252",
+                    "local-address": "10.189.5.252",
                     "local-as": "65171",
-                    "peer-address": "111.87.5.240+179",
+                    "peer-address": "10.189.5.240+179",
                     "peer-as": "65171",
                     "peer-cfg-rti": "master",
                     "peer-flags": "",
@@ -2451,7 +2451,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "gshut-recv-local-preference": "0",
                         "holdtime": "60",
                         "import-policy": "REJ_LONG_ASPATH",
-                        "local-address": "111.87.5.252",
+                        "local-address": "10.189.5.252",
                         "preference": "170",
                     },
                     "description": "cm-hkm004",
@@ -2459,9 +2459,9 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "last-error": "None",
                     "last-event": "ConnectRetry",
                     "last-state": "Active",
-                    "local-address": "111.87.5.252",
+                    "local-address": "10.189.5.252",
                     "local-as": "65171",
-                    "peer-address": "111.87.5.241+179",
+                    "peer-address": "10.189.5.241+179",
                     "peer-as": "65171",
                     "peer-cfg-rti": "master",
                     "peer-flags": "",
@@ -2494,7 +2494,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "REJ_LONG_ASPATH",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "60",
-                        "local-address": "111.87.5.252",
+                        "local-address": "10.189.5.252",
                         "preference": "170",
                     },
                     "description": "cm-hkt003",
@@ -2502,9 +2502,9 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "last-error": "None",
                     "last-event": "Start",
                     "last-state": "Idle",
-                    "local-address": "111.87.5.252",
+                    "local-address": "10.189.5.252",
                     "local-as": "65171",
-                    "peer-address": "111.87.5.242",
+                    "peer-address": "10.189.5.242",
                     "peer-as": "65171",
                     "peer-cfg-rti": "master",
                     "peer-flags": "",
@@ -2537,7 +2537,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "REJ_LONG_ASPATH",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "60",
-                        "local-address": "111.87.5.252",
+                        "local-address": "10.189.5.252",
                         "preference": "170",
                     },
                     "description": "cm-hkt004",
@@ -2545,9 +2545,9 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "last-error": "None",
                     "last-event": "Start",
                     "last-state": "Idle",
-                    "local-address": "111.87.5.252",
+                    "local-address": "10.189.5.252",
                     "local-as": "65171",
-                    "peer-address": "111.87.5.243",
+                    "peer-address": "10.189.5.243",
                     "peer-as": "65171",
                     "peer-cfg-rti": "master",
                     "peer-flags": "",
@@ -2580,7 +2580,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "REJ_LONG_ASPATH",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "60",
-                        "local-address": "111.87.5.252",
+                        "local-address": "10.189.5.252",
                         "preference": "170",
                     },
                     "description": "lg-hkt001",
@@ -2588,9 +2588,9 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "last-error": "None",
                     "last-event": "Start",
                     "last-state": "Idle",
-                    "local-address": "111.87.5.252",
+                    "local-address": "10.189.5.252",
                     "local-as": "65171",
-                    "peer-address": "111.87.5.245",
+                    "peer-address": "10.189.5.245",
                     "peer-as": "65171",
                     "peer-cfg-rti": "master",
                     "peer-flags": "",
@@ -2628,7 +2628,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "export-policy": "(v4_WATARI " "&& " "NEXT-HOP-SELF)",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "60",
-                        "local-address": "111.87.5.252",
+                        "local-address": "10.189.5.252",
                         "preference": "170",
                     },
                     "bgp-output-queue": [
@@ -2671,7 +2671,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "last-received": "13",
                     "last-sent": "3",
                     "last-state": "OpenConfirm",
-                    "local-address": "111.87.5.252+60144",
+                    "local-address": "10.189.5.252+60144",
                     "local-as": "65171",
                     "local-ext-nh-color-nlri": "inet-unicast",
                     "nlri-type-peer": "inet-unicast",
@@ -2682,7 +2682,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "output-updates": "61307",
                     "peer-4byte-as-capability-advertised": "65171",
                     "peer-addpath-not-supported": True,
-                    "peer-address": "111.87.5.253+179",
+                    "peer-address": "10.189.5.253+179",
                     "peer-as": "65171",
                     "peer-cfg-rti": "master",
                     "peer-end-of-rib-received": "inet-unicast",
@@ -2724,7 +2724,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "HKG-SNG_AddMED))",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "30",
-                        "local-address": "111.87.5.252",
+                        "local-address": "10.189.5.252",
                         "preference": "170",
                     },
                     "description": "sggjbb001",
@@ -2732,9 +2732,9 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "last-error": "None",
                     "last-event": "Start",
                     "last-state": "Idle",
-                    "local-address": "111.87.5.252",
+                    "local-address": "10.189.5.252",
                     "local-as": "65171",
-                    "peer-address": "111.87.6.250",
+                    "peer-address": "10.189.6.250",
                     "peer-as": "65181",
                     "peer-cfg-rti": "master",
                     "peer-flags": "",
@@ -2759,7 +2759,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "gshut-recv-local-preference": "0",
                         "holdtime": "720",
                         "import-policy": "11",
-                        "local-address": "2001:268:fb90::b",
+                        "local-address": "2001:db8:223c:ca45::b",
                         "preference": "170",
                     },
                     "description": "v6_Kentik",
@@ -2767,9 +2767,9 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "last-error": "None",
                     "last-event": "ConnectRetry",
                     "last-state": "Active",
-                    "local-address": "2001:268:fb90::b",
+                    "local-address": "2001:db8:223c:ca45::b",
                     "local-as": "65171",
-                    "peer-address": "2001:268:fa03:272::1:140+179",
+                    "peer-address": "2001:db8:6be:89bb::1:140+179",
                     "peer-as": "65171",
                     "peer-cfg-rti": "master",
                     "peer-flags": "",
@@ -2813,7 +2813,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "v6_HKG-EC_AddMED))",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "30",
-                        "local-address": "2001:268:fb90::b",
+                        "local-address": "2001:db8:223c:ca45::b",
                         "preference": "170",
                     },
                     "bgp-output-queue": [
@@ -2856,7 +2856,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "last-received": "1",
                     "last-sent": "3",
                     "last-state": "OpenConfirm",
-                    "local-address": "2001:268:fb90::b+63754",
+                    "local-address": "2001:db8:223c:ca45::b+63754",
                     "local-as": "65171",
                     "local-ext-nh-color-nlri": "inet6-unicast",
                     "nlri-type-peer": "inet6-unicast",
@@ -2867,7 +2867,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "output-updates": "0",
                     "peer-4byte-as-capability-advertised": "65151",
                     "peer-addpath-not-supported": True,
-                    "peer-address": "2001:268:fb8f::1+179",
+                    "peer-address": "2001:db8:eb18:ca45::1+179",
                     "peer-as": "65151",
                     "peer-cfg-rti": "master",
                     "peer-end-of-rib-received": "inet6-unicast",
@@ -2909,7 +2909,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "v6_HKG-WC_AddMED))",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "30",
-                        "local-address": "2001:268:fb90::b",
+                        "local-address": "2001:db8:223c:ca45::b",
                         "preference": "170",
                     },
                     "description": "obpGCS001-WC11",
@@ -2917,9 +2917,9 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "last-error": "None",
                     "last-event": "Start",
                     "last-state": "Idle",
-                    "local-address": "2001:268:fb90::b",
+                    "local-address": "2001:db8:223c:ca45::b",
                     "local-as": "65171",
-                    "peer-address": "2001:268:fb8f::11",
+                    "peer-address": "2001:db8:eb18:ca45::11",
                     "peer-as": "65151",
                     "peer-cfg-rti": "master",
                     "peer-flags": "",
@@ -2947,7 +2947,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "v6_NEXT-HOP-SELF_hktGCS001)",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "60",
-                        "local-address": "2001:268:fb90::b",
+                        "local-address": "2001:db8:223c:ca45::b",
                         "preference": "170",
                     },
                     "description": "cm-hkt003",
@@ -2955,9 +2955,9 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "last-error": "None",
                     "last-event": "Start",
                     "last-state": "Idle",
-                    "local-address": "2001:268:fb90::b",
+                    "local-address": "2001:db8:223c:ca45::b",
                     "local-as": "65171",
-                    "peer-address": "2001:268:fb90::7",
+                    "peer-address": "2001:db8:223c:ca45::7",
                     "peer-as": "65171",
                     "peer-cfg-rti": "master",
                     "peer-flags": "",
@@ -2986,7 +2986,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "v6_NEXT-HOP-SELF_hktGCS001)",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "60",
-                        "local-address": "2001:268:fb90::b",
+                        "local-address": "2001:db8:223c:ca45::b",
                         "preference": "170",
                     },
                     "description": "cm-hkt004",
@@ -2994,9 +2994,9 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "last-error": "None",
                     "last-event": "ConnectRetry",
                     "last-state": "Active",
-                    "local-address": "2001:268:fb90::b",
+                    "local-address": "2001:db8:223c:ca45::b",
                     "local-as": "65171",
-                    "peer-address": "2001:268:fb90::8+179",
+                    "peer-address": "2001:db8:223c:ca45::8+179",
                     "peer-as": "65171",
                     "peer-cfg-rti": "master",
                     "peer-flags": "",
@@ -3023,7 +3023,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "export-policy": "ALL_out",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "60",
-                        "local-address": "2001:268:fb90::b",
+                        "local-address": "2001:db8:223c:ca45::b",
                         "preference": "170",
                     },
                     "description": "cm-hkm003",
@@ -3031,9 +3031,9 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "last-error": "None",
                     "last-event": "Start",
                     "last-state": "Idle",
-                    "local-address": "2001:268:fb90::b",
+                    "local-address": "2001:db8:223c:ca45::b",
                     "local-as": "65171",
-                    "peer-address": "2001:268:fb90::9",
+                    "peer-address": "2001:db8:223c:ca45::9",
                     "peer-as": "65171",
                     "peer-cfg-rti": "master",
                     "peer-flags": "",
@@ -3060,7 +3060,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "export-policy": "ALL_out",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "60",
-                        "local-address": "2001:268:fb90::b",
+                        "local-address": "2001:db8:223c:ca45::b",
                         "preference": "170",
                     },
                     "description": "cm-hkm004",
@@ -3068,9 +3068,9 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "last-error": "None",
                     "last-event": "ConnectRetry",
                     "last-state": "Active",
-                    "local-address": "2001:268:fb90::b",
+                    "local-address": "2001:db8:223c:ca45::b",
                     "local-as": "65171",
-                    "peer-address": "2001:268:fb90::a+179",
+                    "peer-address": "2001:db8:223c:ca45::a+179",
                     "peer-as": "65171",
                     "peer-cfg-rti": "master",
                     "peer-flags": "",
@@ -3108,7 +3108,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "export-policy": "(v6_WATARI " "&& " "NEXT-HOP-SELF)",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "60",
-                        "local-address": "2001:268:fb90::b",
+                        "local-address": "2001:db8:223c:ca45::b",
                         "preference": "170",
                     },
                     "bgp-output-queue": [
@@ -3144,14 +3144,14 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "input-refreshes": "0",
                     "input-updates": "1",
                     "keepalive-interval": "20",
-                    "last-checked": "1999683",
+                    "last-checked": "16510983",
                     "last-error": "Hold Timer Expired Error",
                     "last-event": "RecvKeepAlive",
                     "last-flap-event": "HoldTime",
                     "last-received": "6",
                     "last-sent": "5",
                     "last-state": "OpenConfirm",
-                    "local-address": "2001:268:fb90::b+179",
+                    "local-address": "2001:db8:223c:ca45::b+179",
                     "local-as": "65171",
                     "local-ext-nh-color-nlri": "inet6-unicast",
                     "nlri-type-peer": "inet6-unicast",
@@ -3162,7 +3162,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "output-updates": "0",
                     "peer-4byte-as-capability-advertised": "65171",
                     "peer-addpath-not-supported": True,
-                    "peer-address": "2001:268:fb90::c+60268",
+                    "peer-address": "2001:db8:223c:ca45::c+60268",
                     "peer-as": "65171",
                     "peer-cfg-rti": "master",
                     "peer-end-of-rib-received": "inet6-unicast",
@@ -3204,7 +3204,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "v6_HKG-SNG_AddMED))",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "30",
-                        "local-address": "2001:268:fb90::b",
+                        "local-address": "2001:db8:223c:ca45::b",
                         "preference": "170",
                     },
                     "description": "sggjbb001",
@@ -3212,9 +3212,9 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "last-error": "None",
                     "last-event": "Start",
                     "last-state": "Idle",
-                    "local-address": "2001:268:fb90::b",
+                    "local-address": "2001:db8:223c:ca45::b",
                     "local-as": "65171",
-                    "peer-address": "2001:268:fb91::1",
+                    "peer-address": "2001:db8:5961:ca45::1",
                     "peer-as": "65181",
                     "peer-cfg-rti": "master",
                     "peer-flags": "",

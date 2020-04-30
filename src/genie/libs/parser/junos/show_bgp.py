@@ -1189,7 +1189,7 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
         else:
             out = output
 
-        # Peer: 27.85.216.179 AS 65171   Local: 111.87.5.252 AS 65171
+        # Peer: 10.49.216.179 AS 65171   Local: 10.189.5.252 AS 65171
         p1 = re.compile(r'^Peer: +(?P<peer_address>\S+) +AS +(?P<peer_as>\d+) +Local: +(?P<local_address>\S+) +AS +(?P<local_as>\d+)$')
         # Description: v4_Kentik
         p2 = re.compile(r'^Description: +(?P<description>\S+)$')
@@ -1208,7 +1208,7 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
         # Options: <Preference LocalAddress HoldTime LogUpDown Cluster PeerAS Refresh Confed>
         # Options: <GracefulShutdownRcv>
         p9 = re.compile(r'^Options: +<(?P<options>[\S\s]+)>$')
-        # Local Address: 111.87.5.252 Holdtime: 720 Preference: 170
+        # Local Address: 10.189.5.252 Holdtime: 720 Preference: 170
         p10 = re.compile(r'^Local +Address: +(?P<local_address>\S+) +Holdtime: +(?P<holdtime>\S+) +Preference: +(?P<preference>\S+)$')
         # Graceful Shutdown Receiver local-preference: 0
         p11 = re.compile(r'^Graceful +Shutdown +Receiver +local-preference: +(?P<gshut_recv_local_preference>\d+)$')
@@ -1226,7 +1226,7 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
         p17 = re.compile(r'^Last +flap +event: +(?P<last_flap_event>\S+)')
         # Error: 'Hold Timer Expired Error' Sent: 27 Recv: 40
         p18 = re.compile(r'^Error: +\'(?P<name>[\S\s]+)\' +Sent: +(?P<send_count>\d+) +Recv: +(?P<receive_count>\d+)$')
-        # Peer ID: 106.187.14.240  Local ID: 111.87.5.252      Active Holdtime: 30
+        # Peer ID: 10.169.14.240  Local ID: 10.189.5.252      Active Holdtime: 30
         p19 = re.compile(r'^Peer +ID: +(?P<peer_id>[\d\.]+) +Local +ID: +(?P<local_id>[\d\.]+) +Active +Holdtime: +(?P<active_holdtime>\d+)$')
         # Keepalive Interval: 10         Group index: 10   Peer index: 0    SNMP index: 15
         p20 = re.compile(r'^Keepalive +Interval: +(?P<keepalive_interval>\d+) +Group +index: +(?P<group_index>\d+) +Peer +index: +(?P<peer_index>\d+) +SNMP +index: +(?P<snmp_index>\d+)$')
@@ -1298,7 +1298,7 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # Peer: 27.85.216.179 AS 65171   Local: 111.87.5.252 AS 65171
+            # Peer: 10.49.216.179 AS 65171   Local: 10.189.5.252 AS 65171
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -1396,7 +1396,7 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
                     entry['bgp-options-extended'] = group['options']
                 continue
 
-            # Local Address: 111.87.5.252 Holdtime: 720 Preference: 170
+            # Local Address: 10.189.5.252 Holdtime: 720 Preference: 170
             m = p10.match(line)
             if m:
                 group = m.groupdict()
@@ -1490,7 +1490,7 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
                 entry_location.setdefault("bgp-error", []).append(entry)
                 continue
 
-            # Peer ID: 106.187.14.240  Local ID: 111.87.5.252      Active Holdtime: 30
+            # Peer ID: 10.169.14.240  Local ID: 10.189.5.252      Active Holdtime: 30
             m = p19.match(line)
             if m:
                 group = m.groupdict()
