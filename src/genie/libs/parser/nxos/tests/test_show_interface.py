@@ -1,4 +1,3 @@
-
 # Python
 import unittest
 from unittest.mock import Mock
@@ -2101,7 +2100,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         WCCP Redirect inbound: disabled
         WCCP Redirect exclude: disabled
     '''}
-    golden_parsed_output_2 = { 
+    golden_parsed_output_2 = {
         "loopback0": {
             "wccp_redirect_exclude": "disabled",
             "icmp_port_unreachable": "enabled",
@@ -2562,7 +2561,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             "directed_broadcast": "disabled"
         }
     }
-    golden_output_custom={'execute.return_value': '''
+    golden_output_custom = {'execute.return_value': '''
      IP Interface Status for VRF "VRF1"
         Ethernet2/1, Interface status: protocol-up/link-up/admin-up, iod: 36,
           IP address: 10.4.4.4, IP subnet: 10.4.4.0/24
@@ -2598,7 +2597,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
           WCCP Redirect inbound: disabled
           WCCP Redirect exclude: disabled
     '''}
-    golden_parsed_output_custom={
+    golden_parsed_output_custom = {
         'Ethernet2/1': {'directed_broadcast': 'disabled',
                         'icmp_port_unreachable': 'enabled',
                         'icmp_redirects': 'disabled',
@@ -4915,12 +4914,18 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                    'iod': 95,
                    'ip_forwarding': 'disabled',
                    'ip_mtu': 1500,
-                   'ipv4': {'10.49.1.1/32': {'broadcast_address': '255.255.255.255',
-                                            'ip': '10.49.1.1',
-                                            'ip_subnet': '10.49.1.1',
-                                            'prefix_length': '32',
-                                            'route_preference': '0',
-                                            'route_tag': '0'},
+                   'ipv4': {'10.49.1.1/32': {'ip': '10.49.1.1',
+                                                'ip_subnet': '10.49.1.1',
+                                                'prefix_length': '32',
+                                                'route_preference': '0',
+                                                'route_tag': '0'},
+                             '10.49.2.1/32': {'broadcast_address': '255.255.255.255',
+                                                 'ip': '10.49.2.1',
+                                                 'ip_subnet': '10.49.2.1',
+                                                 'prefix_length': '32',
+                                                 'route_preference': '0',
+                                                 'route_tag': '0',
+                                                 'secondary': True},
                             'counters': {'broadcast_bytes_consumed': 0,
                                          'broadcast_bytes_forwarded': 0,
                                          'broadcast_bytes_originated': 0,
@@ -5031,6 +5036,142 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                'unicast_reverse_path': 'none',
                'vrf': 'management'}}
 
+    golden_output_6 = {'execute.return_value': '''
+    Vlan300, Interface status: protocol-up/link-up/admin-up, iod: 7,
+      IP address: 10.115.65.2, IP subnet: 10.115.65.0/24 route-preference: 0, tag: 0
+      IP address: 10.115.69.2, IP subnet: 10.115.69.0/24 secondary route-preference: 0, tag: 0
+      IP address: 10.115.72.2, IP subnet: 10.115.72.0/24 secondary route-preference: 0, tag: 0
+      IP address: 10.115.77.2, IP subnet: 10.115.77.0/24 secondary route-preference: 0, tag: 0
+      IP broadcast address: 255.255.255.255
+      IP multicast groups locally joined:
+          224.0.0.102
+      IP MTU: 1500 bytes (using link MTU)
+      IP primary address route-preference: 0, tag: 0
+      IP proxy ARP : disabled
+      IP Local Proxy ARP : disabled
+      IP multicast routing: disabled
+      IP icmp redirects: disabled
+      IP directed-broadcast: disabled
+      IP Forwarding: disabled
+      IP icmp unreachables (except port): disabled
+      IP icmp port-unreachable: enabled
+      IP unicast reverse path forwarding: none
+      IP load sharing: none
+      IP interface statistics last reset: never
+      IP interface software stats: (sent/received/forwarded/originated/consumed)
+        Unicast packets    : 9853/3233248/9422/441/9385858
+        Unicast bytes      : 1313118/192909900/1272720/41238/498894997
+        Multicast packets  : 0/10735961/0/0/21471922
+        Multicast bytes    : 0/858876880/0/0/858876880
+        Broadcast packets  : 0/0/0/0/0
+        Broadcast bytes    : 0/0/0/0/0
+        Labeled packets    : 0/0/0/0/0
+        Labeled bytes      : 0/0/0/0/0
+      WCCP Redirect outbound: disabled
+      WCCP Redirect inbound: disabled
+      WCCP Redirect exclude: disabled
+    '''}
+
+    golden_parsed_output_6 = {
+        'Vlan300': {
+            'ip_mtu': 1500,
+            'wccp_redirect_exclude': 'disabled',
+            'proxy_arp': 'disabled',
+            'multicast_groups': ['224.0.0.102'],
+            'wccp_redirect_inbound': 'disabled',
+            'ip_forwarding': 'disabled',
+            'icmp_port_unreachable': 'enabled',
+            'wccp_redirect_outbound': 'disabled',
+            'unicast_reverse_path': 'none',
+            'directed_broadcast': 'disabled',
+            'icmp_unreachable': 'disabled',
+            'local_proxy_arp': 'disabled',
+            'ipv4': {
+                '10.115.77.2/24': {
+                    'broadcast_address': '255.255.255.255',
+                    'ip_subnet': '10.115.77.0',
+                    'ip': '10.115.77.2',
+                    'route_preference': '0',
+                    'prefix_length': '24',
+                    'route_tag': '0',
+                    'secondary': True,
+                },
+                '10.115.69.2/24': {
+                    'ip_subnet': '10.115.69.0',
+                    'ip': '10.115.69.2',
+                    'route_preference': '0',
+                    'prefix_length': '24',
+                    'route_tag': '0',
+                    'secondary': True,
+                },
+                'counters': {
+                    'unicast_bytes_sent': 1313118,
+                    'broadcast_bytes_received': 0,
+                    'multicast_bytes_forwarded': 0,
+                    'labeled_bytes_received': 0,
+                    'unicast_bytes_originated': 41238,
+                    'broadcast_bytes_forwarded': 0,
+                    'multicast_bytes_consumed': 858876880,
+                    'labeled_packets_consumed': 0,
+                    'multicast_packets_received': 10735961,
+                    'broadcast_bytes_consumed': 0,
+                    'broadcast_packets_forwarded': 0,
+                    'labeled_bytes_originated': 0,
+                    'unicast_packets_consumed': 9385858,
+                    'broadcast_packets_received': 0,
+                    'broadcast_packets_consumed': 0,
+                    'multicast_packets_sent': 0,
+                    'unicast_packets_originated': 441,
+                    'labeled_packets_forwarded': 0,
+                    'unicast_bytes_received': 192909900,
+                    'broadcast_packets_originated': 0,
+                    'unicast_bytes_forwarded': 1272720,
+                    'labeled_packets_received': 0,
+                    'multicast_bytes_received': 858876880,
+                    'unicast_packets_received': 3233248,
+                    'broadcast_bytes_originated': 0,
+                    'broadcast_packets_sent': 0,
+                    'unicast_packets_sent': 9853,
+                    'multicast_packets_forwarded': 0,
+                    'labeled_bytes_consumed': 0,
+                    'multicast_packets_originated': 0,
+                    'multicast_packets_consumed': 21471922,
+                    'labeled_bytes_sent': 0,
+                    'unicast_packets_forwarded': 9422,
+                    'multicast_bytes_originated': 0,
+                    'unicast_bytes_consumed': 498894997,
+                    'multicast_bytes_sent': 0,
+                    'labeled_packets_sent': 0,
+                    'labeled_packets_originated': 0,
+                    'broadcast_bytes_sent': 0,
+                    'labeled_bytes_forwarded': 0,
+                },
+                '10.115.72.2/24': {
+                    'ip_subnet': '10.115.72.0',
+                    'ip': '10.115.72.2',
+                    'route_preference': '0',
+                    'prefix_length': '24',
+                    'route_tag': '0',
+                    'secondary': True,
+                },
+                '10.115.65.2/24': {
+                    'ip_subnet': '10.115.65.0',
+                    'ip': '10.115.65.2',
+                    'route_tag': '0',
+                    'route_preference': '0',
+                    'prefix_length': '24',
+                },
+            },
+            'icmp_redirects': 'disabled',
+            'multicast_routing': 'disabled',
+            'load_sharing': 'none',
+            'interface_status': 'protocol-up/link-up/admin-up',
+            'iod': 7,
+            'int_stat_last_reset': 'never',
+            'vrf': '',
+        },
+    }
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         ip_interface_vrf_all_obj = ShowIpInterfaceVrfAll(device=self.device1)
@@ -5085,6 +5226,14 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         obj = ShowIpInterfaceVrfAll(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
+
+    def test_golden_6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_6)
+        obj = ShowIpInterfaceVrfAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_6)
+
 
 # #############################################################################
 # # Unittest For Show Vrf All Interface
