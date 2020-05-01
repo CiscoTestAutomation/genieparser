@@ -19,10 +19,10 @@ class TestShowLogFilename(unittest.TestCase):
         "execute.return_value": """
         show log messages
         Mar  5 00:45:00 sr_hktGCS001 newsyslog[89037]: logfile turned over due to size>1024K
-        Mar  5 02:42:53  sr_hktGCS001 sshd[87374]: Received disconnect from 1.0.0.1 port 46480:11: disconnected by user
-        Mar  5 02:42:53  sr_hktGCS001 sshd[87374]: Disconnected from 1.0.0.1 port 46480
+        Mar  5 02:42:53  sr_hktGCS001 sshd[87374]: Received disconnect from 10.1.0.1 port 46480:11: disconnected by user
+        Mar  5 02:42:53  sr_hktGCS001 sshd[87374]: Disconnected from 10.1.0.1 port 46480
         Mar  5 02:42:53  sr_hktGCS001 inetd[6841]: /usr/sbin/sshd[87371]: exited, status 255
-        Mar  5 14:47:18  sr_hktGCS001 sshd[91368]: Accepted keyboard-interactive/pam for kddi from 1.0.0.1 port 46494 ssh2
+        Mar  5 14:47:18  sr_hktGCS001 sshd[91368]: Accepted keyboard-interactive/pam for kddi from 10.1.0.1 port 46494 ssh2
         Mar  5 14:47:45  sr_hktGCS001 mgd[91373]: UI_DBASE_LOGIN_EVENT: User 'kddi' entering configuration mode
         Mar  5 14:47:45  sr_hktGCS001 mgd[91373]: UI_LOAD_EVENT: User 'kddi' is performing a 'load override'
         Mar  5 14:47:45  sr_hktGCS001 mgd[91373]: UI_COMMIT: User 'kddi' requested 'commit' operation (comment: none)
@@ -73,13 +73,13 @@ class TestShowLogFilename(unittest.TestCase):
             "        Mar  5 00:45:00 sr_hktGCS001 newsyslog[89037]: "
             "logfile turned over due to size>1024K",
             "        Mar  5 02:42:53  sr_hktGCS001 sshd[87374]: Received "
-            "disconnect from 1.0.0.1 port 46480:11: disconnected by user",
+            "disconnect from 10.1.0.1 port 46480:11: disconnected by user",
             "        Mar  5 02:42:53  sr_hktGCS001 sshd[87374]: "
-            "Disconnected from 1.0.0.1 port 46480",
+            "Disconnected from 10.1.0.1 port 46480",
             "        Mar  5 02:42:53  sr_hktGCS001 inetd[6841]: "
             "/usr/sbin/sshd[87371]: exited, status 255",
             "        Mar  5 14:47:18  sr_hktGCS001 sshd[91368]: Accepted "
-            "keyboard-interactive/pam for kddi from 1.0.0.1 port 46494 "
+            "keyboard-interactive/pam for kddi from 10.1.0.1 port 46494 "
             "ssh2",
             "        Mar  5 14:47:45  sr_hktGCS001 mgd[91373]: "
             "UI_DBASE_LOGIN_EVENT: User 'kddi' entering configuration "

@@ -8,13 +8,18 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
-
-* JUNOS
-    * Added ShowLogFilename for:
-        * show log {filename}
+   
 * JUNOS
     * Added ShowOspfNeighborDetail for:
         * show ospf neighbor {neighbor} detail
+    * Added ShowLogFilename for:
+        * show log {filename}
+    * Added ShowChassisFpc for:
+        * show chassis fpc
+    * Added ShowChassisRoutingEngine for:
+        * show chassis routing-engine
+    * Added ShowChassisRoutingEngineNoForwarding for:
+        * show chassis routing-engine no-forwarding
 
 --------------------------------------------------------------------------------
                                 Fix
