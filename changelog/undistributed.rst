@@ -12,14 +12,24 @@
 * JUNOS
     * Added ShowOspfNeighborDetail for:
         * show ospf neighbor {neighbor} detail
-    * Added ShowLacpInterfacesInterface for:
-        * show lacp interfaces {interface}
     * Added ShowLogFilename for:
         * show log {filename}
+    * Added ShowChassisFpc for:
+        * show chassis fpc
+    * Added ShowChassisRoutingEngine for:
+        * show chassis routing-engine
+    * Added ShowChassisRoutingEngineNoForwarding for:
+        * show chassis routing-engine no-forwarding
+    * Added ShowLacpInterfacesInterface for:
+        * show lacp interfaces {interface}
 
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
+
+* IOSXE
+    * Fixed ShowDmvpn not executing the command properly on device
+
 * NXOS
     * Updated ShowIpStaticRouteMulticast:
         * Change key 'address_family' into Optional
