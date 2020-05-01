@@ -6,28 +6,29 @@ from unittest.mock import Mock
 from pyats.topology import Device
 
 # Metaparset
-from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
-                                             SchemaMissingKeyError
+from genie.metaparser.util.exceptions import (
+    SchemaEmptyParserError,
+    SchemaMissingKeyError,
+)
 
 # Parser
-from genie.libs.parser.junos.show_pfe import ShowPfeStatisticsTraffic,\
-    ShowPfeStatisticsIpIcmp
+from genie.libs.parser.junos.show_pfe import (
+    ShowPfeStatisticsTraffic,
+    ShowPfeStatisticsIpIcmp,
+)
 
-#=========================================================
+# =========================================================
 # Unit test for show pfe statistics traffic
-#=========================================================
+# =========================================================
 class test_show_pfe_statistics_traffic(unittest.TestCase):
 
-    device = Device(name='aDevice')
-    empty_output = {'execute.return_value': ''}
+    device = Device(name="aDevice")
+    empty_output = {"execute.return_value": ""}
     maxDiff = None
 
     golden_parsed_output_1 = {
         "pfe-statistics": {
-            "pfe-chip-statistics": {
-                "input-checksum": "0",
-                "output-mtu": "0"
-            },
+            "pfe-chip-statistics": {"input-checksum": "0", "output-mtu": "0"},
             "pfe-hardware-discard-statistics": {
                 "bad-route-discard": "962415",
                 "bits-to-test-discard": "0",
@@ -40,7 +41,7 @@ class test_show_pfe_statistics_traffic(unittest.TestCase):
                 "stack-underflow-discard": "0",
                 "tcp-header-error-discard": "0",
                 "timeout-discard": "0",
-                "truncated-key-discard": "0"
+                "truncated-key-discard": "0",
             },
             "pfe-local-protocol-statistics": {
                 "arp-count": "56818",
@@ -56,7 +57,7 @@ class test_show_pfe_statistics_traffic(unittest.TestCase):
                 "ospf3-hello-count": "4146329",
                 "ppp-lcp-ncp-count": "0",
                 "rsvp-hello-count": "7040269",
-                "unknown-count": "0"
+                "unknown-count": "0",
             },
             "pfe-local-traffic-statistics": {
                 "hardware-input-drops": "0",
@@ -66,7 +67,7 @@ class test_show_pfe_statistics_traffic(unittest.TestCase):
                 "software-input-high-drops": "0",
                 "software-input-low-drops": "0",
                 "software-input-medium-drops": "0",
-                "software-output-low-drops": "0"
+                "software-output-low-drops": "0",
             },
             "pfe-traffic-statistics": {
                 "input-pps": "14",
@@ -76,13 +77,13 @@ class test_show_pfe_statistics_traffic(unittest.TestCase):
                 "pfe-fabric-output": "0",
                 "pfe-fabric-output-pps": "0",
                 "pfe-input-packets": "763584752",
-                "pfe-output-packets": "728623201"
-            }
+                "pfe-output-packets": "728623201",
+            },
         }
     }
 
-
-    golden_output_1 = {'execute.return_value': '''
+    golden_output_1 = {
+        "execute.return_value": """
                 show pfe statistics traffic
         Packet Forwarding Engine traffic statistics:
             Input  packets:            763584752                   14 pps
@@ -130,7 +131,7 @@ class test_show_pfe_statistics_traffic(unittest.TestCase):
             Input Checksum             :                    0
             Output MTU                 :                    0
 
-    '''
+    """
     }
 
     def test_empty(self):
@@ -145,38 +146,49 @@ class test_show_pfe_statistics_traffic(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
-#=========================================================
+
+# =========================================================
 # Unit test for show pfe statistics ip icmp
-#=========================================================
+# =========================================================
 class TestShowPfeStatisticsIpIcmp(unittest.TestCase):
 
-    device = Device(name='aDevice')
-    empty_output = {'execute.return_value': ''}
+    device = Device(name="aDevice")
+    empty_output = {"execute.return_value": ""}
     maxDiff = None
 
-    golden_parsed_output_1 = {'pfe-statistics': {'icmp-discards': {'bad-dest-addresses': '0',
-                                      'bad-source-addresses': '0',
-                                      'icmp-errors': '0',
-                                      'ip-fragments': '0',
-                                      'multicasts': '0'},
-                    'icmp-errors': {'bad-input-interface': '0',
-                                    'invalid-icmp-type': '0',
-                                    'invalid-protocol': '0',
-                                    'runts': '0',
-                                    'throttled-icmps': '575',
-                                    'unknown-unreachables': '0',
-                                    'unprocessed-redirects': '0',
-                                    'unsupported-icmp-type': '0'},
-                    'icmp-statistics': {'icmp-option-handoffs': '0',
-                                        'mtu-exceeded': '0',
-                                        'network-unreachables': '311',
-                                        'redirects': '0',
-                                        'requests': '246259',
-                                        'ttl-captured': '0',
-                                        'ttl-expired': '245373'}}}
+    golden_parsed_output_1 = {
+        "pfe-statistics": {
+            "icmp-discards": {
+                "bad-dest-addresses": "0",
+                "bad-source-addresses": "0",
+                "icmp-errors": "0",
+                "ip-fragments": "0",
+                "multicasts": "0",
+            },
+            "icmp-errors": {
+                "bad-input-interface": "0",
+                "invalid-icmp-type": "0",
+                "invalid-protocol": "0",
+                "runts": "0",
+                "throttled-icmps": "575",
+                "unknown-unreachables": "0",
+                "unprocessed-redirects": "0",
+                "unsupported-icmp-type": "0",
+            },
+            "icmp-statistics": {
+                "icmp-option-handoffs": "0",
+                "mtu-exceeded": "0",
+                "network-unreachables": "311",
+                "redirects": "0",
+                "requests": "246259",
+                "ttl-captured": "0",
+                "ttl-expired": "245373",
+            },
+        }
+    }
 
-
-    golden_output_1 = {'execute.return_value': '''
+    golden_output_1 = {
+        "execute.return_value": """
                 show pfe statistics ip icmp
             ICMP Statistics:
                 246259 requests
@@ -204,7 +216,7 @@ class TestShowPfeStatisticsIpIcmp(unittest.TestCase):
                     0 IP fragments
                     0 ICMP errors
 
-    '''
+    """
     }
 
     def test_empty(self):
@@ -219,5 +231,6 @@ class TestShowPfeStatisticsIpIcmp(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()
