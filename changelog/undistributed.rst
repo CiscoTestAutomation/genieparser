@@ -24,6 +24,8 @@
         * show lacp interfaces {interface}
     * Added ShowPfeStatisticsIpIcmpSchema for:
         * show pfe statistics ip icmp
+    * Added ShowOspfRouteBrief for:
+        * show ospf route brief
 
 --------------------------------------------------------------------------------
                                 Fix
