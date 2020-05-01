@@ -26,6 +26,8 @@
         * show pfe statistics ip icmp
     * Added ShowOspfRouteBrief for:
         * show ospf route brief
+    * Added ShowOspfRouteDetail for:
+        * show ospf route detail
 
 --------------------------------------------------------------------------------
                                 Fix
