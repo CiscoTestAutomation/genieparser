@@ -3291,6 +3291,7 @@ class ShowOspfRouteBrief(ShowOspfRouteBriefSchema):
             line = line.strip()
 
             # 10.36.3.3            Intra Router     IP         1201 ge-0/0/1.0    10.169.14.121
+            # 10.19.198.28/30    Intra Network    IP         1005 ge-0/0/0.0    10.189.5.94
             # 2568 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
             m = p1.match(line)
             if m:
