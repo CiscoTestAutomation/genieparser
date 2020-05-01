@@ -23,7 +23,8 @@ from genie.libs.parser.junos.show_ospf import (ShowOspfInterface,
                                                ShowOspfDatabaseExtensive,
                                                ShowOspfNeighborExtensive,
                                                ShowOspfInterfaceExtensive,
-                                               ShowOspfNeighborDetail)
+                                               ShowOspfNeighborDetail,
+                                               ShowOspfRouteBrief)
 
 
 class test_show_ospf_interface(unittest.TestCase):
@@ -3639,7 +3640,7 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "Priority "
                                 "7, "
                                 "1000Mbps\n",
-                                "Local " "333, " "Remote " "0",
+                                "Local 333, Remote 0",
                                 "0",
                             ],
                             "tlv-length": [
@@ -3731,7 +3732,7 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "Priority "
                                 "7, "
                                 "1000Mbps\n",
-                                "Local " "334, " "Remote " "0",
+                                "Local 334, Remote 0",
                                 "10",
                             ],
                             "tlv-length": [
@@ -3823,7 +3824,7 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "Priority "
                                 "7, "
                                 "1000Mbps\n",
-                                "Local " "336, " "Remote " "0",
+                                "Local 336, Remote 0",
                                 "2",
                             ],
                             "tlv-length": [
@@ -3887,8 +3888,8 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                             "tlv-length": ["1", "12", "3", "3", "3"],
                             "tlv-type-name": [
                                 "Algo",
-                                "SID/Label " "Range",
-                                "Range " "Size",
+                                "SID/Label Range",
+                                "Range Size",
                                 "SID/Label",
                                 "Label",
                             ],
@@ -3938,14 +3939,14 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "4",
                             ],
                             "tlv-type-name": [
-                                "Route " "Type",
-                                "Prefix " "Length",
+                                "Route Type",
+                                "Prefix Length",
                                 "AF",
                                 "Flags",
                                 "Prefix",
-                                "Prefix " "Sid",
+                                "Prefix Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Algorithm",
                                 "SID",
                             ],
@@ -3965,7 +3966,7 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "20",
-                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-name": "Extended Prefix",
                             "tlv-type-value": "1",
                         },
                     },
@@ -4011,17 +4012,17 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -4044,7 +4045,7 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -4090,17 +4091,17 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -4123,7 +4124,7 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -4169,17 +4170,17 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -4202,7 +4203,7 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -5801,7 +5802,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:54:08"},
                         "installation-time": {"#text": "00:05:44"},
                         "lsa-change-count": "69",
-                        "lsa-changed-time": {"#text": "1d " "02:16:03"},
+                        "lsa-changed-time": {"#text": "1d 02:16:03"},
                         "send-time": {"#text": "00:05:42"},
                     },
                     "ospf-router-lsa": {
@@ -5997,7 +5998,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:30:40"},
                         "installation-time": {"#text": "00:29:13"},
                         "lsa-change-count": "38",
-                        "lsa-changed-time": {"#text": "4w6d " "19:31:25"},
+                        "lsa-changed-time": {"#text": "4w6d 19:31:25"},
                         "send-time": {"#text": "00:29:11"},
                     },
                     "ospf-router-lsa": {
@@ -6081,7 +6082,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:44:47"},
                         "installation-time": {"#text": "00:15:12"},
                         "lsa-change-count": "45",
-                        "lsa-changed-time": {"#text": "1w0d " "19:55:00"},
+                        "lsa-changed-time": {"#text": "1w0d 19:55:00"},
                         "send-time": {"#text": "00:15:10"},
                     },
                     "ospf-router-lsa": {
@@ -6219,7 +6220,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:42:53"},
                         "installation-time": {"#text": "00:17:01"},
                         "lsa-change-count": "1911",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:24"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:24"},
                         "send-time": {"#text": "00:16:59"},
                     },
                     "ospf-router-lsa": {
@@ -6433,7 +6434,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:45:42"},
                         "installation-time": {"#text": "00:14:09"},
                         "lsa-change-count": "1258",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:22"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:22"},
                         "send-time": {"#text": "00:14:07"},
                     },
                     "ospf-router-lsa": {
@@ -6593,7 +6594,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:31:22"},
                         "installation-time": {"#text": "00:28:32"},
                         "lsa-change-count": "5",
-                        "lsa-changed-time": {"#text": "3w0d " "08:18:02"},
+                        "lsa-changed-time": {"#text": "3w0d 08:18:02"},
                         "send-time": {"#text": "00:28:30"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -6630,7 +6631,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "Priority "
                                 "7, "
                                 "1000Mbps\n",
-                                "Local " "334, " "Remote " "0",
+                                "Local 334, Remote 0",
                                 "4",
                             ],
                             "tlv-length": [
@@ -6692,7 +6693,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:34:43"},
                         "installation-time": {"#text": "00:25:08"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "3w0d " "08:09:50"},
+                        "lsa-changed-time": {"#text": "3w0d 08:09:50"},
                         "send-time": {"#text": "00:25:06"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -6729,7 +6730,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "Priority "
                                 "7, "
                                 "1000Mbps\n",
-                                "Local " "334, " "Remote " "0",
+                                "Local 334, Remote 0",
                                 "6",
                             ],
                             "tlv-length": [
@@ -6791,7 +6792,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:34:31"},
                         "installation-time": {"#text": "00:25:26"},
                         "lsa-change-count": "6",
-                        "lsa-changed-time": {"#text": "3w3d " "07:23:05"},
+                        "lsa-changed-time": {"#text": "3w3d 07:23:05"},
                         "send-time": {"#text": "00:25:24"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -6828,7 +6829,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "Priority "
                                 "7, "
                                 "1000Mbps\n",
-                                "Local " "334, " "Remote " "0",
+                                "Local 334, Remote 0",
                                 "10",
                             ],
                             "tlv-length": [
@@ -6890,7 +6891,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:19:42"},
                         "installation-time": {"#text": "00:40:12"},
                         "lsa-change-count": "35",
-                        "lsa-changed-time": {"#text": "3w3d " "07:23:04"},
+                        "lsa-changed-time": {"#text": "3w3d 07:23:04"},
                         "send-time": {"#text": "00:40:10"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -6927,7 +6928,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "Priority "
                                 "7, "
                                 "1000Mbps\n",
-                                "Local " "334, " "Remote " "0",
+                                "Local 334, Remote 0",
                                 "6",
                             ],
                             "tlv-length": [
@@ -6990,7 +6991,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "generation-timer": {"#text": "00:00:19"},
                         "installation-time": {"#text": "00:45:02"},
                         "lsa-change-count": "3",
-                        "lsa-changed-time": {"#text": "3w3d " "07:23:03"},
+                        "lsa-changed-time": {"#text": "3w3d 07:23:03"},
                         "send-time": {"#text": "00:45:00"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7027,7 +7028,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "Priority "
                                 "7, "
                                 "1000Mbps\n",
-                                "Local " "334, " "Remote " "0",
+                                "Local 334, Remote 0",
                                 "10",
                             ],
                             "tlv-length": [
@@ -7090,7 +7091,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:56:31"},
                         "installation-time": {"#text": "00:03:26"},
                         "lsa-change-count": "15",
-                        "lsa-changed-time": {"#text": "3w3d " "07:23:04"},
+                        "lsa-changed-time": {"#text": "3w3d 07:23:04"},
                         "send-time": {"#text": "00:03:24"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7127,7 +7128,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "Priority "
                                 "7, "
                                 "1000Mbps\n",
-                                "Local " "334, " "Remote " "0",
+                                "Local 334, Remote 0",
                                 "6",
                             ],
                             "tlv-length": [
@@ -7189,7 +7190,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:50:20"},
                         "installation-time": {"#text": "00:09:34"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:24"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:24"},
                         "send-time": {"#text": "00:09:32"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7226,7 +7227,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "Priority "
                                 "7, "
                                 "1000Mbps\n",
-                                "Local " "337, " "Remote " "0",
+                                "Local 337, Remote 0",
                                 "2",
                             ],
                             "tlv-length": [
@@ -7288,7 +7289,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:30:40"},
                         "installation-time": {"#text": "00:29:13"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "21w5d " "22:48:11"},
+                        "lsa-changed-time": {"#text": "21w5d 22:48:11"},
                         "send-time": {"#text": "00:29:11"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7317,14 +7318,14 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "4",
                             ],
                             "tlv-type-name": [
-                                "Route " "Type",
-                                "Prefix " "Length",
+                                "Route Type",
+                                "Prefix Length",
                                 "AF",
                                 "Flags",
                                 "Prefix",
-                                "Prefix " "Sid",
+                                "Prefix Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Algorithm",
                                 "SID",
                             ],
@@ -7344,7 +7345,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "20",
-                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-name": "Extended Prefix",
                             "tlv-type-value": "1",
                         },
                     },
@@ -7363,7 +7364,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:42:53"},
                         "installation-time": {"#text": "00:17:01"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "30w0d " "01:32:34"},
+                        "lsa-changed-time": {"#text": "30w0d 01:32:34"},
                         "send-time": {"#text": "00:16:59"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7392,14 +7393,14 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "4",
                             ],
                             "tlv-type-name": [
-                                "Route " "Type",
-                                "Prefix " "Length",
+                                "Route Type",
+                                "Prefix Length",
                                 "AF",
                                 "Flags",
                                 "Prefix",
-                                "Prefix " "Sid",
+                                "Prefix Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Algorithm",
                                 "SID",
                             ],
@@ -7419,7 +7420,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "20",
-                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-name": "Extended Prefix",
                             "tlv-type-value": "1",
                         },
                     },
@@ -7438,7 +7439,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:45:42"},
                         "installation-time": {"#text": "00:14:09"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "30w0d " "01:32:36"},
+                        "lsa-changed-time": {"#text": "30w0d 01:32:36"},
                         "send-time": {"#text": "00:14:07"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7467,14 +7468,14 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "4",
                             ],
                             "tlv-type-name": [
-                                "Route " "Type",
-                                "Prefix " "Length",
+                                "Route Type",
+                                "Prefix Length",
                                 "AF",
                                 "Flags",
                                 "Prefix",
-                                "Prefix " "Sid",
+                                "Prefix Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Algorithm",
                                 "SID",
                             ],
@@ -7494,7 +7495,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "20",
-                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-name": "Extended Prefix",
                             "tlv-type-value": "1",
                         },
                     },
@@ -7513,7 +7514,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:57:07"},
                         "installation-time": {"#text": "00:02:50"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "30w0d " "01:32:37"},
+                        "lsa-changed-time": {"#text": "30w0d 01:32:37"},
                         "send-time": {"#text": "00:02:48"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7542,14 +7543,14 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "4",
                             ],
                             "tlv-type-name": [
-                                "Route " "Type",
-                                "Prefix " "Length",
+                                "Route Type",
+                                "Prefix Length",
                                 "AF",
                                 "Flags",
                                 "Prefix",
-                                "Prefix " "Sid",
+                                "Prefix Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Algorithm",
                                 "SID",
                             ],
@@ -7569,7 +7570,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "20",
-                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-name": "Extended Prefix",
                             "tlv-type-value": "1",
                         },
                     },
@@ -7588,7 +7589,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:30:41"},
                         "installation-time": {"#text": "00:29:13"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "30w0d " "01:32:36"},
+                        "lsa-changed-time": {"#text": "30w0d 01:32:36"},
                         "send-time": {"#text": "00:29:11"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7617,14 +7618,14 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "4",
                             ],
                             "tlv-type-name": [
-                                "Route " "Type",
-                                "Prefix " "Length",
+                                "Route Type",
+                                "Prefix Length",
                                 "AF",
                                 "Flags",
                                 "Prefix",
-                                "Prefix " "Sid",
+                                "Prefix Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Algorithm",
                                 "SID",
                             ],
@@ -7644,7 +7645,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "20",
-                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-name": "Extended Prefix",
                             "tlv-type-value": "1",
                         },
                     },
@@ -7664,7 +7665,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "generation-timer": {"#text": "00:18:20"},
                         "installation-time": {"#text": "00:31:39"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "30w0d " "01:46:13"},
+                        "lsa-changed-time": {"#text": "30w0d 01:46:13"},
                         "send-time": {"#text": "00:31:37"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7693,14 +7694,14 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "4",
                             ],
                             "tlv-type-name": [
-                                "Route " "Type",
-                                "Prefix " "Length",
+                                "Route Type",
+                                "Prefix Length",
                                 "AF",
                                 "Flags",
                                 "Prefix",
-                                "Prefix " "Sid",
+                                "Prefix Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Algorithm",
                                 "SID",
                             ],
@@ -7720,7 +7721,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "20",
-                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-name": "Extended Prefix",
                             "tlv-type-value": "1",
                         },
                     },
@@ -7740,7 +7741,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:27:00"},
                         "installation-time": {"#text": "00:32:57"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "30w0d " "01:32:43"},
+                        "lsa-changed-time": {"#text": "30w0d 01:32:43"},
                         "send-time": {"#text": "00:32:55"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7769,14 +7770,14 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "4",
                             ],
                             "tlv-type-name": [
-                                "Route " "Type",
-                                "Prefix " "Length",
+                                "Route Type",
+                                "Prefix Length",
                                 "AF",
                                 "Flags",
                                 "Prefix",
-                                "Prefix " "Sid",
+                                "Prefix Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Algorithm",
                                 "SID",
                             ],
@@ -7796,7 +7797,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "20",
-                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-name": "Extended Prefix",
                             "tlv-type-value": "1",
                         },
                     },
@@ -7815,7 +7816,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:53:53"},
                         "installation-time": {"#text": "00:06:01"},
                         "lsa-change-count": "285",
-                        "lsa-changed-time": {"#text": "2w0d " "00:50:30"},
+                        "lsa-changed-time": {"#text": "2w0d 00:50:30"},
                         "send-time": {"#text": "00:05:59"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7849,17 +7850,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -7882,7 +7883,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -7901,7 +7902,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:43:04"},
                         "installation-time": {"#text": "00:16:50"},
                         "lsa-change-count": "50",
-                        "lsa-changed-time": {"#text": "2w6d " "19:46:47"},
+                        "lsa-changed-time": {"#text": "2w6d 19:46:47"},
                         "send-time": {"#text": "00:16:48"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7935,17 +7936,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -7968,7 +7969,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -7987,7 +7988,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:17:59"},
                         "installation-time": {"#text": "00:41:58"},
                         "lsa-change-count": "31",
-                        "lsa-changed-time": {"#text": "2w6d " "20:01:45"},
+                        "lsa-changed-time": {"#text": "2w6d 20:01:45"},
                         "send-time": {"#text": "00:41:56"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -8021,17 +8022,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -8054,7 +8055,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -8073,7 +8074,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:46:50"},
                         "installation-time": {"#text": "00:13:04"},
                         "lsa-change-count": "47",
-                        "lsa-changed-time": {"#text": "2w6d " "18:58:08"},
+                        "lsa-changed-time": {"#text": "2w6d 18:58:08"},
                         "send-time": {"#text": "00:13:02"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -8107,17 +8108,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -8140,7 +8141,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -8159,7 +8160,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:50:35"},
                         "installation-time": {"#text": "00:09:19"},
                         "lsa-change-count": "7",
-                        "lsa-changed-time": {"#text": "2w6d " "18:14:24"},
+                        "lsa-changed-time": {"#text": "2w6d 18:14:24"},
                         "send-time": {"#text": "00:09:17"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -8193,17 +8194,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -8226,7 +8227,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -8245,7 +8246,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:44:13"},
                         "installation-time": {"#text": "00:15:44"},
                         "lsa-change-count": "17",
-                        "lsa-changed-time": {"#text": "2w0d " "00:43:19"},
+                        "lsa-changed-time": {"#text": "2w0d 00:43:19"},
                         "send-time": {"#text": "00:15:42"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -8279,17 +8280,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -8312,7 +8313,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -8331,7 +8332,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:22:29"},
                         "installation-time": {"#text": "00:37:28"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:02"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:02"},
                         "send-time": {"#text": "00:37:26"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -8365,17 +8366,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -8398,7 +8399,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -8417,7 +8418,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:30:40"},
                         "installation-time": {"#text": "00:29:13"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "21w5d " "22:48:11"},
+                        "lsa-changed-time": {"#text": "21w5d 22:48:11"},
                         "send-time": {"#text": "00:29:11"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -8451,17 +8452,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -8484,7 +8485,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "32",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -8503,7 +8504,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:12:09"},
                         "installation-time": {"#text": "00:47:45"},
                         "lsa-change-count": "123",
-                        "lsa-changed-time": {"#text": "2w0d " "00:42:10"},
+                        "lsa-changed-time": {"#text": "2w0d 00:42:10"},
                         "send-time": {"#text": "00:47:43"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -8519,12 +8520,12 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                             ],
                             "tlv-length": ["1", "4", "4", "7", "1", "1", "1", "3"],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -8533,7 +8534,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "24",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -8552,7 +8553,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:38:23"},
                         "installation-time": {"#text": "00:21:28"},
                         "lsa-change-count": "243",
-                        "lsa-changed-time": {"#text": "2w6d " "19:46:37"},
+                        "lsa-changed-time": {"#text": "2w6d 19:46:37"},
                         "send-time": {"#text": "00:21:26"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -8586,17 +8587,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -8619,7 +8620,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -8638,7 +8639,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:44:47"},
                         "installation-time": {"#text": "00:15:12"},
                         "lsa-change-count": "2",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:03"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:03"},
                         "send-time": {"#text": "00:15:10"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -8708,37 +8709,37 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
-                                "Weight",
-                                "Label",
-                                "Invalid",
-                                "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -8781,7 +8782,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "80",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -8800,7 +8801,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:46:28"},
                         "installation-time": {"#text": "00:13:25"},
                         "lsa-change-count": "2",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:24"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:24"},
                         "send-time": {"#text": "00:13:23"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -8870,37 +8871,37 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
-                                "Weight",
-                                "Label",
-                                "Invalid",
-                                "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -8943,7 +8944,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "80",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -8962,7 +8963,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:44:47"},
                         "installation-time": {"#text": "00:15:12"},
                         "lsa-change-count": "2",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:02"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:02"},
                         "send-time": {"#text": "00:15:10"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -9032,37 +9033,37 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
-                                "Weight",
-                                "Label",
-                                "Invalid",
-                                "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -9105,7 +9106,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "80",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -9124,7 +9125,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:46:28"},
                         "installation-time": {"#text": "00:13:25"},
                         "lsa-change-count": "2",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:22"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:22"},
                         "send-time": {"#text": "00:13:23"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -9194,37 +9195,37 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
-                                "Weight",
-                                "Label",
-                                "Invalid",
-                                "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -9267,7 +9268,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "80",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -9286,7 +9287,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:58:06"},
                         "installation-time": {"#text": "00:01:47"},
                         "lsa-change-count": "8",
-                        "lsa-changed-time": {"#text": "2w0d " "00:43:41"},
+                        "lsa-changed-time": {"#text": "2w0d 00:43:41"},
                         "send-time": {"#text": "00:01:45"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -9320,17 +9321,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -9353,7 +9354,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -9372,7 +9373,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:42:02"},
                         "installation-time": {"#text": "00:17:50"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:22"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:22"},
                         "send-time": {"#text": "00:17:48"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -9406,17 +9407,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -9439,7 +9440,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -9458,7 +9459,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:27:31"},
                         "installation-time": {"#text": "00:32:23"},
                         "lsa-change-count": "7",
-                        "lsa-changed-time": {"#text": "2w0d " "00:27:01"},
+                        "lsa-changed-time": {"#text": "2w0d 00:27:01"},
                         "send-time": {"#text": "00:32:21"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -9492,17 +9493,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -9525,7 +9526,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -9544,7 +9545,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:39:03"},
                         "installation-time": {"#text": "00:20:51"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:24"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:24"},
                         "send-time": {"#text": "00:20:49"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -9578,17 +9579,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -9611,7 +9612,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -9631,7 +9632,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "generation-timer": {"#text": "00:36:39"},
                         "installation-time": {"#text": "00:13:12"},
                         "lsa-change-count": "25",
-                        "lsa-changed-time": {"#text": "2w0d " "00:37:11"},
+                        "lsa-changed-time": {"#text": "2w0d 00:37:11"},
                         "send-time": {"#text": "00:13:10"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -9665,17 +9666,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -9698,7 +9699,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -9719,7 +9720,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "generation-timer": {"#text": "00:27:30"},
                         "installation-time": {"#text": "00:22:13"},
                         "lsa-change-count": "26",
-                        "lsa-changed-time": {"#text": "2w0d " "00:46:13"},
+                        "lsa-changed-time": {"#text": "2w0d 00:46:13"},
                         "send-time": {"#text": "00:22:11"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -9753,17 +9754,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -9786,7 +9787,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -9807,7 +9808,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "generation-timer": {"#text": "00:09:20"},
                         "installation-time": {"#text": "00:36:07"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:03"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:03"},
                         "send-time": {"#text": "00:36:05"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -9841,17 +9842,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -9874,7 +9875,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -9894,7 +9895,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:37:02"},
                         "installation-time": {"#text": "00:22:55"},
                         "lsa-change-count": "57",
-                        "lsa-changed-time": {"#text": "2w6d " "19:46:52"},
+                        "lsa-changed-time": {"#text": "2w6d 19:46:52"},
                         "send-time": {"#text": "00:22:53"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -9928,17 +9929,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -9961,7 +9962,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -9980,7 +9981,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:32:00"},
                         "installation-time": {"#text": "00:27:57"},
                         "lsa-change-count": "52",
-                        "lsa-changed-time": {"#text": "3w1d " "08:43:52"},
+                        "lsa-changed-time": {"#text": "3w1d 08:43:52"},
                         "send-time": {"#text": "00:27:55"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -10014,17 +10015,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -10047,7 +10048,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -10066,7 +10067,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:39:32"},
                         "installation-time": {"#text": "00:20:25"},
                         "lsa-change-count": "6",
-                        "lsa-changed-time": {"#text": "2w6d " "18:58:13"},
+                        "lsa-changed-time": {"#text": "2w6d 18:58:13"},
                         "send-time": {"#text": "00:20:23"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -10100,17 +10101,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -10133,7 +10134,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -10152,7 +10153,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:54:34"},
                         "installation-time": {"#text": "00:05:21"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "1d " "02:16:03"},
+                        "lsa-changed-time": {"#text": "1d 02:16:03"},
                         "send-time": {"#text": "00:05:19"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -10213,32 +10214,32 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -10276,7 +10277,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "68",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -10295,7 +10296,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:16:26"},
                         "installation-time": {"#text": "00:43:25"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "30w0d " "01:32:36"},
+                        "lsa-changed-time": {"#text": "30w0d 01:32:36"},
                         "send-time": {"#text": "00:43:23"},
                     },
                     "ospf-external-lsa": {
@@ -10324,7 +10325,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:21:58"},
                         "installation-time": {"#text": "00:37:59"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "4w2d " "05:46:52"},
+                        "lsa-changed-time": {"#text": "4w2d 05:46:52"},
                         "send-time": {"#text": "00:37:57"},
                     },
                     "ospf-external-lsa": {
@@ -10353,7 +10354,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:39:41"},
                         "installation-time": {"#text": "00:20:15"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "21w6d " "00:04:15"},
+                        "lsa-changed-time": {"#text": "21w6d 00:04:15"},
                         "send-time": {"#text": "00:20:13"},
                     },
                     "ospf-external-lsa": {
@@ -10382,7 +10383,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:46:49"},
                         "installation-time": {"#text": "00:13:07"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "21w6d " "00:04:43"},
+                        "lsa-changed-time": {"#text": "21w6d 00:04:43"},
                         "send-time": {"#text": "00:13:05"},
                     },
                     "ospf-external-lsa": {
@@ -10411,7 +10412,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:24:28"},
                         "installation-time": {"#text": "00:35:29"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "4w2d " "05:46:49"},
+                        "lsa-changed-time": {"#text": "4w2d 05:46:49"},
                         "send-time": {"#text": "00:35:27"},
                     },
                     "ospf-external-lsa": {
@@ -10440,7 +10441,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:14:26"},
                         "installation-time": {"#text": "00:45:31"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "3w0d " "08:49:51"},
+                        "lsa-changed-time": {"#text": "3w0d 08:49:51"},
                         "send-time": {"#text": "00:45:29"},
                     },
                     "ospf-external-lsa": {
@@ -10469,7 +10470,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:16:03"},
                         "installation-time": {"#text": "00:43:51"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "3w0d " "08:09:51"},
+                        "lsa-changed-time": {"#text": "3w0d 08:09:51"},
                         "send-time": {"#text": "00:43:49"},
                     },
                     "ospf-external-lsa": {
@@ -10498,7 +10499,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:52:05"},
                         "installation-time": {"#text": "00:07:52"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "3w0d " "08:49:56"},
+                        "lsa-changed-time": {"#text": "3w0d 08:49:56"},
                         "send-time": {"#text": "00:07:50"},
                     },
                     "ospf-external-lsa": {
@@ -10527,7 +10528,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:42:03"},
                         "installation-time": {"#text": "00:17:54"},
                         "lsa-change-count": "75",
-                        "lsa-changed-time": {"#text": "2w6d " "18:58:13"},
+                        "lsa-changed-time": {"#text": "2w6d 18:58:13"},
                         "send-time": {"#text": "00:17:52"},
                     },
                     "ospf-external-lsa": {
@@ -10556,7 +10557,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:44:33"},
                         "installation-time": {"#text": "00:15:24"},
                         "lsa-change-count": "75",
-                        "lsa-changed-time": {"#text": "2w6d " "18:58:13"},
+                        "lsa-changed-time": {"#text": "2w6d 18:58:13"},
                         "send-time": {"#text": "00:15:22"},
                     },
                     "ospf-external-lsa": {
@@ -10663,10 +10664,10 @@ class TestShowOspfNeighborExtensive(unittest.TestCase):
                     "dr-address": "0.0.0.0",
                     "interface-name": "ge-0/0/0.0",
                     "neighbor-address": "10.189.5.94",
-                    "neighbor-adjacency-time": {"#text": "3w0d " "16:50:35"},
+                    "neighbor-adjacency-time": {"#text": "3w0d 16:50:35"},
                     "neighbor-id": "10.189.5.253",
                     "neighbor-priority": "128",
-                    "neighbor-up-time": {"#text": "3w0d " "16:50:35"},
+                    "neighbor-up-time": {"#text": "3w0d 16:50:35"},
                     "options": "0x52",
                     "ospf-area": "0.0.0.8",
                     "ospf-neighbor-state": "Full",
@@ -10688,10 +10689,10 @@ class TestShowOspfNeighborExtensive(unittest.TestCase):
                     "dr-address": "0.0.0.0",
                     "interface-name": "ge-0/0/1.0",
                     "neighbor-address": "10.169.14.121",
-                    "neighbor-adjacency-time": {"#text": "3w2d " "03:12:15"},
+                    "neighbor-adjacency-time": {"#text": "3w2d 03:12:15"},
                     "neighbor-id": "10.169.14.240",
                     "neighbor-priority": "128",
-                    "neighbor-up-time": {"#text": "3w2d " "03:12:20"},
+                    "neighbor-up-time": {"#text": "3w2d 03:12:20"},
                     "options": "0x52",
                     "ospf-area": "0.0.0.8",
                     "ospf-neighbor-state": "Full",
@@ -10721,10 +10722,10 @@ class TestShowOspfNeighborExtensive(unittest.TestCase):
                     "dr-address": "0.0.0.0",
                     "interface-name": "ge-0/0/2.0",
                     "neighbor-address": "10.19.198.26",
-                    "neighbor-adjacency-time": {"#text": "1w5d " "20:40:14"},
+                    "neighbor-adjacency-time": {"#text": "1w5d 20:40:14"},
                     "neighbor-id": "10.19.198.239",
                     "neighbor-priority": "1",
-                    "neighbor-up-time": {"#text": "1w5d " "20:40:14"},
+                    "neighbor-up-time": {"#text": "1w5d 20:40:14"},
                     "options": "0x52",
                     "ospf-area": "0.0.0.8",
                     "ospf-neighbor-state": "Full",
@@ -11036,10 +11037,10 @@ class TestShowOspfNeighborDetail(unittest.TestCase):
                     "dr-address": "0.0.0.0",
                     "interface-name": "ge-0/0/0.0",
                     "neighbor-address": "10.189.5.94",
-                    "neighbor-adjacency-time": {"#text": "3w0d " "16:50:35"},
+                    "neighbor-adjacency-time": {"#text": "3w0d 16:50:35"},
                     "neighbor-id": "10.189.5.253",
                     "neighbor-priority": "128",
-                    "neighbor-up-time": {"#text": "3w0d " "16:50:35"},
+                    "neighbor-up-time": {"#text": "3w0d 16:50:35"},
                     "options": "0x52",
                     "ospf-area": "0.0.0.8",
                     "ospf-neighbor-state": "Full",
@@ -11061,10 +11062,10 @@ class TestShowOspfNeighborDetail(unittest.TestCase):
                     "dr-address": "0.0.0.0",
                     "interface-name": "ge-0/0/1.0",
                     "neighbor-address": "10.169.14.121",
-                    "neighbor-adjacency-time": {"#text": "3w2d " "03:12:15"},
+                    "neighbor-adjacency-time": {"#text": "3w2d 03:12:15"},
                     "neighbor-id": "10.169.14.240",
                     "neighbor-priority": "128",
-                    "neighbor-up-time": {"#text": "3w2d " "03:12:20"},
+                    "neighbor-up-time": {"#text": "3w2d 03:12:20"},
                     "options": "0x52",
                     "ospf-area": "0.0.0.8",
                     "ospf-neighbor-state": "Full",
@@ -11094,10 +11095,10 @@ class TestShowOspfNeighborDetail(unittest.TestCase):
                     "dr-address": "0.0.0.0",
                     "interface-name": "ge-0/0/2.0",
                     "neighbor-address": "10.19.198.26",
-                    "neighbor-adjacency-time": {"#text": "1w5d " "20:40:14"},
+                    "neighbor-adjacency-time": {"#text": "1w5d 20:40:14"},
                     "neighbor-id": "10.19.198.239",
                     "neighbor-priority": "1",
-                    "neighbor-up-time": {"#text": "1w5d " "20:40:14"},
+                    "neighbor-up-time": {"#text": "1w5d 20:40:14"},
                     "options": "0x52",
                     "ospf-area": "0.0.0.8",
                     "ospf-neighbor-state": "Full",
@@ -11127,6 +11128,1429 @@ class TestShowOspfNeighborDetail(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowOspfNeighborDetail(device=self.device)
         parsed_output = obj.parse(neighbor='10.189.5.94')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class TestShowOspfRouteBrief(unittest.TestCase):
+    """ Unit tests for:
+            * show ospf route brief
+    """
+
+    maxDiff = None
+
+    device = Device(name="aDevice")
+
+    empty_output = {"execute.return_value": ""}
+
+    golden_output = {
+        "execute.return_value": """
+        show ospf route brief
+        Topology default Route Table:
+
+        Prefix             Path  Route      NH       Metric NextHop       Nexthop
+                        Type  Type       Type            Interface     Address/LSP
+        10.36.3.3            Intra Router     IP         1201 ge-0/0/1.0    10.169.14.121
+        10.100.5.5            Intra Router     IP         1200 ge-0/0/1.0    10.169.14.121
+        10.19.198.239      Intra Router     IP         1000 ge-0/0/2.0    10.19.198.26
+        10.34.2.250       Intra AS BR      IP          200 ge-0/0/1.0    10.169.14.121
+        10.34.2.251       Intra AS BR      IP          205 ge-0/0/1.0    10.169.14.121
+        10.169.196.241    Intra Router     IP         1200 ge-0/0/1.0    10.169.14.121
+        10.169.14.240     Intra AS BR      IP          100 ge-0/0/1.0    10.169.14.121
+        10.169.14.241     Intra AS BR      IP          105 ge-0/0/1.0    10.169.14.121
+        10.189.5.253       Intra AS BR      IP            5 ge-0/0/0.0    10.189.5.94
+        192.168.36.119    Intra AS BR      IP        10100 ge-0/0/1.0    10.169.14.121
+        192.168.36.120    Intra AS BR      IP        10100 ge-0/0/1.0    10.169.14.121
+        0.0.0.0/0          Ext1  Network    IP          101 ge-0/0/1.0    10.169.14.121
+        10.1.0.0/24         Ext2  Network    IP           20 ge-0/0/1.0    10.169.14.121
+        10.36.3.3/32         Intra Network    IP         1202 ge-0/0/1.0    10.169.14.121
+        10.16.0.0/30         Intra Network    IP         1200 ge-0/0/1.0    10.169.14.121
+        10.100.5.5/32         Intra Network    IP         1201 ge-0/0/1.0    10.169.14.121
+        10.100.5.5/32         Intra Network    Spring     1201 ge-0/0/1.0    10.169.14.121
+                                            Bkup SPRING     ge-0/0/0.0    10.189.5.94
+        10.19.198.24/30    Intra Network    IP         1000 ge-0/0/2.0
+        10.19.198.28/30    Intra Network    IP         1005 ge-0/0/0.0    10.189.5.94
+        10.19.198.239/32   Intra Network    IP         1001 ge-0/0/2.0    10.19.198.26
+        10.19.198.239/32   Intra Network    Spring     1001 ge-0/0/2.0    10.19.198.26
+                                            Bkup SPRING     ge-0/0/0.0    10.189.5.94
+        10.174.132.237/32   Ext1  Network    IP          150 ge-0/0/1.0    10.169.14.121
+        10.34.2.200/30    Intra Network    IP          205 ge-0/0/1.0    10.169.14.121
+        10.34.2.250/32    Intra Network    IP          200 ge-0/0/1.0    10.169.14.121
+        10.34.2.250/32    Intra Network    Spring      200 ge-0/0/1.0    10.169.14.121
+        10.34.2.251/32    Intra Network    IP          205 ge-0/0/1.0    10.169.14.121
+        10.34.2.251/32    Intra Network    Spring      205 ge-0/0/1.0    10.169.14.121
+        10.15.0.0/30        Intra Network    IP         1001 ge-0/0/2.0    10.19.198.26
+        10.64.0.0/30        Intra Network    IP         1201 ge-0/0/1.0    10.169.14.121
+        10.55.0.0/24       Intra Network    IP          100 ge-0/0/3.0
+        10.169.196.212/30 Intra Network    IP         1200 ge-0/0/1.0    10.169.14.121
+        10.169.196.216/30 Intra Network    IP         1205 ge-0/0/1.0    10.169.14.121
+        10.169.196.241/32 Intra Network    IP         1201 ge-0/0/1.0    10.169.14.121
+        10.169.196.241/32 Intra Network    Spring     1201 ge-0/0/1.0    10.169.14.121
+                                            Bkup SPRING     ge-0/0/0.0    10.189.5.94
+        10.169.14.16/30   Intra Network    IP          105 ge-0/0/1.0    10.169.14.121
+        10.169.14.32/30   Intra Network    IP          225 ge-0/0/1.0    10.169.14.121
+        10.169.14.120/30  Intra Network    IP          100 ge-0/0/1.0
+        10.169.14.128/30  Intra Network    IP          125 ge-0/0/0.0    10.189.5.94
+        10.169.14.156/30  Intra Network    IP          200 ge-0/0/1.0    10.169.14.121
+        10.169.14.240/32  Intra Network    IP          100 ge-0/0/1.0    10.169.14.121
+        10.169.14.240/32  Intra Network    Spring      100 ge-0/0/1.0    10.169.14.121
+                                            Bkup SPRING     ge-0/0/0.0    10.189.5.94
+        10.169.14.241/32  Intra Network    IP          105 ge-0/0/1.0    10.169.14.121
+        10.169.14.241/32  Intra Network    Spring      105 ge-0/0/1.0    10.169.14.121
+        10.169.14.242/32  Intra Network    IP          100 ge-0/0/1.0    10.169.14.121
+        10.169.14.243/32  Intra Network    IP          105 ge-0/0/1.0    10.169.14.121
+        10.189.5.92/30     Intra Network    IP            5 ge-0/0/0.0
+        10.189.5.252/32    Intra Network    IP            0 lo0.0
+        10.189.5.252/32    Intra Network    Spring        0 lo0.0
+        10.189.5.253/32    Intra Network    IP            5 ge-0/0/0.0    10.189.5.94
+        10.189.5.253/32    Intra Network    Spring        5 ge-0/0/0.0    10.189.5.94
+        192.168.220.0/30       Intra Network    IP         1200 ge-0/0/1.0    10.169.14.121
+        192.168.36.119/32 Intra Network    IP        10101 ge-0/0/1.0    10.169.14.121
+        192.168.36.120/32 Intra Network    IP        10101 ge-0/0/1.0    10.169.14.121
+        2567               Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        2567 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        2568               Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+        2568 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+        167966             Intra Network    Mpls          0 ge-0/0/2.0    10.19.198.26
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        167966 (S=0)       Intra Network    Mpls          0 ge-0/0/2.0    10.19.198.26
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        167967             Intra Network    Mpls          0 ge-0/0/2.0    10.19.198.26
+        167967 (S=0)       Intra Network    Mpls          0 ge-0/0/2.0    10.19.198.26
+        28985              Intra Network    Mpls          0 ge-0/0/0.0    10.189.5.94
+        28985 (S=0)        Intra Network    Mpls          0 ge-0/0/0.0    10.189.5.94
+        28986              Intra Network    Mpls          0 ge-0/0/0.0    10.189.5.94
+        28986 (S=0)        Intra Network    Mpls          0 ge-0/0/0.0    10.189.5.94
+        17000              Intra Network    Mpls       1201 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        16051              Intra Network    Mpls        100 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        16051 (S=0)        Intra Network    Mpls        100 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        16052              Intra Network    Mpls        105 ge-0/0/1.0    10.169.14.121
+        16061              Intra Network    Mpls        200 ge-0/0/1.0    10.169.14.121
+        16062              Intra Network    Mpls        205 ge-0/0/1.0    10.169.14.121
+        16063              Intra Network    Mpls       1201 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        16072              Intra Network    Mpls          5 ge-0/0/0.0    10.189.5.94
+        16073              Intra Network    Mpls       1001 ge-0/0/2.0    10.19.198.26
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        16073 (S=0)        Intra Network    Mpls       1001 ge-0/0/2.0    10.19.198.26
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+    """
+    }
+
+    golden_parsed_output = {
+        "ospf-route-information": {
+            "ospf-topology-route-table": {
+                "ospf-route": [
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.36.3.3",
+                                "interface-cost": "1201",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Router",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.100.5.5",
+                                "interface-cost": "1200",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Router",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.19.198.239",
+                                "interface-cost": "1000",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Router",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.34.2.250",
+                                "interface-cost": "200",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "AS BR",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.34.2.251",
+                                "interface-cost": "205",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "AS BR",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.196.241",
+                                "interface-cost": "1200",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Router",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.240",
+                                "interface-cost": "100",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "AS BR",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.241",
+                                "interface-cost": "105",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "AS BR",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.189.5.253",
+                                "interface-cost": "5",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "AS BR",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "192.168.36.119",
+                                "interface-cost": "10100",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "AS BR",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "192.168.36.120",
+                                "interface-cost": "10100",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "AS BR",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "0.0.0.0/0",
+                                "interface-cost": "101",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Ext1",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.1.0.0/24",
+                                "interface-cost": "20",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Ext2",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.36.3.3/32",
+                                "interface-cost": "1202",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.16.0.0/30",
+                                "interface-cost": "1200",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.100.5.5/32",
+                                "interface-cost": "1201",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                            {
+                                "address-prefix": "10.100.5.5/32",
+                                "interface-cost": "1201",
+                                "next-hop-type": "Spring",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup SPRING",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.19.198.24/30",
+                                "interface-cost": "1000",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"}
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.19.198.28/30",
+                                "interface-cost": "1005",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.19.198.239/32",
+                                "interface-cost": "1001",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                            {
+                                "address-prefix": "10.19.198.239/32",
+                                "interface-cost": "1001",
+                                "next-hop-type": "Spring",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup SPRING",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.174.132.237/32",
+                                "interface-cost": "150",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Ext1",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.34.2.200/30",
+                                "interface-cost": "205",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.34.2.250/32",
+                                "interface-cost": "200",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                            {
+                                "address-prefix": "10.34.2.250/32",
+                                "interface-cost": "200",
+                                "next-hop-type": "Spring",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.34.2.251/32",
+                                "interface-cost": "205",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                            {
+                                "address-prefix": "10.34.2.251/32",
+                                "interface-cost": "205",
+                                "next-hop-type": "Spring",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.15.0.0/30",
+                                "interface-cost": "1001",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.64.0.0/30",
+                                "interface-cost": "1201",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.55.0.0/24",
+                                "interface-cost": "100",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-name": {"interface-name": "ge-0/0/3.0"}
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.196.212/30",
+                                "interface-cost": "1200",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.196.216/30",
+                                "interface-cost": "1205",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.196.241/32",
+                                "interface-cost": "1201",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                            {
+                                "address-prefix": "10.169.196.241/32",
+                                "interface-cost": "1201",
+                                "next-hop-type": "Spring",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup SPRING",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.16/30",
+                                "interface-cost": "105",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.32/30",
+                                "interface-cost": "225",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.120/30",
+                                "interface-cost": "100",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"}
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.128/30",
+                                "interface-cost": "125",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.156/30",
+                                "interface-cost": "200",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.240/32",
+                                "interface-cost": "100",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                            {
+                                "address-prefix": "10.169.14.240/32",
+                                "interface-cost": "100",
+                                "next-hop-type": "Spring",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup SPRING",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.241/32",
+                                "interface-cost": "105",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                            {
+                                "address-prefix": "10.169.14.241/32",
+                                "interface-cost": "105",
+                                "next-hop-type": "Spring",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.242/32",
+                                "interface-cost": "100",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.243/32",
+                                "interface-cost": "105",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.189.5.92/30",
+                                "interface-cost": "5",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"}
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.189.5.252/32",
+                                "interface-cost": "0",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-name": {"interface-name": "lo0.0"}
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                            {
+                                "address-prefix": "10.189.5.252/32",
+                                "interface-cost": "0",
+                                "next-hop-type": "Spring",
+                                "ospf-next-hop": {
+                                    "next-hop-name": {"interface-name": "lo0.0"}
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.189.5.253/32",
+                                "interface-cost": "5",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                            {
+                                "address-prefix": "10.189.5.253/32",
+                                "interface-cost": "5",
+                                "next-hop-type": "Spring",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "192.168.220.0/30",
+                                "interface-cost": "1200",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "192.168.36.119/32",
+                                "interface-cost": "10101",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "192.168.36.120/32",
+                                "interface-cost": "10101",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "2567",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "2567 (S=0)",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "2568",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "2568 (S=0)",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "167966",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "167966 (S=0)",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "167967",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "167967 (S=0)",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "28985",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "28985 (S=0)",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "28986",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "28986 (S=0)",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "17000",
+                                "interface-cost": "1201",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16051",
+                                "interface-cost": "100",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16051 (S=0)",
+                                "interface-cost": "100",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16052",
+                                "interface-cost": "105",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16061",
+                                "interface-cost": "200",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16062",
+                                "interface-cost": "205",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16063",
+                                "interface-cost": "1201",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16072",
+                                "interface-cost": "5",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16073",
+                                "interface-cost": "1001",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16073 (S=0)",
+                                "interface-cost": "1001",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                ]
+            }
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfRouteBrief(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspfRouteBrief(device=self.device)
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':

@@ -22,6 +22,8 @@
         * show chassis routing-engine no-forwarding
     * Added ShowLacpInterfacesInterface for:
         * show lacp interfaces {interface}
+    * Added ShowOspfRouteBrief for:
+        * show ospf route brief
 
 --------------------------------------------------------------------------------
                                 Fix
