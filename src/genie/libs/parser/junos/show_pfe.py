@@ -293,7 +293,8 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
             # Software input control plane drops  :                    0
             m = p7.match(line)
             if m:
-                entry = ret_dict.setdefault('pfe-statistics', {}).setdefault('pfe-local-traffic-statistics', {})
+                entry = ret_dict.setdefault('pfe-statistics', {})\
+                    .setdefault('pfe-local-traffic-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_','-')
@@ -325,7 +326,8 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
             # Software input low drops            :                    0
             m = p10.match(line)
             if m:
-                entry = ret_dict.setdefault('pfe-statistics', {}).setdefault('pfe-local-traffic-statistics', {})
+                entry = ret_dict.setdefault('pfe-statistics', {})\
+                    .setdefault('pfe-local-traffic-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_','-')
@@ -478,7 +480,8 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
             # ARP                        :                56818
             m = p24.match(line)
             if m:
-                entry = ret_dict.setdefault('pfe-statistics', {}).setdefault('pfe-local-protocol-statistics', {})
+                entry = ret_dict.setdefault('pfe-statistics', {})\
+                    .setdefault('pfe-local-protocol-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_','-')
@@ -543,7 +546,8 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
             # Data error                 :                    0
             m = p30.match(line)
             if m:
-                entry = ret_dict.setdefault('pfe-statistics', {}).setdefault('pfe-hardware-discard-statistics', {})
+                entry = ret_dict.setdefault('pfe-statistics', {})\
+                    .setdefault('pfe-hardware-discard-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_','-')
@@ -553,7 +557,8 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
             # TCP header length error    :                    0
             m = p31.match(line)
             if m:
-                entry = ret_dict.setdefault('pfe-statistics', {}).setdefault('pfe-hardware-discard-statistics', {})
+                entry = ret_dict.setdefault('pfe-statistics', {})\
+                    .setdefault('pfe-hardware-discard-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_','-')
@@ -629,7 +634,8 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
             # Fabric drops               :                    0
             m = p38.match(line)
             if m:
-                entry = ret_dict.setdefault('pfe-statistics', {}).setdefault('pfe-hardware-discard-statistics', {})
+                entry = ret_dict.setdefault('pfe-statistics', {})\
+                    .setdefault('pfe-hardware-discard-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_','-')
@@ -753,7 +759,9 @@ class ShowPfeStatisticsIpIcmp(ShowPfeStatisticsIpIcmpSchema):
 
                     if key in schemaMap:
                         schemaKey = schemaMap[key]
-                        ret_dict.setdefault("pfe-statistics", {}).setdefault("icmp-statistics", {}).setdefault(schemaKey, value)
+                        ret_dict.setdefault("pfe-statistics", {})\
+                            .setdefault("icmp-statistics", {})\
+                                .setdefault(schemaKey, value)
                     continue
 
             if self.state == "ICMP Errors":
@@ -780,7 +788,9 @@ class ShowPfeStatisticsIpIcmp(ShowPfeStatisticsIpIcmpSchema):
 
                     if key in schemaMap:
                         schemaKey = schemaMap[key]
-                        ret_dict.setdefault("pfe-statistics", {}).setdefault("icmp-errors", {}).setdefault(schemaKey, value)
+                        ret_dict.setdefault("pfe-statistics", {})\
+                            .setdefault("icmp-errors", {})\
+                                .setdefault(schemaKey, value)
                     continue
 
             if self.state == "ICMP Discards":
@@ -804,7 +814,9 @@ class ShowPfeStatisticsIpIcmp(ShowPfeStatisticsIpIcmpSchema):
 
                     if key in schemaMap:
                         schemaKey = schemaMap[key]
-                        ret_dict.setdefault("pfe-statistics", {}).setdefault("icmp-discards", {}).setdefault(schemaKey, value)
+                        ret_dict.setdefault("pfe-statistics", {})\
+                            .setdefault("icmp-discards", {})\
+                                .setdefault(schemaKey, value)
                     continue
 
         return ret_dict
