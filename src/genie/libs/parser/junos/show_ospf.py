@@ -3274,16 +3274,11 @@ class ShowOspfRouteBrief(ShowOspfRouteBriefSchema):
         # 2568 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
         p1 = re.compile(r'^(?P<address_prefix>[\d\.\/]+( \(S=\d+\))?) +(?P<route_path_type>\S+)'
             r' +(?P<route_type>\S+|(AS BR)) +(?P<next_hop_type>\S+) +(?P<interface_cost>\S+)'
-            r' +(?P<interface_name>\S+) +(?P<interface_address>[\d\.]+)$')
+            r' +(?P<interface_name>\S+)( +(?P<interface_address>[\d\.]+))?$')
 
         # Bkup SPRING     ge-0/0/0.0    10.189.5.94
         p2 = re.compile(r'^(?P<ospf_backup_next_hop_type>Bkup +\S+) +'
         r'(?P<ospf_backup_next_hop_interface>\S+) +(?P<ospf_backup_next_hop_address>[\d\.]+)$')
-
-        # 10.19.198.24/30    Intra Network    IP         1000 ge-0/0/2.0
-        p3 = re.compile(r'^(?P<address_prefix>\S+) +(?P<route_path_type>\S+) +'
-            r'(?P<route_type>\S+) +(?P<next_hop_type>\S+) +(?P<interface_cost>\S+)'
-            r' +(?P<interface_name>\S+)$')
 
         ret_dict = {}
 
@@ -3308,8 +3303,10 @@ class ShowOspfRouteBrief(ShowOspfRouteBriefSchema):
                 entry.setdefault("interface-cost", group['interface_cost'])
                 entry.setdefault("ospf-next-hop", {}).setdefault("next-hop-name", {})\
                         .setdefault("interface-name", group['interface_name'])
-                entry.setdefault("ospf-next-hop", {}).setdefault("next-hop-address", {})\
-                        .setdefault("interface-address", group['interface_address'])
+
+                if "interface_address" in group and group['interface_address']:
+                    entry.setdefault("ospf-next-hop", {}).setdefault("next-hop-address", {})\
+                            .setdefault("interface-address", group['interface_address'])
 
                 if self.address_prefix == group['address_prefix']:
                     ret_dict["ospf-route-information"]["ospf-topology-route-table"]\
@@ -3335,31 +3332,6 @@ class ShowOspfRouteBrief(ShowOspfRouteBriefSchema):
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_','-')
                     entry[entry_key] = group_value
-                continue
-
-            # 10.19.198.24/30    Intra Network    IP         1000 ge-0/0/2.0
-            m = p3.match(line)
-            if m:
-                group = m.groupdict()
-
-                entry = {}
-                entry.setdefault("address-prefix", group['address_prefix'])
-                entry.setdefault("route-path-type", group['route_path_type'])
-                entry.setdefault("route-type", group['route_type'])
-                entry.setdefault("next-hop-type", group['next_hop_type'])
-                entry.setdefault("interface-cost", group['interface_cost'])
-                entry.setdefault("ospf-next-hop", {}).setdefault("next-hop-name", {})\
-                        .setdefault("interface-name", group['interface_name'])
-                route_list = ret_dict.setdefault("ospf-route-information", {})\
-                    .setdefault("ospf-topology-route-table", {}).setdefault("ospf-route", [])
-                if self.address_prefix == group['address_prefix']:
-                    ret_dict["ospf-route-information"]["ospf-topology-route-table"]\
-                        ["ospf-route"][-1]["ospf-route-entry"].append(entry)
-                else:
-                    ret_dict["ospf-route-information"]["ospf-topology-route-table"]\
-                        ["ospf-route"].append({"ospf-route-entry":[entry]})
-
-                self.address_prefix = group['address_prefix']
                 continue
 
         return ret_dict
