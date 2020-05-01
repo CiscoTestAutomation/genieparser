@@ -3209,7 +3209,7 @@ class ShowOspfRouteBriefSchema(MetaParser):
 
     def validate_ospf_route_entry_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-lsa-topology-link is not a list')
+            raise SchemaTypeError('ospf-route-entry is not a list')
         ospf_route_schema = Schema(
                 {
             "address-prefix": str,
@@ -3237,7 +3237,7 @@ class ShowOspfRouteBriefSchema(MetaParser):
 
     def validate_ospf_route_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-lsa-topology-link is not a list')
+            raise SchemaTypeError('ospf-route is not a list')
         ospf_route_schema = Schema(
             {
             "ospf-route-entry": Use(ShowOspfRouteBriefSchema.validate_ospf_route_entry_list)
@@ -3270,13 +3270,19 @@ class ShowOspfRouteBrief(ShowOspfRouteBriefSchema):
             out = output
 
         # 3.3.3.3            Intra Router     IP         1201 ge-0/0/1.0    106.187.14.121
-        p1 = re.compile(r'^(?P<address_prefix>\S+( \(S=\d+\))?) +(?P<route_path_type>\S+) +(?P<route_type>\S+|(AS BR)) +(?P<next_hop_type>\S+) +(?P<interface_cost>\S+) +(?P<interface_name>\S+) +(?P<interface_address>[\d\.]+)$')
+        # 2568 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    106.187.14.121
+        p1 = re.compile(r'^(?P<address_prefix>\S+( \(S=\d+\))?) +(?P<route_path_type>\S+)'
+            r' +(?P<route_type>\S+|(AS BR)) +(?P<next_hop_type>\S+) +(?P<interface_cost>\S+)'
+            r' +(?P<interface_name>\S+) +(?P<interface_address>[\d\.]+)$')
 
         # Bkup SPRING     ge-0/0/0.0    111.87.5.94
-        p2 = re.compile(r'^(?P<ospf_backup_next_hop_type>Bkup +\S+) +(?P<ospf_backup_next_hop_interface>\S+) +(?P<ospf_backup_next_hop_address>[\d\.]+)$')
+        p2 = re.compile(r'^(?P<ospf_backup_next_hop_type>Bkup +\S+) +'
+        r'(?P<ospf_backup_next_hop_interface>\S+) +(?P<ospf_backup_next_hop_address>[\d\.]+)$')
 
         # 27.86.198.24/30    Intra Network    IP         1000 ge-0/0/2.0
-        p3 = re.compile(r'^(?P<address_prefix>\S+) +(?P<route_path_type>\S+) +(?P<route_type>\S+) +(?P<next_hop_type>\S+) +(?P<interface_cost>\S+) +(?P<interface_name>\S+)$')
+        p3 = re.compile(r'^(?P<address_prefix>\S+) +(?P<route_path_type>\S+) +'
+            r'(?P<route_type>\S+) +(?P<next_hop_type>\S+) +(?P<interface_cost>\S+)'
+            r' +(?P<interface_name>\S+)$')
 
         ret_dict = {}
 
@@ -3284,10 +3290,13 @@ class ShowOspfRouteBrief(ShowOspfRouteBriefSchema):
             line = line.strip()
 
             # 3.3.3.3            Intra Router     IP         1201 ge-0/0/1.0    106.187.14.121
+            # 2568 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    106.187.14.121
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict.setdefault("ospf-route-information", {}).setdefault("ospf-topology-route-table", {}).setdefault("ospf-route", [])
+                ret_dict.setdefault("ospf-route-information", {})\
+                    .setdefault("ospf-topology-route-table", {})\
+                        .setdefault("ospf-route", [])
 
                 entry = {}
                 entry.setdefault("address-prefix", group['address_prefix'])
@@ -3301,9 +3310,11 @@ class ShowOspfRouteBrief(ShowOspfRouteBriefSchema):
                         .setdefault("interface-address", group['interface_address'])
 
                 if self.address_prefix == group['address_prefix']:
-                    ret_dict["ospf-route-information"]["ospf-topology-route-table"]["ospf-route"][-1]["ospf-route-entry"].append(entry)
+                    ret_dict["ospf-route-information"]["ospf-topology-route-table"]\
+                        ["ospf-route"][-1]["ospf-route-entry"].append(entry)
                 else:
-                    ret_dict["ospf-route-information"]["ospf-topology-route-table"]["ospf-route"].append({"ospf-route-entry":[entry]})
+                    ret_dict["ospf-route-information"]["ospf-topology-route-table"]\
+                        ["ospf-route"].append({"ospf-route-entry":[entry]})
 
                 self.address_prefix = group['address_prefix']
                 continue
@@ -3340,9 +3351,11 @@ class ShowOspfRouteBrief(ShowOspfRouteBriefSchema):
                 route_list = ret_dict.setdefault("ospf-route-information", {})\
                     .setdefault("ospf-topology-route-table", {}).setdefault("ospf-route", [])
                 if self.address_prefix == group['address_prefix']:
-                    ret_dict["ospf-route-information"]["ospf-topology-route-table"]["ospf-route"][-1]["ospf-route-entry"].append(entry)
+                    ret_dict["ospf-route-information"]["ospf-topology-route-table"]\
+                        ["ospf-route"][-1]["ospf-route-entry"].append(entry)
                 else:
-                    ret_dict["ospf-route-information"]["ospf-topology-route-table"]["ospf-route"].append({"ospf-route-entry":[entry]})
+                    ret_dict["ospf-route-information"]["ospf-topology-route-table"]\
+                        ["ospf-route"].append({"ospf-route-entry":[entry]})
 
                 self.address_prefix = group['address_prefix']
                 continue
