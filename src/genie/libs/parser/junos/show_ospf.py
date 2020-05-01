@@ -3174,6 +3174,39 @@ class ShowOspfRouteBriefSchema(MetaParser):
             * show ospf route brief
     """
 
+    """
+    schema = {
+        "ospf-route-information": {
+            "ospf-topology-route-table": {
+                "ospf-route": [{
+                "ospf-route-entry": [{
+                    "address-prefix": str,
+                    "interface-cost": str,
+                    "next-hop-type": str,
+                    "ospf-next-hop": {
+                        Optional("next-hop-address"): {
+                            "interface-address": str
+                        },
+                        "next-hop-name": {
+                            "interface-name": str
+                        }
+                    },
+                    "route-path-type": str,
+                    "route-type": str,
+                    Optional("ospf-backup-next-hop"): {
+                        "ospf-backup-next-hop-type": str,
+                        "ospf-backup-next-hop-address": str,
+                        "ospf-backup-next-hop-interface": str
+                    }
+                }]
+            }],
+                Optional("ospf-topology-name"): str
+            }
+        }
+    }
+    """
+
+
     def validate_ospf_route_entry_list(value):
         if not isinstance(value, list):
             raise SchemaTypeError('ospf-lsa-topology-link is not a list')
@@ -3214,13 +3247,13 @@ class ShowOspfRouteBriefSchema(MetaParser):
         return value
 
     schema = {
-    "ospf-route-information": {
-        "ospf-topology-route-table": {
-            "ospf-route": Use(validate_ospf_route_list),
-            Optional("ospf-topology-name"): str
+        "ospf-route-information": {
+            "ospf-topology-route-table": {
+                "ospf-route": Use(validate_ospf_route_list),
+                Optional("ospf-topology-name"): str
+            }
         }
     }
-}
 
 class ShowOspfRouteBrief(ShowOspfRouteBriefSchema):
     """ Parser for:
