@@ -742,7 +742,8 @@ class ShowPfeStatisticsIpIcmp(ShowPfeStatisticsIpIcmpSchema):
                 }
 
                 #       246259 requests
-                #          311 network unreachables
+                #     311 network unreachables
+                # 245373 ttl expired
                 m = p2.match(line)
                 if m:
                     group = m.groupdict()
@@ -768,8 +769,8 @@ class ShowPfeStatisticsIpIcmp(ShowPfeStatisticsIpIcmpSchema):
                     "runts": "runts"
                 }
 
-                #       246259 requests
-                #          311 network unreachables
+                # 0 unknown unreachables
+                # 0 unsupported ICMP type
                 m = p2.match(line)
                 if m:
                     group = m.groupdict()
@@ -792,8 +793,8 @@ class ShowPfeStatisticsIpIcmp(ShowPfeStatisticsIpIcmpSchema):
                     "ICMP_errors": "icmp-errors",
                 }
 
-                #       246259 requests
-                #          311 network unreachables
+                # 0 multicasts
+                # 0 bad source addresses
                 m = p2.match(line)
                 if m:
                     group = m.groupdict()
