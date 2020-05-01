@@ -22,6 +22,7 @@ JunOs parsers for the following show commands:
     * show ospf neighbor detail
     * show ospf neighbor {neighbor} detail
     * show ospf interface extensive
+    * show ospf route brief
 """
 
 # Python
