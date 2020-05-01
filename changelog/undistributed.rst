@@ -39,3 +39,7 @@
 * LINUX
     * Fixed Ifconfig parser issues.
 
+* JUNOS
+    * Updated ShowRoute:
+        * Update regex to support various outputs.
+
