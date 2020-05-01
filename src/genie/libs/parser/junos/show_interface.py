@@ -14,7 +14,7 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use
 from genie.metaparser.util.exceptions import SchemaTypeError
-                  
+
 # import parser utils
 from genie.libs.parser.utils.common import Common
 
@@ -361,6 +361,7 @@ class ShowInterfacesSchema(MetaParser):
                         Optional("ifaf-preferred"): bool,
                         Optional("ifaf-primary"): bool,
                         Optional("ifaf-is-default"): bool,
+                        Optional("ifaf-none"): bool,
                     },
                     Optional("ifa-local"): str
                 })
@@ -466,9 +467,9 @@ class ShowInterfacesSchema(MetaParser):
             Optional("ld-pdu-error"): str,
             Optional("link-level-type"): str,
             Optional("link-type"): str,
-            "local-index": str,
+            Optional("local-index"): str,
             Optional("logical-interface"): {
-                "address-family": Use(verify_address_family_list),
+                Optional("address-family"): Use(verify_address_family_list),
                 Optional("encapsulation"): str,
                 Optional("filter-information"): str,
                 "if-config-flags": {
@@ -480,14 +481,29 @@ class ShowInterfacesSchema(MetaParser):
                 Optional("logical-interface-bandwidth"): str,
                 "name": str,
                 Optional("policer-overhead"): str,
-                "snmp-index": str,
-                "traffic-statistics": {
+                Optional("snmp-index"): str,
+                Optional("traffic-statistics"): {
                     Optional("@junos:style"): str,
                     "input-packets": str,
-                    "output-packets": str
+                    Optional("input-bytes"): str,
+                    "output-packets": str,
+                    Optional("output-bytes"): str,
+                    Optional("ipv6-transit-statistics"): {
+                        "input-bytes": str,
+                        "input-packets": str,
+                        "output-bytes": str,
+                        "output-packets": str,
+                    },
                 }
             },
             Optional("loopback"): str,
+            Optional("lsi-traffic-statistics"): {
+                Optional("@junos:style"): str,
+                "input-bps": str,
+                "input-bytes": str,
+                "input-packets": str,
+                "input-pps": str
+            },
             Optional("mru"): str,
             Optional("mtu"): str,
             "name": str,
@@ -497,17 +513,56 @@ class ShowInterfacesSchema(MetaParser):
                 "physical-interface-cos-hw-max-queues": str,
                 "physical-interface-cos-use-max-queues": str
             },
-            "snmp-index": str,
+            Optional("snmp-index"): str,
             Optional("sonet-mode"): str,
             Optional("source-filtering"): str,
             Optional("speed"): str,
+            Optional("stp-traffic-statistics"): {
+                Optional("@junos:style"): str,
+                Optional("stp-input-bytes-dropped"): str,
+                Optional("stp-input-packets-dropped"): str,
+                Optional("stp-output-bytes-dropped"): str,
+                Optional("stp-output-packets-dropped"): str
+            },
             Optional("traffic-statistics"): {
                 Optional("@junos:style"): str,
-                "input-bps": str,
+                Optional("input-bps"): str,
+                Optional("output-bytes"): str,
+                Optional("input-bytes"): str,
                 Optional("input-packets"): str,
-                "input-pps": str,
-                "output-bps": str,
+                Optional("input-pps"): str,
+                Optional("output-bps"): str,
                 Optional("output-packets"): str,
+                Optional("output-pps"): str,
+                Optional("ipv6-transit-statistics"): {
+                    Optional("input-bps"): str,
+                    Optional("input-bytes"): str,
+                    Optional("input-packets"): str,
+                    Optional("input-pps"): str,
+                    Optional("output-bps"): str,
+                    Optional("output-bytes"): str,
+                    Optional("output-packets"): str,
+                    Optional("output-pps"): str
+                },
+            },
+            Optional("transit-traffic-statistics"): {
+                "input-bps": str,
+                "input-bytes": str,
+                "input-packets": str,
+                "input-pps": str,
+                Optional("ipv6-transit-statistics"): {
+                    "input-bps": str,
+                    "input-bytes": str,
+                    "input-packets": str,
+                    "input-pps": str,
+                    "output-bps": str,
+                    "output-bytes": str,
+                    "output-packets": str,
+                    "output-pps": str
+                },
+                "output-bps": str,
+                "output-bytes": str,
+                "output-packets": str,
                 "output-pps": str
             }
         })
@@ -536,14 +591,15 @@ class ShowInterfaces(ShowInterfacesSchema):
             out = output
         
         ret_dict = {}
+        
+        statistics_type = None
 
         # Physical interface: ge-0/0/0, Enabled, Physical link is Up
         p1 = re.compile(r'^Physical +interface: +(?P<name>\S+), +'
             r'(?P<admin_status>\S+), +Physical +link +is +(?P<oper_status>\S+)$')
 
         # Interface index: 148, SNMP ifIndex: 526
-        p2 = re.compile(r'^Interface +index: +(?P<local_index>\d+), +'
-            r'SNMP +ifIndex: +(?P<snmp_index>\d+)$')
+        p2 = re.compile(r'^Interface +index: +(?P<local_index>\d+), +SNMP +ifIndex: +(?P<snmp_index>\d+)(, +Generation: +\S+)$')
 
         # Description: none/100G/in/hktGCS002_ge-0/0/0
         p3 = re.compile(r'^Description: +(?P<description>\S+)$')
@@ -599,6 +655,15 @@ class ShowInterfaces(ShowInterfacesSchema):
         p14 = re.compile(r'^Input +rate +: +(?P<input_bps>\d+) +'
             r'bps +\((?P<input_pps>\d+) +pps\)$')
         
+        # Input  bytes  :          19732539397                 3152 bps
+        p14_1 = re.compile(r'^Input +bytes *: +(?P<input_bytes>\S+)( +(?P<input_bps>\S+) +bps)?$')
+        # Output bytes  :          16367814635                 3160 bps
+        p14_2 = re.compile(r'^Output +bytes *: +(?P<output_bytes>\S+)( +(?P<output_bps>\S+) +bps)?$')
+        # Input  packets:            133726363                    5 pps
+        p14_3 = re.compile(r'^Input +packets *: +(?P<input_packets>\S+)( +(?P<input_pps>\S+) +pps)?$')
+        # Output packets:            129306863                    4 pps
+        p14_4 = re.compile(r'^Output +packets *: +(?P<output_packets>\S+)( +(?P<output_pps>\S+) +pps)?$')
+        
         # Output rate    : 3080 bps (3 pps)
         p15 = re.compile(r'^Output +rate +: +(?P<output_bps>\d+) +'
             r'bps +\((?P<output_pps>\d+) +pps\)$')
@@ -635,18 +700,16 @@ class ShowInterfaces(ShowInterfacesSchema):
             r'(?P<interface_transmit_statistics>\S+)$')
 
         # Logical interface ge-0/0/0.0 (Index 333) (SNMP ifIndex 606)
-        p24 = re.compile(r'Logical +interface +(?P<name>\S+) +'
-            r'\(Index +(?P<local_index>\d+)\) +'
-            r'\(SNMP +ifIndex +(?P<snmp_index>\d+)\)$')
+        p24 = re.compile(r'^Logical +interface +(?P<name>\S+) +\(Index +(?P<local_index>\d+)\) +\(SNMP +ifIndex +(?P<snmp_index>\d+)\)( +\(Generation +\S+\))?$')
 
         # Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
         p25 = re.compile(r'^Flags: +(?P<iff_up>\S+)( +SNMP-Traps)?( +(?P<internal_flags>\S+))? +Encapsulation: +(?P<encapsulation>\S+)$')
 
         # Input packets : 133657033
-        p26 = re.compile(r'^Input +packets *: +(?P<input_packets>\S+)')
+        p26 = re.compile(r'^Input +packets *: +(?P<input_packets>\S+)$')
 
         # Output packets: 129243982
-        p27 = re.compile(r'^Output +packets *: +(?P<output_packets>\S+)')
+        p27 = re.compile(r'^Output +packets *: +(?P<output_packets>\S+)$')
 
         # Protocol inet, MTU: 1500
         p28 = re.compile(r'^Protocol +(?P<address_family_name>\S+), +'
@@ -676,13 +739,40 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Local: fe80::250:560f:fc8d:7c08
         p35 = re.compile(r'^Local: +(?P<ifa_local>\S+)$')
 
+        # IPv6 transit statistics:
+        p36 = re.compile(r'^IPv6 +transit +statistics:$')
+
+        # Dropped traffic statistics due to STP State:
+        p37 = re.compile(r'^Dropped +traffic +statistics +due +to +STP +State:$')
+
+        # Transit statistics:
+        p38 = re.compile(r'^Transit +statistics:$')
+
+        # Hold-times     : Up 2000 ms, Down 0 ms
+        p39 = re.compile(r'^Hold-times +: +Up +\d+ +ms, +Down +\d+ +ms$')
+
+        p40 = re.compile(r'^Damping +: +half-life: +\d+ +sec, +max-suppress: +\d+ +sec, +reuse: +\d+, +suppress: +\d+, +state: +\S+$')
+
+        p41 = re.compile(r'^Input +errors:$')
+
+        p42 = re.compile(r'^Output +errors:$')
+
+        p43 = re.compile(r'^L2 +mismatch +timeouts: +\d+, +FIFO +errors: +\d+, Resource +errors: +\d+$')
+
+        p44 = re.compile(r'^MTU +errors: +\d+, +Resource +errors: +\d+$')
+
+        p45 = re.compile(r'^')
+
+        cnt = 0
         for line in out.splitlines():
             line = line.strip()
+            cnt += 1
 
             # Physical interface: ge-0/0/0, Enabled, Physical link is Up
             m = p1.match(line)
             if m:
                 group = m.groupdict()
+                statistics_type = 'physical'
                 interface_info_dict = ret_dict.setdefault('interface-information', {})
                 physical_interface_list =  interface_info_dict.setdefault('physical-interface', [])
                 physical_interface_dict = {}
@@ -815,21 +905,112 @@ class ShowInterfaces(ShowInterfacesSchema):
                 intf_flapped_dict = physical_interface_dict.setdefault('interface-flapped', {})
                 intf_flapped_dict.update({'#text': group['interface_flapped']})
                 continue
+            
+            # IPv6 transit statistics:
+            m = p36.match(line)
+            if m:
+                statistics_type = 'ipv6_transit'
+                group = m.groupdict()
+                traffic_statistics_dict = traffic_statistics_dict.setdefault('ipv6-transit-statistics', {})
+                continue
+            
+            # Dropped traffic statistics due to STP State:
+            m = p37.match(line)
+            if m:
+                statistics_type = 'dropped_stp_state'
+                group = m.groupdict()
+                traffic_statistics_dict = physical_interface_dict.setdefault('stp-traffic-statistics', {})
+                continue
+
+            # Transit statistics:
+            m = p38.match(line)
+            if m:
+                statistics_type = 'transit_statistics'
+                group = m.groupdict()
+                traffic_statistics_dict = physical_interface_dict.setdefault('transit-traffic-statistics', {})
+                continue
 
             # Input rate     : 2952 bps (5 pps)
             m = p14.match(line)
             if m:
+                if statistics_type == 'physical':
+                    traffic_statistics_dict = physical_interface_dict.setdefault('traffic-statistics', {})
+                elif statistics_type == 'logical':
+                    traffic_statistics_dict = logical_interface_dict.setdefault('traffic-statistics', {})
                 group = m.groupdict()
-                traffic_statistics_dict = physical_interface_dict.setdefault('traffic-statistics', {})
                 traffic_statistics_dict.update({k.replace('_','-'):
                     v for k, v in group.items() if v is not None})
+                continue
+
+            # Input  bytes  :          19732539397                 3152 bps
+            m = p14_1.match(line)
+            if m:
+                group = m.groupdict()
+                if statistics_type == 'physical':
+                    traffic_statistics_dict = physical_interface_dict.setdefault('traffic-statistics', {})
+                elif statistics_type == 'logical':
+                    traffic_statistics_dict = logical_interface_dict.setdefault('traffic-statistics', {})
+                if statistics_type == 'dropped_stp_state':
+                    traffic_statistics_dict.update({'stp-{}-dropped'.format(k.replace('_','-')):
+                        v for k, v in group.items() if v is not None})
+                else:
+                    traffic_statistics_dict.update({k.replace('_','-'):
+                        v for k, v in group.items() if v is not None})
+                continue
+            # Output bytes  :          16367814635                 3160 bps
+            m = p14_2.match(line)
+            if m:
+                group = m.groupdict()
+                if statistics_type == 'physical':
+                    traffic_statistics_dict = physical_interface_dict.setdefault('traffic-statistics', {})
+                elif statistics_type == 'logical':
+                    traffic_statistics_dict = logical_interface_dict.setdefault('traffic-statistics', {})
+                if statistics_type == 'dropped_stp_state':
+                    traffic_statistics_dict.update({'stp-{}-dropped'.format(k.replace('_','-')):
+                        v for k, v in group.items() if v is not None})
+                else:
+                    traffic_statistics_dict.update({k.replace('_','-'):
+                        v for k, v in group.items() if v is not None})
+                continue
+            # Input  packets:            133726363                    5 pps
+            m = p14_3.match(line)
+            if m:
+                group = m.groupdict()
+                if statistics_type == 'physical':
+                    traffic_statistics_dict = physical_interface_dict.setdefault('traffic-statistics', {})
+                elif statistics_type == 'logical':
+                    traffic_statistics_dict = logical_interface_dict.setdefault('traffic-statistics', {})
+                if statistics_type == 'dropped_stp_state':
+                    traffic_statistics_dict.update({'stp-{}-dropped'.format(k.replace('_','-')):
+                        v for k, v in group.items() if v is not None})
+                else:
+                    traffic_statistics_dict.update({k.replace('_','-'):
+                        v for k, v in group.items() if v is not None})
+                continue
+            # Output packets:            129306863                    4 pps
+            m = p14_4.match(line)
+            if m:
+                group = m.groupdict()
+                if statistics_type == 'physical':
+                    traffic_statistics_dict = physical_interface_dict.setdefault('traffic-statistics', {})
+                elif statistics_type == 'logical':
+                    traffic_statistics_dict = logical_interface_dict.setdefault('traffic-statistics', {})
+                if statistics_type == 'dropped_stp_state':
+                    traffic_statistics_dict.update({'stp-{}-dropped'.format(k.replace('_','-')):
+                        v for k, v in group.items() if v is not None})
+                else:
+                    traffic_statistics_dict.update({k.replace('_','-'):
+                        v for k, v in group.items() if v is not None})
                 continue
             
             # Output rate    : 3080 bps (3 pps)
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-                traffic_statistics_dict = physical_interface_dict.setdefault('traffic-statistics', {})
+                if statistics_type == 'physical':
+                    traffic_statistics_dict = physical_interface_dict.setdefault('traffic-statistics', {})
+                elif statistics_type == 'logical':
+                    traffic_statistics_dict = logical_interface_dict.setdefault('traffic-statistics', {})
                 traffic_statistics_dict.update({k.replace('_','-'):
                     v for k, v in group.items() if v is not None})
                 continue
@@ -934,6 +1115,7 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Logical interface ge-0/0/0.0 (Index 333) (SNMP ifIndex 606)
             m = p24.match(line)
             if m:
+                statistics_type = 'logical'
                 group = m.groupdict()
                 logical_interface_dict = physical_interface_dict.setdefault('logical-interface', {})
                 logical_interface_dict.update({k.replace('_','-'):
@@ -956,7 +1138,6 @@ class ShowInterfaces(ShowInterfacesSchema):
             m = p26.match(line)
             if m:
                 group = m.groupdict()
-                traffic_statistics_dict = logical_interface_dict.setdefault('traffic-statistics', {})
                 traffic_statistics_dict.update({k.replace('_','-'):
                     v for k, v in group.items() if v is not None})
                 continue
@@ -965,7 +1146,6 @@ class ShowInterfaces(ShowInterfacesSchema):
             m = p27.match(line)
             if m:
                 group = m.groupdict()
-                traffic_statistics_dict = logical_interface_dict.setdefault('traffic-statistics', {})
                 traffic_statistics_dict.update({k.replace('_','-'):
                     v for k, v in group.items() if v is not None})
                 continue
@@ -1046,4 +1226,21 @@ class ShowInterfaces(ShowInterfacesSchema):
                 interface_address_dict.update({k.replace('_','-'):
                     v for k, v in group.items() if v is not None})
                 continue
+        
+        import json
+        json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
+        f = open("dict.txt","w")
+        f.write(json_data.replace(' true', ' True'))
+        f.close()
         return ret_dict
+
+class ShowInterfacesExtensive(ShowInterfaces):
+    cli_command = ['show interfaces extensive']
+    def cli(self, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+        
+        return super().cli(output=out)
