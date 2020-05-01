@@ -11149,95 +11149,95 @@ class TestShowOspfRouteBrief(unittest.TestCase):
 
         Prefix             Path  Route      NH       Metric NextHop       Nexthop
                         Type  Type       Type            Interface     Address/LSP
-        3.3.3.3            Intra Router     IP         1201 ge-0/0/1.0    106.187.14.121
-        5.5.5.5            Intra Router     IP         1200 ge-0/0/1.0    106.187.14.121
-        27.86.198.239      Intra Router     IP         1000 ge-0/0/2.0    27.86.198.26
-        59.128.2.250       Intra AS BR      IP          200 ge-0/0/1.0    106.187.14.121
-        59.128.2.251       Intra AS BR      IP          205 ge-0/0/1.0    106.187.14.121
-        106.162.196.241    Intra Router     IP         1200 ge-0/0/1.0    106.187.14.121
-        106.187.14.240     Intra AS BR      IP          100 ge-0/0/1.0    106.187.14.121
-        106.187.14.241     Intra AS BR      IP          105 ge-0/0/1.0    106.187.14.121
-        111.87.5.253       Intra AS BR      IP            5 ge-0/0/0.0    111.87.5.94
-        202.239.165.119    Intra AS BR      IP        10100 ge-0/0/1.0    106.187.14.121
-        202.239.165.120    Intra AS BR      IP        10100 ge-0/0/1.0    106.187.14.121
-        0.0.0.0/0          Ext1  Network    IP          101 ge-0/0/1.0    106.187.14.121
-        1.0.0.0/24         Ext2  Network    IP           20 ge-0/0/1.0    106.187.14.121
-        3.3.3.3/32         Intra Network    IP         1202 ge-0/0/1.0    106.187.14.121
-        4.0.0.0/30         Intra Network    IP         1200 ge-0/0/1.0    106.187.14.121
-        5.5.5.5/32         Intra Network    IP         1201 ge-0/0/1.0    106.187.14.121
-        5.5.5.5/32         Intra Network    Spring     1201 ge-0/0/1.0    106.187.14.121
-                                            Bkup SPRING     ge-0/0/0.0    111.87.5.94
-        27.86.198.24/30    Intra Network    IP         1000 ge-0/0/2.0
-        27.86.198.28/30    Intra Network    IP         1005 ge-0/0/0.0    111.87.5.94
-        27.86.198.239/32   Intra Network    IP         1001 ge-0/0/2.0    27.86.198.26
-        27.86.198.239/32   Intra Network    Spring     1001 ge-0/0/2.0    27.86.198.26
-                                            Bkup SPRING     ge-0/0/0.0    111.87.5.94
-        27.90.132.237/32   Ext1  Network    IP          150 ge-0/0/1.0    106.187.14.121
-        59.128.2.200/30    Intra Network    IP          205 ge-0/0/1.0    106.187.14.121
-        59.128.2.250/32    Intra Network    IP          200 ge-0/0/1.0    106.187.14.121
-        59.128.2.250/32    Intra Network    Spring      200 ge-0/0/1.0    106.187.14.121
-        59.128.2.251/32    Intra Network    IP          205 ge-0/0/1.0    106.187.14.121
-        59.128.2.251/32    Intra Network    Spring      205 ge-0/0/1.0    106.187.14.121
-        75.0.0.0/30        Intra Network    IP         1001 ge-0/0/2.0    27.86.198.26
-        77.0.0.0/30        Intra Network    IP         1201 ge-0/0/1.0    106.187.14.121
-        100.0.0.0/24       Intra Network    IP          100 ge-0/0/3.0
-        106.162.196.212/30 Intra Network    IP         1200 ge-0/0/1.0    106.187.14.121
-        106.162.196.216/30 Intra Network    IP         1205 ge-0/0/1.0    106.187.14.121
-        106.162.196.241/32 Intra Network    IP         1201 ge-0/0/1.0    106.187.14.121
-        106.162.196.241/32 Intra Network    Spring     1201 ge-0/0/1.0    106.187.14.121
-                                            Bkup SPRING     ge-0/0/0.0    111.87.5.94
-        106.187.14.16/30   Intra Network    IP          105 ge-0/0/1.0    106.187.14.121
-        106.187.14.32/30   Intra Network    IP          225 ge-0/0/1.0    106.187.14.121
-        106.187.14.120/30  Intra Network    IP          100 ge-0/0/1.0
-        106.187.14.128/30  Intra Network    IP          125 ge-0/0/0.0    111.87.5.94
-        106.187.14.156/30  Intra Network    IP          200 ge-0/0/1.0    106.187.14.121
-        106.187.14.240/32  Intra Network    IP          100 ge-0/0/1.0    106.187.14.121
-        106.187.14.240/32  Intra Network    Spring      100 ge-0/0/1.0    106.187.14.121
-                                            Bkup SPRING     ge-0/0/0.0    111.87.5.94
-        106.187.14.241/32  Intra Network    IP          105 ge-0/0/1.0    106.187.14.121
-        106.187.14.241/32  Intra Network    Spring      105 ge-0/0/1.0    106.187.14.121
-        106.187.14.242/32  Intra Network    IP          100 ge-0/0/1.0    106.187.14.121
-        106.187.14.243/32  Intra Network    IP          105 ge-0/0/1.0    106.187.14.121
-        111.87.5.92/30     Intra Network    IP            5 ge-0/0/0.0
-        111.87.5.252/32    Intra Network    IP            0 lo0.0
-        111.87.5.252/32    Intra Network    Spring        0 lo0.0
-        111.87.5.253/32    Intra Network    IP            5 ge-0/0/0.0    111.87.5.94
-        111.87.5.253/32    Intra Network    Spring        5 ge-0/0/0.0    111.87.5.94
-        200.0.0.0/30       Intra Network    IP         1200 ge-0/0/1.0    106.187.14.121
-        202.239.165.119/32 Intra Network    IP        10101 ge-0/0/1.0    106.187.14.121
-        202.239.165.120/32 Intra Network    IP        10101 ge-0/0/1.0    106.187.14.121
-        2567               Intra Network    Mpls          0 ge-0/0/1.0    106.187.14.121
-                                            Bkup MPLS       ge-0/0/0.0    111.87.5.94
-        2567 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    106.187.14.121
-                                            Bkup MPLS       ge-0/0/0.0    111.87.5.94
-        2568               Intra Network    Mpls          0 ge-0/0/1.0    106.187.14.121
-        2568 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    106.187.14.121
-        167966             Intra Network    Mpls          0 ge-0/0/2.0    27.86.198.26
-                                            Bkup MPLS       ge-0/0/0.0    111.87.5.94
-        167966 (S=0)       Intra Network    Mpls          0 ge-0/0/2.0    27.86.198.26
-                                            Bkup MPLS       ge-0/0/0.0    111.87.5.94
-        167967             Intra Network    Mpls          0 ge-0/0/2.0    27.86.198.26
-        167967 (S=0)       Intra Network    Mpls          0 ge-0/0/2.0    27.86.198.26
-        28985              Intra Network    Mpls          0 ge-0/0/0.0    111.87.5.94
-        28985 (S=0)        Intra Network    Mpls          0 ge-0/0/0.0    111.87.5.94
-        28986              Intra Network    Mpls          0 ge-0/0/0.0    111.87.5.94
-        28986 (S=0)        Intra Network    Mpls          0 ge-0/0/0.0    111.87.5.94
-        17000              Intra Network    Mpls       1201 ge-0/0/1.0    106.187.14.121
-                                            Bkup MPLS       ge-0/0/0.0    111.87.5.94
-        16051              Intra Network    Mpls        100 ge-0/0/1.0    106.187.14.121
-                                            Bkup MPLS       ge-0/0/0.0    111.87.5.94
-        16051 (S=0)        Intra Network    Mpls        100 ge-0/0/1.0    106.187.14.121
-                                            Bkup MPLS       ge-0/0/0.0    111.87.5.94
-        16052              Intra Network    Mpls        105 ge-0/0/1.0    106.187.14.121
-        16061              Intra Network    Mpls        200 ge-0/0/1.0    106.187.14.121
-        16062              Intra Network    Mpls        205 ge-0/0/1.0    106.187.14.121
-        16063              Intra Network    Mpls       1201 ge-0/0/1.0    106.187.14.121
-                                            Bkup MPLS       ge-0/0/0.0    111.87.5.94
-        16072              Intra Network    Mpls          5 ge-0/0/0.0    111.87.5.94
-        16073              Intra Network    Mpls       1001 ge-0/0/2.0    27.86.198.26
-                                            Bkup MPLS       ge-0/0/0.0    111.87.5.94
-        16073 (S=0)        Intra Network    Mpls       1001 ge-0/0/2.0    27.86.198.26
-                                            Bkup MPLS       ge-0/0/0.0    111.87.5.94
+        10.36.3.3            Intra Router     IP         1201 ge-0/0/1.0    10.169.14.121
+        10.100.5.5            Intra Router     IP         1200 ge-0/0/1.0    10.169.14.121
+        10.19.198.239      Intra Router     IP         1000 ge-0/0/2.0    10.19.198.26
+        10.34.2.250       Intra AS BR      IP          200 ge-0/0/1.0    10.169.14.121
+        10.34.2.251       Intra AS BR      IP          205 ge-0/0/1.0    10.169.14.121
+        10.169.196.241    Intra Router     IP         1200 ge-0/0/1.0    10.169.14.121
+        10.169.14.240     Intra AS BR      IP          100 ge-0/0/1.0    10.169.14.121
+        10.169.14.241     Intra AS BR      IP          105 ge-0/0/1.0    10.169.14.121
+        10.189.5.253       Intra AS BR      IP            5 ge-0/0/0.0    10.189.5.94
+        192.168.36.119    Intra AS BR      IP        10100 ge-0/0/1.0    10.169.14.121
+        192.168.36.120    Intra AS BR      IP        10100 ge-0/0/1.0    10.169.14.121
+        0.0.0.0/0          Ext1  Network    IP          101 ge-0/0/1.0    10.169.14.121
+        10.1.0.0/24         Ext2  Network    IP           20 ge-0/0/1.0    10.169.14.121
+        10.36.3.3/32         Intra Network    IP         1202 ge-0/0/1.0    10.169.14.121
+        10.16.0.0/30         Intra Network    IP         1200 ge-0/0/1.0    10.169.14.121
+        10.100.5.5/32         Intra Network    IP         1201 ge-0/0/1.0    10.169.14.121
+        10.100.5.5/32         Intra Network    Spring     1201 ge-0/0/1.0    10.169.14.121
+                                            Bkup SPRING     ge-0/0/0.0    10.189.5.94
+        10.19.198.24/30    Intra Network    IP         1000 ge-0/0/2.0
+        10.19.198.28/30    Intra Network    IP         1005 ge-0/0/0.0    10.189.5.94
+        10.19.198.239/32   Intra Network    IP         1001 ge-0/0/2.0    10.19.198.26
+        10.19.198.239/32   Intra Network    Spring     1001 ge-0/0/2.0    10.19.198.26
+                                            Bkup SPRING     ge-0/0/0.0    10.189.5.94
+        10.174.132.237/32   Ext1  Network    IP          150 ge-0/0/1.0    10.169.14.121
+        10.34.2.200/30    Intra Network    IP          205 ge-0/0/1.0    10.169.14.121
+        10.34.2.250/32    Intra Network    IP          200 ge-0/0/1.0    10.169.14.121
+        10.34.2.250/32    Intra Network    Spring      200 ge-0/0/1.0    10.169.14.121
+        10.34.2.251/32    Intra Network    IP          205 ge-0/0/1.0    10.169.14.121
+        10.34.2.251/32    Intra Network    Spring      205 ge-0/0/1.0    10.169.14.121
+        10.15.0.0/30        Intra Network    IP         1001 ge-0/0/2.0    10.19.198.26
+        10.64.0.0/30        Intra Network    IP         1201 ge-0/0/1.0    10.169.14.121
+        10.55.0.0/24       Intra Network    IP          100 ge-0/0/3.0
+        10.169.196.212/30 Intra Network    IP         1200 ge-0/0/1.0    10.169.14.121
+        10.169.196.216/30 Intra Network    IP         1205 ge-0/0/1.0    10.169.14.121
+        10.169.196.241/32 Intra Network    IP         1201 ge-0/0/1.0    10.169.14.121
+        10.169.196.241/32 Intra Network    Spring     1201 ge-0/0/1.0    10.169.14.121
+                                            Bkup SPRING     ge-0/0/0.0    10.189.5.94
+        10.169.14.16/30   Intra Network    IP          105 ge-0/0/1.0    10.169.14.121
+        10.169.14.32/30   Intra Network    IP          225 ge-0/0/1.0    10.169.14.121
+        10.169.14.120/30  Intra Network    IP          100 ge-0/0/1.0
+        10.169.14.128/30  Intra Network    IP          125 ge-0/0/0.0    10.189.5.94
+        10.169.14.156/30  Intra Network    IP          200 ge-0/0/1.0    10.169.14.121
+        10.169.14.240/32  Intra Network    IP          100 ge-0/0/1.0    10.169.14.121
+        10.169.14.240/32  Intra Network    Spring      100 ge-0/0/1.0    10.169.14.121
+                                            Bkup SPRING     ge-0/0/0.0    10.189.5.94
+        10.169.14.241/32  Intra Network    IP          105 ge-0/0/1.0    10.169.14.121
+        10.169.14.241/32  Intra Network    Spring      105 ge-0/0/1.0    10.169.14.121
+        10.169.14.242/32  Intra Network    IP          100 ge-0/0/1.0    10.169.14.121
+        10.169.14.243/32  Intra Network    IP          105 ge-0/0/1.0    10.169.14.121
+        10.189.5.92/30     Intra Network    IP            5 ge-0/0/0.0
+        10.189.5.252/32    Intra Network    IP            0 lo0.0
+        10.189.5.252/32    Intra Network    Spring        0 lo0.0
+        10.189.5.253/32    Intra Network    IP            5 ge-0/0/0.0    10.189.5.94
+        10.189.5.253/32    Intra Network    Spring        5 ge-0/0/0.0    10.189.5.94
+        192.168.220.0/30       Intra Network    IP         1200 ge-0/0/1.0    10.169.14.121
+        192.168.36.119/32 Intra Network    IP        10101 ge-0/0/1.0    10.169.14.121
+        192.168.36.120/32 Intra Network    IP        10101 ge-0/0/1.0    10.169.14.121
+        2567               Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        2567 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        2568               Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+        2568 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+        167966             Intra Network    Mpls          0 ge-0/0/2.0    10.19.198.26
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        167966 (S=0)       Intra Network    Mpls          0 ge-0/0/2.0    10.19.198.26
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        167967             Intra Network    Mpls          0 ge-0/0/2.0    10.19.198.26
+        167967 (S=0)       Intra Network    Mpls          0 ge-0/0/2.0    10.19.198.26
+        28985              Intra Network    Mpls          0 ge-0/0/0.0    10.189.5.94
+        28985 (S=0)        Intra Network    Mpls          0 ge-0/0/0.0    10.189.5.94
+        28986              Intra Network    Mpls          0 ge-0/0/0.0    10.189.5.94
+        28986 (S=0)        Intra Network    Mpls          0 ge-0/0/0.0    10.189.5.94
+        17000              Intra Network    Mpls       1201 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        16051              Intra Network    Mpls        100 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        16051 (S=0)        Intra Network    Mpls        100 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        16052              Intra Network    Mpls        105 ge-0/0/1.0    10.169.14.121
+        16061              Intra Network    Mpls        200 ge-0/0/1.0    10.169.14.121
+        16062              Intra Network    Mpls        205 ge-0/0/1.0    10.169.14.121
+        16063              Intra Network    Mpls       1201 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        16072              Intra Network    Mpls          5 ge-0/0/0.0    10.189.5.94
+        16073              Intra Network    Mpls       1001 ge-0/0/2.0    10.19.198.26
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        16073 (S=0)        Intra Network    Mpls       1001 ge-0/0/2.0    10.19.198.26
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
     """
     }
 
@@ -11248,12 +11248,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "3.3.3.3",
+                                "address-prefix": "10.36.3.3",
                                 "interface-cost": "1201",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11265,12 +11265,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "5.5.5.5",
+                                "address-prefix": "10.100.5.5",
                                 "interface-cost": "1200",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11282,12 +11282,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "27.86.198.239",
+                                "address-prefix": "10.19.198.239",
                                 "interface-cost": "1000",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "27.86.198.26"
+                                        "interface-address": "10.19.198.26"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/2.0"},
                                 },
@@ -11299,12 +11299,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "59.128.2.250",
+                                "address-prefix": "10.34.2.250",
                                 "interface-cost": "200",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11316,12 +11316,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "59.128.2.251",
+                                "address-prefix": "10.34.2.251",
                                 "interface-cost": "205",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11333,12 +11333,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "106.162.196.241",
+                                "address-prefix": "10.169.196.241",
                                 "interface-cost": "1200",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11350,12 +11350,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "106.187.14.240",
+                                "address-prefix": "10.169.14.240",
                                 "interface-cost": "100",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11367,12 +11367,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "106.187.14.241",
+                                "address-prefix": "10.169.14.241",
                                 "interface-cost": "105",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11384,12 +11384,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "111.87.5.253",
+                                "address-prefix": "10.189.5.253",
                                 "interface-cost": "5",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "111.87.5.94"
+                                        "interface-address": "10.189.5.94"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/0.0"},
                                 },
@@ -11401,12 +11401,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "202.239.165.119",
+                                "address-prefix": "192.168.36.119",
                                 "interface-cost": "10100",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11418,12 +11418,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "202.239.165.120",
+                                "address-prefix": "192.168.36.120",
                                 "interface-cost": "10100",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11440,7 +11440,7 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11452,12 +11452,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "1.0.0.0/24",
+                                "address-prefix": "10.1.0.0/24",
                                 "interface-cost": "20",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11469,12 +11469,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "3.3.3.3/32",
+                                "address-prefix": "10.36.3.3/32",
                                 "interface-cost": "1202",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11486,12 +11486,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "4.0.0.0/30",
+                                "address-prefix": "10.16.0.0/30",
                                 "interface-cost": "1200",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11503,12 +11503,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "5.5.5.5/32",
+                                "address-prefix": "10.100.5.5/32",
                                 "interface-cost": "1201",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11516,17 +11516,17 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "route-type": "Network",
                             },
                             {
-                                "address-prefix": "5.5.5.5/32",
+                                "address-prefix": "10.100.5.5/32",
                                 "interface-cost": "1201",
                                 "next-hop-type": "Spring",
                                 "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
                                     "ospf-backup-next-hop-type": "Bkup " "SPRING",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11538,7 +11538,7 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "27.86.198.24/30",
+                                "address-prefix": "10.19.198.24/30",
                                 "interface-cost": "1000",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
@@ -11552,12 +11552,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "27.86.198.28/30",
+                                "address-prefix": "10.19.198.28/30",
                                 "interface-cost": "1005",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "111.87.5.94"
+                                        "interface-address": "10.189.5.94"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/0.0"},
                                 },
@@ -11569,12 +11569,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "27.86.198.239/32",
+                                "address-prefix": "10.19.198.239/32",
                                 "interface-cost": "1001",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "27.86.198.26"
+                                        "interface-address": "10.19.198.26"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/2.0"},
                                 },
@@ -11582,17 +11582,17 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "route-type": "Network",
                             },
                             {
-                                "address-prefix": "27.86.198.239/32",
+                                "address-prefix": "10.19.198.239/32",
                                 "interface-cost": "1001",
                                 "next-hop-type": "Spring",
                                 "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
                                     "ospf-backup-next-hop-type": "Bkup " "SPRING",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "27.86.198.26"
+                                        "interface-address": "10.19.198.26"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/2.0"},
                                 },
@@ -11604,12 +11604,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "27.90.132.237/32",
+                                "address-prefix": "10.174.132.237/32",
                                 "interface-cost": "150",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11621,12 +11621,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "59.128.2.200/30",
+                                "address-prefix": "10.34.2.200/30",
                                 "interface-cost": "205",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11638,12 +11638,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "59.128.2.250/32",
+                                "address-prefix": "10.34.2.250/32",
                                 "interface-cost": "200",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11651,12 +11651,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "route-type": "Network",
                             },
                             {
-                                "address-prefix": "59.128.2.250/32",
+                                "address-prefix": "10.34.2.250/32",
                                 "interface-cost": "200",
                                 "next-hop-type": "Spring",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11668,12 +11668,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "59.128.2.251/32",
+                                "address-prefix": "10.34.2.251/32",
                                 "interface-cost": "205",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11681,12 +11681,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "route-type": "Network",
                             },
                             {
-                                "address-prefix": "59.128.2.251/32",
+                                "address-prefix": "10.34.2.251/32",
                                 "interface-cost": "205",
                                 "next-hop-type": "Spring",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11698,12 +11698,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "75.0.0.0/30",
+                                "address-prefix": "10.15.0.0/30",
                                 "interface-cost": "1001",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "27.86.198.26"
+                                        "interface-address": "10.19.198.26"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/2.0"},
                                 },
@@ -11715,12 +11715,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "77.0.0.0/30",
+                                "address-prefix": "10.64.0.0/30",
                                 "interface-cost": "1201",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11732,7 +11732,7 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "100.0.0.0/24",
+                                "address-prefix": "10.55.0.0/24",
                                 "interface-cost": "100",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
@@ -11746,12 +11746,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "106.162.196.212/30",
+                                "address-prefix": "10.169.196.212/30",
                                 "interface-cost": "1200",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11763,12 +11763,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "106.162.196.216/30",
+                                "address-prefix": "10.169.196.216/30",
                                 "interface-cost": "1205",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11780,12 +11780,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "106.162.196.241/32",
+                                "address-prefix": "10.169.196.241/32",
                                 "interface-cost": "1201",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11793,17 +11793,17 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "route-type": "Network",
                             },
                             {
-                                "address-prefix": "106.162.196.241/32",
+                                "address-prefix": "10.169.196.241/32",
                                 "interface-cost": "1201",
                                 "next-hop-type": "Spring",
                                 "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
                                     "ospf-backup-next-hop-type": "Bkup " "SPRING",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11815,12 +11815,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "106.187.14.16/30",
+                                "address-prefix": "10.169.14.16/30",
                                 "interface-cost": "105",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11832,12 +11832,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "106.187.14.32/30",
+                                "address-prefix": "10.169.14.32/30",
                                 "interface-cost": "225",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11849,7 +11849,7 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "106.187.14.120/30",
+                                "address-prefix": "10.169.14.120/30",
                                 "interface-cost": "100",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
@@ -11863,12 +11863,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "106.187.14.128/30",
+                                "address-prefix": "10.169.14.128/30",
                                 "interface-cost": "125",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "111.87.5.94"
+                                        "interface-address": "10.189.5.94"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/0.0"},
                                 },
@@ -11880,12 +11880,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "106.187.14.156/30",
+                                "address-prefix": "10.169.14.156/30",
                                 "interface-cost": "200",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11897,12 +11897,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "106.187.14.240/32",
+                                "address-prefix": "10.169.14.240/32",
                                 "interface-cost": "100",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11910,17 +11910,17 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "route-type": "Network",
                             },
                             {
-                                "address-prefix": "106.187.14.240/32",
+                                "address-prefix": "10.169.14.240/32",
                                 "interface-cost": "100",
                                 "next-hop-type": "Spring",
                                 "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
                                     "ospf-backup-next-hop-type": "Bkup " "SPRING",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11932,12 +11932,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "106.187.14.241/32",
+                                "address-prefix": "10.169.14.241/32",
                                 "interface-cost": "105",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11945,12 +11945,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "route-type": "Network",
                             },
                             {
-                                "address-prefix": "106.187.14.241/32",
+                                "address-prefix": "10.169.14.241/32",
                                 "interface-cost": "105",
                                 "next-hop-type": "Spring",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11962,12 +11962,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "106.187.14.242/32",
+                                "address-prefix": "10.169.14.242/32",
                                 "interface-cost": "100",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11979,12 +11979,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "106.187.14.243/32",
+                                "address-prefix": "10.169.14.243/32",
                                 "interface-cost": "105",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -11996,7 +11996,7 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "111.87.5.92/30",
+                                "address-prefix": "10.189.5.92/30",
                                 "interface-cost": "5",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
@@ -12010,7 +12010,7 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "111.87.5.252/32",
+                                "address-prefix": "10.189.5.252/32",
                                 "interface-cost": "0",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
@@ -12020,7 +12020,7 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "route-type": "Network",
                             },
                             {
-                                "address-prefix": "111.87.5.252/32",
+                                "address-prefix": "10.189.5.252/32",
                                 "interface-cost": "0",
                                 "next-hop-type": "Spring",
                                 "ospf-next-hop": {
@@ -12034,12 +12034,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "111.87.5.253/32",
+                                "address-prefix": "10.189.5.253/32",
                                 "interface-cost": "5",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "111.87.5.94"
+                                        "interface-address": "10.189.5.94"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/0.0"},
                                 },
@@ -12047,12 +12047,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "route-type": "Network",
                             },
                             {
-                                "address-prefix": "111.87.5.253/32",
+                                "address-prefix": "10.189.5.253/32",
                                 "interface-cost": "5",
                                 "next-hop-type": "Spring",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "111.87.5.94"
+                                        "interface-address": "10.189.5.94"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/0.0"},
                                 },
@@ -12064,12 +12064,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "200.0.0.0/30",
+                                "address-prefix": "192.168.220.0/30",
                                 "interface-cost": "1200",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -12081,12 +12081,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "202.239.165.119/32",
+                                "address-prefix": "192.168.36.119/32",
                                 "interface-cost": "10101",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -12098,12 +12098,12 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "202.239.165.120/32",
+                                "address-prefix": "192.168.36.120/32",
                                 "interface-cost": "10101",
                                 "next-hop-type": "IP",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -12119,13 +12119,13 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "interface-cost": "0",
                                 "next-hop-type": "Mpls",
                                 "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
                                     "ospf-backup-next-hop-type": "Bkup " "MPLS",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -12141,13 +12141,13 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "interface-cost": "0",
                                 "next-hop-type": "Mpls",
                                 "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
                                     "ospf-backup-next-hop-type": "Bkup " "MPLS",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -12164,7 +12164,7 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "next-hop-type": "Mpls",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -12181,7 +12181,7 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "next-hop-type": "Mpls",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -12197,13 +12197,13 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "interface-cost": "0",
                                 "next-hop-type": "Mpls",
                                 "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
                                     "ospf-backup-next-hop-type": "Bkup " "MPLS",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "27.86.198.26"
+                                        "interface-address": "10.19.198.26"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/2.0"},
                                 },
@@ -12219,13 +12219,13 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "interface-cost": "0",
                                 "next-hop-type": "Mpls",
                                 "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
                                     "ospf-backup-next-hop-type": "Bkup " "MPLS",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "27.86.198.26"
+                                        "interface-address": "10.19.198.26"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/2.0"},
                                 },
@@ -12242,7 +12242,7 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "next-hop-type": "Mpls",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "27.86.198.26"
+                                        "interface-address": "10.19.198.26"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/2.0"},
                                 },
@@ -12259,7 +12259,7 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "next-hop-type": "Mpls",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "27.86.198.26"
+                                        "interface-address": "10.19.198.26"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/2.0"},
                                 },
@@ -12276,7 +12276,7 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "next-hop-type": "Mpls",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "111.87.5.94"
+                                        "interface-address": "10.189.5.94"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/0.0"},
                                 },
@@ -12293,7 +12293,7 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "next-hop-type": "Mpls",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "111.87.5.94"
+                                        "interface-address": "10.189.5.94"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/0.0"},
                                 },
@@ -12310,7 +12310,7 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "next-hop-type": "Mpls",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "111.87.5.94"
+                                        "interface-address": "10.189.5.94"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/0.0"},
                                 },
@@ -12327,7 +12327,7 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "next-hop-type": "Mpls",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "111.87.5.94"
+                                        "interface-address": "10.189.5.94"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/0.0"},
                                 },
@@ -12343,13 +12343,13 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "interface-cost": "1201",
                                 "next-hop-type": "Mpls",
                                 "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
                                     "ospf-backup-next-hop-type": "Bkup " "MPLS",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -12365,13 +12365,13 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "interface-cost": "100",
                                 "next-hop-type": "Mpls",
                                 "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
                                     "ospf-backup-next-hop-type": "Bkup " "MPLS",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -12387,13 +12387,13 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "interface-cost": "100",
                                 "next-hop-type": "Mpls",
                                 "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
                                     "ospf-backup-next-hop-type": "Bkup " "MPLS",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -12410,7 +12410,7 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "next-hop-type": "Mpls",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -12427,7 +12427,7 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "next-hop-type": "Mpls",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -12444,7 +12444,7 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "next-hop-type": "Mpls",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -12460,13 +12460,13 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "interface-cost": "1201",
                                 "next-hop-type": "Mpls",
                                 "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
                                     "ospf-backup-next-hop-type": "Bkup " "MPLS",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
+                                        "interface-address": "10.169.14.121"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
@@ -12483,7 +12483,7 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "next-hop-type": "Mpls",
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "111.87.5.94"
+                                        "interface-address": "10.189.5.94"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/0.0"},
                                 },
@@ -12499,13 +12499,13 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "interface-cost": "1001",
                                 "next-hop-type": "Mpls",
                                 "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
                                     "ospf-backup-next-hop-type": "Bkup " "MPLS",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "27.86.198.26"
+                                        "interface-address": "10.19.198.26"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/2.0"},
                                 },
@@ -12521,13 +12521,13 @@ class TestShowOspfRouteBrief(unittest.TestCase):
                                 "interface-cost": "1001",
                                 "next-hop-type": "Mpls",
                                 "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
                                     "ospf-backup-next-hop-type": "Bkup " "MPLS",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
-                                        "interface-address": "27.86.198.26"
+                                        "interface-address": "10.19.198.26"
                                     },
                                     "next-hop-name": {"interface-name": "ge-0/0/2.0"},
                                 },

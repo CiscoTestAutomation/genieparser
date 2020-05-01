@@ -3269,17 +3269,17 @@ class ShowOspfRouteBrief(ShowOspfRouteBriefSchema):
         else:
             out = output
 
-        # 3.3.3.3            Intra Router     IP         1201 ge-0/0/1.0    106.187.14.121
-        # 2568 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    106.187.14.121
-        p1 = re.compile(r'^(?P<address_prefix>\S+( \(S=\d+\))?) +(?P<route_path_type>\S+)'
+        # 10.36.3.3            Intra Router     IP         1201 ge-0/0/1.0    10.169.14.121
+        # 2568 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+        p1 = re.compile(r'^(?P<address_prefix>[\d\.\/]+( \(S=\d+\))?) +(?P<route_path_type>\S+)'
             r' +(?P<route_type>\S+|(AS BR)) +(?P<next_hop_type>\S+) +(?P<interface_cost>\S+)'
             r' +(?P<interface_name>\S+) +(?P<interface_address>[\d\.]+)$')
 
-        # Bkup SPRING     ge-0/0/0.0    111.87.5.94
+        # Bkup SPRING     ge-0/0/0.0    10.189.5.94
         p2 = re.compile(r'^(?P<ospf_backup_next_hop_type>Bkup +\S+) +'
         r'(?P<ospf_backup_next_hop_interface>\S+) +(?P<ospf_backup_next_hop_address>[\d\.]+)$')
 
-        # 27.86.198.24/30    Intra Network    IP         1000 ge-0/0/2.0
+        # 10.19.198.24/30    Intra Network    IP         1000 ge-0/0/2.0
         p3 = re.compile(r'^(?P<address_prefix>\S+) +(?P<route_path_type>\S+) +'
             r'(?P<route_type>\S+) +(?P<next_hop_type>\S+) +(?P<interface_cost>\S+)'
             r' +(?P<interface_name>\S+)$')
@@ -3289,8 +3289,8 @@ class ShowOspfRouteBrief(ShowOspfRouteBriefSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 3.3.3.3            Intra Router     IP         1201 ge-0/0/1.0    106.187.14.121
-            # 2568 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    106.187.14.121
+            # 10.36.3.3            Intra Router     IP         1201 ge-0/0/1.0    10.169.14.121
+            # 2568 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -3319,7 +3319,7 @@ class ShowOspfRouteBrief(ShowOspfRouteBriefSchema):
                 self.address_prefix = group['address_prefix']
                 continue
 
-            # Bkup SPRING     ge-0/0/0.0    111.87.5.94
+            # Bkup SPRING     ge-0/0/0.0    10.189.5.94
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -3335,7 +3335,7 @@ class ShowOspfRouteBrief(ShowOspfRouteBriefSchema):
                     entry[entry_key] = group_value
                 continue
 
-            # 27.86.198.24/30    Intra Network    IP         1000 ge-0/0/2.0
+            # 10.19.198.24/30    Intra Network    IP         1000 ge-0/0/2.0
             m = p3.match(line)
             if m:
                 group = m.groupdict()
