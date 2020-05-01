@@ -358,7 +358,7 @@ class ShowRoute(ShowRouteSchema):
         # *[OSPF3/10] 3w1d 17:03:23, metric 5
         # 0.0.0.0/0          *[OSPF/150/10] 3w3d 03:24:58, metric 101, tag 0
         # 167963             *[LDP/9] 1w6d 20:41:01, metric 1, metric2 100, tag 65000500
-        # 2.2.2.2/32         *[Static/5] 00:00:02
+        # 10.16.2.2/32         *[Static/5] 00:00:02
         p2 = re.compile(r'^((?P<rt_destination>\S+) +)?(?P<active_tag>[\*\+\-])?'
             r'\[(?P<protocol>[\w\-]+)\/(?P<preference>\d+)'
             r'(\/(?P<preference2>\d+))?\] +(?P<text>\S+( +\S+)?)'

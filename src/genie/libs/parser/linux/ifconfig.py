@@ -123,7 +123,7 @@ class Ifconfig(IfconfigSchema):
         p9 = re.compile(r'^device( +interrupt +(?P<device_interrupt>\d+))? '
                          '+memory +(?P<device_memory>\S+)$')
         
-        # eth0      Link encap:Ethernet  HWaddr 00:50:56:82:7E:91
+        # eth0      Link encap:Ethernet  HWaddr 00:50:56:FF:01:14
         # lo        Link encap:Local Loopback
         p10 = re.compile(r'^(?P<interface>\S+)\s+Link\s+encap:(?P<description>' + 
                          r'\S+(\s+\S+)*?)(\s+HWaddr\s+\S+)?$') 
@@ -249,7 +249,7 @@ class Ifconfig(IfconfigSchema):
                     intf_dict.update({'device_memory': memory})
                 continue
 
-            # eth0      Link encap:Ethernet  HWaddr 00:50:56:82:7E:91
+            # eth0      Link encap:Ethernet  HWaddr 00:50:56:FF:01:14
             # Link encap:Local Loopback
             m = p10.match(line)
             if m:

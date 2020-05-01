@@ -420,18 +420,18 @@ class test_ifconfig(unittest.TestCase):
 
 
     golden_output_two = {'execute.return_value': '''
-        eth0      Link encap:Ethernet  HWaddr 00:50:56:82:7E:91
+        eth0      Link encap:Ethernet  HWaddr 00:50:56:FF:01:14
           inet addr:172.27.114.205  Bcast:172.27.114.255  Mask:255.255.255.0
-          inet6 addr: fe80::250:56ff:fe82:7e91/64 Scope:Link
+          inet6 addr: fe80::250:56ff:feff:114/64 Scope:Link
           UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
           RX packets:2004256429 errors:0 dropped:0 overruns:0 frame:0
           TX packets:4779769715 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
           RX bytes:2084687440241 (1.8 TiB)  TX bytes:6145946777794 (5.5 TiB)
 
-        eth1      Link encap:Ethernet  HWaddr 00:50:56:82:25:00
+        eth1      Link encap:Ethernet  HWaddr 00:50:56:ff:a7:82
           inet addr:10.1.6.104  Bcast:10.1.6.255  Mask:255.255.255.0
-          inet6 addr: fe80::250:56ff:fe82:2500/64 Scope:Link
+          inet6 addr: fe80::250:56ff:feff:a782/64 Scope:Link
           UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
           RX packets:15305561 errors:0 dropped:0 overruns:0 frame:0
           TX packets:10687824 errors:0 dropped:0 overruns:0 carrier:0
@@ -447,7 +447,7 @@ class test_ifconfig(unittest.TestCase):
           collisions:0 txqueuelen:0
           RX bytes:168964687 (161.1 MiB)  TX bytes:168964687 (161.1 MiB)
 
-        virbr0    Link encap:Ethernet  HWaddr 52:54:00:C2:A2:DC
+        virbr0    Link encap:Ethernet  HWaddr 52:54:00:FF:65:9F
           inet addr:192.168.122.1  Bcast:192.168.122.255  Mask:255.255.255.0
           UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
           RX packets:0 errors:0 dropped:0 overruns:0 frame:0
