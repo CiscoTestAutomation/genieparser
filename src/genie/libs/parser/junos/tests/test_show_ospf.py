@@ -10,22 +10,6 @@ from pyats.topology import loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # junos show_ospf
-<<<<<<< HEAD
-from genie.libs.parser.junos.show_ospf import (
-    ShowOspfInterface,
-    ShowOspfInterfaceBrief,
-    ShowOspfInterfaceDetail,
-    ShowOspfNeighbor,
-    ShowOspfDatabase,
-    ShowOspfDatabaseSummary,
-    ShowOspfDatabaseExternalExtensive,
-    ShowOspfOverview,
-    ShowOspfOverviewExtensive,
-    ShowOspfDatabaseAdvertisingRouterSelfDetail,
-    ShowOspfRouteBrief,
-    ShowOspfRouteDetail,
-)
-=======
 from genie.libs.parser.junos.show_ospf import (ShowOspfInterface,
                                                ShowOspfInterfaceBrief,
                                                ShowOspfInterfaceDetail,
@@ -40,8 +24,8 @@ from genie.libs.parser.junos.show_ospf import (ShowOspfInterface,
                                                ShowOspfNeighborExtensive,
                                                ShowOspfInterfaceExtensive,
                                                ShowOspfNeighborDetail,
-                                               ShowOspfRouteBrief)
->>>>>>> dev
+                                               ShowOspfRouteBrief,
+                                               ShowOspfRouteDetail)
 
 
 class test_show_ospf_interface(unittest.TestCase):
@@ -12615,21 +12599,6 @@ class TestShowOspfRouteDetail(unittest.TestCase):
         27.86.198.239/32   Intra Network    Spring     1001 ge-0/0/2.0    27.86.198.26
                                             Bkup SPRING     ge-0/0/0.0    111.87.5.94
         area 0.0.0.8, origin 27.86.198.239, priority medium
-        27.90.132.237/32   Ext1  Network    IP          150 ge-0/0/1.0    106.187.14.121
-        area 0.0.0.0, origin 106.187.14.240, priority medium
-        106.162.196.241/32 Intra Network    Spring     1201 ge-0/0/1.0    106.187.14.121
-                                            Bkup SPRING     ge-0/0/0.0    111.87.5.94
-        area 0.0.0.8, origin 106.162.196.241, priority medium
-        106.187.14.16/30   Intra Network    IP          105 ge-0/0/1.0    106.187.14.121
-        area 0.0.0.8, origin 106.187.14.240, priority medium
-        106.187.14.32/30   Intra Network    IP          225 ge-0/0/1.0    106.187.14.121
-        area 0.0.0.8, origin 106.187.14.241, priority medium
-        111.87.5.92/30     Intra Network    IP            5 ge-0/0/0.0
-        area 0.0.0.8, origin 111.87.5.252, priority low
-        111.87.5.252/32    Intra Network    IP            0 lo0.0
-        area 0.0.0.8, origin 111.87.5.252, priority low
-        111.87.5.252/32    Intra Network    Spring        0 lo0.0
-        area 0.0.0.8, origin 111.87.5.252, priority low
         202.239.164.252/32 Ext1  Network    IP        32000 ge-0/0/1.0    106.187.14.121
         area 0.0.0.0, origin 106.187.14.240, priority medium
         202.239.165.48/30  Intra Network    IP        10100 ge-0/0/1.0    106.187.14.121
@@ -12685,1301 +12654,618 @@ class TestShowOspfRouteDetail(unittest.TestCase):
     }
 
     golden_parsed_output = {
-        "ospf-route-information": {
-            "ospf-topology-route-table": {
-                "ospf-route": [
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "3.3.3.3",
-                                "interface-cost": "1201",
-                                "next-hop-type": "IP",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Router",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "optional-capability",
-                                "next-hop-type": "3.3.3.3,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "0x0"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "5.5.5.5",
-                                "interface-cost": "1200",
-                                "next-hop-type": "IP",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Router",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "optional-capability",
-                                "next-hop-type": "5.5.5.5,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "0x0"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "27.86.198.239",
-                                "interface-cost": "1000",
-                                "next-hop-type": "IP",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "27.86.198.26"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Router",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "optional-capability",
-                                "next-hop-type": "27.86.198.239,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "0x0"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "59.128.2.250",
-                                "interface-cost": "200",
-                                "next-hop-type": "IP",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "AS " "BR",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "optional-capability",
-                                "next-hop-type": "59.128.2.250,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "0x2"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "59.128.2.251",
-                                "interface-cost": "205",
-                                "next-hop-type": "IP",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "AS " "BR",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "optional-capability",
-                                "next-hop-type": "59.128.2.251,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "0x2"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "106.162.196.241",
-                                "interface-cost": "1200",
-                                "next-hop-type": "IP",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Router",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "optional-capability",
-                                "next-hop-type": "106.162.196.241,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "0x0"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "106.187.14.240",
-                                "interface-cost": "100",
-                                "next-hop-type": "IP",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "AS " "BR",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "optional-capability",
-                                "next-hop-type": "106.187.14.240,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "0x2"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "5.5.5.5/32",
-                                "interface-cost": "1201",
-                                "next-hop-type": "Spring",
-                                "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
-                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "SPRING",
-                                },
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "5.5.5.5,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "27.86.198.24/30",
-                                "interface-cost": "1000",
-                                "next-hop-type": "IP",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"}
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "111.87.5.252,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "low"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "27.86.198.28/30",
-                                "interface-cost": "1005",
-                                "next-hop-type": "IP",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "111.87.5.94"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "111.87.5.253,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "27.86.198.239/32",
-                                "interface-cost": "1001",
-                                "next-hop-type": "IP",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "27.86.198.26"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "27.86.198.239,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "27.86.198.239/32",
-                                "interface-cost": "1001",
-                                "next-hop-type": "Spring",
-                                "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
-                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "SPRING",
-                                },
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "27.86.198.26"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "27.86.198.239,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "27.90.132.237/32",
-                                "interface-cost": "150",
-                                "next-hop-type": "IP",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Ext1",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "106.187.14.240,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.0,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "106.162.196.241/32",
-                                "interface-cost": "1201",
-                                "next-hop-type": "Spring",
-                                "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
-                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "SPRING",
-                                },
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "106.162.196.241,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "106.187.14.16/30",
-                                "interface-cost": "105",
-                                "next-hop-type": "IP",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "106.187.14.240,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "106.187.14.32/30",
-                                "interface-cost": "225",
-                                "next-hop-type": "IP",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "106.187.14.241,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "111.87.5.92/30",
-                                "interface-cost": "5",
-                                "next-hop-type": "IP",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"}
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "111.87.5.252,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "low"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "111.87.5.252/32",
-                                "interface-cost": "0",
-                                "next-hop-type": "IP",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "lo0.0"}
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "111.87.5.252,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "low"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "111.87.5.252/32",
-                                "interface-cost": "0",
-                                "next-hop-type": "Spring",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "lo0.0"}
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "111.87.5.252,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "low"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "202.239.164.252/32",
-                                "interface-cost": "32000",
-                                "next-hop-type": "IP",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Ext1",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "106.187.14.240,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.0,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "202.239.165.48/30",
-                                "interface-cost": "10100",
-                                "next-hop-type": "IP",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "106.187.14.240,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "202.239.165.56/30",
-                                "interface-cost": "10100",
-                                "next-hop-type": "IP",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "106.187.14.240,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "202.239.165.119/32",
-                                "interface-cost": "10101",
-                                "next-hop-type": "IP",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "202.239.165.119,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "202.239.165.120/32",
-                                "interface-cost": "10101",
-                                "next-hop-type": "IP",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "202.239.165.120,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "2567",
-                                "interface-cost": "0",
-                                "next-hop-type": "Mpls",
-                                "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
-                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "MPLS",
-                                },
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "111.87.5.252,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "2567 " "(S=0)",
-                                "interface-cost": "0",
-                                "next-hop-type": "Mpls",
-                                "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
-                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "MPLS",
-                                },
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "111.87.5.252,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "2568",
-                                "interface-cost": "0",
-                                "next-hop-type": "Mpls",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "111.87.5.252,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "2568 " "(S=0)",
-                                "interface-cost": "0",
-                                "next-hop-type": "Mpls",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "111.87.5.252,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "167966",
-                                "interface-cost": "0",
-                                "next-hop-type": "Mpls",
-                                "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
-                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "MPLS",
-                                },
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "27.86.198.26"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "111.87.5.252,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "167966 " "(S=0)",
-                                "interface-cost": "0",
-                                "next-hop-type": "Mpls",
-                                "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
-                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "MPLS",
-                                },
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "27.86.198.26"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "111.87.5.252,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "167967",
-                                "interface-cost": "0",
-                                "next-hop-type": "Mpls",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "27.86.198.26"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "111.87.5.252,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "167967 " "(S=0)",
-                                "interface-cost": "0",
-                                "next-hop-type": "Mpls",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "27.86.198.26"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "111.87.5.252,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "16051 " "(S=0)",
-                                "interface-cost": "100",
-                                "next-hop-type": "Mpls",
-                                "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
-                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "MPLS",
-                                },
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "106.187.14.240,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "16052",
-                                "interface-cost": "105",
-                                "next-hop-type": "Mpls",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "106.187.14.241,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "16061",
-                                "interface-cost": "200",
-                                "next-hop-type": "Mpls",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "59.128.2.250,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "16062",
-                                "interface-cost": "205",
-                                "next-hop-type": "Mpls",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "59.128.2.251,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "16063",
-                                "interface-cost": "1201",
-                                "next-hop-type": "Mpls",
-                                "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
-                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "MPLS",
-                                },
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "106.187.14.121"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "106.162.196.241,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "16072",
-                                "interface-cost": "5",
-                                "next-hop-type": "Mpls",
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "111.87.5.94"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "111.87.5.253,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "16073",
-                                "interface-cost": "1001",
-                                "next-hop-type": "Mpls",
-                                "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
-                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "MPLS",
-                                },
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "27.86.198.26"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "27.86.198.239,",
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "16073 " "(S=0)",
-                                "interface-cost": "1001",
-                                "next-hop-type": "Mpls",
-                                "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
-                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "MPLS",
-                                },
-                                "ospf-next-hop": {
-                                    "next-hop-address": {
-                                        "interface-address": "27.86.198.26"
-                                    },
-                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
-                                },
-                                "route-path-type": "Intra",
-                                "route-type": "Network",
-                            }
-                        ]
-                    },
-                    {
-                        "ospf-route-entry": [
-                            {
-                                "address-prefix": "area",
-                                "interface-cost": "priority",
-                                "next-hop-type": "27.86.198.239,",
-                                "ospf-backup-next-hop": {
-                                    "ospf-backup-next-hop-address": "111.87.5.94",
-                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "MPLS",
-                                },
-                                "ospf-next-hop": {
-                                    "next-hop-name": {"interface-name": "medium"}
-                                },
-                                "route-path-type": "0.0.0.8,",
-                                "route-type": "origin",
-                            }
-                        ]
-                    },
-                ]
-            }
+    "ospf-route-information": {
+        "ospf-topology-route-table": {
+            "ospf-route": [
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "3.3.3.3",
+                            "interface-cost": "1201",
+                            "next-hop-type": "IP",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "106.187.14.121"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Router",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "5.5.5.5",
+                            "interface-cost": "1200",
+                            "next-hop-type": "IP",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "106.187.14.121"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Router",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "27.86.198.239",
+                            "interface-cost": "1000",
+                            "next-hop-type": "IP",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "27.86.198.26"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Router",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "59.128.2.250",
+                            "interface-cost": "200",
+                            "next-hop-type": "IP",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "106.187.14.121"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "AS " "BR",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "59.128.2.251",
+                            "interface-cost": "205",
+                            "next-hop-type": "IP",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "106.187.14.121"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "AS " "BR",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "106.162.196.241",
+                            "interface-cost": "1200",
+                            "next-hop-type": "IP",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "106.187.14.121"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Router",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "106.187.14.240",
+                            "interface-cost": "100",
+                            "next-hop-type": "IP",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "106.187.14.121"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "AS " "BR",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "5.5.5.5/32",
+                            "interface-cost": "1201",
+                            "next-hop-type": "Spring",
+                            "ospf-backup-next-hop": {
+                                "ospf-backup-next-hop-address": "111.87.5.94",
+                                "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                "ospf-backup-next-hop-type": "Bkup " "SPRING",
+                            },
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "106.187.14.121"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "27.86.198.24/30",
+                            "interface-cost": "1000",
+                            "next-hop-type": "IP",
+                            "ospf-next-hop": {
+                                "next-hop-name": {"interface-name": "ge-0/0/2.0"}
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "27.86.198.28/30",
+                            "interface-cost": "1005",
+                            "next-hop-type": "IP",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "111.87.5.94"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "27.86.198.239/32",
+                            "interface-cost": "1001",
+                            "next-hop-type": "IP",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "27.86.198.26"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        },
+                        {
+                            "address-prefix": "27.86.198.239/32",
+                            "interface-cost": "1001",
+                            "next-hop-type": "Spring",
+                            "ospf-backup-next-hop": {
+                                "ospf-backup-next-hop-address": "111.87.5.94",
+                                "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                "ospf-backup-next-hop-type": "Bkup " "SPRING",
+                            },
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "27.86.198.26"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        },
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "202.239.164.252/32",
+                            "interface-cost": "32000",
+                            "next-hop-type": "IP",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "106.187.14.121"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                            },
+                            "route-path-type": "Ext1",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "202.239.165.48/30",
+                            "interface-cost": "10100",
+                            "next-hop-type": "IP",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "106.187.14.121"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "202.239.165.56/30",
+                            "interface-cost": "10100",
+                            "next-hop-type": "IP",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "106.187.14.121"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "202.239.165.119/32",
+                            "interface-cost": "10101",
+                            "next-hop-type": "IP",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "106.187.14.121"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "202.239.165.120/32",
+                            "interface-cost": "10101",
+                            "next-hop-type": "IP",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "106.187.14.121"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "2567",
+                            "interface-cost": "0",
+                            "next-hop-type": "Mpls",
+                            "ospf-backup-next-hop": {
+                                "ospf-backup-next-hop-address": "111.87.5.94",
+                                "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                "ospf-backup-next-hop-type": "Bkup " "MPLS",
+                            },
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "106.187.14.121"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "2567 " "(S=0)",
+                            "interface-cost": "0",
+                            "next-hop-type": "Mpls",
+                            "ospf-backup-next-hop": {
+                                "ospf-backup-next-hop-address": "111.87.5.94",
+                                "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                "ospf-backup-next-hop-type": "Bkup " "MPLS",
+                            },
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "106.187.14.121"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "2568",
+                            "interface-cost": "0",
+                            "next-hop-type": "Mpls",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "106.187.14.121"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "2568 " "(S=0)",
+                            "interface-cost": "0",
+                            "next-hop-type": "Mpls",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "106.187.14.121"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "167966",
+                            "interface-cost": "0",
+                            "next-hop-type": "Mpls",
+                            "ospf-backup-next-hop": {
+                                "ospf-backup-next-hop-address": "111.87.5.94",
+                                "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                "ospf-backup-next-hop-type": "Bkup " "MPLS",
+                            },
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "27.86.198.26"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "167966 " "(S=0)",
+                            "interface-cost": "0",
+                            "next-hop-type": "Mpls",
+                            "ospf-backup-next-hop": {
+                                "ospf-backup-next-hop-address": "111.87.5.94",
+                                "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                "ospf-backup-next-hop-type": "Bkup " "MPLS",
+                            },
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "27.86.198.26"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "167967",
+                            "interface-cost": "0",
+                            "next-hop-type": "Mpls",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "27.86.198.26"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "167967 " "(S=0)",
+                            "interface-cost": "0",
+                            "next-hop-type": "Mpls",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "27.86.198.26"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "16051 " "(S=0)",
+                            "interface-cost": "100",
+                            "next-hop-type": "Mpls",
+                            "ospf-backup-next-hop": {
+                                "ospf-backup-next-hop-address": "111.87.5.94",
+                                "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                "ospf-backup-next-hop-type": "Bkup " "MPLS",
+                            },
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "106.187.14.121"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "16052",
+                            "interface-cost": "105",
+                            "next-hop-type": "Mpls",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "106.187.14.121"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "16061",
+                            "interface-cost": "200",
+                            "next-hop-type": "Mpls",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "106.187.14.121"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "16062",
+                            "interface-cost": "205",
+                            "next-hop-type": "Mpls",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "106.187.14.121"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "16063",
+                            "interface-cost": "1201",
+                            "next-hop-type": "Mpls",
+                            "ospf-backup-next-hop": {
+                                "ospf-backup-next-hop-address": "111.87.5.94",
+                                "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                "ospf-backup-next-hop-type": "Bkup " "MPLS",
+                            },
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "106.187.14.121"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "16072",
+                            "interface-cost": "5",
+                            "next-hop-type": "Mpls",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "111.87.5.94"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "16073",
+                            "interface-cost": "1001",
+                            "next-hop-type": "Mpls",
+                            "ospf-backup-next-hop": {
+                                "ospf-backup-next-hop-address": "111.87.5.94",
+                                "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                "ospf-backup-next-hop-type": "Bkup " "MPLS",
+                            },
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "27.86.198.26"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+                {
+                    "ospf-route-entry": [
+                        {
+                            "address-prefix": "16073 " "(S=0)",
+                            "interface-cost": "1001",
+                            "next-hop-type": "Mpls",
+                            "ospf-backup-next-hop": {
+                                "ospf-backup-next-hop-address": "111.87.5.94",
+                                "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                "ospf-backup-next-hop-type": "Bkup " "MPLS",
+                            },
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "27.86.198.26"
+                                },
+                                "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                            },
+                            "route-path-type": "Intra",
+                            "route-type": "Network",
+                        }
+                    ]
+                },
+            ]
         }
     }
+}
+
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
