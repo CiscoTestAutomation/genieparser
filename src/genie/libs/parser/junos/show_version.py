@@ -141,13 +141,7 @@ class ShowVersionDetail(ShowVersionDetailSchema):
         #COMMIT-SYNCD release 20190606.224121_builder.r1033375 built by builder on 2019-06-06 22:58:46 UTC
         p9 = re.compile(r'^(?P<component>[\w\s\-]+)release +(?P<release>\S+) +built +by +(?P<builder>\S+) +on +(?P<build_date>[\S\s]+)$')
 
-        for line in out.splitlines():
-            line = line.strip()
-
-            # Hostname: sr_hktGCS001
-            m = p1.match(line)
-            if m:
-                package_map = {"JUNOS OS Kernel 64-bit  [20190517.f0321c3_builder_stable_11]":"os-kernel",
+        package_map = {"JUNOS OS Kernel 64-bit  [20190517.f0321c3_builder_stable_11]":"os-kernel",
                             "JUNOS OS libs [20190517.f0321c3_builder_stable_11]":"os-libs",
                             "JUNOS OS runtime [20190517.f0321c3_builder_stable_11]":"os-runtime",
                             "JUNOS OS time zone information [20190517.f0321c3_builder_stable_11]":"zoneinfo",
@@ -215,6 +209,12 @@ class ShowVersionDetail(ShowVersionDetailSchema):
                             "KERNEL JNPR-11.0-20190517.f0321c3_builder_stable_11 #0 r356482+f0321c3e9c9(HEAD) built":"KERNEL"
                 }
 
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Hostname: sr_hktGCS001
+            m = p1.match(line)
+            if m:
                 software_info_first_entry = ret_dict.setdefault("software-information", {})
                 group = m.groupdict()
                 package_list = []
@@ -371,10 +371,10 @@ class ShowVersionInvokeOnAllRoutingEnginesSchema(MetaParser):
                 "package-information": Use(validate_package_information_list),
                 "product-model": str,
                 Optional("product-name"): str
+                }
             }
         }
     }
-}
 
 
 class ShowVersionInvokeOnAllRoutingEngines(ShowVersionInvokeOnAllRoutingEnginesSchema):
@@ -422,24 +422,7 @@ class ShowVersionInvokeOnAllRoutingEngines(ShowVersionInvokeOnAllRoutingEnginesS
         #COMMIT-SYNCD release 20190606.224121_builder.r1033375 built by builder on 2019-06-06 22:58:46 UTC
         p9 = re.compile(r'^(?P<component>[\w\s\-]+)release +(?P<release>\S+) +built +by +(?P<builder>\S+) +on +(?P<build_date>[\S\s]+)$')
 
-
-        for line in out.splitlines():
-            line = line.strip()
-
-            #re0:
-            m = p0.match(line)
-            if m:
-                group = m.groupdict()
-                multi_routing_engine_item_entry = ret_dict.setdefault("multi-routing-engine-results", {}).\
-                                            setdefault("multi-routing-engine-item", {})
-                software_information_entry = multi_routing_engine_item_entry.setdefault("software-information", {})
-                multi_routing_engine_item_entry['re-name'] = group['re_name']
-                continue 
-
-            # Hostname: sr_hktGCS001
-            m = p1.match(line)
-            if m:
-                package_map = {"JUNOS OS Kernel 64-bit  [20190517.f0321c3_builder_stable_11]":"os-kernel",
+        package_map = {"JUNOS OS Kernel 64-bit  [20190517.f0321c3_builder_stable_11]":"os-kernel",
                             "JUNOS OS libs [20190517.f0321c3_builder_stable_11]":"os-libs",
                             "JUNOS OS runtime [20190517.f0321c3_builder_stable_11]":"os-runtime",
                             "JUNOS OS time zone information [20190517.f0321c3_builder_stable_11]":"zoneinfo",
@@ -506,7 +489,23 @@ class ShowVersionInvokeOnAllRoutingEngines(ShowVersionInvokeOnAllRoutingEnginesS
                             "JUNOS jail runtime [20190517.f0321c3_builder_stable_11]":"jail-runtime",
                             "KERNEL JNPR-11.0-20190517.f0321c3_builder_stable_11 #0 r356482+f0321c3e9c9(HEAD) built":"KERNEL"
                 }
-                
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #re0:
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                multi_routing_engine_item_entry = ret_dict.setdefault("multi-routing-engine-results", {}).\
+                                            setdefault("multi-routing-engine-item", {})
+                software_information_entry = multi_routing_engine_item_entry.setdefault("software-information", {})
+                multi_routing_engine_item_entry['re-name'] = group['re_name']
+                continue 
+
+            # Hostname: sr_hktGCS001
+            m = p1.match(line)
+            if m:                
                 group = m.groupdict()
                 package_list = []
                 software_information_entry['host-name'] = group['host_name']
