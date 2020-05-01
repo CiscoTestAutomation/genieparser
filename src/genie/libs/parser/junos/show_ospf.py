@@ -3272,7 +3272,7 @@ class ShowOspfRouteBrief(ShowOspfRouteBriefSchema):
         # 10.36.3.3            Intra Router     IP         1201 ge-0/0/1.0    10.169.14.121
         # 10.19.198.28/30    Intra Network    IP         1005 ge-0/0/0.0    10.189.5.94
         # 2568 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
-        # 106.187.14.120/30  Intra Network    IP          100 ge-0/0/1.0
+        # 10.169.14.120/30  Intra Network    IP          100 ge-0/0/1.0
         p1 = re.compile(r'^(?P<address_prefix>[\d\.\/]+( \(S=\d+\))?) +(?P<route_path_type>\S+)'
             r' +(?P<route_type>\S+|(AS BR)) +(?P<next_hop_type>\S+) +(?P<interface_cost>\S+)'
             r' +(?P<interface_name>\S+)( +(?P<interface_address>[\d\.]+))?$')
@@ -3289,7 +3289,7 @@ class ShowOspfRouteBrief(ShowOspfRouteBriefSchema):
             # 10.36.3.3            Intra Router     IP         1201 ge-0/0/1.0    10.169.14.121
             # 10.19.198.28/30    Intra Network    IP         1005 ge-0/0/0.0    10.189.5.94
             # 2568 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
-            # 106.187.14.120/30  Intra Network    IP          100 ge-0/0/1.0
+            # 10.169.14.120/30  Intra Network    IP          100 ge-0/0/1.0
             m = p1.match(line)
             if m:
                 group = m.groupdict()
