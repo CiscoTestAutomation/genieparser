@@ -8,7 +8,7 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
-   
+
 * JUNOS
     * Added ShowOspfNeighborDetail for:
         * show ospf neighbor {neighbor} detail
@@ -20,6 +20,8 @@
         * show chassis routing-engine
     * Added ShowChassisRoutingEngineNoForwarding for:
         * show chassis routing-engine no-forwarding
+    * Added ShowLacpInterfacesInterface for:
+        * show lacp interfaces {interface}
 
 --------------------------------------------------------------------------------
                                 Fix
