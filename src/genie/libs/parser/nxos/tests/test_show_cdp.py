@@ -164,7 +164,7 @@ class test_show_cdp_neighbors(unittest.TestCase):
                     'hold_time': 130,
                     'local_interface': 'Ethernet1/3',
                     'platform': 'HPE 2200AF-48',
-                    'port_id': 'Ten-GigabitEthernet1/0/10'
+                    'port_id': 'TenGigabitEthernet1/0/10'
                 },
                 6: {
                     'capability': 'S',
@@ -172,7 +172,7 @@ class test_show_cdp_neighbors(unittest.TestCase):
                     'hold_time': 125,
                     'local_interface': 'Ethernet1/5',
                     'platform': 'HPE 2200AF-48 B',
-                    'port_id': 'Ten-GigabitEthernet2/0/20'
+                    'port_id': 'TenGigabitEthernet2/0/20'
                 }
             }
         }   

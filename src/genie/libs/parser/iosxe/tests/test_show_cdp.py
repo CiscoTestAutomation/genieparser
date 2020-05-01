@@ -191,7 +191,14 @@ class test_show_cdp_neighbors(unittest.TestCase):
                     'hold_time': 134,
                     'local_interface': 'GigabitEthernet1',
                     'platform': 'N9K-9000v',
-                    'port_id': 'Ethernet0/0'}
+                    'port_id': 'Ethernet0/0'},
+                2: {
+                    'capability': 'S I',
+                    'device_id': 'another_device_with_a_long_name',
+                    'hold_time': 141,
+                    'local_interface': 'TwentyFiveGigE1/0/3',
+                    'platform': 'WS-C3850-',
+                    'port_id': 'TenGigabitEthernet1/1/4'}
             }
         }
     }
@@ -204,6 +211,8 @@ class test_show_cdp_neighbors(unittest.TestCase):
         Device ID        Local Intrfce     Holdtme    Capability  Platform  Port ID
         Device_With_A_Particularly_Long_Name
                          Gig 1             134             R S C  N9K-9000v Eth 0/0
+        another_device_with_a_long_name
+                         Twe 1/0/3         141              S I   WS-C3850- Ten 1/1/4
     '''}
 
     def test_show_cdp_neighbors_1(self):

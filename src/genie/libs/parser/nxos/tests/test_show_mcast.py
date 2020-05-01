@@ -733,7 +733,7 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
 
 
 # ===============================================
-# Unit test for 'show ip static route multicast'
+# Unit test for 'show ip static-route multicast vrf all'
 # ===============================================
 class test_show_ip_static_route_multicast(unittest.TestCase):
     
@@ -836,6 +836,25 @@ class test_show_ip_static_route_multicast(unittest.TestCase):
             (installed in urib)
       '''}
 
+    golden_output_2 = {'execute.return_value': '''
+    Mstatic-route for VRF "default"(1)
+    IPv4 Multicast Static Routes:
+    
+    Mstatic-route for VRF "management"(2)
+    IPv4 Multicast Static Routes:
+    
+    Process finished with exit code 0
+    '''}
+
+    golden_parsed_output_2 = {
+        'vrf': {
+            'default': {
+            },
+            'management': {
+            },
+        },
+    }
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         ip_static_route_multicast_obj = ShowIpStaticRouteMulticast(device=self.device1)
@@ -847,6 +866,12 @@ class test_show_ip_static_route_multicast(unittest.TestCase):
         ip_static_route_multicast_obj = ShowIpStaticRouteMulticast(device=self.device)
         parsed_output = ip_static_route_multicast_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        ip_static_route_multicast_obj = ShowIpStaticRouteMulticast(device=self.device)
+        parsed_output = ip_static_route_multicast_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 
 # =================================================

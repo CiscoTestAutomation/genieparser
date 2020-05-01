@@ -1856,9 +1856,7 @@ class ShowChassisRoutingEngineNoForwarding(ShowChassisRoutingEngine):
             - show chassis routing-engine no-forwarding
     """
 
-    cli_command = [
-        'show chassis routing-engine no-forwarding'
-        ]
+    cli_command = 'show chassis routing-engine no-forwarding'
 
     def cli(self, output=None):
         if not output:
