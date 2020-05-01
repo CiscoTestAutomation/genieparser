@@ -589,7 +589,7 @@ class ShowMplsLdpNeighborDetail(ShowMplsLdpNeighbor):
     """Parser for show mpls ldp neighbor detail,
                   show mpls ldp neighbor {interface} detail"""
 
-    cli_command = ['show mpls ldp neighbor detail', 'show mpls ldp vrf {vrf} neighbor  detail', 
+    cli_command = ['show mpls ldp neighbor detail', 'show mpls ldp vrf {vrf} neighbor detail', 
     'show mpls ldp neighbor {interface} detail', 'show mpls ldp vrf {vrf} {interface} detail']
 
     def cli(self, vrf="", interface=None, output=None):

@@ -2,6 +2,7 @@
 
 JunOs parsers for the following show commands:
     * show pfe statistics traffic
+    * show pfe statistics ip icmp
 """
 
 # Python
@@ -292,7 +293,8 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
             # Software input control plane drops  :                    0
             m = p7.match(line)
             if m:
-                entry = ret_dict.setdefault('pfe-statistics', {}).setdefault('pfe-local-traffic-statistics', {})
+                entry = ret_dict.setdefault('pfe-statistics', {})\
+                    .setdefault('pfe-local-traffic-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_','-')
@@ -324,7 +326,8 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
             # Software input low drops            :                    0
             m = p10.match(line)
             if m:
-                entry = ret_dict.setdefault('pfe-statistics', {}).setdefault('pfe-local-traffic-statistics', {})
+                entry = ret_dict.setdefault('pfe-statistics', {})\
+                    .setdefault('pfe-local-traffic-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_','-')
@@ -477,7 +480,8 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
             # ARP                        :                56818
             m = p24.match(line)
             if m:
-                entry = ret_dict.setdefault('pfe-statistics', {}).setdefault('pfe-local-protocol-statistics', {})
+                entry = ret_dict.setdefault('pfe-statistics', {})\
+                    .setdefault('pfe-local-protocol-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_','-')
@@ -542,7 +546,8 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
             # Data error                 :                    0
             m = p30.match(line)
             if m:
-                entry = ret_dict.setdefault('pfe-statistics', {}).setdefault('pfe-hardware-discard-statistics', {})
+                entry = ret_dict.setdefault('pfe-statistics', {})\
+                    .setdefault('pfe-hardware-discard-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_','-')
@@ -552,7 +557,8 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
             # TCP header length error    :                    0
             m = p31.match(line)
             if m:
-                entry = ret_dict.setdefault('pfe-statistics', {}).setdefault('pfe-hardware-discard-statistics', {})
+                entry = ret_dict.setdefault('pfe-statistics', {})\
+                    .setdefault('pfe-hardware-discard-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_','-')
@@ -628,7 +634,8 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
             # Fabric drops               :                    0
             m = p38.match(line)
             if m:
-                entry = ret_dict.setdefault('pfe-statistics', {}).setdefault('pfe-hardware-discard-statistics', {})
+                entry = ret_dict.setdefault('pfe-statistics', {})\
+                    .setdefault('pfe-hardware-discard-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_','-')
@@ -656,5 +663,160 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     entry_key = group_key.replace('_','-')
                     entry[entry_key] = group_value
                 continue
+
+        return ret_dict
+
+class ShowPfeStatisticsIpIcmpSchema(MetaParser):
+    """ Schema for:
+            * show pfe statistics ip icmp
+    """
+
+    schema = {
+        "pfe-statistics": {
+            "icmp-statistics": {
+                "requests": str,
+                "network-unreachables": str,
+                "ttl-expired": str,
+                "ttl-captured": str,
+                "redirects": str,
+                "mtu-exceeded": str,
+                "icmp-option-handoffs": str,
+            },
+            "icmp-errors": {
+                "unknown-unreachables": str,
+                "unsupported-icmp-type": str,
+                "unprocessed-redirects": str,
+                "invalid-icmp-type": str,
+                "invalid-protocol": str,
+                "bad-input-interface": str,
+                "throttled-icmps": str,
+                "runts": str,
+            },
+            "icmp-discards": {
+                "multicasts": str,
+                "bad-source-addresses": str,
+                "bad-dest-addresses": str,
+                "ip-fragments": str,
+                "icmp-errors": str,
+            },
+        }
+    }
+
+class ShowPfeStatisticsIpIcmp(ShowPfeStatisticsIpIcmpSchema):
+    """ Parser for:
+            * show pfe statistics ip icmp
+    """
+    cli_command = 'show pfe statistics ip icmp'
+
+    state = None
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        #         ICMP Statistics:
+        p1 = re.compile(r'^(?P<state>[\S\s]+):$')
+
+        #       246259 requests
+        #          311 network unreachables
+        p2 = re.compile(r'^(?P<value>\d+) +(?P<key>[\S\s]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #         ICMP Statistics:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                self.state = group['state']
+                continue
+
+            if self.state == "ICMP Statistics":
+
+                schemaMap = {
+                    "requests": "requests",
+                    "network_unreachables": "network-unreachables",
+                    "ttl_expired": "ttl-expired",
+                    "ttl_captured": "ttl-captured",
+                    "redirects": "redirects",
+                    "mtu_exceeded": "mtu-exceeded",
+                    "icmp/option_handoffs": "icmp-option-handoffs",
+                }
+
+                #       246259 requests
+                #     311 network unreachables
+                # 245373 ttl expired
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()
+                    value = group['value']
+                    key = group['key']
+                    key = key.replace(' ','_')
+
+                    if key in schemaMap:
+                        schemaKey = schemaMap[key]
+                        ret_dict.setdefault("pfe-statistics", {})\
+                            .setdefault("icmp-statistics", {})\
+                                .setdefault(schemaKey, value)
+                    continue
+
+            if self.state == "ICMP Errors":
+
+                schemaMap = {
+                    "unknown_unreachables": "unknown-unreachables",
+                    "unsupported_ICMP_type": "unsupported-icmp-type",
+                    "unprocessed_redirects": "unprocessed-redirects",
+                    "invalid_ICMP_type": "invalid-icmp-type",
+                    "invalid_protocol": "invalid-protocol",
+                    "bad_input_interface": "bad-input-interface",
+                    "throttled_icmps": "throttled-icmps",
+                    "runts": "runts"
+                }
+
+                # 0 unknown unreachables
+                # 0 unsupported ICMP type
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()
+                    value = group['value']
+                    key = group['key']
+                    key = key.replace(' ','_')
+
+                    if key in schemaMap:
+                        schemaKey = schemaMap[key]
+                        ret_dict.setdefault("pfe-statistics", {})\
+                            .setdefault("icmp-errors", {})\
+                                .setdefault(schemaKey, value)
+                    continue
+
+            if self.state == "ICMP Discards":
+
+                schemaMap = {
+                    "multicasts": "multicasts",
+                    "bad_source_addresses": "bad-source-addresses",
+                    "bad_dest_addresses": "bad-dest-addresses",
+                    "IP_fragments": "ip-fragments",
+                    "ICMP_errors": "icmp-errors",
+                }
+
+                # 0 multicasts
+                # 0 bad source addresses
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()
+                    value = group['value']
+                    key = group['key']
+                    key = key.replace(' ','_')
+
+                    if key in schemaMap:
+                        schemaKey = schemaMap[key]
+                        ret_dict.setdefault("pfe-statistics", {})\
+                            .setdefault("icmp-discards", {})\
+                                .setdefault(schemaKey, value)
+                    continue
 
         return ret_dict

@@ -40,7 +40,7 @@ class IfconfigSchema(MetaParser):
             'type': str,
             Optional('txqueuelen'): int,
             Optional('mac'): str,
-            'destription': str,
+            'description': str,
             'counters': {
                 'rx_pkts': int,
                 'rx_bytes': int,
@@ -99,7 +99,7 @@ class Ifconfig(IfconfigSchema):
         #  loop  txqueuelen 1000  (Local Loopback)
         #  loop  (Local Loopback)
         p4 = re.compile(r'^(?P<type>\S+)( +(?P<mac>\S+))?( +txqueuelen +(?P<txqueuelen>\d+))? '
-                         '+\((?P<destription>.*)\)$')
+                         '+\((?P<description>.*)\)$')
 
         #  RX packets 66766  bytes 4274334 (4.0 MiB)
         p5 = re.compile(r'^RX +packets +(?P<rx_pkts>\d+) +bytes +(?P<rx_bytes>\d+) '
@@ -122,6 +122,42 @@ class Ifconfig(IfconfigSchema):
         #  device memory 0xdea00000-deafffff
         p9 = re.compile(r'^device( +interrupt +(?P<device_interrupt>\d+))? '
                          '+memory +(?P<device_memory>\S+)$')
+        
+        # eth0      Link encap:Ethernet  HWaddr 00:50:56:FF:01:14
+        # lo        Link encap:Local Loopback
+        p10 = re.compile(r'^(?P<interface>\S+)\s+Link\s+encap:(?P<description>' + 
+                         r'\S+(\s+\S+)*?)(\s+HWaddr\s+\S+)?$') 
+
+        # UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+        p11 = re.compile(r'^(?P<flags>[\S+|\s]+?)\s+MTU:(?P<mtu>\d+)\s+\S+$')
+
+        # Match anything that doesn't have 'bytes'
+        p12 = re.compile(r'^((?!bytes).)*$')
+
+        # inet addr:192.168.122.1  Bcast:192.168.122.255  Mask:255.255.255.0
+        # inet addr:127.0.0.1  Mask:255.0.0.0
+        p13 = re.compile(r'^inet\s+addr:(?P<ip>(\S+))\s+(Bcast:' +
+                         r'(?P<broadcast>\S+)\s+)?Mask:(?P<netmask>\S+)$')
+
+        # RX packets:1892776 errors:0 dropped:0 overruns:0 frame:0
+        p14 = re.compile(r'^RX\spackets:(?P<rx_pkts>\d+)\serrors:(?P<rx_errors>' + 
+                         r'\d+)\sdropped:(?P<rx_dropped>\d+)\soverruns:' +
+                         r'(?P<rx_overruns>\d+)\sframe:(?P<rx_frame>\d+)$')
+
+        # TX packets:1892776 errors:0 dropped:0 overruns:0 carrier:0
+        p15 = re.compile(r'^TX\spackets:(?P<tx_pkts>\d+)\serrors:(' + 
+                         r'?P<tx_errors>\d+)\sdropped:(?P<tx_dropped>\d+)' + 
+                         r'\soverruns:(?P<tx_overruns>\d+)\scarrier:' + 
+                         r'(?P<tx_carrier>\d+)$')
+
+        # collisions:0 txqueuelen:0
+        p16 = re.compile(r'^collisions:(?P<tx_collisions>\d+)\s' +
+                         r'txqueuelen:(?P<txqueuelen>\d+)$')
+
+        # RX bytes:0 (0.0 b)  TX bytes:0 (0.0 b)
+        p17 = re.compile(r'^RX\sbytes:(?P<rx_bytes>\d+)\s\((?P<rx_value>.*?)' +
+                         r'\)\s+TX\sbytes:(?P<tx_bytes>\d+)\s\((' + 
+                         r'?P<tx_value>.*?)\)$')
 
         for line in out.splitlines():
             line = line.replace('\t', '    ')
@@ -158,10 +194,10 @@ class Ifconfig(IfconfigSchema):
 
             #   ether 48:2a:e3:ff:58:55  txqueuelen 1000  (Ethernet)
             m = p4.match(line)
-            if m:
+            if m and p12.match(line):
                 group = m.groupdict()
                 intf_dict.update({'type': group['type'],
-                                  'destription': group['destription']})
+                                  'description': group['description']})
 
                 mac = group['mac']
                 txqueuelen = group['txqueuelen']
@@ -211,6 +247,70 @@ class Ifconfig(IfconfigSchema):
                     intf_dict.update({'device_interrupt': int(interrupt)})
                 if memory:
                     intf_dict.update({'device_memory': memory})
+                continue
+
+            # eth0      Link encap:Ethernet  HWaddr 00:50:56:FF:01:14
+            # Link encap:Local Loopback
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                intf_dict = result_dict.setdefault(interface, {
+                    'interface': interface, 'description': 
+                    group['description'], 'type': group['description']})
+                continue
+
+            # UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({k: (int(v) if v.isdigit() else v) for k, v in 
+                                                                group.items()})
+                continue
+
+            # inet addr:192.168.122.1  Bcast:192.168.122.255  Mask:255.255.255.0
+            # inet addr:127.0.0.1  Mask:255.0.0.0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                ip = group['ip']
+                group['broadcast'] = group['broadcast'] or ''
+                ipv4_dict = intf_dict.setdefault('ipv4', {}).setdefault(ip, {})
+                ipv4_dict.update({k: v for k, v in group.items()})
+                continue
+
+            # RX packets:1892776 errors:0 dropped:0 overruns:0 frame:0
+            m = p14.match(line)
+            if m: 
+                group = m.groupdict()
+                intf_dict.setdefault('counters', {}).update({
+                    k: int(v) for k, v in group.items()})
+                continue
+
+            # TX packets:1892776 errors:0 dropped:0 overruns:0 carrier:0
+            m = p15.match(line)
+            if m: 
+                group = m.groupdict()
+                intf_dict.setdefault('counters', {}).update({
+                    k: int(v) for k, v in group.items()})
+                continue
+
+            # collisions:0 txqueuelen:0
+            m = p16.match(line)
+            if m: 
+                group = m.groupdict()
+                intf_dict.setdefault('counters', {}).update({'tx_collisions':
+                                                int(group['tx_collisions'])})
+                intf_dict.setdefault('txqueuelen', int(group['txqueuelen']))
+                continue
+
+            # RX bytes:0 (0.0 b)  TX bytes:0 (0.0 b)
+            m = p17.match(line)
+            if m: 
+                group = m.groupdict()
+                intf_dict.setdefault('counters', {}).update({
+                    k: int(v) if v.isdigit() else v for k, v in group.items()
+                })
                 continue
 
         return result_dict
