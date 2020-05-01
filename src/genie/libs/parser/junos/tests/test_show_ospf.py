@@ -10765,7 +10765,7 @@ class TestShowOspfInterfaceExtensive(unittest.TestCase):
                 show ospf interface extensive
         Interface           State   Area            DR ID           BDR ID          Nbrs
         ge-0/0/0.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
-        Type: P2P, Address: 111.87.5.93, Mask: 255.255.255.252, MTU: 1500, Cost: 5
+        Type: P2P, Address: 10.189.5.93, Mask: 255.255.255.252, MTU: 1500, Cost: 5
         Adj count: 1
         Hello: 10, Dead: 40, ReXmit: 5, Not Stub
         Auth type: None
@@ -10773,7 +10773,7 @@ class TestShowOspfInterfaceExtensive(unittest.TestCase):
         Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 100
         Topology default (ID 0) -> Cost: 5
         ge-0/0/1.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
-        Type: P2P, Address: 106.187.14.122, Mask: 255.255.255.252, MTU: 1500, Cost: 100
+        Type: P2P, Address: 10.169.14.122, Mask: 255.255.255.252, MTU: 1500, Cost: 100
         Adj count: 1
         Hello: 10, Dead: 40, ReXmit: 5, Not Stub
         Auth type: None
@@ -10781,7 +10781,7 @@ class TestShowOspfInterfaceExtensive(unittest.TestCase):
         Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 100
         Topology default (ID 0) -> Cost: 100
         ge-0/0/2.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
-        Type: P2P, Address: 27.86.198.25, Mask: 255.255.255.252, MTU: 1500, Cost: 1000
+        Type: P2P, Address: 10.19.198.25, Mask: 255.255.255.252, MTU: 1500, Cost: 1000
         Adj count: 1
         Hello: 10, Dead: 40, ReXmit: 5, Not Stub
         Auth type: None
@@ -10789,15 +10789,15 @@ class TestShowOspfInterfaceExtensive(unittest.TestCase):
         Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 100
         Topology default (ID 0) -> Cost: 1000
         ge-0/0/3.0          DRother 0.0.0.8         0.0.0.0         0.0.0.0            0
-        Type: LAN, Address: 100.0.0.254, Mask: 255.255.255.0, MTU: 1500, Cost: 100
+        Type: LAN, Address: 10.55.0.254, Mask: 255.255.255.0, MTU: 1500, Cost: 100
         Adj count: 0, Passive
         Hello: 10, Dead: 40, ReXmit: 5, Not Stub
         Auth type: None
         Protection type: None
         Topology default (ID 0) -> Passive, Cost: 100
-        lo0.0               DR      0.0.0.8         111.87.5.252    0.0.0.0            0
-        Type: LAN, Address: 111.87.5.252, Mask: 255.255.255.255, MTU: 65535, Cost: 0
-        DR addr: 111.87.5.252, Priority: 128
+        lo0.0               DR      0.0.0.8         10.189.5.252    0.0.0.0            0
+        Type: LAN, Address: 10.189.5.252, Mask: 255.255.255.255, MTU: 65535, Cost: 0
+        DR addr: 10.189.5.252, Priority: 128
         Adj count: 0
         Hello: 10, Dead: 40, ReXmit: 5, Not Stub
         Auth type: None
@@ -10816,7 +10816,7 @@ class TestShowOspfInterfaceExtensive(unittest.TestCase):
                     "dead-interval": "40",
                     "dr-id": "0.0.0.0",
                     "hello-interval": "10",
-                    "interface-address": "111.87.5.93",
+                    "interface-address": "10.189.5.93",
                     "interface-cost": "5",
                     "interface-name": "ge-0/0/0.0",
                     "interface-type": "P2P",
@@ -10845,7 +10845,7 @@ class TestShowOspfInterfaceExtensive(unittest.TestCase):
                     "dead-interval": "40",
                     "dr-id": "0.0.0.0",
                     "hello-interval": "10",
-                    "interface-address": "106.187.14.122",
+                    "interface-address": "10.169.14.122",
                     "interface-cost": "100",
                     "interface-name": "ge-0/0/1.0",
                     "interface-type": "P2P",
@@ -10874,7 +10874,7 @@ class TestShowOspfInterfaceExtensive(unittest.TestCase):
                     "dead-interval": "40",
                     "dr-id": "0.0.0.0",
                     "hello-interval": "10",
-                    "interface-address": "27.86.198.25",
+                    "interface-address": "10.19.198.25",
                     "interface-cost": "1000",
                     "interface-name": "ge-0/0/2.0",
                     "interface-type": "P2P",
@@ -10903,7 +10903,7 @@ class TestShowOspfInterfaceExtensive(unittest.TestCase):
                     "dead-interval": "40",
                     "dr-id": "0.0.0.0",
                     "hello-interval": "10",
-                    "interface-address": "100.0.0.254",
+                    "interface-address": "10.55.0.254",
                     "interface-cost": "100",
                     "interface-name": "ge-0/0/3.0",
                     "interface-type": "LAN",
@@ -10928,10 +10928,10 @@ class TestShowOspfInterfaceExtensive(unittest.TestCase):
                     "authentication-type": "None",
                     "bdr-id": "0.0.0.0",
                     "dead-interval": "40",
-                    "dr-address": "111.87.5.252",
-                    "dr-id": "111.87.5.252",
+                    "dr-address": "10.189.5.252",
+                    "dr-id": "10.189.5.252",
                     "hello-interval": "10",
-                    "interface-address": "111.87.5.252",
+                    "interface-address": "10.189.5.252",
                     "interface-cost": "0",
                     "interface-name": "lo0.0",
                     "interface-type": "LAN",
@@ -10979,7 +10979,7 @@ class TestShowOspfNeighborDetail(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         show ospf neighbor detail
         Address          Interface              State     ID               Pri  Dead
-        111.87.5.94      ge-0/0/0.0             Full      111.87.5.253     128    39
+        10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    39
         Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
         Up 3w0d 16:50:35, adjacent 3w0d 16:50:35
         SPRING Adjacency Labels:
@@ -10991,7 +10991,7 @@ class TestShowOspfNeighborDetail(unittest.TestCase):
             28986       VL          UnProtected
 
         Topology default (ID 0) -> Bidirectional
-        106.187.14.121   ge-0/0/1.0             Full      106.187.14.240   128    31
+        10.169.14.121   ge-0/0/1.0             Full      10.169.14.240   128    31
         Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
         Up 3w2d 03:12:20, adjacent 3w2d 03:12:15
         SPRING Adjacency Labels:
@@ -11003,7 +11003,7 @@ class TestShowOspfNeighborDetail(unittest.TestCase):
             2568        VL          UnProtected
 
         Topology default (ID 0) -> Bidirectional
-        27.86.198.26     ge-0/0/2.0             Full      27.86.198.239      1    39
+        10.19.198.26     ge-0/0/2.0             Full      10.19.198.239      1    39
         Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
         Up 1w5d 20:40:14, adjacent 1w5d 20:40:14
         SPRING Adjacency Labels:
@@ -11035,9 +11035,9 @@ class TestShowOspfNeighborDetail(unittest.TestCase):
                     "bdr-address": "0.0.0.0",
                     "dr-address": "0.0.0.0",
                     "interface-name": "ge-0/0/0.0",
-                    "neighbor-address": "111.87.5.94",
+                    "neighbor-address": "10.189.5.94",
                     "neighbor-adjacency-time": {"#text": "3w0d " "16:50:35"},
-                    "neighbor-id": "111.87.5.253",
+                    "neighbor-id": "10.189.5.253",
                     "neighbor-priority": "128",
                     "neighbor-up-time": {"#text": "3w0d " "16:50:35"},
                     "options": "0x52",
@@ -11060,9 +11060,9 @@ class TestShowOspfNeighborDetail(unittest.TestCase):
                     "bdr-address": "0.0.0.0",
                     "dr-address": "0.0.0.0",
                     "interface-name": "ge-0/0/1.0",
-                    "neighbor-address": "106.187.14.121",
+                    "neighbor-address": "10.169.14.121",
                     "neighbor-adjacency-time": {"#text": "3w2d " "03:12:15"},
-                    "neighbor-id": "106.187.14.240",
+                    "neighbor-id": "10.169.14.240",
                     "neighbor-priority": "128",
                     "neighbor-up-time": {"#text": "3w2d " "03:12:20"},
                     "options": "0x52",
@@ -11093,9 +11093,9 @@ class TestShowOspfNeighborDetail(unittest.TestCase):
                     "bdr-address": "0.0.0.0",
                     "dr-address": "0.0.0.0",
                     "interface-name": "ge-0/0/2.0",
-                    "neighbor-address": "27.86.198.26",
+                    "neighbor-address": "10.19.198.26",
                     "neighbor-adjacency-time": {"#text": "1w5d " "20:40:14"},
-                    "neighbor-id": "27.86.198.239",
+                    "neighbor-id": "10.19.198.239",
                     "neighbor-priority": "1",
                     "neighbor-up-time": {"#text": "1w5d " "20:40:14"},
                     "options": "0x52",
@@ -11123,5 +11123,11 @@ class TestShowOspfNeighborDetail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-if __name__ == "__main__":
+    def test_show_ospf_neighbor_instance_detail(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspfNeighborDetail(device=self.device)
+        parsed_output = obj.parse(neighbor='10.189.5.94')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+if __name__ == '__main__':
     unittest.main()
