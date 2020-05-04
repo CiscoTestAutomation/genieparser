@@ -12,22 +12,8 @@
 * JUNOS
     * Added ShowOspfNeighborDetail for:
         * show ospf neighbor {neighbor} detail
-    * Added ShowLogFilename for:
-        * show log {filename}
-    * Added ShowChassisFpc for:
-        * show chassis fpc
-    * Added ShowChassisRoutingEngine for:
-        * show chassis routing-engine
-    * Added ShowChassisRoutingEngineNoForwarding for:
-        * show chassis routing-engine no-forwarding
-    * Added ShowLacpInterfacesInterface for:
-        * show lacp interfaces {interface}
-    * Added ShowPfeStatisticsIpIcmpSchema for:
-        * show pfe statistics ip icmp
-    * Added ShowOspfRouteBrief for:
-        * show ospf route brief
-    * Added ShowOspfRouteDetail for:
-        * show ospf route detail
+    * Added ShowInterfacesDescriptions for:
+        * show interfaces descriptions
 
 --------------------------------------------------------------------------------
                                 Fix
