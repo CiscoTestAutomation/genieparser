@@ -8,6 +8,7 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
+
 * JUNOS
     * Added ShowOspfNeighborDetail for:
         * show ospf neighbor {neighbor} detail
@@ -17,3 +18,18 @@
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
+
+* IOSXE
+    * Fixed ShowDmvpn not executing the command properly on device
+
+* NXOS
+    * Updated ShowIpStaticRouteMulticast:
+        * Change key 'address_family' into Optional
+
+* LINUX
+    * Fixed Ifconfig parser issues.
+
+* JUNOS
+    * Updated ShowRoute:
+        * Update regex to support various outputs.
+
