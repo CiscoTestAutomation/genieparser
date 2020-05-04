@@ -911,6 +911,4 @@ class ShowPfeRouteSummary(ShowPfeRouteSummarySchema):
                     entry[entry_key] = group_value
                 entry_list.append(entry)
 
-        import pprint
-        pprint.pprint(ret_dict)
         return ret_dict
