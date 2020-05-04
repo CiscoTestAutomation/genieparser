@@ -34,6 +34,7 @@
 --------------------------------------------------------------------------------
 
 * IOSXE
+    * Fixed ShowBootvar to support more outputs
     * Fixed ShowDmvpn not executing the command properly on device
 
 * NXOS
@@ -46,4 +47,3 @@
 * JUNOS
     * Updated ShowRoute:
         * Update regex to support various outputs.
-

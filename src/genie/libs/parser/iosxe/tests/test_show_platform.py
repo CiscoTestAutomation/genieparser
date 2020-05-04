@@ -5,7 +5,7 @@ from unittest.mock import Mock
 from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
-                                       SchemaMissingKeyError
+                                             SchemaMissingKeyError
 from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   Dir,\
                                                   ShowBootvar,\
@@ -64,9 +64,9 @@ class TestShowBootvar(unittest.TestCase):
 
     golden_parsed_output1 = {
         'active': 
-            {'boot_variable': 'harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12',
+            {'boot_variable': 'harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12;',
             'configuration_register': '0x2'},
-        'next_reload_boot_variable': 'harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12'}
+        'next_reload_boot_variable': 'harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12;'}
 
     golden_output2 = {'execute.return_value': '''
         asr-MIB-1#show bootvar
@@ -97,9 +97,9 @@ class TestShowBootvar(unittest.TestCase):
 
     golden_parsed_output3 = {
         'active': 
-            {'boot_variable': 'bootflash:12351822-iedge-asr-uut,12',
+            {'boot_variable': 'bootflash:12351822-iedge-asr-uut,12;',
             'configuration_register': '0x2102'},
-        'next_reload_boot_variable': 'bootflash:12351822-iedge-asr-uut,12'}
+        'next_reload_boot_variable': 'bootflash:12351822-iedge-asr-uut,12;'}
 
     golden_output4 = {'execute.return_value': '''
         SSR-4400-1#sh bootvar
@@ -111,15 +111,67 @@ class TestShowBootvar(unittest.TestCase):
         Standby not ready to show bootvar
 
         SSR-4400-1#
-    '''
-    }
+        '''}
+
     golden_parsed_output4 = {
         'active': {
             'configuration_register': '0x1'
             },
-            'config_file': 'bootflash:/taas/psan06_Golden_Config'
-    }
+            'config_file': 'bootflash:/taas/psan06_Golden_Config'}
 
+    golden_output5 = {'execute.return_value': '''
+        show boot
+        BOOT variable = tftp://10.1.0.41/cat9k_iosxe.16.12.03a.SPA.bin
+        Configuration Register is 0x102
+        MANUAL_BOOT variable = yes
+        BAUD variable = 9600
+        ENABLE_BREAK variable does not exist
+        BOOTMODE variable does not exist
+        IPXE_TIMEOUT variable does not exist
+        CONFIG_FILE variable =
+        '''}
+
+    golden_parsed_output5 = {
+        'active': 
+            {'boot_variable': 'tftp://10.1.0.41/cat9k_iosxe.16.12.03a.SPA.bin',
+            'configuration_register': '0x102'},
+        'next_reload_boot_variable': 'tftp://10.1.0.41/cat9k_iosxe.16.12.03a.SPA.bin'}
+
+    golden_output6 = {'execute.return_value': '''
+        starfleet-1#show boot
+        BOOT variable = bootflash:cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200421_032634.SSA.bin;
+        Configuration Register is 0x102
+        MANUAL_BOOT variable = no
+        BAUD variable = 9600
+        ENABLE_BREAK variable does not exist
+        BOOTMODE variable does not exist
+        IPXE_TIMEOUT variable does not exist
+        CONFIG_FILE variable =
+        '''}
+
+    golden_parsed_output6 = {
+        'active': 
+            {'boot_variable': 'bootflash:cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200421_032634.SSA.bin;',
+            'configuration_register': '0x102'},
+        'next_reload_boot_variable': 'bootflash:cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200421_032634.SSA.bin;'}
+
+    golden_output7 = {'execute.return_value': '''
+        starfleet-1#show boot
+        BOOT variable = tftp://10.1.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200427_012602.SSA.bin
+        Configuration Register is 0x102
+        MANUAL_BOOT variable = yes
+        BAUD variable = 9600
+        ENABLE_BREAK variable does not exist
+        BOOTMODE variable does not exist
+        IPXE_TIMEOUT variable does not exist
+        CONFIG_FILE variable =
+        '''}
+
+    golden_parsed_output7 = {
+        'active': 
+            {'boot_variable': 'tftp://10.1.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200427_012602.SSA.bin',
+            'configuration_register': '0x102'},
+        'next_reload_boot_variable': 'tftp://10.1.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200427_012602.SSA.bin'}
 
     def test_show_bootvar_empty(self):
         self.device = Mock(**self.empty_output)
@@ -151,6 +203,23 @@ class TestShowBootvar(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
 
+    def test_show_bootvar_full5(self):
+        self.device = Mock(**self.golden_output5)
+        obj = ShowBootvar(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
+
+    def test_show_bootvar_full6(self):
+        self.device = Mock(**self.golden_output6)
+        obj = ShowBootvar(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output6)
+
+    def test_show_bootvar_full7(self):
+        self.device = Mock(**self.golden_output7)
+        obj = ShowBootvar(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output7)
 
 class TestShowVersion(unittest.TestCase):
 
