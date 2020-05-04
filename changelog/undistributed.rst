@@ -15,6 +15,14 @@
     * Added ShowInterfacesDescriptions for:
         * show interfaces descriptions
 
+* IOSXE
+    * Updated ShowMacAddressTable for new commnad:
+        * show mac address-table vlan {vlan}
+
+* IOS
+    * Updated ShowMacAddressTable for new commnad:
+        * show mac address-table vlan {vlan}
+
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
