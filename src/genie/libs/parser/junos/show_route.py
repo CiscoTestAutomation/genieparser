@@ -9,6 +9,8 @@ JUNOS parsers for the following commands:
     * show route protocol {protocol} table {table}
     * show route protocol {protocol}
     * show route protocol {protocol} {ip_address}
+    * show route instance detail
+    * show route protocol {protocol} table {table} extensive {destination}
     * show route advertising-protocol {protocol} {ip_address}
     * show route forwarding-table summary
     * show route summary
@@ -356,13 +358,14 @@ class ShowRoute(ShowRouteSchema):
         # *[OSPF3/10] 3w1d 17:03:23, metric 5
         # 0.0.0.0/0          *[OSPF/150/10] 3w3d 03:24:58, metric 101, tag 0
         # 167963             *[LDP/9] 1w6d 20:41:01, metric 1, metric2 100, tag 65000500
+        # 10.16.2.2/32         *[Static/5] 00:00:02
         p2 = re.compile(r'^((?P<rt_destination>\S+) +)?(?P<active_tag>[\*\+\-])?'
-                r'\[(?P<protocol>[\w\-]+)\/(?P<preference>\d+)'
-                r'(\/(?P<preference2>\d+))?\] +(?P<text>\S+ +\S+)'
-                r'(, +metric +(?P<metric>\d+))?(, +metric2 +(?P<metric2>\d+))?'
-                r'(, +tag +(?P<rt_tag>\d+))?(, +MED +(?P<med>\w+))?'
-                r'(, +localpref +(?P<local_preference>\d+))?'
-                r'(, +from +(?P<learned_from>\S+))?$')
+            r'\[(?P<protocol>[\w\-]+)\/(?P<preference>\d+)'
+            r'(\/(?P<preference2>\d+))?\] +(?P<text>\S+( +\S+)?)'
+            r'(, +metric +(?P<metric>\d+))?(, +metric2 +(?P<metric2>\d+))?'
+            r'(, +tag +(?P<rt_tag>\d+))?(, +MED +(?P<med>\w+))?'
+            r'(, +localpref +(?P<local_preference>\d+))?'
+            r'(, +from +(?P<learned_from>\S+))?$')
 
         # MultiRecv
         p2_1 = re.compile(r'^(?P<nh_type>MultiRecv)$')
@@ -736,13 +739,20 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
     """ Parser for:
             * show route protocol {protocol} extensive
             * show route protocol {protocol} table {table} extensive
+            * show route protocol {protocol} table {table} extensive {destination}
     """
 
     cli_command = ['show route protocol {protocol} extensive',
-                    'show route protocol {protocol} table {table} extensive']
-    def cli(self, protocol, table=None, output=None):
+                    'show route protocol {protocol} table {table} extensive',
+                    'show route protocol {protocol} table {table} extensive {destination}']
+    def cli(self, protocol, table=None, destination=None, output=None):
         if not output:
-            if table:
+            if table and destination:
+                cmd = self.cli_command[2].format(
+                    protocol=protocol,
+                    table=table,
+                    destination=destination)
+            elif table:
                 cmd = self.cli_command[1].format(
                     protocol=protocol,
                     table=table)
@@ -1674,4 +1684,181 @@ class ShowRouteSummary(ShowRouteSummarySchema):
                     v for k, v in group.items() if v is not None})
                 continue
 
+        return ret_dict
+
+class ShowRouteInstanceDetailSchema(MetaParser):
+    """ Schema for:
+            * show route instance detail
+    """
+    # schema = {
+    #     Optional("@xmlns:junos"): str,
+    #     "instance-information": {
+    #         Optional("@junos:style"): str,
+    #         Optional("@xmlns"): str,
+    #         "instance-core": [
+    #             {
+    #                 "instance-interface": [
+    #                     {
+    #                         "interface-name": str
+    #                     }
+    #                 ],
+    #                 "instance-name": str,
+    #                 "instance-rib": [
+    #                     {
+    #                         "irib-active-count": str,
+    #                         "irib-hidden-count": str,
+    #                         "irib-holddown-count": str,
+    #                         "irib-name": str,
+    #                         "irib-route-count": str
+    #                     }
+    #                 ],
+    #                 "instance-state": str,
+    #                 "instance-type": str,
+    #                 "router-id": str
+    #             }
+    #         ]
+    #     }
+    # }
+
+    def validate_instance_core_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('instance-core is not a list')
+        def validate_instance_rib_list(value):
+            if not isinstance(value, list):
+                raise SchemaTypeError('instance-rib is not a list')
+            instance_rib_schema = Schema({
+                        "irib-active-count": str,
+                        "irib-hidden-count": str,
+                        "irib-holddown-count": str,
+                        "irib-name": str,
+                        "irib-route-count": str
+                    })
+            # Validate each dictionary in list
+            for item in value:
+                instance_rib_schema.validate(item)
+            return value
+        def validate_interface_name_list(value):
+            if not isinstance(value, list):
+                raise SchemaTypeError('interface-name is not a list')
+            instance_rib_schema = Schema({
+                    "interface-name": str
+                })
+            # Validate each dictionary in list
+            for item in value:
+                instance_rib_schema.validate(item)
+            return value
+        instance_core_schema = Schema({
+            Optional("instance-interface"): Use(validate_interface_name_list),
+            "instance-name": str,
+            Optional("instance-rib"): Use(validate_instance_rib_list),
+            Optional("instance-state"): str,
+            Optional("instance-type"): str,
+            Optional("router-id"): str
+        })
+        # Validate each dictionary in list
+        for item in value:
+            instance_core_schema.validate(item)
+        return value
+    
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "instance-information": {
+            Optional("@junos:style"): str,
+            Optional("@xmlns"): str,
+            "instance-core": Use(validate_instance_core_list)
+        }
+    }
+
+class ShowRouteInstanceDetail(ShowRouteInstanceDetailSchema):
+    """ Parser for:
+            * show route instance detail
+    """
+    cli_command = 'show route instance detail'
+    
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+        # Router ID: 0.0.0.0
+        p1 = re.compile(r'^Router +ID: +(?P<router_id>\S+)$')
+
+        # Type: forwarding        State: Active        
+        p2 = re.compile(r'^Type: +(?P<instance_type>\S+) +State: +(?P<instance_state>\S+)$')
+
+        # Tables:
+        p3 = re.compile(r'^Tables:$')
+
+        # Interfaces:
+        p4 = re.compile(r'^Interfaces:$')
+
+        # inet.0                 : 1615 routes (929 active, 0 holddown, 0 hidden)
+        # __juniper_private1__.inet.0: 6 routes (5 active, 0 holddown, 0 hidden)
+        p5 = re.compile(r'^(?P<irib_name>\S+) *: +(?P<irib_route_count>\d+) +'
+                r'routes +\((?P<irib_active_count>\d+) +active, +'
+                r'(?P<irib_holddown_count>\d+) +holddown, +'
+                r'(?P<irib_hidden_count>\d+) +hidden\)$')
+
+        # master:
+        p6 = re.compile(r'^(?P<instance_name>\S+):$')
+
+        # pfh-0/0/0.16383
+        p7 = re.compile(r'^(?P<interface_name>\S+)$')
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Router ID: 0.0.0.0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                instance_core_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # Type: forwarding        State: Active        
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                instance_core_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # Tables:
+            m = p3.match(line)
+            if m:
+                continue
+
+            # Interfaces:
+            m = p4.match(line)
+            if m:
+                instance_interface_list = instance_core_dict.setdefault('instance-interface', [])
+                continue
+
+            # inet.0                 : 1615 routes (929 active, 0 holddown, 0 hidden)
+            # __juniper_private1__.inet.0: 6 routes (5 active, 0 holddown, 0 hidden)
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                instance_rib_list = instance_core_dict.setdefault('instance-rib', [])
+                instance_rib_list.append({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # master:
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                instance_core_list = ret_dict.setdefault('instance-information', {}). \
+                    setdefault('instance-core', [])
+                instance_core_dict = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                instance_core_list.append(instance_core_dict)
+                continue
+
+            # pfh-0/0/0.16383
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                instance_interface_list.append({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
         return ret_dict

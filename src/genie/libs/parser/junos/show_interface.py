@@ -761,7 +761,35 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         p44 = re.compile(r'^MTU +errors: +\d+, +Resource +errors: +\d+$')
 
-        p45 = re.compile(r'^')
+        p45 = re.compile(r'^Total +octets +\d+ +\d+$')
+
+        p46 = re.compile(r'^Total +packets +\d+ +\d+')
+
+        p47 = re.compile(r'^Unicast +packets +\d+ +\d+$')
+
+        p48 = re.compile(r'^Broadcast +packets +\d+ +\d+$')
+
+        p49 = re.compile(r'^Multicast +packets +\d+ +\d+$')
+
+        p50 = re.compile(r'^CRC\/Align +errors +\d+ +\d+$')
+
+        p51 = re.compile(r'^FIFO +errors +\d+ +\d+$')
+
+        p52 = re.compile(r'^MAC +control +frames +\d+ +\d+$')
+
+        p53 = re.compile(r'^MAC +pause +frames +\d+ +\d+$')
+
+        p54 = re.compile(r'^Oversized +frames +\d+$')
+
+        p56 = re.compile(r'^Jabber +frames +\d+$')
+
+        p57 = re.compile(r'^Fragment +frames +\d+$')
+
+        p58 = re.compile(r'^VLAN +tagged +frames +\d+$')
+
+        p59 = re.compile(r'^Code +violations +\d+$')
+
+        p60 = re.compile(r'^Total +errors +\d+$')
 
         cnt = 0
         for line in out.splitlines():
