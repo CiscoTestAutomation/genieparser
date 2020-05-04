@@ -12564,7 +12564,7 @@ class TestShowOspfRouteDetail(unittest.TestCase):
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
                                 "route-path-type": "Intra",
-                                "route-type": "AS " "BR",
+                                "route-type": "AS BR",
                             }
                         ]
                     },
@@ -12581,7 +12581,7 @@ class TestShowOspfRouteDetail(unittest.TestCase):
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
                                 "route-path-type": "Intra",
-                                "route-type": "AS " "BR",
+                                "route-type": "AS BR",
                             }
                         ]
                     },
@@ -12615,7 +12615,7 @@ class TestShowOspfRouteDetail(unittest.TestCase):
                                     "next-hop-name": {"interface-name": "ge-0/0/1.0"},
                                 },
                                 "route-path-type": "Intra",
-                                "route-type": "AS " "BR",
+                                "route-type": "AS BR",
                             }
                         ]
                     },
@@ -12628,7 +12628,7 @@ class TestShowOspfRouteDetail(unittest.TestCase):
                                 "ospf-backup-next-hop": {
                                     "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "SPRING",
+                                    "ospf-backup-next-hop-type": "Bkup SPRING",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
@@ -12694,7 +12694,7 @@ class TestShowOspfRouteDetail(unittest.TestCase):
                                 "ospf-backup-next-hop": {
                                     "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "SPRING",
+                                    "ospf-backup-next-hop-type": "Bkup SPRING",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
@@ -12801,7 +12801,7 @@ class TestShowOspfRouteDetail(unittest.TestCase):
                                 "ospf-backup-next-hop": {
                                     "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "MPLS",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
@@ -12817,13 +12817,13 @@ class TestShowOspfRouteDetail(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "2567 " "(S=0)",
+                                "address-prefix": "2567 (S=0)",
                                 "interface-cost": "0",
                                 "next-hop-type": "Mpls",
                                 "ospf-backup-next-hop": {
                                     "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "MPLS",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
@@ -12856,7 +12856,7 @@ class TestShowOspfRouteDetail(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "2568 " "(S=0)",
+                                "address-prefix": "2568 (S=0)",
                                 "interface-cost": "0",
                                 "next-hop-type": "Mpls",
                                 "ospf-next-hop": {
@@ -12879,7 +12879,7 @@ class TestShowOspfRouteDetail(unittest.TestCase):
                                 "ospf-backup-next-hop": {
                                     "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "MPLS",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
@@ -12895,13 +12895,13 @@ class TestShowOspfRouteDetail(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "167966 " "(S=0)",
+                                "address-prefix": "167966 (S=0)",
                                 "interface-cost": "0",
                                 "next-hop-type": "Mpls",
                                 "ospf-backup-next-hop": {
                                     "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "MPLS",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
@@ -12934,7 +12934,7 @@ class TestShowOspfRouteDetail(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "167967 " "(S=0)",
+                                "address-prefix": "167967 (S=0)",
                                 "interface-cost": "0",
                                 "next-hop-type": "Mpls",
                                 "ospf-next-hop": {
@@ -12951,13 +12951,13 @@ class TestShowOspfRouteDetail(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "16051 " "(S=0)",
+                                "address-prefix": "16051 (S=0)",
                                 "interface-cost": "100",
                                 "next-hop-type": "Mpls",
                                 "ospf-backup-next-hop": {
                                     "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "MPLS",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
@@ -13030,7 +13030,7 @@ class TestShowOspfRouteDetail(unittest.TestCase):
                                 "ospf-backup-next-hop": {
                                     "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "MPLS",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
@@ -13069,7 +13069,7 @@ class TestShowOspfRouteDetail(unittest.TestCase):
                                 "ospf-backup-next-hop": {
                                     "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "MPLS",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
@@ -13085,13 +13085,13 @@ class TestShowOspfRouteDetail(unittest.TestCase):
                     {
                         "ospf-route-entry": [
                             {
-                                "address-prefix": "16073 " "(S=0)",
+                                "address-prefix": "16073 (S=0)",
                                 "interface-cost": "1001",
                                 "next-hop-type": "Mpls",
                                 "ospf-backup-next-hop": {
                                     "ospf-backup-next-hop-address": "10.189.5.94",
                                     "ospf-backup-next-hop-interface": "ge-0/0/0.0",
-                                    "ospf-backup-next-hop-type": "Bkup " "MPLS",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
                                 },
                                 "ospf-next-hop": {
                                     "next-hop-address": {
