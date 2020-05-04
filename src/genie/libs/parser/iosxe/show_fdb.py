@@ -55,12 +55,16 @@ class ShowMacAddressTableSchema(MetaParser):
 class ShowMacAddressTable(ShowMacAddressTableSchema):
     """Parser for show mac address-table"""
 
-    cli_command = 'show mac address-table'
+    cli_command = ['show mac address-table',
+                   'show mac address-table vlan {vlan}']
 
-    def cli(self,output=None):
+    def cli(self, vlan='', output=None):
         if output is None:
             # get output from device
-            out = self.device.execute(self.cli_command)
+            if vlan:
+                out = self.device.execute(self.cli_command[1].format(vlan=vlan))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
