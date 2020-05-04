@@ -852,7 +852,7 @@ class ShowPfeRouteSummarySchema(MetaParser):
     schema = {
         'slot': {
             Any(): {
-                'route-tables': {
+                Any(): {
                     'IPv4': Use(validate_route_table_data),
                     'MPLS': Use(validate_route_table_data),
                     'IPv6': Use(validate_route_table_data),
