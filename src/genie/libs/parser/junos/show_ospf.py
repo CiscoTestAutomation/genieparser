@@ -3347,7 +3347,7 @@ class ShowOspfRouteDetail(ShowOspfRouteBrief):
 
     def cli(self, output=None):
         if not output:
-            out = self.device.execute(self.cli_command[0])
+            out = self.device.execute(self.cli_command)
         else:
             out = output
 
