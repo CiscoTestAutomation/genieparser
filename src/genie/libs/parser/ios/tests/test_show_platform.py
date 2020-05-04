@@ -1880,10 +1880,10 @@ class test_show_bootvar(unittest.TestCase):
 
     golden_parsed_output_iosv = {
         "active": {
-            "boot_variable": "disk0:s72033-adventerprisek9-mz.122-33.SRE0a-ssr-nxos-76k-1,12",
+            "boot_variable": "disk0:s72033-adventerprisek9-mz.122-33.SRE0a-ssr-nxos-76k-1,12;",
             "configuration_register": "0x2012"
         },
-        "next_reload_boot_variable": "disk0:s72033-adventerprisek9-mz.122-33.SRE0a-ssr-nxos-76k-1,12"
+        "next_reload_boot_variable": "disk0:s72033-adventerprisek9-mz.122-33.SRE0a-ssr-nxos-76k-1,12;"
     }
 
     golden_output_iosv = {'execute.return_value': '''\
