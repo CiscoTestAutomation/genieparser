@@ -821,3 +821,96 @@ class ShowPfeStatisticsIpIcmp(ShowPfeStatisticsIpIcmpSchema):
                     continue
 
         return ret_dict
+
+class ShowPfeRouteSummarySchema(MetaParser):
+    """ Schema for:
+            * show pfe route summary
+    """
+    def validate_route_table_data(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('validate_route_table_data is not a list')
+        entry_schema = Schema({
+                    'index': str,
+                    'routes': str,
+                    'size': str
+                })
+        # Validate each dictionary in list
+        for item in value:
+            entry_schema.validate(item)
+        return value
+
+    schema = {
+        'slot': {
+            Any(): {
+            'route-tables': {
+                'IPv4': Use(validate_route_table_data),
+                'MPLS': Use(validate_route_table_data),
+                'IPv6': Use(validate_route_table_data),
+                'CLNP': Use(validate_route_table_data),
+                'DHCP-Snooping': Use(validate_route_table_data),
+                }
+            }
+        }
+    }
+
+class ShowPfeRouteSummary(ShowPfeRouteSummarySchema):
+
+    """ Parser for:
+            * show pfe route summary
+    """
+    cli_command = 'show pfe route summary'
+
+    slot = None
+
+    route_tables = None
+
+    def cli(self, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Slot 0
+        p1 = re.compile(r'^Slot +(?P<slot>\S+)$')
+
+        # IPv4 Route Tables:
+        p2 = re.compile(r'^(?P<route_tables>\S+) +Route +Tables:$')
+
+        # Default          944      132156
+        p3 = re.compile(r'^(?P<index>\S+) +(?P<routes>\d+) +(?P<size>\d+)$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Slot 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                self.slot = group['slot']
+                ret_dict.setdefault("slot", {}).setdefault(self.slot, {})
+                continue
+
+            # IPv4 Route Tables:
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                self.route_tables = group['route_tables']
+                ret_dict.setdefault("slot", {}).setdefault(self.slot, {}).setdefault("route-tables", {}).setdefault(self.route_tables, [])
+
+            # Default          944      132156
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                entry_list = ret_dict.setdefault("slot", {}).setdefault(self.slot, {}).setdefault("route-tables", {}).setdefault(self.route_tables, [])
+                entry = {}
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+                entry_list.append(entry)
+
+        import pprint
+        pprint.pprint(ret_dict)
+        return ret_dict
