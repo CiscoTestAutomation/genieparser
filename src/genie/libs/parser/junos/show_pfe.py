@@ -11,8 +11,9 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import (Any,
-        Optional, Use, SchemaTypeError, Schema)
+from genie.metaparser.util.schemaengine import (Any, Optional, Use,
+                                                SchemaTypeError, Schema)
+
 
 class ShowPfeStatisticsTrafficSchema(MetaParser):
     """ Schema for:
@@ -20,63 +21,64 @@ class ShowPfeStatisticsTrafficSchema(MetaParser):
     """
 
     schema = {
-    "pfe-statistics": {
-        "pfe-chip-statistics": {
-            "input-checksum": str,
-            "output-mtu": str
-        },
-        "pfe-hardware-discard-statistics": {
-            "bad-route-discard": str,
-            "bits-to-test-discard": str,
-            "data-error-discard": str,
-            "fabric-discard": str,
-            "info-cell-discard": str,
-            "invalid-iif-discard": str,
-            "nexthop-discard": str,
-            "stack-overflow-discard": str,
-            "stack-underflow-discard": str,
-            "tcp-header-error-discard": str,
-            "timeout-discard": str,
-            "truncated-key-discard": str
-        },
-        "pfe-local-protocol-statistics": {
-            "arp-count": str,
-            "atm-oam-count": str,
-            "bfd-count": str,
-            "ether-oam-count": str,
-            "fr-lmi-count": str,
-            "hdlc-keepalive-count": str,
-            "isis-iih-count": str,
-            "lacp-count": str,
-            "ldp-hello-count": str,
-            "ospf-hello-count": str,
-            "ospf3-hello-count": str,
-            "ppp-lcp-ncp-count": str,
-            "rsvp-hello-count": str,
-            "unknown-count": str
-        },
-        "pfe-local-traffic-statistics": {
-            "hardware-input-drops": str,
-            "pfe-input-packets": str,
-            "pfe-output-packets": str,
-            "software-input-control-drops": str,
-            "software-input-high-drops": str,
-            "software-input-low-drops": str,
-            "software-input-medium-drops": str,
-            "software-output-low-drops": str
-        },
-        "pfe-traffic-statistics": {
-            "input-pps": str,
-            "output-pps": str,
-            "pfe-fabric-input": str,
-            "pfe-fabric-input-pps": str,
-            "pfe-fabric-output": str,
-            "pfe-fabric-output-pps": str,
-            "pfe-input-packets": str,
-            "pfe-output-packets": str
+        "pfe-statistics": {
+            "pfe-chip-statistics": {
+                "input-checksum": str,
+                "output-mtu": str
+            },
+            "pfe-hardware-discard-statistics": {
+                "bad-route-discard": str,
+                "bits-to-test-discard": str,
+                "data-error-discard": str,
+                "fabric-discard": str,
+                "info-cell-discard": str,
+                "invalid-iif-discard": str,
+                "nexthop-discard": str,
+                "stack-overflow-discard": str,
+                "stack-underflow-discard": str,
+                "tcp-header-error-discard": str,
+                "timeout-discard": str,
+                "truncated-key-discard": str
+            },
+            "pfe-local-protocol-statistics": {
+                "arp-count": str,
+                "atm-oam-count": str,
+                "bfd-count": str,
+                "ether-oam-count": str,
+                "fr-lmi-count": str,
+                "hdlc-keepalive-count": str,
+                "isis-iih-count": str,
+                "lacp-count": str,
+                "ldp-hello-count": str,
+                "ospf-hello-count": str,
+                "ospf3-hello-count": str,
+                "ppp-lcp-ncp-count": str,
+                "rsvp-hello-count": str,
+                "unknown-count": str
+            },
+            "pfe-local-traffic-statistics": {
+                "hardware-input-drops": str,
+                "pfe-input-packets": str,
+                "pfe-output-packets": str,
+                "software-input-control-drops": str,
+                "software-input-high-drops": str,
+                "software-input-low-drops": str,
+                "software-input-medium-drops": str,
+                "software-output-low-drops": str
+            },
+            "pfe-traffic-statistics": {
+                "input-pps": str,
+                "output-pps": str,
+                "pfe-fabric-input": str,
+                "pfe-fabric-input-pps": str,
+                "pfe-fabric-output": str,
+                "pfe-fabric-output-pps": str,
+                "pfe-input-packets": str,
+                "pfe-output-packets": str
+            }
         }
     }
-}
+
 
 class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
     """ Parser for:
@@ -94,52 +96,55 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
 
         # Input  packets:            763584752                   14 pps
         p1 = re.compile(r'^Input +packets: +(?P<pfe_input_packets>\d+)'
-            r' +(?P<input_pps>\d+) +pps$')
+                        r' +(?P<input_pps>\d+) +pps$')
 
         # Output packets:            728623201                   16 pps
         p2 = re.compile(r'^Output +packets: +(?P<pfe_output_packets>\d+)'
-            r' +(?P<output_pps>\d+) +pps$')
+                        r' +(?P<output_pps>\d+) +pps$')
 
         #    Fabric Input  :                    0                    0 pps
         p3 = re.compile(r'^Fabric +Input +: +(?P<pfe_fabric_input>\d+)'
-            r' +(?P<pfe_fabric_input_pps>\d+) +pps$')
+                        r' +(?P<pfe_fabric_input_pps>\d+) +pps$')
 
         #    Fabric Output :                    0                    0 pps
         p4 = re.compile(r'^Fabric +Output +: +(?P<pfe_fabric_output>\d+)'
-            r' +(?P<pfe_fabric_output_pps>\d+) +pps$')
+                        r' +(?P<pfe_fabric_output_pps>\d+) +pps$')
 
         # Local packets input                 :            184259247
-        p5 = re.compile(r'^Local +packets +input +: +(?P<pfe_input_packets>\d+)$')
+        p5 = re.compile(
+            r'^Local +packets +input +: +(?P<pfe_input_packets>\d+)$')
 
         # Local packets output                :            370506284
-        p6 = re.compile(r'^Local +packets +output +: +(?P<pfe_output_packets>\d+)$')
+        p6 = re.compile(
+            r'^Local +packets +output +: +(?P<pfe_output_packets>\d+)$')
 
         # Software input control plane drops  :                    0
         p7 = re.compile(r'^Software +input +control +plane +drops +:'
-            r' +(?P<software_input_control_drops>\d+)$')
+                        r' +(?P<software_input_control_drops>\d+)$')
 
         # Software input high drops           :                    0
         p8 = re.compile(r'^Software +input +high +drops +:'
-            r' +(?P<software_input_high_drops>\d+)$')
+                        r' +(?P<software_input_high_drops>\d+)$')
 
         # Software input medium drops         :                    0
         p9 = re.compile(r'^Software +input +medium +drops +:'
-            r' +(?P<software_input_medium_drops>\d+)$')
+                        r' +(?P<software_input_medium_drops>\d+)$')
 
         # Software input low drops            :                    0
         p10 = re.compile(r'^Software +input +low +drops +:'
-            r' +(?P<software_input_low_drops>\d+)$')
+                         r' +(?P<software_input_low_drops>\d+)$')
 
         # Software output drops               :                    0
         p11 = re.compile(r'^Software +output +drops +:'
-            r' +(?P<software_output_low_drops>\d+)$')
+                         r' +(?P<software_output_low_drops>\d+)$')
 
         # Hardware input drops                :                    0
         p12 = re.compile(r'^Hardware +input +drops +:'
-            r' +(?P<hardware_input_drops>\d+)$')
+                         r' +(?P<hardware_input_drops>\d+)$')
 
         # HDLC keepalives            :                    0
-        p13 = re.compile(r'^HDLC +keepalives +: +(?P<hdlc_keepalive_count>\d+)$')
+        p13 = re.compile(
+            r'^HDLC +keepalives +: +(?P<hdlc_keepalive_count>\d+)$')
 
         # ATM OAM                    :                    0
         p14 = re.compile(r'^ATM +OAM +: +(?P<atm_oam_count>\d+)$')
@@ -184,7 +189,8 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
         p27 = re.compile(r'^Timeout +: +(?P<timeout_discard>\d+)$')
 
         # Truncated key              :                    0
-        p28 = re.compile(r'^Truncated +key +: +(?P<truncated_key_discard>\d+)$')
+        p28 = re.compile(
+            r'^Truncated +key +: +(?P<truncated_key_discard>\d+)$')
 
         # Bits to test               :                    0
         p29 = re.compile(r'^Bits +to +test +: +(?P<bits_to_test_discard>\d+)$')
@@ -193,13 +199,17 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
         p30 = re.compile(r'^Data +error +: +(?P<data_error_discard>\d+)$')
 
         # TCP header length error    :                    0
-        p31 = re.compile(r'^TCP +header +length +error +: +(?P<tcp_header_error_discard>\d+)$')
+        p31 = re.compile(
+            r'^TCP +header +length +error +: +(?P<tcp_header_error_discard>\d+)$'
+        )
 
         # Stack underflow            :                    0
-        p32 = re.compile(r'^Stack +underflow +: +(?P<stack_underflow_discard>\d+)$')
+        p32 = re.compile(
+            r'^Stack +underflow +: +(?P<stack_underflow_discard>\d+)$')
 
         # Stack overflow             :                    0
-        p33 = re.compile(r'^Stack +overflow +: +(?P<stack_overflow_discard>\d+)$')
+        p33 = re.compile(
+            r'^Stack +overflow +: +(?P<stack_overflow_discard>\d+)$')
 
         # Normal discard             :               962415
         p34 = re.compile(r'^Normal +discard +: +(?P<bad_route_discard>\d+)$')
@@ -208,7 +218,8 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
         p35 = re.compile(r'^Extended +discard +: +(?P<nexthop_discard>\d+)$')
 
         # Invalid interface          :                    0
-        p36 = re.compile(r'^Invalid +interface +: +(?P<invalid_iif_discard>\d+)$')
+        p36 = re.compile(
+            r'^Invalid +interface +: +(?P<invalid_iif_discard>\d+)$')
 
         # Info cell drops            :                    0
         p37 = re.compile(r'^Info +cell +drops +: +(?P<info_cell_discard>\d+)$')
@@ -232,7 +243,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-traffic-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -243,7 +254,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-traffic-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -254,7 +265,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-traffic-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -265,7 +276,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-traffic-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -276,7 +287,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-traffic-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -287,7 +298,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-traffic-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -298,7 +309,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-traffic-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -309,7 +320,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-traffic-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -320,7 +331,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-traffic-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -331,7 +342,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-traffic-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -342,7 +353,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-traffic-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -353,7 +364,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-traffic-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -364,7 +375,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-protocol-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -375,7 +386,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-protocol-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -386,7 +397,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-protocol-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -397,7 +408,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-protocol-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -408,7 +419,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-protocol-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -419,7 +430,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-protocol-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -430,7 +441,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-protocol-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -441,7 +452,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-protocol-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -452,7 +463,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-protocol-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -463,7 +474,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-protocol-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -474,7 +485,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-protocol-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -485,7 +496,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-protocol-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -496,7 +507,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-protocol-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -507,7 +518,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-local-protocol-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -518,7 +529,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-hardware-discard-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -529,7 +540,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-hardware-discard-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -540,7 +551,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-hardware-discard-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -551,7 +562,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-hardware-discard-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -562,7 +573,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-hardware-discard-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -573,7 +584,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-hardware-discard-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -584,7 +595,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-hardware-discard-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -595,7 +606,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-hardware-discard-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -606,7 +617,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-hardware-discard-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -617,7 +628,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-hardware-discard-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -628,7 +639,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-hardware-discard-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -639,7 +650,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-hardware-discard-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -650,7 +661,7 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-chip-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
@@ -661,11 +672,12 @@ class ShowPfeStatisticsTraffic(ShowPfeStatisticsTrafficSchema):
                     .setdefault('pfe-chip-statistics', {})
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 continue
 
         return ret_dict
+
 
 class ShowPfeStatisticsIpIcmpSchema(MetaParser):
     """ Schema for:
@@ -702,6 +714,7 @@ class ShowPfeStatisticsIpIcmpSchema(MetaParser):
             },
         }
     }
+
 
 class ShowPfeStatisticsIpIcmp(ShowPfeStatisticsIpIcmpSchema):
     """ Parser for:
@@ -756,7 +769,7 @@ class ShowPfeStatisticsIpIcmp(ShowPfeStatisticsIpIcmpSchema):
                     group = m.groupdict()
                     value = group['value']
                     key = group['key']
-                    key = key.replace(' ','_')
+                    key = key.replace(' ', '_')
 
                     if key in schemaMap:
                         schemaKey = schemaMap[key]
@@ -785,7 +798,7 @@ class ShowPfeStatisticsIpIcmp(ShowPfeStatisticsIpIcmpSchema):
                     group = m.groupdict()
                     value = group['value']
                     key = group['key']
-                    key = key.replace(' ','_')
+                    key = key.replace(' ', '_')
 
                     if key in schemaMap:
                         schemaKey = schemaMap[key]
@@ -811,7 +824,7 @@ class ShowPfeStatisticsIpIcmp(ShowPfeStatisticsIpIcmpSchema):
                     group = m.groupdict()
                     value = group['value']
                     key = group['key']
-                    key = key.replace(' ','_')
+                    key = key.replace(' ', '_')
 
                     if key in schemaMap:
                         schemaKey = schemaMap[key]
@@ -822,6 +835,7 @@ class ShowPfeStatisticsIpIcmp(ShowPfeStatisticsIpIcmpSchema):
 
         return ret_dict
 
+
 class ShowPfeRouteSummarySchema(MetaParser):
     """ Schema for:
             * show pfe route summary
@@ -829,11 +843,7 @@ class ShowPfeRouteSummarySchema(MetaParser):
     def validate_route_table_data(value):
         if not isinstance(value, list):
             raise SchemaTypeError('validate_route_table_data is not a list')
-        entry_schema = Schema({
-                    'index': str,
-                    'routes': str,
-                    'size': str
-                })
+        entry_schema = Schema({'index': str, 'routes': str, 'size': str})
         # Validate each dictionary in list
         for item in value:
             entry_schema.validate(item)
@@ -842,19 +852,19 @@ class ShowPfeRouteSummarySchema(MetaParser):
     schema = {
         'slot': {
             Any(): {
-            'route-tables': {
-                'IPv4': Use(validate_route_table_data),
-                'MPLS': Use(validate_route_table_data),
-                'IPv6': Use(validate_route_table_data),
-                'CLNP': Use(validate_route_table_data),
-                'DHCP-Snooping': Use(validate_route_table_data),
+                'route-tables': {
+                    'IPv4': Use(validate_route_table_data),
+                    'MPLS': Use(validate_route_table_data),
+                    'IPv6': Use(validate_route_table_data),
+                    'CLNP': Use(validate_route_table_data),
+                    'DHCP-Snooping': Use(validate_route_table_data),
                 }
             }
         }
     }
 
-class ShowPfeRouteSummary(ShowPfeRouteSummarySchema):
 
+class ShowPfeRouteSummary(ShowPfeRouteSummarySchema):
     """ Parser for:
             * show pfe route summary
     """
@@ -898,16 +908,22 @@ class ShowPfeRouteSummary(ShowPfeRouteSummarySchema):
             if m:
                 group = m.groupdict()
                 self.route_tables = group['route_tables']
-                ret_dict.setdefault("slot", {}).setdefault(self.slot, {}).setdefault("route-tables", {}).setdefault(self.route_tables, [])
+                ret_dict.setdefault("slot",
+                                    {}).setdefault(self.slot, {}).setdefault(
+                                        "route-tables",
+                                        {}).setdefault(self.route_tables, [])
 
             # Default          944      132156
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                entry_list = ret_dict.setdefault("slot", {}).setdefault(self.slot, {}).setdefault("route-tables", {}).setdefault(self.route_tables, [])
+                entry_list = ret_dict.setdefault("slot", {}).setdefault(
+                    self.slot,
+                    {}).setdefault("route-tables",
+                                   {}).setdefault(self.route_tables, [])
                 entry = {}
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_','-')
+                    entry_key = group_key.replace('_', '-')
                     entry[entry_key] = group_value
                 entry_list.append(entry)
 
