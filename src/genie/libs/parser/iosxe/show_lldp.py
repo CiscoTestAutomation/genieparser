@@ -178,7 +178,8 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         p1_1 = re.compile(r'^Port\s+id:\s+(?P<port_id>[\S\s]+)$')
 
         # Chassis id:  843d.c6ff.f1b8
-        p2 = re.compile(r'^Chassis\s+id:\s+(?P<chassis_id>[\w\.:]+)$')
+        # Chassis id: r2-rf2222-qwe
+        p2 = re.compile(r'^Chassis\s+id:\s+(?P<chassis_id>[\w\.\:\-]+)$')
 
         # Port Description: GigabitEthernet1/0/4
         p3 = re.compile(r'^Port\s+Description:\s+(?P<desc>[\w\/\.\-\s]+)$')
