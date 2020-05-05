@@ -33,7 +33,8 @@
     * Fixed ShowBootvar to support more outputs
     * Removed duplicate ShowBoot parser & fixed existing ShowBoot parser
     * Fixed ShowDmvpn not executing the command properly on device
-
+    * Update ShowIpRoute:
+        * Fixed regex for VRF name, now supports the '-' character in name.
 * NXOS
     * Updated ShowIpStaticRouteMulticast:
         * Change key 'address_family' into Optional
@@ -50,3 +51,4 @@
 * JUNOS
     * Updated ShowRoute:
         * Update regex to support various outputs.
+

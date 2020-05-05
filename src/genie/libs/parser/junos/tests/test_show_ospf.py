@@ -691,7 +691,6 @@ class TestShowOspfNeighbor(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-
 class TestShowOspfDatabase(unittest.TestCase):
     """ Unit tests for:
             * show ospf database
