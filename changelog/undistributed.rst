@@ -17,6 +17,14 @@
     * Added ShowPfeRouteSummary for:
         * show pfe route summary
 
+* IOSXE
+    * Updated ShowMacAddressTable for new commnad:
+        * show mac address-table vlan {vlan}
+
+* IOS
+    * Updated ShowMacAddressTable for new commnad:
+        * show mac address-table vlan {vlan}
+
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
@@ -29,6 +37,12 @@
 * NXOS
     * Updated ShowIpStaticRouteMulticast:
         * Change key 'address_family' into Optional
+    * Updated ShowRunInterface:
+        * Add regex to support various sample outputs
+
+* IOSXR
+    * Updated ShowBgpSessions:
+        * Added regex to support various outputs
 
 * LINUX
     * Fixed Ifconfig parser issues.
