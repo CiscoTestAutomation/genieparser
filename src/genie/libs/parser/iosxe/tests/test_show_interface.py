@@ -327,7 +327,6 @@ class TestShowInterfacesSwitchport(unittest.TestCase):
          }
     }
 
-
     golden_output = {'execute.return_value': '''
         Name: Gi1/0/2
         Switchport: Enabled
@@ -448,6 +447,10 @@ class TestShowInterfacesSwitchport(unittest.TestCase):
         Unknown unicast blocked: disabled
         Unknown multicast blocked: disabled
         Appliance trust: none
+    '''}
+
+    golden_output_2 = {'execute.return_value': '''
+    
     '''}
 
     def test_golden(self):
