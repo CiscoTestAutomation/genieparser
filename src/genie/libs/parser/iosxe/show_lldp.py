@@ -459,8 +459,6 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             m = med_p4.match(line)
             if m:
                 list_capabilities = m.groupdict()['capabilities'].split(', ')
-                # Capabilities can be empty -> remove empty strings
-                list_capabilities = [x for x in list_capabilities if x]
                 med_dict['capabilities'] = list_capabilities
                 continue
 
