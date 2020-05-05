@@ -14,8 +14,10 @@ from genie.metaparser.util.exceptions import (
 # Parser
 from genie.libs.parser.junos.show_pfe import (
     ShowPfeStatisticsTraffic,
+    ShowPfeRouteSummary,
     ShowPfeStatisticsIpIcmp,
 )
+
 
 # =========================================================
 # Unit test for show pfe statistics traffic
@@ -28,7 +30,10 @@ class test_show_pfe_statistics_traffic(unittest.TestCase):
 
     golden_parsed_output_1 = {
         "pfe-statistics": {
-            "pfe-chip-statistics": {"input-checksum": "0", "output-mtu": "0"},
+            "pfe-chip-statistics": {
+                "input-checksum": "0",
+                "output-mtu": "0"
+            },
             "pfe-hardware-discard-statistics": {
                 "bad-route-discard": "962415",
                 "bits-to-test-discard": "0",
@@ -83,7 +88,8 @@ class test_show_pfe_statistics_traffic(unittest.TestCase):
     }
 
     golden_output_1 = {
-        "execute.return_value": """
+        "execute.return_value":
+        """
                 show pfe statistics traffic
         Packet Forwarding Engine traffic statistics:
             Input  packets:            763584752                   14 pps
@@ -188,7 +194,8 @@ class TestShowPfeStatisticsIpIcmp(unittest.TestCase):
     }
 
     golden_output_1 = {
-        "execute.return_value": """
+        "execute.return_value":
+        """
                 show pfe statistics ip icmp
             ICMP Statistics:
                 246259 requests
@@ -228,6 +235,165 @@ class TestShowPfeStatisticsIpIcmp(unittest.TestCase):
     def test_golden_1(self):
         self.device = Mock(**self.golden_output_1)
         obj = ShowPfeStatisticsIpIcmp(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+
+# =========================================================
+# Unit test for show pfe route summary
+# =========================================================
+class TestShowPfeRouteSummary(unittest.TestCase):
+
+    device = Device(name="aDevice")
+    empty_output = {"execute.return_value": ""}
+    maxDiff = None
+
+    golden_parsed_output_1 = {
+        "slot": {
+            "0": {
+                "route-tables": {
+                    "CLNP": [
+                        {
+                            "index": "Default",
+                            "routes": "1",
+                            "size": "136"
+                        },
+                        {
+                            "index": "5",
+                            "routes": "1",
+                            "size": "136"
+                        },
+                    ],
+                    "DHCP-Snooping": [{
+                        "index": "Default",
+                        "routes": "1",
+                        "size": "136"
+                    }],
+                    "IPv4": [
+                        {
+                            "index": "Default",
+                            "routes": "944",
+                            "size": "132156"
+                        },
+                        {
+                            "index": "1",
+                            "routes": "9",
+                            "size": "1256"
+                        },
+                        {
+                            "index": "2",
+                            "routes": "8",
+                            "size": "1116"
+                        },
+                        {
+                            "index": "3",
+                            "routes": "5",
+                            "size": "696"
+                        },
+                        {
+                            "index": "4",
+                            "routes": "9",
+                            "size": "1256"
+                        },
+                        {
+                            "index": "5",
+                            "routes": "5",
+                            "size": "696"
+                        },
+                        {
+                            "index": "36736",
+                            "routes": "5",
+                            "size": "696"
+                        },
+                    ],
+                    "IPv6": [
+                        {
+                            "index": "Default",
+                            "routes": "39",
+                            "size": "5824"
+                        },
+                        {
+                            "index": "1",
+                            "routes": "6",
+                            "size": "872"
+                        },
+                        {
+                            "index": "5",
+                            "routes": "6",
+                            "size": "872"
+                        },
+                    ],
+                    "MPLS": [
+                        {
+                            "index": "Default",
+                            "routes": "45",
+                            "size": "6296"
+                        },
+                        {
+                            "index": "6",
+                            "routes": "1",
+                            "size": "136"
+                        },
+                    ],
+                }
+            }
+        }
+    }
+
+    golden_output_1 = {
+        "execute.return_value":
+        """
+            show pfe route summary
+
+            Slot 0
+
+
+            IPv4 Route Tables:
+            Index         Routes     Size(b)
+            --------  ----------  ----------
+            Default          944      132156
+            1                  9        1256
+            2                  8        1116
+            3                  5         696
+            4                  9        1256
+            5                  5         696
+            36736              5         696
+
+            MPLS Route Tables:
+            Index         Routes     Size(b)
+            --------  ----------  ----------
+            Default           45        6296
+            6                  1         136
+
+            IPv6 Route Tables:
+            Index         Routes     Size(b)
+            --------  ----------  ----------
+            Default           39        5824
+            1                  6         872
+            5                  6         872
+
+            CLNP Route Tables:
+            Index         Routes     Size(b)
+            --------  ----------  ----------
+            Default            1         136
+            5                  1         136
+
+            DHCP-Snooping Route Tables:
+            Index         Routes     Size(b)
+            --------  ----------  ----------
+            Default            1         136
+    """
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowPfeRouteSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowPfeRouteSummary(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
