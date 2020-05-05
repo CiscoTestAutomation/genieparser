@@ -29934,6 +29934,33 @@ class TestShowBgpSessions(unittest.TestCase):
             }
         }
     }
+
+    golden_output_2 = {'execute.return_value': '''
+    2001:db8:4401:4453::6f9
+    default 0 65000 0 0 Established NSR Ready
+    '''}
+
+    golden_parsed_output_2 = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'default': {
+                        'neighbors': {
+                            '2001:db8:4401:4453::6f9': {
+                                'nbr_state': 'Established',
+                                'as_number': 65000,
+                                'nsr_state': 'NSR Ready',
+                                'spk': 0,
+                                'out_q': 0,
+                                'in_q': 0,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
     def test_empty(self):
 	    self.dev = Mock(**self.empty_output)
 	    obj = ShowBgpSessions(device=self.dev)
@@ -29951,6 +29978,12 @@ class TestShowBgpSessions(unittest.TestCase):
         obj = ShowBgpSessions(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.dev = Mock(**self.golden_output_2)
+        obj = ShowBgpSessions(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 # ===============================================

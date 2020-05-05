@@ -10,7 +10,9 @@ from genie.libs.parser.iosxe.show_fdb import ShowMacAddressTable, \
                                   ShowMacAddressTableLearning
 
 
-class test_show_mac_address_table(unittest.TestCase):
+class TestShowMacAddressTable(unittest.TestCase):
+
+    maxDiff = None
     dev1 = Device(name='empty')
     dev_c3850 = Device(name='c3850')
     empty_output = {'execute.return_value': '      '}
@@ -164,8 +166,111 @@ class test_show_mac_address_table(unittest.TestCase):
          * 10    aaaa.bbff.8888    STATIC      Gi1/0/8 Gi1/0/9
                                               Vl101
         Total Mac Addresses for this criterion: 10
-    '''
+    '''}
+
+    golden_parsed_output1 = {
+        'mac_table': {
+            'vlans': {
+                '101': {
+                    'mac_addresses': {
+                        '701f.534d.0095': {
+                            'interfaces': {
+                                'GigabitEthernet2/0/30': {
+                                    'entry_type': 'static',
+                                    'interface': 'GigabitEthernet2/0/30',
+                                },
+                            },
+                            'mac_address': '701f.534d.0095',
+                        },
+                        'cc5a.5306.a6c1': {
+                            'interfaces': {
+                                'Vlan101': {
+                                    'entry_type': 'static',
+                                    'interface': 'Vlan101',
+                                },
+                            },
+                            'mac_address': 'cc5a.5306.a6c1',
+                        },
+                        'cc98.9154.776e': {
+                            'interfaces': {
+                                'GigabitEthernet1/0/32': {
+                                    'entry_type': 'dynamic',
+                                    'interface': 'GigabitEthernet1/0/32',
+                                },
+                            },
+                            'mac_address': 'cc98.9154.776e',
+                        },
+                        'cc98.9154.94fa': {
+                            'interfaces': {
+                                'GigabitEthernet1/0/31': {
+                                    'entry_type': 'dynamic',
+                                    'interface': 'GigabitEthernet1/0/31',
+                                },
+                            },
+                            'mac_address': 'cc98.9154.94fa',
+                        },
+                        'cc98.9154.952a': {
+                            'interfaces': {
+                                'GigabitEthernet1/0/28': {
+                                    'entry_type': 'dynamic',
+                                    'interface': 'GigabitEthernet1/0/28',
+                                },
+                            },
+                            'mac_address': 'cc98.9154.952a',
+                        },
+                        'cc98.9154.b464': {
+                            'interfaces': {
+                                'GigabitEthernet1/0/34': {
+                                    'entry_type': 'dynamic',
+                                    'interface': 'GigabitEthernet1/0/34',
+                                },
+                            },
+                            'mac_address': 'cc98.9154.b464',
+                        },
+                        'cc98.9154.b770': {
+                            'interfaces': {
+                                'GigabitEthernet1/0/33': {
+                                    'entry_type': 'dynamic',
+                                    'interface': 'GigabitEthernet1/0/33',
+                                },
+                            },
+                            'mac_address': 'cc98.9154.b770',
+                        },
+                        'cc98.9154.b840': {
+                            'interfaces': {
+                                'GigabitEthernet1/0/29': {
+                                    'entry_type': 'dynamic',
+                                    'interface': 'GigabitEthernet1/0/29',
+                                },
+                            },
+                            'mac_address': 'cc98.9154.b840',
+                        },
+                    },
+                    'vlan': 101,
+                },
+            },
+        },
+        'total_mac_addresses': 8,
     }
+
+    golden_output1 = {'execute.return_value': '''\
+        show mac address-table vlan 101
+
+                    Mac Address Table
+        -------------------------------------------
+
+        Vlan    Mac Address       Type        Ports
+        ----    -----------       --------    -----
+        101    701f.534d.0095    STATIC      Gi2/0/30 
+        101    cc5a.5306.a6c1    STATIC      Vl101 
+        101    cc98.9154.776e    DYNAMIC     Gi1/0/32
+        101    cc98.9154.94fa    DYNAMIC     Gi1/0/31
+        101    cc98.9154.952a    DYNAMIC     Gi1/0/28
+        101    cc98.9154.b464    DYNAMIC     Gi1/0/34
+        101    cc98.9154.b770    DYNAMIC     Gi1/0/33
+        101    cc98.9154.b840    DYNAMIC     Gi1/0/29
+        Total Mac Addresses for this criterion: 8
+    '''}
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -174,14 +279,19 @@ class test_show_mac_address_table(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden(self):
-        self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output)
         obj = ShowMacAddressTable(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
+    def test_golden1(self):
+        self.dev_c3850 = Mock(**self.golden_output1)
+        obj = ShowMacAddressTable(device=self.dev_c3850)
+        parsed_output = obj.parse(vlan='101')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-class test_show_mac_address_table_2(unittest.TestCase):
+
+class TestShowMacAddressTable2(unittest.TestCase):
     dev1 = Device(name='empty')
     dev_c3850 = Device(name='c3850')
     empty_output = {'execute.return_value': '      '}
@@ -434,7 +544,7 @@ class test_show_mac_address_table_2(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
-class test_show_mac_address_table_aging_time(unittest.TestCase):
+class TestShowMacAddressTableAgingTime(unittest.TestCase):
     dev1 = Device(name='empty')
     dev_c3850 = Device(name='c3850')
     empty_output = {'execute.return_value': '      '}
@@ -471,7 +581,7 @@ class test_show_mac_address_table_aging_time(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
-class test_show_mac_address_table_learning(unittest.TestCase):
+class TestShowMacAddressTableLearning(unittest.TestCase):
     dev1 = Device(name='empty')
     dev_c3850 = Device(name='c3850')
     empty_output = {'execute.return_value': '      '}
