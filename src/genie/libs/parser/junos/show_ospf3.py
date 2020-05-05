@@ -8,6 +8,8 @@ Parser for the following show commands:
     * show ospf3 database external extensive
     * show ospf3 overview
     * show ospf3 overview extensive
+    * show ospf3 database network detail
+    * show ospf3 database link advertising-router {ipaddress} detail
 '''
 import re
 
@@ -1907,3 +1909,401 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
 
         return ret_dict
 
+
+
+class ShowOspf3DatabaseNetworkDetailSchema(MetaParser):
+    """ Schema for:
+            * show ospf3 database network detail
+    """
+    """ schema = {
+    Optional("@xmlns:junos"): str,
+    "ospf3-database-information": {
+        Optional("@xmlns"): str,
+        "ospf3-area-header": {
+            "ospf-area": str
+        },
+        "ospf3-database": [
+            {
+                Optional("@heading"): str,
+                "advertising-router": str,
+                "age": str,
+                "checksum": str,
+                "lsa-id": str,
+                "lsa-length": str,
+                "lsa-type": str,
+                "ospf3-network-lsa": {
+                    "attached-router": "list",
+                    "ospf3-lsa-topology": {
+                        "ospf-topology-id": str,
+                        "ospf-topology-name": str,
+                        "ospf3-lsa-topology-link": [
+                            {
+                                "link-type-name": str,
+                                "ospf-lsa-topology-link-metric": str,
+                                "ospf-lsa-topology-link-node-id": str,
+                                "ospf-lsa-topology-link-state": str
+                            }
+                        ]
+                    },
+                    "ospf3-options": str
+                },
+                "our-entry": str,
+                "sequence-number": str
+                }
+            ]
+        }
+    } """
+
+    def validate_ospf_lsa_topology_innerlist(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf3 lsa  is not a list')
+        ospf3_lsa_schema = Schema({
+                "link-type-name": str,
+                "ospf-lsa-topology-link-metric": str,
+                "ospf-lsa-topology-link-node-id": str,
+                "ospf-lsa-topology-link-state": str
+            })
+        for item in value:
+            ospf3_lsa_schema.validate(item)
+        return value
+
+    def validate_ospf3_database_topology_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-database is not a list')
+        ospf3_database_schema = Schema({
+                Optional("@heading"): str,
+                "advertising-router": str,
+                "age": str,
+                "checksum": str,
+                "lsa-id": str,
+                "lsa-length": str,
+                "lsa-type": str,
+                "ospf3-network-lsa": {
+                    "attached-router": list,
+                    "ospf3-lsa-topology": {
+                        Optional("ospf-topology-id"): str,
+                        Optional("ospf-topology-name"): str,
+                        "ospf3-lsa-topology-link": Use(ShowOspf3DatabaseNetworkDetail.validate_ospf_lsa_topology_innerlist)
+                    },
+                    "ospf3-options": str
+                },
+                Optional("our-entry"): str,
+                "sequence-number": str
+            })
+        for item in value:
+            ospf3_database_schema.validate(item)
+        return value
+
+    schema = {
+    Optional("@xmlns:junos"): str,
+    "ospf3-database-information": {
+        Optional("@xmlns"): str,
+        "ospf3-area-header": {
+            "ospf-area": str
+        },
+        "ospf3-database": Use(validate_ospf3_database_topology_list)
+        }
+    }
+
+class ShowOspf3DatabaseNetworkDetail(ShowOspf3DatabaseNetworkDetailSchema):
+    """ Parser for:
+            * show ospf3 database network detail
+    """
+    cli_command = 'show ospf3 database network detail'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # OSPF database, Area 203.181.97.0
+        p1 = re.compile(r'^OSPF3 +database, +Area +(?P<ospf_area>\S+)$')
+
+        # Network    *0.0.0.9          203.181.99.235   0x8000001d   892  0xf99f  36
+        p2 = re.compile(r'^(?P<lsa_type>\S+) *(?P<our_entry>\*)?'
+                        r'(?P<lsa_id>[\d\.]+) +(?P<advertising_router>\S+) '
+                        r'+(?P<sequence_number>\S+) +(?P<age>\S+) '
+                        r'+(?P<checksum>\S+) +(?P<lsa_length>\S+)$')
+
+        # Options 0x33
+        p3 = re.compile(r'^Options +(?P<ospf3_options>\S+)+$')
+
+        # attached router 203.181.99.235
+        p4 = re.compile(r'^Attached router +(?P<attached_router>\S+)$')
+
+        # Type: Transit, Node ID: 203.181.99.236, Metric: 0, Bidirectional
+        p6 = re.compile(r'^Type: +(?P<link_type_name>\S+)+, '
+                        r'+Node +ID: +(?P<ospf_lsa_topology_link_node_id>\S+), '
+                        r'+Metric: +(?P<ospf_lsa_topology_link_metric>\S+)+, '
+                        r'+(?P<ospf_lsa_topology_link_state>\S+)$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF database, Area 203.181.97.0
+            m = p1.match(line)
+            if m:
+                ospf_database_information_entry = ret_dict.setdefault("ospf3-database-information", {})
+                ospf3_database_list = ospf_database_information_entry.setdefault("ospf3-database", [])
+                group = m.groupdict()
+                entry_dict = {}
+                entry_dict["ospf-area"] = group["ospf_area"]
+
+                ospf_database_information_entry["ospf3-area-header"] = entry_dict
+                continue
+
+            # Network *118.155.197.1    203.181.99.235   0x80000026  1730  0x22 0x1b56  36
+            m = p2.match(line)
+            if m:
+                ospf3_database_dict = {}
+                attached_router_list = []
+                ospf3_network_lsa = {}
+                ospf3_lsa_topology = {}
+                ospf3_lsa_topology_link = []
+                ospf3_network_lsa["attached-router"] = attached_router_list
+                ospf3_lsa_topology["ospf3-lsa-topology-link"] = ospf3_lsa_topology_link
+                ospf3_network_lsa["ospf3-lsa-topology"] = ospf3_lsa_topology
+                ospf3_database_dict["ospf3-network-lsa"] = ospf3_network_lsa
+                ospf3_database_list.append(ospf3_database_dict)
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    if(group_key != "our_entry"):
+                        entry_key = group_key.replace('_','-')
+                        ospf3_database_dict[entry_key] = group_value
+                continue
+
+            # Options 0x33
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ospf3_network_lsa["ospf3-options"] = group["ospf3_options"]
+                continue
+
+            # attached router 203.181.99.235
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                attached_router_list.append(group["attached_router"])
+                continue
+
+            # Type: Transit, Node ID: 203.181.99.236, Metric: 0, Bidirectional
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict = {}
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry_dict[entry_key] = group_value
+                ospf3_lsa_topology_link.append(entry_dict)
+                continue
+
+        return ret_dict
+
+
+class ShowOspf3DatabaseLinkAdvertisingRouterSchema(MetaParser):
+    """ Schema for:
+            * show ospf3 database link advertising-router {ipaddress} detail
+    """
+    """ schema = {
+        Optional("@xmlns:junos"): str,
+        "ospf3-database-information": {
+            Optional("@xmlns"): str,
+            "ospf3-database": [
+                {
+                    Optional("@heading"): str,
+                    "advertising-router": str,
+                    "age": str,
+                    "checksum": str,
+                    "lsa-id": str,
+                    "lsa-length": str,
+                    "lsa-type": str,
+                    "ospf3-link-lsa": {
+                        "linklocal-address": str,
+                        "ospf3-options": str,
+                        "ospf3-prefix": str,
+                        "ospf3-prefix-options": str,
+                        "prefix-count": str,
+                        "router-priority": str
+                    },
+                    "our-entry": str,
+                    "sequence-number": str
+                }
+            ],
+            "ospf3-intf-header": [
+                {
+                    "ospf-area": str,
+                    "ospf-intf": str
+                }
+            ]
+        }
+    } """
+
+    def validate_ospf3_intf_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf3 lsa  is not a list')
+        ospf3_intf_schema = Schema({
+                "ospf-area": str,
+                "ospf-intf": str
+            })
+        for item in value:
+            ospf3_intf_schema.validate(item)
+        return value
+
+    def validate_ospf3_database_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-database is not a list')
+        ospf3_database_schema = Schema({
+                Optional("@heading"): str,
+                "advertising-router": str,
+                "age": str,
+                "checksum": str,
+                "lsa-id": str,
+                "lsa-length": str,
+                "lsa-type": str,
+                "ospf3-link-lsa": {
+                    "linklocal-address": str,
+                    "ospf3-options": str,
+                    Optional("ospf3-prefix"): str,
+                    Optional("ospf3-prefix-options"): str,
+                    "prefix-count": str,
+                    "router-priority": str
+                },
+                Optional("our-entry"): str,
+                "sequence-number": str
+            })
+        for item in value:
+            ospf3_database_schema.validate(item)
+        return value
+
+    schema = {
+    Optional("@xmlns:junos"): str,
+    "ospf3-database-information": {
+        Optional("@xmlns"): str,
+        "ospf3-database": Use(validate_ospf3_database_list),
+        "ospf3-intf-header": Use(validate_ospf3_intf_list)
+        }
+    }
+
+class ShowOspf3DatabaseLinkAdvertisingRouter(ShowOspf3DatabaseLinkAdvertisingRouterSchema):
+    """ Parser for:
+            * show ospf3 database link advertising-router {ipaddress} detail
+    """
+    cli_command = 'show ospf3 database link advertising-router {ipaddress} detail'
+
+    def cli(self, ipaddress=None, output=None):
+        if not output:
+            if ipaddress:
+                cmd = self.cli_command.format(
+                    ipaddress=ipaddress)
+            else:
+                cmd = self.cli_command
+
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+        p0 = re.compile(r'^(?P<heading>Type \s+ID[\s\S]+)$')
+
+        # OSPF3 Link-Local database, interface ge-0/0/2.0 Area 0.0.0.0
+        p1 = re.compile(r'^OSPF3 +Link-Local +database, +interface '
+                        r'+(?P<ospf_intf>\S+) +Area +(?P<ospf_area>\S+)$')
+
+        # Link       *0.0.0.9          203.181.99.235   0x80000b10  1379  0xd3b0  56
+        p2 = re.compile(r'^(?P<lsa_type>\S+) *(?P<our_entry>\*)?'
+                        r'(?P<lsa_id>[\d\.]+) +(?P<advertising_router>\S+) '
+                        r'+(?P<sequence_number>\S+) +(?P<age>\S+) '
+                        r'+(?P<checksum>\S+) +(?P<lsa_length>\S+)$')
+
+        # fe80::20c:2900:3367:243d
+        p3 = re.compile(r'^(?P<linklocal_address>fe80+[\s\S]+)$')
+        
+        # Options 0x33, Priority 20
+        p4 = re.compile(r'^Options +(?P<ospf3_options>\S+)+, Priority +(?P<router_priority>\S+)$')
+
+        # Prefix-count 1
+        p5 = re.compile(r'^Prefix-count +(?P<prefix_count>\S+)$')
+
+        # Prefix 2001:268:fb02:1::/64 Prefix-options 0x0
+        p6 = re.compile(r'^Prefix +(?P<ospf3_prefix>\S+) '
+                        r'+Prefix-options +(?P<ospf3_prefix_options>\S+)$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+            # Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+            m = p0.match(line)
+            if m:
+                ospf3_database_dict = {}
+                group = m.groupdict()
+                ospf3_database_dict["@heading"] = group["heading"]
+
+            # OSPF3 Link-Local database, interface ge-0/0/2.0 Area 0.0.0.0
+            m = p1.match(line)
+            if m:
+                ospf_database_information_entry = ret_dict.setdefault("ospf3-database-information", {})
+                ospf3_database_list = ospf_database_information_entry.setdefault("ospf3-database", [])
+                ospf3_intf_header = ospf_database_information_entry.setdefault("ospf3-intf-header", [])
+
+                group = m.groupdict()
+                entry_dict = {}
+                entry_dict["ospf-area"] = group["ospf_area"]
+                entry_dict["ospf-intf"] = group["ospf_intf"]
+                ospf3_intf_header.append(entry_dict)
+                continue
+
+            # Link       *0.0.0.9          203.181.99.235   0x80000b10  1379  0xd3b0  56
+            m = p2.match(line)
+            if m:
+                
+                ospf3_link_lsa = {}
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    if(group_key != "our_entry"):
+                        entry_key = group_key.replace('_','-')
+                        ospf3_database_dict[entry_key] = group_value
+                ospf3_database_list.append(ospf3_database_dict)
+                continue
+
+            # fe80::20c:2900:3367:243d
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    ospf3_link_lsa[entry_key] = group_value
+                continue
+
+            # Options 0x33, Priority 20
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    ospf3_link_lsa[entry_key] = group_value
+                continue
+
+            # Prefix-count 1
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    ospf3_link_lsa[entry_key] = group_value
+                ospf3_database_dict["ospf3-link-lsa"] = ospf3_link_lsa
+                continue
+
+            # Prefix 2001:268:fb02:1::/64 Prefix-options 0x0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    ospf3_link_lsa[entry_key] = group_value
+                continue
+
+        return ret_dict
