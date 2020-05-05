@@ -118,7 +118,7 @@ class ShowLldpEntrySchema(MetaParser):
             }
         },
         Optional('med_information'): {
-            'f/w_revision': str,
+            Optional('f/w_revision'): str,
             Optional('h/w_revision'): str,
             Optional('s/w_revision'): str,
             'manufacturer': str,
@@ -134,9 +134,9 @@ class ShowLldpEntrySchema(MetaParser):
                 },
             },
             Optional('serial_number'): str,
-            'power_source': str,
-            'power_priority': str,
-            'wattage': float,
+            Optional('power_source'): str,
+            Optional('power_priority'): str,
+            Optional('wattage'): float,
             'location': str,
         }
     }
