@@ -751,12 +751,16 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Hold-times     : Up 2000 ms, Down 0 ms
         p39 = re.compile(r'^Hold-times +: +Up +\d+ +ms, +Down +\d+ +ms$')
 
+        # Damping        : half-life: 0 sec, max-suppress: 0 sec, reuse: 0, suppress: 0, state: unsuppressed
         p40 = re.compile(r'^Damping +: +half-life: +\d+ +sec, +max-suppress: +\d+ +sec, +reuse: +\d+, +suppress: +\d+, +state: +\S+$')
 
+        # Input errors:
         p41 = re.compile(r'^Input +errors:$')
 
+        # Output errors:
         p42 = re.compile(r'^Output +errors:$')
 
+        # 
         p43 = re.compile(r'^L2 +mismatch +timeouts: +\d+, +FIFO +errors: +\d+, Resource +errors: +\d+$')
 
         p44 = re.compile(r'^MTU +errors: +\d+, +Resource +errors: +\d+$')
