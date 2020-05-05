@@ -25,7 +25,24 @@ from genie.libs.parser.junos.show_ospf import (ShowOspfInterface,
                                                ShowOspfInterfaceExtensive,
                                                ShowOspfNeighborDetail,
                                                ShowOspfDatabaseNetworkLsaidDetail,
-                                               ShowOspfDatabaseLsaidDetail)
+                                               ShowOspfDatabaseLsaidDetail,
+                                               ShowOspfInterface,
+                                               ShowOspfInterfaceBrief,
+                                               ShowOspfInterfaceDetail,
+                                               ShowOspfNeighbor,
+                                               ShowOspfDatabase,
+                                               ShowOspfDatabaseSummary,
+                                               ShowOspfDatabaseExternalExtensive,
+                                               ShowOspfOverview,
+                                               ShowOspfOverviewExtensive,
+                                               ShowOspfDatabaseAdvertisingRouterSelfDetail,
+                                               ShowOspfDatabaseExtensive,
+                                               ShowOspfNeighborExtensive,
+                                               ShowOspfInterfaceExtensive,
+                                               ShowOspfNeighborDetail,
+                                               ShowOspfRouteBrief,
+                                               ShowOspfRouteDetail,
+                                               )
 
 
 class test_show_ospf_interface(unittest.TestCase):
@@ -689,17 +706,19 @@ class TestShowOspfNeighbor(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
 class TestShowOspfDatabase(unittest.TestCase):
     """ Unit tests for:
             * show ospf database
     """
 
-    device = Device(name='aDevice')
+    device = Device(name="aDevice")
     maxDiff = None
 
-    empty_output = {'execute.return_value': ''}
+    empty_output = {"execute.return_value": ""}
 
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        "execute.return_value": """
         show ospf database
 
             OSPF database, Area 0.0.0.8
@@ -818,1149 +837,1147 @@ class TestShowOspfDatabase(unittest.TestCase):
         Extern   10.189.5.253     10.169.14.241   0x8000140f  2566  0x22 0x6d4   36
         Extern   192.168.100.0    10.169.14.240   0x800002da   786  0x22 0xfb51  36
         Extern   192.168.100.252  10.169.14.240   0x800002d9   636  0x22 0x19b8  36
-    '''}
-
-    golden_parsed_output = {"ospf-database-information": {
-        "ospf-area-header": {
-            "ospf-area": "0.0.0.8"
-        },
-        "ospf-database": [
-            {
-                "advertising-router": "10.36.3.3",
-                "age": "61",
-                "checksum": "0xa127",
-                "lsa-id": "10.36.3.3",
-                "lsa-length": "2496",
-                "lsa-type": "Router",
-                "options": "0x22",
-                "sequence-number": "0x80004d2d"
-            },
-            {
-                "advertising-router": "10.100.5.5",
-                "age": "1469",
-                "checksum": "0xa1c",
-                "lsa-id": "10.100.5.5",
-                "lsa-length": "60",
-                "lsa-type": "Router",
-                "options": "0x22",
-                "sequence-number": "0x800019d7"
-            },
-            {
-                "advertising-router": "10.19.198.239",
-                "age": "622",
-                "checksum": "0x95bf",
-                "lsa-id": "10.19.198.239",
-                "lsa-length": "96",
-                "lsa-type": "Router",
-                "options": "0x22",
-                "sequence-number": "0x80000442"
-            },
-            {
-                "advertising-router": "10.34.2.250",
-                "age": "736",
-                "checksum": "0x26f6",
-                "lsa-id": "10.34.2.250",
-                "lsa-length": "144",
-                "lsa-type": "Router",
-                "options": "0x22",
-                "sequence-number": "0x8000205a"
-            },
-            {
-                "advertising-router": "10.34.2.251",
-                "age": "567",
-                "checksum": "0x1022",
-                "lsa-id": "10.34.2.251",
-                "lsa-length": "108",
-                "lsa-type": "Router",
-                "options": "0x22",
-                "sequence-number": "0x80001dde"
-            },
-            {
-                "advertising-router": "10.169.196.241",
-                "age": "35",
-                "checksum": "0x1055",
-                "lsa-id": "10.169.196.241",
-                "lsa-length": "144",
-                "lsa-type": "Router",
-                "options": "0x22",
-                "sequence-number": "0x800004a4"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "2732",
-                "checksum": "0x3a76",
-                "lsa-id": "10.169.14.240",
-                "lsa-length": "144",
-                "lsa-type": "Router",
-                "options": "0x22",
-                "sequence-number": "0x80001bc1"
-            },
-            {
-                "advertising-router": "10.169.14.241",
-                "age": "1468",
-                "checksum": "0x81fa",
-                "lsa-id": "10.169.14.241",
-                "lsa-length": "120",
-                "lsa-type": "Router",
-                "options": "0x22",
-                "sequence-number": "0x80001f67"
-            },
-            {
-                "advertising-router": "10.189.5.252",
-                "age": "1608",
-                "checksum": "0x1e2",
-                "lsa-id": "10.189.5.252",
-                "lsa-length": "120",
-                "lsa-type": "Router",
-                "options": "0x22",
-                "our-entry": True,
-                "sequence-number": "0x80001b9e"
-            },
-            {
-                "advertising-router": "10.189.5.253",
-                "age": "1689",
-                "checksum": "0xe230",
-                "lsa-id": "10.189.5.253",
-                "lsa-length": "108",
-                "lsa-type": "Router",
-                "options": "0x22",
-                "sequence-number": "0x80001b04"
-            },
-            {
-                "advertising-router": "192.168.36.119",
-                "age": "928",
-                "checksum": "0xc6a6",
-                "lsa-id": "192.168.36.119",
-                "lsa-length": "48",
-                "lsa-type": "Router",
-                "options": "0x22",
-                "sequence-number": "0x800019de"
-            },
-            {
-                "advertising-router": "192.168.36.120",
-                "age": "500",
-                "checksum": "0x2747",
-                "lsa-id": "192.168.36.120",
-                "lsa-length": "48",
-                "lsa-type": "Router",
-                "options": "0x22",
-                "sequence-number": "0x800019ea"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "485",
-                "checksum": "0xbb30",
-                "lsa-id": "192.168.36.49",
-                "lsa-length": "32",
-                "lsa-type": "Network",
-                "options": "0x22",
-                "sequence-number": "0x80000499"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "2292",
-                "checksum": "0x5f86",
-                "lsa-id": "192.168.36.57",
-                "lsa-length": "32",
-                "lsa-type": "Network",
-                "options": "0x22",
-                "sequence-number": "0x80000498"
-            },
-            {
-                "advertising-router": "10.100.5.5",
-                "age": "1469",
-                "checksum": "0xc57f",
-                "lsa-id": "10.1.0.0",
-                "lsa-length": "28",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x800019ac"
-            },
-            {
-                "advertising-router": "10.19.198.239",
-                "age": "622",
-                "checksum": "0x4e06",
-                "lsa-id": "10.1.0.0",
-                "lsa-length": "28",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x8000028c"
-            },
-            {
-                "advertising-router": "10.169.196.241",
-                "age": "521",
-                "checksum": "0xe9d4",
-                "lsa-id": "10.1.0.0",
-                "lsa-length": "28",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x80000fdd"
-            },
-            {
-                "advertising-router": "10.34.2.250",
-                "age": "1888",
-                "checksum": "0x902f",
-                "lsa-id": "10.1.0.1",
-                "lsa-length": "28",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x800019e5"
-            },
-            {
-                "advertising-router": "10.34.2.251",
-                "age": "1664",
-                "checksum": "0xd00b",
-                "lsa-id": "10.1.0.1",
-                "lsa-length": "28",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x800019c7"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "334",
-                "checksum": "0xde66",
-                "lsa-id": "10.1.0.1",
-                "lsa-length": "28",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x80001987"
-            },
-            {
-                "advertising-router": "10.169.14.241",
-                "age": "1907",
-                "checksum": "0x8014",
-                "lsa-id": "10.1.0.1",
-                "lsa-length": "28",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x80001e31"
-            },
-            {
-                "advertising-router": "10.189.5.252",
-                "age": "231",
-                "checksum": "0xd49a",
-                "lsa-id": "10.1.0.1",
-                "lsa-length": "28",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "our-entry": True,
-                "sequence-number": "0x80001a15"
-            },
-            {
-                "advertising-router": "10.189.5.253",
-                "age": "901",
-                "checksum": "0xe48e",
-                "lsa-id": "10.1.0.1",
-                "lsa-length": "28",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x80001a0f"
-            },
-            {
-                "advertising-router": "10.34.2.250",
-                "age": "2119",
-                "checksum": "0x47bd",
-                "lsa-id": "10.1.0.3",
-                "lsa-length": "136",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x800013d3"
-            },
-            {
-                "advertising-router": "10.34.2.251",
-                "age": "1445",
-                "checksum": "0x5fc3",
-                "lsa-id": "10.1.0.3",
-                "lsa-length": "136",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x800013b5"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "1690",
-                "checksum": "0x75dc",
-                "lsa-id": "10.1.0.3",
-                "lsa-length": "136",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x8000063d"
-            },
-            {
-                "advertising-router": "10.169.14.241",
-                "age": "951",
-                "checksum": "0x1721",
-                "lsa-id": "10.1.0.3",
-                "lsa-length": "136",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x80000c51"
-            },
-            {
-                "advertising-router": "10.189.5.252",
-                "age": "2678",
-                "checksum": "0x97cc",
-                "lsa-id": "10.1.0.3",
-                "lsa-length": "136",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "our-entry": True,
-                "sequence-number": "0x80000321"
-            },
-            {
-                "advertising-router": "10.189.5.253",
-                "age": "2500",
-                "checksum": "0x71f1",
-                "lsa-id": "10.1.0.3",
-                "lsa-length": "136",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x80000322"
-            },
-            {
-                "advertising-router": "10.34.2.250",
-                "age": "1427",
-                "checksum": "0x1e4",
-                "lsa-id": "10.1.0.4",
-                "lsa-length": "136",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x8000029e"
-            },
-            {
-                "advertising-router": "10.34.2.251",
-                "age": "1226",
-                "checksum": "0x29c0",
-                "lsa-id": "10.1.0.4",
-                "lsa-length": "136",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x80000299"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "1238",
-                "checksum": "0xb606",
-                "lsa-id": "10.1.0.4",
-                "lsa-length": "136",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x800003f8"
-            },
-            {
-                "advertising-router": "10.169.14.241",
-                "age": "2127",
-                "checksum": "0x694d",
-                "lsa-id": "10.1.0.4",
-                "lsa-length": "136",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x800013fe"
-            },
-            {
-                "advertising-router": "10.189.5.252",
-                "age": "2411",
-                "checksum": "0xb804",
-                "lsa-id": "10.1.0.4",
-                "lsa-length": "136",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "our-entry": True,
-                "sequence-number": "0x800013e8"
-            },
-            {
-                "advertising-router": "10.189.5.253",
-                "age": "2772",
-                "checksum": "0x4ecf",
-                "lsa-id": "10.1.0.4",
-                "lsa-length": "136",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x80000f9b"
-            },
-            {
-                "advertising-router": "10.34.2.250",
-                "age": "289",
-                "checksum": "0x5e9d",
-                "lsa-id": "10.1.0.5",
-                "lsa-length": "136",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x800001b5"
-            },
-            {
-                "advertising-router": "10.34.2.251",
-                "age": "276",
-                "checksum": "0xd817",
-                "lsa-id": "10.1.0.5",
-                "lsa-length": "136",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x800001b5"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "33",
-                "checksum": "0xdd1f",
-                "lsa-id": "10.1.0.5",
-                "lsa-length": "136",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x80000289"
-            },
-            {
-                "advertising-router": "10.169.14.241",
-                "age": "1687",
-                "checksum": "0x21a9",
-                "lsa-id": "10.1.0.5",
-                "lsa-length": "136",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x80000298"
-            },
-            {
-                "advertising-router": "10.189.5.252",
-                "age": "1312",
-                "checksum": "0x79b5",
-                "lsa-id": "10.1.0.5",
-                "lsa-length": "136",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "our-entry": True,
-                "sequence-number": "0x800001bb"
-            },
-            {
-                "advertising-router": "10.189.5.253",
-                "age": "1147",
-                "checksum": "0x5ec3",
-                "lsa-id": "10.1.0.5",
-                "lsa-length": "136",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x800001bb"
-            },
-            {
-                "advertising-router": "10.100.5.5",
-                "age": "1469",
-                "checksum": "0x629a",
-                "lsa-id": "10.1.0.6",
-                "lsa-length": "168",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x800019be"
-            },
-            {
-                "advertising-router": "10.19.198.239",
-                "age": "622",
-                "checksum": "0xcffa",
-                "lsa-id": "10.1.0.10",
-                "lsa-length": "132",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x8000025d"
-            },
-            {
-                "advertising-router": "10.169.196.241",
-                "age": "521",
-                "checksum": "0x771b",
-                "lsa-id": "10.1.0.10",
-                "lsa-length": "132",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x8000025d"
-            },
-            {
-                "advertising-router": "10.19.198.239",
-                "age": "622",
-                "checksum": "0xecd3",
-                "lsa-id": "10.1.0.11",
-                "lsa-length": "132",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x8000025d"
-            },
-            {
-                "advertising-router": "10.169.196.241",
-                "age": "521",
-                "checksum": "0xa14f",
-                "lsa-id": "10.1.0.11",
-                "lsa-length": "132",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x8000025d"
-            },
-            {
-                "advertising-router": "10.19.198.239",
-                "age": "622",
-                "checksum": "0x87f8",
-                "lsa-id": "10.1.0.12",
-                "lsa-length": "80",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x80000163"
-            },
-            {
-                "advertising-router": "10.169.196.241",
-                "age": "35",
-                "checksum": "0x8150",
-                "lsa-id": "10.1.8.69",
-                "lsa-length": "80",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x8000003b"
-            },
-            {
-                "advertising-router": "10.169.196.241",
-                "age": "521",
-                "checksum": "0x8a2d",
-                "lsa-id": "10.1.8.70",
-                "lsa-length": "80",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x80000151"
-            },
-            {
-                "advertising-router": "10.100.5.5",
-                "age": "1469",
-                "checksum": "0x810a",
-                "lsa-id": "10.16.0.0",
-                "lsa-length": "52",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x800019ac"
-            },
-            {
-                "advertising-router": "10.19.198.239",
-                "age": "622",
-                "checksum": "0x8e0f",
-                "lsa-id": "10.16.0.0",
-                "lsa-length": "76",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x8000028c"
-            },
-            {
-                "advertising-router": "10.34.2.250",
-                "age": "2810",
-                "checksum": "0xbd3d",
-                "lsa-id": "10.16.0.0",
-                "lsa-length": "44",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x80001a15"
-            },
-            {
-                "advertising-router": "10.34.2.251",
-                "age": "2103",
-                "checksum": "0x1b10",
-                "lsa-id": "10.16.0.0",
-                "lsa-length": "44",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x800019e4"
-            },
-            {
-                "advertising-router": "10.169.196.241",
-                "age": "521",
-                "checksum": "0x2db9",
-                "lsa-id": "10.16.0.0",
-                "lsa-length": "76",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x800003a6"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "2142",
-                "checksum": "0x15f1",
-                "lsa-id": "10.16.0.0",
-                "lsa-length": "44",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x8000199d"
-            },
-            {
-                "advertising-router": "10.169.14.241",
-                "age": "48",
-                "checksum": "0xb2a7",
-                "lsa-id": "10.16.0.0",
-                "lsa-length": "44",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x80001e44"
-            },
-            {
-                "advertising-router": "10.189.5.252",
-                "age": "771",
-                "checksum": "0xe5ef",
-                "lsa-id": "10.16.0.0",
-                "lsa-length": "44",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "our-entry": True,
-                "sequence-number": "0x80001a2a"
-            },
-            {
-                "advertising-router": "10.189.5.253",
-                "age": "410",
-                "checksum": "0xf1eb",
-                "lsa-id": "10.16.0.0",
-                "lsa-length": "44",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x80001a21"
-            },
-            {
-                "advertising-router": "10.19.198.239",
-                "age": "622",
-                "checksum": "0xcdab",
-                "lsa-id": "10.49.0.0",
-                "lsa-length": "44",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x8000028c"
-            },
-            {
-                "advertising-router": "10.169.196.241",
-                "age": "521",
-                "checksum": "0x69c9",
-                "lsa-id": "10.49.0.0",
-                "lsa-length": "44",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x800003a4"
-            },
-            {
-                "advertising-router": "10.100.5.5",
-                "age": "1469",
-                "checksum": "0x6c5a",
-                "lsa-id": "10.49.0.1",
-                "lsa-length": "44",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x800019ac"
-            },
-            {
-                "advertising-router": "10.34.2.250",
-                "age": "736",
-                "checksum": "0x7fa7",
-                "lsa-id": "10.49.0.1",
-                "lsa-length": "44",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x80001fa9"
-            },
-            {
-                "advertising-router": "10.34.2.251",
-                "age": "567",
-                "checksum": "0x6ce",
-                "lsa-id": "10.49.0.1",
-                "lsa-length": "44",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x80001cfb"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "2732",
-                "checksum": "0x99aa",
-                "lsa-id": "10.49.0.1",
-                "lsa-length": "44",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x80001bc1"
-            },
-            {
-                "advertising-router": "10.169.14.241",
-                "age": "1468",
-                "checksum": "0x6433",
-                "lsa-id": "10.49.0.1",
-                "lsa-length": "44",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x80001f67"
-            },
-            {
-                "advertising-router": "10.189.5.252",
-                "age": "1608",
-                "checksum": "0x8c7f",
-                "lsa-id": "10.49.0.1",
-                "lsa-length": "44",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "our-entry": True,
-                "sequence-number": "0x80001b9e"
-            },
-            {
-                "advertising-router": "10.189.5.253",
-                "age": "1689",
-                "checksum": "0xe3bf",
-                "lsa-id": "10.49.0.1",
-                "lsa-length": "44",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x80001b04"
-            },
-            {
-                "advertising-router": "10.34.2.250",
-                "age": "76",
-                "checksum": "0x39a3",
-                "lsa-id": "10.64.0.1",
-                "lsa-length": "60",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x800004f9"
-            },
-            {
-                "advertising-router": "10.169.14.241",
-                "age": "725",
-                "checksum": "0x7002",
-                "lsa-id": "10.64.0.1",
-                "lsa-length": "60",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x80000311"
-            },
-            {
-                "advertising-router": "10.189.5.253",
-                "age": "2230",
-                "checksum": "0x6915",
-                "lsa-id": "10.64.0.1",
-                "lsa-length": "60",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x8000030a"
-            },
-            {
-                "advertising-router": "10.169.14.241",
-                "age": "499",
-                "checksum": "0x7271",
-                "lsa-id": "10.64.0.2",
-                "lsa-length": "60",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x80000305"
-            },
-            {
-                "advertising-router": "10.169.14.241",
-                "age": "274",
-                "checksum": "0x7248",
-                "lsa-id": "10.64.0.3",
-                "lsa-length": "60",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x8000029a"
-            },
-            {
-                "advertising-router": "10.189.5.253",
-                "age": "656",
-                "checksum": "0x34eb",
-                "lsa-id": "10.64.0.3",
-                "lsa-length": "60",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x800002db"
-            },
-            {
-                "advertising-router": "10.189.5.253",
-                "age": "1960",
-                "checksum": "0x31be",
-                "lsa-id": "10.64.0.4",
-                "lsa-length": "60",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x800001bb"
-            },
-            {
-                "advertising-router": "10.100.5.5",
-                "age": "1469",
-                "checksum": "0x4de2",
-                "lsa-id": "10.64.0.6",
-                "lsa-length": "56",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x800019bf"
-            },
-            {
-                "advertising-router": "10.34.2.250",
-                "age": "2580",
-                "checksum": "0xb9a6",
-                "lsa-id": "10.64.0.7",
-                "lsa-length": "48",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x8000046b"
-            },
-            {
-                "advertising-router": "10.34.2.251",
-                "age": "1006",
-                "checksum": "0x6a96",
-                "lsa-id": "10.64.0.7",
-                "lsa-length": "60",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x800004de"
-            },
-            {
-                "advertising-router": "10.19.198.239",
-                "age": "622",
-                "checksum": "0xb34a",
-                "lsa-id": "10.64.0.17",
-                "lsa-length": "104",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x8000025d"
-            },
-            {
-                "advertising-router": "10.169.196.241",
-                "age": "521",
-                "checksum": "0x3e3c",
-                "lsa-id": "10.64.0.17",
-                "lsa-length": "104",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x8000025d"
-            },
-            {
-                "advertising-router": "10.19.198.239",
-                "age": "622",
-                "checksum": "0xb938",
-                "lsa-id": "10.64.0.18",
-                "lsa-length": "104",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x8000025d"
-            },
-            {
-                "advertising-router": "10.169.196.241",
-                "age": "521",
-                "checksum": "0x6fdb",
-                "lsa-id": "10.64.0.18",
-                "lsa-length": "104",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x8000025d"
-            },
-            {
-                "advertising-router": "10.34.2.251",
-                "age": "2542",
-                "checksum": "0xe909",
-                "lsa-id": "10.64.0.31",
-                "lsa-length": "60",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x8000029a"
-            },
-            {
-                "advertising-router": "10.34.2.251",
-                "age": "787",
-                "checksum": "0xe396",
-                "lsa-id": "10.64.0.32",
-                "lsa-length": "60",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x800001b5"
-            },
-            {
-                "advertising-router": "10.34.2.250",
-                "age": "1658",
-                "checksum": "0xffb8",
-                "lsa-id": "10.64.0.37",
-                "lsa-length": "60",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x8000029b"
-            },
-            {
-                "advertising-router": "10.34.2.250",
-                "age": "966",
-                "checksum": "0x71b3",
-                "lsa-id": "10.64.0.38",
-                "lsa-length": "60",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x800001b5"
-            },
-            {
-                "advertising-router": "10.189.5.252",
-                "age": "501",
-                "checksum": "0x7efa",
-                "lsa-id": "10.64.0.52",
-                "lsa-length": "60",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "our-entry": True,
-                "sequence-number": "0x80000308"
-            },
-            {
-                "advertising-router": "10.189.5.252",
-                "age": "1042",
-                "checksum": "0x1839",
-                "lsa-id": "10.64.0.54",
-                "lsa-length": "60",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "our-entry": True,
-                "sequence-number": "0x800002dc"
-            },
-            {
-                "advertising-router": "10.189.5.252",
-                "age": "1876",
-                "checksum": "0x92eb",
-                "lsa-id": "10.64.0.55",
-                "lsa-length": "60",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "our-entry": True,
-                "sequence-number": "0x800001bb"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "1087",
-                "checksum": "0x7544",
-                "lsa-id": "10.64.0.57",
-                "lsa-length": "60",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x80000303"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "1389",
-                "checksum": "0x6d12",
-                "lsa-id": "10.64.0.59",
-                "lsa-length": "60",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x800002f4"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "937",
-                "checksum": "0x4f1a",
-                "lsa-id": "10.64.0.60",
-                "lsa-length": "60",
-                "lsa-type": "OpaqArea",
-                "options": "0x22",
-                "sequence-number": "0x8000028b"
-            },
-            {
-                "advertising-router": "10.169.196.241",
-                "age": "35",
-                "checksum": "0xdcd1",
-                "lsa-id": "10.64.8.74",
-                "lsa-length": "92",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x80000030"
-            },
-            {
-                "advertising-router": "10.169.196.241",
-                "age": "521",
-                "checksum": "0xd4b0",
-                "lsa-id": "10.64.8.75",
-                "lsa-length": "92",
-                "lsa-type": "OpaqArea",
-                "options": "0x20",
-                "sequence-number": "0x80000151"
-            },
-            {
-                "advertising-router": "10.34.2.251",
-                "age": "2323",
-                "checksum": "0x6715",
-                "lsa-id": "0.0.0.0",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "sequence-number": "0x800019e3"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "1991",
-                "checksum": "0x9fcc",
-                "lsa-id": "0.0.0.0",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "sequence-number": "0x8000039e"
-            },
-            {
-                "advertising-router": "192.168.36.119",
-                "age": "928",
-                "checksum": "0x3bc3",
-                "lsa-id": "10.1.0.0",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x20",
-                "sequence-number": "0x800019b0"
-            },
-            {
-                "advertising-router": "192.168.36.120",
-                "age": "500",
-                "checksum": "0x33c9",
-                "lsa-id": "10.1.0.0",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x20",
-                "sequence-number": "0x800019b1"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "1841",
-                "checksum": "0xf161",
-                "lsa-id": "10.174.132.237",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "sequence-number": "0x8000039e"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "2443",
-                "checksum": "0x473e",
-                "lsa-id": "10.34.2.250",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "sequence-number": "0x80000288"
-            },
-            {
-                "advertising-router": "10.169.14.241",
-                "age": "2346",
-                "checksum": "0x2153",
-                "lsa-id": "10.34.2.250",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "sequence-number": "0x80000298"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "184",
-                "checksum": "0x3b48",
-                "lsa-id": "10.34.2.251",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "sequence-number": "0x80000289"
-            },
-            {
-                "advertising-router": "10.169.14.241",
-                "age": "1176",
-                "checksum": "0x175c",
-                "lsa-id": "10.34.2.251",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "sequence-number": "0x80000298"
-            },
-            {
-                "advertising-router": "10.34.2.250",
-                "age": "1197",
-                "checksum": "0xf88e",
-                "lsa-id": "10.169.14.240",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "sequence-number": "0x8000029a"
-            },
-            {
-                "advertising-router": "10.34.2.251",
-                "age": "1884",
-                "checksum": "0x190c",
-                "lsa-id": "10.169.14.240",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "sequence-number": "0x800019e4"
-            },
-            {
-                "advertising-router": "10.189.5.252",
-                "age": "2143",
-                "checksum": "0xc3fb",
-                "lsa-id": "10.169.14.240",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "our-entry": True,
-                "sequence-number": "0x80001a3a"
-            },
-            {
-                "advertising-router": "10.34.2.250",
-                "age": "2349",
-                "checksum": "0xb341",
-                "lsa-id": "10.169.14.241",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "sequence-number": "0x80001a14"
-            },
-            {
-                "advertising-router": "10.34.2.251",
-                "age": "50",
-                "checksum": "0xea9b",
-                "lsa-id": "10.169.14.241",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "sequence-number": "0x80000299"
-            },
-            {
-                "advertising-router": "10.189.5.253",
-                "age": "164",
-                "checksum": "0xeb68",
-                "lsa-id": "10.169.14.241",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "sequence-number": "0x80000fae"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "1539",
-                "checksum": "0xc372",
-                "lsa-id": "10.189.5.252",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "sequence-number": "0x800019b0"
-            },
-            {
-                "advertising-router": "10.169.14.241",
-                "age": "2566",
-                "checksum": "0x6d4",
-                "lsa-id": "10.189.5.253",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "sequence-number": "0x8000140f"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "786",
-                "checksum": "0xfb51",
-                "lsa-id": "192.168.100.0",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "sequence-number": "0x800002da"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "636",
-                "checksum": "0x19b8",
-                "lsa-id": "192.168.100.252",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "sequence-number": "0x800002d9"
-            }
-        ]
+    """
     }
-}
 
-
+    golden_parsed_output = {
+        "ospf-database-information": {
+            "ospf-area-header": {"ospf-area": "0.0.0.8"},
+            "ospf-database": [
+                {
+                    "advertising-router": "10.36.3.3",
+                    "age": "61",
+                    "checksum": "0xa127",
+                    "lsa-id": "10.36.3.3",
+                    "lsa-length": "2496",
+                    "lsa-type": "Router",
+                    "options": "0x22",
+                    "sequence-number": "0x80004d2d",
+                },
+                {
+                    "advertising-router": "10.100.5.5",
+                    "age": "1469",
+                    "checksum": "0xa1c",
+                    "lsa-id": "10.100.5.5",
+                    "lsa-length": "60",
+                    "lsa-type": "Router",
+                    "options": "0x22",
+                    "sequence-number": "0x800019d7",
+                },
+                {
+                    "advertising-router": "10.19.198.239",
+                    "age": "622",
+                    "checksum": "0x95bf",
+                    "lsa-id": "10.19.198.239",
+                    "lsa-length": "96",
+                    "lsa-type": "Router",
+                    "options": "0x22",
+                    "sequence-number": "0x80000442",
+                },
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "736",
+                    "checksum": "0x26f6",
+                    "lsa-id": "10.34.2.250",
+                    "lsa-length": "144",
+                    "lsa-type": "Router",
+                    "options": "0x22",
+                    "sequence-number": "0x8000205a",
+                },
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "567",
+                    "checksum": "0x1022",
+                    "lsa-id": "10.34.2.251",
+                    "lsa-length": "108",
+                    "lsa-type": "Router",
+                    "options": "0x22",
+                    "sequence-number": "0x80001dde",
+                },
+                {
+                    "advertising-router": "10.169.196.241",
+                    "age": "35",
+                    "checksum": "0x1055",
+                    "lsa-id": "10.169.196.241",
+                    "lsa-length": "144",
+                    "lsa-type": "Router",
+                    "options": "0x22",
+                    "sequence-number": "0x800004a4",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "2732",
+                    "checksum": "0x3a76",
+                    "lsa-id": "10.169.14.240",
+                    "lsa-length": "144",
+                    "lsa-type": "Router",
+                    "options": "0x22",
+                    "sequence-number": "0x80001bc1",
+                },
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "1468",
+                    "checksum": "0x81fa",
+                    "lsa-id": "10.169.14.241",
+                    "lsa-length": "120",
+                    "lsa-type": "Router",
+                    "options": "0x22",
+                    "sequence-number": "0x80001f67",
+                },
+                {
+                    "advertising-router": "10.189.5.252",
+                    "age": "1608",
+                    "checksum": "0x1e2",
+                    "lsa-id": "10.189.5.252",
+                    "lsa-length": "120",
+                    "lsa-type": "Router",
+                    "options": "0x22",
+                    "our-entry": True,
+                    "sequence-number": "0x80001b9e",
+                },
+                {
+                    "advertising-router": "10.189.5.253",
+                    "age": "1689",
+                    "checksum": "0xe230",
+                    "lsa-id": "10.189.5.253",
+                    "lsa-length": "108",
+                    "lsa-type": "Router",
+                    "options": "0x22",
+                    "sequence-number": "0x80001b04",
+                },
+                {
+                    "advertising-router": "192.168.36.119",
+                    "age": "928",
+                    "checksum": "0xc6a6",
+                    "lsa-id": "192.168.36.119",
+                    "lsa-length": "48",
+                    "lsa-type": "Router",
+                    "options": "0x22",
+                    "sequence-number": "0x800019de",
+                },
+                {
+                    "advertising-router": "192.168.36.120",
+                    "age": "500",
+                    "checksum": "0x2747",
+                    "lsa-id": "192.168.36.120",
+                    "lsa-length": "48",
+                    "lsa-type": "Router",
+                    "options": "0x22",
+                    "sequence-number": "0x800019ea",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "485",
+                    "checksum": "0xbb30",
+                    "lsa-id": "192.168.36.49",
+                    "lsa-length": "32",
+                    "lsa-type": "Network",
+                    "options": "0x22",
+                    "sequence-number": "0x80000499",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "2292",
+                    "checksum": "0x5f86",
+                    "lsa-id": "192.168.36.57",
+                    "lsa-length": "32",
+                    "lsa-type": "Network",
+                    "options": "0x22",
+                    "sequence-number": "0x80000498",
+                },
+                {
+                    "advertising-router": "10.100.5.5",
+                    "age": "1469",
+                    "checksum": "0xc57f",
+                    "lsa-id": "10.1.0.0",
+                    "lsa-length": "28",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x800019ac",
+                },
+                {
+                    "advertising-router": "10.19.198.239",
+                    "age": "622",
+                    "checksum": "0x4e06",
+                    "lsa-id": "10.1.0.0",
+                    "lsa-length": "28",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x8000028c",
+                },
+                {
+                    "advertising-router": "10.169.196.241",
+                    "age": "521",
+                    "checksum": "0xe9d4",
+                    "lsa-id": "10.1.0.0",
+                    "lsa-length": "28",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x80000fdd",
+                },
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "1888",
+                    "checksum": "0x902f",
+                    "lsa-id": "10.1.0.1",
+                    "lsa-length": "28",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x800019e5",
+                },
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "1664",
+                    "checksum": "0xd00b",
+                    "lsa-id": "10.1.0.1",
+                    "lsa-length": "28",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x800019c7",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "334",
+                    "checksum": "0xde66",
+                    "lsa-id": "10.1.0.1",
+                    "lsa-length": "28",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x80001987",
+                },
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "1907",
+                    "checksum": "0x8014",
+                    "lsa-id": "10.1.0.1",
+                    "lsa-length": "28",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x80001e31",
+                },
+                {
+                    "advertising-router": "10.189.5.252",
+                    "age": "231",
+                    "checksum": "0xd49a",
+                    "lsa-id": "10.1.0.1",
+                    "lsa-length": "28",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "our-entry": True,
+                    "sequence-number": "0x80001a15",
+                },
+                {
+                    "advertising-router": "10.189.5.253",
+                    "age": "901",
+                    "checksum": "0xe48e",
+                    "lsa-id": "10.1.0.1",
+                    "lsa-length": "28",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x80001a0f",
+                },
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "2119",
+                    "checksum": "0x47bd",
+                    "lsa-id": "10.1.0.3",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x800013d3",
+                },
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "1445",
+                    "checksum": "0x5fc3",
+                    "lsa-id": "10.1.0.3",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x800013b5",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "1690",
+                    "checksum": "0x75dc",
+                    "lsa-id": "10.1.0.3",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x8000063d",
+                },
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "951",
+                    "checksum": "0x1721",
+                    "lsa-id": "10.1.0.3",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x80000c51",
+                },
+                {
+                    "advertising-router": "10.189.5.252",
+                    "age": "2678",
+                    "checksum": "0x97cc",
+                    "lsa-id": "10.1.0.3",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "our-entry": True,
+                    "sequence-number": "0x80000321",
+                },
+                {
+                    "advertising-router": "10.189.5.253",
+                    "age": "2500",
+                    "checksum": "0x71f1",
+                    "lsa-id": "10.1.0.3",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x80000322",
+                },
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "1427",
+                    "checksum": "0x1e4",
+                    "lsa-id": "10.1.0.4",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x8000029e",
+                },
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "1226",
+                    "checksum": "0x29c0",
+                    "lsa-id": "10.1.0.4",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x80000299",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "1238",
+                    "checksum": "0xb606",
+                    "lsa-id": "10.1.0.4",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x800003f8",
+                },
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "2127",
+                    "checksum": "0x694d",
+                    "lsa-id": "10.1.0.4",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x800013fe",
+                },
+                {
+                    "advertising-router": "10.189.5.252",
+                    "age": "2411",
+                    "checksum": "0xb804",
+                    "lsa-id": "10.1.0.4",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "our-entry": True,
+                    "sequence-number": "0x800013e8",
+                },
+                {
+                    "advertising-router": "10.189.5.253",
+                    "age": "2772",
+                    "checksum": "0x4ecf",
+                    "lsa-id": "10.1.0.4",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x80000f9b",
+                },
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "289",
+                    "checksum": "0x5e9d",
+                    "lsa-id": "10.1.0.5",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x800001b5",
+                },
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "276",
+                    "checksum": "0xd817",
+                    "lsa-id": "10.1.0.5",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x800001b5",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "33",
+                    "checksum": "0xdd1f",
+                    "lsa-id": "10.1.0.5",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x80000289",
+                },
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "1687",
+                    "checksum": "0x21a9",
+                    "lsa-id": "10.1.0.5",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x80000298",
+                },
+                {
+                    "advertising-router": "10.189.5.252",
+                    "age": "1312",
+                    "checksum": "0x79b5",
+                    "lsa-id": "10.1.0.5",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "our-entry": True,
+                    "sequence-number": "0x800001bb",
+                },
+                {
+                    "advertising-router": "10.189.5.253",
+                    "age": "1147",
+                    "checksum": "0x5ec3",
+                    "lsa-id": "10.1.0.5",
+                    "lsa-length": "136",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x800001bb",
+                },
+                {
+                    "advertising-router": "10.100.5.5",
+                    "age": "1469",
+                    "checksum": "0x629a",
+                    "lsa-id": "10.1.0.6",
+                    "lsa-length": "168",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x800019be",
+                },
+                {
+                    "advertising-router": "10.19.198.239",
+                    "age": "622",
+                    "checksum": "0xcffa",
+                    "lsa-id": "10.1.0.10",
+                    "lsa-length": "132",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x8000025d",
+                },
+                {
+                    "advertising-router": "10.169.196.241",
+                    "age": "521",
+                    "checksum": "0x771b",
+                    "lsa-id": "10.1.0.10",
+                    "lsa-length": "132",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x8000025d",
+                },
+                {
+                    "advertising-router": "10.19.198.239",
+                    "age": "622",
+                    "checksum": "0xecd3",
+                    "lsa-id": "10.1.0.11",
+                    "lsa-length": "132",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x8000025d",
+                },
+                {
+                    "advertising-router": "10.169.196.241",
+                    "age": "521",
+                    "checksum": "0xa14f",
+                    "lsa-id": "10.1.0.11",
+                    "lsa-length": "132",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x8000025d",
+                },
+                {
+                    "advertising-router": "10.19.198.239",
+                    "age": "622",
+                    "checksum": "0x87f8",
+                    "lsa-id": "10.1.0.12",
+                    "lsa-length": "80",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x80000163",
+                },
+                {
+                    "advertising-router": "10.169.196.241",
+                    "age": "35",
+                    "checksum": "0x8150",
+                    "lsa-id": "10.1.8.69",
+                    "lsa-length": "80",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x8000003b",
+                },
+                {
+                    "advertising-router": "10.169.196.241",
+                    "age": "521",
+                    "checksum": "0x8a2d",
+                    "lsa-id": "10.1.8.70",
+                    "lsa-length": "80",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x80000151",
+                },
+                {
+                    "advertising-router": "10.100.5.5",
+                    "age": "1469",
+                    "checksum": "0x810a",
+                    "lsa-id": "10.16.0.0",
+                    "lsa-length": "52",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x800019ac",
+                },
+                {
+                    "advertising-router": "10.19.198.239",
+                    "age": "622",
+                    "checksum": "0x8e0f",
+                    "lsa-id": "10.16.0.0",
+                    "lsa-length": "76",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x8000028c",
+                },
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "2810",
+                    "checksum": "0xbd3d",
+                    "lsa-id": "10.16.0.0",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x80001a15",
+                },
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "2103",
+                    "checksum": "0x1b10",
+                    "lsa-id": "10.16.0.0",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x800019e4",
+                },
+                {
+                    "advertising-router": "10.169.196.241",
+                    "age": "521",
+                    "checksum": "0x2db9",
+                    "lsa-id": "10.16.0.0",
+                    "lsa-length": "76",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x800003a6",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "2142",
+                    "checksum": "0x15f1",
+                    "lsa-id": "10.16.0.0",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x8000199d",
+                },
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "48",
+                    "checksum": "0xb2a7",
+                    "lsa-id": "10.16.0.0",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x80001e44",
+                },
+                {
+                    "advertising-router": "10.189.5.252",
+                    "age": "771",
+                    "checksum": "0xe5ef",
+                    "lsa-id": "10.16.0.0",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "our-entry": True,
+                    "sequence-number": "0x80001a2a",
+                },
+                {
+                    "advertising-router": "10.189.5.253",
+                    "age": "410",
+                    "checksum": "0xf1eb",
+                    "lsa-id": "10.16.0.0",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x80001a21",
+                },
+                {
+                    "advertising-router": "10.19.198.239",
+                    "age": "622",
+                    "checksum": "0xcdab",
+                    "lsa-id": "10.49.0.0",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x8000028c",
+                },
+                {
+                    "advertising-router": "10.169.196.241",
+                    "age": "521",
+                    "checksum": "0x69c9",
+                    "lsa-id": "10.49.0.0",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x800003a4",
+                },
+                {
+                    "advertising-router": "10.100.5.5",
+                    "age": "1469",
+                    "checksum": "0x6c5a",
+                    "lsa-id": "10.49.0.1",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x800019ac",
+                },
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "736",
+                    "checksum": "0x7fa7",
+                    "lsa-id": "10.49.0.1",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x80001fa9",
+                },
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "567",
+                    "checksum": "0x6ce",
+                    "lsa-id": "10.49.0.1",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x80001cfb",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "2732",
+                    "checksum": "0x99aa",
+                    "lsa-id": "10.49.0.1",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x80001bc1",
+                },
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "1468",
+                    "checksum": "0x6433",
+                    "lsa-id": "10.49.0.1",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x80001f67",
+                },
+                {
+                    "advertising-router": "10.189.5.252",
+                    "age": "1608",
+                    "checksum": "0x8c7f",
+                    "lsa-id": "10.49.0.1",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "our-entry": True,
+                    "sequence-number": "0x80001b9e",
+                },
+                {
+                    "advertising-router": "10.189.5.253",
+                    "age": "1689",
+                    "checksum": "0xe3bf",
+                    "lsa-id": "10.49.0.1",
+                    "lsa-length": "44",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x80001b04",
+                },
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "76",
+                    "checksum": "0x39a3",
+                    "lsa-id": "10.64.0.1",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x800004f9",
+                },
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "725",
+                    "checksum": "0x7002",
+                    "lsa-id": "10.64.0.1",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x80000311",
+                },
+                {
+                    "advertising-router": "10.189.5.253",
+                    "age": "2230",
+                    "checksum": "0x6915",
+                    "lsa-id": "10.64.0.1",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x8000030a",
+                },
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "499",
+                    "checksum": "0x7271",
+                    "lsa-id": "10.64.0.2",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x80000305",
+                },
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "274",
+                    "checksum": "0x7248",
+                    "lsa-id": "10.64.0.3",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x8000029a",
+                },
+                {
+                    "advertising-router": "10.189.5.253",
+                    "age": "656",
+                    "checksum": "0x34eb",
+                    "lsa-id": "10.64.0.3",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x800002db",
+                },
+                {
+                    "advertising-router": "10.189.5.253",
+                    "age": "1960",
+                    "checksum": "0x31be",
+                    "lsa-id": "10.64.0.4",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x800001bb",
+                },
+                {
+                    "advertising-router": "10.100.5.5",
+                    "age": "1469",
+                    "checksum": "0x4de2",
+                    "lsa-id": "10.64.0.6",
+                    "lsa-length": "56",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x800019bf",
+                },
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "2580",
+                    "checksum": "0xb9a6",
+                    "lsa-id": "10.64.0.7",
+                    "lsa-length": "48",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x8000046b",
+                },
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "1006",
+                    "checksum": "0x6a96",
+                    "lsa-id": "10.64.0.7",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x800004de",
+                },
+                {
+                    "advertising-router": "10.19.198.239",
+                    "age": "622",
+                    "checksum": "0xb34a",
+                    "lsa-id": "10.64.0.17",
+                    "lsa-length": "104",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x8000025d",
+                },
+                {
+                    "advertising-router": "10.169.196.241",
+                    "age": "521",
+                    "checksum": "0x3e3c",
+                    "lsa-id": "10.64.0.17",
+                    "lsa-length": "104",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x8000025d",
+                },
+                {
+                    "advertising-router": "10.19.198.239",
+                    "age": "622",
+                    "checksum": "0xb938",
+                    "lsa-id": "10.64.0.18",
+                    "lsa-length": "104",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x8000025d",
+                },
+                {
+                    "advertising-router": "10.169.196.241",
+                    "age": "521",
+                    "checksum": "0x6fdb",
+                    "lsa-id": "10.64.0.18",
+                    "lsa-length": "104",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x8000025d",
+                },
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "2542",
+                    "checksum": "0xe909",
+                    "lsa-id": "10.64.0.31",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x8000029a",
+                },
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "787",
+                    "checksum": "0xe396",
+                    "lsa-id": "10.64.0.32",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x800001b5",
+                },
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "1658",
+                    "checksum": "0xffb8",
+                    "lsa-id": "10.64.0.37",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x8000029b",
+                },
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "966",
+                    "checksum": "0x71b3",
+                    "lsa-id": "10.64.0.38",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x800001b5",
+                },
+                {
+                    "advertising-router": "10.189.5.252",
+                    "age": "501",
+                    "checksum": "0x7efa",
+                    "lsa-id": "10.64.0.52",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "our-entry": True,
+                    "sequence-number": "0x80000308",
+                },
+                {
+                    "advertising-router": "10.189.5.252",
+                    "age": "1042",
+                    "checksum": "0x1839",
+                    "lsa-id": "10.64.0.54",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "our-entry": True,
+                    "sequence-number": "0x800002dc",
+                },
+                {
+                    "advertising-router": "10.189.5.252",
+                    "age": "1876",
+                    "checksum": "0x92eb",
+                    "lsa-id": "10.64.0.55",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "our-entry": True,
+                    "sequence-number": "0x800001bb",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "1087",
+                    "checksum": "0x7544",
+                    "lsa-id": "10.64.0.57",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x80000303",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "1389",
+                    "checksum": "0x6d12",
+                    "lsa-id": "10.64.0.59",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x800002f4",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "937",
+                    "checksum": "0x4f1a",
+                    "lsa-id": "10.64.0.60",
+                    "lsa-length": "60",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x22",
+                    "sequence-number": "0x8000028b",
+                },
+                {
+                    "advertising-router": "10.169.196.241",
+                    "age": "35",
+                    "checksum": "0xdcd1",
+                    "lsa-id": "10.64.8.74",
+                    "lsa-length": "92",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x80000030",
+                },
+                {
+                    "advertising-router": "10.169.196.241",
+                    "age": "521",
+                    "checksum": "0xd4b0",
+                    "lsa-id": "10.64.8.75",
+                    "lsa-length": "92",
+                    "lsa-type": "OpaqArea",
+                    "options": "0x20",
+                    "sequence-number": "0x80000151",
+                },
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "2323",
+                    "checksum": "0x6715",
+                    "lsa-id": "0.0.0.0",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "sequence-number": "0x800019e3",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "1991",
+                    "checksum": "0x9fcc",
+                    "lsa-id": "0.0.0.0",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "sequence-number": "0x8000039e",
+                },
+                {
+                    "advertising-router": "192.168.36.119",
+                    "age": "928",
+                    "checksum": "0x3bc3",
+                    "lsa-id": "10.1.0.0",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x20",
+                    "sequence-number": "0x800019b0",
+                },
+                {
+                    "advertising-router": "192.168.36.120",
+                    "age": "500",
+                    "checksum": "0x33c9",
+                    "lsa-id": "10.1.0.0",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x20",
+                    "sequence-number": "0x800019b1",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "1841",
+                    "checksum": "0xf161",
+                    "lsa-id": "10.174.132.237",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "sequence-number": "0x8000039e",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "2443",
+                    "checksum": "0x473e",
+                    "lsa-id": "10.34.2.250",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "sequence-number": "0x80000288",
+                },
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "2346",
+                    "checksum": "0x2153",
+                    "lsa-id": "10.34.2.250",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "sequence-number": "0x80000298",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "184",
+                    "checksum": "0x3b48",
+                    "lsa-id": "10.34.2.251",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "sequence-number": "0x80000289",
+                },
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "1176",
+                    "checksum": "0x175c",
+                    "lsa-id": "10.34.2.251",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "sequence-number": "0x80000298",
+                },
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "1197",
+                    "checksum": "0xf88e",
+                    "lsa-id": "10.169.14.240",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "sequence-number": "0x8000029a",
+                },
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "1884",
+                    "checksum": "0x190c",
+                    "lsa-id": "10.169.14.240",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "sequence-number": "0x800019e4",
+                },
+                {
+                    "advertising-router": "10.189.5.252",
+                    "age": "2143",
+                    "checksum": "0xc3fb",
+                    "lsa-id": "10.169.14.240",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "our-entry": True,
+                    "sequence-number": "0x80001a3a",
+                },
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "2349",
+                    "checksum": "0xb341",
+                    "lsa-id": "10.169.14.241",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "sequence-number": "0x80001a14",
+                },
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "50",
+                    "checksum": "0xea9b",
+                    "lsa-id": "10.169.14.241",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "sequence-number": "0x80000299",
+                },
+                {
+                    "advertising-router": "10.189.5.253",
+                    "age": "164",
+                    "checksum": "0xeb68",
+                    "lsa-id": "10.169.14.241",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "sequence-number": "0x80000fae",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "1539",
+                    "checksum": "0xc372",
+                    "lsa-id": "10.189.5.252",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "sequence-number": "0x800019b0",
+                },
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "2566",
+                    "checksum": "0x6d4",
+                    "lsa-id": "10.189.5.253",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "sequence-number": "0x8000140f",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "786",
+                    "checksum": "0xfb51",
+                    "lsa-id": "192.168.100.0",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "sequence-number": "0x800002da",
+                },
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "636",
+                    "checksum": "0x19b8",
+                    "lsa-id": "192.168.100.252",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "sequence-number": "0x800002d9",
+                },
+            ],
+        }
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -1980,11 +1997,12 @@ class TestShowOspfDatabaseSummary(unittest.TestCase):
             * show ospf database summary
     """
 
-    device = Device(name='aDevice')
+    device = Device(name="aDevice")
     maxDiff = None
-    empty_output = {'execute.return_value': ''}
+    empty_output = {"execute.return_value": ""}
 
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        "execute.return_value": """
         show ospf database summary
             Area 0.0.0.8:
                12 Router LSAs
@@ -2002,48 +2020,41 @@ class TestShowOspfDatabaseSummary(unittest.TestCase):
             Area 0.0.0.8:
             Interface lo0.0:
             Area 0.0.0.8:
-    '''}
+    """
+    }
 
     golden_parsed_output = {
         "ospf-database-information": {
-        "ospf-database-summary": [
-            {
-                "ospf-area": "0.0.0.8",
-                "ospf-lsa-count": [
-                    "12",
-                    "2",
-                    "79"
-                ],
-                "ospf-lsa-type": [
-                    "Router",
-                    "Network",
-                    "OpaqArea"
-                ]
-            },
-            {
-                "@external-heading": "Externals",
-                "ospf-lsa-count": "19",
-                "ospf-lsa-type": "Extern"
-            },
-            {
-                "ospf-area": [
-                    "0.0.0.8",
-                    "0.0.0.8",
-                    "0.0.0.8",
-                    "0.0.0.8",
-                    "0.0.0.8"
-                ],
-                "ospf-intf": [
-                    "ge-0/0/0.0",
-                    "ge-0/0/1.0",
-                    "ge-0/0/2.0",
-                    "ge-0/0/3.0",
-                    "lo0.0"
-                ]
-            }
-        ]
-    }
+            "ospf-database-summary": [
+                {
+                    "ospf-area": "0.0.0.8",
+                    "ospf-lsa-count": ["12", "2", "79"],
+                    "ospf-lsa-type": ["Router", "Network", "OpaqArea"],
+                },
+                {
+                    "@external-heading": "Externals",
+                    "ospf-lsa-count": "19",
+                    "ospf-lsa-type": "Extern",
+                },
+                {
+                    "ospf-area": [
+                        "0.0.0.8",
+                        "0.0.0.8",
+                        "0.0.0.8",
+                        "0.0.0.8",
+                        "0.0.0.8",
+                    ],
+                    "ospf-intf": [
+                        "ge-0/0/0.0",
+                        "ge-0/0/1.0",
+                        "ge-0/0/2.0",
+                        "ge-0/0/3.0",
+                        "lo0.0",
+                    ],
+                },
+            ]
         }
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -2063,11 +2074,12 @@ class TestShowOspfDatabaseExternalExtensive(unittest.TestCase):
             * show ospf database external extensive
     """
 
-    device = Device(name='aDevice')
+    device = Device(name="aDevice")
     maxDiff = None
-    empty_output = {'execute.return_value': ''}
+    empty_output = {"execute.return_value": ""}
 
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        "execute.return_value": """
         show ospf database external extensive
             OSPF AS SCOPE link state database
         Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
@@ -2205,718 +2217,539 @@ class TestShowOspfDatabaseExternalExtensive(unittest.TestCase):
         Aging timer 00:42:39
         Installed 00:17:18 ago, expires in 00:42:39, sent 00:17:16 ago
         Last changed 2w6d 19:00:07 ago, Change count: 75
-    '''}
+    """
+    }
 
     golden_parsed_output = {
         "ospf-database-information": {
-        "ospf-database": [
-            {
-                "@external-heading": "OSPF AS SCOPE link state database",
-                "@heading": "Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len",
-                "advertising-router": "10.34.2.251",
-                "age": "2728",
-                "checksum": "0x6715",
-                "lsa-id": "0.0.0.0",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "ospf-database-extensive": {
-                    "aging-timer": {
-                        "#text": "00:14:32"
+            "ospf-database": [
+                {
+                    "@external-heading": "OSPF AS SCOPE link state database",
+                    "@heading": "Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len",
+                    "advertising-router": "10.34.2.251",
+                    "age": "2728",
+                    "checksum": "0x6715",
+                    "lsa-id": "0.0.0.0",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:14:32"},
+                        "expiration-time": {"#text": "00:14:32"},
+                        "installation-time": {"#text": "00:45:19"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "30w0d 01:34:30"},
+                        "send-time": {"#text": "00:45:17"},
                     },
-                    "expiration-time": {
-                        "#text": "00:14:32"
+                    "ospf-external-lsa": {
+                        "address-mask": "0.0.0.0",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "1",
+                            "ospf-topology-name": "default",
+                            "tag": "0.0.0.0",
+                            "type-value": "1",
+                        },
                     },
-                    "installation-time": {
-                        "#text": "00:45:19"
-                    },
-                    "lsa-change-count": "1",
-                    "lsa-changed-time": {
-                        "#text": "30w0d 01:34:30"
-                    },
-                    "send-time": {
-                        "#text": "00:45:17"
-                    }
+                    "sequence-number": "0x800019e3",
                 },
-                "ospf-external-lsa": {
-                    "address-mask": "0.0.0.0",
-                    "ospf-external-lsa-topology": {
-                        "forward-address": "0.0.0.0",
-                        "ospf-topology-id": "0",
-                        "ospf-topology-metric": "1",
-                        "ospf-topology-name": "default",
-                        "tag": "0.0.0.0",
-                        "type-value": "1"
-                    }
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "2396",
+                    "checksum": "0x9fcc",
+                    "lsa-id": "0.0.0.0",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:20:03"},
+                        "expiration-time": {"#text": "00:20:04"},
+                        "installation-time": {"#text": "00:39:53"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "4w2d 05:48:46"},
+                        "send-time": {"#text": "00:39:51"},
+                    },
+                    "ospf-external-lsa": {
+                        "address-mask": "0.0.0.0",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "1",
+                            "ospf-topology-name": "default",
+                            "tag": "0.0.0.0",
+                            "type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x8000039e",
                 },
-                "sequence-number": "0x800019e3"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "2396",
-                "checksum": "0x9fcc",
-                "lsa-id": "0.0.0.0",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "ospf-database-extensive": {
-                    "aging-timer": {
-                        "#text": "00:20:03"
+                {
+                    "advertising-router": "192.168.36.119",
+                    "age": "1333",
+                    "checksum": "0x3bc3",
+                    "lsa-id": "10.1.0.0",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x20",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:37:47"},
+                        "expiration-time": {"#text": "00:37:47"},
+                        "installation-time": {"#text": "00:22:09"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "21w6d 00:06:09"},
+                        "send-time": {"#text": "00:22:07"},
                     },
-                    "expiration-time": {
-                        "#text": "00:20:04"
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.0",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "20",
+                            "ospf-topology-name": "default",
+                            "tag": "0.0.0.0",
+                            "type-value": "2",
+                        },
                     },
-                    "installation-time": {
-                        "#text": "00:39:53"
-                    },
-                    "lsa-change-count": "1",
-                    "lsa-changed-time": {
-                        "#text": "4w2d 05:48:46"
-                    },
-                    "send-time": {
-                        "#text": "00:39:51"
-                    }
+                    "sequence-number": "0x800019b0",
                 },
-                "ospf-external-lsa": {
-                    "address-mask": "0.0.0.0",
-                    "ospf-external-lsa-topology": {
-                        "forward-address": "0.0.0.0",
-                        "ospf-topology-id": "0",
-                        "ospf-topology-metric": "1",
-                        "ospf-topology-name": "default",
-                        "tag": "0.0.0.0",
-                        "type-value": "1"
-                    }
+                {
+                    "advertising-router": "192.168.36.120",
+                    "age": "905",
+                    "checksum": "0x33c9",
+                    "lsa-id": "10.1.0.0",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x20",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:44:55"},
+                        "expiration-time": {"#text": "00:44:55"},
+                        "installation-time": {"#text": "00:15:01"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "21w6d 00:06:37"},
+                        "send-time": {"#text": "00:14:59"},
+                    },
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.0",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "20",
+                            "ospf-topology-name": "default",
+                            "tag": "0.0.0.0",
+                            "type-value": "2",
+                        },
+                    },
+                    "sequence-number": "0x800019b1",
                 },
-                "sequence-number": "0x8000039e"
-            },
-            {
-                "advertising-router": "192.168.36.119",
-                "age": "1333",
-                "checksum": "0x3bc3",
-                "lsa-id": "10.1.0.0",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x20",
-                "ospf-database-extensive": {
-                    "aging-timer": {
-                        "#text": "00:37:47"
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "2246",
+                    "checksum": "0xf161",
+                    "lsa-id": "10.174.132.237",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:22:34"},
+                        "expiration-time": {"#text": "00:22:34"},
+                        "installation-time": {"#text": "00:37:23"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "4w2d 05:48:43"},
+                        "send-time": {"#text": "00:37:21"},
                     },
-                    "expiration-time": {
-                        "#text": "00:37:47"
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.255",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "50",
+                            "ospf-topology-name": "default",
+                            "tag": "0.0.0.0",
+                            "type-value": "1",
+                        },
                     },
-                    "installation-time": {
-                        "#text": "00:22:09"
-                    },
-                    "lsa-change-count": "1",
-                    "lsa-changed-time": {
-                        "#text": "21w6d 00:06:09"
-                    },
-                    "send-time": {
-                        "#text": "00:22:07"
-                    }
+                    "sequence-number": "0x8000039e",
                 },
-                "ospf-external-lsa": {
-                    "address-mask": "255.255.255.0",
-                    "ospf-external-lsa-topology": {
-                        "forward-address": "0.0.0.0",
-                        "ospf-topology-id": "0",
-                        "ospf-topology-metric": "20",
-                        "ospf-topology-name": "default",
-                        "tag": "0.0.0.0",
-                        "type-value": "2"
-                    }
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "2848",
+                    "checksum": "0x473e",
+                    "lsa-id": "10.34.2.250",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:12:32"},
+                        "expiration-time": {"#text": "00:12:32"},
+                        "installation-time": {"#text": "00:47:25"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "3w0d 08:51:45"},
+                        "send-time": {"#text": "00:47:23"},
+                    },
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.255",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "50",
+                            "ospf-topology-name": "default",
+                            "tag": "10.166.34.12",
+                            "type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x80000288",
                 },
-                "sequence-number": "0x800019b0"
-            },
-            {
-                "advertising-router": "192.168.36.120",
-                "age": "905",
-                "checksum": "0x33c9",
-                "lsa-id": "10.1.0.0",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x20",
-                "ospf-database-extensive": {
-                    "aging-timer": {
-                        "#text": "00:44:55"
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "2751",
+                    "checksum": "0x2153",
+                    "lsa-id": "10.34.2.250",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:14:09"},
+                        "expiration-time": {"#text": "00:14:09"},
+                        "installation-time": {"#text": "00:45:45"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "3w0d 08:11:45"},
+                        "send-time": {"#text": "00:45:43"},
                     },
-                    "expiration-time": {
-                        "#text": "00:44:55"
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.255",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "50",
+                            "ospf-topology-name": "default",
+                            "tag": "10.166.34.12",
+                            "type-value": "1",
+                        },
                     },
-                    "installation-time": {
-                        "#text": "00:15:01"
-                    },
-                    "lsa-change-count": "1",
-                    "lsa-changed-time": {
-                        "#text": "21w6d 00:06:37"
-                    },
-                    "send-time": {
-                        "#text": "00:14:59"
-                    }
+                    "sequence-number": "0x80000298",
                 },
-                "ospf-external-lsa": {
-                    "address-mask": "255.255.255.0",
-                    "ospf-external-lsa-topology": {
-                        "forward-address": "0.0.0.0",
-                        "ospf-topology-id": "0",
-                        "ospf-topology-metric": "20",
-                        "ospf-topology-name": "default",
-                        "tag": "0.0.0.0",
-                        "type-value": "2"
-                    }
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "589",
+                    "checksum": "0x3b48",
+                    "lsa-id": "10.34.2.251",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:50:11"},
+                        "expiration-time": {"#text": "00:50:11"},
+                        "installation-time": {"#text": "00:09:46"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "3w0d 08:51:50"},
+                        "send-time": {"#text": "00:09:44"},
+                    },
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.255",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "50",
+                            "ospf-topology-name": "default",
+                            "tag": "10.166.34.12",
+                            "type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x80000289",
                 },
-                "sequence-number": "0x800019b1"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "2246",
-                "checksum": "0xf161",
-                "lsa-id": "10.174.132.237",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "ospf-database-extensive": {
-                    "aging-timer": {
-                        "#text": "00:22:34"
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "1581",
+                    "checksum": "0x175c",
+                    "lsa-id": "10.34.2.251",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:33:38"},
+                        "expiration-time": {"#text": "00:33:39"},
+                        "installation-time": {"#text": "00:26:15"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "3w0d 08:11:40"},
+                        "send-time": {"#text": "00:26:13"},
                     },
-                    "expiration-time": {
-                        "#text": "00:22:34"
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.255",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "50",
+                            "ospf-topology-name": "default",
+                            "tag": "10.166.34.12",
+                            "type-value": "1",
+                        },
                     },
-                    "installation-time": {
-                        "#text": "00:37:23"
-                    },
-                    "lsa-change-count": "1",
-                    "lsa-changed-time": {
-                        "#text": "4w2d 05:48:43"
-                    },
-                    "send-time": {
-                        "#text": "00:37:21"
-                    }
+                    "sequence-number": "0x80000298",
                 },
-                "ospf-external-lsa": {
-                    "address-mask": "255.255.255.255",
-                    "ospf-external-lsa-topology": {
-                        "forward-address": "0.0.0.0",
-                        "ospf-topology-id": "0",
-                        "ospf-topology-metric": "50",
-                        "ospf-topology-name": "default",
-                        "tag": "0.0.0.0",
-                        "type-value": "1"
-                    }
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "1602",
+                    "checksum": "0xf88e",
+                    "lsa-id": "10.169.14.240",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:33:18"},
+                        "expiration-time": {"#text": "00:33:18"},
+                        "installation-time": {"#text": "00:26:36"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "3w0d 08:51:43"},
+                        "send-time": {"#text": "00:26:34"},
+                    },
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.255",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "50",
+                            "ospf-topology-name": "default",
+                            "tag": "0.0.0.0",
+                            "type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x8000029a",
                 },
-                "sequence-number": "0x8000039e"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "2848",
-                "checksum": "0x473e",
-                "lsa-id": "10.34.2.250",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "ospf-database-extensive": {
-                    "aging-timer": {
-                        "#text": "00:12:32"
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "2289",
+                    "checksum": "0x190c",
+                    "lsa-id": "10.169.14.240",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:21:51"},
+                        "expiration-time": {"#text": "00:21:51"},
+                        "installation-time": {"#text": "00:38:00"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "30w0d 01:34:30"},
+                        "send-time": {"#text": "00:37:59"},
                     },
-                    "expiration-time": {
-                        "#text": "00:12:32"
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.255",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "50",
+                            "ospf-topology-name": "default",
+                            "tag": "0.0.0.0",
+                            "type-value": "1",
+                        },
                     },
-                    "installation-time": {
-                        "#text": "00:47:25"
-                    },
-                    "lsa-change-count": "1",
-                    "lsa-changed-time": {
-                        "#text": "3w0d 08:51:45"
-                    },
-                    "send-time": {
-                        "#text": "00:47:23"
-                    }
+                    "sequence-number": "0x800019e4",
                 },
-                "ospf-external-lsa": {
-                    "address-mask": "255.255.255.255",
-                    "ospf-external-lsa-topology": {
-                        "forward-address": "0.0.0.0",
-                        "ospf-topology-id": "0",
-                        "ospf-topology-metric": "50",
-                        "ospf-topology-name": "default",
-                        "tag": "10.166.34.12",
-                        "type-value": "1"
-                    }
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "2754",
+                    "checksum": "0xb341",
+                    "lsa-id": "10.169.14.241",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:14:05"},
+                        "expiration-time": {"#text": "00:14:06"},
+                        "installation-time": {"#text": "00:45:48"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "30w0d 01:05:04"},
+                        "send-time": {"#text": "00:45:46"},
+                    },
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.255",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "50",
+                            "ospf-topology-name": "default",
+                            "tag": "0.0.0.0",
+                            "type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x80001a14",
                 },
-                "sequence-number": "0x80000288"
-            },
-            {
-                "advertising-router": "10.169.14.241",
-                "age": "2751",
-                "checksum": "0x2153",
-                "lsa-id": "10.34.2.250",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "ospf-database-extensive": {
-                    "aging-timer": {
-                        "#text": "00:14:09"
+                {
+                    "advertising-router": "10.34.2.251",
+                    "age": "455",
+                    "checksum": "0xea9b",
+                    "lsa-id": "10.169.14.241",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:52:25"},
+                        "expiration-time": {"#text": "00:52:25"},
+                        "installation-time": {"#text": "00:07:27"},
+                        "lsa-change-count": "1",
+                        "lsa-changed-time": {"#text": "3w0d 08:11:38"},
+                        "send-time": {"#text": "00:07:25"},
                     },
-                    "expiration-time": {
-                        "#text": "00:14:09"
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.255",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "50",
+                            "ospf-topology-name": "default",
+                            "tag": "0.0.0.0",
+                            "type-value": "1",
+                        },
                     },
-                    "installation-time": {
-                        "#text": "00:45:45"
-                    },
-                    "lsa-change-count": "1",
-                    "lsa-changed-time": {
-                        "#text": "3w0d 08:11:45"
-                    },
-                    "send-time": {
-                        "#text": "00:45:43"
-                    }
+                    "sequence-number": "0x80000299",
                 },
-                "ospf-external-lsa": {
-                    "address-mask": "255.255.255.255",
-                    "ospf-external-lsa-topology": {
-                        "forward-address": "0.0.0.0",
-                        "ospf-topology-id": "0",
-                        "ospf-topology-metric": "50",
-                        "ospf-topology-name": "default",
-                        "tag": "10.166.34.12",
-                        "type-value": "1"
-                    }
+                {
+                    "advertising-router": "10.189.5.253",
+                    "age": "569",
+                    "checksum": "0xeb68",
+                    "lsa-id": "10.169.14.241",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:50:31"},
+                        "expiration-time": {"#text": "00:50:31"},
+                        "installation-time": {"#text": "00:09:26"},
+                        "lsa-change-count": "31",
+                        "lsa-changed-time": {"#text": "3w3d 07:33:47"},
+                        "send-time": {"#text": "00:09:24"},
+                    },
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.255",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "50",
+                            "ospf-topology-name": "default",
+                            "tag": "0.0.0.0",
+                            "type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x80000fae",
                 },
-                "sequence-number": "0x80000298"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "589",
-                "checksum": "0x3b48",
-                "lsa-id": "10.34.2.251",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "ospf-database-extensive": {
-                    "aging-timer": {
-                        "#text": "00:50:11"
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "1944",
+                    "checksum": "0xc372",
+                    "lsa-id": "10.189.5.252",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:27:35"},
+                        "expiration-time": {"#text": "00:27:36"},
+                        "installation-time": {"#text": "00:32:21"},
+                        "lsa-change-count": "3",
+                        "lsa-changed-time": {"#text": "3w3d 07:33:50"},
+                        "send-time": {"#text": "00:32:19"},
                     },
-                    "expiration-time": {
-                        "#text": "00:50:11"
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.255",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "50",
+                            "ospf-topology-name": "default",
+                            "tag": "10.166.34.12",
+                            "type-value": "1",
+                        },
                     },
-                    "installation-time": {
-                        "#text": "00:09:46"
-                    },
-                    "lsa-change-count": "1",
-                    "lsa-changed-time": {
-                        "#text": "3w0d 08:51:50"
-                    },
-                    "send-time": {
-                        "#text": "00:09:44"
-                    }
+                    "sequence-number": "0x800019b0",
                 },
-                "ospf-external-lsa": {
-                    "address-mask": "255.255.255.255",
-                    "ospf-external-lsa-topology": {
-                        "forward-address": "0.0.0.0",
-                        "ospf-topology-id": "0",
-                        "ospf-topology-metric": "50",
-                        "ospf-topology-name": "default",
-                        "tag": "10.166.34.12",
-                        "type-value": "1"
-                    }
+                {
+                    "advertising-router": "10.169.14.241",
+                    "age": "227",
+                    "checksum": "0x4d5",
+                    "lsa-id": "10.189.5.253",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:56:12"},
+                        "expiration-time": {"#text": "00:56:13"},
+                        "installation-time": {"#text": "00:03:41"},
+                        "lsa-change-count": "17",
+                        "lsa-changed-time": {"#text": "3w3d 07:24:57"},
+                        "send-time": {"#text": "00:03:39"},
+                    },
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.255",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "50",
+                            "ospf-topology-name": "default",
+                            "tag": "10.166.34.12",
+                            "type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x80001410",
                 },
-                "sequence-number": "0x80000289"
-            },
-            {
-                "advertising-router": "10.169.14.241",
-                "age": "1581",
-                "checksum": "0x175c",
-                "lsa-id": "10.34.2.251",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "ospf-database-extensive": {
-                    "aging-timer": {
-                        "#text": "00:33:38"
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "1191",
+                    "checksum": "0xfb51",
+                    "lsa-id": "192.168.100.0",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:40:08"},
+                        "expiration-time": {"#text": "00:40:09"},
+                        "installation-time": {"#text": "00:19:48"},
+                        "lsa-change-count": "75",
+                        "lsa-changed-time": {"#text": "2w6d 19:00:07"},
+                        "send-time": {"#text": "00:19:46"},
                     },
-                    "expiration-time": {
-                        "#text": "00:33:39"
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.128",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "31900",
+                            "ospf-topology-name": "default",
+                            "tag": "10.76.212.52",
+                            "type-value": "1",
+                        },
                     },
-                    "installation-time": {
-                        "#text": "00:26:15"
-                    },
-                    "lsa-change-count": "1",
-                    "lsa-changed-time": {
-                        "#text": "3w0d 08:11:40"
-                    },
-                    "send-time": {
-                        "#text": "00:26:13"
-                    }
+                    "sequence-number": "0x800002da",
                 },
-                "ospf-external-lsa": {
-                    "address-mask": "255.255.255.255",
-                    "ospf-external-lsa-topology": {
-                        "forward-address": "0.0.0.0",
-                        "ospf-topology-id": "0",
-                        "ospf-topology-metric": "50",
-                        "ospf-topology-name": "default",
-                        "tag": "10.166.34.12",
-                        "type-value": "1"
-                    }
+                {
+                    "advertising-router": "10.169.14.240",
+                    "age": "1041",
+                    "checksum": "0x19b8",
+                    "lsa-id": "192.168.100.252",
+                    "lsa-length": "36",
+                    "lsa-type": "Extern",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:42:39"},
+                        "expiration-time": {"#text": "00:42:39"},
+                        "installation-time": {"#text": "00:17:18"},
+                        "lsa-change-count": "75",
+                        "lsa-changed-time": {"#text": "2w6d 19:00:07"},
+                        "send-time": {"#text": "00:17:16"},
+                    },
+                    "ospf-external-lsa": {
+                        "address-mask": "255.255.255.255",
+                        "ospf-external-lsa-topology": {
+                            "forward-address": "0.0.0.0",
+                            "ospf-topology-id": "0",
+                            "ospf-topology-metric": "31900",
+                            "ospf-topology-name": "default",
+                            "tag": "10.76.212.52",
+                            "type-value": "1",
+                        },
+                    },
+                    "sequence-number": "0x800002d9",
                 },
-                "sequence-number": "0x80000298"
-            },
-            {
-                "advertising-router": "10.34.2.250",
-                "age": "1602",
-                "checksum": "0xf88e",
-                "lsa-id": "10.169.14.240",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "ospf-database-extensive": {
-                    "aging-timer": {
-                        "#text": "00:33:18"
-                    },
-                    "expiration-time": {
-                        "#text": "00:33:18"
-                    },
-                    "installation-time": {
-                        "#text": "00:26:36"
-                    },
-                    "lsa-change-count": "1",
-                    "lsa-changed-time": {
-                        "#text": "3w0d 08:51:43"
-                    },
-                    "send-time": {
-                        "#text": "00:26:34"
-                    }
-                },
-                "ospf-external-lsa": {
-                    "address-mask": "255.255.255.255",
-                    "ospf-external-lsa-topology": {
-                        "forward-address": "0.0.0.0",
-                        "ospf-topology-id": "0",
-                        "ospf-topology-metric": "50",
-                        "ospf-topology-name": "default",
-                        "tag": "0.0.0.0",
-                        "type-value": "1"
-                    }
-                },
-                "sequence-number": "0x8000029a"
-            },
-            {
-                "advertising-router": "10.34.2.251",
-                "age": "2289",
-                "checksum": "0x190c",
-                "lsa-id": "10.169.14.240",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "ospf-database-extensive": {
-                    "aging-timer": {
-                        "#text": "00:21:51"
-                    },
-                    "expiration-time": {
-                        "#text": "00:21:51"
-                    },
-                    "installation-time": {
-                        "#text": "00:38:00"
-                    },
-                    "lsa-change-count": "1",
-                    "lsa-changed-time": {
-                        "#text": "30w0d 01:34:30"
-                    },
-                    "send-time": {
-                        "#text": "00:37:59"
-                    }
-                },
-                "ospf-external-lsa": {
-                    "address-mask": "255.255.255.255",
-                    "ospf-external-lsa-topology": {
-                        "forward-address": "0.0.0.0",
-                        "ospf-topology-id": "0",
-                        "ospf-topology-metric": "50",
-                        "ospf-topology-name": "default",
-                        "tag": "0.0.0.0",
-                        "type-value": "1"
-                    }
-                },
-                "sequence-number": "0x800019e4"
-            },
-            {
-                "advertising-router": "10.34.2.250",
-                "age": "2754",
-                "checksum": "0xb341",
-                "lsa-id": "10.169.14.241",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "ospf-database-extensive": {
-                    "aging-timer": {
-                        "#text": "00:14:05"
-                    },
-                    "expiration-time": {
-                        "#text": "00:14:06"
-                    },
-                    "installation-time": {
-                        "#text": "00:45:48"
-                    },
-                    "lsa-change-count": "1",
-                    "lsa-changed-time": {
-                        "#text": "30w0d 01:05:04"
-                    },
-                    "send-time": {
-                        "#text": "00:45:46"
-                    }
-                },
-                "ospf-external-lsa": {
-                    "address-mask": "255.255.255.255",
-                    "ospf-external-lsa-topology": {
-                        "forward-address": "0.0.0.0",
-                        "ospf-topology-id": "0",
-                        "ospf-topology-metric": "50",
-                        "ospf-topology-name": "default",
-                        "tag": "0.0.0.0",
-                        "type-value": "1"
-                    }
-                },
-                "sequence-number": "0x80001a14"
-            },
-            {
-                "advertising-router": "10.34.2.251",
-                "age": "455",
-                "checksum": "0xea9b",
-                "lsa-id": "10.169.14.241",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "ospf-database-extensive": {
-                    "aging-timer": {
-                        "#text": "00:52:25"
-                    },
-                    "expiration-time": {
-                        "#text": "00:52:25"
-                    },
-                    "installation-time": {
-                        "#text": "00:07:27"
-                    },
-                    "lsa-change-count": "1",
-                    "lsa-changed-time": {
-                        "#text": "3w0d 08:11:38"
-                    },
-                    "send-time": {
-                        "#text": "00:07:25"
-                    }
-                },
-                "ospf-external-lsa": {
-                    "address-mask": "255.255.255.255",
-                    "ospf-external-lsa-topology": {
-                        "forward-address": "0.0.0.0",
-                        "ospf-topology-id": "0",
-                        "ospf-topology-metric": "50",
-                        "ospf-topology-name": "default",
-                        "tag": "0.0.0.0",
-                        "type-value": "1"
-                    }
-                },
-                "sequence-number": "0x80000299"
-            },
-            {
-                "advertising-router": "10.189.5.253",
-                "age": "569",
-                "checksum": "0xeb68",
-                "lsa-id": "10.169.14.241",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "ospf-database-extensive": {
-                    "aging-timer": {
-                        "#text": "00:50:31"
-                    },
-                    "expiration-time": {
-                        "#text": "00:50:31"
-                    },
-                    "installation-time": {
-                        "#text": "00:09:26"
-                    },
-                    "lsa-change-count": "31",
-                    "lsa-changed-time": {
-                        "#text": "3w3d 07:33:47"
-                    },
-                    "send-time": {
-                        "#text": "00:09:24"
-                    }
-                },
-                "ospf-external-lsa": {
-                    "address-mask": "255.255.255.255",
-                    "ospf-external-lsa-topology": {
-                        "forward-address": "0.0.0.0",
-                        "ospf-topology-id": "0",
-                        "ospf-topology-metric": "50",
-                        "ospf-topology-name": "default",
-                        "tag": "0.0.0.0",
-                        "type-value": "1"
-                    }
-                },
-                "sequence-number": "0x80000fae"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "1944",
-                "checksum": "0xc372",
-                "lsa-id": "10.189.5.252",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "ospf-database-extensive": {
-                    "aging-timer": {
-                        "#text": "00:27:35"
-                    },
-                    "expiration-time": {
-                        "#text": "00:27:36"
-                    },
-                    "installation-time": {
-                        "#text": "00:32:21"
-                    },
-                    "lsa-change-count": "3",
-                    "lsa-changed-time": {
-                        "#text": "3w3d 07:33:50"
-                    },
-                    "send-time": {
-                        "#text": "00:32:19"
-                    }
-                },
-                "ospf-external-lsa": {
-                    "address-mask": "255.255.255.255",
-                    "ospf-external-lsa-topology": {
-                        "forward-address": "0.0.0.0",
-                        "ospf-topology-id": "0",
-                        "ospf-topology-metric": "50",
-                        "ospf-topology-name": "default",
-                        "tag": "10.166.34.12",
-                        "type-value": "1"
-                    }
-                },
-                "sequence-number": "0x800019b0"
-            },
-            {
-                "advertising-router": "10.169.14.241",
-                "age": "227",
-                "checksum": "0x4d5",
-                "lsa-id": "10.189.5.253",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "ospf-database-extensive": {
-                    "aging-timer": {
-                        "#text": "00:56:12"
-                    },
-                    "expiration-time": {
-                        "#text": "00:56:13"
-                    },
-                    "installation-time": {
-                        "#text": "00:03:41"
-                    },
-                    "lsa-change-count": "17",
-                    "lsa-changed-time": {
-                        "#text": "3w3d 07:24:57"
-                    },
-                    "send-time": {
-                        "#text": "00:03:39"
-                    }
-                },
-                "ospf-external-lsa": {
-                    "address-mask": "255.255.255.255",
-                    "ospf-external-lsa-topology": {
-                        "forward-address": "0.0.0.0",
-                        "ospf-topology-id": "0",
-                        "ospf-topology-metric": "50",
-                        "ospf-topology-name": "default",
-                        "tag": "10.166.34.12",
-                        "type-value": "1"
-                    }
-                },
-                "sequence-number": "0x80001410"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "1191",
-                "checksum": "0xfb51",
-                "lsa-id": "192.168.100.0",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "ospf-database-extensive": {
-                    "aging-timer": {
-                        "#text": "00:40:08"
-                    },
-                    "expiration-time": {
-                        "#text": "00:40:09"
-                    },
-                    "installation-time": {
-                        "#text": "00:19:48"
-                    },
-                    "lsa-change-count": "75",
-                    "lsa-changed-time": {
-                        "#text": "2w6d 19:00:07"
-                    },
-                    "send-time": {
-                        "#text": "00:19:46"
-                    }
-                },
-                "ospf-external-lsa": {
-                    "address-mask": "255.255.255.128",
-                    "ospf-external-lsa-topology": {
-                        "forward-address": "0.0.0.0",
-                        "ospf-topology-id": "0",
-                        "ospf-topology-metric": "31900",
-                        "ospf-topology-name": "default",
-                        "tag": "10.76.212.52",
-                        "type-value": "1"
-                    }
-                },
-                "sequence-number": "0x800002da"
-            },
-            {
-                "advertising-router": "10.169.14.240",
-                "age": "1041",
-                "checksum": "0x19b8",
-                "lsa-id": "192.168.100.252",
-                "lsa-length": "36",
-                "lsa-type": "Extern",
-                "options": "0x22",
-                "ospf-database-extensive": {
-                    "aging-timer": {
-                        "#text": "00:42:39"
-                    },
-                    "expiration-time": {
-                        "#text": "00:42:39"
-                    },
-                    "installation-time": {
-                        "#text": "00:17:18"
-                    },
-                    "lsa-change-count": "75",
-                    "lsa-changed-time": {
-                        "#text": "2w6d 19:00:07"
-                    },
-                    "send-time": {
-                        "#text": "00:17:16"
-                    }
-                },
-                "ospf-external-lsa": {
-                    "address-mask": "255.255.255.255",
-                    "ospf-external-lsa-topology": {
-                        "forward-address": "0.0.0.0",
-                        "ospf-topology-id": "0",
-                        "ospf-topology-metric": "31900",
-                        "ospf-topology-name": "default",
-                        "tag": "10.76.212.52",
-                        "type-value": "1"
-                    }
-                },
-                "sequence-number": "0x800002d9"
-            }
-        ]
-    }
+            ]
         }
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -2931,18 +2764,18 @@ class TestShowOspfDatabaseExternalExtensive(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
-
 class TestShowOspfOverview(unittest.TestCase):
     """ Unit tests for:
             * show ospf overview
     """
 
-    device = Device(name='aDevice')
+    device = Device(name="aDevice")
     maxDiff = None
 
-    empty_output = {'execute.return_value': ''}
+    empty_output = {"execute.return_value": ""}
 
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        "execute.return_value": """
         show ospf overview
         Instance: master
             Router ID: 10.189.5.252
@@ -2970,63 +2803,59 @@ class TestShowOspfOverview(unittest.TestCase):
                 Full SPF runs: 173416
                 SPF delay: 0.200000 sec, SPF holddown: 2 sec, SPF rapid runs: 3
                 Backup SPF: Not Needed
-    '''}
+    """
+    }
 
     golden_parsed_output = {
         "ospf-overview-information": {
-        "ospf-overview": {
-            "instance-name": "master",
-            "ospf-area-overview": {
-                "authentication-type": "None",
-                "ospf-abr-count": "0",
-                "ospf-area": "0.0.0.8",
-                "ospf-asbr-count": "7",
-                "ospf-nbr-overview": {
-                    "ospf-nbr-up-count": "3"
+            "ospf-overview": {
+                "instance-name": "master",
+                "ospf-area-overview": {
+                    "authentication-type": "None",
+                    "ospf-abr-count": "0",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-asbr-count": "7",
+                    "ospf-nbr-overview": {"ospf-nbr-up-count": "3"},
+                    "ospf-stub-type": "Not Stub",
                 },
-                "ospf-stub-type": "Not Stub"
-            },
-            "ospf-lsa-refresh-time": "50",
-            "ospf-route-table-index": "0",
-            "ospf-router-id": "10.189.5.252",
-            "ospf-spring-overview": {
-                "ospf-node-segment": {
-                    "ospf-node-segment-ipv4-index": "71"
+                "ospf-lsa-refresh-time": "50",
+                "ospf-route-table-index": "0",
+                "ospf-router-id": "10.189.5.252",
+                "ospf-spring-overview": {
+                    "ospf-node-segment": {"ospf-node-segment-ipv4-index": "71"},
+                    "ospf-node-segment-enabled": "Enabled",
+                    "ospf-spring-enabled": "Enabled",
+                    "ospf-srgb-allocation": "Success",
+                    "ospf-srgb-block": {
+                        "ospf-srgb-first-label": "16000",
+                        "ospf-srgb-last-label": "23999",
+                        "ospf-srgb-size": "8000",
+                        "ospf-srgb-start-index": "16000",
+                    },
+                    "ospf-srgb-config": {
+                        "ospf-srgb-config-block-header": "SRGB Config Range",
+                        "ospf-srgb-index-range": "8000",
+                        "ospf-srgb-start-label": "16000",
+                    },
                 },
-                "ospf-node-segment-enabled": "Enabled",
-                "ospf-spring-enabled": "Enabled",
-                "ospf-srgb-allocation": "Success",
-                "ospf-srgb-block": {
-                    "ospf-srgb-first-label": "16000",
-                    "ospf-srgb-last-label": "23999",
-                    "ospf-srgb-size": "8000",
-                    "ospf-srgb-start-index": "16000"
+                "ospf-tilfa-overview": {
+                    "ospf-tilfa-ecmp-backup": "1",
+                    "ospf-tilfa-enabled": "Enabled",
+                    "ospf-tilfa-max-labels": "3",
+                    "ospf-tilfa-max-spf": "100",
                 },
-                "ospf-srgb-config": {
-                    "ospf-srgb-config-block-header": "SRGB Config Range",
-                    "ospf-srgb-index-range": "8000",
-                    "ospf-srgb-start-label": "16000"
-                }
-            },
-            "ospf-tilfa-overview": {
-                "ospf-tilfa-ecmp-backup": "1",
-                "ospf-tilfa-enabled": "Enabled",
-                "ospf-tilfa-max-labels": "3",
-                "ospf-tilfa-max-spf": "100"
-            },
-            "ospf-topology-overview": {
-                "ospf-backup-spf-status": "Not Needed",
-                "ospf-full-spf-count": "173416",
-                "ospf-prefix-export-count": "1",
-                "ospf-spf-delay": "0.200000",
-                "ospf-spf-holddown": "2",
-                "ospf-spf-rapid-runs": "3",
-                "ospf-topology-id": "0",
-                "ospf-topology-name": "default"
+                "ospf-topology-overview": {
+                    "ospf-backup-spf-status": "Not Needed",
+                    "ospf-full-spf-count": "173416",
+                    "ospf-prefix-export-count": "1",
+                    "ospf-spf-delay": "0.200000",
+                    "ospf-spf-holddown": "2",
+                    "ospf-spf-rapid-runs": "3",
+                    "ospf-topology-id": "0",
+                    "ospf-topology-name": "default",
+                },
             }
         }
-    }
-
     }
 
     def test_empty(self):
@@ -3041,17 +2870,19 @@ class TestShowOspfOverview(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
 class TestShowOspfOverviewExtensive(unittest.TestCase):
     """ Unit tests for:
             * show ospf overview extensive
     """
 
-    device = Device(name='aDevice')
+    device = Device(name="aDevice")
     maxDiff = None
 
-    empty_output = {'execute.return_value': ''}
+    empty_output = {"execute.return_value": ""}
 
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        "execute.return_value": """
         show ospf overview extensive
         Instance: master
             Router ID: 10.189.5.252
@@ -3079,62 +2910,59 @@ class TestShowOspfOverviewExtensive(unittest.TestCase):
                 Full SPF runs: 173416
                 SPF delay: 0.200000 sec, SPF holddown: 2 sec, SPF rapid runs: 3
                 Backup SPF: Not Needed
-    '''}
+    """
+    }
 
     golden_parsed_output = {
         "ospf-overview-information": {
-        "ospf-overview": {
-            "instance-name": "master",
-            "ospf-area-overview": {
-                "authentication-type": "None",
-                "ospf-abr-count": "0",
-                "ospf-area": "0.0.0.8",
-                "ospf-asbr-count": "7",
-                "ospf-nbr-overview": {
-                    "ospf-nbr-up-count": "3"
+            "ospf-overview": {
+                "instance-name": "master",
+                "ospf-area-overview": {
+                    "authentication-type": "None",
+                    "ospf-abr-count": "0",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-asbr-count": "7",
+                    "ospf-nbr-overview": {"ospf-nbr-up-count": "3"},
+                    "ospf-stub-type": "Not Stub",
                 },
-                "ospf-stub-type": "Not Stub"
-            },
-            "ospf-lsa-refresh-time": "50",
-            "ospf-route-table-index": "0",
-            "ospf-router-id": "10.189.5.252",
-            "ospf-spring-overview": {
-                "ospf-node-segment": {
-                    "ospf-node-segment-ipv4-index": "71"
+                "ospf-lsa-refresh-time": "50",
+                "ospf-route-table-index": "0",
+                "ospf-router-id": "10.189.5.252",
+                "ospf-spring-overview": {
+                    "ospf-node-segment": {"ospf-node-segment-ipv4-index": "71"},
+                    "ospf-node-segment-enabled": "Enabled",
+                    "ospf-spring-enabled": "Enabled",
+                    "ospf-srgb-allocation": "Success",
+                    "ospf-srgb-block": {
+                        "ospf-srgb-first-label": "16000",
+                        "ospf-srgb-last-label": "23999",
+                        "ospf-srgb-size": "8000",
+                        "ospf-srgb-start-index": "16000",
+                    },
+                    "ospf-srgb-config": {
+                        "ospf-srgb-config-block-header": "SRGB Config Range",
+                        "ospf-srgb-index-range": "8000",
+                        "ospf-srgb-start-label": "16000",
+                    },
                 },
-                "ospf-node-segment-enabled": "Enabled",
-                "ospf-spring-enabled": "Enabled",
-                "ospf-srgb-allocation": "Success",
-                "ospf-srgb-block": {
-                    "ospf-srgb-first-label": "16000",
-                    "ospf-srgb-last-label": "23999",
-                    "ospf-srgb-size": "8000",
-                    "ospf-srgb-start-index": "16000"
+                "ospf-tilfa-overview": {
+                    "ospf-tilfa-ecmp-backup": "1",
+                    "ospf-tilfa-enabled": "Enabled",
+                    "ospf-tilfa-max-labels": "3",
+                    "ospf-tilfa-max-spf": "100",
                 },
-                "ospf-srgb-config": {
-                    "ospf-srgb-config-block-header": "SRGB Config Range",
-                    "ospf-srgb-index-range": "8000",
-                    "ospf-srgb-start-label": "16000"
-                }
-            },
-            "ospf-tilfa-overview": {
-                "ospf-tilfa-ecmp-backup": "1",
-                "ospf-tilfa-enabled": "Enabled",
-                "ospf-tilfa-max-labels": "3",
-                "ospf-tilfa-max-spf": "100"
-            },
-            "ospf-topology-overview": {
-                "ospf-backup-spf-status": "Not Needed",
-                "ospf-full-spf-count": "173416",
-                "ospf-prefix-export-count": "1",
-                "ospf-spf-delay": "0.200000",
-                "ospf-spf-holddown": "2",
-                "ospf-spf-rapid-runs": "3",
-                "ospf-topology-id": "0",
-                "ospf-topology-name": "default"
+                "ospf-topology-overview": {
+                    "ospf-backup-spf-status": "Not Needed",
+                    "ospf-full-spf-count": "173416",
+                    "ospf-prefix-export-count": "1",
+                    "ospf-spf-delay": "0.200000",
+                    "ospf-spf-holddown": "2",
+                    "ospf-spf-rapid-runs": "3",
+                    "ospf-topology-id": "0",
+                    "ospf-topology-name": "default",
+                },
             }
         }
-    }
     }
 
     def test_empty(self):
@@ -3641,7 +3469,7 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "Priority "
                                 "7, "
                                 "1000Mbps\n",
-                                "Local " "333, " "Remote " "0",
+                                "Local 333, Remote 0",
                                 "0",
                             ],
                             "tlv-length": [
@@ -3733,7 +3561,7 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "Priority "
                                 "7, "
                                 "1000Mbps\n",
-                                "Local " "334, " "Remote " "0",
+                                "Local 334, Remote 0",
                                 "10",
                             ],
                             "tlv-length": [
@@ -3825,7 +3653,7 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "Priority "
                                 "7, "
                                 "1000Mbps\n",
-                                "Local " "336, " "Remote " "0",
+                                "Local 336, Remote 0",
                                 "2",
                             ],
                             "tlv-length": [
@@ -3889,8 +3717,8 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                             "tlv-length": ["1", "12", "3", "3", "3"],
                             "tlv-type-name": [
                                 "Algo",
-                                "SID/Label " "Range",
-                                "Range " "Size",
+                                "SID/Label Range",
+                                "Range Size",
                                 "SID/Label",
                                 "Label",
                             ],
@@ -3940,14 +3768,14 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "4",
                             ],
                             "tlv-type-name": [
-                                "Route " "Type",
-                                "Prefix " "Length",
+                                "Route Type",
+                                "Prefix Length",
                                 "AF",
                                 "Flags",
                                 "Prefix",
-                                "Prefix " "Sid",
+                                "Prefix Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Algorithm",
                                 "SID",
                             ],
@@ -3967,7 +3795,7 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "20",
-                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-name": "Extended Prefix",
                             "tlv-type-value": "1",
                         },
                     },
@@ -4013,17 +3841,17 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -4046,7 +3874,7 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -4092,17 +3920,17 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -4125,7 +3953,7 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -4171,17 +3999,17 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -4204,7 +4032,7 @@ class TestShowOspfDatabaseAdvertisingRouterSelfDetail(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -4259,8 +4087,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
     empty_output = {"execute.return_value": ""}
 
     golden_output = {
-        "execute.return_value":
-        """
+        "execute.return_value": """
         show ospf database extensive
 
             OSPF database, Area 0.0.0.8
@@ -5803,7 +5630,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:54:08"},
                         "installation-time": {"#text": "00:05:44"},
                         "lsa-change-count": "69",
-                        "lsa-changed-time": {"#text": "1d " "02:16:03"},
+                        "lsa-changed-time": {"#text": "1d 02:16:03"},
                         "send-time": {"#text": "00:05:42"},
                     },
                     "ospf-router-lsa": {
@@ -5999,7 +5826,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:30:40"},
                         "installation-time": {"#text": "00:29:13"},
                         "lsa-change-count": "38",
-                        "lsa-changed-time": {"#text": "4w6d " "19:31:25"},
+                        "lsa-changed-time": {"#text": "4w6d 19:31:25"},
                         "send-time": {"#text": "00:29:11"},
                     },
                     "ospf-router-lsa": {
@@ -6083,7 +5910,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:44:47"},
                         "installation-time": {"#text": "00:15:12"},
                         "lsa-change-count": "45",
-                        "lsa-changed-time": {"#text": "1w0d " "19:55:00"},
+                        "lsa-changed-time": {"#text": "1w0d 19:55:00"},
                         "send-time": {"#text": "00:15:10"},
                     },
                     "ospf-router-lsa": {
@@ -6221,7 +6048,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:42:53"},
                         "installation-time": {"#text": "00:17:01"},
                         "lsa-change-count": "1911",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:24"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:24"},
                         "send-time": {"#text": "00:16:59"},
                     },
                     "ospf-router-lsa": {
@@ -6435,7 +6262,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:45:42"},
                         "installation-time": {"#text": "00:14:09"},
                         "lsa-change-count": "1258",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:22"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:22"},
                         "send-time": {"#text": "00:14:07"},
                     },
                     "ospf-router-lsa": {
@@ -6595,7 +6422,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:31:22"},
                         "installation-time": {"#text": "00:28:32"},
                         "lsa-change-count": "5",
-                        "lsa-changed-time": {"#text": "3w0d " "08:18:02"},
+                        "lsa-changed-time": {"#text": "3w0d 08:18:02"},
                         "send-time": {"#text": "00:28:30"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -6632,7 +6459,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "Priority "
                                 "7, "
                                 "1000Mbps\n",
-                                "Local " "334, " "Remote " "0",
+                                "Local 334, Remote 0",
                                 "4",
                             ],
                             "tlv-length": [
@@ -6694,7 +6521,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:34:43"},
                         "installation-time": {"#text": "00:25:08"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "3w0d " "08:09:50"},
+                        "lsa-changed-time": {"#text": "3w0d 08:09:50"},
                         "send-time": {"#text": "00:25:06"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -6731,7 +6558,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "Priority "
                                 "7, "
                                 "1000Mbps\n",
-                                "Local " "334, " "Remote " "0",
+                                "Local 334, Remote 0",
                                 "6",
                             ],
                             "tlv-length": [
@@ -6793,7 +6620,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:34:31"},
                         "installation-time": {"#text": "00:25:26"},
                         "lsa-change-count": "6",
-                        "lsa-changed-time": {"#text": "3w3d " "07:23:05"},
+                        "lsa-changed-time": {"#text": "3w3d 07:23:05"},
                         "send-time": {"#text": "00:25:24"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -6830,7 +6657,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "Priority "
                                 "7, "
                                 "1000Mbps\n",
-                                "Local " "334, " "Remote " "0",
+                                "Local 334, Remote 0",
                                 "10",
                             ],
                             "tlv-length": [
@@ -6892,7 +6719,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:19:42"},
                         "installation-time": {"#text": "00:40:12"},
                         "lsa-change-count": "35",
-                        "lsa-changed-time": {"#text": "3w3d " "07:23:04"},
+                        "lsa-changed-time": {"#text": "3w3d 07:23:04"},
                         "send-time": {"#text": "00:40:10"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -6929,7 +6756,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "Priority "
                                 "7, "
                                 "1000Mbps\n",
-                                "Local " "334, " "Remote " "0",
+                                "Local 334, Remote 0",
                                 "6",
                             ],
                             "tlv-length": [
@@ -6992,7 +6819,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "generation-timer": {"#text": "00:00:19"},
                         "installation-time": {"#text": "00:45:02"},
                         "lsa-change-count": "3",
-                        "lsa-changed-time": {"#text": "3w3d " "07:23:03"},
+                        "lsa-changed-time": {"#text": "3w3d 07:23:03"},
                         "send-time": {"#text": "00:45:00"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7029,7 +6856,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "Priority "
                                 "7, "
                                 "1000Mbps\n",
-                                "Local " "334, " "Remote " "0",
+                                "Local 334, Remote 0",
                                 "10",
                             ],
                             "tlv-length": [
@@ -7092,7 +6919,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:56:31"},
                         "installation-time": {"#text": "00:03:26"},
                         "lsa-change-count": "15",
-                        "lsa-changed-time": {"#text": "3w3d " "07:23:04"},
+                        "lsa-changed-time": {"#text": "3w3d 07:23:04"},
                         "send-time": {"#text": "00:03:24"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7129,7 +6956,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "Priority "
                                 "7, "
                                 "1000Mbps\n",
-                                "Local " "334, " "Remote " "0",
+                                "Local 334, Remote 0",
                                 "6",
                             ],
                             "tlv-length": [
@@ -7191,7 +7018,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:50:20"},
                         "installation-time": {"#text": "00:09:34"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:24"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:24"},
                         "send-time": {"#text": "00:09:32"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7228,7 +7055,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "Priority "
                                 "7, "
                                 "1000Mbps\n",
-                                "Local " "337, " "Remote " "0",
+                                "Local 337, Remote 0",
                                 "2",
                             ],
                             "tlv-length": [
@@ -7290,7 +7117,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:30:40"},
                         "installation-time": {"#text": "00:29:13"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "21w5d " "22:48:11"},
+                        "lsa-changed-time": {"#text": "21w5d 22:48:11"},
                         "send-time": {"#text": "00:29:11"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7319,14 +7146,14 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "4",
                             ],
                             "tlv-type-name": [
-                                "Route " "Type",
-                                "Prefix " "Length",
+                                "Route Type",
+                                "Prefix Length",
                                 "AF",
                                 "Flags",
                                 "Prefix",
-                                "Prefix " "Sid",
+                                "Prefix Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Algorithm",
                                 "SID",
                             ],
@@ -7346,7 +7173,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "20",
-                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-name": "Extended Prefix",
                             "tlv-type-value": "1",
                         },
                     },
@@ -7365,7 +7192,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:42:53"},
                         "installation-time": {"#text": "00:17:01"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "30w0d " "01:32:34"},
+                        "lsa-changed-time": {"#text": "30w0d 01:32:34"},
                         "send-time": {"#text": "00:16:59"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7394,14 +7221,14 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "4",
                             ],
                             "tlv-type-name": [
-                                "Route " "Type",
-                                "Prefix " "Length",
+                                "Route Type",
+                                "Prefix Length",
                                 "AF",
                                 "Flags",
                                 "Prefix",
-                                "Prefix " "Sid",
+                                "Prefix Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Algorithm",
                                 "SID",
                             ],
@@ -7421,7 +7248,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "20",
-                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-name": "Extended Prefix",
                             "tlv-type-value": "1",
                         },
                     },
@@ -7440,7 +7267,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:45:42"},
                         "installation-time": {"#text": "00:14:09"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "30w0d " "01:32:36"},
+                        "lsa-changed-time": {"#text": "30w0d 01:32:36"},
                         "send-time": {"#text": "00:14:07"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7469,14 +7296,14 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "4",
                             ],
                             "tlv-type-name": [
-                                "Route " "Type",
-                                "Prefix " "Length",
+                                "Route Type",
+                                "Prefix Length",
                                 "AF",
                                 "Flags",
                                 "Prefix",
-                                "Prefix " "Sid",
+                                "Prefix Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Algorithm",
                                 "SID",
                             ],
@@ -7496,7 +7323,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "20",
-                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-name": "Extended Prefix",
                             "tlv-type-value": "1",
                         },
                     },
@@ -7515,7 +7342,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:57:07"},
                         "installation-time": {"#text": "00:02:50"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "30w0d " "01:32:37"},
+                        "lsa-changed-time": {"#text": "30w0d 01:32:37"},
                         "send-time": {"#text": "00:02:48"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7544,14 +7371,14 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "4",
                             ],
                             "tlv-type-name": [
-                                "Route " "Type",
-                                "Prefix " "Length",
+                                "Route Type",
+                                "Prefix Length",
                                 "AF",
                                 "Flags",
                                 "Prefix",
-                                "Prefix " "Sid",
+                                "Prefix Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Algorithm",
                                 "SID",
                             ],
@@ -7571,7 +7398,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "20",
-                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-name": "Extended Prefix",
                             "tlv-type-value": "1",
                         },
                     },
@@ -7590,7 +7417,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:30:41"},
                         "installation-time": {"#text": "00:29:13"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "30w0d " "01:32:36"},
+                        "lsa-changed-time": {"#text": "30w0d 01:32:36"},
                         "send-time": {"#text": "00:29:11"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7619,14 +7446,14 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "4",
                             ],
                             "tlv-type-name": [
-                                "Route " "Type",
-                                "Prefix " "Length",
+                                "Route Type",
+                                "Prefix Length",
                                 "AF",
                                 "Flags",
                                 "Prefix",
-                                "Prefix " "Sid",
+                                "Prefix Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Algorithm",
                                 "SID",
                             ],
@@ -7646,7 +7473,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "20",
-                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-name": "Extended Prefix",
                             "tlv-type-value": "1",
                         },
                     },
@@ -7666,7 +7493,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "generation-timer": {"#text": "00:18:20"},
                         "installation-time": {"#text": "00:31:39"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "30w0d " "01:46:13"},
+                        "lsa-changed-time": {"#text": "30w0d 01:46:13"},
                         "send-time": {"#text": "00:31:37"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7695,14 +7522,14 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "4",
                             ],
                             "tlv-type-name": [
-                                "Route " "Type",
-                                "Prefix " "Length",
+                                "Route Type",
+                                "Prefix Length",
                                 "AF",
                                 "Flags",
                                 "Prefix",
-                                "Prefix " "Sid",
+                                "Prefix Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Algorithm",
                                 "SID",
                             ],
@@ -7722,7 +7549,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "20",
-                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-name": "Extended Prefix",
                             "tlv-type-value": "1",
                         },
                     },
@@ -7742,7 +7569,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:27:00"},
                         "installation-time": {"#text": "00:32:57"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "30w0d " "01:32:43"},
+                        "lsa-changed-time": {"#text": "30w0d 01:32:43"},
                         "send-time": {"#text": "00:32:55"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7771,14 +7598,14 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "4",
                             ],
                             "tlv-type-name": [
-                                "Route " "Type",
-                                "Prefix " "Length",
+                                "Route Type",
+                                "Prefix Length",
                                 "AF",
                                 "Flags",
                                 "Prefix",
-                                "Prefix " "Sid",
+                                "Prefix Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Algorithm",
                                 "SID",
                             ],
@@ -7798,7 +7625,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "20",
-                            "tlv-type-name": "Extended " "Prefix",
+                            "tlv-type-name": "Extended Prefix",
                             "tlv-type-value": "1",
                         },
                     },
@@ -7817,7 +7644,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:53:53"},
                         "installation-time": {"#text": "00:06:01"},
                         "lsa-change-count": "285",
-                        "lsa-changed-time": {"#text": "2w0d " "00:50:30"},
+                        "lsa-changed-time": {"#text": "2w0d 00:50:30"},
                         "send-time": {"#text": "00:05:59"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7851,17 +7678,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -7884,7 +7711,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -7903,7 +7730,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:43:04"},
                         "installation-time": {"#text": "00:16:50"},
                         "lsa-change-count": "50",
-                        "lsa-changed-time": {"#text": "2w6d " "19:46:47"},
+                        "lsa-changed-time": {"#text": "2w6d 19:46:47"},
                         "send-time": {"#text": "00:16:48"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -7937,17 +7764,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -7970,7 +7797,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -7989,7 +7816,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:17:59"},
                         "installation-time": {"#text": "00:41:58"},
                         "lsa-change-count": "31",
-                        "lsa-changed-time": {"#text": "2w6d " "20:01:45"},
+                        "lsa-changed-time": {"#text": "2w6d 20:01:45"},
                         "send-time": {"#text": "00:41:56"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -8023,17 +7850,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -8056,7 +7883,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -8075,7 +7902,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:46:50"},
                         "installation-time": {"#text": "00:13:04"},
                         "lsa-change-count": "47",
-                        "lsa-changed-time": {"#text": "2w6d " "18:58:08"},
+                        "lsa-changed-time": {"#text": "2w6d 18:58:08"},
                         "send-time": {"#text": "00:13:02"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -8109,17 +7936,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -8142,7 +7969,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -8161,7 +7988,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:50:35"},
                         "installation-time": {"#text": "00:09:19"},
                         "lsa-change-count": "7",
-                        "lsa-changed-time": {"#text": "2w6d " "18:14:24"},
+                        "lsa-changed-time": {"#text": "2w6d 18:14:24"},
                         "send-time": {"#text": "00:09:17"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -8195,17 +8022,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -8228,7 +8055,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -8247,7 +8074,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:44:13"},
                         "installation-time": {"#text": "00:15:44"},
                         "lsa-change-count": "17",
-                        "lsa-changed-time": {"#text": "2w0d " "00:43:19"},
+                        "lsa-changed-time": {"#text": "2w0d 00:43:19"},
                         "send-time": {"#text": "00:15:42"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -8281,17 +8108,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -8314,7 +8141,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -8333,7 +8160,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:22:29"},
                         "installation-time": {"#text": "00:37:28"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:02"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:02"},
                         "send-time": {"#text": "00:37:26"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -8367,17 +8194,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -8400,7 +8227,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -8419,7 +8246,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:30:40"},
                         "installation-time": {"#text": "00:29:13"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "21w5d " "22:48:11"},
+                        "lsa-changed-time": {"#text": "21w5d 22:48:11"},
                         "send-time": {"#text": "00:29:11"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -8453,17 +8280,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -8486,7 +8313,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "32",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -8505,7 +8332,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:12:09"},
                         "installation-time": {"#text": "00:47:45"},
                         "lsa-change-count": "123",
-                        "lsa-changed-time": {"#text": "2w0d " "00:42:10"},
+                        "lsa-changed-time": {"#text": "2w0d 00:42:10"},
                         "send-time": {"#text": "00:47:43"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -8521,12 +8348,12 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                             ],
                             "tlv-length": ["1", "4", "4", "7", "1", "1", "1", "3"],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -8535,7 +8362,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "24",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -8554,7 +8381,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:38:23"},
                         "installation-time": {"#text": "00:21:28"},
                         "lsa-change-count": "243",
-                        "lsa-changed-time": {"#text": "2w6d " "19:46:37"},
+                        "lsa-changed-time": {"#text": "2w6d 19:46:37"},
                         "send-time": {"#text": "00:21:26"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -8588,17 +8415,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -8621,7 +8448,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -8640,7 +8467,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:44:47"},
                         "installation-time": {"#text": "00:15:12"},
                         "lsa-change-count": "2",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:03"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:03"},
                         "send-time": {"#text": "00:15:10"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -8710,37 +8537,37 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
-                                "Weight",
-                                "Label",
-                                "Invalid",
-                                "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -8783,7 +8610,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "80",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -8802,7 +8629,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:46:28"},
                         "installation-time": {"#text": "00:13:25"},
                         "lsa-change-count": "2",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:24"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:24"},
                         "send-time": {"#text": "00:13:23"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -8872,37 +8699,37 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
-                                "Weight",
-                                "Label",
-                                "Invalid",
-                                "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -8945,7 +8772,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "80",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -8964,7 +8791,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:44:47"},
                         "installation-time": {"#text": "00:15:12"},
                         "lsa-change-count": "2",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:02"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:02"},
                         "send-time": {"#text": "00:15:10"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -9034,37 +8861,37 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
-                                "Weight",
-                                "Label",
-                                "Invalid",
-                                "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -9107,7 +8934,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "80",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -9126,7 +8953,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:46:28"},
                         "installation-time": {"#text": "00:13:25"},
                         "lsa-change-count": "2",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:22"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:22"},
                         "send-time": {"#text": "00:13:23"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -9196,37 +9023,37 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
-                                "Weight",
-                                "Label",
-                                "Invalid",
-                                "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
+                                "Weight",
+                                "Label",
+                                "Invalid",
+                                "Flags",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -9269,7 +9096,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "80",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -9288,7 +9115,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:58:06"},
                         "installation-time": {"#text": "00:01:47"},
                         "lsa-change-count": "8",
-                        "lsa-changed-time": {"#text": "2w0d " "00:43:41"},
+                        "lsa-changed-time": {"#text": "2w0d 00:43:41"},
                         "send-time": {"#text": "00:01:45"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -9322,17 +9149,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -9355,7 +9182,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -9374,7 +9201,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:42:02"},
                         "installation-time": {"#text": "00:17:50"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:22"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:22"},
                         "send-time": {"#text": "00:17:48"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -9408,17 +9235,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -9441,7 +9268,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -9460,7 +9287,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:27:31"},
                         "installation-time": {"#text": "00:32:23"},
                         "lsa-change-count": "7",
-                        "lsa-changed-time": {"#text": "2w0d " "00:27:01"},
+                        "lsa-changed-time": {"#text": "2w0d 00:27:01"},
                         "send-time": {"#text": "00:32:21"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -9494,17 +9321,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -9527,7 +9354,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -9546,7 +9373,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:39:03"},
                         "installation-time": {"#text": "00:20:51"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:24"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:24"},
                         "send-time": {"#text": "00:20:49"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -9580,17 +9407,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -9613,7 +9440,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -9633,7 +9460,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "generation-timer": {"#text": "00:36:39"},
                         "installation-time": {"#text": "00:13:12"},
                         "lsa-change-count": "25",
-                        "lsa-changed-time": {"#text": "2w0d " "00:37:11"},
+                        "lsa-changed-time": {"#text": "2w0d 00:37:11"},
                         "send-time": {"#text": "00:13:10"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -9667,17 +9494,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -9700,7 +9527,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -9721,7 +9548,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "generation-timer": {"#text": "00:27:30"},
                         "installation-time": {"#text": "00:22:13"},
                         "lsa-change-count": "26",
-                        "lsa-changed-time": {"#text": "2w0d " "00:46:13"},
+                        "lsa-changed-time": {"#text": "2w0d 00:46:13"},
                         "send-time": {"#text": "00:22:11"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -9755,17 +9582,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -9788,7 +9615,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -9809,7 +9636,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "generation-timer": {"#text": "00:09:20"},
                         "installation-time": {"#text": "00:36:07"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "2w0d " "00:51:03"},
+                        "lsa-changed-time": {"#text": "2w0d 00:51:03"},
                         "send-time": {"#text": "00:36:05"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -9843,17 +9670,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -9876,7 +9703,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -9896,7 +9723,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:37:02"},
                         "installation-time": {"#text": "00:22:55"},
                         "lsa-change-count": "57",
-                        "lsa-changed-time": {"#text": "2w6d " "19:46:52"},
+                        "lsa-changed-time": {"#text": "2w6d 19:46:52"},
                         "send-time": {"#text": "00:22:53"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -9930,17 +9757,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -9963,7 +9790,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -9982,7 +9809,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:32:00"},
                         "installation-time": {"#text": "00:27:57"},
                         "lsa-change-count": "52",
-                        "lsa-changed-time": {"#text": "3w1d " "08:43:52"},
+                        "lsa-changed-time": {"#text": "3w1d 08:43:52"},
                         "send-time": {"#text": "00:27:55"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -10016,17 +9843,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -10049,7 +9876,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -10068,7 +9895,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:39:32"},
                         "installation-time": {"#text": "00:20:25"},
                         "lsa-change-count": "6",
-                        "lsa-changed-time": {"#text": "2w6d " "18:58:13"},
+                        "lsa-changed-time": {"#text": "2w6d 18:58:13"},
                         "send-time": {"#text": "00:20:23"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -10102,17 +9929,17 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
-                                "Adjacency " "Sid",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -10135,7 +9962,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "36",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -10154,7 +9981,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:54:34"},
                         "installation-time": {"#text": "00:05:21"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "1d " "02:16:03"},
+                        "lsa-changed-time": {"#text": "1d 02:16:03"},
                         "send-time": {"#text": "00:05:19"},
                     },
                     "ospf-opaque-area-lsa": {
@@ -10215,32 +10042,32 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                             ],
                             "tlv-type-name": [
-                                "Link " "Type",
-                                "Link " "Id",
-                                "Link " "Data",
-                                "Adjacency " "Sid",
+                                "Link Type",
+                                "Link Id",
+                                "Link Data",
+                                "Adjacency Sid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                                 "Invalid",
                                 "Flags",
-                                "MT " "ID",
+                                "MT ID",
                                 "Weight",
                                 "Label",
                             ],
@@ -10278,7 +10105,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "tlv-block": {
                             "formatted-tlv-data": "",
                             "tlv-length": "68",
-                            "tlv-type-name": "Extended " "Link",
+                            "tlv-type-name": "Extended Link",
                             "tlv-type-value": "1",
                         },
                     },
@@ -10297,7 +10124,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:16:26"},
                         "installation-time": {"#text": "00:43:25"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "30w0d " "01:32:36"},
+                        "lsa-changed-time": {"#text": "30w0d 01:32:36"},
                         "send-time": {"#text": "00:43:23"},
                     },
                     "ospf-external-lsa": {
@@ -10326,7 +10153,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:21:58"},
                         "installation-time": {"#text": "00:37:59"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "4w2d " "05:46:52"},
+                        "lsa-changed-time": {"#text": "4w2d 05:46:52"},
                         "send-time": {"#text": "00:37:57"},
                     },
                     "ospf-external-lsa": {
@@ -10355,7 +10182,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:39:41"},
                         "installation-time": {"#text": "00:20:15"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "21w6d " "00:04:15"},
+                        "lsa-changed-time": {"#text": "21w6d 00:04:15"},
                         "send-time": {"#text": "00:20:13"},
                     },
                     "ospf-external-lsa": {
@@ -10384,7 +10211,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:46:49"},
                         "installation-time": {"#text": "00:13:07"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "21w6d " "00:04:43"},
+                        "lsa-changed-time": {"#text": "21w6d 00:04:43"},
                         "send-time": {"#text": "00:13:05"},
                     },
                     "ospf-external-lsa": {
@@ -10413,7 +10240,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:24:28"},
                         "installation-time": {"#text": "00:35:29"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "4w2d " "05:46:49"},
+                        "lsa-changed-time": {"#text": "4w2d 05:46:49"},
                         "send-time": {"#text": "00:35:27"},
                     },
                     "ospf-external-lsa": {
@@ -10442,7 +10269,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:14:26"},
                         "installation-time": {"#text": "00:45:31"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "3w0d " "08:49:51"},
+                        "lsa-changed-time": {"#text": "3w0d 08:49:51"},
                         "send-time": {"#text": "00:45:29"},
                     },
                     "ospf-external-lsa": {
@@ -10471,7 +10298,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:16:03"},
                         "installation-time": {"#text": "00:43:51"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "3w0d " "08:09:51"},
+                        "lsa-changed-time": {"#text": "3w0d 08:09:51"},
                         "send-time": {"#text": "00:43:49"},
                     },
                     "ospf-external-lsa": {
@@ -10500,7 +10327,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:52:05"},
                         "installation-time": {"#text": "00:07:52"},
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "3w0d " "08:49:56"},
+                        "lsa-changed-time": {"#text": "3w0d 08:49:56"},
                         "send-time": {"#text": "00:07:50"},
                     },
                     "ospf-external-lsa": {
@@ -10529,7 +10356,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:42:03"},
                         "installation-time": {"#text": "00:17:54"},
                         "lsa-change-count": "75",
-                        "lsa-changed-time": {"#text": "2w6d " "18:58:13"},
+                        "lsa-changed-time": {"#text": "2w6d 18:58:13"},
                         "send-time": {"#text": "00:17:52"},
                     },
                     "ospf-external-lsa": {
@@ -10558,7 +10385,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "expiration-time": {"#text": "00:44:33"},
                         "installation-time": {"#text": "00:15:24"},
                         "lsa-change-count": "75",
-                        "lsa-changed-time": {"#text": "2w6d " "18:58:13"},
+                        "lsa-changed-time": {"#text": "2w6d 18:58:13"},
                         "send-time": {"#text": "00:15:22"},
                     },
                     "ospf-external-lsa": {
@@ -10578,8 +10405,6 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
         }
     }
 
-
-
     def test_empty(self):
         pass
         self.device = Mock(**self.empty_output)
@@ -10594,18 +10419,20 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
 class TestShowOspfNeighborExtensive(unittest.TestCase):
     """ Unit tests for:
             * show ospf neighbor extensive
     """
 
-    device = Device(name='aDevice')
+    device = Device(name="aDevice")
 
     maxDiff = None
 
-    empty_output = {'execute.return_value': ''}
+    empty_output = {"execute.return_value": ""}
 
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        "execute.return_value": """
         show ospf neighbor extensive
         Address          Interface              State     ID               Pri  Dead
         10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    39
@@ -10644,7 +10471,8 @@ class TestShowOspfNeighborExtensive(unittest.TestCase):
             167967      VL          UnProtected
 
         Topology default (ID 0) -> Bidirectional
-    '''}
+    """
+    }
 
     golden_parsed_output = {
         "ospf-neighbor-information": {
@@ -10653,7 +10481,11 @@ class TestShowOspfNeighborExtensive(unittest.TestCase):
                     "activity-timer": "39",
                     "adj-sid-list": {
                         "spring-adjacency-labels": [
-                            {"adj-sid-type": "Protected", "flags": "BVL", "label": "28985"},
+                            {
+                                "adj-sid-type": "Protected",
+                                "flags": "BVL",
+                                "label": "28985",
+                            },
                             {
                                 "adj-sid-type": "UnProtected",
                                 "flags": "VL",
@@ -10665,10 +10497,10 @@ class TestShowOspfNeighborExtensive(unittest.TestCase):
                     "dr-address": "0.0.0.0",
                     "interface-name": "ge-0/0/0.0",
                     "neighbor-address": "10.189.5.94",
-                    "neighbor-adjacency-time": {"#text": "3w0d " "16:50:35"},
+                    "neighbor-adjacency-time": {"#text": "3w0d 16:50:35"},
                     "neighbor-id": "10.189.5.253",
                     "neighbor-priority": "128",
-                    "neighbor-up-time": {"#text": "3w0d " "16:50:35"},
+                    "neighbor-up-time": {"#text": "3w0d 16:50:35"},
                     "options": "0x52",
                     "ospf-area": "0.0.0.8",
                     "ospf-neighbor-state": "Full",
@@ -10682,18 +10514,26 @@ class TestShowOspfNeighborExtensive(unittest.TestCase):
                     "activity-timer": "31",
                     "adj-sid-list": {
                         "spring-adjacency-labels": [
-                            {"adj-sid-type": "Protected", "flags": "BVL", "label": "2567"},
-                            {"adj-sid-type": "UnProtected", "flags": "VL", "label": "2568"},
+                            {
+                                "adj-sid-type": "Protected",
+                                "flags": "BVL",
+                                "label": "2567",
+                            },
+                            {
+                                "adj-sid-type": "UnProtected",
+                                "flags": "VL",
+                                "label": "2568",
+                            },
                         ]
                     },
                     "bdr-address": "0.0.0.0",
                     "dr-address": "0.0.0.0",
                     "interface-name": "ge-0/0/1.0",
                     "neighbor-address": "10.169.14.121",
-                    "neighbor-adjacency-time": {"#text": "3w2d " "03:12:15"},
+                    "neighbor-adjacency-time": {"#text": "3w2d 03:12:15"},
                     "neighbor-id": "10.169.14.240",
                     "neighbor-priority": "128",
-                    "neighbor-up-time": {"#text": "3w2d " "03:12:20"},
+                    "neighbor-up-time": {"#text": "3w2d 03:12:20"},
                     "options": "0x52",
                     "ospf-area": "0.0.0.8",
                     "ospf-neighbor-state": "Full",
@@ -10723,10 +10563,10 @@ class TestShowOspfNeighborExtensive(unittest.TestCase):
                     "dr-address": "0.0.0.0",
                     "interface-name": "ge-0/0/2.0",
                     "neighbor-address": "10.19.198.26",
-                    "neighbor-adjacency-time": {"#text": "1w5d " "20:40:14"},
+                    "neighbor-adjacency-time": {"#text": "1w5d 20:40:14"},
                     "neighbor-id": "10.19.198.239",
                     "neighbor-priority": "1",
-                    "neighbor-up-time": {"#text": "1w5d " "20:40:14"},
+                    "neighbor-up-time": {"#text": "1w5d 20:40:14"},
                     "options": "0x52",
                     "ospf-area": "0.0.0.8",
                     "ospf-neighbor-state": "Full",
@@ -10752,6 +10592,7 @@ class TestShowOspfNeighborExtensive(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
 class TestShowOspfInterfaceExtensive(unittest.TestCase):
     """ Unit tests for:
             * show ospf interface extensive
@@ -10759,11 +10600,12 @@ class TestShowOspfInterfaceExtensive(unittest.TestCase):
 
     maxDiff = None
 
-    device = Device(name='aDevice')
+    device = Device(name="aDevice")
 
-    empty_output = {'execute.return_value': ''}
+    empty_output = {"execute.return_value": ""}
 
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        "execute.return_value": """
                 show ospf interface extensive
         Interface           State   Area            DR ID           BDR ID          Nbrs
         ge-0/0/0.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
@@ -10805,7 +10647,8 @@ class TestShowOspfInterfaceExtensive(unittest.TestCase):
         Auth type: None
         Protection type: None
         Topology default (ID 0) -> Cost: 0
-        '''}
+        """
+    }
 
     golden_parsed_output = {
         "ospf-interface-information": {
@@ -10834,10 +10677,10 @@ class TestShowOspfInterfaceExtensive(unittest.TestCase):
                     "ospf-interface-topology": {
                         "ospf-topology-id": "0",
                         "ospf-topology-metric": "5",
-                        "ospf-topology-name": "default"
+                        "ospf-topology-name": "default",
                     },
                     "ospf-stub-type": "Not Stub",
-                    "retransmit-interval": "5"
+                    "retransmit-interval": "5",
                 },
                 {
                     "address-mask": "255.255.255.252",
@@ -10863,10 +10706,10 @@ class TestShowOspfInterfaceExtensive(unittest.TestCase):
                     "ospf-interface-topology": {
                         "ospf-topology-id": "0",
                         "ospf-topology-metric": "100",
-                        "ospf-topology-name": "default"
+                        "ospf-topology-name": "default",
                     },
                     "ospf-stub-type": "Not Stub",
-                    "retransmit-interval": "5"
+                    "retransmit-interval": "5",
                 },
                 {
                     "address-mask": "255.255.255.252",
@@ -10892,10 +10735,10 @@ class TestShowOspfInterfaceExtensive(unittest.TestCase):
                     "ospf-interface-topology": {
                         "ospf-topology-id": "0",
                         "ospf-topology-metric": "1000",
-                        "ospf-topology-name": "default"
+                        "ospf-topology-name": "default",
                     },
                     "ospf-stub-type": "Not Stub",
-                    "retransmit-interval": "5"
+                    "retransmit-interval": "5",
                 },
                 {
                     "address-mask": "255.255.255.0",
@@ -10918,11 +10761,11 @@ class TestShowOspfInterfaceExtensive(unittest.TestCase):
                         "ospf-topology-id": "0",
                         "ospf-topology-metric": "100",
                         "ospf-topology-name": "default",
-                        "ospf-topology-passive": True
+                        "ospf-topology-passive": True,
                     },
                     "ospf-stub-type": "Not Stub",
                     "passive": "Passive",
-                    "retransmit-interval": "5"
+                    "retransmit-interval": "5",
                 },
                 {
                     "address-mask": "255.255.255.255",
@@ -10945,12 +10788,12 @@ class TestShowOspfInterfaceExtensive(unittest.TestCase):
                     "ospf-interface-topology": {
                         "ospf-topology-id": "0",
                         "ospf-topology-metric": "0",
-                        "ospf-topology-name": "default"
+                        "ospf-topology-name": "default",
                     },
                     "ospf-stub-type": "Not Stub",
                     "retransmit-interval": "5",
-                    "router-priority": "128"
-                }
+                    "router-priority": "128",
+                },
             ]
         }
     }
@@ -10967,18 +10810,20 @@ class TestShowOspfInterfaceExtensive(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
 class TestShowOspfNeighborDetail(unittest.TestCase):
     """ Unit tests for:
             * show ospf neighbor detail
     """
 
-    device = Device(name='aDevice')
+    device = Device(name="aDevice")
 
     maxDiff = None
 
-    empty_output = {'execute.return_value': ''}
+    empty_output = {"execute.return_value": ""}
 
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        "execute.return_value": """
         show ospf neighbor detail
         Address          Interface              State     ID               Pri  Dead
         10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    39
@@ -11017,7 +10862,8 @@ class TestShowOspfNeighborDetail(unittest.TestCase):
             167967      VL          UnProtected
 
         Topology default (ID 0) -> Bidirectional
-    '''}
+    """
+    }
 
     golden_parsed_output = {
         "ospf-neighbor-information": {
@@ -11026,7 +10872,11 @@ class TestShowOspfNeighborDetail(unittest.TestCase):
                     "activity-timer": "39",
                     "adj-sid-list": {
                         "spring-adjacency-labels": [
-                            {"adj-sid-type": "Protected", "flags": "BVL", "label": "28985"},
+                            {
+                                "adj-sid-type": "Protected",
+                                "flags": "BVL",
+                                "label": "28985",
+                            },
                             {
                                 "adj-sid-type": "UnProtected",
                                 "flags": "VL",
@@ -11038,10 +10888,10 @@ class TestShowOspfNeighborDetail(unittest.TestCase):
                     "dr-address": "0.0.0.0",
                     "interface-name": "ge-0/0/0.0",
                     "neighbor-address": "10.189.5.94",
-                    "neighbor-adjacency-time": {"#text": "3w0d " "16:50:35"},
+                    "neighbor-adjacency-time": {"#text": "3w0d 16:50:35"},
                     "neighbor-id": "10.189.5.253",
                     "neighbor-priority": "128",
-                    "neighbor-up-time": {"#text": "3w0d " "16:50:35"},
+                    "neighbor-up-time": {"#text": "3w0d 16:50:35"},
                     "options": "0x52",
                     "ospf-area": "0.0.0.8",
                     "ospf-neighbor-state": "Full",
@@ -11055,18 +10905,26 @@ class TestShowOspfNeighborDetail(unittest.TestCase):
                     "activity-timer": "31",
                     "adj-sid-list": {
                         "spring-adjacency-labels": [
-                            {"adj-sid-type": "Protected", "flags": "BVL", "label": "2567"},
-                            {"adj-sid-type": "UnProtected", "flags": "VL", "label": "2568"},
+                            {
+                                "adj-sid-type": "Protected",
+                                "flags": "BVL",
+                                "label": "2567",
+                            },
+                            {
+                                "adj-sid-type": "UnProtected",
+                                "flags": "VL",
+                                "label": "2568",
+                            },
                         ]
                     },
                     "bdr-address": "0.0.0.0",
                     "dr-address": "0.0.0.0",
                     "interface-name": "ge-0/0/1.0",
                     "neighbor-address": "10.169.14.121",
-                    "neighbor-adjacency-time": {"#text": "3w2d " "03:12:15"},
+                    "neighbor-adjacency-time": {"#text": "3w2d 03:12:15"},
                     "neighbor-id": "10.169.14.240",
                     "neighbor-priority": "128",
-                    "neighbor-up-time": {"#text": "3w2d " "03:12:20"},
+                    "neighbor-up-time": {"#text": "3w2d 03:12:20"},
                     "options": "0x52",
                     "ospf-area": "0.0.0.8",
                     "ospf-neighbor-state": "Full",
@@ -11096,10 +10954,10 @@ class TestShowOspfNeighborDetail(unittest.TestCase):
                     "dr-address": "0.0.0.0",
                     "interface-name": "ge-0/0/2.0",
                     "neighbor-address": "10.19.198.26",
-                    "neighbor-adjacency-time": {"#text": "1w5d " "20:40:14"},
+                    "neighbor-adjacency-time": {"#text": "1w5d 20:40:14"},
                     "neighbor-id": "10.19.198.239",
                     "neighbor-priority": "1",
-                    "neighbor-up-time": {"#text": "1w5d " "20:40:14"},
+                    "neighbor-up-time": {"#text": "1w5d 20:40:14"},
                     "options": "0x52",
                     "ospf-area": "0.0.0.8",
                     "ospf-neighbor-state": "Full",
@@ -11128,8 +10986,2156 @@ class TestShowOspfNeighborDetail(unittest.TestCase):
     def test_show_ospf_neighbor_instance_detail(self):
         self.device = Mock(**self.golden_output)
         obj = ShowOspfNeighborDetail(device=self.device)
-        parsed_output = obj.parse(neighbor='10.189.5.94')
+        parsed_output = obj.parse(neighbor="10.189.5.94")
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class TestShowOspfRouteBrief(unittest.TestCase):
+    """ Unit tests for:
+            * show ospf route brief
+    """
+
+    maxDiff = None
+
+    device = Device(name="aDevice")
+
+    empty_output = {"execute.return_value": ""}
+
+    golden_output = {
+        "execute.return_value": """
+        show ospf route brief
+        Topology default Route Table:
+
+        Prefix             Path  Route      NH       Metric NextHop       Nexthop
+                        Type  Type       Type            Interface     Address/LSP
+        10.36.3.3            Intra Router     IP         1201 ge-0/0/1.0    10.169.14.121
+        10.100.5.5            Intra Router     IP         1200 ge-0/0/1.0    10.169.14.121
+        10.19.198.239      Intra Router     IP         1000 ge-0/0/2.0    10.19.198.26
+        10.34.2.250       Intra AS BR      IP          200 ge-0/0/1.0    10.169.14.121
+        10.34.2.251       Intra AS BR      IP          205 ge-0/0/1.0    10.169.14.121
+        10.169.196.241    Intra Router     IP         1200 ge-0/0/1.0    10.169.14.121
+        10.169.14.240     Intra AS BR      IP          100 ge-0/0/1.0    10.169.14.121
+        10.169.14.241     Intra AS BR      IP          105 ge-0/0/1.0    10.169.14.121
+        10.189.5.253       Intra AS BR      IP            5 ge-0/0/0.0    10.189.5.94
+        192.168.36.119    Intra AS BR      IP        10100 ge-0/0/1.0    10.169.14.121
+        192.168.36.120    Intra AS BR      IP        10100 ge-0/0/1.0    10.169.14.121
+        0.0.0.0/0          Ext1  Network    IP          101 ge-0/0/1.0    10.169.14.121
+        10.1.0.0/24         Ext2  Network    IP           20 ge-0/0/1.0    10.169.14.121
+        10.36.3.3/32         Intra Network    IP         1202 ge-0/0/1.0    10.169.14.121
+        10.16.0.0/30         Intra Network    IP         1200 ge-0/0/1.0    10.169.14.121
+        10.100.5.5/32         Intra Network    IP         1201 ge-0/0/1.0    10.169.14.121
+        10.100.5.5/32         Intra Network    Spring     1201 ge-0/0/1.0    10.169.14.121
+                                            Bkup SPRING     ge-0/0/0.0    10.189.5.94
+        10.19.198.24/30    Intra Network    IP         1000 ge-0/0/2.0
+        10.19.198.28/30    Intra Network    IP         1005 ge-0/0/0.0    10.189.5.94
+        10.19.198.239/32   Intra Network    IP         1001 ge-0/0/2.0    10.19.198.26
+        10.19.198.239/32   Intra Network    Spring     1001 ge-0/0/2.0    10.19.198.26
+                                            Bkup SPRING     ge-0/0/0.0    10.189.5.94
+        10.174.132.237/32   Ext1  Network    IP          150 ge-0/0/1.0    10.169.14.121
+        10.34.2.200/30    Intra Network    IP          205 ge-0/0/1.0    10.169.14.121
+        10.34.2.250/32    Intra Network    IP          200 ge-0/0/1.0    10.169.14.121
+        10.34.2.250/32    Intra Network    Spring      200 ge-0/0/1.0    10.169.14.121
+        10.34.2.251/32    Intra Network    IP          205 ge-0/0/1.0    10.169.14.121
+        10.34.2.251/32    Intra Network    Spring      205 ge-0/0/1.0    10.169.14.121
+        10.15.0.0/30        Intra Network    IP         1001 ge-0/0/2.0    10.19.198.26
+        10.64.0.0/30        Intra Network    IP         1201 ge-0/0/1.0    10.169.14.121
+        10.55.0.0/24       Intra Network    IP          100 ge-0/0/3.0
+        10.169.196.212/30 Intra Network    IP         1200 ge-0/0/1.0    10.169.14.121
+        10.169.196.216/30 Intra Network    IP         1205 ge-0/0/1.0    10.169.14.121
+        10.169.196.241/32 Intra Network    IP         1201 ge-0/0/1.0    10.169.14.121
+        10.169.196.241/32 Intra Network    Spring     1201 ge-0/0/1.0    10.169.14.121
+                                            Bkup SPRING     ge-0/0/0.0    10.189.5.94
+        10.169.14.16/30   Intra Network    IP          105 ge-0/0/1.0    10.169.14.121
+        10.169.14.32/30   Intra Network    IP          225 ge-0/0/1.0    10.169.14.121
+        10.169.14.120/30  Intra Network    IP          100 ge-0/0/1.0
+        10.169.14.128/30  Intra Network    IP          125 ge-0/0/0.0    10.189.5.94
+        10.169.14.156/30  Intra Network    IP          200 ge-0/0/1.0    10.169.14.121
+        10.169.14.240/32  Intra Network    IP          100 ge-0/0/1.0    10.169.14.121
+        10.169.14.240/32  Intra Network    Spring      100 ge-0/0/1.0    10.169.14.121
+                                            Bkup SPRING     ge-0/0/0.0    10.189.5.94
+        10.169.14.241/32  Intra Network    IP          105 ge-0/0/1.0    10.169.14.121
+        10.169.14.241/32  Intra Network    Spring      105 ge-0/0/1.0    10.169.14.121
+        10.169.14.242/32  Intra Network    IP          100 ge-0/0/1.0    10.169.14.121
+        10.169.14.243/32  Intra Network    IP          105 ge-0/0/1.0    10.169.14.121
+        10.189.5.92/30     Intra Network    IP            5 ge-0/0/0.0
+        10.189.5.252/32    Intra Network    IP            0 lo0.0
+        10.189.5.252/32    Intra Network    Spring        0 lo0.0
+        10.189.5.253/32    Intra Network    IP            5 ge-0/0/0.0    10.189.5.94
+        10.189.5.253/32    Intra Network    Spring        5 ge-0/0/0.0    10.189.5.94
+        192.168.220.0/30       Intra Network    IP         1200 ge-0/0/1.0    10.169.14.121
+        192.168.36.119/32 Intra Network    IP        10101 ge-0/0/1.0    10.169.14.121
+        192.168.36.120/32 Intra Network    IP        10101 ge-0/0/1.0    10.169.14.121
+        2567               Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        2567 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        2568               Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+        2568 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+        167966             Intra Network    Mpls          0 ge-0/0/2.0    10.19.198.26
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        167966 (S=0)       Intra Network    Mpls          0 ge-0/0/2.0    10.19.198.26
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        167967             Intra Network    Mpls          0 ge-0/0/2.0    10.19.198.26
+        167967 (S=0)       Intra Network    Mpls          0 ge-0/0/2.0    10.19.198.26
+        28985              Intra Network    Mpls          0 ge-0/0/0.0    10.189.5.94
+        28985 (S=0)        Intra Network    Mpls          0 ge-0/0/0.0    10.189.5.94
+        28986              Intra Network    Mpls          0 ge-0/0/0.0    10.189.5.94
+        28986 (S=0)        Intra Network    Mpls          0 ge-0/0/0.0    10.189.5.94
+        17000              Intra Network    Mpls       1201 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        16051              Intra Network    Mpls        100 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        16051 (S=0)        Intra Network    Mpls        100 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        16052              Intra Network    Mpls        105 ge-0/0/1.0    10.169.14.121
+        16061              Intra Network    Mpls        200 ge-0/0/1.0    10.169.14.121
+        16062              Intra Network    Mpls        205 ge-0/0/1.0    10.169.14.121
+        16063              Intra Network    Mpls       1201 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        16072              Intra Network    Mpls          5 ge-0/0/0.0    10.189.5.94
+        16073              Intra Network    Mpls       1001 ge-0/0/2.0    10.19.198.26
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        16073 (S=0)        Intra Network    Mpls       1001 ge-0/0/2.0    10.19.198.26
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+    """
+    }
+
+    golden_parsed_output = {
+        "ospf-route-information": {
+            "ospf-topology-route-table": {
+                "ospf-route": [
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.36.3.3",
+                                "interface-cost": "1201",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Router",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.100.5.5",
+                                "interface-cost": "1200",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Router",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.19.198.239",
+                                "interface-cost": "1000",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Router",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.34.2.250",
+                                "interface-cost": "200",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "AS BR",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.34.2.251",
+                                "interface-cost": "205",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "AS BR",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.196.241",
+                                "interface-cost": "1200",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Router",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.240",
+                                "interface-cost": "100",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "AS BR",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.241",
+                                "interface-cost": "105",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "AS BR",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.189.5.253",
+                                "interface-cost": "5",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "AS BR",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "192.168.36.119",
+                                "interface-cost": "10100",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "AS BR",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "192.168.36.120",
+                                "interface-cost": "10100",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "AS BR",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "0.0.0.0/0",
+                                "interface-cost": "101",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Ext1",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.1.0.0/24",
+                                "interface-cost": "20",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Ext2",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.36.3.3/32",
+                                "interface-cost": "1202",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.16.0.0/30",
+                                "interface-cost": "1200",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.100.5.5/32",
+                                "interface-cost": "1201",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                            {
+                                "address-prefix": "10.100.5.5/32",
+                                "interface-cost": "1201",
+                                "next-hop-type": "Spring",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup SPRING",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.19.198.24/30",
+                                "interface-cost": "1000",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"}
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.19.198.28/30",
+                                "interface-cost": "1005",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.19.198.239/32",
+                                "interface-cost": "1001",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                            {
+                                "address-prefix": "10.19.198.239/32",
+                                "interface-cost": "1001",
+                                "next-hop-type": "Spring",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup SPRING",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.174.132.237/32",
+                                "interface-cost": "150",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Ext1",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.34.2.200/30",
+                                "interface-cost": "205",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.34.2.250/32",
+                                "interface-cost": "200",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                            {
+                                "address-prefix": "10.34.2.250/32",
+                                "interface-cost": "200",
+                                "next-hop-type": "Spring",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.34.2.251/32",
+                                "interface-cost": "205",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                            {
+                                "address-prefix": "10.34.2.251/32",
+                                "interface-cost": "205",
+                                "next-hop-type": "Spring",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.15.0.0/30",
+                                "interface-cost": "1001",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.64.0.0/30",
+                                "interface-cost": "1201",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.55.0.0/24",
+                                "interface-cost": "100",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-name": {"interface-name": "ge-0/0/3.0"}
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.196.212/30",
+                                "interface-cost": "1200",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.196.216/30",
+                                "interface-cost": "1205",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.196.241/32",
+                                "interface-cost": "1201",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                            {
+                                "address-prefix": "10.169.196.241/32",
+                                "interface-cost": "1201",
+                                "next-hop-type": "Spring",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup SPRING",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.16/30",
+                                "interface-cost": "105",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.32/30",
+                                "interface-cost": "225",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.120/30",
+                                "interface-cost": "100",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"}
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.128/30",
+                                "interface-cost": "125",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.156/30",
+                                "interface-cost": "200",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.240/32",
+                                "interface-cost": "100",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                            {
+                                "address-prefix": "10.169.14.240/32",
+                                "interface-cost": "100",
+                                "next-hop-type": "Spring",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup SPRING",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.241/32",
+                                "interface-cost": "105",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                            {
+                                "address-prefix": "10.169.14.241/32",
+                                "interface-cost": "105",
+                                "next-hop-type": "Spring",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.242/32",
+                                "interface-cost": "100",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.243/32",
+                                "interface-cost": "105",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.189.5.92/30",
+                                "interface-cost": "5",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"}
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.189.5.252/32",
+                                "interface-cost": "0",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-name": {"interface-name": "lo0.0"}
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                            {
+                                "address-prefix": "10.189.5.252/32",
+                                "interface-cost": "0",
+                                "next-hop-type": "Spring",
+                                "ospf-next-hop": {
+                                    "next-hop-name": {"interface-name": "lo0.0"}
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.189.5.253/32",
+                                "interface-cost": "5",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                            {
+                                "address-prefix": "10.189.5.253/32",
+                                "interface-cost": "5",
+                                "next-hop-type": "Spring",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "192.168.220.0/30",
+                                "interface-cost": "1200",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "192.168.36.119/32",
+                                "interface-cost": "10101",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "192.168.36.120/32",
+                                "interface-cost": "10101",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "2567",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "2567 (S=0)",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "2568",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "2568 (S=0)",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "167966",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "167966 (S=0)",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "167967",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "167967 (S=0)",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "28985",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "28985 (S=0)",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "28986",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "28986 (S=0)",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "17000",
+                                "interface-cost": "1201",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16051",
+                                "interface-cost": "100",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16051 (S=0)",
+                                "interface-cost": "100",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16052",
+                                "interface-cost": "105",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16061",
+                                "interface-cost": "200",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16062",
+                                "interface-cost": "205",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16063",
+                                "interface-cost": "1201",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16072",
+                                "interface-cost": "5",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16073",
+                                "interface-cost": "1001",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16073 (S=0)",
+                                "interface-cost": "1001",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                ]
+            }
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfRouteBrief(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspfRouteBrief(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class TestShowOspfRouteDetail(unittest.TestCase):
+    """ Unit tests for:
+            * show ospf route detail
+    """
+
+    maxDiff = None
+
+    device = Device(name="aDevice")
+
+    empty_output = {"execute.return_value": ""}
+
+    golden_output = {
+        "execute.return_value": """
+        show ospf route detail
+        Topology default Route Table:
+
+        Prefix             Path  Route      NH       Metric NextHop       Nexthop
+                        Type  Type       Type            Interface     Address/LSP
+        10.36.3.3            Intra Router     IP         1201 ge-0/0/1.0    10.169.14.121
+        area 0.0.0.8, origin 10.36.3.3, optional-capability 0x0
+        10.100.5.5            Intra Router     IP         1200 ge-0/0/1.0    10.169.14.121
+        area 0.0.0.8, origin 10.100.5.5, optional-capability 0x0
+        10.19.198.239      Intra Router     IP         1000 ge-0/0/2.0    10.19.198.26
+        area 0.0.0.8, origin 10.19.198.239, optional-capability 0x0
+        10.34.2.250       Intra AS BR      IP          200 ge-0/0/1.0    10.169.14.121
+        area 0.0.0.8, origin 10.34.2.250, optional-capability 0x2
+        10.34.2.251       Intra AS BR      IP          205 ge-0/0/1.0    10.169.14.121
+        area 0.0.0.8, origin 10.34.2.251, optional-capability 0x2
+        10.169.196.241    Intra Router     IP         1200 ge-0/0/1.0    10.169.14.121
+        area 0.0.0.8, origin 10.169.196.241, optional-capability 0x0
+        10.169.14.240     Intra AS BR      IP          100 ge-0/0/1.0    10.169.14.121
+        area 0.0.0.8, origin 10.169.14.240, optional-capability 0x2
+        10.100.5.5/32         Intra Network    Spring     1201 ge-0/0/1.0    10.169.14.121
+                                            Bkup SPRING     ge-0/0/0.0    10.189.5.94
+        area 0.0.0.8, origin 10.100.5.5, priority medium
+        10.19.198.24/30    Intra Network    IP         1000 ge-0/0/2.0
+        area 0.0.0.8, origin 10.189.5.252, priority low
+        10.19.198.28/30    Intra Network    IP         1005 ge-0/0/0.0    10.189.5.94
+        area 0.0.0.8, origin 10.189.5.253, priority medium
+        10.19.198.239/32   Intra Network    IP         1001 ge-0/0/2.0    10.19.198.26
+        area 0.0.0.8, origin 10.19.198.239, priority medium
+        10.19.198.239/32   Intra Network    Spring     1001 ge-0/0/2.0    10.19.198.26
+                                            Bkup SPRING     ge-0/0/0.0    10.189.5.94
+        area 0.0.0.8, origin 10.19.198.239, priority medium
+        192.168.100.252/32 Ext1  Network    IP        32000 ge-0/0/1.0    10.169.14.121
+        area 0.0.0.0, origin 10.169.14.240, priority medium
+        192.168.36.48/30  Intra Network    IP        10100 ge-0/0/1.0    10.169.14.121
+        area 0.0.0.8, origin 10.169.14.240, priority medium
+        192.168.36.56/30  Intra Network    IP        10100 ge-0/0/1.0    10.169.14.121
+        area 0.0.0.8, origin 10.169.14.240, priority medium
+        192.168.36.119/32 Intra Network    IP        10101 ge-0/0/1.0    10.169.14.121
+        area 0.0.0.8, origin 192.168.36.119, priority medium
+        192.168.36.120/32 Intra Network    IP        10101 ge-0/0/1.0    10.169.14.121
+        area 0.0.0.8, origin 192.168.36.120, priority medium
+        2567               Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        area 0.0.0.8, origin 10.189.5.252, priority medium
+        2567 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        area 0.0.0.8, origin 10.189.5.252, priority medium
+        2568               Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+        area 0.0.0.8, origin 10.189.5.252, priority medium
+        2568 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+        area 0.0.0.8, origin 10.189.5.252, priority medium
+        167966             Intra Network    Mpls          0 ge-0/0/2.0    10.19.198.26
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        area 0.0.0.8, origin 10.189.5.252, priority medium
+        167966 (S=0)       Intra Network    Mpls          0 ge-0/0/2.0    10.19.198.26
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        area 0.0.0.8, origin 10.189.5.252, priority medium
+        167967             Intra Network    Mpls          0 ge-0/0/2.0    10.19.198.26
+        area 0.0.0.8, origin 10.189.5.252, priority medium
+        167967 (S=0)       Intra Network    Mpls          0 ge-0/0/2.0    10.19.198.26
+        area 0.0.0.8, origin 10.189.5.252, priority medium
+        16051 (S=0)        Intra Network    Mpls        100 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        area 0.0.0.8, origin 10.169.14.240, priority medium
+        16052              Intra Network    Mpls        105 ge-0/0/1.0    10.169.14.121
+        area 0.0.0.8, origin 10.169.14.241, priority medium
+        16061              Intra Network    Mpls        200 ge-0/0/1.0    10.169.14.121
+        area 0.0.0.8, origin 10.34.2.250, priority medium
+        16062              Intra Network    Mpls        205 ge-0/0/1.0    10.169.14.121
+        area 0.0.0.8, origin 10.34.2.251, priority medium
+        16063              Intra Network    Mpls       1201 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        area 0.0.0.8, origin 10.169.196.241, priority medium
+        16072              Intra Network    Mpls          5 ge-0/0/0.0    10.189.5.94
+        area 0.0.0.8, origin 10.189.5.253, priority medium
+        16073              Intra Network    Mpls       1001 ge-0/0/2.0    10.19.198.26
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        area 0.0.0.8, origin 10.19.198.239, priority medium
+        16073 (S=0)        Intra Network    Mpls       1001 ge-0/0/2.0    10.19.198.26
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        area 0.0.0.8, origin 10.19.198.239, priority medium
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+    """
+    }
+
+    golden_parsed_output = {
+        "ospf-route-information": {
+            "ospf-topology-route-table": {
+                "ospf-route": [
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.36.3.3",
+                                "interface-cost": "1201",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Router",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.100.5.5",
+                                "interface-cost": "1200",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Router",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.19.198.239",
+                                "interface-cost": "1000",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Router",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.34.2.250",
+                                "interface-cost": "200",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "AS BR",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.34.2.251",
+                                "interface-cost": "205",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "AS BR",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.196.241",
+                                "interface-cost": "1200",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Router",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.169.14.240",
+                                "interface-cost": "100",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "AS BR",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.100.5.5/32",
+                                "interface-cost": "1201",
+                                "next-hop-type": "Spring",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup SPRING",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.19.198.24/30",
+                                "interface-cost": "1000",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"}
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.19.198.28/30",
+                                "interface-cost": "1005",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "10.19.198.239/32",
+                                "interface-cost": "1001",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                            {
+                                "address-prefix": "10.19.198.239/32",
+                                "interface-cost": "1001",
+                                "next-hop-type": "Spring",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup SPRING",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            },
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "192.168.100.252/32",
+                                "interface-cost": "32000",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Ext1",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "192.168.36.48/30",
+                                "interface-cost": "10100",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "192.168.36.56/30",
+                                "interface-cost": "10100",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "192.168.36.119/32",
+                                "interface-cost": "10101",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "192.168.36.120/32",
+                                "interface-cost": "10101",
+                                "next-hop-type": "IP",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "2567",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "2567 (S=0)",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "2568",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "2568 (S=0)",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "167966",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "167966 (S=0)",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "167967",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "167967 (S=0)",
+                                "interface-cost": "0",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16051 (S=0)",
+                                "interface-cost": "100",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16052",
+                                "interface-cost": "105",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16061",
+                                "interface-cost": "200",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16062",
+                                "interface-cost": "205",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16063",
+                                "interface-cost": "1201",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.169.14.121"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/1.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16072",
+                                "interface-cost": "5",
+                                "next-hop-type": "Mpls",
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.189.5.94"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/0.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16073",
+                                "interface-cost": "1001",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                    {
+                        "ospf-route-entry": [
+                            {
+                                "address-prefix": "16073 (S=0)",
+                                "interface-cost": "1001",
+                                "next-hop-type": "Mpls",
+                                "ospf-backup-next-hop": {
+                                    "ospf-backup-next-hop-address": "10.189.5.94",
+                                    "ospf-backup-next-hop-interface": "ge-0/0/0.0",
+                                    "ospf-backup-next-hop-type": "Bkup MPLS",
+                                },
+                                "ospf-next-hop": {
+                                    "next-hop-address": {
+                                        "interface-address": "10.19.198.26"
+                                    },
+                                    "next-hop-name": {"interface-name": "ge-0/0/2.0"},
+                                },
+                                "route-path-type": "Intra",
+                                "route-type": "Network",
+                            }
+                        ]
+                    },
+                ]
+            }
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfRouteDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspfRouteDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 class TestShowOspfDatabaseNetworkLsaidDetail(unittest.TestCase):
     """ Unit tests for:
@@ -11438,5 +13444,5 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
         )
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

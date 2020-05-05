@@ -67,14 +67,18 @@ class ShowBootvar(ShowBootvarSchema):
 
         # BOOT variable = bootflash:/asr1000rpx.bin,12;
         # BOOT variable = flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden;
-        p1 = re.compile(r'^BOOT +variable +=( *(?P<var>\S+);)?$')
+        # BOOT variable = tftp:/auto/tftp-best/genie_images/genie_clean/asr1000-genie-image 255.255.255.255,12;
+        # BOOT variable = tftp:/auto/tftp-best/genie_images/genie_clean/asr1000-genie-image 255.255.255.255,12;harddisk:/asr1000-genie-image_asr-MIB-1,12;
+        # BOOT variable = tftp://202.153.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200427_012602.SSA.bin
+        p1 = re.compile(r'^BOOT +variable +=( *(?P<var>\S+);?)?$')
 
         # Standby BOOT variable = bootflash:/asr1000rpx.bin,12;
         p2 = re.compile(r'^Standby +BOOT +variable +=( *(?P<var>\S+);)?$')
 
         # Configuration register is 0x2002
         # Configuration register is 0x2 (will be 0x2102 at next reload)
-        p3 = re.compile(r'Configuration +register +is +(?P<var1>(\S+))'
+        # Configuration Register is 0x102
+        p3 = re.compile(r'Configuration +[R|r]egister +is +(?P<var1>(\S+))'
                         r'(?: +\(will +be +(?P<var2>(\S+)) +at +next +reload\))?$')
 
         # Standby Configuration register is 0x2002
