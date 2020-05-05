@@ -213,8 +213,10 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
         # Management Addresses:
         #     IP: 10.9.1.1
+        # Management Addresses:
+        #     IPV6: 0000:0000:0000:0000:0000:ffff:7f00:0001
         # Management Addresses - not advertised
-        p9 = re.compile(r'^IP:\s+(?P<ip>[\w\.]+)$')
+        p9 = re.compile(r'^(IP|IPV6):\s+(?P<ip>[\w\.:]+)$')
         p9_1 = re.compile(r'^Management\s+Addresses\s+-\s+(?P<ip>not\sadvertised)$')
 
         # Auto Negotiation - supported, enabled
