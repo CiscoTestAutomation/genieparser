@@ -119,60 +119,6 @@ class TestShowBootvar(unittest.TestCase):
             },
             'config_file': 'bootflash:/taas/psan06_Golden_Config'}
 
-    golden_output5 = {'execute.return_value': '''
-        show boot
-        BOOT variable = tftp://10.1.0.41/cat9k_iosxe.16.12.03a.SPA.bin
-        Configuration Register is 0x102
-        MANUAL_BOOT variable = yes
-        BAUD variable = 9600
-        ENABLE_BREAK variable does not exist
-        BOOTMODE variable does not exist
-        IPXE_TIMEOUT variable does not exist
-        CONFIG_FILE variable =
-        '''}
-
-    golden_parsed_output5 = {
-        'active': 
-            {'boot_variable': 'tftp://10.1.0.41/cat9k_iosxe.16.12.03a.SPA.bin',
-            'configuration_register': '0x102'},
-        'next_reload_boot_variable': 'tftp://10.1.0.41/cat9k_iosxe.16.12.03a.SPA.bin'}
-
-    golden_output6 = {'execute.return_value': '''
-        starfleet-1#show boot
-        BOOT variable = bootflash:cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200421_032634.SSA.bin;
-        Configuration Register is 0x102
-        MANUAL_BOOT variable = no
-        BAUD variable = 9600
-        ENABLE_BREAK variable does not exist
-        BOOTMODE variable does not exist
-        IPXE_TIMEOUT variable does not exist
-        CONFIG_FILE variable =
-        '''}
-
-    golden_parsed_output6 = {
-        'active': 
-            {'boot_variable': 'bootflash:cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200421_032634.SSA.bin;',
-            'configuration_register': '0x102'},
-        'next_reload_boot_variable': 'bootflash:cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200421_032634.SSA.bin;'}
-
-    golden_output7 = {'execute.return_value': '''
-        starfleet-1#show boot
-        BOOT variable = tftp://10.1.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200427_012602.SSA.bin
-        Configuration Register is 0x102
-        MANUAL_BOOT variable = yes
-        BAUD variable = 9600
-        ENABLE_BREAK variable does not exist
-        BOOTMODE variable does not exist
-        IPXE_TIMEOUT variable does not exist
-        CONFIG_FILE variable =
-        '''}
-
-    golden_parsed_output7 = {
-        'active': 
-            {'boot_variable': 'tftp://10.1.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200427_012602.SSA.bin',
-            'configuration_register': '0x102'},
-        'next_reload_boot_variable': 'tftp://10.1.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200427_012602.SSA.bin'}
-
     def test_show_bootvar_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBootvar(device=self.device)
@@ -202,24 +148,6 @@ class TestShowBootvar(unittest.TestCase):
         obj = ShowBootvar(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
-
-    def test_show_bootvar_full5(self):
-        self.device = Mock(**self.golden_output5)
-        obj = ShowBootvar(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output5)
-
-    def test_show_bootvar_full6(self):
-        self.device = Mock(**self.golden_output6)
-        obj = ShowBootvar(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output6)
-
-    def test_show_bootvar_full7(self):
-        self.device = Mock(**self.golden_output7)
-        obj = ShowBootvar(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output7)
 
 class TestShowVersion(unittest.TestCase):
 
@@ -4472,16 +4400,16 @@ Switch#   Role        Priority      State
 
 
 class TestShowBoot(unittest.TestCase):
-    dev1 = Device(name='empty')
-    dev_asr1k = Device(name='asr1k')
-    dev_c3850 = Device(name='c3850')
+
+    maxDiff = None
+
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output_c3850 = {
         "ipxe_timeout": 0,
          "enable_break": True,
-         "current_boot_variable": "flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden",
-         "next_reload_boot_variable": "flash:ISSUCleanGolden",
+         "current_boot_variable": "flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden;",
+         "next_reload_boot_variable": "flash:ISSUCleanGolden;",
          "manual_boot": True,
          "boot_mode": "device"
     }
@@ -4508,7 +4436,7 @@ class TestShowBoot(unittest.TestCase):
             "configuration_register": "0x2002"
         },
         "active": {
-            "boot_variable": "bootflash:/asr1000rpx.bin,12",
+            "boot_variable": "bootflash:/asr1000rpx.bin,12;",
             "configuration_register": "0x2002"
         }
     }
@@ -4604,6 +4532,77 @@ class TestShowBoot(unittest.TestCase):
         },
         'timeout_config_download': '0 seconds'
     }
+
+    golden_output_cat9k_1 = {'execute.return_value': '''
+        show boot
+        BOOT variable = tftp://202.153.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200428_021754.SSA.bin;bootflash:/cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20200429_051305.SSA_starfleet-1.bin;
+        Configuration Register is 0x102
+        MANUAL_BOOT variable = no
+        BAUD variable = 9600
+        ENABLE_BREAK variable does not exist
+        BOOTMODE variable does not exist
+        IPXE_TIMEOUT variable does not exist
+        CONFIG_FILE variable =
+
+        starfleet-1#
+        '''}
+
+    golden_parsed_output_cat9k_1 = {
+        'active': 
+            {'boot_variable': 'tftp://202.153.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200428_021754.SSA.bin;bootflash:/cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20200429_051305.SSA_starfleet-1.bin;',
+            'configuration_register': '0x102'}}
+
+    golden_output_cat9k_2 = {'execute.return_value': '''
+        show boot
+        BOOT variable = tftp://10.1.0.41/cat9k_iosxe.16.12.03a.SPA.bin
+        Configuration Register is 0x102
+        MANUAL_BOOT variable = yes
+        BAUD variable = 9600
+        ENABLE_BREAK variable does not exist
+        BOOTMODE variable does not exist
+        IPXE_TIMEOUT variable does not exist
+        CONFIG_FILE variable =
+        '''}
+
+    golden_parsed_output_cat9k_2 = {
+        'active': 
+            {'boot_variable': 'tftp://10.1.0.41/cat9k_iosxe.16.12.03a.SPA.bin',
+            'configuration_register': '0x102'}}
+
+    golden_output_cat9k_3 = {'execute.return_value': '''
+        starfleet-1#show boot
+        BOOT variable = bootflash:cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200421_032634.SSA.bin;
+        Configuration Register is 0x102
+        MANUAL_BOOT variable = no
+        BAUD variable = 9600
+        ENABLE_BREAK variable does not exist
+        BOOTMODE variable does not exist
+        IPXE_TIMEOUT variable does not exist
+        CONFIG_FILE variable =
+        '''}
+
+    golden_parsed_output_cat9k_3 = {
+        'active': 
+            {'boot_variable': 'bootflash:cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200421_032634.SSA.bin;',
+            'configuration_register': '0x102'}}
+
+    golden_output_cat9k_4 = {'execute.return_value': '''
+        starfleet-1#show boot
+        BOOT variable = tftp://10.1.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200427_012602.SSA.bin
+        Configuration Register is 0x102
+        MANUAL_BOOT variable = yes
+        BAUD variable = 9600
+        ENABLE_BREAK variable does not exist
+        BOOTMODE variable does not exist
+        IPXE_TIMEOUT variable does not exist
+        CONFIG_FILE variable =
+        '''}
+
+    golden_parsed_output_cat9k_4 = {
+        'active': 
+            {'boot_variable': 'tftp://10.1.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200427_012602.SSA.bin',
+            'configuration_register': '0x102'}}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         platform_obj = ShowBoot(device=self.dev1)
@@ -4611,26 +4610,52 @@ class TestShowBoot(unittest.TestCase):
             parsed_output = platform_obj.parse()    
 
     def test_golden_c3850(self):
-        self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_c3850)
         platform_obj = ShowBoot(device=self.dev_c3850)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
 
     def test_golden_asr1k(self):
-        self.maxDiff = None
         self.dev_asr1k = Mock(**self.golden_output_asr1k)
         platform_obj = ShowBoot(device=self.dev_asr1k)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_asr1k)
     
     def test_golden_2900(self):
-        self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_2900)
         obj = ShowBoot(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2900)
 
+    def test_golden_cat9k_1(self):
+        self.dev_cat9k = Mock(**self.golden_output_cat9k_1)
+        obj = ShowBoot(device=self.dev_cat9k)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_cat9k_1)
+
+    def test_golden_cat9k_1(self):
+        self.dev_cat9k = Mock(**self.golden_output_cat9k_1)
+        obj = ShowBoot(device=self.dev_cat9k)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_cat9k_1)
+
+    def test_golden_cat9k_2(self):
+        self.dev_cat9k = Mock(**self.golden_output_cat9k_2)
+        obj = ShowBoot(device=self.dev_cat9k)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_cat9k_2)
+
+    def test_golden_cat9k_3(self):
+        self.dev_cat9k = Mock(**self.golden_output_cat9k_3)
+        obj = ShowBoot(device=self.dev_cat9k)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_cat9k_3)
+
+    def test_golden_cat9k_4(self):
+        self.dev_cat9k = Mock(**self.golden_output_cat9k_4)
+        obj = ShowBoot(device=self.dev_cat9k)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_cat9k_4)
 
 class TestShowSwitchDetail(unittest.TestCase):
     dev1 = Device(name='empty')
