@@ -1114,7 +1114,10 @@ class TestShowChassisHardwareExtensiveNoForwarding(unittest.TestCase):
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        obj = ShowChassisHardwareExtensive(device=self.device)     
+        obj = ShowChassisHardwareExtensive(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+   
 
 
 class TestShowChassisFpc(unittest.TestCase):
