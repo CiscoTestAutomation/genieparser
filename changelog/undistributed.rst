@@ -29,6 +29,10 @@
     * Updated ShowIpStaticRouteMulticast:
         * Change key 'address_family' into Optional
 
+* IOSXR
+    * Updated ShowBgpSessions:
+        * Added regex to support various outputs
+
 * LINUX
     * Fixed Ifconfig parser issues.
 
