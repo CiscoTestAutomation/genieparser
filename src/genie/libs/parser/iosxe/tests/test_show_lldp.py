@@ -1689,7 +1689,6 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
             }
         },
         'med_information': {
-            'capabilities': [],
             'device_type': 'Endpoint Class I',
             'location': 'not advertised'
         },
@@ -1733,13 +1732,6 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
     def test_golden_5(self):
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_5)
-        obj = ShowLldpNeighborsDetail(device=self.dev_c3850)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_5)
-
-    def test_golden_6(self):
-        self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output_6)
         obj = ShowLldpNeighborsDetail(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_5)

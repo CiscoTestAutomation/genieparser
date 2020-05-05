@@ -123,7 +123,7 @@ class ShowLldpEntrySchema(MetaParser):
             Optional('s/w_revision'): str,
             Optional('manufacturer'): str,
             Optional('model'): str,
-            'capabilities': list,
+            Optional('capabilities'): list,
             'device_type': str,
             Optional('network_policy'): {
                 Any(): { # 'voice'; 'voice_signal'
@@ -258,7 +258,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         med_p3 = re.compile(r'^Model:\s+(?P<model>[\S\s]+)$')
 
         # Capabilities: NP, LI, PD, IN
-        med_p4 = re.compile(r'^Capabilities:\s*(?P<capabilities>[\S\s]*)$')
+        med_p4 = re.compile(r'^Capabilities:\s*(?P<capabilities>[\S\s]+)$')
 
         # Device type: Endpoint Class III
         med_p5 = re.compile(r'^Device\s+type:\s+(?P<device_type>[\S\s]+)$')
