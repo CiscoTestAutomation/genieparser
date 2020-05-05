@@ -199,7 +199,8 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         # Compiled Thu 21-Jul-11 01:23 by prod_rel_team
         # Avaya 1220 IP Deskphone, Firmware:06Q
         # IP Phone, Firmware:90234AP
-        p5_2 = re.compile(r'^(?P<msg>(Compile|Avaya|IP Phone).*)$')
+        # {"SN":"SN-NR","Owner":"OWNER"}
+        p5_2 = re.compile(r'^(?P<msg>(Compile|Avaya|IP Phone|{).*)$')
 
         # Time remaining: 112 seconds
         p6 = re.compile(r'^Time\s+remaining:\s+(?P<time_remaining>\w+)\s+seconds$')
