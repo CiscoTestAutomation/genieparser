@@ -3451,12 +3451,8 @@ class ShowOspfDatabaseNetworkLsaidDetail(ShowOspfDatabaseNetworkLsaidDetailSchem
 
     def cli(self, ipaddress=None, output=None):
         if not output:
-            if ipaddress:
-                cmd = self.cli_command.format(
-                    ipaddress=ipaddress)
-            else:
-                cmd = self.cli_command
-
+            cmd = self.cli_command.format(
+                ipaddress=ipaddress)
             out = self.device.execute(cmd)
         else:
             out = output
@@ -3728,18 +3724,14 @@ class ShowOspfDatabaseLsaidDetail(ShowOspfDatabaseLsaidDetailSchema):
 
     def cli(self, ipaddress=None, output=None):
         if not output:
-            if ipaddress:
-                cmd = self.cli_command.format(
-                    ipaddress=ipaddress)
-            else:
-                cmd = self.cli_command
-
+            cmd = self.cli_command.format(
+                ipaddress=ipaddress)
             out = self.device.execute(cmd)
         else:
             out = output
 
         # Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
-        p0 = re.compile(r'^(?P<heading>Type \s+ID[\s\S]+)$')
+        p0 = re.compile(r'^(?P<heading>Type\s+ID[\s\S]+)$')
 
         # OSPF database, Area 0.0.0.8
         p1 = re.compile(r'^OSPF +database, +Area +(?P<ospf_area>\S+)$')

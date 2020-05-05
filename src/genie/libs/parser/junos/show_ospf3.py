@@ -1956,7 +1956,7 @@ class ShowOspf3DatabaseNetworkDetailSchema(MetaParser):
 
     def validate_ospf_lsa_topology_innerlist(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf3 lsa  is not a list')
+            raise SchemaTypeError('ospf3 lsa is not a list')
         ospf3_lsa_schema = Schema({
                 "link-type-name": str,
                 "ospf-lsa-topology-link-metric": str,
@@ -2017,19 +2017,20 @@ class ShowOspf3DatabaseNetworkDetail(ShowOspf3DatabaseNetworkDetailSchema):
         else:
             out = output
 
-        # OSPF database, Area 192.168.76.0
+        # OSPF3 database, Area 0.0.0.0
         p1 = re.compile(r'^OSPF3 +database, +Area +(?P<ospf_area>\S+)$')
 
         # Network    *0.0.0.9          192.168.219.235   0x8000001d   892  0xf99f  36
+        # Network     0.0.0.3          203.181.99.236   0x80000b14  2142  0x1983  36
         p2 = re.compile(r'^(?P<lsa_type>\S+) *(?P<our_entry>\*)?'
                         r'(?P<lsa_id>[\d\.]+) +(?P<advertising_router>\S+) '
                         r'+(?P<sequence_number>\S+) +(?P<age>\S+) '
                         r'+(?P<checksum>\S+) +(?P<lsa_length>\S+)$')
 
         # Options 0x33
-        p3 = re.compile(r'^Options +(?P<ospf3_options>\S+)+$')
+        p3 = re.compile(r'^Options +(?P<ospf3_options>\S+)$')
 
-        # attached router 192.168.219.235
+        # Attached router 192.168.219.235
         p4 = re.compile(r'^Attached router +(?P<attached_router>\S+)$')
 
         # Type: Transit, Node ID: 192.168.219.236, Metric: 0, Bidirectional
@@ -2043,7 +2044,7 @@ class ShowOspf3DatabaseNetworkDetail(ShowOspf3DatabaseNetworkDetailSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # OSPF database, Area 192.168.76.0
+            # OSPF3 database, Area 0.0.0.0
             m = p1.match(line)
             if m:
                 ospf_database_information_entry = ret_dict.setdefault("ospf3-database-information", {})
@@ -2056,6 +2057,7 @@ class ShowOspf3DatabaseNetworkDetail(ShowOspf3DatabaseNetworkDetailSchema):
                 continue
 
             # Network *10.69.197.1    192.168.219.235   0x80000026  1730  0x22 0x1b56  36
+            # Network     0.0.0.3          203.181.99.236   0x80000b14  2142  0x1983  36
             m = p2.match(line)
             if m:
                 ospf3_database_dict = {}
@@ -2143,7 +2145,7 @@ class ShowOspf3DatabaseLinkAdvertisingRouterSchema(MetaParser):
 
     def validate_ospf3_intf_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf3 lsa  is not a list')
+            raise SchemaTypeError('ospf3 intf is not a list')
         ospf3_intf_schema = Schema({
                 "ospf-area": str,
                 "ospf-intf": str
