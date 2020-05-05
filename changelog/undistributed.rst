@@ -14,6 +14,8 @@
         * show ospf neighbor {neighbor} detail
     * Added ShowInterfacesDescriptions for:
         * show interfaces descriptions
+    * Added ShowPfeRouteSummary for:
+        * show pfe route summary
 
 * IOSXE
     * Updated ShowMacAddressTable for new commnad:
@@ -28,11 +30,16 @@
 --------------------------------------------------------------------------------
 
 * IOSXE
+    * Fixed ShowBootvar to support more outputs
     * Fixed ShowDmvpn not executing the command properly on device
 
 * NXOS
     * Updated ShowIpStaticRouteMulticast:
         * Change key 'address_family' into Optional
+
+* IOSXR
+    * Updated ShowBgpSessions:
+        * Added regex to support various outputs
 
 * LINUX
     * Fixed Ifconfig parser issues.
@@ -40,4 +47,3 @@
 * JUNOS
     * Updated ShowRoute:
         * Update regex to support various outputs.
-
