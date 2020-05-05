@@ -10,10 +10,10 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 from netaddr import IPAddress
 
+
 # =============================================
 # Schema for 'show route'
 # =============================================
-
 
 class ShowRouteSchema(MetaParser):
     """Schema for
