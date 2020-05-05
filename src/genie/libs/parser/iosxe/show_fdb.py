@@ -1,6 +1,7 @@
 """show_fdb.py
    supported commands:
      *  show mac address-table
+     *  show mac address-table vlan {vlan}
      *  show mac address-table aging-time
      *  show mac address-table learning
 """
