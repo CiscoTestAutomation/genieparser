@@ -17,6 +17,14 @@
     * Added ShowPfeRouteSummary for:
         * show pfe route summary
 
+* IOSXE
+    * Updated ShowMacAddressTable for new commnad:
+        * show mac address-table vlan {vlan}
+
+* IOS
+    * Updated ShowMacAddressTable for new commnad:
+        * show mac address-table vlan {vlan}
+
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
