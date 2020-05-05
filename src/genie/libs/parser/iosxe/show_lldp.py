@@ -121,11 +121,11 @@ class ShowLldpEntrySchema(MetaParser):
             Optional('f/w_revision'): str,
             Optional('h/w_revision'): str,
             Optional('s/w_revision'): str,
-            'manufacturer': str,
-            'model': str,
+            Optional('manufacturer'): str,
+            Optional('model'): str,
             'capabilities': list,
             'device_type': str,
-            'network_policy': {
+            Optional('network_policy'): {
                 Any(): { # 'voice'; 'voice_signal'
                     'vlan': int, # 110
                     'tagged': bool,
@@ -242,6 +242,9 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         p14 = re.compile(r'^Total\s+entries\s+displayed:\s+(?P<entry>\d+)$')
 
         # ==== MED Information patterns =====
+        # MED Information:
+        med_p0 = re.compile(r'^MED\s+Information:.*$')
+
         # F/W revision: 06Q
         # S/W revision: SCCP42.9-3-1ES27S
         # H/W revision: 12
@@ -254,7 +257,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         med_p3 = re.compile(r'^Model:\s+(?P<model>[\S\s]+)$')
 
         # Capabilities: NP, LI, PD, IN
-        med_p4 = re.compile(r'^Capabilities:\s+(?P<capabilities>[\S\s]+)$')
+        med_p4 = re.compile(r'^Capabilities:\s*(?P<capabilities>[\S\s]*)$')
 
         # Device type: Endpoint Class III
         med_p5 = re.compile(r'^Device\s+type:\s+(?P<device_type>[\S\s]+)$')
@@ -426,13 +429,18 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 continue
 
             # ==== Med Information ====
+            # MED Information:
+            m = med_p0.match(line)
+            if m:
+                med_dict = ret_dict.setdefault('med_information', {})
+                continue
+
             # F/W revision: 06Q
             # S/W revision: SCCP42.9-3-1ES27S
             # H/W revision: 12
             m = med_p1.match(line)
             if m:
                 group = m.groupdict()
-                med_dict = ret_dict.setdefault('med_information', {})
                 med_dict[group['head'].lower()+'_revision'] = m.groupdict()['revision']
                 continue
 
@@ -446,9 +454,12 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 continue
 
             # Capabilities: NP, LI, PD, IN
+            # Capabilities:
             m = med_p4.match(line)
             if m:
                 list_capabilities = m.groupdict()['capabilities'].split(', ')
+                # Capabilities can be empty -> remove empty strings
+                list_capabilities = [x for x in list_capabilities if x]
                 med_dict['capabilities'] = list_capabilities
                 continue
 
