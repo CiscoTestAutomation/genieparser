@@ -2401,6 +2401,7 @@ class ShowBoot(ShowBootSchema):
                 continue
 
             # Configuration register is 0x2002
+            # Configuration Register is 0x102
             p3 = re.compile(r'^Configuration +[r|R]egister +is +(?P<var>\w+)$')
             m = p3.match(line)
             if m:
@@ -2445,7 +2446,7 @@ class ShowBoot(ShowBootSchema):
                 continue
 
             # iPXE Timeout = 0
-            p6 = re.compile(r'^[i|I]PXE +Timeout += +(?P<var>\w+)$')
+            p6 = re.compile(r'^iPXE +Timeout +=? +(?P<var>\w+)$')
             m = p6.match(line)
             if m:
                 boot_dict['ipxe_timeout'] = int(m.groupdict()['var'])
