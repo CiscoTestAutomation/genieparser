@@ -5373,7 +5373,7 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
             '(?P<as_number>\d+) +(?P<in_q>\d+) +(?P<out_q>\d+) +'
             '(?P<nbr_state>\w+) +(?P<nsr_state>[\w\s]+)$')
 
-        # 2001:2001:0:8::6f9
+        # 2001:db8:4401:4453::6f9
         p1_1 = re.compile(r'^(?P<neighbor>[\w\d:]+)$')
 
         # default 0 65000 0 0 Established NSR Ready
@@ -5417,7 +5417,7 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
                 neighbor_dict.update({'nsr_state': nsr_state})
                 continue
 
-            # 2001:2001:0:8::6f9
+            # 2001:db8:4401:4453::6f9
             m = p1_1.match(line)
             if m:
                 neighbor = m.groupdict()['neighbor']

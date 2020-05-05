@@ -29936,7 +29936,7 @@ class TestShowBgpSessions(unittest.TestCase):
     }
 
     golden_output_2 = {'execute.return_value': '''
-    2001:2001:0:8::6f9
+    2001:db8:4401:4453::6f9
     default 0 65000 0 0 Established NSR Ready
     '''}
 
@@ -29946,7 +29946,7 @@ class TestShowBgpSessions(unittest.TestCase):
                 'vrf': {
                     'default': {
                         'neighbors': {
-                            '2001:2001:0:8::6f9': {
+                            '2001:db8:4401:4453::6f9': {
                                 'nbr_state': 'Established',
                                 'as_number': 65000,
                                 'nsr_state': 'NSR Ready',
