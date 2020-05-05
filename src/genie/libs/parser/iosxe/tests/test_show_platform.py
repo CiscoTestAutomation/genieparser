@@ -4480,8 +4480,8 @@ class TestShowBoot(unittest.TestCase):
     golden_parsed_output_c3850 = {
         "ipxe_timeout": 0,
          "enable_break": True,
-         "current_boot_variable": "flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden",
-         "next_reload_boot_variable": "flash:ISSUCleanGolden",
+         "current_boot_variable": "flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden;",
+         "next_reload_boot_variable": "flash:ISSUCleanGolden;",
          "manual_boot": True,
          "boot_mode": "device"
     }
@@ -4508,7 +4508,7 @@ class TestShowBoot(unittest.TestCase):
             "configuration_register": "0x2002"
         },
         "active": {
-            "boot_variable": "bootflash:/asr1000rpx.bin,12",
+            "boot_variable": "bootflash:/asr1000rpx.bin,12;",
             "configuration_register": "0x2002"
         }
     }

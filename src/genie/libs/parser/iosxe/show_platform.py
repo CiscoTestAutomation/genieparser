@@ -69,7 +69,6 @@ class ShowBootvar(ShowBootvarSchema):
         # BOOT variable = flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden;
         # BOOT variable = tftp:/auto/tftp-best/genie_images/genie_clean/asr1000-genie-image 255.255.255.255,12;
         # BOOT variable = tftp:/auto/tftp-best/genie_images/genie_clean/asr1000-genie-image 255.255.255.255,12;harddisk:/asr1000-genie-image_asr-MIB-1,12;
-        # BOOT variable = tftp://202.153.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200427_012602.SSA.bin
         p1 = re.compile(r'^BOOT +variable +=( *(?P<var>\S+);?)?$')
 
         # Standby BOOT variable = bootflash:/asr1000rpx.bin,12;
@@ -144,20 +143,6 @@ class ShowBootvar(ShowBootvarSchema):
                     boot_dict.setdefault('standby', {})['bootldr'] = m.groupdict()['var']
                 continue
         return boot_dict
-
-
-class ShowBoot(ShowBootvar):
-    """Parser for show boot"""
-
-    cli_command = 'show boot'
-
-    def cli(self, output=None):
-
-        # Execute command if output not provided
-        if output is None:
-            output = self.device.execute(self.cli_command)
-
-        return super().cli(output=output)
 
 
 class ShowVersionSchema(MetaParser):
@@ -2354,9 +2339,11 @@ class ShowBoot(ShowBootSchema):
         'enabled': True,
         'yes': True
     }
+
     cli_command = 'show boot'
 
     def cli(self, output=None):
+
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
@@ -2386,7 +2373,9 @@ class ShowBoot(ShowBootSchema):
             # BOOT variable = bootflash:/asr1000rpx.bin,12;
             # BOOT variable = flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;
             #                 flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden;
-            p1_1 = re.compile(r'^BOOT +variable +=( *(?P<var>\S+);)?$')
+            # BOOT variable = tftp://10.1.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200427_012602.SSA.bin
+            # BOOT variable = tftp://10.1.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200428_021754.SSA.bin;bootflash:/cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20200429_051305.SSA_starfleet-1.bin;
+            p1_1 = re.compile(r'^BOOT +variable +=( *(?P<var>\S+);?)?$')
             m = p1_1.match(line)
             if m:
                 boot = m.groupdict()['var']
@@ -2412,7 +2401,7 @@ class ShowBoot(ShowBootSchema):
                 continue
 
             # Configuration register is 0x2002
-            p3 = re.compile(r'^Configuration +register +is +(?P<var>\w+)$')
+            p3 = re.compile(r'^Configuration +[r|R]egister +is +(?P<var>\w+)$')
             m = p3.match(line)
             if m:
                 if 'active' not in boot_dict:
@@ -2456,7 +2445,7 @@ class ShowBoot(ShowBootSchema):
                 continue
 
             # iPXE Timeout = 0
-            p6 = re.compile(r'^iPXE +Timeout += +(?P<var>\w+)$')
+            p6 = re.compile(r'^[i|I]PXE +Timeout += +(?P<var>\w+)$')
             m = p6.match(line)
             if m:
                 boot_dict['ipxe_timeout'] = int(m.groupdict()['var'])

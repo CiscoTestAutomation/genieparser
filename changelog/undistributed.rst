@@ -21,6 +21,7 @@
 
 * IOSXE
     * Fixed ShowBootvar to support more outputs
+    * Removed duplicate ShowBoot parser & fixed existing ShowBoot parser
     * Fixed ShowDmvpn not executing the command properly on device
 
 * NXOS
