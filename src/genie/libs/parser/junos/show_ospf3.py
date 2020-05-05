@@ -2017,10 +2017,10 @@ class ShowOspf3DatabaseNetworkDetail(ShowOspf3DatabaseNetworkDetailSchema):
         else:
             out = output
 
-        # OSPF database, Area 203.181.97.0
+        # OSPF database, Area 192.168.76.0
         p1 = re.compile(r'^OSPF3 +database, +Area +(?P<ospf_area>\S+)$')
 
-        # Network    *0.0.0.9          203.181.99.235   0x8000001d   892  0xf99f  36
+        # Network    *0.0.0.9          192.168.219.235   0x8000001d   892  0xf99f  36
         p2 = re.compile(r'^(?P<lsa_type>\S+) *(?P<our_entry>\*)?'
                         r'(?P<lsa_id>[\d\.]+) +(?P<advertising_router>\S+) '
                         r'+(?P<sequence_number>\S+) +(?P<age>\S+) '
@@ -2029,10 +2029,10 @@ class ShowOspf3DatabaseNetworkDetail(ShowOspf3DatabaseNetworkDetailSchema):
         # Options 0x33
         p3 = re.compile(r'^Options +(?P<ospf3_options>\S+)+$')
 
-        # attached router 203.181.99.235
+        # attached router 192.168.219.235
         p4 = re.compile(r'^Attached router +(?P<attached_router>\S+)$')
 
-        # Type: Transit, Node ID: 203.181.99.236, Metric: 0, Bidirectional
+        # Type: Transit, Node ID: 192.168.219.236, Metric: 0, Bidirectional
         p6 = re.compile(r'^Type: +(?P<link_type_name>\S+)+, '
                         r'+Node +ID: +(?P<ospf_lsa_topology_link_node_id>\S+), '
                         r'+Metric: +(?P<ospf_lsa_topology_link_metric>\S+)+, '
@@ -2043,7 +2043,7 @@ class ShowOspf3DatabaseNetworkDetail(ShowOspf3DatabaseNetworkDetailSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # OSPF database, Area 203.181.97.0
+            # OSPF database, Area 192.168.76.0
             m = p1.match(line)
             if m:
                 ospf_database_information_entry = ret_dict.setdefault("ospf3-database-information", {})
@@ -2055,7 +2055,7 @@ class ShowOspf3DatabaseNetworkDetail(ShowOspf3DatabaseNetworkDetailSchema):
                 ospf_database_information_entry["ospf3-area-header"] = entry_dict
                 continue
 
-            # Network *118.155.197.1    203.181.99.235   0x80000026  1730  0x22 0x1b56  36
+            # Network *10.69.197.1    192.168.219.235   0x80000026  1730  0x22 0x1b56  36
             m = p2.match(line)
             if m:
                 ospf3_database_dict = {}
@@ -2082,14 +2082,14 @@ class ShowOspf3DatabaseNetworkDetail(ShowOspf3DatabaseNetworkDetailSchema):
                 ospf3_network_lsa["ospf3-options"] = group["ospf3_options"]
                 continue
 
-            # attached router 203.181.99.235
+            # attached router 192.168.219.235
             m = p4.match(line)
             if m:
                 group = m.groupdict()
                 attached_router_list.append(group["attached_router"])
                 continue
 
-            # Type: Transit, Node ID: 203.181.99.236, Metric: 0, Bidirectional
+            # Type: Transit, Node ID: 192.168.219.236, Metric: 0, Bidirectional
             m = p6.match(line)
             if m:
                 group = m.groupdict()
@@ -2212,7 +2212,7 @@ class ShowOspf3DatabaseLinkAdvertisingRouter(ShowOspf3DatabaseLinkAdvertisingRou
         p1 = re.compile(r'^OSPF3 +Link-Local +database, +interface '
                         r'+(?P<ospf_intf>\S+) +Area +(?P<ospf_area>\S+)$')
 
-        # Link       *0.0.0.9          203.181.99.235   0x80000b10  1379  0xd3b0  56
+        # Link       *0.0.0.9          192.168.219.235   0x80000b10  1379  0xd3b0  56
         p2 = re.compile(r'^(?P<lsa_type>\S+) *(?P<our_entry>\*)?'
                         r'(?P<lsa_id>[\d\.]+) +(?P<advertising_router>\S+) '
                         r'+(?P<sequence_number>\S+) +(?P<age>\S+) '
@@ -2227,7 +2227,7 @@ class ShowOspf3DatabaseLinkAdvertisingRouter(ShowOspf3DatabaseLinkAdvertisingRou
         # Prefix-count 1
         p5 = re.compile(r'^Prefix-count +(?P<prefix_count>\S+)$')
 
-        # Prefix 2001:268:fb02:1::/64 Prefix-options 0x0
+        # Prefix 2001:db8:dae9:cf16::/64 Prefix-options 0x0
         p6 = re.compile(r'^Prefix +(?P<ospf3_prefix>\S+) '
                         r'+Prefix-options +(?P<ospf3_prefix_options>\S+)$')
 
@@ -2256,7 +2256,7 @@ class ShowOspf3DatabaseLinkAdvertisingRouter(ShowOspf3DatabaseLinkAdvertisingRou
                 ospf3_intf_header.append(entry_dict)
                 continue
 
-            # Link       *0.0.0.9          203.181.99.235   0x80000b10  1379  0xd3b0  56
+            # Link       *0.0.0.9          192.168.219.235   0x80000b10  1379  0xd3b0  56
             m = p2.match(line)
             if m:
                 
@@ -2297,7 +2297,7 @@ class ShowOspf3DatabaseLinkAdvertisingRouter(ShowOspf3DatabaseLinkAdvertisingRou
                 ospf3_database_dict["ospf3-link-lsa"] = ospf3_link_lsa
                 continue
 
-            # Prefix 2001:268:fb02:1::/64 Prefix-options 0x0
+            # Prefix 2001:db8:dae9:cf16::/64 Prefix-options 0x0
             m = p6.match(line)
             if m:
                 group = m.groupdict()

@@ -3464,10 +3464,10 @@ class ShowOspfDatabaseNetworkLsaidDetail(ShowOspfDatabaseNetworkLsaidDetailSchem
         # Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
         p0 = re.compile(r'^(?P<heading>Type \s+ID[\s\S]+)$')
 
-        # OSPF database, Area 203.181.97.0
+        # OSPF database, Area 192.168.76.0
         p1 = re.compile(r'^OSPF +database, +Area +(?P<ospf_area>\S+)$')
 
-        # Network *118.155.197.1    203.181.99.235   0x80000026  1730  0x22 0x1b56  36
+        # Network *10.69.197.1    192.168.219.235   0x80000026  1730  0x22 0x1b56  36
         p2 = re.compile(r'^(?P<lsa_type>\S+) *(?P<our_entry>\*)?(?P<lsa_id>[\d\.]+) '
                         r'+(?P<advertising_router>\S+) +(?P<sequence_number>\S+) +'
                         r'(?P<age>\S+) +(?P<options>\S+) +(?P<checksum>\S+) +'
@@ -3476,13 +3476,13 @@ class ShowOspfDatabaseNetworkLsaidDetail(ShowOspfDatabaseNetworkLsaidDetailSchem
         # mask 255.255.255.128
         p3 = re.compile(r'^mask +(?P<address_mask>\S+)$')
 
-        # attached router 203.181.99.235
+        # attached router 192.168.219.235
         p4 = re.compile(r'^attached router +(?P<attached_router>\S+)$')
 
         # Topology default (ID 0)
         p5 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\S+)+\)$')
 
-        # Type: Transit, Node ID: 203.181.99.236
+        # Type: Transit, Node ID: 192.168.219.236
         p6 = re.compile(r'^Type: +(?P<link_type_name>\S+)+, '
                         r'+Node +ID: +(?P<ospf_lsa_topology_link_node_id>\S+)$')
 
@@ -3501,7 +3501,7 @@ class ShowOspfDatabaseNetworkLsaidDetail(ShowOspfDatabaseNetworkLsaidDetailSchem
                 group = m.groupdict()
                 ospf_database_dict["@heading"] = group["heading"]
 
-            # OSPF database, Area 203.181.97.0
+            # OSPF database, Area 192.168.76.0
             m = p1.match(line)
             if m:
                 ospf_database_information_entry = ret_dict.setdefault("ospf-database-information", {})
@@ -3516,7 +3516,7 @@ class ShowOspfDatabaseNetworkLsaidDetail(ShowOspfDatabaseNetworkLsaidDetailSchem
                 ospf_database_information_entry["ospf-area-header"] = entry_dict
                 continue
 
-            # Network *118.155.197.1    203.181.99.235   0x80000026  1730  0x22 0x1b56  36
+            # Network *10.69.197.1    192.168.219.235   0x80000026  1730  0x22 0x1b56  36
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -3533,7 +3533,7 @@ class ShowOspfDatabaseNetworkLsaidDetail(ShowOspfDatabaseNetworkLsaidDetailSchem
                 ospf_network_lsa["address-mask"] = group["address_mask"]
                 continue
 
-            # attached router 203.181.99.235
+            # attached router 192.168.219.235
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -3548,7 +3548,7 @@ class ShowOspfDatabaseNetworkLsaidDetail(ShowOspfDatabaseNetworkLsaidDetailSchem
                 ospf_lsa_topology["ospf-topology-name"] = group["ospf_topology_name"]
                 continue
 
-            # Type: Transit, Node ID: 203.181.99.236
+            # Type: Transit, Node ID: 192.168.219.236
             m = p6.match(line)
             if m:
                 group = m.groupdict()
@@ -3744,8 +3744,8 @@ class ShowOspfDatabaseLsaidDetail(ShowOspfDatabaseLsaidDetailSchema):
         # OSPF database, Area 0.0.0.8
         p1 = re.compile(r'^OSPF +database, +Area +(?P<ospf_area>\S+)$')
 
-        # Router   59.128.2.250     59.128.2.250     0x80000048  1598  0x22 0xed79 108
-        # Extern  *59.128.2.250     106.187.14.241   0x80000044   670  0x22 0xcffa  36
+        # Router   10.34.2.250     10.34.2.250     0x80000048  1598  0x22 0xed79 108
+        # Extern  *10.34.2.250     10.169.14.241   0x80000044   670  0x22 0xcffa  36
         p2 = re.compile(r'^(?P<lsa_type>\S+) *(?P<our_entry>\*)?'
                         r'(?P<lsa_id>[\d\.]+) +(?P<advertising_router>\S+) '
                         r'+(?P<sequence_number>\S+) +(?P<age>\S+) '
@@ -3755,7 +3755,7 @@ class ShowOspfDatabaseLsaidDetail(ShowOspfDatabaseLsaidDetailSchema):
         p3 = re.compile(r'^bits +(?P<bits>\S+)+, +link +count +(?P<link_count>[\d\.]+)$')
 
                         
-        # id 59.128.2.251, data 59.128.2.201, Type PointToPoint (1)
+        # id 10.34.2.251, data 10.34.2.201, Type PointToPoint (1)
         p4 = re.compile(r'^id +(?P<link_id>\S+)+, data '
                         r'+(?P<link_data>\S+), Type +'
                         r'(?P<link_type_name>\S+) +\('
@@ -3769,7 +3769,7 @@ class ShowOspfDatabaseLsaidDetail(ShowOspfDatabaseLsaidDetailSchema):
         # Topology default (ID 0)
         p6 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\S+)+\)$')
 
-        # Type: PointToPoint, Node ID: 106.187.14.240
+        # Type: PointToPoint, Node ID: 10.169.14.240
         p7 = re.compile(r'^Type: +(?P<link_type_name>\S+)+, '
                         r'+Node +ID: +(?P<ospf_lsa_topology_link_node_id>\S+)$')
 
@@ -3818,8 +3818,8 @@ class ShowOspfDatabaseLsaidDetail(ShowOspfDatabaseLsaidDetailSchema):
                 ospf_database_information_entry["ospf-area-header"] = first_dict
                 continue
 
-            # Router   59.128.2.250     59.128.2.250     0x80000048  1598  0x22 0xed79 108
-            # Extern  *59.128.2.250     106.187.14.241   0x80000044   670  0x22 0xcffa  36
+            # Router   10.34.2.250     10.34.2.250     0x80000048  1598  0x22 0xed79 108
+            # Extern  *10.34.2.250     10.169.14.241   0x80000044   670  0x22 0xcffa  36
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -3856,7 +3856,7 @@ class ShowOspfDatabaseLsaidDetail(ShowOspfDatabaseLsaidDetailSchema):
                 continue
 
 
-            # id 59.128.2.251, data 59.128.2.201, Type PointToPoint (1)
+            # id 10.34.2.251, data 10.34.2.201, Type PointToPoint (1)
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -3889,7 +3889,7 @@ class ShowOspfDatabaseLsaidDetail(ShowOspfDatabaseLsaidDetailSchema):
                         inner_external_lsa_dict[entry_key] = group_value
                 continue
 
-            # Type: PointToPoint, Node ID: 106.187.14.240
+            # Type: PointToPoint, Node ID: 10.169.14.240
             m = p7.match(line)
             if m:
                 group = m.groupdict()

@@ -2797,34 +2797,34 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
 
         OSPF3 database, Area 0.0.0.0
       Type       ID               Adv Rtr           Seq         Age  Cksum  Len
-    Network    *0.0.0.9          203.181.99.235   0x8000001d   892  0xf99f  36
+    Network    *0.0.0.9          192.168.219.235   0x8000001d   892  0xf99f  36
       Options 0x33
-      Attached router 203.181.99.235
-      Attached router 118.155.198.249
-      Attached router 203.181.99.236
-      Type: Transit, Node ID: 203.181.99.236, Metric: 0, Bidirectional
-      Type: Transit, Node ID: 118.155.198.249, Metric: 0, Bidirectional
-      Type: Transit, Node ID: 203.181.99.235, Metric: 0, Bidirectional
-    Network     0.0.0.3          203.181.99.236   0x80000b14  2142  0x1983  36
+      Attached router 192.168.219.235
+      Attached router 10.69.198.249
+      Attached router 192.168.219.236
+      Type: Transit, Node ID: 192.168.219.236, Metric: 0, Bidirectional
+      Type: Transit, Node ID: 10.69.198.249, Metric: 0, Bidirectional
+      Type: Transit, Node ID: 192.168.219.235, Metric: 0, Bidirectional
+    Network     0.0.0.3          192.168.219.236   0x80000b14  2142  0x1983  36
       Options 0x33
-      Attached router 203.181.99.236
-      Attached router 118.155.198.249
-      Attached router 203.181.99.235
-      Type: Transit, Node ID: 203.181.99.235, Metric: 0, Bidirectional
-      Type: Transit, Node ID: 118.155.198.249, Metric: 0, Bidirectional
-      Type: Transit, Node ID: 203.181.99.236, Metric: 0, Bidirectional
-    Network     0.0.0.4          203.181.99.236   0x80000b11  1092  0xa3d1  32
+      Attached router 192.168.219.236
+      Attached router 10.69.198.249
+      Attached router 192.168.219.235
+      Type: Transit, Node ID: 192.168.219.235, Metric: 0, Bidirectional
+      Type: Transit, Node ID: 10.69.198.249, Metric: 0, Bidirectional
+      Type: Transit, Node ID: 192.168.219.236, Metric: 0, Bidirectional
+    Network     0.0.0.4          192.168.219.236   0x80000b11  1092  0xa3d1  32
       Options 0x33
-      Attached router 203.181.99.236
-      Attached router 203.181.99.235
-      Type: Transit, Node ID: 203.181.99.235, Metric: 0, Bidirectional
-      Type: Transit, Node ID: 203.181.99.236, Metric: 0, Bidirectional
-    Network     0.0.0.6          203.181.99.236   0x80000b11  1692  0x8fe3  32
+      Attached router 192.168.219.236
+      Attached router 192.168.219.235
+      Type: Transit, Node ID: 192.168.219.235, Metric: 0, Bidirectional
+      Type: Transit, Node ID: 192.168.219.236, Metric: 0, Bidirectional
+    Network     0.0.0.6          192.168.219.236   0x80000b11  1692  0x8fe3  32
       Options 0x33
-      Attached router 203.181.99.236
-      Attached router 203.181.99.235
-      Type: Transit, Node ID: 203.181.99.235, Metric: 0, Bidirectional
-      Type: Transit, Node ID: 203.181.99.236, Metric: 0, Bidirectional
+      Attached router 192.168.219.236
+      Attached router 192.168.219.235
+      Type: Transit, Node ID: 192.168.219.235, Metric: 0, Bidirectional
+      Type: Transit, Node ID: 192.168.219.236, Metric: 0, Bidirectional
     '''}
 
     golden_parsed_output = {
@@ -2834,7 +2834,7 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
             },
             "ospf3-database": [
                 {
-                    "advertising-router": "203.181.99.235",
+                    "advertising-router": "192.168.219.235",
                     "age": "892",
                     "checksum": "0xf99f",
                     "lsa-id": "0.0.0.9",
@@ -2842,28 +2842,28 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
                     "lsa-type": "Network",
                     "ospf3-network-lsa": {
                         "attached-router": [
-                            "203.181.99.235",
-                            "118.155.198.249",
-                            "203.181.99.236"
+                            "192.168.219.235",
+                            "10.69.198.249",
+                            "192.168.219.236"
                         ],
                         "ospf3-lsa-topology": {
                             "ospf3-lsa-topology-link": [
                                 {
                                     "link-type-name": "Transit",
                                     "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "203.181.99.236",
+                                    "ospf-lsa-topology-link-node-id": "192.168.219.236",
                                     "ospf-lsa-topology-link-state": "Bidirectional"
                                 },
                                 {
                                     "link-type-name": "Transit",
                                     "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "118.155.198.249",
+                                    "ospf-lsa-topology-link-node-id": "10.69.198.249",
                                     "ospf-lsa-topology-link-state": "Bidirectional"
                                 },
                                 {
                                     "link-type-name": "Transit",
                                     "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "203.181.99.235",
+                                    "ospf-lsa-topology-link-node-id": "192.168.219.235",
                                     "ospf-lsa-topology-link-state": "Bidirectional"
                                 }
                             ]
@@ -2873,7 +2873,7 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
                     "sequence-number": "0x8000001d"
                 },
                 {
-                    "advertising-router": "203.181.99.236",
+                    "advertising-router": "192.168.219.236",
                     "age": "2142",
                     "checksum": "0x1983",
                     "lsa-id": "0.0.0.3",
@@ -2881,28 +2881,28 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
                     "lsa-type": "Network",
                     "ospf3-network-lsa": {
                         "attached-router": [
-                            "203.181.99.236",
-                            "118.155.198.249",
-                            "203.181.99.235"
+                            "192.168.219.236",
+                            "10.69.198.249",
+                            "192.168.219.235"
                         ],
                         "ospf3-lsa-topology": {
                             "ospf3-lsa-topology-link": [
                                 {
                                     "link-type-name": "Transit",
                                     "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "203.181.99.235",
+                                    "ospf-lsa-topology-link-node-id": "192.168.219.235",
                                     "ospf-lsa-topology-link-state": "Bidirectional"
                                 },
                                 {
                                     "link-type-name": "Transit",
                                     "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "118.155.198.249",
+                                    "ospf-lsa-topology-link-node-id": "10.69.198.249",
                                     "ospf-lsa-topology-link-state": "Bidirectional"
                                 },
                                 {
                                     "link-type-name": "Transit",
                                     "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "203.181.99.236",
+                                    "ospf-lsa-topology-link-node-id": "192.168.219.236",
                                     "ospf-lsa-topology-link-state": "Bidirectional"
                                 }
                             ]
@@ -2912,7 +2912,7 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
                     "sequence-number": "0x80000b14"
                 },
                 {
-                    "advertising-router": "203.181.99.236",
+                    "advertising-router": "192.168.219.236",
                     "age": "1092",
                     "checksum": "0xa3d1",
                     "lsa-id": "0.0.0.4",
@@ -2920,21 +2920,21 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
                     "lsa-type": "Network",
                     "ospf3-network-lsa": {
                         "attached-router": [
-                            "203.181.99.236",
-                            "203.181.99.235"
+                            "192.168.219.236",
+                            "192.168.219.235"
                         ],
                         "ospf3-lsa-topology": {
                             "ospf3-lsa-topology-link": [
                                 {
                                     "link-type-name": "Transit",
                                     "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "203.181.99.235",
+                                    "ospf-lsa-topology-link-node-id": "192.168.219.235",
                                     "ospf-lsa-topology-link-state": "Bidirectional"
                                 },
                                 {
                                     "link-type-name": "Transit",
                                     "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "203.181.99.236",
+                                    "ospf-lsa-topology-link-node-id": "192.168.219.236",
                                     "ospf-lsa-topology-link-state": "Bidirectional"
                                 }
                             ]
@@ -2944,7 +2944,7 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
                     "sequence-number": "0x80000b11"
                 },
                 {
-                    "advertising-router": "203.181.99.236",
+                    "advertising-router": "192.168.219.236",
                     "age": "1692",
                     "checksum": "0x8fe3",
                     "lsa-id": "0.0.0.6",
@@ -2952,21 +2952,21 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
                     "lsa-type": "Network",
                     "ospf3-network-lsa": {
                         "attached-router": [
-                            "203.181.99.236",
-                            "203.181.99.235"
+                            "192.168.219.236",
+                            "192.168.219.235"
                         ],
                         "ospf3-lsa-topology": {
                             "ospf3-lsa-topology-link": [
                                 {
                                     "link-type-name": "Transit",
                                     "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "203.181.99.235",
+                                    "ospf-lsa-topology-link-node-id": "192.168.219.235",
                                     "ospf-lsa-topology-link-state": "Bidirectional"
                                 },
                                 {
                                     "link-type-name": "Transit",
                                     "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "203.181.99.236",
+                                    "ospf-lsa-topology-link-node-id": "192.168.219.236",
                                     "ospf-lsa-topology-link-state": "Bidirectional"
                                 }
                             ]
@@ -3004,43 +3004,43 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
-        show ospf3 database link advertising-router 203.181.99.235 detail
+        show ospf3 database link advertising-router 192.168.219.235 detail
 
         OSPF3 Link-Local database, interface ge-0/0/2.0 Area 0.0.0.0
     Type       ID               Adv Rtr           Seq         Age  Cksum  Len
-    Link       *0.0.0.9          203.181.99.235   0x80000b10  1379  0xd3b0  56
+    Link       *0.0.0.9          192.168.219.235   0x80000b10  1379  0xd3b0  56
     fe80::20c:2900:3367:243d
     Options 0x33, Priority 20
     Prefix-count 1
-    Prefix 2001:268:fb02:1::/64 Prefix-options 0x0
+    Prefix 2001:db8:dae9:cf16::/64 Prefix-options 0x0
 
         OSPF3 Link-Local database, interface ge-0/0/2.1 Area 0.0.0.0
     Type       ID               Adv Rtr           Seq         Age  Cksum  Len
-    Link       *0.0.0.10         203.181.99.235   0x80000b0f  1979  0x974d  56
+    Link       *0.0.0.10         192.168.219.235   0x80000b0f  1979  0x974d  56
     fe80::20c:2900:3467:243d
     Options 0x33, Priority 128
     Prefix-count 1
-    Prefix 2001:268:fb02:33::/64 Prefix-options 0x0
+    Prefix 2001:db8:dae9:c9df::/64 Prefix-options 0x0
 
         OSPF3 Link-Local database, interface ge-0/0/3.0 Area 0.0.0.0
     Type       ID               Adv Rtr           Seq         Age  Cksum  Len
-    Link       *0.0.0.11         203.181.99.235   0x80000b0f  1829  0x94c2  56
+    Link       *0.0.0.11         192.168.219.235   0x80000b0f  1829  0x94c2  56
     fe80::20c:2900:3667:2465
     Options 0x33, Priority 20
     Prefix-count 1
-    Prefix 2001:268:fb02:2::/64 Prefix-options 0x0
+    Prefix 2001:db8:dae9:d3e9::/64 Prefix-options 0x0
 
         OSPF3 Link-Local database, interface ge-0/0/3.1 Area 0.0.0.0
     Type       ID               Adv Rtr           Seq         Age  Cksum  Len
-    Link       *0.0.0.12         203.181.99.235   0x80000b0f  1679  0x5660  56
+    Link       *0.0.0.12         192.168.219.235   0x80000b0f  1679  0x5660  56
     fe80::20c:2900:3767:2465
     Options 0x33, Priority 128
     Prefix-count 1
-    Prefix 2001:268:fb02:34::/64 Prefix-options 0x0
+    Prefix 2001:db8:dae9:cf16::/64 Prefix-options 0x0
 
         OSPF3 Link-Local database, interface lo0.0 Area 0.0.0.0
     Type       ID               Adv Rtr           Seq         Age  Cksum  Len
-    Link       *0.0.0.7          203.181.99.235   0x80000f62  2729  0xd0a6  44
+    Link       *0.0.0.7          192.168.219.235   0x80000f62  2729  0xd0a6  44
     fe80::20c:290f:fc40:a033
     Options 0x33, Priority 128
     Prefix-count 0
@@ -3051,7 +3051,7 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
             "ospf3-database": [
                 {
                     "@heading": "Type       ID               Adv Rtr           Seq         Age  Cksum  Len",
-                    "advertising-router": "203.181.99.235",
+                    "advertising-router": "192.168.219.235",
                     "age": "1379",
                     "checksum": "0xd3b0",
                     "lsa-id": "0.0.0.9",
@@ -3060,7 +3060,7 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
                     "ospf3-link-lsa": {
                         "linklocal-address": "fe80::20c:2900:3367:243d",
                         "ospf3-options": "0x33",
-                        "ospf3-prefix": "2001:268:fb02:1::/64",
+                        "ospf3-prefix": "2001:db8:dae9:cf16::/64",
                         "ospf3-prefix-options": "0x0",
                         "prefix-count": "1",
                         "router-priority": "20"
@@ -3069,7 +3069,7 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
                 },
                 {
                     "@heading": "Type       ID               Adv Rtr           Seq         Age  Cksum  Len",
-                    "advertising-router": "203.181.99.235",
+                    "advertising-router": "192.168.219.235",
                     "age": "1979",
                     "checksum": "0x974d",
                     "lsa-id": "0.0.0.10",
@@ -3078,7 +3078,7 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
                     "ospf3-link-lsa": {
                         "linklocal-address": "fe80::20c:2900:3467:243d",
                         "ospf3-options": "0x33",
-                        "ospf3-prefix": "2001:268:fb02:33::/64",
+                        "ospf3-prefix": "2001:db8:dae9:c9df::/64",
                         "ospf3-prefix-options": "0x0",
                         "prefix-count": "1",
                         "router-priority": "128"
@@ -3087,7 +3087,7 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
                 },
                 {
                     "@heading": "Type       ID               Adv Rtr           Seq         Age  Cksum  Len",
-                    "advertising-router": "203.181.99.235",
+                    "advertising-router": "192.168.219.235",
                     "age": "1829",
                     "checksum": "0x94c2",
                     "lsa-id": "0.0.0.11",
@@ -3096,7 +3096,7 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
                     "ospf3-link-lsa": {
                         "linklocal-address": "fe80::20c:2900:3667:2465",
                         "ospf3-options": "0x33",
-                        "ospf3-prefix": "2001:268:fb02:2::/64",
+                        "ospf3-prefix": "2001:db8:dae9:d3e9::/64",
                         "ospf3-prefix-options": "0x0",
                         "prefix-count": "1",
                         "router-priority": "20"
@@ -3105,7 +3105,7 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
                 },
                 {
                     "@heading": "Type       ID               Adv Rtr           Seq         Age  Cksum  Len",
-                    "advertising-router": "203.181.99.235",
+                    "advertising-router": "192.168.219.235",
                     "age": "1679",
                     "checksum": "0x5660",
                     "lsa-id": "0.0.0.12",
@@ -3114,7 +3114,7 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
                     "ospf3-link-lsa": {
                         "linklocal-address": "fe80::20c:2900:3767:2465",
                         "ospf3-options": "0x33",
-                        "ospf3-prefix": "2001:268:fb02:34::/64",
+                        "ospf3-prefix": "2001:db8:dae9:cf16::/64",
                         "ospf3-prefix-options": "0x0",
                         "prefix-count": "1",
                         "router-priority": "128"
@@ -3123,7 +3123,7 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
                 },
                 {
                     "@heading": "Type       ID               Adv Rtr           Seq         Age  Cksum  Len",
-                    "advertising-router": "203.181.99.235",
+                    "advertising-router": "192.168.219.235",
                     "age": "2729",
                     "checksum": "0xd0a6",
                     "lsa-id": "0.0.0.7",
@@ -3169,14 +3169,14 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
         obj = ShowOspf3DatabaseLinkAdvertisingRouter(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(
-                ipaddress='203.181.99.235'
+                ipaddress='192.168.219.235'
             )
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowOspf3DatabaseLinkAdvertisingRouter(device=self.device)
         parsed_output = obj.parse(
-                ipaddress='203.181.99.235'
+                ipaddress='192.168.219.235'
             )
         self.assertEqual(parsed_output, self.golden_parsed_output)
 

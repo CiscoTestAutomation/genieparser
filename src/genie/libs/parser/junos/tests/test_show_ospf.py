@@ -13149,63 +13149,63 @@ class TestShowOspfDatabaseNetworkLsaidDetail(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
-        show ospf database network lsa-id 118.155.197.1 detail
+        show ospf database network lsa-id 10.69.197.1 detail
 
-        OSPF database, Area 203.181.97.0
+        OSPF database, Area 192.168.76.0
       Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
-    Network *118.155.197.1    203.181.99.235   0x80000026  1730  0x22 0x1b56  36
+    Network *10.69.197.1    192.168.219.235   0x80000026  1730  0x22 0x1b56  36
     mask 255.255.255.128
-    attached router 203.181.99.235
-    attached router 118.155.198.249
-    attached router 203.181.99.236
+    attached router 192.168.219.235
+    attached router 10.69.198.249
+    attached router 192.168.219.236
     Topology default (ID 0)
-        Type: Transit, Node ID: 203.181.99.236
+        Type: Transit, Node ID: 192.168.219.236
           Metric: 0, Bidirectional
-        Type: Transit, Node ID: 118.155.198.249
+        Type: Transit, Node ID: 10.69.198.249
           Metric: 0, Bidirectional
-        Type: Transit, Node ID: 203.181.99.235
+        Type: Transit, Node ID: 192.168.219.235
           Metric: 0, Bidirectional
     '''}
 
     golden_parsed_output = {
         "ospf-database-information": {
             "ospf-area-header": {
-                "ospf-area": "203.181.97.0"
+                "ospf-area": "192.168.76.0"
             },
             "ospf-database": {
                 "@heading": "Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len",
-                "advertising-router": "203.181.99.235",
+                "advertising-router": "192.168.219.235",
                 "age": "1730",
                 "checksum": "0x1b56",
-                "lsa-id": "118.155.197.1",
+                "lsa-id": "10.69.197.1",
                 "lsa-length": "36",
                 "lsa-type": "Network",
                 "options": "0x22",
                 "ospf-network-lsa": {
                     "address-mask": "255.255.255.128",
                     "attached-router": [
-                        "203.181.99.235",
-                        "118.155.198.249",
-                        "203.181.99.236"
+                        "192.168.219.235",
+                        "10.69.198.249",
+                        "192.168.219.236"
                     ],
                     "ospf-lsa-topology": {
                         "ospf-lsa-topology-link": [
                             {
                                 "link-type-name": "Transit",
                                 "ospf-lsa-topology-link-metric": "0",
-                                "ospf-lsa-topology-link-node-id": "203.181.99.236",
+                                "ospf-lsa-topology-link-node-id": "192.168.219.236",
                                 "ospf-lsa-topology-link-state": "Bidirectional"
                             },
                             {
                                 "link-type-name": "Transit",
                                 "ospf-lsa-topology-link-metric": "0",
-                                "ospf-lsa-topology-link-node-id": "118.155.198.249",
+                                "ospf-lsa-topology-link-node-id": "10.69.198.249",
                                 "ospf-lsa-topology-link-state": "Bidirectional"
                             },
                             {
                                 "link-type-name": "Transit",
                                 "ospf-lsa-topology-link-metric": "0",
-                                "ospf-lsa-topology-link-node-id": "203.181.99.235",
+                                "ospf-lsa-topology-link-node-id": "192.168.219.235",
                                 "ospf-lsa-topology-link-state": "Bidirectional"
                             }
                         ],
@@ -13223,14 +13223,14 @@ class TestShowOspfDatabaseNetworkLsaidDetail(unittest.TestCase):
         obj = ShowOspfDatabaseNetworkLsaidDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(
-                ipaddress='118.155.197.1'
+                ipaddress='10.69.197.1'
             )
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowOspfDatabaseNetworkLsaidDetail(device=self.device)
         parsed_output = obj.parse(
-            ipaddress='118.155.197.1'
+            ipaddress='10.69.197.1'
         )
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
@@ -13246,41 +13246,41 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
-        show ospf database lsa-id 59.128.2.250 detail
+        show ospf database lsa-id 10.34.2.250 detail
 
         OSPF database, Area 0.0.0.8
     Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
-    Router   59.128.2.250     59.128.2.250     0x80000048  1598  0x22 0xed79 108
+    Router   10.34.2.250     10.34.2.250     0x80000048  1598  0x22 0xed79 108
     bits 0x2, link count 7
-    id 59.128.2.251, data 59.128.2.201, Type PointToPoint (1)
+    id 10.34.2.251, data 10.34.2.201, Type PointToPoint (1)
         Topology count: 0, Default metric: 5
-    id 59.128.2.200, data 255.255.255.252, Type Stub (3)
+    id 10.34.2.200, data 255.255.255.252, Type Stub (3)
         Topology count: 0, Default metric: 5
-    id 106.187.14.240, data 106.187.14.158, Type PointToPoint (1)
+    id 10.169.14.240, data 10.169.14.158, Type PointToPoint (1)
         Topology count: 0, Default metric: 100
-    id 106.187.14.156, data 255.255.255.252, Type Stub (3)
+    id 10.169.14.156, data 255.255.255.252, Type Stub (3)
         Topology count: 0, Default metric: 100
-    id 4.0.0.0, data 255.255.255.252, Type Stub (3)
+    id 10.16.0.0, data 255.255.255.252, Type Stub (3)
         Topology count: 0, Default metric: 1000
-    id 200.0.0.0, data 255.255.255.252, Type Stub (3)
+    id 192.168.220.0, data 255.255.255.252, Type Stub (3)
         Topology count: 0, Default metric: 1000
-    id 59.128.2.250, data 255.255.255.255, Type Stub (3)
+    id 10.34.2.250, data 255.255.255.255, Type Stub (3)
         Topology count: 0, Default metric: 0
     Topology default (ID 0)
-        Type: PointToPoint, Node ID: 106.187.14.240
+        Type: PointToPoint, Node ID: 10.169.14.240
         Metric: 100, Bidirectional
-        Type: PointToPoint, Node ID: 59.128.2.251
+        Type: PointToPoint, Node ID: 10.34.2.251
         Metric: 5, Bidirectional
         OSPF AS SCOPE link state database
     Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
-    Extern   59.128.2.250     106.187.14.240   0x80000043  1075  0x22 0xd7f4  36
+    Extern   10.34.2.250     10.169.14.240   0x80000043  1075  0x22 0xd7f4  36
     mask 255.255.255.255
     Topology default (ID 0)
-        Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 3.226.34.12
-    Extern  *59.128.2.250     106.187.14.241   0x80000044   670  0x22 0xcffa  36
+        Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
+    Extern  *10.34.2.250     10.169.14.241   0x80000044   670  0x22 0xcffa  36
     mask 255.255.255.255
     Topology default (ID 0)
-        Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 3.226.34.12
+        Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
     '''}
 
     golden_parsed_output = {
@@ -13291,10 +13291,10 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
             "ospf-database": [
                 {
                     "@heading": "Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len",
-                    "advertising-router": "59.128.2.250",
+                    "advertising-router": "10.34.2.250",
                     "age": "1598",
                     "checksum": "0xed79",
-                    "lsa-id": "59.128.2.250",
+                    "lsa-id": "10.34.2.250",
                     "lsa-length": "108",
                     "lsa-type": "Router",
                     "options": "0x22",
@@ -13303,8 +13303,8 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
                         "link-count": "7",
                         "ospf-link": [
                             {
-                                "link-data": "59.128.2.201",
-                                "link-id": "59.128.2.251",
+                                "link-data": "10.34.2.201",
+                                "link-id": "10.34.2.251",
                                 "link-type-name": "PointToPoint",
                                 "link-type-value": "1",
                                 "metric": "5",
@@ -13312,15 +13312,15 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
                             },
                             {
                                 "link-data": "255.255.255.252",
-                                "link-id": "59.128.2.200",
+                                "link-id": "10.34.2.200",
                                 "link-type-name": "Stub",
                                 "link-type-value": "3",
                                 "metric": "5",
                                 "ospf-topology-count": "0"
                             },
                             {
-                                "link-data": "106.187.14.158",
-                                "link-id": "106.187.14.240",
+                                "link-data": "10.169.14.158",
+                                "link-id": "10.169.14.240",
                                 "link-type-name": "PointToPoint",
                                 "link-type-value": "1",
                                 "metric": "100",
@@ -13328,7 +13328,7 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
                             },
                             {
                                 "link-data": "255.255.255.252",
-                                "link-id": "106.187.14.156",
+                                "link-id": "10.169.14.156",
                                 "link-type-name": "Stub",
                                 "link-type-value": "3",
                                 "metric": "100",
@@ -13336,7 +13336,7 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
                             },
                             {
                                 "link-data": "255.255.255.252",
-                                "link-id": "4.0.0.0",
+                                "link-id": "10.16.0.0",
                                 "link-type-name": "Stub",
                                 "link-type-value": "3",
                                 "metric": "1000",
@@ -13344,7 +13344,7 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
                             },
                             {
                                 "link-data": "255.255.255.252",
-                                "link-id": "200.0.0.0",
+                                "link-id": "192.168.220.0",
                                 "link-type-name": "Stub",
                                 "link-type-value": "3",
                                 "metric": "1000",
@@ -13352,7 +13352,7 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
                             },
                             {
                                 "link-data": "255.255.255.255",
-                                "link-id": "59.128.2.250",
+                                "link-id": "10.34.2.250",
                                 "link-type-name": "Stub",
                                 "link-type-value": "3",
                                 "metric": "0",
@@ -13364,13 +13364,13 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
                                 {
                                     "link-type-name": "PointToPoint",
                                     "ospf-lsa-topology-link-metric": "100",
-                                    "ospf-lsa-topology-link-node-id": "106.187.14.240",
+                                    "ospf-lsa-topology-link-node-id": "10.169.14.240",
                                     "ospf-lsa-topology-link-state": "Bidirectional"
                                 },
                                 {
                                     "link-type-name": "PointToPoint",
                                     "ospf-lsa-topology-link-metric": "5",
-                                    "ospf-lsa-topology-link-node-id": "59.128.2.251",
+                                    "ospf-lsa-topology-link-node-id": "10.34.2.251",
                                     "ospf-lsa-topology-link-state": "Bidirectional"
                                 }
                             ],
@@ -13383,10 +13383,10 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
                 {
                     "@external-heading": "OSPF AS SCOPE link state database",
                     "@heading": "Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len",
-                    "advertising-router": "106.187.14.240",
+                    "advertising-router": "10.169.14.240",
                     "age": "1075",
                     "checksum": "0xd7f4",
-                    "lsa-id": "59.128.2.250",
+                    "lsa-id": "10.34.2.250",
                     "lsa-length": "36",
                     "lsa-type": "Extern",
                     "options": "0x22",
@@ -13397,17 +13397,17 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
                             "ospf-topology-id": "0",
                             "ospf-topology-metric": "50",
                             "ospf-topology-name": "default",
-                            "tag": "3.226.34.12",
+                            "tag": "10.166.34.12",
                             "type-value": "1"
                         }
                     },
                     "sequence-number": "0x80000043"
                 },
                 {
-                    "advertising-router": "106.187.14.241",
+                    "advertising-router": "10.169.14.241",
                     "age": "670",
                     "checksum": "0xcffa",
-                    "lsa-id": "59.128.2.250",
+                    "lsa-id": "10.34.2.250",
                     "lsa-length": "36",
                     "lsa-type": "Extern",
                     "options": "0x22",
@@ -13418,7 +13418,7 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
                             "ospf-topology-id": "0",
                             "ospf-topology-metric": "50",
                             "ospf-topology-name": "default",
-                            "tag": "3.226.34.12",
+                            "tag": "10.166.34.12",
                             "type-value": "1"
                         }
                     },
@@ -13433,14 +13433,14 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
         obj = ShowOspfDatabaseLsaidDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(
-                ipaddress='59.128.2.250'
+                ipaddress='10.34.2.250'
             )
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowOspfDatabaseLsaidDetail(device=self.device)
         parsed_output = obj.parse(
-            ipaddress='59.128.2.250'
+            ipaddress='10.34.2.250'
         )
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
