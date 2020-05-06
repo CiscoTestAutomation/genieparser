@@ -112,7 +112,6 @@ class ShowRoute(ShowRouteSchema):
             out = output
 
         ret_dict = {}
-
         # strip this patter from the original text
         # Codes: L - Local, C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP
         # D - EIGRP, E - EGP, EX - EIGRP external, O - OSPF, I - IGRP, IA - OSPF inter area
@@ -179,10 +178,19 @@ class ShowRoute(ShowRouteSchema):
 
         # D 10.0.0.0 255.255.255.0 [90/30720] via 192.168.1.1, 0:19:52, inside
         p8 = re.compile(
-            r'^(?P<code>\S+)\s(?P<network>\S+)\s(?P<subnet>\S+)\s\[(?P<route_preference>[\d\/]+)\]\svia\s+(?P<next_hop>\S+),\s(?P<age>\S+)\s+(?P<context_name>\S+)')
+            r'^(?P<code>\S+)\s(?P<network>\S+)\s(?P<subnet>\S+)\s\[(?P<route_preference>[\d\/]+)\]'
+            '\svia\s+(?P<next_hop>\S+),\s(?P<age>\S+)\s+(?P<context_name>\S+)')
 
         # B 10.122.3.0 255.255.255.0 [20/0]
         p9 = re.compile(r'(?P<code>\S+)\s(?P<network>\S+)\s(?P<subnet>\S+)\s\[(?P<route_preference>[\d\/]+)\]')
+
+        # [170/345856] via 10.9.193.99, 2w1d, esavpn [170/345856] via 10.9.193.98, 2w1d, esavpn
+        p10 = re.compile(
+            r'\[(?P<route_preference>[\d\/]+)\]\svia\s+(?P<next_hop>\S+),\s(?P<age>\S+)'
+            '\s(?P<context_name>\S+)')
+
+        # D EX 10.121.67.0 255.255.255.0
+        p11 = re.compile(r'^(?:\S+)\s(?P<code>\S+)\s(?P<network>\S+)\s(?P<subnet>\S+)')
 
         if not clean_lines:
             return
@@ -236,7 +244,13 @@ class ShowRoute(ShowRouteSchema):
             elif line.startswith('D'):
                 """ EIGRP """
                 m = p8.match(line)
-                groups = m.groupdict()
+                if m:
+                    groups = m.groupdict()
+                else:
+                    m = p11.match(line)
+                    groups = m.groupdict()
+                    next_hops = [m.groupdict() for m in p10.finditer(line)]
+
             else:
                 continue
 

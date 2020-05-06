@@ -39,7 +39,7 @@ class test_ifconfig(unittest.TestCase):
                 }
             },
             "type": "ether",
-            "destription": "Ethernet",
+            "description": "Ethernet",
             "mac": "02:42:04:ff:68:9b",
             "txqueuelen": 0,
             'counters': {
@@ -79,7 +79,7 @@ class test_ifconfig(unittest.TestCase):
                 }
             },
             "type": "ether",
-            "destription": "Ethernet",
+            "description": "Ethernet",
             "mac": "02:42:b0:ff:60:2f",
             "txqueuelen": 0,
             'counters': {
@@ -119,7 +119,7 @@ class test_ifconfig(unittest.TestCase):
                 }
             },
             "type": "ether",
-            "destription": "Ethernet",
+            "description": "Ethernet",
             "mac": "10:6f:3f:ff:f0:ba",
             "txqueuelen": 1000,
             'counters': {
@@ -159,7 +159,7 @@ class test_ifconfig(unittest.TestCase):
                 }
             },
             "type": "ether",
-            "destription": "Ethernet",
+            "description": "Ethernet",
             "mac": "48:2a:e3:ff:58:55",
             "txqueuelen": 1000,
             'counters': {
@@ -194,7 +194,7 @@ class test_ifconfig(unittest.TestCase):
                 }
             },
             "type": "loop",
-            "destription": "Local Loopback",
+            "description": "Local Loopback",
             "txqueuelen": 1000,
             'counters': {
                 "rx_pkts": 100389,
@@ -226,7 +226,7 @@ class test_ifconfig(unittest.TestCase):
                 }
             },
             "type": "ether",
-            "destription": "Ethernet",
+            "description": "Ethernet",
             "mac": "4a:e2:88:ff:28:12",
             "txqueuelen": 0,
             'counters': {
@@ -259,7 +259,7 @@ class test_ifconfig(unittest.TestCase):
                 }
             },
             "type": "ether",
-            "destription": "Ethernet",
+            "description": "Ethernet",
             "mac": "62:e7:71:ff:cd:c2",
             "txqueuelen": 0,
             'counters': {
@@ -381,7 +381,7 @@ class test_ifconfig(unittest.TestCase):
                 }
             },
             "type": "ether",
-            "destription": "Ethernet",
+            "description": "Ethernet",
             "mac": "00:50:b6:ff:4b:83",
             'counters': {
                 "rx_pkts": 0,
@@ -418,6 +418,175 @@ class test_ifconfig(unittest.TestCase):
     '''
     }
 
+
+    golden_output_two = {'execute.return_value': '''
+        eth0      Link encap:Ethernet  HWaddr 00:50:56:FF:01:14
+          inet addr:172.27.114.205  Bcast:172.27.114.255  Mask:255.255.255.0
+          inet6 addr: fe80::250:56ff:feff:114/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:2004256429 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:4779769715 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:2084687440241 (1.8 TiB)  TX bytes:6145946777794 (5.5 TiB)
+
+        eth1      Link encap:Ethernet  HWaddr 00:50:56:ff:a7:82
+          inet addr:10.1.6.104  Bcast:10.1.6.255  Mask:255.255.255.0
+          inet6 addr: fe80::250:56ff:feff:a782/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:15305561 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:10687824 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:7049907887 (6.5 GiB)  TX bytes:732246659 (698.3 MiB)
+
+        lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:1894651 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:1894651 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:168964687 (161.1 MiB)  TX bytes:168964687 (161.1 MiB)
+
+        virbr0    Link encap:Ethernet  HWaddr 52:54:00:FF:65:9F
+          inet addr:192.168.122.1  Bcast:192.168.122.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 b)  TX bytes:0 (0.0 b)
+    '''}
+
+    golden_parsed_output_two = {
+        "eth0":{
+            "interface":"eth0",
+            "description":"Ethernet",
+            "type":"Ethernet",
+            "ipv4":{
+                "172.27.114.205":{
+                    "ip":"172.27.114.205",
+                    "broadcast":"172.27.114.255",
+                    "netmask":"255.255.255.0"
+                }
+            },
+            "flags":"UP BROADCAST RUNNING MULTICAST",
+            "mtu":1500,
+            "counters":{
+                "rx_pkts":2004256429,
+                "rx_errors":0,
+                "rx_dropped":0,
+                "rx_overruns":0,
+                "rx_frame":0,
+                "tx_pkts":4779769715,
+                "tx_errors":0,
+                "tx_dropped":0,
+                "tx_overruns":0,
+                "tx_carrier":0,
+                "tx_collisions":0,
+                "rx_bytes":2084687440241,
+                "rx_value":"1.8 TiB",
+                "tx_bytes":6145946777794,
+                "tx_value":"5.5 TiB"
+            },
+            "txqueuelen":1000
+        },
+        "eth1":{
+            "interface":"eth1",
+            "description":"Ethernet",
+            "type":"Ethernet",
+            "ipv4":{
+                "10.1.6.104":{
+                    "ip":"10.1.6.104",
+                    "broadcast":"10.1.6.255",
+                    "netmask":"255.255.255.0"
+                }
+            },
+            "flags":"UP BROADCAST RUNNING MULTICAST",
+            "mtu":1500,
+            "counters":{
+                "rx_pkts":15305561,
+                "rx_errors":0,
+                "rx_dropped":0,
+                "rx_overruns":0,
+                "rx_frame":0,
+                "tx_pkts":10687824,
+                "tx_errors":0,
+                "tx_dropped":0,
+                "tx_overruns":0,
+                "tx_carrier":0,
+                "tx_collisions":0,
+                "rx_bytes":7049907887,
+                "rx_value":"6.5 GiB",
+                "tx_bytes":732246659,
+                "tx_value":"698.3 MiB"
+            },
+            "txqueuelen":1000
+        },
+        "lo":{
+            "interface":"lo",
+            "description":"Local Loopback",
+            "type":"Local Loopback",
+            "ipv4":{
+                "127.0.0.1":{
+                    "ip":"127.0.0.1",
+                    "broadcast":"",
+                    "netmask":"255.0.0.0"
+                }
+            },
+            "flags":"UP LOOPBACK RUNNING",
+            "mtu":65536,
+            "counters":{
+                "rx_pkts":1894651,
+                "rx_errors":0,
+                "rx_dropped":0,
+                "rx_overruns":0,
+                "rx_frame":0,
+                "tx_pkts":1894651,
+                "tx_errors":0,
+                "tx_dropped":0,
+                "tx_overruns":0,
+                "tx_carrier":0,
+                "tx_collisions":0,
+                "rx_bytes":168964687,
+                "rx_value":"161.1 MiB",
+                "tx_bytes":168964687,
+                "tx_value":"161.1 MiB"
+            },
+            "txqueuelen":0
+        },
+        "virbr0":{
+            "interface":"virbr0",
+            "description":"Ethernet",
+            "type":"Ethernet",
+            "ipv4":{
+                "192.168.122.1":{
+                    "ip":"192.168.122.1",
+                    "broadcast":"192.168.122.255",
+                    "netmask":"255.255.255.0"
+                }
+            },
+            "flags":"UP BROADCAST RUNNING MULTICAST",
+            "mtu":1500,
+            "counters":{
+                "rx_pkts":0,
+                "rx_errors":0,
+                "rx_dropped":0,
+                "rx_overruns":0,
+                "rx_frame":0,
+                "tx_pkts":0,
+                "tx_errors":0,
+                "tx_dropped":0,
+                "tx_overruns":0,
+                "tx_carrier":0,
+                "tx_collisions":0,
+                "rx_bytes":0,
+                "rx_value":"0.0 b",
+                "tx_bytes":0,
+                "tx_value":"0.0 b"
+            },
+            "txqueuelen":0
+        }
+    }
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         obj = Ifconfig(device=self.device1)
@@ -438,6 +607,12 @@ class test_ifconfig(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output_interface)
 
+    def test_golden_two(self):
+        self.device = Mock(**self.golden_output_two)
+        obj = Ifconfig(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output_two)
 
 if __name__ == '__main__':
     unittest.main()

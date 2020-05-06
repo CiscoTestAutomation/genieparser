@@ -427,7 +427,7 @@ class ShowIpStaticRouteMulticastSchema(MetaParser):
 
     schema = {'vrf': 
                 {Any():
-                    {'address_family':
+                    {Optional('address_family'):
                         {Any():
                             {'mroute':
                                 {Any():
@@ -446,6 +446,7 @@ class ShowIpStaticRouteMulticastSchema(MetaParser):
                     },
                 },
             }
+
 
 class ShowIpStaticRouteMulticast(ShowIpStaticRouteMulticastSchema):
     """Parser for show ip static-route multicast vrf all"""

@@ -20,7 +20,9 @@ JunOs parsers for the following show commands:
     * show ospf database advertising-router self detail
     * show ospf neighbor extensive
     * show ospf neighbor detail
+    * show ospf neighbor {neighbor} detail
     * show ospf interface extensive
+    * show ospf route brief
 """
 
 # Python
@@ -2816,7 +2818,7 @@ class ShowOspfNeighborExtensive(ShowOspfNeighborExtensiveSchema):
     """
     cli_command = 'show ospf neighbor extensive'
 
-    def cli(self, output=None):
+    def cli(self, output=None, neighbor=None):
         if not output:
             out = self.device.execute(self.cli_command)
         else:
@@ -3149,12 +3151,203 @@ class ShowOspfInterfaceExtensive(ShowOspfInterfaceExtensiveSchema):
 class ShowOspfNeighborDetail(ShowOspfNeighborExtensive):
     """ Parser for:
             * show ospf neighbor detail
+            * show ospf neighbor {neighbor} detail
     """
-    cli_command = 'show ospf neighbor detail'
+    cli_command = [
+        'show ospf neighbor detail',
+        'show ospf neighbor {neighbor} detail'
+    ]
+
+    def cli(self, neighbor=None, output=None):
+        if output is None:
+            if neighbor:
+                out = self.device.execute(self.cli_command[1].format(neighbor=neighbor))
+            else:
+                out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        return super().cli(output=out, neighbor=neighbor)
+
+class ShowOspfRouteBriefSchema(MetaParser):
+    """ Schema for:
+            * show ospf route brief
+    """
+
+    """
+    schema = {
+        "ospf-route-information": {
+            "ospf-topology-route-table": {
+                "ospf-route": [{
+                "ospf-route-entry": [{
+                    "address-prefix": str,
+                    "interface-cost": str,
+                    "next-hop-type": str,
+                    "ospf-next-hop": {
+                        Optional("next-hop-address"): {
+                            "interface-address": str
+                        },
+                        "next-hop-name": {
+                            "interface-name": str
+                        }
+                    },
+                    "route-path-type": str,
+                    "route-type": str,
+                    Optional("ospf-backup-next-hop"): {
+                        "ospf-backup-next-hop-type": str,
+                        "ospf-backup-next-hop-address": str,
+                        "ospf-backup-next-hop-interface": str
+                    }
+                }]
+            }],
+                Optional("ospf-topology-name"): str
+            }
+        }
+    }
+    """
+
+
+    def validate_ospf_route_entry_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-route-entry is not a list')
+        ospf_route_schema = Schema(
+                {
+            "address-prefix": str,
+            "interface-cost": str,
+            "next-hop-type": str,
+            "ospf-next-hop": {
+                Optional("next-hop-address"): {
+                    "interface-address": str
+                },
+                "next-hop-name": {
+                    "interface-name": str
+                }
+            },
+            "route-path-type": str,
+            "route-type": str,
+            Optional("ospf-backup-next-hop"): {
+                "ospf-backup-next-hop-type": str,
+                "ospf-backup-next-hop-address": str,
+                "ospf-backup-next-hop-interface": str
+            }
+        })
+        for item in value:
+            ospf_route_schema.validate(item)
+        return value
+
+    def validate_ospf_route_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-route is not a list')
+        ospf_route_schema = Schema(
+            {
+            "ospf-route-entry": Use(ShowOspfRouteBriefSchema.validate_ospf_route_entry_list)
+        })
+        for item in value:
+            ospf_route_schema.validate(item)
+        return value
+
+    schema = {
+        "ospf-route-information": {
+            "ospf-topology-route-table": {
+                "ospf-route": Use(validate_ospf_route_list),
+                Optional("ospf-topology-name"): str
+            }
+        }
+    }
+
+class ShowOspfRouteBrief(ShowOspfRouteBriefSchema):
+    """ Parser for:
+            * show ospf route brief
+    """
+    cli_command = 'show ospf route brief'
+
+    address_prefix = None
 
     def cli(self, output=None):
         if not output:
-            out = self.device.execute(self.cli_command[0])
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # 10.36.3.3            Intra Router     IP         1201 ge-0/0/1.0    10.169.14.121
+        # 10.19.198.28/30    Intra Network    IP         1005 ge-0/0/0.0    10.189.5.94
+        # 2568 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+        # 10.169.14.120/30  Intra Network    IP          100 ge-0/0/1.0
+        p1 = re.compile(r'^(?P<address_prefix>[\d\.\/]+( \(S=\d+\))?) +(?P<route_path_type>\S+)'
+            r' +(?P<route_type>\S+|(AS BR)) +(?P<next_hop_type>\S+) +(?P<interface_cost>\S+)'
+            r' +(?P<interface_name>\S+)( +(?P<interface_address>[\d\.]+))?$')
+
+        # Bkup SPRING     ge-0/0/0.0    10.189.5.94
+        p2 = re.compile(r'^(?P<ospf_backup_next_hop_type>Bkup +\S+) +'
+        r'(?P<ospf_backup_next_hop_interface>\S+) +(?P<ospf_backup_next_hop_address>[\d\.]+)$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 10.36.3.3            Intra Router     IP         1201 ge-0/0/1.0    10.169.14.121
+            # 10.19.198.28/30    Intra Network    IP         1005 ge-0/0/0.0    10.189.5.94
+            # 2568 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+            # 10.169.14.120/30  Intra Network    IP          100 ge-0/0/1.0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault("ospf-route-information", {})\
+                    .setdefault("ospf-topology-route-table", {})\
+                        .setdefault("ospf-route", [])
+
+                entry = {}
+                entry.setdefault("address-prefix", group['address_prefix'])
+                entry.setdefault("route-path-type", group['route_path_type'])
+                entry.setdefault("route-type", group['route_type'])
+                entry.setdefault("next-hop-type", group['next_hop_type'])
+                entry.setdefault("interface-cost", group['interface_cost'])
+                entry.setdefault("ospf-next-hop", {}).setdefault("next-hop-name", {})\
+                        .setdefault("interface-name", group['interface_name'])
+
+                if "interface_address" in group and group['interface_address']:
+                    entry.setdefault("ospf-next-hop", {}).setdefault("next-hop-address", {})\
+                            .setdefault("interface-address", group['interface_address'])
+
+                if self.address_prefix == group['address_prefix']:
+                    ret_dict["ospf-route-information"]["ospf-topology-route-table"]\
+                        ["ospf-route"][-1]["ospf-route-entry"].append(entry)
+                else:
+                    ret_dict["ospf-route-information"]["ospf-topology-route-table"]\
+                        ["ospf-route"].append({"ospf-route-entry":[entry]})
+
+                self.address_prefix = group['address_prefix']
+                continue
+
+            # Bkup SPRING     ge-0/0/0.0    10.189.5.94
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+
+                last_route = ret_dict["ospf-route-information"]["ospf-topology-route-table"]\
+                    ["ospf-route"][-1]
+
+                last_route["ospf-route-entry"][-1]["ospf-backup-next-hop"] = {}
+
+                entry = last_route["ospf-route-entry"][-1]["ospf-backup-next-hop"]
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+                continue
+
+        return ret_dict
+
+class ShowOspfRouteDetail(ShowOspfRouteBrief):
+    """ Parser for:
+            * show ospf route detail
+    """
+
+    cli_command = 'show ospf route detail'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
         else:
             out = output
 
