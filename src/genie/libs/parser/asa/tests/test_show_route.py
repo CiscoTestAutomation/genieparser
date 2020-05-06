@@ -178,6 +178,144 @@ class test_show_ip_route(unittest.TestCase):
                                 'source_protocol': 'connected',
                                 'source_protocol_codes': 'C',
                             },
+                            '10.121.65.0/24': {
+                                'active': True,
+                                'candidate_default': False,
+                                'metric': 20,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.121.64.35',
+                                            'outgoing_interface_name': 'inside',
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '10.121.64.34',
+                                            'outgoing_interface_name': 'inside',
+                                        },
+                                    },
+                                },
+                                'route': '10.121.65.0/24',
+                                'route_preference': 110,
+                                'source_protocol': 'ospf',
+                                'source_protocol_codes': 'O',
+                            },
+                            '10.121.67.0/24': {
+                                'active': True,
+                                'candidate_default': False,
+                                'metric': 345856,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.9.193.99',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '10.9.193.98',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                    },
+                                },
+                                'route': '10.121.67.0/24',
+                                'route_preference': 170,
+                                'source_protocol': 'eigrp',
+                                'source_protocol_codes': 'EX',
+                            },
+                            '10.121.68.0/24': {
+                                'active': True,
+                                'candidate_default': False,
+                                'metric': 345856,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.9.193.99',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '10.9.193.98',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                    },
+                                },
+                                'route': '10.121.68.0/24',
+                                'route_preference': 170,
+                                'source_protocol': 'eigrp',
+                                'source_protocol_codes': 'EX',
+                            },
+                            '10.121.69.0/24': {
+                                'active': True,
+                                'candidate_default': False,
+                                'metric': 20,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.121.64.35',
+                                            'outgoing_interface_name': 'inside',
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '10.121.64.34',
+                                            'outgoing_interface_name': 'inside',
+                                        },
+                                    },
+                                },
+                                'route': '10.121.69.0/24',
+                                'route_preference': 110,
+                                'source_protocol': 'ospf',
+                                'source_protocol_codes': 'O',
+                            },
+                            '10.121.70.0/24': {
+                                'active': True,
+                                'candidate_default': False,
+                                'metric': 345856,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.9.193.99',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '10.9.193.98',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                    },
+                                },
+                                'route': '10.121.70.0/24',
+                                'route_preference': 170,
+                                'source_protocol': 'eigrp',
+                                'source_protocol_codes': 'EX',
+                            },
+                            '10.121.71.0/24': {
+                                'active': True,
+                                'candidate_default': False,
+                                'metric': 345856,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.9.193.99',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '10.9.193.98',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                    },
+                                },
+                                'route': '10.121.71.0/24',
+                                'route_preference': 170,
+                                'source_protocol': 'eigrp',
+                                'source_protocol_codes': 'EX',
+                            },
                             '10.122.3.0/24': {
                                 'active': True,
                                 'candidate_default': False,
@@ -315,7 +453,186 @@ class test_show_ip_route(unittest.TestCase):
                        [110/11] via 10.20.192.4, 1w1d, wan4
             O    30.20.8.0 255.255.254.0 [110/20] via 172.20.1.1, 7w0d, wan5
             D    10.0.0.0 255.255.255.0 [90/30720] via 192.168.1.1, 0:19:52, inside
+           O        10.121.65.0 255.255.255.0 [110/20] via 10.121.64.35, 7w0d, inside
+                                              [110/20] via 10.121.64.34, 7w0d, inside
+           D EX     10.121.67.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
+                                              [170/345856] via 10.9.193.98, 2w1d, esavpn
+           D EX     10.121.68.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
+                                              [170/345856] via 10.9.193.98, 2w1d, esavpn
+           O        10.121.69.0 255.255.255.0 [110/20] via 10.121.64.35, 7w0d, inside
+                                              [110/20] via 10.121.64.34, 7w0d, inside
+           D EX     10.121.70.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
+                                              [170/345856] via 10.9.193.98, 2w1d, esavpn
+           D EX     10.121.71.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
+                                              [170/345856] via 10.9.193.98, 2w1d, esavpn            
                 """}
+
+    golden_output_2 = {'execute.return_value': '''
+
+       O        10.121.65.0 255.255.255.0 [110/20] via 10.121.64.35, 7w0d, inside
+                                          [110/20] via 10.121.64.34, 7w0d, inside
+       D EX     10.121.67.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
+                                          [170/345856] via 10.9.193.98, 2w1d, esavpn
+       D EX     10.121.68.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
+                                          [170/345856] via 10.9.193.98, 2w1d, esavpn
+       O        10.121.69.0 255.255.255.0 [110/20] via 10.121.64.35, 7w0d, inside
+                                          [110/20] via 10.121.64.34, 7w0d, inside
+       D EX     10.121.70.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
+                                          [170/345856] via 10.9.193.98, 2w1d, esavpn
+       D EX     10.121.71.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
+                                          [170/345856] via 10.9.193.98, 2w1d, esavpn
+       '''}
+
+    golden_parsed_output_2 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'routes': {
+                            '10.121.65.0/24': {
+                                'active': True,
+                                'candidate_default': False,
+                                'metric': 20,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.121.64.35',
+                                            'outgoing_interface_name': 'inside',
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '10.121.64.34',
+                                            'outgoing_interface_name': 'inside',
+                                        },
+                                    },
+                                },
+                                'route': '10.121.65.0/24',
+                                'route_preference': 110,
+                                'source_protocol': 'ospf',
+                                'source_protocol_codes': 'O',
+                            },
+                            '10.121.67.0/24': {
+                                'active': True,
+                                'candidate_default': False,
+                                'metric': 345856,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.9.193.99',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '10.9.193.98',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                    },
+                                },
+                                'route': '10.121.67.0/24',
+                                'route_preference': 170,
+                                'source_protocol': 'eigrp',
+                                'source_protocol_codes': 'EX',
+                            },
+                            '10.121.68.0/24': {
+                                'active': True,
+                                'candidate_default': False,
+                                'metric': 345856,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.9.193.99',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '10.9.193.98',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                    },
+                                },
+                                'route': '10.121.68.0/24',
+                                'route_preference': 170,
+                                'source_protocol': 'eigrp',
+                                'source_protocol_codes': 'EX',
+                            },
+                            '10.121.69.0/24': {
+                                'active': True,
+                                'candidate_default': False,
+                                'metric': 20,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.121.64.35',
+                                            'outgoing_interface_name': 'inside',
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '10.121.64.34',
+                                            'outgoing_interface_name': 'inside',
+                                        },
+                                    },
+                                },
+                                'route': '10.121.69.0/24',
+                                'route_preference': 110,
+                                'source_protocol': 'ospf',
+                                'source_protocol_codes': 'O',
+                            },
+                            '10.121.70.0/24': {
+                                'active': True,
+                                'candidate_default': False,
+                                'metric': 345856,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.9.193.99',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '10.9.193.98',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                    },
+                                },
+                                'route': '10.121.70.0/24',
+                                'route_preference': 170,
+                                'source_protocol': 'eigrp',
+                                'source_protocol_codes': 'EX',
+                            },
+                            '10.121.71.0/24': {
+                                'active': True,
+                                'candidate_default': False,
+                                'metric': 345856,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '10.9.193.99',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '10.9.193.98',
+                                            'outgoing_interface_name': 'esavpn',
+                                        },
+                                    },
+                                },
+                                'route': '10.121.71.0/24',
+                                'route_preference': 170,
+                                'source_protocol': 'eigrp',
+                                'source_protocol_codes': 'EX',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -329,6 +646,12 @@ class test_show_ip_route(unittest.TestCase):
         route_obj = ShowRoute(device=self.device)
         parsed_output = route_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        route_obj = ShowRoute(device=self.device)
+        parsed_output = route_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 if __name__ == '__main__':

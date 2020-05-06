@@ -16,3 +16,10 @@
 * IOSXE
     * Update ShowIpRoute:
         * Fixed regex for VRF name, now supports the '-' character in name.
+
+* ASA
+    * Updated ShowRoute:
+        * Fixed the logic for overlapping prefixes.
+        * Fixed the OSPF protocol mappings.
+        * Parser optimization for dynamic routing protocols (EIGRP, OSPF, BGP, etc)
+
