@@ -1512,6 +1512,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
             p1 = re.compile(r'^Name: +(?P<intf>[\w\/\.\-]+)$')
             m = p1.match(line)
             if m:
+                print('line : ', line)
+                print('p1')
                 intf = Common.convert_intf_name(m.groupdict()['intf'])
                 if intf not in ret_dict:
                     ret_dict[intf] = {}
@@ -1521,6 +1523,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
             p2 = re.compile(r'^Switchport: +(?P<switchport_enable>\w+)$')
             m = p2.match(line)
             if m:
+                print('line : ', line)
+                print('p2')
                 if m.groupdict()['switchport_enable'].lower() == 'enabled':
                     ret_dict[intf]['switchport_enable'] = True
                 else:
@@ -1531,6 +1535,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
             p3 = re.compile(r'^Administrative +Mode: +(?P<switchport_mode>[\w\s]+)$')
             m = p3.match(line)
             if m:
+                print('line : ', line)
+                print('p3')
                 ret_dict[intf]['switchport_mode'] = m.groupdict()['switchport_mode']
                 continue
 
@@ -1540,6 +1546,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                               '( +\((?P<dummy>[\w\s]+)? *member +of +bundle +(?P<port_channel_int>[\w\/\.\-]+)\))?$')
             m = p4.match(line)
             if m:
+                print('line : ', line)
+                print('p4')
                 ret_dict[intf]['operational_mode'] = m.groupdict()['operational_mode']
 
                 bundle_intf = m.groupdict()['port_channel_int']
@@ -1573,6 +1581,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                               '(?P<encapsulation>\w+)$')
             m = p5.match(line)
             if m:
+                print('line : ', line)
+                print('p5')
                 if 'encapsulation' not in ret_dict[intf]:
                     ret_dict[intf]['encapsulation'] = {}
                 ret_dict[intf]['encapsulation']['administrative_encapsulation'] = \
@@ -1584,6 +1594,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                               '(?P<encapsulation>\w+)$')
             m = p6.match(line)
             if m:
+                print('line : ', line)
+                print('p6')
                 if 'encapsulation' not in ret_dict[intf]:
                     ret_dict[intf]['encapsulation'] = {}
                 ret_dict[intf]['encapsulation']['operational_encapsulation'] = \
@@ -1594,6 +1606,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
             p7 = re.compile(r'^Negotiation +of +Trunking: +(?P<negotiation_of_trunk>\w+)$')
             m = p7.match(line)
             if m:
+                print('line : ', line)
+                print('p7')
                 negotiation_of_trunk = m.groupdict()['negotiation_of_trunk'].lower()
                 if 'on' in negotiation_of_trunk:
                     ret_dict[intf]['negotiation_of_trunk'] = True
@@ -1607,6 +1621,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                               '( *\((?P<access_vlan_name>.+)\))?$')
             m = p8.match(line)
             if m:
+                print('line : ', line)
+                print('p8')
                 ret_dict[intf]['access_vlan'] = m.groupdict()['access_vlan']
                 if m.groupdict()['access_vlan_name']:
                     ret_dict[intf]['access_vlan_name'] = m.groupdict()['access_vlan_name']
@@ -1617,6 +1633,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                               '( *\((?P<native_vlan_name>.+)\))?$')
             m = p9.match(line)
             if m:
+                print('line : ', line)
+                print('p9')
                 if 'encapsulation' not in ret_dict[intf]:
                     ret_dict[intf]['encapsulation'] = {}
                 ret_dict[intf]['encapsulation']['native_vlan'] = m.groupdict()['native_vlan']
@@ -1629,6 +1647,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                                '(?P<tagging>\w+)$')
             m = p10.match(line)
             if m:
+                print('line : ', line)
+                print('p10')
                 if 'enable' in m.groupdict()['tagging'].lower():
                     ret_dict[intf]['native_vlan_tagging'] = True
                 else:
@@ -1641,6 +1661,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                               '( *\((?P<voice_vlan_name>.+)\))?$')
             m = p11.match(line)
             if m:
+                print('line : ', line)
+                print('p11')
                 ret_dict[intf]['voice_vlan'] = m.groupdict()['vlan']
                 if m.groupdict()['voice_vlan_name']:
                     ret_dict[intf]['voice_vlan_name'] = m.groupdict()['voice_vlan_name']
@@ -1651,6 +1673,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                                'host-association: +(?P<ret>[\w\-]+)$')
             m = p12.match(line)
             if m:
+                print('line : ', line)
+                print('p12')
                 if 'private_vlan' not in ret_dict[intf]:
                     ret_dict[intf]['private_vlan'] = {}
                 ret = m.groupdict()['ret'].lower()
@@ -1663,6 +1687,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                                'mapping: +(?P<ret>[\w\-]+)$')
             m = p13.match(line)
             if m:
+                print('line : ', line)
+                print('p13')
                 if 'private_vlan' not in ret_dict[intf]:
                     ret_dict[intf]['private_vlan'] = {}
                 ret = m.groupdict()['ret'].lower()
@@ -1675,6 +1701,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                                'trunk +native +VLAN: +(?P<ret>[\w\-]+)$')
             m = p14.match(line)
             if m:
+                print('line : ', line)
+                print('p14')
                 if 'private_vlan' not in ret_dict[intf]:
                     ret_dict[intf]['private_vlan'] = {}
                 ret = m.groupdict()['ret'].lower()
@@ -1687,6 +1715,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                                'trunk +Native +VLAN +tagging: +(?P<ret>[\w\-]+)$')
             m = p15.match(line)
             if m:
+                print('line : ', line)
+                print('p15')
                 if 'private_vlan' not in ret_dict[intf]:
                     ret_dict[intf]['private_vlan'] = {}
                 ret = m.groupdict()['ret'].lower()
@@ -1701,6 +1731,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                                'trunk +encapsulation: +(?P<ret>[\w\-]+)$')
             m = p16.match(line)
             if m:
+                print('line : ', line)
+                print('p16')
                 if 'private_vlan' not in ret_dict[intf]:
                     ret_dict[intf]['private_vlan'] = {}
                 ret = m.groupdict()['ret'].lower()
@@ -1713,6 +1745,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                                'trunk +normal +VLANs: +(?P<ret>[\w\-]+)$')
             m = p17.match(line)
             if m:
+                print('line : ', line)
+                print('p17')
                 if 'private_vlan' not in ret_dict[intf]:
                     ret_dict[intf]['private_vlan'] = {}
                 ret = m.groupdict()['ret'].lower()
@@ -1725,6 +1759,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                                'trunk +associations: +(?P<ret>[\w\-]+)$')
             m = p18.match(line)
             if m:
+                print('line : ', line)
+                print('p18')
                 if 'private_vlan' not in ret_dict[intf]:
                     ret_dict[intf]['private_vlan'] = {}
                 ret = m.groupdict()['ret'].lower()
@@ -1738,6 +1774,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                                'trunk +mappings:( *(?P<ret>[\w\-]+))?$')
             m = p19.match(line)
             if m:
+                print('line : ', line)
+                print('p19')
                 if 'private_vlan' not in ret_dict[intf]:
                     ret_dict[intf]['private_vlan'] = {}
                 private_trunk_mappings = m.groupdict()['ret']
@@ -1751,6 +1789,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 p19_1 = re.compile(r'^(?P<mappings>[\w\(\)\s]+)$')
                 m = p19_1.match(line)
                 if m:
+                    print('line : ', line)
+                    print('p19-1')
                     ret = m.groupdict()['mappings']
                     private_trunk_mappings += ' {}'.format(ret)
                     ret_dict[intf]['private_vlan']['trunk_mappings'] = private_trunk_mappings.strip()
@@ -1764,6 +1804,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                                '( *(?P<private_operational>[\w\-]+))?$')
             m = p20.match(line)
             if m:
+                print('line : ', line)
+                print('p20')
                 if 'private_vlan' not in ret_dict[intf]:
                     ret_dict[intf]['private_vlan'] = {}
                 private_operational = m.groupdict()['private_operational']
@@ -1777,6 +1819,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 p20_1 = re.compile(r'^(?P<private_operational>[\w\(\)\s]+)$')
                 m = p20_1.match(line)
                 if m:
+                    print('line : ', line)
+                    print('p20-1')
                     ret = m.groupdict()['private_operational']
                     private_operational += ' {}'.format(ret)
                     ret_dict[intf]['private_vlan']['operational'] = private_operational.strip()
