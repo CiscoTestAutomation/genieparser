@@ -450,7 +450,31 @@ class TestShowInterfacesSwitchport(unittest.TestCase):
     '''}
 
     golden_output_2 = {'execute.return_value': '''
+    show interfaces switchport
+    Name: Te1/1/1
+    Switchport: Enabled
+    Administrative Mode: trunk
+    Operational Mode: trunk (member of bundle Po11)
+    Administrative Trunking Encapsulation: dot1q
+    Operational Trunking Encapsulation: dot1q
+    Operational Dot1q Ethertype:  0x8100
+    Negotiation of Trunking: Off
+    Access Mode VLAN: 1 (default)
+    Trunking Native Mode VLAN: 1 (default)
+    Administrative Native VLAN tagging: enabled
+    Operational Native VLAN tagging: disabled
+    Voice VLAN: none
+    Administrative private-vlan host-association: none 
+    Administrative private-vlan mapping: none 
+    Operational private-vlan: none
+    Trunking VLANs Enabled: 1,111,130,131,400,405,410,420,430,439-442,450,451,460,
+         470,480,490,500,616,619,700,709-712,720,723-725,760,900
+    Pruning VLANs Enabled: 2-1001
+    Capture Mode Disabled
+    Capture VLANs Allowed: ALL
     
+    Unknown unicast blocked: disabled
+    Unknown multicast blocked: disabled
     '''}
 
     def test_golden(self):
@@ -465,6 +489,18 @@ class TestShowInterfacesSwitchport(unittest.TestCase):
         intf_obj = ShowInterfacesSwitchport(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        intf_obj = ShowInterfacesSwitchport(device=self.device)
+        parsed_output = intf_obj.parse()
+        self.maxDiff = None
+        import pprint
+        pprint.pprint(parsed_output)
+        import pdb
+        pdb.set_trace()
+
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 
 #############################################################################
