@@ -6417,6 +6417,28 @@ class TestShowRunInterface(unittest.TestCase):
     '''
     }
 
+    # show running-config interface Eth1/4
+    golden_output_3 = {'execute.return_value': '''
+    !Time: ...
+    version ...
+    interface Ethernet1/4
+     description DeviceA-description
+     switchport access vlan x
+     speed 1000
+     duplex full
+    '''}
+
+    golden_parsed_output_3 = {
+        'interface': {
+            'Ethernet1/4': {
+                'duplex': 'full',
+                'access_vlan': 'x',
+                'speed': 1000,
+                'description': 'DeviceA-description',
+            },
+        },
+    }
+
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         intf_obj = ShowRunningConfigInterface(device=self.device)
@@ -6440,6 +6462,12 @@ class TestShowRunInterface(unittest.TestCase):
         intf_obj = ShowRunningConfigInterface(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse(interface='nve1')
+
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        intf_obj = ShowRunningConfigInterface(device=self.device)
+        parsed_output = intf_obj.parse(interface='Ethernet1/4')
+        self.assertEqual(parsed_output,self.golden_parsed_output_3)
 
 
 class TestShowNveInterface(unittest.TestCase):
