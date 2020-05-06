@@ -2543,13 +2543,13 @@ class ShowSwitchDetailSchema(MetaParser):
     schema = {
         'switch': {
             'mac_address': str,
-            'mac_persistency_wait_time': str,
+            Optional('mac_persistency_wait_time'): str,
             'stack': {
                 Any(): {
                     'role': str,
                     'mac_address': str,
                     'priority': str,
-                    'hw_ver': str,
+                    Optional('hw_ver'): str,
                     'state': str,
                     'ports': {
                         Any(): {
@@ -2597,20 +2597,27 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
         # Switch#   Role    Mac Address     Priority Version  State
         # -----------------------------------------------------------
         # *1       Active   689c.e2ff.b9d9     3      V04     Ready
-        p3 = re.compile(r'^\*?(?P<switch>\d+) +(?P<role>\w+) +'
-                        '(?P<mac_address>[\w\.]+) +'
-                        '(?P<priority>\d+) +'
-                        '(?P<hw_ver>\w+) +'
-                        '(?P<state>[\w\s]+)$')
+        #  2       Standby  689c.e2ff.b9d9     14             Ready
+        p3_0 = re.compile(r'^Switch#\s+Role\s+Mac\sAddress\s+Priority\s+Version\s+State$')
+
+        p3_1 = re.compile(r'^\*?(?P<switch>\d+) +(?P<role>\w+) +'
+                           '(?P<mac_address>[\w\.]+) +'
+                           '(?P<priority>\d+) +'
+                           '(?P<hw_ver>\w+)? +'
+                           '(?P<state>[\w\s]+)$')
 
         #          Stack Port Status             Neighbors
         # Switch#  Port 1     Port 2           Port 1   Port 2
         #   1         OK         OK               3        2
         #   1       DOWN       DOWN             None     None
-        p4 = re.compile(r'^(?P<switch>\d+) +(?P<status1>\w+) +'
-                        '(?P<status2>\w+) +'
-                        '(?P<nbr_num_1>\w+) +'
-                        '(?P<nbr_num_2>\w+)$')
+        p4_0 = re.compile(r'^Switch#\s+Port\s1\s+Port\s2\s+Port\s1\s+Port\s2$')
+
+        p4_1 = re.compile(r'^(?P<switch>\d+) +(?P<status1>\w+) +'
+                           '(?P<status2>\w+) +'
+                           '(?P<nbr_num_1>\w+) +'
+                           '(?P<nbr_num_2>\w+)$')
+
+        active_table = 0
 
         for line in out.splitlines():
             line = line.strip()
@@ -2627,16 +2634,29 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
                 ret_dict['mac_persistency_wait_time'] = m.groupdict()['mac_persistency_wait_time'].lower()
                 continue
 
+            # In order to know which regex (p3_1 or p4_1) should be used, we use p3_0 and p4_0 to determine which table
+            # is currently parsed.
+            m = p3_0.match(line)
+            if m:
+                active_table = 1
+                continue
+
+            m = p4_0.match(line)
+            if m:
+                active_table = 2
+                continue
+
             #                                              H/W   Current
             # Switch#   Role    Mac Address     Priority Version  State
             # -----------------------------------------------------------
             # *1       Active   689c.e2ff.b9d9     3      V04     Ready
-            m = p3.match(line)
-            if m:
+            #  2       Standby  689c.e2ff.b9d9     14             Ready
+            m = p3_1.match(line)
+            if m and active_table == 1:
                 group = m.groupdict()
                 stack = group['switch']
                 match_dict = {k: v.lower()for k, v in group.items() if k in ['role', 'state']}
-                match_dict.update({k: v for k, v in group.items() if k in ['priority', 'mac_address', 'hw_ver']})
+                match_dict.update({k: v for k, v in group.items() if k in ['priority', 'mac_address', 'hw_ver'] and v})
                 ret_dict.setdefault('stack', {}).setdefault(stack, {}).update(match_dict)
                 continue
 
@@ -2645,8 +2665,8 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
             # --------------------------------------------------------
             #   1         OK         OK               3        2
             #   1       DOWN       DOWN             None     None
-            m = p4.match(line)
-            if m:
+            m = p4_1.match(line)
+            if m and active_table == 2:
                 group = m.groupdict()
                 stack = group['switch']
                 stack_ports = ret_dict.setdefault('stack', {}).setdefault(stack, {}).setdefault('ports', {})
