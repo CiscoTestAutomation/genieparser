@@ -450,11 +450,10 @@ class TestShowInterfacesSwitchport(unittest.TestCase):
     '''}
 
     golden_output_2 = {'execute.return_value': '''
-    show interfaces switchport
-    Name: Te1/1/1
+    Name: Te1/1/2
     Switchport: Enabled
     Administrative Mode: trunk
-    Operational Mode: trunk (member of bundle Po11)
+    Operational Mode: trunk (member of bundle Po12)
     Administrative Trunking Encapsulation: dot1q
     Operational Trunking Encapsulation: dot1q
     Operational Dot1q Ethertype:  0x8100
@@ -468,14 +467,93 @@ class TestShowInterfacesSwitchport(unittest.TestCase):
     Administrative private-vlan mapping: none 
     Operational private-vlan: none
     Trunking VLANs Enabled: 1,111,130,131,400,405,410,420,430,439-442,450,451,460,
-         470,480,490,500,616,619,700,709-712,720,723-725,760,900
+         470,480,490,500,616,619,700,709-712,720,723-725,760
     Pruning VLANs Enabled: 2-1001
     Capture Mode Disabled
     Capture VLANs Allowed: ALL
     
     Unknown unicast blocked: disabled
     Unknown multicast blocked: disabled
+    
+    Name: Po12
+    Switchport: Enabled
+    Administrative Mode: trunk
+    Operational Mode: trunk
+    Administrative Trunking Encapsulation: dot1q
+    Operational Trunking Encapsulation: dot1q
+    Operational Dot1q Ethertype:  0x8100
+    Negotiation of Trunking: Off
+    Access Mode VLAN: 1 (default)
+    Trunking Native Mode VLAN: 1 (default)
+    Administrative Native VLAN tagging: enabled
+    Operational Native VLAN tagging: disabled
+    Voice VLAN: none
+    Administrative private-vlan host-association: none 
+    Administrative private-vlan mapping: none 
+    Operational private-vlan: none
+    Trunking VLANs Enabled: 1,111,130,131,400,405,410,420,430,439-442,450,451,460,
+         470,480,490,500,616,619,700,709-712,720,723-725,760
+    Pruning VLANs Enabled: 2-1001
+    
+    Unknown unicast blocked: disabled
+    Unknown multicast blocked: disabled
+
     '''}
+
+    golden_parsed_output_2 = {
+        'Port-channel12': {
+            'operational_mode': 'trunk',
+            'switchport_mode': 'trunk',
+            'access_vlan_name': 'default',
+            'private_vlan': {
+            },
+            'switchport_enable': True,
+            'native_vlan_tagging': True,
+            'negotiation_of_trunk': False,
+            'encapsulation': {
+                'native_vlan': '1',
+                'native_vlan_name': 'default',
+                'operational_encapsulation': 'dot1q',
+                'administrative_encapsulation': 'dot1q',
+            },
+            'port_channel': {
+                'port_channel_member_intfs': ['TenGigabitEthernet1/1/2'],
+                'port_channel_member': True,
+            },
+            'pruning_vlans': '2-1001',
+            'access_vlan': '1',
+            'unknown_multicast_blocked': False,
+            'trunk_vlans': '1,111,130,131,400,405,410,420,430,439-442,450,451,460,',
+            'unknown_unicast_blocked': False,
+        },
+        'TenGigabitEthernet1/1/2': {
+            'access_vlan': '1',
+            'operational_mode': 'trunk',
+            'switchport_mode': 'trunk',
+            'access_vlan_name': 'default',
+            'switchport_enable': True,
+            'private_vlan': {
+            },
+            'capture_mode': False,
+            'trunk_vlans': '1,111,130,131,400,405,410,420,430,439-442,450,451,460,',
+            'capture_vlans': 'all',
+            'negotiation_of_trunk': False,
+            'unknown_multicast_blocked': False,
+            'port_channel': {
+                'port_channel_int': 'Port-channel12',
+                'port_channel_member': True,
+            },
+            'native_vlan_tagging': True,
+            'encapsulation': {
+                'native_vlan': '1',
+                'native_vlan_name': 'default',
+                'operational_encapsulation': 'dot1q',
+                'administrative_encapsulation': 'dot1q',
+            },
+            'unknown_unicast_blocked': False,
+            'pruning_vlans': '2-1001',
+        },
+    }
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
@@ -495,11 +573,6 @@ class TestShowInterfacesSwitchport(unittest.TestCase):
         intf_obj = ShowInterfacesSwitchport(device=self.device)
         parsed_output = intf_obj.parse()
         self.maxDiff = None
-        import pprint
-        pprint.pprint(parsed_output)
-        import pdb
-        pdb.set_trace()
-
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 
