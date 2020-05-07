@@ -52,3 +52,7 @@
     * Updated ShowRoute:
         * Update regex to support various outputs.
 
+* IOS 
+    * Updated ShowIpArp
+        * Added argument 'output' into super().cli()
+
