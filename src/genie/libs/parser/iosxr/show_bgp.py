@@ -2506,7 +2506,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         p1 = re.compile(r'^BGP +instance +(?P<instance_number>[0-9]+): +'
                             '(?P<instance>[a-zA-Z0-9\-\_\']+)$')
         p2 =  re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
-        p2_1 =  re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor>[a-zA-Z0-9\.\:]+), +vrf +(?P<vrf>[a-zA-Z0-9]+)$')
+        p2_1 =  re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor>[a-zA-Z0-9\.\:]+), +vrf +(?P<vrf>\S+)$')
         p3 = re.compile(r'^Remote +AS +(?P<remote_as>[0-9]+), +local +AS'
                             ' +(?P<local_as_as_no>[0-9]+)'
                             '(?:, +(?P<link_state>[a-zA-Z\s]+))?$')
@@ -2660,7 +2660,6 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
             
             # Remote AS 200, local AS 100, external link
-
             m = p3.match(line)
             if m:
                 sub_dict['remote_as'] = int(m.groupdict()['remote_as'])
