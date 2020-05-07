@@ -250,7 +250,8 @@ class ShowVersionSchema(MetaParser):
                 'data_base': str,
             },
             Optional('interfaces'): {
-                'virtual_ethernet': int,
+                Optional('virtual_ethernet'): int,
+                Optional('fastethernet'): int,
                 'gigabit_ethernet': int,
             },
             Optional('revision'): {
@@ -508,7 +509,7 @@ class ShowVersion(ShowVersionSchema):
 
         # 1 Virtual Ethernet/IEEE 802.3 interface(s)
         # 50 Gigabit Ethernet/IEEE 802.3 interface(s)
-        p48 = re.compile(r'^(?P<interface>\d+) +(?P<ethernet_type>Virtual Ethernet|Gigabit Ethernet)'
+        p48 = re.compile(r'^(?P<interface>\d+) +(?P<ethernet_type>Virtual Ethernet|Gigabit Ethernet|FastEthernet)'
                          r'/IEEE 802\.3 +interface\(s\)$')
 
         # Dagobah Revision 95, Swamp Revision 6

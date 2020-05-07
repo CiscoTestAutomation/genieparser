@@ -1068,6 +1068,96 @@ class TestShowVersion(unittest.TestCase):
         }
     }
 
+    golden_output_2 = {'execute.return_value': '''
+        Cisco Internetwork Operating System Software 
+        IOS (tm) C2940 Software (C2940-I6K2L2Q4-M), Version 12.1(22)EA12, RELEASE SOFTWARE (fc1)
+        Copyright (c) 1986-2008 by cisco Systems, Inc.
+        Compiled Tue 08-Jul-08 00:06 by amvarma
+        Image text-base: 0x80010000, data-base: 0x8068C000
+        
+        ROM: Bootstrap program is C2950 boot loader
+        
+        testsw01 uptime is 24 weeks, 1 day, 20 hours, 50 minutes
+        System returned to ROM by power-on
+        System restarted at 09:17:28 UTC Sun Oct 27 2019
+        System image file is "flash:f1111-aei43934-mz.121-22.EA12.bin"
+        
+        
+        This product contains cryptographic features and is subject to United
+        States and local country laws governing import, export, transfer and
+        use. Delivery of Cisco cryptographic products does not imply
+        third-party authority to import, export, distribute or use encryption.
+        Importers, exporters, distributors and users are responsible for
+        compliance with U.S. and local country laws. By using this product you
+        agree to comply with applicable laws and regulations. If you are unable
+        to comply with U.S. and local laws, return this product immediately.
+        
+        A summary of U.S. laws governing Cisco cryptographic products may be found at:
+        http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+        
+        If you require further assistance please contact us by sending email to
+        export@cisco.com.
+        
+        cisco WS-C2940-8TT-S (RC32300) processor (revision H0) with 19868K bytes of memory.
+        Processor board ID FOC2345C3DB
+        Last reset from system-reset
+        Running Standard Image
+        8 FastEthernet/IEEE 802.3 interface(s)
+        1 Gigabit Ethernet/IEEE 802.3 interface(s)
+        The password-recovery mechanism is disabled.
+        
+        32K bytes of flash-simulated non-volatile configuration memory.
+        Base ethernet MAC Address: 00:11:22:54:00:44
+        Motherboard assembly number: 99-6666-88
+        Power supply part number: 444-8888-00
+        Motherboard serial number: FOC99344ERT
+        Power supply serial number: CCC4466B6LL
+        Model revision number: H0
+        Motherboard revision number: A0
+        Model number: WS-C2940-8TT-S
+        System serial number: FOC6666U4BB
+        Configuration register is 0xF
+
+        '''}
+
+    golden_parsed_output_2 = {
+        'version': {
+        'version_short': '12.1',
+        'platform': 'C2940',
+        'version': '12.1(22)EA12',
+        'image_id': 'C2940-I6K2L2Q4-M',
+        'os': 'IOS',
+        'image_type': 'developer image',
+        'compiled_date': 'Tue 08-Jul-08 00:06',
+        'compiled_by': 'amvarma',
+        'image': {
+          'text_base': '0x80010000',
+          'data_base': '0x8068C000'
+        },
+        'rom': 'Bootstrap program is C2950 boot loader',
+        'hostname': 'testsw01',
+        'uptime': '24 weeks, 1 day, 20 hours, 50 minutes',
+        'returned_to_rom_by': 'power-on',
+        'system_restarted_at': '09:17:28 UTC Sun Oct 27 2019',
+        'system_image': 'flash:f1111-aei43934-mz.121-22.EA12.bin',
+        'chassis': 'WS-C2940-8TT-S',
+        'main_mem': '19868',
+        'processor_type': 'RC32300',
+        'rtr_type': 'WS-C2940-8TT-S',
+        'chassis_sn': 'FOC2345C3DB',
+        'last_reload_reason': 'system-reset',
+        'interfaces': {
+          'fastethernet': 8,
+          'gigabit_ethernet': 1
+        },
+        'mem_size': {
+          'flash-simulated non-volatile configuration': '32'
+        },
+        'curr_config_register': '0xF'
+      }
+    }
+    
+    
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.dev1)
@@ -1122,6 +1212,12 @@ class TestShowVersion(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.dev_1 = Mock(**self.golden_output_2)
+        obj = ShowVersion(device=self.dev_1)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 class TestDir(unittest.TestCase):
     dev1 = Device(name='empty')
