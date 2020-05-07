@@ -35,6 +35,8 @@
     * Fixed ShowDmvpn not executing the command properly on device
     * Update ShowIpRoute:
         * Fixed regex for VRF name, now supports the '-' character in name.
+    * Updated ShowInterfacesSwitchport:
+        * Fixed the order of conditional statements, now the parser can parse the device output correctly
 * NXOS
     * Updated ShowIpStaticRouteMulticast:
         * Change key 'address_family' into Optional

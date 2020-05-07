@@ -1068,7 +1068,6 @@ class TestShowVersion(unittest.TestCase):
         }
     }
 
-    
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.dev1)
@@ -1122,6 +1121,7 @@ class TestShowVersion(unittest.TestCase):
         obj = ShowVersion(device=self.dev_1)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
 
 class TestDir(unittest.TestCase):
     dev1 = Device(name='empty')
