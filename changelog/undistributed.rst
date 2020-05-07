@@ -40,6 +40,10 @@
         * Change key 'address_family' into Optional
     * Updated ShowRunInterface:
         * Add regex to support various sample outputs
+    * Updated ShowInterface
+        * Added regex to support interfaces down for SFP Not Inserted
+        * Added regex to support interfaces down for ErrDisabled
+        * Added regex to support interfaces down due to being suspended (LACP)
 
 * IOSXR
     * Updated ShowBgpSessions:
