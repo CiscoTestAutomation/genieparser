@@ -1,3 +1,6 @@
+# This action is triggered when a user opens an issue.
+# It automatically assigned the issue to user 'xiaoxinz-cisco' when issue title or body contains keyword 'show'
+
 name: "Set Assignee"
 on:
   issues:
