@@ -9,5 +9,6 @@ jobs:
     steps:
       - uses: Naturalclar/issue-action@v1.0.0
         with:
+          keywords: '["show"]'
           assignees: '["xiaoxinz-cisco"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
