@@ -1,0 +1,13 @@
+name: "Set Assignee"
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          assignees: '["xiaoxinz-cisco"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
