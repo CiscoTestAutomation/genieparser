@@ -30,6 +30,7 @@ class ShowRouteSchema(MetaParser):
                                 Optional('subnet'): str,
                                 'route': str,
                                 Optional('active'): bool,
+                                Optional('date'): str,
                                 Optional('route_preference'): int,
                                 Optional('metric'): int,
                                 Optional('source_protocol'): str,
