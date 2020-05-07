@@ -81,6 +81,7 @@ class test_show_ip_route(unittest.TestCase):
                             '10.0.0.0/24': {
                                 'active': True,
                                 'candidate_default': False,
+                                'date': '0:19:52',
                                 'metric': 30720,
                                 'next_hop': {
                                     'outgoing_interface_name': {
@@ -181,6 +182,7 @@ class test_show_ip_route(unittest.TestCase):
                             '10.121.65.0/24': {
                                 'active': True,
                                 'candidate_default': False,
+                                'date': '7w0d',
                                 'metric': 20,
                                 'next_hop': {
                                     'next_hop_list': {
@@ -204,6 +206,7 @@ class test_show_ip_route(unittest.TestCase):
                             '10.121.67.0/24': {
                                 'active': True,
                                 'candidate_default': False,
+                                'date': '2w1d',
                                 'metric': 345856,
                                 'next_hop': {
                                     'next_hop_list': {
@@ -227,6 +230,7 @@ class test_show_ip_route(unittest.TestCase):
                             '10.121.68.0/24': {
                                 'active': True,
                                 'candidate_default': False,
+                                'date': '2w1d',
                                 'metric': 345856,
                                 'next_hop': {
                                     'next_hop_list': {
@@ -250,6 +254,7 @@ class test_show_ip_route(unittest.TestCase):
                             '10.121.69.0/24': {
                                 'active': True,
                                 'candidate_default': False,
+                                'date': '7w0d',
                                 'metric': 20,
                                 'next_hop': {
                                     'next_hop_list': {
@@ -273,6 +278,7 @@ class test_show_ip_route(unittest.TestCase):
                             '10.121.70.0/24': {
                                 'active': True,
                                 'candidate_default': False,
+                                'date': '2w1d',
                                 'metric': 345856,
                                 'next_hop': {
                                     'next_hop_list': {
@@ -296,6 +302,7 @@ class test_show_ip_route(unittest.TestCase):
                             '10.121.71.0/24': {
                                 'active': True,
                                 'candidate_default': False,
+                                'date': '2w1d',
                                 'metric': 345856,
                                 'next_hop': {
                                     'next_hop_list': {
@@ -319,6 +326,7 @@ class test_show_ip_route(unittest.TestCase):
                             '10.122.3.0/24': {
                                 'active': True,
                                 'candidate_default': False,
+                                'date': '7w0d',
                                 'metric': 0,
                                 'next_hop': {
                                     'next_hop_list': {
@@ -336,6 +344,7 @@ class test_show_ip_route(unittest.TestCase):
                             '10.20.2.64/26': {
                                 'active': True,
                                 'candidate_default': False,
+                                'date': '2d03h',
                                 'metric': 1,
                                 'next_hop': {
                                     'next_hop_list': {
@@ -354,6 +363,7 @@ class test_show_ip_route(unittest.TestCase):
                             '10.20.58.64/26': {
                                 'active': True,
                                 'candidate_default': False,
+                                'date': '3w6d',
                                 'metric': 11,
                                 'next_hop': {
                                     'next_hop_list': {
@@ -372,6 +382,7 @@ class test_show_ip_route(unittest.TestCase):
                             '10.30.79.64/26': {
                                 'active': True,
                                 'candidate_default': False,
+                                'date': '1w1d',
                                 'metric': 11,
                                 'next_hop': {
                                     'next_hop_list': {
@@ -395,6 +406,7 @@ class test_show_ip_route(unittest.TestCase):
                             '30.20.8.0/23': {
                                 'active': True,
                                 'candidate_default': False,
+                                'date': '7w0d',
                                 'metric': 20,
                                 'next_hop': {
                                     'next_hop_list': {
@@ -492,6 +504,7 @@ class test_show_ip_route(unittest.TestCase):
                             '10.121.65.0/24': {
                                 'active': True,
                                 'candidate_default': False,
+                                'date': '7w0d',
                                 'metric': 20,
                                 'next_hop': {
                                     'next_hop_list': {
@@ -515,6 +528,7 @@ class test_show_ip_route(unittest.TestCase):
                             '10.121.67.0/24': {
                                 'active': True,
                                 'candidate_default': False,
+                                'date': '2w1d',
                                 'metric': 345856,
                                 'next_hop': {
                                     'next_hop_list': {
@@ -538,6 +552,7 @@ class test_show_ip_route(unittest.TestCase):
                             '10.121.68.0/24': {
                                 'active': True,
                                 'candidate_default': False,
+                                'date': '2w1d',
                                 'metric': 345856,
                                 'next_hop': {
                                     'next_hop_list': {
@@ -561,6 +576,7 @@ class test_show_ip_route(unittest.TestCase):
                             '10.121.69.0/24': {
                                 'active': True,
                                 'candidate_default': False,
+                                'date': '7w0d',
                                 'metric': 20,
                                 'next_hop': {
                                     'next_hop_list': {
@@ -584,6 +600,7 @@ class test_show_ip_route(unittest.TestCase):
                             '10.121.70.0/24': {
                                 'active': True,
                                 'candidate_default': False,
+                                'date': '2w1d',
                                 'metric': 345856,
                                 'next_hop': {
                                     'next_hop_list': {
@@ -607,6 +624,7 @@ class test_show_ip_route(unittest.TestCase):
                             '10.121.71.0/24': {
                                 'active': True,
                                 'candidate_default': False,
+                                'date': '2w1d',
                                 'metric': 345856,
                                 'next_hop': {
                                     'next_hop_list': {

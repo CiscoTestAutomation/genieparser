@@ -160,13 +160,13 @@ class ShowRoute(ShowRouteSchema):
 
         # [110/11] via 10.20.192.3, 1w1d, wan3 [110/11] via 10.20.192.4, 1w1d, wan4
         p2 = re.compile(
-            r'\[(?P<route_preference>[\d\/]+)\]\svia\s+(?P<next_hop>\S+),\s(?P<age>\S+)\s+(?P<context_name>\S+)')
+            r'\[(?P<route_preference>[\d\/]+)\]\svia\s+(?P<next_hop>\S+),\s(?P<date>\S+),\s+(?P<context_name>\S+)')
 
         # O E2
         p3 = re.compile(r'^(?P<protocol>\S+)\s(?P<code>[A-Z].+?)')
 
         # [20/0] via 172.25.141.2, 7w0d
-        p4 = re.compile(r'\[(?P<route_preference>[\d\/]+)\]\svia\s+(?P<next_hop>\S+),\s(?P<age>\S+)')
+        p4 = re.compile(r'\[(?P<route_preference>[\d\/]+)\]\svia\s+(?P<next_hop>\S+),\s(?P<date>\S+)')
 
         # L 10.10.1.5 255.255.255.255 is directly connected, pod2500
         p5 = re.compile(r'^(?P<code>\S+)\s(?P<network>\S+)\s(?P<subnet>\S+)\s(?:.*),\s(?P<context_name>\S+)')
@@ -180,14 +180,14 @@ class ShowRoute(ShowRouteSchema):
         # D 10.0.0.0 255.255.255.0 [90/30720] via 192.168.1.1, 0:19:52, inside
         p8 = re.compile(
             r'^(?P<code>\S+)\s(?P<network>\S+)\s(?P<subnet>\S+)\s\[(?P<route_preference>[\d\/]+)\]'
-            '\svia\s+(?P<next_hop>\S+),\s(?P<age>\S+)\s+(?P<context_name>\S+)')
+            '\svia\s+(?P<next_hop>\S+),\s(?P<date>\S+),\s+(?P<context_name>\S+)')
 
         # B 10.122.3.0 255.255.255.0 [20/0]
         p9 = re.compile(r'(?P<code>\S+)\s(?P<network>\S+)\s(?P<subnet>\S+)\s\[(?P<route_preference>[\d\/]+)\]')
 
         # [170/345856] via 10.9.193.99, 2w1d, esavpn [170/345856] via 10.9.193.98, 2w1d, esavpn
         p10 = re.compile(
-            r'\[(?P<route_preference>[\d\/]+)\]\svia\s+(?P<next_hop>\S+),\s(?P<age>\S+)'
+            r'\[(?P<route_preference>[\d\/]+)\]\svia\s+(?P<next_hop>\S+),\s(?P<date>\S+),'
             '\s(?P<context_name>\S+)')
 
         # D EX 10.121.67.0 255.255.255.0
@@ -264,7 +264,16 @@ class ShowRoute(ShowRouteSchema):
                 groups['code'] = groups['code'].strip('*')
             else:
                 dict_routes.update({'candidate_default': False})
+
             dict_routes.update({'active': True})
+
+            if 'date' not in groups.keys() and next_hops:
+                date = next_hops[0].get('date')
+            else:
+                date = groups.get('date')
+            if date:
+                dict_routes.update({'date': date})
+
             dict_routes.update({'route': combined_ip})
 
             dict_routes.update({'source_protocol_codes': groups['code']})
