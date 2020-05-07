@@ -47478,11 +47478,11 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
 
         inet.0: 16 destinations, 16 routes (16 active, 0 holddown, 0 hidden)
 
-        2.2.2.2/32 (1 entry, 1 announced)
+        10.16.2.2/32 (1 entry, 1 announced)
 
         TSI:
 
-        KRT in-kernel 2.2.2.2/32 -> {20.0.0.2}
+        KRT in-kernel 10.16.2.2/32 -> {10.145.0.2}
 
             *Static Preference: 5
 
@@ -47492,7 +47492,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
 
                     Next-hop reference count: 19
 
-                    Next hop: 20.0.0.2 via ge-0/0/1.0, selected
+                    Next hop: 10.145.0.2 via ge-0/0/1.0, selected
 
                     State: <Active Int Ext>
 
@@ -47516,7 +47516,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                     "rt": [
                         {
                             "rt-announced-count": "1",
-                            "rt-destination": "2.2.2.2/32",
+                            "rt-destination": "10.16.2.2/32",
                             "rt-entry": {
                                 "active-tag": "*",
                                 "announce-bits": "2",
@@ -47531,7 +47531,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                 "nh": [
                                     {
                                         "nh-string": "Next hop",
-                                        "to": "20.0.0.2",
+                                        "to": "10.145.0.2",
                                         "via": "ge-0/0/1.0"
                                     }
                                 ],
@@ -47549,7 +47549,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                 "@junos:format": "1 entry"
                             },
                             "tsi": {
-                                "#text": "KRT in-kernel 2.2.2.2/32 -> {20.0.0.2}"
+                                "#text": "KRT in-kernel 10.16.2.2/32 -> {10.145.0.2}"
                             }
                         }
                     ],
