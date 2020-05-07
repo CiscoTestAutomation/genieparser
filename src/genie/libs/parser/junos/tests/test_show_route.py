@@ -12,7 +12,6 @@ from genie.libs.parser.junos.show_route import (ShowRouteTable,
                                                 ShowRouteProtocolExtensive,
                                                 ShowRouteInstanceDetail,
                                                 ShowRoute,
-                                                ShowRouteProtocolExtensive,
                                                 ShowRouteSummary,
                                                 ShowRouteAdvertisingProtocol,
                                                 ShowRouteForwardingTableSummary,
@@ -47474,6 +47473,93 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
         }
     }
 
+    golden_output_4 = {'execute.return_value': '''
+        show route protocol static extensive 
+
+        inet.0: 16 destinations, 16 routes (16 active, 0 holddown, 0 hidden)
+
+        2.2.2.2/32 (1 entry, 1 announced)
+
+        TSI:
+
+        KRT in-kernel 2.2.2.2/32 -> {20.0.0.2}
+
+            *Static Preference: 5
+
+                    Next hop type: Router, Next hop index: 590
+
+                    Address: 0x9348b50
+
+                    Next-hop reference count: 19
+
+                    Next hop: 20.0.0.2 via ge-0/0/1.0, selected
+
+                    State: <Active Int Ext>
+
+                    Age: 1:06       Tag: 100 
+
+                    Task: RT
+
+                    Announcement bits (2): 0-KRT 1-Resolve tree 1 
+
+                    AS path: I
+    '''}
+
+    golden_parsed_output_4 = {
+        "route-information": {
+            "route-table": [
+                {
+                    "active-route-count": "16",
+                    "destination-count": "16",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": [
+                        {
+                            "rt-announced-count": "1",
+                            "rt-destination": "2.2.2.2/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "announce-bits": "2",
+                                "announce-tasks": "0-KRT 1-Resolve tree 1",
+                                "as-path": "AS path: I",
+                                "bgp-path-attributes": {
+                                    "attr-as-path-effective": {
+                                        "aspath-effective-string": "AS path:",
+                                        "attr-value": "I"
+                                    }
+                                },
+                                "nh": [
+                                    {
+                                        "nh-string": "Next hop",
+                                        "to": "20.0.0.2",
+                                        "via": "ge-0/0/1.0"
+                                    }
+                                ],
+                                "nh-address": "0x9348b50",
+                                "nh-index": "590",
+                                "nh-reference-count": "19",
+                                "nh-type": "Router",
+                                "preference": "5",
+                                "protocol-name": "Static",
+                                "rt-entry-state": "Active Int Ext",
+                                "task-name": "RT"
+                            },
+                            "rt-entry-count": {
+                                "#text": "1",
+                                "@junos:format": "1 entry"
+                            },
+                            "tsi": {
+                                "#text": "KRT in-kernel 2.2.2.2/32 -> {20.0.0.2}"
+                            }
+                        }
+                    ],
+                    "table-name": "inet.0",
+                    "total-route-count": "16"
+                }
+            ]
+        }
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteProtocolExtensive(device=self.device)
@@ -47504,6 +47590,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
             table='inet.0',
             destination='10.169.196.241')
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
+    
+    def test_golden_4(self):
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowRouteProtocolExtensive(device=self.device)
+        parsed_output = obj.parse(
+            protocol='static')
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 '''
 Unit test for:
