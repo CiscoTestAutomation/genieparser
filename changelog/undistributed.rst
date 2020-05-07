@@ -53,4 +53,6 @@
 * JUNOS
     * Updated ShowRoute:
         * Update regex to support various outputs.
+    * Updated ShowRouteProtocolExtensive:
+        * Update key 'validation-state' as Optional
 
