@@ -13,10 +13,10 @@ jobs:
         run: python3 -m venv genieparser_venv
         
       - name: Activate the virtual environment
-        run: . genieparser_venv/bin/activate
+        run: . genieparser_venv/bin/activate; pip install pyats
         
-      - name: Install pyATS
-        run: pip install pyats
+#       - name: Install pyATS
+#         run: 
       - name: Install Genie
         run: pip install genie
 
