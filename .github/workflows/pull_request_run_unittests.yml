@@ -9,5 +9,5 @@ jobs:
       - name: Test
         uses: onichandame/python-test-action@master
         with:
-          path: 'genieparser/tests'
+          path: 'tests'
           deps_list: 'requirement'
