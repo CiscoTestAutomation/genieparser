@@ -37,7 +37,7 @@
         * Fixed regex for VRF name, now supports the '-' character in name.
     * Updated ShowAccessLists:
         * Fixed a typo in code.
-        
+
 * NXOS
     * Updated ShowIpStaticRouteMulticast:
         * Change key 'address_family' into Optional
@@ -62,4 +62,3 @@
 * IOS 
     * Updated ShowIpArp
         * Added argument 'output' into super().cli()
-
