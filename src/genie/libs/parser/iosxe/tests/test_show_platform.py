@@ -1471,7 +1471,7 @@ class TestShowVersion(unittest.TestCase):
         'chassis': 'WS-C2960X-48FPD-L',
         'main_mem': '524288',
         'processor_type': 'APM86XXX',
-        'rtr_type': 'Edison',
+        'rtr_type': 'WS-C2960X-48FPD-L',
         'chassis_sn': 'FOC1913S46M',
         'number_of_intfs': {
           'Virtual Ethernet': '4',

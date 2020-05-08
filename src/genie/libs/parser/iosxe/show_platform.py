@@ -751,7 +751,6 @@ class ShowVersion(ShowVersionSchema):
                 version_dict['version']['processor_type'] = group['processor_type']
 
                 if 'C3850' in version_dict['version']['chassis'] or \
-                   'C2960' in version_dict['version']['chassis'] or \
                    'C3650' in version_dict['version']['chassis']:
                     version_dict['version']['rtr_type'] = rtr_type = 'Edison'
                 elif 'ASR1' in version_dict['version']['chassis']:
@@ -835,11 +834,12 @@ class ShowVersion(ShowVersionSchema):
             m = p26.match(line)
             if m:
                 switch_number = m.groupdict()['switch_number']
-                if 'Edison' in rtr_type:
-                    if 'switch_num' not in version_dict['version']:
-                        version_dict['version']['switch_num'] = {}
-                    if switch_number not in version_dict['version']['switch_num']:
-                        version_dict['version']['switch_num'][switch_number] = {}
+
+                if 'switch_num' not in version_dict['version']:
+                    version_dict['version']['switch_num'] = {}
+                if switch_number not in version_dict['version']['switch_num']:
+                    version_dict['version']['switch_num'][switch_number] = {}
+
                 continue
 
             # uptime
