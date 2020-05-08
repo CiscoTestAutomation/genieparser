@@ -3,7 +3,6 @@ on: pull_request
 jobs:
   test:
     runs-on: ubuntu-latest
-    env: GITHUB_WORKSPACE/
     steps:
       - name: Setup Python
         uses: actions/setup-python@v2
