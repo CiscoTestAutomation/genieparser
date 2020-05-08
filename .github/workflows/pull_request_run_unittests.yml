@@ -12,7 +12,8 @@ jobs:
         run: pip install pyats
       - name: Install Genie
         run: pip install genie
-        
+      - name: Access developer mode
+        run: make develop
       - name: Prepare repo
         uses: actions/checkout@master
       - name: Run Test
