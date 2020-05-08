@@ -3,6 +3,7 @@ on: pull_request
 jobs:
   test:
     runs-on: ubuntu-latest
+    env: GITHUB_WORKSPACE/
     steps:
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -13,10 +14,13 @@ jobs:
         run: python3 -m venv genieparser_venv
         
       - name: Activate the virtual environment
-        run: . genieparser_venv/bin/activate; pip install pyats
+        run: source genieparser_venv/bin/activate
         
-#       - name: Install pyATS
-#         run: 
+      - name: Check virtualenv
+        run: pip -V
+        
+      - name: Install pyATS
+        run: pip install pyats
       - name: Install Genie
         run: pip install genie
 
@@ -27,7 +31,7 @@ jobs:
         run: pip -V
         
       - name: Run Test
-        uses: onichandame/python-test-action@master
+        uses: xiaoxinz-cisco/pyats_run_tests@master
         with:
 #         current path is: github/workspace == this repository
           path: 'tests'
