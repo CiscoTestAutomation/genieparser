@@ -4,10 +4,20 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with: 
+          python-version: 3.6
+      - name: Install pyATS
+        run: pip install pyats
+      - name: Install Genie
+        run: pip install genie
+        
       - name: Prepare repo
         uses: actions/checkout@master
-      - name: Test
+      - name: Run Test
         uses: onichandame/python-test-action@master
         with:
+#         current path is: github/workspace == this repository
           path: 'tests'
           deps_list: 'requirement'
