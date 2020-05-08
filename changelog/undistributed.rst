@@ -35,6 +35,9 @@
     * Fixed ShowDmvpn not executing the command properly on device
     * Update ShowIpRoute:
         * Fixed regex for VRF name, now supports the '-' character in name.
+    * Update ShowCdpNeighborsDetail:
+        * Modified regex to parse interface and port_id like FastEthernet0/0.1 and Serial0/0/0:1
+
 * NXOS
     * Updated ShowIpStaticRouteMulticast:
         * Change key 'address_family' into Optional
