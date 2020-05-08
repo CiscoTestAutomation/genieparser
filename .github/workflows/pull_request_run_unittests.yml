@@ -23,7 +23,7 @@ jobs:
       - name: Prepare repo
         uses: actions/checkout@master
       - name: Run Test
-#         uses: onichandame/python-test-action@master
+        uses: onichandame/python-test-action@master
         with:
 #         current path is: github/workspace == this repository
           path: 'tests'
