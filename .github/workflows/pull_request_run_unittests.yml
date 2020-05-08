@@ -22,6 +22,10 @@ jobs:
 
       - name: Prepare repo
         uses: actions/checkout@master
+        
+      - name: Check virtualenv
+        run: pip -V
+        
       - name: Run Test
         uses: onichandame/python-test-action@master
         with:
