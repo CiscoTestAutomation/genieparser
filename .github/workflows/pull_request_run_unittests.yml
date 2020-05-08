@@ -8,16 +8,22 @@ jobs:
         uses: actions/setup-python@v2
         with: 
           python-version: 3.6
+          
+      - name: Create a virtual environment
+        run: python3 -m venv genieparser_venv
+        
+      - name: Activate the virtual environment
+        run: source genieparser_venv/bin/activate
+        
       - name: Install pyATS
         run: pip install pyats
       - name: Install Genie
         run: pip install genie
-      - name: Access developer mode
-        run: make develop
+
       - name: Prepare repo
         uses: actions/checkout@master
       - name: Run Test
-        uses: onichandame/python-test-action@master
+#         uses: onichandame/python-test-action@master
         with:
 #         current path is: github/workspace == this repository
           path: 'tests'
