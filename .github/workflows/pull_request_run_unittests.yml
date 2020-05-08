@@ -1,0 +1,13 @@
+name: Run Unit Tests
+on: pull_request
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare repo
+        uses: actions/checkout@master
+      - name: Test
+        uses: onichandame/python-test-action@master
+        with:
+          path: 'genieparser/tests'
+          deps_list: 'requirement'
