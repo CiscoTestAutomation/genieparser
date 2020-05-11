@@ -887,7 +887,8 @@ class ShowSpanningTree(ShowSpanningTreeSchema):
                 'Desg': 'designated',
                 'Root': 'root',
                 'BLK': 'blocking',
-                'Altn': 'alternate',}
+                'Altn': 'alternate',
+                'Back': 'backup'}
     cli_command = ['show spanning-tree vlan {vlan}','show spanning-tree mst {mst}','show spanning-tree']
 
     def cli(self, mst='', vlan='',output=None):
