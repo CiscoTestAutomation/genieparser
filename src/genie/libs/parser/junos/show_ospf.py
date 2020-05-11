@@ -3464,7 +3464,7 @@ class ShowOspfDatabaseNetworkLsaidDetail(ShowOspfDatabaseNetworkLsaidDetailSchem
         p1 = re.compile(r'^OSPF +database, +Area +(?P<ospf_area>\S+)$')
 
         # Network *10.69.197.1    192.168.219.235   0x80000026  1730  0x22 0x1b56  36
-        p2 = re.compile(r'^(?P<lsa_type>\S+) (?P<our_entry>\*)+(?P<lsa_id>[\d\.]+) '
+        p2 = re.compile(r'^(?P<lsa_type>\S+) *(?P<our_entry>\*)?(?P<lsa_id>[\d\.]+) '
                         r'+(?P<advertising_router>\S+) +(?P<sequence_number>\S+) +'
                         r'(?P<age>\S+) +(?P<options>\S+) +(?P<checksum>\S+) +'
                         r'(?P<lsa_length>\S+)$')
