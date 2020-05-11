@@ -69,6 +69,8 @@
         * Fixed regex for vlan name, now also supports multiple white spaces.
         * Added regex for toking ring table.
         * Added the following keys: 'token_ring', 'are_hops', 'ste_hops' and 'backup_crf'.
+    * Update ShowSwitchDetail
+        * Changed the following keys into Optional: 'mac_persistency_wait_time' and 'hw_ver'.
 
 * NXOS
     * Updated ShowIpStaticRouteMulticast:
