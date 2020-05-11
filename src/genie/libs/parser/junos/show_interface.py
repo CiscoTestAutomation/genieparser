@@ -545,6 +545,58 @@ class ShowInterfacesSchema(MetaParser):
                     Optional("output-pps"): str
                 },
             },
+            Optional("output-error-list"): {
+                Optional("aged-packets"): str,
+                Optional("carrier-transitions"): str,
+                Optional("hs-link-crc-errors"): str,
+                Optional("mtu-errors"): str,
+                Optional("output-collisions"): str,
+                Optional("output-drops"): str,
+                Optional("output-errors"): str,
+                Optional("output-fifo-errors"): str,
+                Optional("output-resource-errors"): str
+            },
+            Optional("ethernet-mac-statistics"): {
+                    Optional("@junos:style"): str,
+                    "input-broadcasts": str,
+                    "input-bytes": str,
+                    "input-code-violations": str,
+                    "input-crc-errors": str,
+                    "input-fifo-errors": str,
+                    "input-fragment-frames": str,
+                    "input-jabber-frames": str,
+                    "input-mac-control-frames": str,
+                    "input-mac-pause-frames": str,
+                    "input-multicasts": str,
+                    "input-oversized-frames": str,
+                    "input-packets": str,
+                    Optional("input-total-errors"): str,
+                    "input-unicasts": str,
+                    "input-vlan-tagged-frames": str,
+                    "output-broadcasts": str,
+                    "output-bytes": str,
+                    "output-crc-errors": str,
+                    "output-fifo-errors": str,
+                    "output-mac-control-frames": str,
+                    "output-mac-pause-frames": str,
+                    "output-multicasts": str,
+                    "output-packets": str,
+                    Optional("output-total-errors"): str,
+                    "output-unicasts": str
+            },
+            Optional("input-error-list"): {
+                    Optional("framing-errors"): str,
+                    Optional("input-discards"): str,
+                    Optional("input-drops"): str,
+                    Optional("input-errors"): str,
+                    Optional("input-fifo-errors"): str,
+                    Optional("input-giants"): str,
+                    Optional("input-l2-channel-errors"): str,
+                    Optional("input-l2-mismatch-timeouts"): str,
+                    Optional("input-l3-incompletes"): str,
+                    Optional("input-resource-errors"): str,
+                    Optional("input-runts"): str
+            },
             Optional("transit-traffic-statistics"): {
                 "input-bps": str,
                 "input-bytes": str,
@@ -760,40 +812,69 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Output errors:
         p42 = re.compile(r'^Output +errors:$')
 
-        # 
-        p43 = re.compile(r'^L2 +mismatch +timeouts: +\d+, +FIFO +errors: +\d+, Resource +errors: +\d+$')
+        # Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Policed discards: 0, L3 incompletes: 0, L2 channel errors: 0,
+        p43_1 = re.compile(r'^Errors: +(?P<input_errors>\d+), +Drops: +(?P<input_drops>\d+), +Framing +errors: +(?P<framing_errors>\d+), +Runts: +(?P<input_runts>\d+), Policed +discards: +(?P<input_discards>\d+), +L3 +incompletes: +(?P<input_l3_incompletes>\d+), +L2 +channel +errors: +(?P<input_l2_channel_errors>\d+),$')
+        
+        # L2 mismatch timeouts: 0, FIFO errors: 0, Resource errors: 0
+        p43_2 = re.compile(r'^L2 +mismatch +timeouts: +(?P<input_l2_mismatch_timeouts>\d+), +FIFO +errors: +(?P<input_fifo_errors>\d+), +Resource +errors: +(?P<input_resource_errors>\d+)')
 
-        p44 = re.compile(r'^MTU +errors: +\d+, +Resource +errors: +\d+$')
+        # Carrier transitions: 1, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0, FIFO errors: 0, HS link CRC errors: 0,
+        p44_1 = re.compile(r'^Carrier +transitions: +(?P<carrier_transitions>\d+), +Errors: +(?P<output_errors>\d+), +Drops: +(?P<output_drops>\d+), +Collisions: +(?P<output_collisions>\d+), +Aged+ packets: +(?P<aged_packets>\d+), +FIFO +errors: +(?P<output_fifo_errors>\d+), +HS +link +CRC +errors: +(?P<hs_link_crc_errors>\d+),$')
 
-        p45 = re.compile(r'^Total +octets +\d+ +\d+$')
+        # MTU errors: 0, Resource errors: 0
+        p44_2 = re.compile(r'^MTU +errors: +(?P<mtu_errors>\d+), +Resource +errors: +(?P<output_resource_errors>\d+)$')
+        
+        # Total octets                   21604601324      16828244544
+        p45 = re.compile(r'^Total +octets +(?P<input_bytes>\d+) +(?P<output_bytes>\d+)$')
 
-        p46 = re.compile(r'^Total +packets +\d+ +\d+')
+        # MAC statistics:                      Receive         Transmit
+        p45_1 = re.compile(r'^MAC +statistics: +Receive +Transmit$')
 
-        p47 = re.compile(r'^Unicast +packets +\d+ +\d+$')
+        # Total packets                    133726919        129183374
+        p46 = re.compile(r'^Total +packets +(?P<input_packets>\d+) +(?P<output_packets>\d+)')
 
-        p48 = re.compile(r'^Broadcast +packets +\d+ +\d+$')
+        # Unicast packets                  133726908        129183361
+        p47 = re.compile(r'^Unicast +packets +(?P<input_unicasts>\d+) +(?P<output_unicasts>\d+)$')
 
-        p49 = re.compile(r'^Multicast +packets +\d+ +\d+$')
+        # Broadcast packets                        0                0
+        p48 = re.compile(r'^Broadcast +packets +(?P<input_broadcasts>\d+) +(?P<output_broadcasts>\d+)$')
 
-        p50 = re.compile(r'^CRC\/Align +errors +\d+ +\d+$')
+        # Multicast packets                        0                0
+        p49 = re.compile(r'^Multicast +packets +(?P<input_multicasts>\d+) +(?P<output_multicasts>\d+)$')
 
-        p51 = re.compile(r'^FIFO +errors +\d+ +\d+$')
+        # CRC/Align errors                         0                0
+        p50 = re.compile(r'^CRC\/Align +errors +(?P<input_crc_errors>\d+) +(?P<output_crc_errors>\d+)$')
 
-        p52 = re.compile(r'^MAC +control +frames +\d+ +\d+$')
+        # FIFO errors                              0                0
+        p51 = re.compile(r'^FIFO +errors +(?P<input_fifo_errors>\d+) +(?P<output_fifo_errors>\d+)$')
 
-        p53 = re.compile(r'^MAC +pause +frames +\d+ +\d+$')
+        # MAC control frames                       0                0
+        p52 = re.compile(r'^MAC +control +frames +(?P<input_mac_control_frames>\d+) +(?P<output_mac_control_frames>\d+)$')
 
-        p54 = re.compile(r'^Oversized +frames +\d+$')
+        # MAC pause frames                         0                0
+        p53 = re.compile(r'^MAC +pause +frames +(?P<input_mac_pause_frames>\d+) +(?P<output_mac_pause_frames>\d+)$')
 
-        p56 = re.compile(r'^Jabber +frames +\d+$')
+        # Oversized frames                         0
+        p54 = re.compile(r'^Oversized +frames +(?P<input_oversized_frames>\d+)$')
 
-        p57 = re.compile(r'^Fragment +frames +\d+$')
+        # Jabber frames                            0
+        p56 = re.compile(r'^Jabber +frames +(?P<input_jabber_frames>\d+)$')
 
-        p58 = re.compile(r'^VLAN +tagged +frames +\d+$')
+        # Fragment frames                          0
+        p57 = re.compile(r'^Fragment +frames +(?P<input_fragment_frames>\d+)$')
 
-        p59 = re.compile(r'^Code +violations +\d+$')
+        # VLAN tagged frames                       0
+        p58 = re.compile(r'^VLAN +tagged +frames +(?P<input_vlan_tagged_frames>\d+)$')
 
-        p60 = re.compile(r'^Total +errors +\d+$')
+        # Code violations                          0
+        p59 = re.compile(r'^Code +violations +(?P<input_code_violations>\d+)$')
+
+        # Total errors                             0                0
+        p60 = re.compile(r'^Total +errors +(?P<input_total_errors>\d+)$')
+
+        # Label-switched interface (LSI) traffic statistics:
+        p61 = re.compile(r'^Label-switched +interface +\(LSI\) +traffic +statistics:$')
+
 
         cnt = 0
         for line in out.splitlines():
@@ -1258,16 +1339,205 @@ class ShowInterfaces(ShowInterfacesSchema):
                 interface_address_dict.update({k.replace('_','-'):
                     v for k, v in group.items() if v is not None})
                 continue
-        
-        import json
-        json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
-        f = open("dict.txt","w")
-        f.write(json_data.replace(' true', ' True'))
-        f.close()
+            
+            # Input errors:
+            # p41 = re.compile(r'^Input +errors:$')
+            m = p41.match(line)
+            if m:
+                input_error_list_dict = physical_interface_dict.setdefault('input-error-list', {})
+                continue
+
+            # Output errors:
+            # p42 = re.compile(r'^Output +errors:$')
+            m = p42.match(line)
+            if m:
+                output_error_list_dict = physical_interface_dict.setdefault('output-error-list', {})
+                continue
+
+            # Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Policed discards: 0, L3 incompletes: 0, L2 channel errors: 0,
+            m = p43_1.match(line)
+            if m:
+                group = m.groupdict()
+                input_error_list_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # L2 mismatch timeouts: 0, FIFO errors: 0, Resource errors: 0
+            m = p43_2.match(line)
+            if m:
+                group = m.groupdict()
+                input_error_list_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Carrier transitions: 1, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0, FIFO errors: 0, HS link CRC errors: 0,
+            m = p44_1.match(line)
+            if m:
+                group = m.groupdict()
+                output_error_list_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # MTU errors: 0, Resource errors: 0
+            m = p44_2.match(line)
+            if m:
+                group = m.groupdict()
+                output_error_list_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Total octets                   21604601324      16828244544
+            m = p45.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_mac_statistics.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            m = p45_1.match(line)
+            if m:
+                ethernet_mac_statistics = physical_interface_dict.setdefault('ethernet-mac-statistics', {})
+                continue
+
+            # Total packets                    133726919        129183374
+            m = p46.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_mac_statistics.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Unicast packets                  133726908        129183361
+            m = p47.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_mac_statistics.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Broadcast packets                        0                0
+            m = p48.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_mac_statistics.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Multicast packets                        0                0
+            m = p49.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_mac_statistics.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # CRC/Align errors                         0                0
+            m = p50.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_mac_statistics.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # FIFO errors                              0                0
+            m = p51.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_mac_statistics.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # MAC control frames                       0                0
+            m = p52.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_mac_statistics.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # MAC pause frames                         0                0
+            m = p53.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_mac_statistics.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Oversized frames                         0
+            m = p54.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_mac_statistics.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Jabber frames                            0
+            m = p56.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_mac_statistics.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Fragment frames                          0
+            m = p57.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_mac_statistics.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # VLAN tagged frames                       0
+            m = p58.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_mac_statistics.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Code violations                          0
+            m = p59.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_mac_statistics.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Total errors                             0                0
+            m = p60.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_mac_statistics.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Label-switched interface (LSI) traffic statistics:
+            m = p61.match(line)
+            if m:
+                statistics_type = 'lsi_traffic_statistics'
+                traffic_statistics_dict = physical_interface_dict.setdefault('lsi-traffic-statistics', {})
+                continue
         return ret_dict
 
 class ShowInterfacesExtensive(ShowInterfaces):
-    cli_command = ['show interfaces extensive']
+    cli_command = ['show interfaces extensive',
+        'show interfaces extensive {interface}']
+    def cli(self, interface=None, output=None):
+
+        if not output:
+            if interface:
+                out = self.device.execute(self.cli_command[1].format(
+                    interface=interface
+                ))
+            else:
+                out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+        
+        return super().cli(output=out)
+
+class ShowInterfacesExtensiveNoForwarding(ShowInterfacesExtensive):
+    cli_command = ['show interfaces extensive no-forwarding']
     def cli(self, output=None):
 
         if not output:
@@ -1276,3 +1546,4 @@ class ShowInterfacesExtensive(ShowInterfaces):
             out = output
         
         return super().cli(output=out)
+
