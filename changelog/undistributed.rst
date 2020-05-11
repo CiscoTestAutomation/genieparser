@@ -37,6 +37,8 @@
         * Fixed regex for VRF name, now supports the '-' character in name.
     * Updated ShowAccessLists:
         * Fixed a typo in code.
+    * Update ShowVtpStatus:
+        * Changed the following keys into Optional: 'maximum_vlans' and 'md5_digest'.
 
 * NXOS
     * Updated ShowIpStaticRouteMulticast:
