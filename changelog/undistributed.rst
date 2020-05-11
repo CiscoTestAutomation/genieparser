@@ -37,6 +37,11 @@
         * Fixed regex for VRF name, now supports the '-' character in name.
     * Updated ShowAccessLists:
         * Fixed a typo in code.
+    * Update ShowLldpEntry:
+        * Fixed regex for chassis id, now also supports ':' and '-'.
+        * Fixed regex for description, now also supports messages like '{"SN":"SN-NR","Owner":"OWNER"}'.
+        * Fixed regex for management addresses, now also supports IPv6 addresses.
+        * Changed the following keys into Optional for 'med_information': 'f/w_revision', 'power_source', 'power_priority', 'wattage' and 'capabilities'.
 
 * NXOS
     * Updated ShowIpStaticRouteMulticast:
