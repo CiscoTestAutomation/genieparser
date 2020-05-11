@@ -3436,7 +3436,7 @@ class ShowOspfDatabaseNetworkLsaidDetailSchema(MetaParser):
                     "ospf-topology-name": str
                 }
             },
-            Optional("our-entry"): str,
+            Optional("our-entry"): bool,
             "sequence-number": str
             }
         }
@@ -3464,7 +3464,7 @@ class ShowOspfDatabaseNetworkLsaidDetail(ShowOspfDatabaseNetworkLsaidDetailSchem
         p1 = re.compile(r'^OSPF +database, +Area +(?P<ospf_area>\S+)$')
 
         # Network *10.69.197.1    192.168.219.235   0x80000026  1730  0x22 0x1b56  36
-        p2 = re.compile(r'^(?P<lsa_type>\S+) *(?P<our_entry>\*)?(?P<lsa_id>[\d\.]+) '
+        p2 = re.compile(r'^(?P<lsa_type>\S+) (?P<our_entry>\*)+(?P<lsa_id>[\d\.]+) '
                         r'+(?P<advertising_router>\S+) +(?P<sequence_number>\S+) +'
                         r'(?P<age>\S+) +(?P<options>\S+) +(?P<checksum>\S+) +'
                         r'(?P<lsa_length>\S+)$')
@@ -3517,7 +3517,10 @@ class ShowOspfDatabaseNetworkLsaidDetail(ShowOspfDatabaseNetworkLsaidDetailSchem
             if m:
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    if(group_key != "our_entry"):
+                    if(group_key == "our_entry"):
+                        if(group_value == '*'):
+                            ospf_database_dict['our-entry'] = True
+                    else:
                         entry_key = group_key.replace('_','-')
                         ospf_database_dict[entry_key] = group_value
                 continue
@@ -3696,7 +3699,7 @@ class ShowOspfDatabaseLsaidDetailSchema(MetaParser):
                         "ospf-topology-name": str
                     }
                 },
-                Optional("our-entry"): str,
+                Optional("our-entry"): bool,
                 "sequence-number": str
             })
         # Validate each dictionary in list
@@ -3744,7 +3747,7 @@ class ShowOspfDatabaseLsaidDetail(ShowOspfDatabaseLsaidDetailSchema):
                         r'+(?P<options>\S+) +(?P<checksum>\S+) +(?P<lsa_length>\S+)$')
 
         # bits 0x2, link count 7
-        p3 = re.compile(r'^bits +(?P<bits>\S+)+, +link +count +(?P<link_count>[\d\.]+)$')
+        p3 = re.compile(r'^bits +(?P<bits>\S+)+, +link +count +(?P<link_count>\d+)$')
 
                         
         # id 10.34.2.251, data 10.34.2.201, Type PointToPoint (1)
@@ -3759,7 +3762,8 @@ class ShowOspfDatabaseLsaidDetail(ShowOspfDatabaseLsaidDetailSchema):
                         r'+Default metric: +(?P<metric>\S+)$')
 
         # Topology default (ID 0)
-        p6 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\S+)+\)$')
+        p6 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) '
+                        r'+\(ID +(?P<ospf_topology_id>\S+)+\)$')
 
         # Type: PointToPoint, Node ID: 10.169.14.240
         p7 = re.compile(r'^Type: +(?P<link_type_name>\S+)+, '
@@ -3776,9 +3780,10 @@ class ShowOspfDatabaseLsaidDetail(ShowOspfDatabaseLsaidDetailSchema):
         p10 = re.compile(r'^mask +(?P<address_mask>\S+)$')
 
         #Type: 1, Metric: 1, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
-        p11 = re.compile(r'^Type: +(?P<type_value>\d+), Metric: +(?P<ospf_topology_metric>\d+), '
-                        r'Fwd addr: +(?P<forward_address>[\w\.\/]+), '
-                        r'Tag: +(?P<tag>[\w\.\/]+)$')
+        p11 = re.compile(r'^Type: +(?P<type_value>\d+), Metric: '
+                         r'+(?P<ospf_topology_metric>\d+), '
+                         r'Fwd addr: +(?P<forward_address>[\w\.]+), '
+                         r'Tag: +(?P<tag>[\w\.\/]+)$')
         
         ret_dict = {}
 
@@ -3794,7 +3799,6 @@ class ShowOspfDatabaseLsaidDetail(ShowOspfDatabaseLsaidDetailSchema):
                     ospf3_database_dict["@heading"] = group["heading"]
                 else:
                     second_dict["@heading"] = group["heading"]
-
 
             # OSPF database, Area 0.0.0.8
             m = p1.match(line)
@@ -3822,6 +3826,12 @@ class ShowOspfDatabaseLsaidDetail(ShowOspfDatabaseLsaidDetailSchema):
                             ospf3_database_dict[entry_key] = group_value
                         else:
                             second_dict[entry_key] = group_value
+                    else:
+                        if(group_value == '*'):
+                            if(is_not_scope_link):
+                                ospf3_database_dict['our-entry'] = True
+                            else:
+                                second_dict['our-entry'] = True
                             
                 if(is_not_scope_link):
                     ospf3_database_list.append(ospf3_database_dict)
@@ -3844,9 +3854,7 @@ class ShowOspfDatabaseLsaidDetail(ShowOspfDatabaseLsaidDetailSchema):
                     ospf_router_lsa_dict[entry_key] = group_value
                 ospf_router_lsa_dict["ospf-link"] = ospf_link_list
                 ospf3_database_dict["ospf-router-lsa"] = ospf_router_lsa_dict
-                
                 continue
-
 
             # id 10.34.2.251, data 10.34.2.201, Type PointToPoint (1)
             m = p4.match(line)
@@ -3927,7 +3935,6 @@ class ShowOspfDatabaseLsaidDetail(ShowOspfDatabaseLsaidDetailSchema):
                     inner_external_lsa_dict[entry_key] = group_value
                 inner_second_dict["ospf-external-lsa-topology"] = inner_external_lsa_dict
                 second_dict["ospf-external-lsa"] = inner_second_dict
-                #ospf_link_list.append(second_dict)
                 second_dict = {}
                 continue
         

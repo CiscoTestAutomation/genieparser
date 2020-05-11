@@ -13199,6 +13199,7 @@ class TestShowOspfDatabaseNetworkLsaidDetail(unittest.TestCase):
                         "ospf-topology-name": "default"
                     }
                 },
+                "our-entry": True,
                 "sequence-number": "0x80000026"
             }
         }
@@ -13408,6 +13409,7 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
                             "type-value": "1"
                         }
                     },
+                    "our-entry": True,
                     "sequence-number": "0x80000044"
                 }
             ]

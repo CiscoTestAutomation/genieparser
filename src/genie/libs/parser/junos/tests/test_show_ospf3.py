@@ -2870,6 +2870,7 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
                         },
                         "ospf3-options": "0x33"
                     },
+                    "our-entry": True,
                     "sequence-number": "0x8000001d"
                 },
                 {
@@ -2992,7 +2993,7 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
+class TestShowOspf3DatabaseLinkAdvertisingRouter(unittest.TestCase):
     """ Unit tests for:
             * show ospf3 database link advertising-router {ipaddress} detail
     """
@@ -3065,6 +3066,7 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
                         "prefix-count": "1",
                         "router-priority": "20"
                     },
+                    "our-entry": True,
                     "sequence-number": "0x80000b10"
                 },
                 {
@@ -3083,6 +3085,7 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
                         "prefix-count": "1",
                         "router-priority": "128"
                     },
+                    "our-entry": True,
                     "sequence-number": "0x80000b0f"
                 },
                 {
@@ -3101,6 +3104,7 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
                         "prefix-count": "1",
                         "router-priority": "20"
                     },
+                    "our-entry": True,
                     "sequence-number": "0x80000b0f"
                 },
                 {
@@ -3119,6 +3123,7 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
                         "prefix-count": "1",
                         "router-priority": "128"
                     },
+                    "our-entry": True,
                     "sequence-number": "0x80000b0f"
                 },
                 {
@@ -3135,6 +3140,7 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
                         "prefix-count": "0",
                         "router-priority": "128"
                     },
+                    "our-entry": True,
                     "sequence-number": "0x80000f62"
                 }
             ],

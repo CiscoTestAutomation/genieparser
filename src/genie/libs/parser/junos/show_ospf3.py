@@ -1904,11 +1904,9 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace("_", "-")
                     entry[entry_key] = group_value
-
                 continue
 
         return ret_dict
-
 
 
 class ShowOspf3DatabaseNetworkDetailSchema(MetaParser):
@@ -1987,7 +1985,7 @@ class ShowOspf3DatabaseNetworkDetailSchema(MetaParser):
                     },
                     "ospf3-options": str
                 },
-                Optional("our-entry"): str,
+                Optional("our-entry"): bool,
                 "sequence-number": str
             })
         for item in value:
@@ -2004,6 +2002,7 @@ class ShowOspf3DatabaseNetworkDetailSchema(MetaParser):
         "ospf3-database": Use(validate_ospf3_database_topology_list)
         }
     }
+
 
 class ShowOspf3DatabaseNetworkDetail(ShowOspf3DatabaseNetworkDetailSchema):
     """ Parser for:
@@ -2036,7 +2035,7 @@ class ShowOspf3DatabaseNetworkDetail(ShowOspf3DatabaseNetworkDetailSchema):
         # Type: Transit, Node ID: 192.168.219.236, Metric: 0, Bidirectional
         p6 = re.compile(r'^Type: +(?P<link_type_name>\S+)+, '
                         r'+Node +ID: +(?P<ospf_lsa_topology_link_node_id>\S+), '
-                        r'+Metric: +(?P<ospf_lsa_topology_link_metric>\S+)+, '
+                        r'+Metric: +(?P<ospf_lsa_topology_link_metric>\d+), '
                         r'+(?P<ospf_lsa_topology_link_state>\S+)$')
 
         ret_dict = {}
@@ -2052,7 +2051,6 @@ class ShowOspf3DatabaseNetworkDetail(ShowOspf3DatabaseNetworkDetailSchema):
                 group = m.groupdict()
                 entry_dict = {}
                 entry_dict["ospf-area"] = group["ospf_area"]
-
                 ospf_database_information_entry["ospf3-area-header"] = entry_dict
                 continue
 
@@ -2072,7 +2070,10 @@ class ShowOspf3DatabaseNetworkDetail(ShowOspf3DatabaseNetworkDetailSchema):
                 ospf3_database_list.append(ospf3_database_dict)
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    if(group_key != "our_entry"):
+                    if(group_key == "our_entry"):
+                        if(group_value == '*'):
+                            ospf3_database_dict['our-entry'] = True
+                    else:
                         entry_key = group_key.replace('_','-')
                         ospf3_database_dict[entry_key] = group_value
                 continue
@@ -2173,7 +2174,7 @@ class ShowOspf3DatabaseLinkAdvertisingRouterSchema(MetaParser):
                     "prefix-count": str,
                     "router-priority": str
                 },
-                Optional("our-entry"): str,
+                Optional("our-entry"): bool,
                 "sequence-number": str
             })
         for item in value:
@@ -2224,7 +2225,7 @@ class ShowOspf3DatabaseLinkAdvertisingRouter(ShowOspf3DatabaseLinkAdvertisingRou
         p3 = re.compile(r'^(?P<linklocal_address>fe80+[\s\S]+)$')
         
         # Options 0x33, Priority 20
-        p4 = re.compile(r'^Options +(?P<ospf3_options>\S+)+, Priority +(?P<router_priority>\S+)$')
+        p4 = re.compile(r'^Options +(?P<ospf3_options>\S+), Priority +(?P<router_priority>\S+)$')
 
         # Prefix-count 1
         p5 = re.compile(r'^Prefix-count +(?P<prefix_count>\S+)$')
@@ -2265,10 +2266,14 @@ class ShowOspf3DatabaseLinkAdvertisingRouter(ShowOspf3DatabaseLinkAdvertisingRou
                 ospf3_link_lsa = {}
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    if(group_key != "our_entry"):
+
+                    if(group_key == "our_entry"):
+                        if(group_value == '*'):
+                            ospf3_database_dict['our-entry'] = True
+                    else:
                         entry_key = group_key.replace('_','-')
                         ospf3_database_dict[entry_key] = group_value
-                ospf3_database_list.append(ospf3_database_dict)
+                ospf3_database_list.append(ospf3_database_dict)               
                 continue
 
             # fe80::20c:2900:3367:243d
