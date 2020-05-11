@@ -46,7 +46,8 @@
 * IOSXR
     * Updated ShowBgpSessions:
         * Added regex to support various outputs
-
+    * Updated ShowBgpInstanceNeighborsDetail:
+        * Updated regex to support various outputs
 * LINUX
     * Fixed Ifconfig parser issues.
 
