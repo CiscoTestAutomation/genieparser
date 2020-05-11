@@ -69,6 +69,11 @@
         * Fixed regex for vlan name, now also supports multiple white spaces.
         * Added regex for toking ring table.
         * Added the following keys: 'token_ring', 'are_hops', 'ste_hops' and 'backup_crf'.
+    * Update ShowVersion:
+        * Fixed regex for interface and ethernet_type, now also supports 'FastEthernet'.
+        * Changed the key 'virtual_ethernet' value to optional.
+        * Added the following keys 'fastethernet', 'power_supply_part_nr', 'power_supply_sn', 'db_assembly_num', 'db_sn', 'top_assembly_part_num', 'top_assembly_rev_num', 'version_id', 'clei_code_num', 'db_rev_num' and 'hb_rev_num'
+        * Added regex for swith table without 'Mode' column.
 
 * NXOS
     * Updated ShowIpStaticRouteMulticast:
