@@ -37,6 +37,10 @@
         * Fixed regex for VRF name, now supports the '-' character in name.
     * Updated ShowAccessLists:
         * Fixed a typo in code.
+    * Update ShowVlan:
+        * Fixed regex for vlan name, now also supports multiple white spaces.
+        * Added regex for toking ring table.
+        * Added the following keys: 'token_ring', 'are_hops', 'ste_hops' and 'backup_crf'.
 
 * NXOS
     * Updated ShowIpStaticRouteMulticast:
