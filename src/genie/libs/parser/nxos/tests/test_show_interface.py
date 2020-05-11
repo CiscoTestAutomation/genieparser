@@ -6935,185 +6935,52 @@ class test_show_interface_status(unittest.TestCase):
     golden_output_2 = {'execute.return_value': '''
     --------------------------------------------------------------------------------
     Port          Name               Status    Vlan      Duplex  Speed   Type
-    --------------------------------------------------------------------------------
-    Eth1/1        DO-5672-B e1/1 (vP connected trunk     full    10G     SFP-H10GB-C
-    Eth1/2        DO-5672-B e1/2 (vP connected trunk     full    10G     SFP-H10GB-C
-    Eth1/3        DO-FEX101 (port1)  connected 1         full    10G     10Gbase-SR 
-    Eth1/4        DO-FEX101 (port2)  connected 1         full    10G     10Gbase-SR 
-    Eth1/5        DO-FEX102 (port1)  connected 1         full    10G     10Gbase-SR 
-    Eth1/6        DO-FEX102 (port2)  connected 1         full    10G     10Gbase-SR 
-    Eth1/7        DO-4500X-A (Te1/1/ connected routed    full    10G     10Gbase-SR 
-    Eth1/8        DO-4500X-A (Te1/1/ connected routed    full    10G     10Gbase-SR 
-    Eth1/9        DO-4500X-A (Te2/1/ connected routed    full    10G     10Gbase-SR 
-    Eth1/10       DO-4500X-A (Te2/1/ connected routed    full    10G     10Gbase-SR 
-    Eth1/11       DO-UCS01-A (e1/17) connected trunk     full    10G     SFP-H10GB-C
-    Eth1/12       DO-UCS01-B (e1/17) connected trunk     full    10G     SFP-H10GB-C
-    Eth1/13       --                 sfpAbsent 1         full    10G     --         
-    Eth1/14       --                 sfpAbsent 1         full    10G     --         
-    Eth1/15       DO-DD01            connected 51        full    10G     SFP-H10GB-C
-    Eth1/16       --                 sfpAbsent 1         full    10G     --         
-    Eth1/17       Brik_Node1         connected trunk     full    10G     SFP-H10GB-C
-    Eth1/18       Brik_Node2         connected trunk     full    10G     10Gbase-SR 
-    Eth1/19       Brik_Node3         connected trunk     full    10G     10Gbase-LRM
-    Eth1/20       Brik_Node4         connected trunk     full    10G     10Gbase-LRM
-    Eth1/21       --                 sfpAbsent 1         full    10G     --         
-    Eth1/22       --                 sfpAbsent 1         full    10G     --         
-    Eth1/23       --                 sfpAbsent 1         full    10G     --         
-    Eth1/24       --                 sfpAbsent 1         full    10G     --         
-    Eth1/25       --                 sfpAbsent 1         full    10G     --         
-    Eth1/26       --                 sfpAbsent 1         full    10G     --         
-    Eth1/27       --                 sfpAbsent 1         full    10G     --         
-    Eth1/28       --                 sfpAbsent 1         full    10G     --         
-    Eth1/29       PA5220FW01_Eth1/12 connected routed    full    10G     10Gbase-LRM
-    Eth1/30       INTERNET BOUND PAL connected 101       full    10G     10Gbase-LRM
-    Eth1/31       Frontier SIP       connected 101       full    1000    SFP-1000BAS
-    Eth1/32       VPC_Keepalive      connected routed    full    1000    SFP-1000BAS
-    Eth2/1        --                 sfpAbsent 1         half    40G     --         
-    Eth2/2        --                 sfpAbsent 1         half    40G     --         
-    Eth2/3        --                 sfpAbsent 1         half    40G     --         
-    Eth2/4        --                 sfpAbsent 1         half    40G     --         
-    Eth2/5        --                 sfpAbsent 1         half    40G     --         
-    Eth2/6        --                 sfpAbsent 1         half    40G     --         
-    Po1           DO-5672-B (vPC Pee connected trunk     full    a-10G   --         
-    Po2           DA-FPS01           noOperMem 101       auto    auto    --         
-    Po5           DO-FPS04           noOperMem 101       auto    auto    --         
-    Po7           DO-NAS01           noOperMem 101       auto    auto    --         
-    Po8           DO-SPARE-02        noOperMem 101       auto    auto    --         
-    Po9           DODC01             connected 101       full    a-1000  --         
-    Po13          DODC02             connected 101       full    a-1000  --         
-    Po15          DO-HYPER-03        connected 101       full    a-1000  --         
-    Po16          JO-FPS01           noOperMem 101       auto    auto    --         
-    Po17          KE-FPS01           noOperMem 101       auto    auto    --         
-    Po18          DO-SQL01           connected 101       full    a-1000  --         
-    Po19          DO-FS02            connected 101       full    a-1000  --         
-    Po21          WA-FPS01           noOperMem 101       auto    auto    --         
-    Po22          DO-ETS-01          connected 101       full    a-1000  --         
-    Po23          SF-FPS01           noOperMem 101       auto    auto    --         
-    Po24          DO-EXCH-01         connected 101       full    a-1000  --         
-    Po25          DO-EXCH-02         noOperMem 101       full    auto    --         
-    Po29          DO-NAS03           noOperMem 101       auto    auto    --         
-    Po30          DO-HYPER-01        noOperMem 101       full    auto    --         
-    Po31          DO-HYPER-02        noOperMem 101       full    auto    --         
-    Po32          EC-HYPER-01        connected 101       full    a-1000  --         
-    Po33          DO-FPS06           noOperMem 101       auto    auto    --         
-    Po34          DO-TS02            noOperMem 101       auto    auto    --         
-    Po35          DO-HYPR02          connected 101       full    a-1000  --         
-    Po36          DO-HYPER-03        noOperMem 101       auto    auto    --         
-    Po37          HO-FPS01           noOperMem 101       auto    auto    --         
-    Po38          VI-FPS01           noOperMem 101       full    auto    --         
-    Po41          --                 noOperMem trunk     full    10G     --         
-    Po42          --                 noOperMem trunk     full    10G     --         
-    Po43          --                 noOperMem trunk     full    10G     --         
-    Po44          --                 noOperMem trunk     full    10G     --         
-    Po101         DO-FEX101          connected 1         full    a-10G   --         
-    Po102         DO-FEX102          connected 1         full    a-10G   --         
-    Po110         DO-4500X-A         connected routed    full    a-10G   --         
-    Po130         DO-UCS01-A         connected trunk     full    a-10G   --         
+    --------------------------------------------------------------------------------    
     Po135         DO-DD01            connected 51        full    a-10G   --         
     Po140         DO-UCS01-B         connected trunk     full    a-10G   --         
     mgmt0         --                 connected routed    full    a-1000  --         
     Eth101/1/1    DODC01             connected 101       full    a-1000             
     Eth101/1/2    DO-EXCH-01         connected 101       full    a-1000             
-    Eth101/1/3    ACS-3415           connected 101       full    a-1000             
-    Eth101/1/4    INTERNET BOUND TRA notconnec 101       auto    auto               
-    Eth101/1/5    DO-BRIGHTMAIL      connected 101       full    a-100              
-    Eth101/1/6    EC-HYPER-01        connected 101       full    a-1000             
-    Eth101/1/7    EC-HYPER-01        connected 101       full    a-1000             
-    Eth101/1/8    DO-FS02            connected 101       full    a-1000             
-    Eth101/1/9    WA-FPS01           notconnec 101       auto    auto               
-    Eth101/1/10   DO-HYPER-03        connected 101       full    a-1000             
-    Eth101/1/11   DA-FPS01           notconnec 101       auto    auto               
-    Eth101/1/12   DODC02             connected 101       full    a-1000             
-    Eth101/1/13   DO-ESX01           connected 101       full    a-1000             
-    Eth101/1/14   DO-ETS-01          connected 101       full    a-1000             
-    Eth101/1/15   DO-EXCH-02         connected 101       full    a-1000             
-    Eth101/1/16   RACK02UPS-MGMT     notconnec 101       auto    auto               
-    Eth101/1/17   RACKx2UPS-MGMT     connected 101       full    a-1000             
-    Eth101/1/18   DO-FPS04           notconnec 101       auto    auto               
-    Eth101/1/19   --                 connected 101       full    a-100              
-    Eth101/1/20   DO-FPS06           notconnec 101       auto    auto               
-    Eth101/1/21   DO-SCHMAX          connected 101       full    a-1000             
-    Eth101/1/22   DO-COLDFU01        connected 101       full    a-100              
-    Eth101/1/23   DO-HYPER-01        notconnec 101       auto    auto               
-    Eth101/1/24   DO-HYPER-02        notconnec 101       auto    auto               
-    Eth101/1/25   DO-HYPER-03        notconnec 101       auto    auto               
-    Eth101/1/26   DO-NAS01           notconnec 101       auto    auto               
-    Eth101/1/27   DO-NAS01           notconnec 101       auto    auto               
-    Eth101/1/28   DO-NAS01           notconnec 101       auto    auto               
-    Eth101/1/29   DO-NAS02           connected 101       full    a-1000             
-    Eth101/1/30   DO-NAS02           connected 101       full    a-1000             
-    Eth101/1/31   Rubrik_MGMT_TEST   notconnec 200       auto    auto               
-    Eth101/1/32   DO-NAS03           notconnec 101       auto    auto               
-    Eth101/1/33   DO-NAS03           notconnec 101       auto    auto               
-    Eth101/1/34   DO-NAS03           notconnec 101       auto    auto               
-    Eth101/1/35   DO-SPARE-02        notconnec 101       auto    auto               
-    Eth101/1/36   DO-SQL01           connected 101       full    a-1000             
-    Eth101/1/37   DO-TS01            notconnec 101       auto    auto               
-    Eth101/1/38   DO-TS02            notconnec 101       auto    auto               
-    Eth101/1/39   HO-FPS01           notconnec 101       auto    auto               
-    Eth101/1/40   JO-FPS01           notconnec 101       auto    auto               
-    Eth101/1/41   KE-FPS01           notconnec 101       auto    auto               
-    Eth101/1/42   SF-FPS01           notconnec 101       auto    auto               
-    Eth101/1/43   VI-FPS01           connected 101       full    a-1000             
-    Eth101/1/44   DO-HYPER-03        connected 101       full    a-1000             
-    Eth101/1/45   EL-FPS01           notconnec 101       auto    auto               
-    Eth101/1/46   OL-FPS01           notconnec 101       auto    auto               
-    Eth101/1/47   SR-FPS01           notconnec 101       auto    auto               
-    Eth101/1/48   TR-FPS01           notconnec 101       auto    auto               
-    Eth102/1/1    DODC01             connected 101       full    a-1000             
-    Eth102/1/2    DO-EXCH-01         connected 101       full    a-1000             
-    Eth102/1/3    DO-ACS             notconnec 101       auto    auto               
-    Eth102/1/4    PA220_ETH1         connected 101       full    a-1000             
-    Eth102/1/5    DO-BUF02           notconnec 101       auto    auto               
-    Eth102/1/6    EC-HYPER-01        connected 101       full    a-1000             
-    Eth102/1/7    EC-HYPER-01        connected 101       full    a-1000             
-    Eth102/1/8    DO-FS02            connected 101       full    a-1000             
-    Eth102/1/9    WA-FPS01           notconnec 101       auto    auto               
-    Eth102/1/10   DO-HYPER-03        connected 101       full    a-1000             
-    Eth102/1/11   DA-FPS01           notconnec 101       auto    auto               
-    Eth102/1/12   DODC02             connected 101       full    a-1000             
-    Eth102/1/13   DO-ESX01           connected 101       full    a-1000             
-    Eth102/1/14   DO-ETS-01          connected 101       full    a-1000             
-    Eth102/1/15   DO-EXCH-02         notconnec 101       auto    auto               
-    Eth102/1/16   RACKx1UPS-MGMT     notconnec 101       auto    auto               
-    Eth102/1/17   --                 connected 101       full    a-1000             
-    Eth102/1/18   DO-FPS04           notconnec 101       auto    auto               
-    Eth102/1/19   --                 connected 101       full    a-1000             
-    Eth102/1/20   DO-FPS06           notconnec 101       auto    auto               
-    Eth102/1/21   EAROBICS           connected 101       full    a-1000             
-    Eth102/1/22   DO-HELPDESK        connected 101       full    a-1000             
-    Eth102/1/23   DO-HYPER-01        notconnec 101       auto    auto               
-    Eth102/1/24   DO-HYPER-02        notconnec 101       auto    auto               
-    Eth102/1/25   DO-HYPER-03        notconnec 101       auto    auto               
-    Eth102/1/26   DO-NAS01           notconnec 101       auto    auto               
-    Eth102/1/27   DO-NAS01           notconnec 101       auto    auto               
-    Eth102/1/28   DO-NAS01           notconnec 101       auto    auto               
-    Eth102/1/29   DO-NAS02           connected 101       full    a-1000             
-    Eth102/1/30   DO-NAS02           connected 101       full    a-1000             
-    Eth102/1/31   Rubrik_MGMT_TEST   notconnec 200       auto    auto               
-    Eth102/1/32   DO-NAS03           notconnec 101       auto    auto               
-    Eth102/1/33   DO-NAS03           notconnec 101       auto    auto               
-    Eth102/1/34   DO-NAS03           notconnec 101       auto    auto               
-    Eth102/1/35   DO-SPARE-02        notconnec 101       auto    auto               
-    Eth102/1/36   DO-SQL01           connected 101       full    a-1000             
-    Eth102/1/37   DO-TS01            notconnec 101       auto    auto               
-    Eth102/1/38   DO-TS02            notconnec 101       auto    auto               
-    Eth102/1/39   HO-FPS01           notconnec 101       auto    auto               
-    Eth102/1/40   JO-FPS01           notconnec 101       auto    auto               
-    Eth102/1/41   KE-FPS01           notconnec 101       auto    auto               
-    Eth102/1/42   SF-FPS01           notconnec 101       auto    auto               
-    Eth102/1/43   VI-FPS01           connected 101       full    a-1000             
-    Eth102/1/44   DO-HYPER-03        connected 101       full    a-1000             
-    Eth102/1/45   GE-FPS01           notconnec 101       auto    auto               
-    Eth102/1/46   SCH-CORE03         notconnec 101       auto    auto               
-    Eth102/1/47   SV-FPS01           connected 101       full    a-1000             
-    Eth102/1/48   DO-ICUE            connected 101       full    a-100              
-    Lo0           --                 connected routed    auto    unknown --         
-    DO-5672-A# 
-
     '''}
 
-    # golden_parsed_output_2
+    golden_parsed_output_2 = {
+        'interfaces': {
+            'Ethernet101/1/1': {
+                'duplex_code': 'full',
+                'name': 'DODC01',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'vlan': '101',
+            },
+            'Ethernet101/1/2': {
+                'duplex_code': 'full',
+                'name': 'DO-EXCH-01',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'vlan': '101',
+            },
+            'Port-channel135': {
+                'duplex_code': 'full',
+                'name': 'DO-DD01',
+                'port_speed': 'a-10G',
+                'status': 'connected',
+                'vlan': '51',
+            },
+            'Port-channel140': {
+                'duplex_code': 'full',
+                'name': 'DO-UCS01-B',
+                'port_speed': 'a-10G',
+                'status': 'connected',
+                'vlan': 'trunk',
+            },
+            'mgmt0': {
+                'duplex_code': 'full',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'vlan': 'routed',
+            },
+        },
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -7140,11 +7007,6 @@ class test_show_interface_status(unittest.TestCase):
         obj = ShowInterfaceStatus(device=self.device)
         parsed_output = obj.parse(interface='Eth1/1')
         self.maxDiff = None
-        import pprint
-        pprint.pprint(parsed_output)
-        import pdb
-        pdb.set_trace()
-
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
