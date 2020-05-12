@@ -16,6 +16,14 @@
         * show interfaces descriptions
     * Added ShowPfeRouteSummary for:
         * show pfe route summary
+    * Added ShowOspfDatabaseLsaidDetail for:
+        * show ospf database lsa-id {ipaddress} detail
+    * Added ShowOspfDatabaseNetworkLsaidDetail for:
+        * show ospf database network lsa-id {ipaddress} detail
+    * Added ShowOspf3DatabaseLinkAdvertisingRouter for:
+        * show ospf3 database link advertising-router {ipaddress} detail
+    * Added ShowOspf3DatabaseNetworkDetail for:
+        * show ospf3 database network detail
 
 * IOSXE
     * Updated ShowMacAddressTable for new commnad:
