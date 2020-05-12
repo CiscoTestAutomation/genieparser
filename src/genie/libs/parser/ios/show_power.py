@@ -2,7 +2,7 @@
 
 """
 from genie.libs.parser.iosxe.show_power import ShowStackPower as ShowStackPower_iosxe,\
-                                               ShowPowerInline as ShowPowerInlineInterface_iosxe
+                                               ShowPowerInline as ShowPowerInline_iosxe
 
 
 class ShowStackPower(ShowStackPower_iosxe):
@@ -10,6 +10,7 @@ class ShowStackPower(ShowStackPower_iosxe):
     pass
 
 
-class ShowPowerInlineInterface(ShowPowerInlineInterface_iosxe):
-    """Parser for show power inline <interface>"""
+class ShowPowerInline(ShowPowerInline_iosxe):
+    """Parser for show power inline
+                  show power inline <interface>"""
     pass

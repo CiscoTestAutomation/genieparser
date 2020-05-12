@@ -105,7 +105,8 @@ class ShowPowerInlineSchema(MetaParser):
 
 
 class ShowPowerInline(ShowPowerInlineSchema):
-    """Parser for show power inline """
+    """Parser for show power inline
+                  show power inline <interface>"""
 
     cli_command = ['show power inline', 'show power inline {interface}']
 
