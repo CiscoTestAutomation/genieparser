@@ -4366,6 +4366,210 @@ class TestShowBgpInstanceAllAllAllNeighborsDetail(unittest.TestCase):
           Last reset 00:00:00
             '''}
 
+    golden_output_2 = {'execute.return_value': '''
+    BGP neighbor is 10.19.27.9, vrf DnB_IPT
+     Remote AS 65100, local AS 201627, external link
+     Remote router ID 10.64.120.147
+      BGP state = Established, up for 23w1d
+      NSR State: None
+      Last read 00:00:28, Last read before reset 23w1d
+      Hold time is 180, keepalive interval is 60 seconds
+      Configured hold time: 180, keepalive: 60, min acceptable hold time: 3
+      Last write 00:00:48, attempted 19, written 19
+      Second last write 00:01:48, attempted 19, written 19
+      Last write before reset 23w1d, attempted 19, written 19
+      Second last write before reset 23w1d, attempted 19, written 19
+      Last write pulse rcvd  Apr 28 20:01:43.377 last full not set pulse count 3568891
+      Last write pulse rcvd before reset 23w1d
+      Socket not armed for io, armed for read, armed for write
+      Last write thread event before reset 23w1d, second last 23w1d
+      Last KA expiry before reset 23w1d, second last 23w1d
+      Last KA error before reset 00:00:00, KA not sent 00:00:00
+      Last KA start before reset 23w1d, second last 23w1d
+      Precedence: internet
+      Non-stop routing is enabled
+      Entered Neighbor NSR TCP mode:
+        TCP Initial Sync :              ---                
+        TCP Initial Sync Phase Two :    ---                
+        TCP Initial Sync Done :         ---                
+      Enforcing first AS is enabled
+      Multi-protocol capability received
+      Neighbor capabilities:            Adv         Rcvd
+        Route refresh:                  Yes         Yes
+        4-byte AS:                      Yes         Yes
+        Address family IPv4 Unicast:    Yes         Yes
+      Message stats:
+        InQ depth: 0, OutQ depth: 0
+                        Last_Sent               Sent  Last_Rcvd               Rcvd
+        Open:           Nov 18 00:26:13.645        6  Nov 18 00:26:13.677        5
+        Notification:   Aug 26 04:14:54.268        1  Aug 26 07:03:35.092        1
+        Update:         Apr 25 02:20:18.101     2060  Apr 25 02:21:13.202     6287
+        Keepalive:      Apr 28 20:01:23.489  1696449  Apr 28 20:01:43.377  1867201
+        Route_Refresh:  ---                        0  ---                        0
+        Total:                               1698516                       1873494
+      Minimum time between advertisement runs is 0 secs
+      Inbound message logging enabled, 3 messages buffered
+      Outbound message logging enabled, 3 messages buffered
+    
+     For Address Family: IPv4 Unicast
+      BGP neighbor version 152526730
+      Update group: 0.2 Filter-group: 0.1  No Refresh request being processed
+      Inbound soft reconfiguration allowed (override route-refresh)
+      Route refresh request: received 0, sent 0
+      Policy for incoming advertisements is BGP-POL-TELENOR-IN
+      Policy for outgoing advertisements is BGP-POL-TELENOR-OUT
+      48 accepted prefixes, 17 are bestpaths
+      Cumulative no. of prefixes denied: 2. 
+        No policy: 0, Failed RT match: 0
+        By ORF policy: 0, By policy: 2
+      Prefix advertised 74, suppressed 0, withdrawn 17
+      Maximum prefixes allowed 1048576
+      Threshold for warning message 75%, restart interval 0 min
+      An EoR was received during read-only mode
+      Last ack version 152526730, Last synced ack version 0
+      Outstanding version objects: current 0, max 3
+      Additional-paths operation: None
+      Advertise VPNv4 routes enabled with Reoriginate,disable  option
+      Advertise VPNv6 routes is enabled with Reoriginate, option
+    
+      Connections established 5; dropped 4
+      Local host: 10.19.27.10, Local port: 19638, IF Handle: 0x04000d80
+      Foreign host: 10.19.27.9, Foreign port: 179
+      Last reset 23w1d, due to Peer closing down the session
+      Peer reset reason: Remote closed the session (No error)
+      Time since last notification sent to neighbor: 2y35w
+      Error Code: administrative shutdown
+      Notification data sent:
+        None
+      Time since last notification received from neighbor: 2y35w
+      Error Code: open: unknown subcode
+      Notification data received:
+        000000
+
+
+    '''}
+
+    golden_parsed_output_2 = {
+        'instance': {
+            'all': {
+                'vrf': {
+                    'DnB_IPT': {
+                        'neighbor': {
+                            '10.19.27.9': {
+                                'router_id': '10.64.120.147',
+                                'local_as_no_prepend': False,
+                                'tcp_initial_sync': '---',
+                                'min_acceptable_hold_time': 3,
+                                'last_full_not_set_pulse_count': 3568891,
+                                'precedence': 'internet',
+                                'second_attempted': 19,
+                                'attempted': 19,
+                                'second_last_write': '00:01:48',
+                                'tcp_initial_sync_done': '---',
+                                'local_as_as_no': 201627,
+                                'non_stop_routing': True,
+                                'bgp_negotiated_capabilities': {
+                                    'route_refresh': 'advertised received',
+                                    'four_octets_asn': 'advertised received',
+                                    'ipv4_unicast': 'advertised received',
+                                },
+                                'message_stats_output_queue': 0,
+                                'suppress_four_byte_as_capability': False,
+                                'local_as_dual_as': False,
+                                'shutdown': False,
+                                'outbound_message': '3',
+                                'remote_as': 65100,
+                                'remove_private_as': False,
+                                'local_as_replace_as': False,
+                                'written': 19,
+                                'bgp_neighbor_counters': {
+                                    'messages': {
+                                        'received': {
+                                            'notifications': 1,
+                                            'keepalives': 1867201,
+                                            'updates': 6287,
+                                            'opens': 5,
+                                            'totals': 4,
+                                        },
+                                        'sent': {
+                                            'notifications': 1,
+                                            'keepalives': 1696449,
+                                            'updates': 2060,
+                                            'opens': 6,
+                                            'totals': 7,
+                                        },
+                                    },
+                                },
+                                'keepalive_interval': 60,
+                                'last_ka_error_before_reset': '00:00:00',
+                                'session_state': 'established',
+                                'multiprotocol_capability': 'received',
+                                'address_family': {
+                                    'ipv4 unicast': {
+                                        'route_map_name_in': 'BGP-POL-TELENOR-IN',
+                                        'outstanding_version_objects_max': 3,
+                                        'filter_group': '0.1',
+                                        'last_ack_version': 152526730,
+                                        'best_paths': 17,
+                                        'accepted_prefixes': 48,
+                                        'maximum_prefix_restart': 0,
+                                        'neighbor_version': 152526730,
+                                        'cummulative_no_no_policy': 0,
+                                        'prefix_suppressed': 0,
+                                        'maximum_prefix_max_prefix_no': 1048576,
+                                        'route_refresh_request_sent': 0,
+                                        'eor_status': 'was received during read-only mode',
+                                        'maximum_prefix_warning_only': True,
+                                        'route_map_name_out': 'BGP-POL-TELENOR-OUT',
+                                        'cummulative_no_prefixes_denied': 2,
+                                        'last_synced_ack_version': 0,
+                                        'route_refresh_request_received': 0,
+                                        'outstanding_version_objects_current': 0,
+                                        'cummulative_no_failed_rt_match': 0,
+                                        'update_group': '0.2',
+                                        'cummulative_no_by_orf_policy': 0,
+                                        'refresh_request_status': 'No Refresh request being processed',
+                                        'cummulative_no_by_policy': 2,
+                                        'prefix_advertised': 74,
+                                        'additional_paths_operation': 'None',
+                                        'maximum_prefix_threshold': '75%',
+                                        'prefix_withdrawn': 17,
+                                    },
+                                },
+                                'last_ka_error_ka_not_sent': '00:00:00',
+                                'inbound_message': '3',
+                                'enforcing_first_as': 'enabled',
+                                'last_write_pulse_rcvd': 'Apr 28 20:01:43.377 ',
+                                'up_time': '23w1d',
+                                'nsr_state': 'None',
+                                'bgp_session_transport': {
+                                    'connection': {
+                                        'state': 'established',
+                                        'connections_established': 5,
+                                        'connections_dropped': 4,
+                                    },
+                                    'transport': {
+                                        'local_host': '10.19.27.10',
+                                        'foreign_host': '10.19.27.9',
+                                        'if_handle': '0x04000d80',
+                                        'foreign_port': '179',
+                                        'local_port': '19638',
+                                    },
+                                },
+                                'minimum_time_between_adv_runs': 0,
+                                'last_write': '00:00:48',
+                                'second_written': 19,
+                                'message_stats_input_queue': 0,
+                                'holdtime': 180,
+                                'link_state': 'external link',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         bgp_instance_neighbors_detail_obj = ShowBgpInstanceNeighborsDetail(device=self.device1)
@@ -4378,6 +4582,13 @@ class TestShowBgpInstanceAllAllAllNeighborsDetail(unittest.TestCase):
         parsed_output = bgp_instance_neighbors_detail_obj.parse(vrf_type='all')
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        bgp_instance_neighbors_detail_obj = ShowBgpInstanceNeighborsDetail(device=self.device)
+        parsed_output = bgp_instance_neighbors_detail_obj.parse(vrf_type='all')
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 
 # ==============================================================
