@@ -211,6 +211,9 @@ class ShowInterface(ShowInterfaceSchema):
                         r'(,\s*line\s+protocol\s+is\s+(?P<line_protocol>\w+))?'
                         r'(,\s+autostate\s+(?P<autostate>\S+))?'
                         r'(\(Link\s+not\s+connected\))?'
+                        r'(\(SFP\s+not\s+inserted\))?'
+                        r'(\(suspended\(.*\)\))?'
+                        r'(\(\S+ErrDisabled\))?'
                         r'(\(.*ACK.*\))?$')
 
         # admin state is up
