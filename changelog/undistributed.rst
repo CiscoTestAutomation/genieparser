@@ -69,6 +69,10 @@
         * Fixed regex for vlan name, now also supports multiple white spaces.
         * Added regex for toking ring table.
         * Added the following keys: 'token_ring', 'are_hops', 'ste_hops' and 'backup_crf'.
+    * Renamed ShowPowerInlineInterface to ShowPowerInline
+        * Added 'watts' information the schema, containing available, used and remaining watts.
+        * Added regex to parse watts information
+        * Changed the regex to also support white spaces in device names
 
 * NXOS
     * Updated ShowIpStaticRouteMulticast:
