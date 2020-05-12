@@ -16,6 +16,13 @@
         * show interfaces descriptions
     * Added ShowPfeRouteSummary for:
         * show pfe route summary
+    * Added ShowInterfaces for:
+        * show interfaces
+    * Added ShowInterfacesExtensive for:
+        * show interfaces extensive
+        * show interfaces extensive {interface}
+    * Added ShowInterfacesExtensiveNoForwarding for:
+        * show interfaces extensive no-forwarding
     * Added ShowOspfDatabaseLsaidDetail for:
         * show ospf database lsa-id {ipaddress} detail
     * Added ShowOspfDatabaseNetworkLsaidDetail for:
