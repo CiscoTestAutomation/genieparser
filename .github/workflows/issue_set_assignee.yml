@@ -1,0 +1,17 @@
+# This action is triggered when a user opens an issue.
+# It automatically assigns the issue to user 'xiaoxinz-cisco' when issue title or body contains keyword 'show'
+
+name: "Set Assignee"
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["show"]'
+          assignees: '["xiaoxinz-cisco"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
