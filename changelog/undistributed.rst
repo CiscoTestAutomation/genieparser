@@ -50,6 +50,8 @@
         * Change key 'address_family' into Optional
     * Updated ShowRunInterface:
         * Add regex to support various sample outputs
+    * Updated ShowInterfaceStatus:
+        * Fix a regex pattern to support various outputs
 
 * IOSXR
     * Updated ShowBgpSessions:

@@ -3386,9 +3386,12 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         # mgmt0         --                 connected routed    full    1000    --
         # Po1           VPC_PeerLink       connected trunk     full    40G     --
         # Vlan366       BigData            connected routed    auto    auto    --
+        # Eth101/1/10   DO-HYPER-03        connected 101       full    a-1000
 
-        p1 = re.compile(r'(?P<interface>(\S+)) +(?P<name>(\S+))? +(?P<status>(\S+))? +(?P<vlan>(\S+))'
-                        r' +(?P<duplex_code>(\S+)) +(?P<port_speed>(\S+)) +(?P<type>(\S+))$')
+        p1 = re.compile(r'(?P<interface>(\S+)) +(?P<name>(\S+))? '
+                        r'+(?P<status>(\S+))? +(?P<vlan>(\S+))'
+                        r' +(?P<duplex_code>(\S+)) '
+                        r'+(?P<port_speed>(\S+))( +(?P<type>(\S+)))?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -3402,7 +3405,7 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
                 keys = ['name','status', 'vlan', 'duplex_code', 'port_speed', 'type']
 
                 for k in keys:
-                    if group[k] != '--':
+                    if group[k] and group[k] != '--':
                         intf_dict[k] = group[k]
                 continue
 

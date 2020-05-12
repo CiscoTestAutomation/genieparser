@@ -6926,12 +6926,61 @@ class test_show_interface_status(unittest.TestCase):
         }
     }
 
-
     golden_interface_output = {'execute.return_value': '''
         Port          Name               Status    Vlan      Duplex  Speed   Type
         --------------------------------------------------------------------------------
         Eth1/1        AOTLXPRPBD10001    connected trunk     full    10G     10g     
     '''}
+
+    golden_output_2 = {'execute.return_value': '''
+    --------------------------------------------------------------------------------
+    Port          Name               Status    Vlan      Duplex  Speed   Type
+    --------------------------------------------------------------------------------    
+    Po135         DO-DD01            connected 51        full    a-10G   --         
+    Po140         DO-UCS01-B         connected trunk     full    a-10G   --         
+    mgmt0         --                 connected routed    full    a-1000  --         
+    Eth101/1/1    DODC01             connected 101       full    a-1000             
+    Eth101/1/2    DO-EXCH-01         connected 101       full    a-1000             
+    '''}
+
+    golden_parsed_output_2 = {
+        'interfaces': {
+            'Ethernet101/1/1': {
+                'duplex_code': 'full',
+                'name': 'DODC01',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'vlan': '101',
+            },
+            'Ethernet101/1/2': {
+                'duplex_code': 'full',
+                'name': 'DO-EXCH-01',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'vlan': '101',
+            },
+            'Port-channel135': {
+                'duplex_code': 'full',
+                'name': 'DO-DD01',
+                'port_speed': 'a-10G',
+                'status': 'connected',
+                'vlan': '51',
+            },
+            'Port-channel140': {
+                'duplex_code': 'full',
+                'name': 'DO-UCS01-B',
+                'port_speed': 'a-10G',
+                'status': 'connected',
+                'vlan': 'trunk',
+            },
+            'mgmt0': {
+                'duplex_code': 'full',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'vlan': 'routed',
+            },
+        },
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -6952,6 +7001,13 @@ class test_show_interface_status(unittest.TestCase):
         parsed_output = obj.parse(interface='Eth1/1')
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_interface_output)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowInterfaceStatus(device=self.device)
+        parsed_output = obj.parse(interface='Eth1/1')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 if __name__ == '__main__':
