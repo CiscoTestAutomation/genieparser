@@ -3396,8 +3396,8 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         # Eth1/4 *** FEX 2248TP  connected 1     full a-10G  Fabric Exte
         p1_1 = re.compile(r'^(?P<interface>(\S+)) '
                           r'+(?P<name>(\*\*\*\s)([\S\s]+)) '
-                          r'+(?P<status>([a-z]+)) '
-                          r'+(?P<vlan>([a-z\d]+)) '
+                          r'+(?P<status>\S+) '
+                          r'+(?P<vlan>\S+) '
                           r'+(?P<duplex_code>([a-z]+)) '
                           r'+(?P<port_speed>(\S+)) '
                           r'+(?P<type>([\S\s]+))$')
