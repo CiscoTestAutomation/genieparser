@@ -14,6 +14,9 @@ JUNOS parsers for the following commands:
     * show route advertising-protocol {protocol} {ip_address}
     * show route forwarding-table summary
     * show route summary
+    * show route {route} extensive
+    * show route extensive
+    * show route extensive {destination}
 '''
 
 import re
@@ -802,15 +805,20 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             * show route protocol {protocol} extensive
             * show route protocol {protocol} table {table} extensive
             * show route protocol {protocol} table {table} extensive {destination}
+            * show route {route} extensive
+            * show route extensive
+            * show route extensive {destination}
     """
 
     cli_command = ['show route protocol {protocol} extensive',
                     'show route protocol {protocol} table {table} extensive',
                     'show route protocol {protocol} table {table} extensive {destination}',
-                    'show route extensive']
-    def cli(self, protocol=None, table=None, destination=None, output=None):
+                    'show route {route} extensive',
+                    'show route extensive',
+                    'show route extensive {destination}']
+    def cli(self, protocol=None, table=None, destination=None, route=None, output=None):
         if not output:
-            if table and destination:
+            if protocol and table and destination:
                 cmd = self.cli_command[2].format(
                     protocol=protocol,
                     table=table,
@@ -822,8 +830,14 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             elif protocol:
                 cmd = self.cli_command[0].format(
                     protocol=protocol)
+            elif route:
+                cmd = self.cli_command[3].format(
+                    route=route)
+            elif destination:
+                cmd = self.cli_command[5].format(
+                    destination=destination)
             else:
-                cmd = self.cli_command[3]
+                cmd = self.cli_command[4]
             out = self.device.execute(cmd)
         else:
             out = output
