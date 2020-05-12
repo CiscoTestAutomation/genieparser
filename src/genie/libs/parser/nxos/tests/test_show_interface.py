@@ -6982,6 +6982,103 @@ class test_show_interface_status(unittest.TestCase):
         },
     }
 
+    golden_output_3 = {'execute.return_value': '''
+        N7K-1-LAB# show int status
+        
+        --------------------------------------------------------------------------------
+        Port Name Status Vlan Duplex Speed Type
+        --------------------------------------------------------------------------------
+        mgmt0 -- connected routed full a-1000 --
+        Eth1/1 *** N7K-2-FLEXP connected trunk full a-10G SFP-H10GB-C
+        Eth1/2 *** N7K-2-FLEXP connected trunk full a-10G SFP-H10GB-C
+        Eth1/3 *** P2P L3-CIS- connected routed full a-1000 1000base-T
+        Eth1/4 *** FEX 2248TP  connected 1      full a-10G  Fabric Exte
+        Eth1/5 *** L2 L3-CIS-N connected trunk full a-1000 1000base-T
+        Eth1/6 *** L2POE Gi1/0 connected trunk full a-1000 1000base-T
+        Eth1/7 *** To ACI leaf connected trunk full a-1000 1000base-SX
+        Eth1/8 -- sfpAbsent routed auto auto --
+        Eth1/9 -- sfpAbsent routed auto auto --
+    '''}
+
+    golden_parsed_output_3 = {
+        'interfaces': {
+            'Ethernet1/1': {
+                'duplex_code': 'full',
+                'name': '*** N7K-2-FLEXP',
+                'port_speed': 'a-10G',
+                'status': 'connected',
+                'type': 'SFP-H10GB-C',
+                'vlan': 'trunk',
+            },
+            'Ethernet1/2': {
+                'duplex_code': 'full',
+                'name': '*** N7K-2-FLEXP',
+                'port_speed': 'a-10G',
+                'status': 'connected',
+                'type': 'SFP-H10GB-C',
+                'vlan': 'trunk',
+            },
+            'Ethernet1/3': {
+                'duplex_code': 'full',
+                'name': '*** P2P L3-CIS-',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '1000base-T',
+                'vlan': 'routed',
+            },
+            'Ethernet1/4': {
+                'duplex_code': 'full',
+                'name': '*** FEX 2248TP ',
+                'port_speed': 'a-10G',
+                'status': 'connected',
+                'type': 'Fabric Exte',
+                'vlan': '1',
+            },
+            'Ethernet1/5': {
+                'duplex_code': 'full',
+                'name': '*** L2 L3-CIS-N',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '1000base-T',
+                'vlan': 'trunk',
+            },
+            'Ethernet1/6': {
+                'duplex_code': 'full',
+                'name': '*** L2POE Gi1/0',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '1000base-T',
+                'vlan': 'trunk',
+            },
+            'Ethernet1/7': {
+                'duplex_code': 'full',
+                'name': '*** To ACI leaf',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '1000base-SX',
+                'vlan': 'trunk',
+            },
+            'Ethernet1/8': {
+                'duplex_code': 'auto',
+                'port_speed': 'auto',
+                'status': 'sfpAbsent',
+                'vlan': 'routed',
+            },
+            'Ethernet1/9': {
+                'duplex_code': 'auto',
+                'port_speed': 'auto',
+                'status': 'sfpAbsent',
+                'vlan': 'routed',
+            },
+            'mgmt0': {
+                'duplex_code': 'full',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'vlan': 'routed',
+            },
+        },
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowInterfaceStatus(device=self.device)
@@ -7008,6 +7105,13 @@ class test_show_interface_status(unittest.TestCase):
         parsed_output = obj.parse(interface='Eth1/1')
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowInterfaceStatus(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 
 if __name__ == '__main__':
