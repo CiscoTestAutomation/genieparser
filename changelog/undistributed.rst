@@ -66,4 +66,8 @@
         * Update regex to support various outputs.
     * Updated ShowRouteProtocolExtensive:
         * Update key 'validation-state' as Optional
+    * Update ShowRouteProtocolExtensive for:
+        * show route {route} extensive
+        * show route extensive
+        * show route extensive {destination}
 
