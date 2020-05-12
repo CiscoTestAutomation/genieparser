@@ -720,13 +720,19 @@ class ShowInterfaces(ShowInterfacesSchema):
             r'(?P<admin_status>\S+), +Physical +link +is +(?P<oper_status>\S+)$')
 
         # Interface index: 148, SNMP ifIndex: 526
-        p2 = re.compile(r'^Interface +index: +(?P<local_index>\d+), +SNMP +ifIndex: +(?P<snmp_index>\d+)(, +Generation: +\S+)$')
+        p2 = re.compile(r'^Interface +index: +(?P<local_index>\d+), +'
+            r'SNMP +ifIndex: +(?P<snmp_index>\d+)'
+            r'(, +Generation: +\S+)$')
 
         # Description: none/100G/in/hktGCS002_ge-0/0/0
         p3 = re.compile(r'^Description: +(?P<description>\S+)$')
 
         # Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
-        p4 = re.compile(r'^(Type: +\S+, )?Link-level +type: +(?P<link_level_type>\S+), +MTU: +(?P<mtu>\S+)(, +MRU: +(?P<mru>\d+))?(, +(?P<sonet_mode>\S+) +mode)?(, +Speed: +(?P<speed>\S+))?(, +BPDU +Error: +(?P<bpdu_error>\S+),)?$')
+        p4 = re.compile(r'^(Type: +\S+, )?Link-level +type: +'
+            r'(?P<link_level_type>\S+), +MTU: +(?P<mtu>\S+)'
+            r'(, +MRU: +(?P<mru>\d+))?(, +(?P<sonet_mode>\S+) +mode)?'
+            r'(, +Speed: +(?P<speed>\S+))?(, +BPDU +Error: +'
+            r'(?P<bpdu_error>\S+),)?$')
         
         # Speed: 800mbps
         p4_1 = re.compile(r'^Speed: +(?P<speed>\S+)$')
@@ -745,7 +751,8 @@ class ShowInterfaces(ShowInterfacesSchema):
             r'Remote +fault: +(?P<if_remote_fault>\S+)$')
 
         # Pad to minimum frame size: Disabled
-        p7 = re.compile(r'^Pad +to +minimum +frame +size: +(?P<pad_to_minimum_frame_size>\S+)$')
+        p7 = re.compile(r'^Pad +to +minimum +frame +size: +'
+            r'(?P<pad_to_minimum_frame_size>\S+)$')
 
         # Device flags   : Present Running
         p8 = re.compile(r'^Device +flags +: +(?P<if_device_flags>[\S\s]+)$')
@@ -761,7 +768,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         p10_1 = re.compile(r'^Link +type +: +(?P<link_type>\S+)$')
 
         # CoS queues     : 8 supported, 8 maximum usable queues
-        p11 = re.compile(r'^CoS +queues +: +(?P<physical_interface_cos_hw_max_queues>\d+) '
+        p11 = re.compile(r'^CoS +queues +: +(?P<physical_interface_cos_hw_max_queues>\d+) +'
             r'supported, +(?P<physical_interface_cos_use_max_queues>\d+) maximum +'
             r'usable +queues$')
 
@@ -777,13 +784,17 @@ class ShowInterfaces(ShowInterfacesSchema):
             r'bps +\((?P<input_pps>\d+) +pps\)$')
         
         # Input  bytes  :          19732539397                 3152 bps
-        p14_1 = re.compile(r'^Input +bytes *: +(?P<input_bytes>\S+)( +(?P<input_bps>\S+) +bps)?$')
+        p14_1 = re.compile(r'^Input +bytes *: +(?P<input_bytes>\S+)'
+            r'( +(?P<input_bps>\S+) +bps)?$')
         # Output bytes  :          16367814635                 3160 bps
-        p14_2 = re.compile(r'^Output +bytes *: +(?P<output_bytes>\S+)( +(?P<output_bps>\S+) +bps)?$')
+        p14_2 = re.compile(r'^Output +bytes *: +(?P<output_bytes>\S+)'
+            r'( +(?P<output_bps>\S+) +bps)?$')
         # Input  packets:            133726363                    5 pps
-        p14_3 = re.compile(r'^Input +packets *: +(?P<input_packets>\S+)( +(?P<input_pps>\S+) +pps)?$')
+        p14_3 = re.compile(r'^Input +packets *: +(?P<input_packets>\S+)'
+            r'( +(?P<input_pps>\S+) +pps)?$')
         # Output packets:            129306863                    4 pps
-        p14_4 = re.compile(r'^Output +packets *: +(?P<output_packets>\S+)( +(?P<output_pps>\S+) +pps)?$')
+        p14_4 = re.compile(r'^Output +packets *: +(?P<output_packets>\S+)'
+            r'( +(?P<output_pps>\S+) +pps)?$')
         
         # Output rate    : 3080 bps (3 pps)
         p15 = re.compile(r'^Output +rate +: +(?P<output_bps>\d+) +'
@@ -821,10 +832,14 @@ class ShowInterfaces(ShowInterfacesSchema):
             r'(?P<interface_transmit_statistics>\S+)$')
 
         # Logical interface ge-0/0/0.0 (Index 333) (SNMP ifIndex 606)
-        p24 = re.compile(r'^Logical +interface +(?P<name>\S+) +\(Index +(?P<local_index>\d+)\) +\(SNMP +ifIndex +(?P<snmp_index>\d+)\)( +\(Generation +\S+\))?$')
+        p24 = re.compile(r'^Logical +interface +(?P<name>\S+) +'
+            r'\(Index +(?P<local_index>\d+)\) +\(SNMP +ifIndex +'
+            r'(?P<snmp_index>\d+)\)( +\(Generation +\S+\))?$')
 
         # Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
-        p25 = re.compile(r'^Flags: +(?P<iff_up>\S+)( +SNMP-Traps)?( +(?P<internal_flags>\S+))? +Encapsulation: +(?P<encapsulation>\S+)$')
+        p25 = re.compile(r'^Flags: +(?P<iff_up>\S+)( +SNMP-Traps)?'
+            r'( +(?P<internal_flags>\S+))? +Encapsulation: +'
+            r'(?P<encapsulation>\S+)$')
 
         # Input packets : 133657033
         p26 = re.compile(r'^Input +packets *: +(?P<input_packets>\S+)$')
@@ -864,7 +879,8 @@ class ShowInterfaces(ShowInterfacesSchema):
         p36 = re.compile(r'^IPv6 +transit +statistics:$')
 
         # Dropped traffic statistics due to STP State:
-        p37 = re.compile(r'^Dropped +traffic +statistics +due +to +STP +State:$')
+        p37 = re.compile(r'^Dropped +traffic +statistics +due +to +'
+            r'STP +State:$')
 
         # Transit statistics:
         p38 = re.compile(r'^Transit +statistics:$')
@@ -873,7 +889,8 @@ class ShowInterfaces(ShowInterfacesSchema):
         p39 = re.compile(r'^Hold-times +: +Up +\d+ +ms, +Down +\d+ +ms$')
 
         # Damping        : half-life: 0 sec, max-suppress: 0 sec, reuse: 0, suppress: 0, state: unsuppressed
-        p40 = re.compile(r'^Damping +: +half-life: +\d+ +sec, +max-suppress: +\d+ +sec, +reuse: +\d+, +suppress: +\d+, +state: +\S+$')
+        p40 = re.compile(r'^Damping +: +half-life: +\d+ +sec, +max-suppress: +'
+            r'\d+ +sec, +reuse: +\d+, +suppress: +\d+, +state: +\S+$')
 
         # Input errors:
         p41 = re.compile(r'^Input +errors:$')
@@ -882,46 +899,68 @@ class ShowInterfaces(ShowInterfacesSchema):
         p42 = re.compile(r'^Output +errors:$')
 
         # Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Policed discards: 0, L3 incompletes: 0, L2 channel errors: 0,
-        p43_1 = re.compile(r'^Errors: +(?P<input_errors>\d+), +Drops: +(?P<input_drops>\d+), +Framing +errors: +(?P<framing_errors>\d+), +Runts: +(?P<input_runts>\d+), Policed +discards: +(?P<input_discards>\d+), +L3 +incompletes: +(?P<input_l3_incompletes>\d+), +L2 +channel +errors: +(?P<input_l2_channel_errors>\d+),$')
+        p43_1 = re.compile(r'^Errors: +(?P<input_errors>\d+), +Drops: +'
+            r'(?P<input_drops>\d+), +Framing +errors: +(?P<framing_errors>\d+), +'
+            r'Runts: +(?P<input_runts>\d+), Policed +discards: +'
+            r'(?P<input_discards>\d+), +L3 +incompletes: +'
+            r'(?P<input_l3_incompletes>\d+), +L2 +channel +errors: +'
+            r'(?P<input_l2_channel_errors>\d+),$')
         
         # L2 mismatch timeouts: 0, FIFO errors: 0, Resource errors: 0
-        p43_2 = re.compile(r'^L2 +mismatch +timeouts: +(?P<input_l2_mismatch_timeouts>\d+), +FIFO +errors: +(?P<input_fifo_errors>\d+), +Resource +errors: +(?P<input_resource_errors>\d+)')
+        p43_2 = re.compile(r'^L2 +mismatch +timeouts: +'
+            r'(?P<input_l2_mismatch_timeouts>\d+), +FIFO +errors: +'
+            r'(?P<input_fifo_errors>\d+), +Resource +errors: +'
+            r'(?P<input_resource_errors>\d+)')
 
         # Carrier transitions: 1, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0, FIFO errors: 0, HS link CRC errors: 0,
-        p44_1 = re.compile(r'^Carrier +transitions: +(?P<carrier_transitions>\d+), +Errors: +(?P<output_errors>\d+), +Drops: +(?P<output_drops>\d+), +Collisions: +(?P<output_collisions>\d+), +Aged+ packets: +(?P<aged_packets>\d+), +FIFO +errors: +(?P<output_fifo_errors>\d+), +HS +link +CRC +errors: +(?P<hs_link_crc_errors>\d+),$')
+        p44_1 = re.compile(r'^Carrier +transitions: +(?P<carrier_transitions>\d+), +'
+            r'Errors: +(?P<output_errors>\d+), +Drops: +(?P<output_drops>\d+), +'
+            r'Collisions: +(?P<output_collisions>\d+), +Aged+ packets: +'
+            r'(?P<aged_packets>\d+), +FIFO +errors: +(?P<output_fifo_errors>\d+), +'
+            r'HS +link +CRC +errors: +(?P<hs_link_crc_errors>\d+),$')
 
         # MTU errors: 0, Resource errors: 0
-        p44_2 = re.compile(r'^MTU +errors: +(?P<mtu_errors>\d+), +Resource +errors: +(?P<output_resource_errors>\d+)$')
+        p44_2 = re.compile(r'^MTU +errors: +(?P<mtu_errors>\d+), +Resource +'
+            r'errors: +(?P<output_resource_errors>\d+)$')
         
         # Total octets                   21604601324      16828244544
-        p45 = re.compile(r'^Total +octets +(?P<input_bytes>\d+) +(?P<output_bytes>\d+)$')
+        p45 = re.compile(r'^Total +octets +(?P<input_bytes>\d+) +'
+            r'(?P<output_bytes>\d+)$')
 
         # MAC statistics:                      Receive         Transmit
         p45_1 = re.compile(r'^MAC +statistics: +Receive +Transmit$')
 
         # Total packets                    133726919        129183374
-        p46 = re.compile(r'^Total +packets +(?P<input_packets>\d+) +(?P<output_packets>\d+)')
+        p46 = re.compile(r'^Total +packets +(?P<input_packets>\d+) +'
+            r'(?P<output_packets>\d+)')
 
         # Unicast packets                  133726908        129183361
-        p47 = re.compile(r'^Unicast +packets +(?P<input_unicasts>\d+) +(?P<output_unicasts>\d+)$')
+        p47 = re.compile(r'^Unicast +packets +(?P<input_unicasts>\d+) +'
+            r'(?P<output_unicasts>\d+)$')
 
         # Broadcast packets                        0                0
-        p48 = re.compile(r'^Broadcast +packets +(?P<input_broadcasts>\d+) +(?P<output_broadcasts>\d+)$')
+        p48 = re.compile(r'^Broadcast +packets +(?P<input_broadcasts>\d+) +'
+            r'(?P<output_broadcasts>\d+)$')
 
         # Multicast packets                        0                0
-        p49 = re.compile(r'^Multicast +packets +(?P<input_multicasts>\d+) +(?P<output_multicasts>\d+)$')
+        p49 = re.compile(r'^Multicast +packets +(?P<input_multicasts>\d+) +'
+            r'(?P<output_multicasts>\d+)$')
 
         # CRC/Align errors                         0                0
-        p50 = re.compile(r'^CRC\/Align +errors +(?P<input_crc_errors>\d+) +(?P<output_crc_errors>\d+)$')
+        p50 = re.compile(r'^CRC\/Align +errors +(?P<input_crc_errors>\d+) +'
+            r'(?P<output_crc_errors>\d+)$')
 
         # FIFO errors                              0                0
-        p51 = re.compile(r'^FIFO +errors +(?P<input_fifo_errors>\d+) +(?P<output_fifo_errors>\d+)$')
+        p51 = re.compile(r'^FIFO +errors +(?P<input_fifo_errors>\d+) +'
+            r'(?P<output_fifo_errors>\d+)$')
 
         # MAC control frames                       0                0
-        p52 = re.compile(r'^MAC +control +frames +(?P<input_mac_control_frames>\d+) +(?P<output_mac_control_frames>\d+)$')
+        p52 = re.compile(r'^MAC +control +frames +(?P<input_mac_control_frames>\d+) +'
+            r'(?P<output_mac_control_frames>\d+)$')
 
         # MAC pause frames                         0                0
-        p53 = re.compile(r'^MAC +pause +frames +(?P<input_mac_pause_frames>\d+) +(?P<output_mac_pause_frames>\d+)$')
+        p53 = re.compile(r'^MAC +pause +frames +(?P<input_mac_pause_frames>\d+) +'
+            r'(?P<output_mac_pause_frames>\d+)$')
 
         # Oversized frames                         0
         p54 = re.compile(r'^Oversized +frames +(?P<input_oversized_frames>\d+)$')
@@ -943,7 +982,6 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # Label-switched interface (LSI) traffic statistics:
         p61 = re.compile(r'^Label-switched +interface +\(LSI\) +traffic +statistics:$')
-
 
         cnt = 0
         for line in out.splitlines():
