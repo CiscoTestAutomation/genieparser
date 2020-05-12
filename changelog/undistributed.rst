@@ -25,21 +25,43 @@
     * Added ShowOspf3DatabaseNetworkDetail for:
         * show ospf3 database network detail
 
+* IOSXE
+    * Updated ShowMacAddressTable for new commnad:
+        * show mac address-table vlan {vlan}
+
+* IOS
+    * Updated ShowMacAddressTable for new commnad:
+        * show mac address-table vlan {vlan}
+
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
 
 * IOSXE
     * Fixed ShowBootvar to support more outputs
+    * Removed duplicate ShowBoot parser & fixed existing ShowBoot parser
     * Fixed ShowDmvpn not executing the command properly on device
-
+    * Update ShowIpRoute:
+        * Fixed regex for VRF name, now supports the '-' character in name.
+    * Updated ShowInterfacesSwitchport:
+        * Fixed the order of conditional statements, now the parser can parse the device output correctly
 * NXOS
     * Updated ShowIpStaticRouteMulticast:
         * Change key 'address_family' into Optional
+    * Updated ShowRunInterface:
+        * Add regex to support various sample outputs
 
+* IOSXR
+    * Updated ShowBgpSessions:
+        * Added regex to support various outputs
+    * Updated ShowBgpInstanceNeighborsDetail:
+        * Updated regex to support various outputs
 * LINUX
     * Fixed Ifconfig parser issues.
 
 * JUNOS
     * Updated ShowRoute:
         * Update regex to support various outputs.
+    * Updated ShowRouteProtocolExtensive:
+        * Update key 'validation-state' as Optional
+

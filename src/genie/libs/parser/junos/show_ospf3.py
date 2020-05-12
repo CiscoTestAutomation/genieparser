@@ -2020,7 +2020,7 @@ class ShowOspf3DatabaseNetworkDetail(ShowOspf3DatabaseNetworkDetailSchema):
         p1 = re.compile(r'^OSPF3 +database, +Area +(?P<ospf_area>\S+)$')
 
         # Network    *0.0.0.9          192.168.219.235   0x8000001d   892  0xf99f  36
-        # Network     0.0.0.3          203.181.99.236   0x80000b14  2142  0x1983  36
+        # Network     0.0.0.3          192.168.219.236   0x80000b14  2142  0x1983  36
         p2 = re.compile(r'^(?P<lsa_type>\S+) *(?P<our_entry>\*)?'
                         r'(?P<lsa_id>[\d\.]+) +(?P<advertising_router>\S+) '
                         r'+(?P<sequence_number>\S+) +(?P<age>\S+) '
@@ -2055,7 +2055,7 @@ class ShowOspf3DatabaseNetworkDetail(ShowOspf3DatabaseNetworkDetailSchema):
                 continue
 
             # Network *10.69.197.1    192.168.219.235   0x80000026  1730  0x22 0x1b56  36
-            # Network     0.0.0.3          203.181.99.236   0x80000b14  2142  0x1983  36
+            # Network     0.0.0.3          192.168.219.236   0x80000b14  2142  0x1983  36
             m = p2.match(line)
             if m:
                 ospf3_database_dict = {}
