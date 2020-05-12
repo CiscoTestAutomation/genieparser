@@ -8,6 +8,14 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
+ 
+* JUNOS
+    * Added ShowOspfNeighborDetail for:
+        * show ospf neighbor {neighbor} detail
+    * Added ShowInterfacesDescriptions for:
+        * show interfaces descriptions
+    * Added ShowPfeRouteSummary for:
+        * show pfe route summary
 
 * JUNOS
     * Added ShowOspfNeighborDetail for:
@@ -45,6 +53,9 @@
         * Fixed regex for VRF name, now supports the '-' character in name.
     * Updated ShowInterfacesSwitchport:
         * Fixed the order of conditional statements, now the parser can parse the device output correctly
+    * Updated ShowAccessLists:
+        * Fixed a typo in code.
+
 * NXOS
     * Updated ShowIpStaticRouteMulticast:
         * Change key 'address_family' into Optional
@@ -52,6 +63,10 @@
         * Add regex to support various sample outputs
     * Updated ShowInterfaceStatus:
         * Fix a regex pattern to support various outputs
+    * Updated ShowInterface
+        * Added regex to support interfaces down for SFP Not Inserted
+        * Added regex to support interfaces down for ErrDisabled
+        * Added regex to support interfaces down due to being suspended (LACP)
 
 * IOSXR
     * Updated ShowBgpSessions:
@@ -67,3 +82,8 @@
     * Updated ShowRouteProtocolExtensive:
         * Update key 'validation-state' as Optional
 
+
+* IOS 
+    * Updated ShowIpArp
+        * Added argument 'output' into super().cli()
+                

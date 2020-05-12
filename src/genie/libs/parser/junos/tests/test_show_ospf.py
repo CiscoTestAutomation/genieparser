@@ -7722,6 +7722,9 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "te-subtlv": {
                             "formatted-tlv-data": [
                                 "1",
+                                "32",
+                                "0",
+                                "0x40",
                                 "10.169.14.240",
                                 "10.169.14.18",
                                 "0xe0",
@@ -8446,7 +8449,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                     "lsa-id": "10.64.0.17",
                     "lsa-length": "104",
                     "lsa-type": "OpaqArea",
-                    "options": "0x20",
+                    "options": "0x22",
                     "ospf-database-extensive": {
                         "aging-timer": {"#text": "00:44:47"},
                         "expiration-time": {"#text": "00:44:47"},
@@ -8988,6 +8991,9 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                                 "4",
                                 "1",
+                                "4",
+                                "4",
+                                "7",
                                 "1",
                                 "1",
                                 "3",
@@ -9094,7 +9100,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                     "lsa-id": "10.64.0.31",
                     "lsa-length": "60",
                     "lsa-type": "OpaqArea",
-                    "options": "0x22",
+                    "options": "0x20",
                     "ospf-database-extensive": {
                         "aging-timer": {"#text": "00:58:06"},
                         "expiration-time": {"#text": "00:58:06"},
@@ -9158,6 +9164,9 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                                 "4",
                                 "2",
+                                "3",
+                                "4",
+                                "32769",
                                 "1",
                                 "2",
                                 "3",
@@ -9180,7 +9189,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                     "lsa-id": "10.64.0.32",
                     "lsa-length": "60",
                     "lsa-type": "OpaqArea",
-                    "options": "0x22",
+                    "options": "0x20",
                     "ospf-database-extensive": {
                         "aging-timer": {"#text": "00:42:02"},
                         "expiration-time": {"#text": "00:42:02"},
@@ -9236,7 +9245,6 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                             ],
                             "tlv-type-value": [
                                 "1",
-                                "2",
                                 "3",
                                 "2",
                                 "1",
@@ -9245,7 +9253,8 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "4",
                                 "2",
                                 "1",
-                                "2",
+                                "1",
+                                "1",
                                 "3",
                                 "4",
                             ],
@@ -9296,11 +9305,15 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "4",
                                 "7",
                                 "1",
+                                "3",
+                                "8",
                                 "1",
                                 "1",
                                 "3",
                                 "7",
                                 "1",
+                                "3",
+                                "12",
                                 "1",
                                 "1",
                                 "3",
@@ -9334,6 +9347,26 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "2",
                                 "3",
                                 "4",
+                                "8",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "32768",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "9",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "32769",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
                             ],
                         },
                         "tlv-block": {
@@ -9352,7 +9385,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                     "lsa-id": "10.64.0.38",
                     "lsa-length": "60",
                     "lsa-type": "OpaqArea",
-                    "options": "0x22",
+                    "options": "0x20",
                     "ospf-database-extensive": {
                         "aging-timer": {"#text": "00:39:02"},
                         "expiration-time": {"#text": "00:39:03"},
@@ -9390,6 +9423,26 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "1",
                                 "1",
                                 "3",
+                                "4",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "4",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "8",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
+                                "12",
+                                "1",
+                                "1",
+                                "1",
+                                "3",
                             ],
                             "tlv-type-name": [
                                 "Link Type",
@@ -9416,6 +9469,26 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "3",
                                 "4",
                                 "2",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "8",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "32768",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "9",
+                                "1",
+                                "2",
+                                "3",
+                                "4",
+                                "32769",
                                 "1",
                                 "2",
                                 "3",
@@ -9960,7 +10033,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                     "lsa-id": "10.64.8.74",
                     "lsa-length": "92",
                     "lsa-type": "OpaqArea",
-                    "options": "0x20",
+                    "options": "0x22",
                     "ospf-database-extensive": {
                         "aging-timer": {"#text": "00:54:34"},
                         "expiration-time": {"#text": "00:54:34"},
@@ -10005,7 +10078,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "1",
                                 "1",
                                 "3",
-                                "4",
+                                "7",
                                 "1",
                                 "1",
                                 "1",
@@ -10050,7 +10123,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 "MT ID",
                                 "Weight",
                                 "Label",
-                                "Invalid",
+                                "Adjacency Sid",
                                 "Flags",
                                 "MT ID",
                                 "Weight",
@@ -10919,6 +10992,80 @@ class TestShowOspfNeighborDetail(unittest.TestCase):
                         "ospf-topology-name": "default",
                     },
                 },
+            ]
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfInterfaceExtensive(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspfInterfaceExtensive(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class TestShowOspfNeighborDetail(unittest.TestCase):
+    """ Unit tests for:
+            * show ospf neighbor detail
+    """
+
+    device = Device(name="aDevice")
+
+    maxDiff = None
+
+    empty_output = {"execute.return_value": ""}
+
+    golden_output = {
+        "execute.return_value": """
+        show ospf neighbor detail
+        Address          Interface              State     ID               Pri  Dead
+        10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    39
+        Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+        Up 3w0d 16:50:35, adjacent 3w0d 16:50:35
+        SPRING Adjacency Labels:
+
+            Label       Flags       Adj-Sid-Type
+
+            28985       BVL         Protected
+
+            28986       VL          UnProtected
+
+        Topology default (ID 0) -> Bidirectional
+        10.169.14.121   ge-0/0/1.0             Full      10.169.14.240   128    31
+        Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+        Up 3w2d 03:12:20, adjacent 3w2d 03:12:15
+        SPRING Adjacency Labels:
+
+            Label       Flags       Adj-Sid-Type
+
+            2567        BVL         Protected
+
+            2568        VL          UnProtected
+
+        Topology default (ID 0) -> Bidirectional
+        10.19.198.26     ge-0/0/2.0             Full      10.19.198.239      1    39
+        Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+        Up 1w5d 20:40:14, adjacent 1w5d 20:40:14
+        SPRING Adjacency Labels:
+
+            Label       Flags       Adj-Sid-Type
+
+            167966      BVL         Protected
+
+            167967      VL          UnProtected
+
+        Topology default (ID 0) -> Bidirectional
+    """
+    }
+
+    golden_parsed_output = {
+        "ospf-neighbor-information": {
+            "ospf-neighbor": [
                 {
                     "activity-timer": "39",
                     "adj-sid-list": {
@@ -13430,6 +13577,7 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
             ipaddress='10.34.2.250'
         )
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 if __name__ == "__main__":
     unittest.main()
