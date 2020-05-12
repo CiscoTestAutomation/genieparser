@@ -3387,16 +3387,25 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         # Po1           VPC_PeerLink       connected trunk     full    40G     --
         # Vlan366       BigData            connected routed    auto    auto    --
         # Eth101/1/10   DO-HYPER-03        connected 101       full    a-1000
-
         p1 = re.compile(r'(?P<interface>(\S+)) +(?P<name>(\S+))? '
                         r'+(?P<status>(\S+))? +(?P<vlan>(\S+))'
                         r' +(?P<duplex_code>(\S+)) '
                         r'+(?P<port_speed>(\S+))( +(?P<type>(\S+)))?$')
 
+        # Eth1/5 *** L2 L3-CIS-N connected trunk full a-1000 1000base-T
+        # Eth1/4 *** FEX 2248TP  connected 1     full a-10G  Fabric Exte
+        p1_1 = re.compile(r'^(?P<interface>(\S+)) '
+                          r'+(?P<name>(\*\*\*\s)([\S\s]+)) '
+                          r'+(?P<status>([a-z]+)) '
+                          r'+(?P<vlan>([a-z\d]+)) '
+                          r'+(?P<duplex_code>([a-z]+)) '
+                          r'+(?P<port_speed>(\S+)) '
+                          r'+(?P<type>([\S\s]+))$')
+
         for line in out.splitlines():
             line = line.strip()
 
-            m = p1.match(line)
+            m = p1.match(line) or p1_1.match(line)
             if m and m.groupdict()['name'] != 'Name':
                 group = m.groupdict()
                 interface = Common.convert_intf_name(group['interface'])
