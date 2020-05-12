@@ -772,7 +772,7 @@ class ShowInterfaces(ShowInterfacesSchema):
             r'supported, +(?P<physical_interface_cos_use_max_queues>\d+) maximum +'
             r'usable +queues$')
 
-        # Current address: 00:50:56:8d:c8:29, Hardware address: 00:50:56:8d:c8:29
+        # Current address: 00:50:56:ff:56:b6, Hardware address: 00:50:56:ff:56:b6
         p12 = re.compile(r'^Current +address: +(?P<current_physical_address>\S+), +'
             r'Hardware +address: +(?P<hardware_physical_address>\S+)$')
 
@@ -864,7 +864,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Addresses, Flags: Is-Preferred Is-Primary
         p32 = re.compile(r'^Addresses, +Flags: +(?P<flags>[\S\s]+)$')
 
-        # Destination: 111.87.5.92/30, Local: 111.87.5.93, Broadcast: 111.87.5.95
+        # Destination: 10.189.5.92/30, Local: 10.189.5.93, Broadcast: 10.189.5.95
         p33 = re.compile(r'^Destination: +(?P<ifa_destination>\S+)'
             r', +Local: +(?P<ifa_local>\S+)'
             r'(, +Broadcast: +(?P<ifa_broadcast>\S+))?$')
@@ -1110,7 +1110,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                     v for k, v in group.items() if v is not None})
                 continue
 
-            # Current address: 00:50:56:8d:c8:29, Hardware address: 00:50:56:8d:c8:29
+            # Current address: 00:50:56:ff:56:b6, Hardware address: 00:50:56:ff:56:b6
             m = p12.match(line)
             if m:
                 group = m.groupdict()
@@ -1423,7 +1423,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                     address_family_dict.setdefault('interface-address', interface_address_dict)
                 continue
 
-            # Destination: 111.87.5.92/30, Local: 111.87.5.93, Broadcast: 111.87.5.95
+            # Destination: 10.189.5.92/30, Local: 10.189.5.93, Broadcast: 10.189.5.95
             m = p33.match(line)
             if m:
                 group = m.groupdict()

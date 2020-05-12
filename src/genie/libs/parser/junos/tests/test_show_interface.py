@@ -385,7 +385,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "@junos:format": "Enabled"
                     },
                     "bpdu-error": "None",
-                    "current-physical-address": "00:50:56:8d:c8:29",
+                    "current-physical-address": "00:50:56:ff:56:b6",
                     "description": "none/100G/in/hktGCS002_ge-0/0/0",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
@@ -398,7 +398,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "bit-error-seconds": "0",
                         "errored-blocks-seconds": "0"
                     },
-                    "hardware-physical-address": "00:50:56:8d:c8:29",
+                    "hardware-physical-address": "00:50:56:ff:56:b6",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-snmp-traps": True,
@@ -428,13 +428,13 @@ class TestShowInterfaces(unittest.TestCase):
                                 },
                                 "address-family-name": "inet",
                                 "interface-address": {
-                                    "ifa-broadcast": "111.87.5.95",
-                                    "ifa-destination": "111.87.5.92/30",
+                                    "ifa-broadcast": "10.189.5.95",
+                                    "ifa-destination": "10.189.5.92/30",
                                     "ifa-flags": {
                                         "ifaf-is-preferred": True,
                                         "ifaf-is-primary": True
                                     },
-                                    "ifa-local": "111.87.5.93"
+                                    "ifa-local": "10.189.5.93"
                                 },
                                 "intf-curr-cnt": "1",
                                 "intf-dropcnt": "0",
@@ -450,19 +450,19 @@ class TestShowInterfaces(unittest.TestCase):
                                 "address-family-name": "inet6",
                                 "interface-address": [
                                     {
-                                        "ifa-destination": "2001:268:fb90:14::/64",
+                                        "ifa-destination": "2001:db8:223c:2c16::/64",
                                         "ifa-flags": {
                                             "ifaf-is-preferred": True,
                                             "ifaf-is-primary": True
                                         },
-                                        "ifa-local": "2001:268:fb90:14::1"
+                                        "ifa-local": "2001:db8:223c:2c16::1"
                                     },
                                     {
                                         "ifa-destination": "fe80::/64",
                                         "ifa-flags": {
                                             "ifaf-is-preferred": True
                                         },
-                                        "ifa-local": "fe80::250:56ff:fe8d:c829"
+                                        "ifa-local": "fe80::250:56ff:feff:56b6"
                                     }
                                 ],
                                 "intf-curr-cnt": "1",
@@ -702,7 +702,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "@junos:format": "Enabled"
                     },
                     "bpdu-error": "None",
-                    "current-physical-address": "00:50:56:8d:a9:6c",
+                    "current-physical-address": "00:50:56:ff:37:f9",
                     "description": "YW7079/9.6G/BB/sjkGCS001-EC11_xe-0/1/5[SJC]_Area8_Cost100",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
@@ -715,7 +715,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "bit-error-seconds": "0",
                         "errored-blocks-seconds": "0"
                     },
-                    "hardware-physical-address": "00:50:56:8d:a9:6c",
+                    "hardware-physical-address": "00:50:56:ff:37:f9",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-snmp-traps": True,
@@ -745,13 +745,13 @@ class TestShowInterfaces(unittest.TestCase):
                                 },
                                 "address-family-name": "inet",
                                 "interface-address": {
-                                    "ifa-broadcast": "106.187.14.123",
-                                    "ifa-destination": "106.187.14.120/30",
+                                    "ifa-broadcast": "10.169.14.123",
+                                    "ifa-destination": "10.169.14.120/30",
                                     "ifa-flags": {
                                         "ifaf-is-preferred": True,
                                         "ifaf-is-primary": True
                                     },
-                                    "ifa-local": "106.187.14.122"
+                                    "ifa-local": "10.169.14.122"
                                 },
                                 "intf-curr-cnt": "1",
                                 "intf-dropcnt": "0",
@@ -764,19 +764,19 @@ class TestShowInterfaces(unittest.TestCase):
                                 "address-family-name": "inet6",
                                 "interface-address": [
                                     {
-                                        "ifa-destination": "2001:268:fb8f:1f::/64",
+                                        "ifa-destination": "2001:db8:eb18:6337::/64",
                                         "ifa-flags": {
                                             "ifaf-is-preferred": True,
                                             "ifaf-is-primary": True
                                         },
-                                        "ifa-local": "2001:268:fb8f:1f::2"
+                                        "ifa-local": "2001:db8:eb18:6337::2"
                                     },
                                     {
                                         "ifa-destination": "fe80::/64",
                                         "ifa-flags": {
                                             "ifaf-is-preferred": True
                                         },
-                                        "ifa-local": "fe80::250:56ff:fe8d:a96c"
+                                        "ifa-local": "fe80::250:56ff:feff:37f9"
                                     }
                                 ],
                                 "intf-curr-cnt": "2",
@@ -844,7 +844,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "@junos:format": "Enabled"
                     },
                     "bpdu-error": "None",
-                    "current-physical-address": "00:50:56:8d:90:2d",
+                    "current-physical-address": "00:50:56:ff:1e:ba",
                     "description": "ve-hkgasr01_Gi2[DefaultCost1000]",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
@@ -857,7 +857,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "bit-error-seconds": "0",
                         "errored-blocks-seconds": "0"
                     },
-                    "hardware-physical-address": "00:50:56:8d:90:2d",
+                    "hardware-physical-address": "00:50:56:ff:1e:ba",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-snmp-traps": True,
@@ -886,13 +886,13 @@ class TestShowInterfaces(unittest.TestCase):
                                 },
                                 "address-family-name": "inet",
                                 "interface-address": {
-                                    "ifa-broadcast": "27.86.198.27",
-                                    "ifa-destination": "27.86.198.24/30",
+                                    "ifa-broadcast": "10.19.198.27",
+                                    "ifa-destination": "10.19.198.24/30",
                                     "ifa-flags": {
                                         "ifaf-is-preferred": True,
                                         "ifaf-is-primary": True
                                     },
-                                    "ifa-local": "27.86.198.25"
+                                    "ifa-local": "10.19.198.25"
                                 },
                                 "intf-curr-cnt": "1",
                                 "intf-dropcnt": "0",
@@ -959,7 +959,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "@junos:format": "Enabled"
                     },
                     "bpdu-error": "None",
-                    "current-physical-address": "00:50:56:8d:06:3e",
+                    "current-physical-address": "00:50:56:ff:93:cb",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
                         "fec_ccw_count": "0",
@@ -971,7 +971,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "bit-error-seconds": "0",
                         "errored-blocks-seconds": "0"
                     },
-                    "hardware-physical-address": "00:50:56:8d:06:3e",
+                    "hardware-physical-address": "00:50:56:ff:93:cb",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-snmp-traps": True,
@@ -1000,13 +1000,13 @@ class TestShowInterfaces(unittest.TestCase):
                                 },
                                 "address-family-name": "inet",
                                 "interface-address": {
-                                    "ifa-broadcast": "100.0.0.255",
+                                    "ifa-broadcast": "10.55.0.255",
                                     "ifa-destination": "100.0.0/24",
                                     "ifa-flags": {
                                         "ifaf-is-preferred": True,
                                         "ifaf-is-primary": True
                                     },
-                                    "ifa-local": "100.0.0.254"
+                                    "ifa-local": "10.55.0.254"
                                 },
                                 "intf-curr-cnt": "1",
                                 "intf-dropcnt": "0",
@@ -1068,7 +1068,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "@junos:format": "Enabled"
                     },
                     "bpdu-error": "None",
-                    "current-physical-address": "00:50:56:8d:b0:9a",
+                    "current-physical-address": "00:50:56:ff:3e:28",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
                         "fec_ccw_count": "0",
@@ -1080,7 +1080,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "bit-error-seconds": "0",
                         "errored-blocks-seconds": "0"
                     },
-                    "hardware-physical-address": "00:50:56:8d:b0:9a",
+                    "hardware-physical-address": "00:50:56:ff:3e:28",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
@@ -1137,7 +1137,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "@junos:format": "Enabled"
                     },
                     "bpdu-error": "None",
-                    "current-physical-address": "2c:6b:f5:18:e8:05",
+                    "current-physical-address": "2c:6b:f5:ff:01:1d",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
                         "fec_ccw_count": "0",
@@ -1149,7 +1149,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "bit-error-seconds": "0",
                         "errored-blocks-seconds": "0"
                     },
-                    "hardware-physical-address": "2c:6b:f5:18:e8:05",
+                    "hardware-physical-address": "2c:6b:f5:ff:01:1d",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
@@ -1206,7 +1206,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "@junos:format": "Enabled"
                     },
                     "bpdu-error": "None",
-                    "current-physical-address": "2c:6b:f5:18:e8:06",
+                    "current-physical-address": "2c:6b:f5:ff:01:1e",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
                         "fec_ccw_count": "0",
@@ -1218,7 +1218,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "bit-error-seconds": "0",
                         "errored-blocks-seconds": "0"
                     },
-                    "hardware-physical-address": "2c:6b:f5:18:e8:06",
+                    "hardware-physical-address": "2c:6b:f5:ff:01:1e",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
@@ -1275,7 +1275,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "@junos:format": "Enabled"
                     },
                     "bpdu-error": "None",
-                    "current-physical-address": "2c:6b:f5:18:e8:07",
+                    "current-physical-address": "2c:6b:f5:ff:01:1f",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
                         "fec_ccw_count": "0",
@@ -1287,7 +1287,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "bit-error-seconds": "0",
                         "errored-blocks-seconds": "0"
                     },
-                    "hardware-physical-address": "2c:6b:f5:18:e8:07",
+                    "hardware-physical-address": "2c:6b:f5:ff:01:1f",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
@@ -1344,7 +1344,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "@junos:format": "Enabled"
                     },
                     "bpdu-error": "None",
-                    "current-physical-address": "2c:6b:f5:18:e8:08",
+                    "current-physical-address": "2c:6b:f5:ff:01:20",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
                         "fec_ccw_count": "0",
@@ -1356,7 +1356,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "bit-error-seconds": "0",
                         "errored-blocks-seconds": "0"
                     },
-                    "hardware-physical-address": "2c:6b:f5:18:e8:08",
+                    "hardware-physical-address": "2c:6b:f5:ff:01:20",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
@@ -1413,7 +1413,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "@junos:format": "Enabled"
                     },
                     "bpdu-error": "None",
-                    "current-physical-address": "2c:6b:f5:18:e8:09",
+                    "current-physical-address": "2c:6b:f5:ff:01:21",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
                         "fec_ccw_count": "0",
@@ -1425,7 +1425,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "bit-error-seconds": "0",
                         "errored-blocks-seconds": "0"
                     },
-                    "hardware-physical-address": "2c:6b:f5:18:e8:09",
+                    "hardware-physical-address": "2c:6b:f5:ff:01:21",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
@@ -1471,8 +1471,8 @@ class TestShowInterfaces(unittest.TestCase):
                     "admin-status": {
                         "@junos:format": "Enabled"
                     },
-                    "current-physical-address": "2c:6b:f5:18:e8:11",
-                    "hardware-physical-address": "2c:6b:f5:18:e8:11",
+                    "current-physical-address": "2c:6b:f5:ff:01:29",
+                    "hardware-physical-address": "2c:6b:f5:ff:01:29",
                     "if-config-flags": {
                         "iff-snmp-traps": True
                     },
@@ -1540,8 +1540,8 @@ class TestShowInterfaces(unittest.TestCase):
                     "admin-status": {
                         "@junos:format": "Enabled"
                     },
-                    "current-physical-address": "00:50:56:8d:55:34",
-                    "hardware-physical-address": "00:50:56:8d:55:34",
+                    "current-physical-address": "00:50:56:ff:e2:c1",
+                    "hardware-physical-address": "00:50:56:ff:e2:c1",
                     "if-config-flags": {
                         "iff-snmp-traps": True
                     },
@@ -1570,24 +1570,24 @@ class TestShowInterfaces(unittest.TestCase):
                                         "ifa-local": "10.0.0.4"
                                     },
                                     {
-                                        "ifa-broadcast": "191.255.255.255",
+                                        "ifa-broadcast": "172.16.16.255",
                                         "ifa-destination": "128/2",
                                         "ifa-flags": {
                                             "ifaf-is-preferred": True,
                                             "ifaf-kernel": True,
                                             "ifaf-preferred": True
                                         },
-                                        "ifa-local": "128.0.0.1"
+                                        "ifa-local": "172.16.64.1"
                                     },
                                     {
-                                        "ifa-broadcast": "191.255.255.255",
+                                        "ifa-broadcast": "172.16.16.255",
                                         "ifa-destination": "128/2",
                                         "ifa-flags": {
                                             "ifaf-is-default": True,
                                             "ifaf-is-primary": True,
                                             "ifaf-primary": True
                                         },
-                                        "ifa-local": "128.0.0.4"
+                                        "ifa-local": "172.16.64.4"
                                     }
                                 ],
                                 "intf-curr-cnt": "1",
@@ -1608,10 +1608,10 @@ class TestShowInterfaces(unittest.TestCase):
                                         "ifa-flags": {
                                             "ifaf-is-preferred": True
                                         },
-                                        "ifa-local": "fe80::250:56ff:fe8d:5534"
+                                        "ifa-local": "fe80::250:56ff:feff:e2c1"
                                     },
                                     {
-                                        "ifa-destination": "fec0::/64",
+                                        "ifa-destination": "2001:db8:8d82::/64",
                                         "ifa-flags": {
                                             "ifaf-is-default": True,
                                             "ifaf-is-preferred": True,
@@ -1904,8 +1904,8 @@ class TestShowInterfaces(unittest.TestCase):
                     "admin-status": {
                         "@junos:format": "Enabled"
                     },
-                    "current-physical-address": "00:50:56:8d:7c:08",
-                    "hardware-physical-address": "00:50:56:8d:7c:08",
+                    "current-physical-address": "00:50:56:ff:0a:95",
+                    "hardware-physical-address": "00:50:56:ff:0a:95",
                     "if-config-flags": {
                         "iff-snmp-traps": True
                     },
@@ -1926,13 +1926,13 @@ class TestShowInterfaces(unittest.TestCase):
                                 },
                                 "address-family-name": "inet",
                                 "interface-address": {
-                                    "ifa-broadcast": "1.0.0.255",
+                                    "ifa-broadcast": "10.1.0.255",
                                     "ifa-destination": "1.0.0/24",
                                     "ifa-flags": {
                                         "ifaf-is-preferred": True,
                                         "ifaf-is-primary": True
                                     },
-                                    "ifa-local": "1.0.0.101"
+                                    "ifa-local": "10.1.0.101"
                                 },
                                 "intf-curr-cnt": "2",
                                 "intf-dropcnt": "0",
@@ -2004,8 +2004,8 @@ class TestShowInterfaces(unittest.TestCase):
                     "admin-status": {
                         "@junos:format": "Enabled"
                     },
-                    "current-physical-address": "2c:6b:f5:18:ef:f0",
-                    "hardware-physical-address": "2c:6b:f5:18:ef:f0",
+                    "current-physical-address": "2c:6b:f5:ff:08:09",
+                    "hardware-physical-address": "2c:6b:f5:ff:08:09",
                     "if-config-flags": {
                         "iff-snmp-traps": True
                     },
@@ -2032,8 +2032,8 @@ class TestShowInterfaces(unittest.TestCase):
                     "admin-status": {
                         "@junos:format": "Enabled"
                     },
-                    "current-physical-address": "2c:6b:f5:18:ef:c0",
-                    "hardware-physical-address": "2c:6b:f5:18:ef:c0",
+                    "current-physical-address": "2c:6b:f5:ff:08:d8",
+                    "hardware-physical-address": "2c:6b:f5:ff:08:d8",
                     "if-device-flags": {
                         "ifdf-present": True,
                         "ifdf-running": True
@@ -2054,7 +2054,7 @@ class TestShowInterfaces(unittest.TestCase):
                                 },
                                 "address-family-name": "inet",
                                 "interface-address": {
-                                    "ifa-broadcast": "191.255.255.255",
+                                    "ifa-broadcast": "172.16.16.255",
                                     "ifa-destination": "128/2",
                                     "ifa-flags": {
                                         "ifaf-is-default": True,
@@ -2062,7 +2062,7 @@ class TestShowInterfaces(unittest.TestCase):
                                         "ifaf-is-primary": True,
                                         "ifaf-primary": True
                                     },
-                                    "ifa-local": "128.0.0.127"
+                                    "ifa-local": "172.16.64.127"
                                 },
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
@@ -2125,7 +2125,7 @@ class TestShowInterfaces(unittest.TestCase):
                                         "ifaf-is-default": True,
                                         "ifaf-is-primary": True
                                     },
-                                    "ifa-local": "111.87.5.252"
+                                    "ifa-local": "10.189.5.252"
                                 },
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
@@ -2268,8 +2268,8 @@ class TestShowInterfaces(unittest.TestCase):
                     "admin-status": {
                         "@junos:format": "Enabled"
                     },
-                    "current-physical-address": "2c:6b:f5:18:ef:b0",
-                    "hardware-physical-address": "2c:6b:f5:18:ef:b0",
+                    "current-physical-address": "2c:6b:f5:ff:08:c8",
+                    "hardware-physical-address": "2c:6b:f5:ff:08:c8",
                     "if-config-flags": {
                         "iff-snmp-traps": True
                     },
@@ -2399,7 +2399,7 @@ class TestShowInterfaces(unittest.TestCase):
         Interface flags: SNMP-Traps Internal: 0x4000
         Link flags     : None
         CoS queues     : 8 supported, 8 maximum usable queues
-        Current address: 00:50:56:8d:c8:29, Hardware address: 00:50:56:8d:c8:29
+        Current address: 00:50:56:ff:56:b6, Hardware address: 00:50:56:ff:56:b6
         Last flapped   : 2019-08-29 09:09:19 UTC (29w6d 18:56 ago)
         Input rate     : 2952 bps (5 pps)
         Output rate    : 3080 bps (3 pps)
@@ -2423,14 +2423,14 @@ class TestShowInterfaces(unittest.TestCase):
             Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
             Flags: No-Redirects, Sendbcast-pkt-to-re
             Addresses, Flags: Is-Preferred Is-Primary
-                Destination: 111.87.5.92/30, Local: 111.87.5.93, Broadcast: 111.87.5.95
+                Destination: 10.189.5.92/30, Local: 10.189.5.93, Broadcast: 10.189.5.95
             Protocol inet6, MTU: 1500
             Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
             Flags: Is-Primary
             Addresses, Flags: Is-Preferred Is-Primary
-                Destination: 2001:268:fb90:14::/64, Local: 2001:268:fb90:14::1
+                Destination: 2001:db8:223c:2c16::/64, Local: 2001:db8:223c:2c16::1
             Addresses, Flags: Is-Preferred
-                Destination: fe80::/64, Local: fe80::250:56ff:fe8d:c829
+                Destination: fe80::/64, Local: fe80::250:56ff:feff:56b6
             Protocol mpls, MTU: 1488, Maximum labels: 3
             Flags: Is-Primary
             Protocol multiservice, MTU: Unlimited
@@ -2512,7 +2512,7 @@ class TestShowInterfaces(unittest.TestCase):
         Interface flags: SNMP-Traps Internal: 0x4000
         Link flags     : None
         CoS queues     : 8 supported, 8 maximum usable queues
-        Current address: 00:50:56:8d:a9:6c, Hardware address: 00:50:56:8d:a9:6c
+        Current address: 00:50:56:ff:37:f9, Hardware address: 00:50:56:ff:37:f9
         Last flapped   : 2019-08-29 09:09:19 UTC (29w6d 18:56 ago)
         Input rate     : 3696 bps (6 pps)
         Output rate    : 7736 bps (9 pps)
@@ -2536,13 +2536,13 @@ class TestShowInterfaces(unittest.TestCase):
             Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
             Flags: No-Redirects, Sendbcast-pkt-to-re
             Addresses, Flags: Is-Preferred Is-Primary
-                Destination: 106.187.14.120/30, Local: 106.187.14.122, Broadcast: 106.187.14.123
+                Destination: 10.169.14.120/30, Local: 10.169.14.122, Broadcast: 10.169.14.123
             Protocol inet6, MTU: 1500
             Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 2, Curr new hold cnt: 0, NH drop cnt: 0
             Addresses, Flags: Is-Preferred Is-Primary
-                Destination: 2001:268:fb8f:1f::/64, Local: 2001:268:fb8f:1f::2
+                Destination: 2001:db8:eb18:6337::/64, Local: 2001:db8:eb18:6337::2
             Addresses, Flags: Is-Preferred
-                Destination: fe80::/64, Local: fe80::250:56ff:fe8d:a96c
+                Destination: fe80::/64, Local: fe80::250:56ff:feff:37f9
             Protocol mpls, MTU: 1488, Maximum labels: 3
             Protocol multiservice, MTU: Unlimited
 
@@ -2557,7 +2557,7 @@ class TestShowInterfaces(unittest.TestCase):
         Interface flags: SNMP-Traps Internal: 0x4000
         Link flags     : None
         CoS queues     : 8 supported, 8 maximum usable queues
-        Current address: 00:50:56:8d:90:2d, Hardware address: 00:50:56:8d:90:2d
+        Current address: 00:50:56:ff:1e:ba, Hardware address: 00:50:56:ff:1e:ba
         Last flapped   : 2020-03-05 16:04:34 UTC (2w6d 12:00 ago)
         Input rate     : 928 bps (1 pps)
         Output rate    : 800 bps (0 pps)
@@ -2581,7 +2581,7 @@ class TestShowInterfaces(unittest.TestCase):
             Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
             Flags: Sendbcast-pkt-to-re
             Addresses, Flags: Is-Preferred Is-Primary
-                Destination: 27.86.198.24/30, Local: 27.86.198.25, Broadcast: 27.86.198.27
+                Destination: 10.19.198.24/30, Local: 10.19.198.25, Broadcast: 10.19.198.27
             Protocol mpls, MTU: 1488, Maximum labels: 3
             Protocol multiservice, MTU: Unlimited
 
@@ -2595,7 +2595,7 @@ class TestShowInterfaces(unittest.TestCase):
         Interface flags: SNMP-Traps Internal: 0x4000
         Link flags     : None
         CoS queues     : 8 supported, 8 maximum usable queues
-        Current address: 00:50:56:8d:06:3e, Hardware address: 00:50:56:8d:06:3e
+        Current address: 00:50:56:ff:93:cb, Hardware address: 00:50:56:ff:93:cb
         Last flapped   : 2019-10-25 08:50:18 UTC (21w5d 19:15 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
@@ -2619,7 +2619,7 @@ class TestShowInterfaces(unittest.TestCase):
             Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
             Flags: Sendbcast-pkt-to-re
             Addresses, Flags: Is-Preferred Is-Primary
-                Destination: 100.0.0/24, Local: 100.0.0.254, Broadcast: 100.0.0.255
+                Destination: 100.0.0/24, Local: 10.55.0.254, Broadcast: 10.55.0.255
             Protocol multiservice, MTU: Unlimited
 
         Physical interface: ge-0/0/4, Enabled, Physical link is Down
@@ -2632,7 +2632,7 @@ class TestShowInterfaces(unittest.TestCase):
         Interface flags: Hardware-Down SNMP-Traps Internal: 0x4000
         Link flags     : None
         CoS queues     : 8 supported, 8 maximum usable queues
-        Current address: 00:50:56:8d:b0:9a, Hardware address: 00:50:56:8d:b0:9a
+        Current address: 00:50:56:ff:3e:28, Hardware address: 00:50:56:ff:3e:28
         Last flapped   : 2019-08-29 09:09:20 UTC (29w6d 18:55 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
@@ -2658,7 +2658,7 @@ class TestShowInterfaces(unittest.TestCase):
         Interface flags: Hardware-Down SNMP-Traps Internal: 0x4000
         Link flags     : None
         CoS queues     : 8 supported, 8 maximum usable queues
-        Current address: 2c:6b:f5:18:e8:05, Hardware address: 2c:6b:f5:18:e8:05
+        Current address: 2c:6b:f5:ff:01:1d, Hardware address: 2c:6b:f5:ff:01:1d
         Last flapped   : 2019-08-29 09:09:20 UTC (29w6d 18:55 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
@@ -2684,7 +2684,7 @@ class TestShowInterfaces(unittest.TestCase):
         Interface flags: Hardware-Down SNMP-Traps Internal: 0x4000
         Link flags     : None
         CoS queues     : 8 supported, 8 maximum usable queues
-        Current address: 2c:6b:f5:18:e8:06, Hardware address: 2c:6b:f5:18:e8:06
+        Current address: 2c:6b:f5:ff:01:1e, Hardware address: 2c:6b:f5:ff:01:1e
         Last flapped   : 2019-08-29 09:09:20 UTC (29w6d 18:55 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
@@ -2710,7 +2710,7 @@ class TestShowInterfaces(unittest.TestCase):
         Interface flags: Hardware-Down SNMP-Traps Internal: 0x4000
         Link flags     : None
         CoS queues     : 8 supported, 8 maximum usable queues
-        Current address: 2c:6b:f5:18:e8:07, Hardware address: 2c:6b:f5:18:e8:07
+        Current address: 2c:6b:f5:ff:01:1f, Hardware address: 2c:6b:f5:ff:01:1f
         Last flapped   : 2019-08-29 09:09:20 UTC (29w6d 18:55 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
@@ -2736,7 +2736,7 @@ class TestShowInterfaces(unittest.TestCase):
         Interface flags: Hardware-Down SNMP-Traps Internal: 0x4000
         Link flags     : None
         CoS queues     : 8 supported, 8 maximum usable queues
-        Current address: 2c:6b:f5:18:e8:08, Hardware address: 2c:6b:f5:18:e8:08
+        Current address: 2c:6b:f5:ff:01:20, Hardware address: 2c:6b:f5:ff:01:20
         Last flapped   : 2019-08-29 09:09:20 UTC (29w6d 18:55 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
@@ -2762,7 +2762,7 @@ class TestShowInterfaces(unittest.TestCase):
         Interface flags: Hardware-Down SNMP-Traps Internal: 0x4000
         Link flags     : None
         CoS queues     : 8 supported, 8 maximum usable queues
-        Current address: 2c:6b:f5:18:e8:09, Hardware address: 2c:6b:f5:18:e8:09
+        Current address: 2c:6b:f5:ff:01:21, Hardware address: 2c:6b:f5:ff:01:21
         Last flapped   : 2019-08-29 09:09:20 UTC (29w6d 18:55 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
@@ -2785,7 +2785,7 @@ class TestShowInterfaces(unittest.TestCase):
         Interface flags: SNMP-Traps
         Link type      : Full-Duplex
         Link flags     : None
-        Current address: 2c:6b:f5:18:e8:11, Hardware address: 2c:6b:f5:18:e8:11
+        Current address: 2c:6b:f5:ff:01:29, Hardware address: 2c:6b:f5:ff:01:29
         Last flapped   : Never
             Input packets : 0
             Output packets: 0
@@ -2816,7 +2816,7 @@ class TestShowInterfaces(unittest.TestCase):
         Type: Ethernet, Link-level type: Ethernet, MTU: 1514
         Device flags   : Present Running
         Interface flags: SNMP-Traps
-        Current address: 00:50:56:8d:55:34, Hardware address: 00:50:56:8d:55:34
+        Current address: 00:50:56:ff:e2:c1, Hardware address: 00:50:56:ff:e2:c1
         Last flapped   : 2019-08-29 09:03:11 UTC (29w6d 19:02 ago)
             Input packets : 0
             Output packets: 0
@@ -2831,16 +2831,16 @@ class TestShowInterfaces(unittest.TestCase):
             Addresses, Flags: Is-Preferred
                 Destination: 10/8, Local: 10.0.0.4, Broadcast: 10.255.255.255
             Addresses, Flags: Preferred Kernel Is-Preferred
-                Destination: 128/2, Local: 128.0.0.1, Broadcast: 191.255.255.255
+                Destination: 128/2, Local: 172.16.64.1, Broadcast: 172.16.16.255
             Addresses, Flags: Primary Is-Default Is-Primary
-                Destination: 128/2, Local: 128.0.0.4, Broadcast: 191.255.255.255
+                Destination: 128/2, Local: 172.16.64.4, Broadcast: 172.16.16.255
             Protocol inet6, MTU: 1500
             Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
             Flags: Is-Primary
             Addresses, Flags: Is-Preferred
-                Destination: fe80::/64, Local: fe80::250:56ff:fe8d:5534
+                Destination: fe80::/64, Local: fe80::250:56ff:feff:e2c1
             Addresses, Flags: Is-Default Is-Preferred Is-Primary
-                Destination: fec0::/64, Local: fec0::a:0:0:4
+                Destination: 2001:db8:8d82::/64, Local: 2001:db8:8d82::a:0:0:4
             Protocol tnp, MTU: 1500
             Flags: Primary, Is-Primary
             Addresses
@@ -2950,7 +2950,7 @@ class TestShowInterfaces(unittest.TestCase):
         Type: Ethernet, Link-level type: Ethernet, MTU: 1514
         Device flags   : Present Running
         Interface flags: SNMP-Traps
-        Current address: 00:50:56:8d:7c:08, Hardware address: 00:50:56:8d:7c:08
+        Current address: 00:50:56:ff:0a:95, Hardware address: 00:50:56:ff:0a:95
         Last flapped   : 2019-08-29 09:03:11 UTC (29w6d 19:02 ago)
             Input packets : 0
             Output packets: 0
@@ -2963,7 +2963,7 @@ class TestShowInterfaces(unittest.TestCase):
             Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 2, Curr new hold cnt: 0, NH drop cnt: 0
             Flags: Sendbcast-pkt-to-re, Is-Primary
             Addresses, Flags: Is-Preferred Is-Primary
-                Destination: 1.0.0/24, Local: 1.0.0.101, Broadcast: 1.0.0.255
+                Destination: 1.0.0/24, Local: 10.1.0.101, Broadcast: 10.1.0.255
 
         Physical interface: gre, Enabled, Physical link is Up
         Interface index: 10, SNMP ifIndex: 8
@@ -2988,7 +2988,7 @@ class TestShowInterfaces(unittest.TestCase):
         Interface flags: SNMP-Traps
         Link type      : Full-Duplex
         Link flags     : None
-        Current address: 2c:6b:f5:18:ef:f0, Hardware address: 2c:6b:f5:18:ef:f0
+        Current address: 2c:6b:f5:ff:08:09, Hardware address: 2c:6b:f5:ff:08:09
         Last flapped   : Never
             Input packets : 0
             Output packets: 0
@@ -2999,7 +2999,7 @@ class TestShowInterfaces(unittest.TestCase):
         Device flags   : Present Running
         Link type      : Full-Duplex
         Link flags     : None
-        Current address: 2c:6b:f5:18:ef:c0, Hardware address: 2c:6b:f5:18:ef:c0
+        Current address: 2c:6b:f5:ff:08:d8, Hardware address: 2c:6b:f5:ff:08:d8
         Last flapped   : Never
             Input packets : 0
             Output packets: 0
@@ -3014,7 +3014,7 @@ class TestShowInterfaces(unittest.TestCase):
             Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 0, Curr new hold cnt: 0, NH drop cnt: 0
             Flags: Is-Primary
             Addresses, Flags: Primary Is-Default Is-Preferred Is-Primary
-                Destination: 128/2, Local: 128.0.0.127, Broadcast: 191.255.255.255
+                Destination: 128/2, Local: 172.16.64.127, Broadcast: 172.16.16.255
 
         Physical interface: lo0, Enabled, Physical link is Up
         Interface index: 6, SNMP ifIndex: 6
@@ -3034,11 +3034,11 @@ class TestShowInterfaces(unittest.TestCase):
             Max nh cache: 0, New hold nh limit: 0, Curr nh cnt: 0, Curr new hold cnt: 0, NH drop cnt: 0
             Flags: No-Redirects, Sendbcast-pkt-to-re
             Addresses, Flags: Is-Default Is-Primary
-                Local: 111.87.5.252
+                Local: 10.189.5.252
             Protocol inet6, MTU: Unlimited
             Max nh cache: 0, New hold nh limit: 0, Curr nh cnt: 0, Curr new hold cnt: 0, NH drop cnt: 0
             Addresses, Flags: Is-Default Is-Primary
-                Local: 2001:268:fb90::b
+                Local: 2001:db8:223c:ca45::b
                 Local: fe80::250:560f:fc8d:7c08
 
         Logical interface lo0.16384 (Index 322) (SNMP ifIndex 21)
@@ -3095,7 +3095,7 @@ class TestShowInterfaces(unittest.TestCase):
         Interface flags: SNMP-Traps
         Link type      : Full-Duplex
         Link flags     : None
-        Current address: 2c:6b:f5:18:ef:b0, Hardware address: 2c:6b:f5:18:ef:b0
+        Current address: 2c:6b:f5:ff:08:c8, Hardware address: 2c:6b:f5:ff:08:c8
         Last flapped   : Never
             Input packets : 0
             Output packets: 0
@@ -3154,7 +3154,7 @@ class TestShowInterfaces(unittest.TestCase):
             CoS queues     : 8 supported, 8 maximum usable queues
             Hold-times     : Up 2000 ms, Down 0 ms
             Damping        : half-life: 0 sec, max-suppress: 0 sec, reuse: 0, suppress: 0, state: unsuppressed
-            Current address: 00:50:56:8d:c8:29, Hardware address: 00:50:56:8d:c8:29
+            Current address: 00:50:56:ff:56:b6, Hardware address: 00:50:56:ff:56:b6
             Last flapped   : 2019-08-29 09:09:19 UTC (29w6d 22:19 ago)
             Statistics last cleared: Never
             Traffic statistics:
@@ -3261,17 +3261,17 @@ class TestShowInterfaces(unittest.TestCase):
                 Flags: No-Redirects, Sendbcast-pkt-to-re
                 Input Filters: catch_all
                 Addresses, Flags: Is-Preferred Is-Primary
-                    Destination: 111.87.5.92/30, Local: 111.87.5.93, Broadcast: 111.87.5.95, Generation: 146
+                    Destination: 10.189.5.92/30, Local: 10.189.5.93, Broadcast: 10.189.5.95, Generation: 146
                 Protocol inet6, MTU: 1500
                 Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
                 Generation: 161, Route table: 0
                 Flags: Is-Primary
                 Input Filters: v6_catch_all
                 Addresses, Flags: Is-Preferred Is-Primary
-                    Destination: 2001:268:fb90:14::/64, Local: 2001:268:fb90:14::1
+                    Destination: 2001:db8:223c:2c16::/64, Local: 2001:db8:223c:2c16::1
                 Generation: 148
                 Addresses, Flags: Is-Preferred
-                    Destination: fe80::/64, Local: fe80::250:56ff:fe8d:c829
+                    Destination: fe80::/64, Local: fe80::250:56ff:feff:56b6
                 Protocol mpls, MTU: 1488, Maximum labels: 3, Generation: 150
                 Generation: 162, Route table: 0
                 Flags: Is-Primary
@@ -3480,7 +3480,7 @@ class TestShowInterfaces(unittest.TestCase):
             CoS queues     : 8 supported, 8 maximum usable queues
             Hold-times     : Up 2000 ms, Down 0 ms
             Damping        : half-life: 0 sec, max-suppress: 0 sec, reuse: 0, suppress: 0, state: unsuppressed
-            Current address: 00:50:56:8d:a9:6c, Hardware address: 00:50:56:8d:a9:6c
+            Current address: 00:50:56:ff:37:f9, Hardware address: 00:50:56:ff:37:f9
             Last flapped   : 2019-08-29 09:09:19 UTC (29w6d 22:19 ago)
             Statistics last cleared: Never
             Traffic statistics:
@@ -3587,16 +3587,16 @@ class TestShowInterfaces(unittest.TestCase):
                 Flags: No-Redirects, Sendbcast-pkt-to-re
                 Input Filters: catch_all
                 Addresses, Flags: Is-Preferred Is-Primary
-                    Destination: 106.187.14.120/30, Local: 106.187.14.122, Broadcast: 106.187.14.123, Generation: 152
+                    Destination: 10.169.14.120/30, Local: 10.169.14.122, Broadcast: 10.169.14.123, Generation: 152
                 Protocol inet6, MTU: 1500
                 Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 2, Curr new hold cnt: 0, NH drop cnt: 0
                 Generation: 165, Route table: 0
                 Input Filters: v6_catch_all
                 Addresses, Flags: Is-Preferred Is-Primary
-                    Destination: 2001:268:fb8f:1f::/64, Local: 2001:268:fb8f:1f::2
+                    Destination: 2001:db8:eb18:6337::/64, Local: 2001:db8:eb18:6337::2
                 Generation: 154
                 Addresses, Flags: Is-Preferred
-                    Destination: fe80::/64, Local: fe80::250:56ff:fe8d:a96c
+                    Destination: fe80::/64, Local: fe80::250:56ff:feff:37f9
                 Protocol mpls, MTU: 1488, Maximum labels: 3, Generation: 156
                 Protocol multiservice, MTU: Unlimited, Generation: 166, Route table: 0
                 Generation: 167, Route table: 0
@@ -3615,7 +3615,7 @@ class TestShowInterfaces(unittest.TestCase):
             CoS queues     : 8 supported, 8 maximum usable queues
             Hold-times     : Up 2000 ms, Down 0 ms
             Damping        : half-life: 0 sec, max-suppress: 0 sec, reuse: 0, suppress: 0, state: unsuppressed
-            Current address: 00:50:56:8d:90:2d, Hardware address: 00:50:56:8d:90:2d
+            Current address: 00:50:56:ff:1e:ba, Hardware address: 00:50:56:ff:1e:ba
             Last flapped   : 2020-03-05 16:04:34 UTC (2w6d 15:23 ago)
             Statistics last cleared: Never
             Traffic statistics:
@@ -3711,7 +3711,7 @@ class TestShowInterfaces(unittest.TestCase):
                 Generation: 179, Route table: 0
                 Flags: Sendbcast-pkt-to-re
                 Addresses, Flags: Is-Preferred Is-Primary
-                    Destination: 27.86.198.24/30, Local: 27.86.198.25, Broadcast: 27.86.198.27, Generation: 166
+                    Destination: 10.19.198.24/30, Local: 10.19.198.25, Broadcast: 10.19.198.27, Generation: 166
                 Protocol mpls, MTU: 1488, Maximum labels: 3, Generation: 180, Route table: 0
                 Protocol multiservice, MTU: Unlimited, Generation: 181, Route table: 0
                 Policer: Input: __default_arp_policer__
@@ -3728,7 +3728,7 @@ class TestShowInterfaces(unittest.TestCase):
             CoS queues     : 8 supported, 8 maximum usable queues
             Hold-times     : Up 0 ms, Down 0 ms
             Damping        : half-life: 0 sec, max-suppress: 0 sec, reuse: 0, suppress: 0, state: unsuppressed
-            Current address: 00:50:56:8d:06:3e, Hardware address: 00:50:56:8d:06:3e
+            Current address: 00:50:56:ff:93:cb, Hardware address: 00:50:56:ff:93:cb
             Last flapped   : 2019-10-25 08:50:18 UTC (21w5d 22:38 ago)
             Statistics last cleared: Never
             Traffic statistics:
@@ -3821,7 +3821,7 @@ class TestShowInterfaces(unittest.TestCase):
                 Generation: 174, Route table: 0
                 Flags: Sendbcast-pkt-to-re
                 Addresses, Flags: Is-Preferred Is-Primary
-                    Destination: 100.0.0/24, Local: 100.0.0.254, Broadcast: 100.0.0.255, Generation: 162
+                    Destination: 100.0.0/24, Local: 10.55.0.254, Broadcast: 10.55.0.255, Generation: 162
                 Protocol multiservice, MTU: Unlimited, Generation: 175, Route table: 0
                 Policer: Input: __default_arp_policer__
 
@@ -3837,7 +3837,7 @@ class TestShowInterfaces(unittest.TestCase):
             CoS queues     : 8 supported, 8 maximum usable queues
             Hold-times     : Up 0 ms, Down 0 ms
             Damping        : half-life: 0 sec, max-suppress: 0 sec, reuse: 0, suppress: 0, state: unsuppressed
-            Current address: 00:50:56:8d:b0:9a, Hardware address: 00:50:56:8d:b0:9a
+            Current address: 00:50:56:ff:3e:28, Hardware address: 00:50:56:ff:3e:28
             Last flapped   : 2019-08-29 09:09:20 UTC (29w6d 22:19 ago)
             Statistics last cleared: Never
             Traffic statistics:
@@ -3920,7 +3920,7 @@ class TestShowInterfaces(unittest.TestCase):
             CoS queues     : 8 supported, 8 maximum usable queues
             Hold-times     : Up 0 ms, Down 0 ms
             Damping        : half-life: 0 sec, max-suppress: 0 sec, reuse: 0, suppress: 0, state: unsuppressed
-            Current address: 2c:6b:f5:18:e8:05, Hardware address: 2c:6b:f5:18:e8:05
+            Current address: 2c:6b:f5:ff:01:1d, Hardware address: 2c:6b:f5:ff:01:1d
             Last flapped   : 2019-08-29 09:09:20 UTC (29w6d 22:19 ago)
             Statistics last cleared: Never
             Traffic statistics:
@@ -4003,7 +4003,7 @@ class TestShowInterfaces(unittest.TestCase):
             CoS queues     : 8 supported, 8 maximum usable queues
             Hold-times     : Up 0 ms, Down 0 ms
             Damping        : half-life: 0 sec, max-suppress: 0 sec, reuse: 0, suppress: 0, state: unsuppressed
-            Current address: 2c:6b:f5:18:e8:06, Hardware address: 2c:6b:f5:18:e8:06
+            Current address: 2c:6b:f5:ff:01:1e, Hardware address: 2c:6b:f5:ff:01:1e
             Last flapped   : 2019-08-29 09:09:20 UTC (29w6d 22:19 ago)
             Statistics last cleared: Never
             Traffic statistics:
@@ -4086,7 +4086,7 @@ class TestShowInterfaces(unittest.TestCase):
             CoS queues     : 8 supported, 8 maximum usable queues
             Hold-times     : Up 0 ms, Down 0 ms
             Damping        : half-life: 0 sec, max-suppress: 0 sec, reuse: 0, suppress: 0, state: unsuppressed
-            Current address: 2c:6b:f5:18:e8:07, Hardware address: 2c:6b:f5:18:e8:07
+            Current address: 2c:6b:f5:ff:01:1f, Hardware address: 2c:6b:f5:ff:01:1f
             Last flapped   : 2019-08-29 09:09:20 UTC (29w6d 22:19 ago)
             Statistics last cleared: Never
             Traffic statistics:
@@ -4169,7 +4169,7 @@ class TestShowInterfaces(unittest.TestCase):
             CoS queues     : 8 supported, 8 maximum usable queues
             Hold-times     : Up 0 ms, Down 0 ms
             Damping        : half-life: 0 sec, max-suppress: 0 sec, reuse: 0, suppress: 0, state: unsuppressed
-            Current address: 2c:6b:f5:18:e8:08, Hardware address: 2c:6b:f5:18:e8:08
+            Current address: 2c:6b:f5:ff:01:20, Hardware address: 2c:6b:f5:ff:01:20
             Last flapped   : 2019-08-29 09:09:20 UTC (29w6d 22:19 ago)
             Statistics last cleared: Never
             Traffic statistics:
@@ -4252,7 +4252,7 @@ class TestShowInterfaces(unittest.TestCase):
             CoS queues     : 8 supported, 8 maximum usable queues
             Hold-times     : Up 0 ms, Down 0 ms
             Damping        : half-life: 0 sec, max-suppress: 0 sec, reuse: 0, suppress: 0, state: unsuppressed
-            Current address: 2c:6b:f5:18:e8:09, Hardware address: 2c:6b:f5:18:e8:09
+            Current address: 2c:6b:f5:ff:01:21, Hardware address: 2c:6b:f5:ff:01:21
             Last flapped   : 2019-08-29 09:09:20 UTC (29w6d 22:19 ago)
             Statistics last cleared: Never
             Traffic statistics:
@@ -4360,17 +4360,17 @@ class TestShowInterfaces(unittest.TestCase):
                 Generation: 133, Route table: 0
                 Flags: None
                 Addresses, Flags: Is-Primary
-                    Destination: Unspecified, Local: 1.0.0.101, Broadcast: Unspecified, Generation: 133
+                    Destination: Unspecified, Local: 10.1.0.101, Broadcast: Unspecified, Generation: 133
                 Addresses, Flags: None
-                    Destination: Unspecified, Local: 27.86.198.25, Broadcast: Unspecified, Generation: 165
+                    Destination: Unspecified, Local: 10.19.198.25, Broadcast: Unspecified, Generation: 165
                 Addresses, Flags: None
-                    Destination: Unspecified, Local: 100.0.0.254, Broadcast: Unspecified, Generation: 161
+                    Destination: Unspecified, Local: 10.55.0.254, Broadcast: Unspecified, Generation: 161
                 Addresses, Flags: None
-                    Destination: Unspecified, Local: 106.187.14.122, Broadcast: Unspecified, Generation: 151
+                    Destination: Unspecified, Local: 10.169.14.122, Broadcast: Unspecified, Generation: 151
                 Addresses, Flags: None
-                    Destination: Unspecified, Local: 111.87.5.93, Broadcast: Unspecified, Generation: 145
+                    Destination: Unspecified, Local: 10.189.5.93, Broadcast: Unspecified, Generation: 145
                 Addresses, Flags: None
-                    Destination: Unspecified, Local: 111.87.5.252, Broadcast: Unspecified, Generation: 134
+                    Destination: Unspecified, Local: 10.189.5.252, Broadcast: Unspecified, Generation: 134
                 Protocol iso, MTU: Unlimited, Generation: 132, Route table: 0
                 Flags: None
                 Protocol inet6, MTU: Unlimited
@@ -4378,22 +4378,22 @@ class TestShowInterfaces(unittest.TestCase):
                 Generation: 130, Route table: 0
                 Flags: None
                 Addresses, Flags: None
-                    Destination: Unspecified, Local: 2001:268:fb8f:1f::2
+                    Destination: Unspecified, Local: 2001:db8:eb18:6337::2
                 Generation: 153
                 Addresses, Flags: None
-                    Destination: Unspecified, Local: 2001:268:fb90::b
+                    Destination: Unspecified, Local: 2001:db8:223c:ca45::b
                 Generation: 136
                 Addresses, Flags: None
-                    Destination: Unspecified, Local: 2001:268:fb90:14::1
+                    Destination: Unspecified, Local: 2001:db8:223c:2c16::1
                 Generation: 147
                 Addresses, Flags: None
                     Destination: Unspecified, Local: fe80::250:560f:fc8d:7c08
                 Generation: 138
                 Addresses, Flags: None
-                    Destination: Unspecified, Local: fe80::250:56ff:fe8d:a96c
+                    Destination: Unspecified, Local: fe80::250:56ff:feff:37f9
                 Generation: 155
                 Addresses, Flags: None
-                    Destination: Unspecified, Local: fe80::250:56ff:fe8d:c829
+                    Destination: Unspecified, Local: fe80::250:56ff:feff:56b6
                 Protocol mpls, MTU: Unlimited, Maximum labels: 3, Generation: 149
                 Generation: 137, Route table: 0
                 Flags: None
@@ -4410,18 +4410,18 @@ class TestShowInterfaces(unittest.TestCase):
                 Addresses, Flags: Is-Primary
                     Destination: Unspecified, Local: 10.0.0.4, Broadcast: Unspecified, Generation: 130
                 Addresses, Flags: None
-                    Destination: Unspecified, Local: 128.0.0.1, Broadcast: Unspecified, Generation: 142
+                    Destination: Unspecified, Local: 172.16.64.1, Broadcast: Unspecified, Generation: 142
                 Addresses, Flags: None
-                    Destination: Unspecified, Local: 128.0.0.4, Broadcast: Unspecified, Generation: 129
+                    Destination: Unspecified, Local: 172.16.64.4, Broadcast: Unspecified, Generation: 129
                 Protocol inet6, MTU: Unlimited
                 Max nh cache: 0, New hold nh limit: 0, Curr nh cnt: 0, Curr new hold cnt: 0, NH drop cnt: 0
                 Generation: 131, Route table: 1
                 Flags: None
                 Addresses, Flags: None
-                    Destination: Unspecified, Local: fe80::250:56ff:fe8d:5534
+                    Destination: Unspecified, Local: fe80::250:56ff:feff:e2c1
                 Generation: 131
                 Addresses, Flags: None
-                    Destination: Unspecified, Local: fec0::a:0:0:4
+                    Destination: Unspecified, Local: 2001:db8:8d82::a:0:0:4
                 Protocol vpls, MTU: Unlimited, Generation: 132
                 Generation: 138, Route table: 1
                 Flags: None
@@ -4452,7 +4452,7 @@ class TestShowInterfaces(unittest.TestCase):
                 Generation: 148, Route table: 4
                 Flags: None
                 Addresses, Flags: Is-Primary
-                    Destination: Unspecified, Local: 128.0.0.127, Broadcast: Unspecified, Generation: 143
+                    Destination: Unspecified, Local: 172.16.64.127, Broadcast: Unspecified, Generation: 143
 
             Logical interface .local..5 (Index 326) (SNMP ifIndex 0) (Generation 135)
                 Flags: Point-To-Point Encapsulation: Unspecified
@@ -4510,7 +4510,7 @@ class TestShowInterfaces(unittest.TestCase):
             Physical info  : Unspecified
             Hold-times     : Up 0 ms, Down 0 ms
             Damping        : half-life: 0 sec, max-suppress: 0 sec, reuse: 0, suppress: 0, state: unsuppressed
-            Current address: 2c:6b:f5:18:e8:11, Hardware address: 2c:6b:f5:18:e8:11
+            Current address: 2c:6b:f5:ff:01:29, Hardware address: 2c:6b:f5:ff:01:29
             Alternate link address: Unspecified
             Last flapped   : Never
             Statistics last cleared: Never
@@ -4596,7 +4596,7 @@ class TestShowInterfaces(unittest.TestCase):
             Physical info  : Unspecified
             Hold-times     : Up 0 ms, Down 0 ms
             Damping        : half-life: 0 sec, max-suppress: 0 sec, reuse: 0, suppress: 0, state: unsuppressed
-            Current address: 00:50:56:8d:55:34, Hardware address: 00:50:56:8d:55:34
+            Current address: 00:50:56:ff:e2:c1, Hardware address: 00:50:56:ff:e2:c1
             Alternate link address: Unspecified
             Last flapped   : 2019-08-29 09:03:11 UTC (29w6d 22:25 ago)
             Statistics last cleared: Never
@@ -4639,18 +4639,18 @@ class TestShowInterfaces(unittest.TestCase):
                 Addresses, Flags: Is-Preferred
                     Destination: 10/8, Local: 10.0.0.4, Broadcast: 10.255.255.255, Generation: 2
                 Addresses, Flags: Preferred Kernel Is-Preferred
-                    Destination: 128/2, Local: 128.0.0.1, Broadcast: 191.255.255.255, Generation: 7
+                    Destination: 128/2, Local: 172.16.64.1, Broadcast: 172.16.16.255, Generation: 7
                 Addresses, Flags: Primary Is-Default Is-Primary
-                    Destination: 128/2, Local: 128.0.0.4, Broadcast: 191.255.255.255, Generation: 1
+                    Destination: 128/2, Local: 172.16.64.4, Broadcast: 172.16.16.255, Generation: 1
                 Protocol inet6, MTU: 1500
                 Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
                 Generation: 140, Route table: 1
                 Flags: Is-Primary
                 Addresses, Flags: Is-Preferred
-                    Destination: fe80::/64, Local: fe80::250:56ff:fe8d:5534
+                    Destination: fe80::/64, Local: fe80::250:56ff:feff:e2c1
                 Generation: 3
                 Addresses, Flags: Is-Default Is-Preferred Is-Primary
-                    Destination: fec0::/64, Local: fec0::a:0:0:4
+                    Destination: 2001:db8:8d82::/64, Local: 2001:db8:8d82::a:0:0:4
                 Protocol tnp, MTU: 1500, Generation: 4
                 Generation: 141, Route table: 1
                 Flags: Primary, Is-Primary
@@ -4927,7 +4927,7 @@ class TestShowInterfaces(unittest.TestCase):
             Physical info  : Unspecified
             Hold-times     : Up 0 ms, Down 0 ms
             Damping        : half-life: 0 sec, max-suppress: 0 sec, reuse: 0, suppress: 0, state: unsuppressed
-            Current address: 00:50:56:8d:7c:08, Hardware address: 00:50:56:8d:7c:08
+            Current address: 00:50:56:ff:0a:95, Hardware address: 00:50:56:ff:0a:95
             Alternate link address: Unspecified
             Last flapped   : 2019-08-29 09:03:11 UTC (29w6d 22:25 ago)
             Statistics last cleared: Never
@@ -4963,7 +4963,7 @@ class TestShowInterfaces(unittest.TestCase):
                 Generation: 142, Route table: 0
                 Flags: Sendbcast-pkt-to-re, Is-Primary
                 Addresses, Flags: Is-Preferred Is-Primary
-                    Destination: 1.0.0/24, Local: 1.0.0.101, Broadcast: 1.0.0.255, Generation: 6
+                    Destination: 1.0.0/24, Local: 10.1.0.101, Broadcast: 10.1.0.255, Generation: 6
 
             Physical interface: gre, Enabled, Physical link is Up
             Interface index: 10, SNMP ifIndex: 8, Generation: 11
@@ -5011,7 +5011,7 @@ class TestShowInterfaces(unittest.TestCase):
             Physical info  : Unspecified
             Hold-times     : Up 0 ms, Down 0 ms
             Damping        : half-life: 0 sec, max-suppress: 0 sec, reuse: 0, suppress: 0, state: unsuppressed
-            Current address: 2c:6b:f5:18:ef:f0, Hardware address: 2c:6b:f5:18:ef:f0
+            Current address: 2c:6b:f5:ff:08:09, Hardware address: 2c:6b:f5:ff:08:09
             Alternate link address: Unspecified
             Last flapped   : Never
             Statistics last cleared: Never
@@ -5039,7 +5039,7 @@ class TestShowInterfaces(unittest.TestCase):
             Physical info  : Unspecified
             Hold-times     : Up 0 ms, Down 0 ms
             Damping        : half-life: 0 sec, max-suppress: 0 sec, reuse: 0, suppress: 0, state: unsuppressed
-            Current address: 2c:6b:f5:18:ef:c0, Hardware address: 2c:6b:f5:18:ef:c0
+            Current address: 2c:6b:f5:ff:08:d8, Hardware address: 2c:6b:f5:ff:08:d8
             Alternate link address: Unspecified
             Last flapped   : Never
             Statistics last cleared: Never
@@ -5082,7 +5082,7 @@ class TestShowInterfaces(unittest.TestCase):
                 Generation: 149, Route table: 4
                 Flags: Is-Primary
                 Addresses, Flags: Primary Is-Default Is-Preferred Is-Primary
-                    Destination: 128/2, Local: 128.0.0.127, Broadcast: 191.255.255.255, Generation: 144
+                    Destination: 128/2, Local: 172.16.64.127, Broadcast: 172.16.16.255, Generation: 144
 
             Physical interface: lo0, Enabled, Physical link is Up
             Interface index: 6, SNMP ifIndex: 6, Generation: 7
@@ -5146,13 +5146,13 @@ class TestShowInterfaces(unittest.TestCase):
                 Flags: No-Redirects, Sendbcast-pkt-to-re
                 Input Filters: local-access-control
                 Addresses, Flags: Is-Default Is-Primary
-                    Destination: Unspecified, Local: 111.87.5.252, Broadcast: Unspecified, Generation: 135
+                    Destination: Unspecified, Local: 10.189.5.252, Broadcast: Unspecified, Generation: 135
                 Protocol inet6, MTU: Unlimited
                 Max nh cache: 0, New hold nh limit: 0, Curr nh cnt: 0, Curr new hold cnt: 0, NH drop cnt: 0
                 Generation: 144, Route table: 0
                 Input Filters: v6_local-access-control
                 Addresses, Flags: Is-Default Is-Primary
-                    Destination: Unspecified, Local: 2001:268:fb90::b
+                    Destination: Unspecified, Local: 2001:db8:223c:ca45::b
                 Generation: 137
                     Destination: Unspecified, Local: fe80::250:560f:fc8d:7c08
                 Generation: 139
@@ -5291,7 +5291,7 @@ class TestShowInterfaces(unittest.TestCase):
             Physical info  : Unspecified
             Hold-times     : Up 0 ms, Down 0 ms
             Damping        : half-life: 0 sec, max-suppress: 0 sec, reuse: 0, suppress: 0, state: unsuppressed
-            Current address: 2c:6b:f5:18:ef:b0, Hardware address: 2c:6b:f5:18:ef:b0
+            Current address: 2c:6b:f5:ff:08:c8, Hardware address: 2c:6b:f5:ff:08:c8
             Alternate link address: Unspecified
             Last flapped   : Never
             Statistics last cleared: Never
@@ -5426,7 +5426,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "@junos:format": "Enabled"
                     },
                     "bpdu-error": "None",
-                    "current-physical-address": "00:50:56:8d:c8:29",
+                    "current-physical-address": "00:50:56:ff:56:b6",
                     "description": "none/100G/in/hktGCS002_ge-0/0/0",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
@@ -5464,7 +5464,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "bit-error-seconds": "0",
                         "errored-blocks-seconds": "0"
                     },
-                    "hardware-physical-address": "00:50:56:8d:c8:29",
+                    "hardware-physical-address": "00:50:56:ff:56:b6",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-snmp-traps": True,
@@ -5526,19 +5526,19 @@ class TestShowInterfaces(unittest.TestCase):
                                 "address-family-name": "inet6",
                                 "interface-address": [
                                     {
-                                        "ifa-destination": "2001:268:fb90:14::/64",
+                                        "ifa-destination": "2001:db8:223c:2c16::/64",
                                         "ifa-flags": {
                                             "ifaf-is-preferred": True,
                                             "ifaf-is-primary": True
                                         },
-                                        "ifa-local": "2001:268:fb90:14::1"
+                                        "ifa-local": "2001:db8:223c:2c16::1"
                                     },
                                     {
                                         "ifa-destination": "fe80::/64",
                                         "ifa-flags": {
                                             "ifaf-is-preferred": True
                                         },
-                                        "ifa-local": "fe80::250:56ff:fe8d:c829"
+                                        "ifa-local": "fe80::250:56ff:feff:56b6"
                                     }
                                 ],
                                 "intf-curr-cnt": "1",
@@ -5910,7 +5910,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "@junos:format": "Enabled"
                     },
                     "bpdu-error": "None",
-                    "current-physical-address": "00:50:56:8d:a9:6c",
+                    "current-physical-address": "00:50:56:ff:37:f9",
                     "description": "YW7079/9.6G/BB/sjkGCS001-EC11_xe-0/1/5[SJC]_Area8_Cost100",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
@@ -5948,7 +5948,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "bit-error-seconds": "0",
                         "errored-blocks-seconds": "0"
                     },
-                    "hardware-physical-address": "00:50:56:8d:a9:6c",
+                    "hardware-physical-address": "00:50:56:ff:37:f9",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-snmp-traps": True,
@@ -6007,19 +6007,19 @@ class TestShowInterfaces(unittest.TestCase):
                                 "address-family-name": "inet6",
                                 "interface-address": [
                                     {
-                                        "ifa-destination": "2001:268:fb8f:1f::/64",
+                                        "ifa-destination": "2001:db8:eb18:6337::/64",
                                         "ifa-flags": {
                                             "ifaf-is-preferred": True,
                                             "ifaf-is-primary": True
                                         },
-                                        "ifa-local": "2001:268:fb8f:1f::2"
+                                        "ifa-local": "2001:db8:eb18:6337::2"
                                     },
                                     {
                                         "ifa-destination": "fe80::/64",
                                         "ifa-flags": {
                                             "ifaf-is-preferred": True
                                         },
-                                        "ifa-local": "fe80::250:56ff:fe8d:a96c"
+                                        "ifa-local": "fe80::250:56ff:feff:37f9"
                                     }
                                 ],
                                 "intf-curr-cnt": "2",
@@ -6140,7 +6140,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "@junos:format": "Enabled"
                     },
                     "bpdu-error": "None",
-                    "current-physical-address": "00:50:56:8d:90:2d",
+                    "current-physical-address": "00:50:56:ff:1e:ba",
                     "description": "ve-hkgasr01_Gi2[DefaultCost1000]",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
@@ -6178,7 +6178,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "bit-error-seconds": "0",
                         "errored-blocks-seconds": "0"
                     },
-                    "hardware-physical-address": "00:50:56:8d:90:2d",
+                    "hardware-physical-address": "00:50:56:ff:1e:ba",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-snmp-traps": True,
@@ -6327,7 +6327,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "@junos:format": "Enabled"
                     },
                     "bpdu-error": "None",
-                    "current-physical-address": "00:50:56:8d:06:3e",
+                    "current-physical-address": "00:50:56:ff:93:cb",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
                         "fec_ccw_count": "0",
@@ -6364,7 +6364,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "bit-error-seconds": "0",
                         "errored-blocks-seconds": "0"
                     },
-                    "hardware-physical-address": "00:50:56:8d:06:3e",
+                    "hardware-physical-address": "00:50:56:ff:93:cb",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-snmp-traps": True,
@@ -6507,7 +6507,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "@junos:format": "Enabled"
                     },
                     "bpdu-error": "None",
-                    "current-physical-address": "00:50:56:8d:b0:9a",
+                    "current-physical-address": "00:50:56:ff:3e:28",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
                         "fec_ccw_count": "0",
@@ -6544,7 +6544,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "bit-error-seconds": "0",
                         "errored-blocks-seconds": "0"
                     },
-                    "hardware-physical-address": "00:50:56:8d:b0:9a",
+                    "hardware-physical-address": "00:50:56:ff:3e:28",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
@@ -6642,7 +6642,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "@junos:format": "Enabled"
                     },
                     "bpdu-error": "None",
-                    "current-physical-address": "2c:6b:f5:18:e8:05",
+                    "current-physical-address": "2c:6b:f5:ff:01:1d",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
                         "fec_ccw_count": "0",
@@ -6679,7 +6679,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "bit-error-seconds": "0",
                         "errored-blocks-seconds": "0"
                     },
-                    "hardware-physical-address": "2c:6b:f5:18:e8:05",
+                    "hardware-physical-address": "2c:6b:f5:ff:01:1d",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
@@ -6777,7 +6777,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "@junos:format": "Enabled"
                     },
                     "bpdu-error": "None",
-                    "current-physical-address": "2c:6b:f5:18:e8:06",
+                    "current-physical-address": "2c:6b:f5:ff:01:1e",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
                         "fec_ccw_count": "0",
@@ -6814,7 +6814,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "bit-error-seconds": "0",
                         "errored-blocks-seconds": "0"
                     },
-                    "hardware-physical-address": "2c:6b:f5:18:e8:06",
+                    "hardware-physical-address": "2c:6b:f5:ff:01:1e",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
@@ -6912,7 +6912,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "@junos:format": "Enabled"
                     },
                     "bpdu-error": "None",
-                    "current-physical-address": "2c:6b:f5:18:e8:07",
+                    "current-physical-address": "2c:6b:f5:ff:01:1f",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
                         "fec_ccw_count": "0",
@@ -6949,7 +6949,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "bit-error-seconds": "0",
                         "errored-blocks-seconds": "0"
                     },
-                    "hardware-physical-address": "2c:6b:f5:18:e8:07",
+                    "hardware-physical-address": "2c:6b:f5:ff:01:1f",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
@@ -7047,7 +7047,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "@junos:format": "Enabled"
                     },
                     "bpdu-error": "None",
-                    "current-physical-address": "2c:6b:f5:18:e8:08",
+                    "current-physical-address": "2c:6b:f5:ff:01:20",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
                         "fec_ccw_count": "0",
@@ -7084,7 +7084,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "bit-error-seconds": "0",
                         "errored-blocks-seconds": "0"
                     },
-                    "hardware-physical-address": "2c:6b:f5:18:e8:08",
+                    "hardware-physical-address": "2c:6b:f5:ff:01:20",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
@@ -7182,7 +7182,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "@junos:format": "Enabled"
                     },
                     "bpdu-error": "None",
-                    "current-physical-address": "2c:6b:f5:18:e8:09",
+                    "current-physical-address": "2c:6b:f5:ff:01:21",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
                         "fec_ccw_count": "0",
@@ -7219,7 +7219,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "bit-error-seconds": "0",
                         "errored-blocks-seconds": "0"
                     },
-                    "hardware-physical-address": "2c:6b:f5:18:e8:09",
+                    "hardware-physical-address": "2c:6b:f5:ff:01:21",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
@@ -7382,21 +7382,21 @@ class TestShowInterfaces(unittest.TestCase):
                                         "ifa-flags": {
                                             "ifaf-none": True
                                         },
-                                        "ifa-local": "2001:268:fb8f:1f::2"
+                                        "ifa-local": "2001:db8:eb18:6337::2"
                                     },
                                     {
                                         "ifa-destination": "Unspecified",
                                         "ifa-flags": {
                                             "ifaf-none": True
                                         },
-                                        "ifa-local": "2001:268:fb90::b"
+                                        "ifa-local": "2001:db8:223c:ca45::b"
                                     },
                                     {
                                         "ifa-destination": "Unspecified",
                                         "ifa-flags": {
                                             "ifaf-none": True
                                         },
-                                        "ifa-local": "2001:268:fb90:14::1"
+                                        "ifa-local": "2001:db8:223c:2c16::1"
                                     },
                                     {
                                         "ifa-destination": "Unspecified",
@@ -7410,14 +7410,14 @@ class TestShowInterfaces(unittest.TestCase):
                                         "ifa-flags": {
                                             "ifaf-none": True
                                         },
-                                        "ifa-local": "fe80::250:56ff:fe8d:a96c"
+                                        "ifa-local": "fe80::250:56ff:feff:37f9"
                                     },
                                     {
                                         "ifa-destination": "Unspecified",
                                         "ifa-flags": {
                                             "ifaf-none": True
                                         },
-                                        "ifa-local": "fe80::250:56ff:fe8d:c829"
+                                        "ifa-local": "fe80::250:56ff:feff:56b6"
                                     }
                                 ],
                                 "intf-curr-cnt": "0",
@@ -7467,14 +7467,14 @@ class TestShowInterfaces(unittest.TestCase):
                                         "ifa-flags": {
                                             "ifaf-none": True
                                         },
-                                        "ifa-local": "fe80::250:56ff:fe8d:5534"
+                                        "ifa-local": "fe80::250:56ff:feff:e2c1"
                                     },
                                     {
                                         "ifa-destination": "Unspecified",
                                         "ifa-flags": {
                                             "ifaf-none": True
                                         },
-                                        "ifa-local": "fec0::a:0:0:4"
+                                        "ifa-local": "2001:db8:8d82::a:0:0:4"
                                     }
                                 ],
                                 "intf-curr-cnt": "0",
@@ -7596,8 +7596,8 @@ class TestShowInterfaces(unittest.TestCase):
                     "admin-status": {
                         "@junos:format": "Enabled"
                     },
-                    "current-physical-address": "2c:6b:f5:18:e8:11",
-                    "hardware-physical-address": "2c:6b:f5:18:e8:11",
+                    "current-physical-address": "2c:6b:f5:ff:01:29",
+                    "hardware-physical-address": "2c:6b:f5:ff:01:29",
                     "if-config-flags": {
                         "iff-snmp-traps": True
                     },
@@ -7704,8 +7704,8 @@ class TestShowInterfaces(unittest.TestCase):
                     "admin-status": {
                         "@junos:format": "Enabled"
                     },
-                    "current-physical-address": "00:50:56:8d:55:34",
-                    "hardware-physical-address": "00:50:56:8d:55:34",
+                    "current-physical-address": "00:50:56:ff:e2:c1",
+                    "hardware-physical-address": "00:50:56:ff:e2:c1",
                     "if-config-flags": {
                         "iff-snmp-traps": True
                     },
@@ -7766,16 +7766,16 @@ class TestShowInterfaces(unittest.TestCase):
                                         "ifa-flags": {
                                             "ifaf-is-preferred": True
                                         },
-                                        "ifa-local": "fe80::250:56ff:fe8d:5534"
+                                        "ifa-local": "fe80::250:56ff:feff:e2c1"
                                     },
                                     {
-                                        "ifa-destination": "fec0::/64",
+                                        "ifa-destination": "2001:db8:8d82::/64",
                                         "ifa-flags": {
                                             "ifaf-is-default": True,
                                             "ifaf-is-preferred": True,
                                             "ifaf-is-primary": True
                                         },
-                                        "ifa-local": "fec0::a:0:0:4"
+                                        "ifa-local": "2001:db8:8d82::a:0:0:4"
                                     },
                                     {
                                         "ifa-flags": {
@@ -8175,8 +8175,8 @@ class TestShowInterfaces(unittest.TestCase):
                     "admin-status": {
                         "@junos:format": "Enabled"
                     },
-                    "current-physical-address": "00:50:56:8d:7c:08",
-                    "hardware-physical-address": "00:50:56:8d:7c:08",
+                    "current-physical-address": "00:50:56:ff:0a:95",
+                    "hardware-physical-address": "00:50:56:ff:0a:95",
                     "if-config-flags": {
                         "iff-snmp-traps": True
                     },
@@ -8305,8 +8305,8 @@ class TestShowInterfaces(unittest.TestCase):
                     "admin-status": {
                         "@junos:format": "Enabled"
                     },
-                    "current-physical-address": "2c:6b:f5:18:ef:f0",
-                    "hardware-physical-address": "2c:6b:f5:18:ef:f0",
+                    "current-physical-address": "2c:6b:f5:ff:08:09",
+                    "hardware-physical-address": "2c:6b:f5:ff:08:09",
                     "if-config-flags": {
                         "iff-snmp-traps": True
                     },
@@ -8343,8 +8343,8 @@ class TestShowInterfaces(unittest.TestCase):
                     "admin-status": {
                         "@junos:format": "Enabled"
                     },
-                    "current-physical-address": "2c:6b:f5:18:ef:c0",
-                    "hardware-physical-address": "2c:6b:f5:18:ef:c0",
+                    "current-physical-address": "2c:6b:f5:ff:08:d8",
+                    "hardware-physical-address": "2c:6b:f5:ff:08:d8",
                     "if-device-flags": {
                         "ifdf-present": True,
                         "ifdf-running": True
@@ -8688,8 +8688,8 @@ class TestShowInterfaces(unittest.TestCase):
                     "admin-status": {
                         "@junos:format": "Enabled"
                     },
-                    "current-physical-address": "2c:6b:f5:18:ef:b0",
-                    "hardware-physical-address": "2c:6b:f5:18:ef:b0",
+                    "current-physical-address": "2c:6b:f5:ff:08:c8",
+                    "hardware-physical-address": "2c:6b:f5:ff:08:c8",
                     "if-config-flags": {
                         "iff-snmp-traps": True
                     },
