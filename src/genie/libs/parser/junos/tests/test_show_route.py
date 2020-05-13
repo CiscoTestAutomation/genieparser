@@ -47567,12 +47567,12 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
         0.0.0.0/0 (1 entry, 1 announced)
                 State: <FlashAll>
         TSI:
-        KRT in-kernel 0.0.0.0/0 -> {106.187.14.121}
+        KRT in-kernel 0.0.0.0/0 -> {10.169.14.121}
                 *OSPF   Preference: 150/10
                         Next hop type: Router, Next hop index: 613
                         Address: 0xdfa7934
                         Next-hop reference count: 458
-                        Next hop: 106.187.14.121 via ge-0/0/1.0 weight 0x1, selected
+                        Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int Ext>
                         Local AS: 65171 
@@ -47583,7 +47583,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
                         AS path: I 
 
-        1.0.0.0/24 (2 entries, 1 announced)
+        10.1.0.0/24 (2 entries, 1 announced)
                 State: <FlashAll>
                 *Direct Preference: 0
                         Next hop type: Interface, Next hop index: 0
@@ -47601,7 +47601,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop type: Router, Next hop index: 613
                         Address: 0xdfa7934
                         Next-hop reference count: 458
-                        Next hop: 106.187.14.121 via ge-0/0/1.0 weight 0x1, selected
+                        Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Int Ext>
                         Inactive reason: Route Preference
@@ -47612,7 +47612,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Task: OSPF
                         AS path: I 
 
-        1.0.0.101/32 (1 entry, 1 announced)
+        10.1.0.101/32 (1 entry, 1 announced)
                 State: <FlashAll>
                 *Local  Preference: 0
                         Next hop type: Local, Next hop index: 0
@@ -47628,15 +47628,15 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Announcement bits (2): 5-LDP 7-Resolve tree 3 
                         AS path: I 
 
-        3.3.3.3/32 (1 entry, 1 announced)
+        10.36.3.3/32 (1 entry, 1 announced)
                 State: <FlashAll>
         TSI:
-        KRT in-kernel 3.3.3.3/32 -> {106.187.14.121}
+        KRT in-kernel 10.36.3.3/32 -> {10.169.14.121}
                 *OSPF   Preference: 10/10
                         Next hop type: Router, Next hop index: 613
                         Address: 0xdfa7934
                         Next-hop reference count: 458
-                        Next hop: 106.187.14.121 via ge-0/0/1.0 weight 0x1, selected
+                        Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
                         Local AS: 65171 
@@ -47647,15 +47647,15 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
                         AS path: I 
 
-        4.0.0.0/30 (1 entry, 1 announced)
+        10.16.0.0/30 (1 entry, 1 announced)
                 State: <FlashAll>
         TSI:
-        KRT in-kernel 4.0.0.0/30 -> {106.187.14.121}
+        KRT in-kernel 10.16.0.0/30 -> {10.169.14.121}
                 *OSPF   Preference: 10/10
                         Next hop type: Router, Next hop index: 613
                         Address: 0xdfa7934
                         Next-hop reference count: 458
-                        Next hop: 106.187.14.121 via ge-0/0/1.0 weight 0x1, selected
+                        Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
                         Local AS: 65171 
@@ -47666,15 +47666,15 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
                         AS path: I 
 
-        5.5.5.5/32 (1 entry, 1 announced)
+        10.100.5.5/32 (1 entry, 1 announced)
                 State: <FlashAll>
         TSI:
-        KRT in-kernel 5.5.5.5/32 -> {106.187.14.121}
+        KRT in-kernel 10.100.5.5/32 -> {10.169.14.121}
                 *OSPF   Preference: 10/10
                         Next hop type: Router, Next hop index: 613
                         Address: 0xdfa7934
                         Next-hop reference count: 458
-                        Next hop: 106.187.14.121 via ge-0/0/1.0 weight 0x1, selected
+                        Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
                         Local AS: 65171 
@@ -47685,9 +47685,9 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Announcement bits (2): 0-KRT 7-Resolve tree 3 
                         AS path: I 
 
-        14.101.0.0/16 (2 entries, 1 announced)
+        10.220.0.0/16 (2 entries, 1 announced)
         TSI:
-        KRT in-kernel 14.101.0.0/16 -> {indirect(1048574)}
+        KRT in-kernel 10.220.0.0/16 -> {indirect(1048574)}
         Page 0 idx 1, (group hktGCS002 type Internal) Type 1 val 0x10c0b9b0 (adv_entry)
         Advertised metrics:
             Flags: Nexthop Change
@@ -47696,79 +47696,79 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
             Localpref: 120
             AS path: [65171] (65151 65000) I
             Communities: 65001:10 65151:244
-        Path 14.101.0.0
-        from 106.187.14.240
+        Path 10.220.0.0
+        from 10.169.14.240
         Vector len 4.  Val: 1
                 *BGP    Preference: 170/-121
                         Next hop type: Indirect, Next hop index: 0
                         Address: 0xdbc5974
                         Next-hop reference count: 1366
-                        Source: 106.187.14.240
+                        Source: 10.169.14.240
                         Next hop type: Router, Next hop index: 613
-                        Next hop: 106.187.14.121 via ge-0/0/1.0, selected
+                        Next hop: 10.169.14.121 via ge-0/0/1.0, selected
                         Session Id: 0x141
-                        Protocol next hop: 106.187.14.240
+                        Protocol next hop: 10.169.14.240
                         Indirect next hop: 0xc285884 1048574 INH Session ID: 0x1ac
                         State: <Active Int Ext>
                         Local AS: 65171 Peer AS: 65151
                         Age: 3w3d 3:19:15   Metric: 12003   Metric2: 0 
                         Validation State: unverified 
-                        Task: BGP_65151.106.187.14.240
+                        Task: BGP_65151.10.169.14.240
                         Announcement bits (3): 0-KRT 6-BGP_RT_Background 7-Resolve tree 3 
                         AS path: (65151 65000) I 
                         Communities: 65001:10 65151:244
                         Accepted
                         Localpref: 120
-                        Router ID: 106.187.14.240
+                        Router ID: 10.169.14.240
                         Indirect next hops: 1
-                                Protocol next hop: 106.187.14.240
+                                Protocol next hop: 10.169.14.240
                                 Indirect next hop: 0xc285884 1048574 INH Session ID: 0x1ac
                                 Indirect path forwarding next hops: 1
                                         Next hop type: Router
-                                        Next hop: 106.187.14.121 via ge-0/0/1.0
+                                        Next hop: 10.169.14.121 via ge-0/0/1.0
                                         Session Id: 0x141
-                        106.187.14.240/32 Originating RIB: inet.0
+                        10.169.14.240/32 Originating RIB: inet.0
                         Node path count: 1
                         Forwarding nexthops: 1
-                            Nexthop: 106.187.14.121 via ge-0/0/1.0
+                            Nexthop: 10.169.14.121 via ge-0/0/1.0
                             Session Id: 141
                 BGP    Preference: 170/-121
                         Next hop type: Indirect, Next hop index: 0
                         Address: 0xdfae654
                         Next-hop reference count: 682
-                        Source: 111.87.5.253
+                        Source: 10.189.5.253
                         Next hop type: Router, Next hop index: 0
-                        Next hop: 111.87.5.94 via ge-0/0/0.0 weight 0x1, selected
+                        Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0x1, selected
                         Label element ptr: 0xc5cda38
                         Label parent element ptr: 0x0
                         Label element references: 14
                         Label element child references: 10
                         Label element lsp id: 0
                         Session Id: 0x0
-                        Protocol next hop: 111.87.5.253
+                        Protocol next hop: 10.189.5.253
                         Indirect next hop: 0xc285e84 - INH Session ID: 0x0
                         State: <Int Ext Changed>
                         Inactive reason: IGP metric
                         Local AS: 65171 Peer AS: 65171
                         Age: 3w1d 16:57:57  Metric: 12003   Metric2: 5 
                         Validation State: unverified 
-                        Task: BGP_65171.111.87.5.253
+                        Task: BGP_65171.10.189.5.253
                         AS path: (65151 65000) I 
                         Communities: 65001:10 65151:244
                         Accepted
                         Localpref: 120
-                        Router ID: 111.87.5.253
+                        Router ID: 10.189.5.253
                         Indirect next hops: 1
-                                Protocol next hop: 111.87.5.253 Metric: 5
+                                Protocol next hop: 10.189.5.253 Metric: 5
                                 Indirect next hop: 0xc285e84 - INH Session ID: 0x0
                                 Indirect path forwarding next hops: 1
                                         Next hop type: Router
-                                        Next hop: 111.87.5.94 via ge-0/0/0.0 weight 0x1
+                                        Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0x1
                                         Session Id: 0x0
-                        111.87.5.253/32 Originating RIB: inet.3
+                        10.189.5.253/32 Originating RIB: inet.3
                         Metric: 5 Node path count: 1
                         Forwarding nexthops: 1
-                            Nexthop: 111.87.5.94 via ge-0/0/0.0
+                            Nexthop: 10.189.5.94 via ge-0/0/0.0
                             Session Id: 0
 
     '''}
@@ -47805,7 +47805,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     {
                                         "nh-string": "Next hop",
                                         "session": "141",
-                                        "to": "106.187.14.121",
+                                        "to": "10.169.14.121",
                                         "via": "ge-0/0/1.0",
                                         "weight": "0x1"
                                     }
@@ -47828,12 +47828,12 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                             },
                             "rt-state": "FlashAll",
                             "tsi": {
-                                "#text": "KRT in-kernel 0.0.0.0/0 -> {106.187.14.121}"
+                                "#text": "KRT in-kernel 0.0.0.0/0 -> {10.169.14.121}"
                             }
                         },
                         {
                             "rt-announced-count": "1",
-                            "rt-destination": "1.0.0.0/24",
+                            "rt-destination": "10.1.0.0/24",
                             "rt-entry": [
                                 {
                                     "active-tag": "*",
@@ -47884,7 +47884,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                         {
                                             "nh-string": "Next hop",
                                             "session": "141",
-                                            "to": "106.187.14.121",
+                                            "to": "10.169.14.121",
                                             "via": "ge-0/0/1.0",
                                             "weight": "0x1"
                                         }
@@ -47910,7 +47910,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         },
                         {
                             "rt-announced-count": "1",
-                            "rt-destination": "1.0.0.101/32",
+                            "rt-destination": "10.1.0.101/32",
                             "rt-entry": {
                                 "active-tag": "*",
                                 "age": {
@@ -47944,7 +47944,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         },
                         {
                             "rt-announced-count": "1",
-                            "rt-destination": "3.3.3.3/32",
+                            "rt-destination": "10.36.3.3/32",
                             "rt-entry": {
                                 "active-tag": "*",
                                 "age": {
@@ -47965,7 +47965,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     {
                                         "nh-string": "Next hop",
                                         "session": "141",
-                                        "to": "106.187.14.121",
+                                        "to": "10.169.14.121",
                                         "via": "ge-0/0/1.0",
                                         "weight": "0x1"
                                     }
@@ -47988,12 +47988,12 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                             },
                             "rt-state": "FlashAll",
                             "tsi": {
-                                "#text": "KRT in-kernel 3.3.3.3/32 -> {106.187.14.121}"
+                                "#text": "KRT in-kernel 10.36.3.3/32 -> {10.169.14.121}"
                             }
                         },
                         {
                             "rt-announced-count": "1",
-                            "rt-destination": "4.0.0.0/30",
+                            "rt-destination": "10.16.0.0/30",
                             "rt-entry": {
                                 "active-tag": "*",
                                 "age": {
@@ -48014,7 +48014,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     {
                                         "nh-string": "Next hop",
                                         "session": "141",
-                                        "to": "106.187.14.121",
+                                        "to": "10.169.14.121",
                                         "via": "ge-0/0/1.0",
                                         "weight": "0x1"
                                     }
@@ -48037,12 +48037,12 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                             },
                             "rt-state": "FlashAll",
                             "tsi": {
-                                "#text": "KRT in-kernel 4.0.0.0/30 -> {106.187.14.121}"
+                                "#text": "KRT in-kernel 10.16.0.0/30 -> {10.169.14.121}"
                             }
                         },
                         {
                             "rt-announced-count": "1",
-                            "rt-destination": "5.5.5.5/32",
+                            "rt-destination": "10.100.5.5/32",
                             "rt-entry": {
                                 "active-tag": "*",
                                 "age": {
@@ -48063,7 +48063,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     {
                                         "nh-string": "Next hop",
                                         "session": "141",
-                                        "to": "106.187.14.121",
+                                        "to": "10.169.14.121",
                                         "via": "ge-0/0/1.0",
                                         "weight": "0x1"
                                     }
@@ -48086,12 +48086,12 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                             },
                             "rt-state": "FlashAll",
                             "tsi": {
-                                "#text": "KRT in-kernel 5.5.5.5/32 -> {106.187.14.121}"
+                                "#text": "KRT in-kernel 10.100.5.5/32 -> {10.169.14.121}"
                             }
                         },
                         {
                             "rt-announced-count": "1",
-                            "rt-destination": "14.101.0.0/16",
+                            "rt-destination": "10.220.0.0/16",
                             "rt-entry": [
                                 {
                                     "active-tag": "*",
@@ -48101,7 +48101,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                         {
                                             "nh-string": "Next hop",
                                             "session": "141",
-                                            "to": "106.187.14.121",
+                                            "to": "10.169.14.121",
                                             "via": "ge-0/0/1.0"
                                         }
                                     ],
@@ -48115,7 +48115,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "protocol-nh": [
                                         {
                                             "indirect-nh": "0xc285884 1048574 INH Session ID: 0x1ac",
-                                            "to": "106.187.14.240"
+                                            "to": "10.169.14.240"
                                         },
                                         {
                                             "forwarding-nh-count": "1",
@@ -48124,16 +48124,16 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                                 {
                                                     "nh-string": "Next hop",
                                                     "session": "141",
-                                                    "to": "106.187.14.121",
+                                                    "to": "10.169.14.121",
                                                     "via": "ge-0/0/1.0"
                                                 }
                                             ],
-                                            "output": "106.187.14.240/32 Originating RIB: inet.0\nNode path count: 1\nForwarding nexthops: 1\nNexthop: 106.187.14.121 via ge-0/0/1.0\n",
-                                            "to": "106.187.14.240"
+                                            "output": "10.169.14.240/32 Originating RIB: inet.0\nNode path count: 1\nForwarding nexthops: 1\nNexthop: 10.169.14.121 via ge-0/0/1.0\n",
+                                            "to": "10.169.14.240"
                                         }
                                     ],
                                     "rt-entry-state": "Active Int Ext",
-                                    "task-name": "BGP_65151.106.187.14.240",
+                                    "task-name": "BGP_65151.10.169.14.240",
                                     "validation-state": "unverified"
                                 },
                                 {
@@ -48147,7 +48147,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                             "label-element-refcount": "14",
                                             "nh-string": "Next hop",
                                             "session": "0",
-                                            "to": "111.87.5.94",
+                                            "to": "10.189.5.94",
                                             "via": "ge-0/0/0.0",
                                             "weight": "0x1"
                                         }
@@ -48162,7 +48162,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "protocol-nh": [
                                         {
                                             "indirect-nh": "0xc285e84 - INH Session ID: 0x0",
-                                            "to": "111.87.5.253"
+                                            "to": "10.189.5.253"
                                         },
                                         {
                                             "forwarding-nh-count": "1",
@@ -48172,17 +48172,17 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                                 {
                                                     "nh-string": "Next hop",
                                                     "session": "0",
-                                                    "to": "111.87.5.94",
+                                                    "to": "10.189.5.94",
                                                     "via": "ge-0/0/0.0",
                                                     "weight": "0x1"
                                                 }
                                             ],
-                                            "output": "111.87.5.253/32 Originating RIB: inet.3\nForwarding nexthops: 1\nNexthop: 111.87.5.94 via ge-0/0/0.0\n",
-                                            "to": "111.87.5.253"
+                                            "output": "10.189.5.253/32 Originating RIB: inet.3\nForwarding nexthops: 1\nNexthop: 10.189.5.94 via ge-0/0/0.0\n",
+                                            "to": "10.189.5.253"
                                         }
                                     ],
                                     "rt-entry-state": "Int Ext Changed",
-                                    "task-name": "BGP_65171.111.87.5.253",
+                                    "task-name": "BGP_65171.10.189.5.253",
                                     "validation-state": "unverified"
                                 }
                             ],
@@ -48191,7 +48191,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                 "@junos:format": "2 entries"
                             },
                             "tsi": {
-                                "#text": "KRT in-kernel 14.101.0.0/16 -> {indirect(1048574)}\nPage 0 idx 1, (group hktGCS002 type Internal) Type 1 val 0x10c0b9b0 (adv_entry)\nAdvertised metrics:\nFlags: Nexthop Change\nNexthop: Self\nMED: 12003\nLocalpref: 120\nAS path: [65171] (65151 65000) I\nCommunities: 65001:10 65151:244\nPath 14.101.0.0\nfrom 106.187.14.240\nVector len 4.  Val: 1\nAS path: (65151 65000) I\nCommunities: 65001:10 65151:244\nLocalpref: 120\nAS path: (65151 65000) I\nCommunities: 65001:10 65151:244\nLocalpref: 120"
+                                "#text": "KRT in-kernel 10.220.0.0/16 -> {indirect(1048574)}\nPage 0 idx 1, (group hktGCS002 type Internal) Type 1 val 0x10c0b9b0 (adv_entry)\nAdvertised metrics:\nFlags: Nexthop Change\nNexthop: Self\nMED: 12003\nLocalpref: 120\nAS path: [65171] (65151 65000) I\nCommunities: 65001:10 65151:244\nPath 10.220.0.0\nfrom 10.169.14.240\nVector len 4.  Val: 1\nAS path: (65151 65000) I\nCommunities: 65001:10 65151:244\nLocalpref: 120\nAS path: (65151 65000) I\nCommunities: 65001:10 65151:244\nLocalpref: 120"
                             }
                         }
                     ],

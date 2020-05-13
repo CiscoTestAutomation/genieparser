@@ -880,11 +880,11 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         p7 = re.compile(r'^Next-hop +reference +count: +(?P<nh_reference_count>\d+)$')
 
         # Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
-        # Nexthop: 106.187.14.121 via ge-0/0/1.0
+        # Nexthop: 10.169.14.121 via ge-0/0/1.0
         p8 = re.compile(r'^(?P<nh_string>Next *hop):( +(?P<to>\S+))? +via +(?P<via>\S+)'
             r'( +weight +(?P<weight>\w+))?(, +(?P<selected_next_hop>\w+))?$')
 
-        # Protocol next hop: 106.187.14.240
+        # Protocol next hop: 10.169.14.240
         p8_1 = re.compile(r'^Protocol +next +hop: +(?P<to>\S+)( +Metric: +(?P<metric>\d+))?$')
 
         # Session Id: 0x141
@@ -965,8 +965,8 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         #     Localpref: 120
         #     AS path: [65171] (65151 65000) I
         #     Communities: 65001:10 65151:244
-        # Path 14.101.0.0
-        # from 106.187.14.240
+        # Path 10.220.0.0
+        # from 10.169.14.240
         # Vector len 4.  Val: 1
         p31 = re.compile(r'^(Advertised +metrics:)|'
                 r'(Flags: +)|(Nexthop: +)|(MED: +)|'
@@ -979,7 +979,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         # Indirect next hops: 1
         p33 = re.compile(r'^Indirect +next +hops: +(?P<forwarding_nh_count>\d+)$')
 
-        # 106.187.14.240/32 Originating RIB: inet.0
+        # 10.169.14.240/32 Originating RIB: inet.0
         p34 = re.compile(r'^\S+ +Originating +RIB: +[\S\s]+$')
 
         # Node path count: 1
@@ -1340,8 +1340,8 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             #     Localpref: 120
             #     AS path: [65171] (65151 65000) I
             #     Communities: 65001:10 65151:244
-            # Path 14.101.0.0
-            # from 106.187.14.240
+            # Path 10.220.0.0
+            # from 10.169.14.240
             # Vector len 4.  Val: 1
             m = p31.match(line)
             if m:
@@ -1366,7 +1366,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 forwarding_nh_count = group['forwarding_nh_count']
                 continue
 
-            # 106.187.14.240/32 Originating RIB: inet.0
+            # 10.169.14.240/32 Originating RIB: inet.0
             m = p34.match(line)
             if m:
                 originating_rib_found = True
