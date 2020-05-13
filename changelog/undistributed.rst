@@ -43,6 +43,8 @@
     * Fixed ShowDmvpn not executing the command properly on device
     * Update ShowIpRoute:
         * Fixed regex for VRF name, now supports the '-' character in name.
+    * Update ShowCdpNeighborsDetail:
+        * Modified regex to parse interface and port_id like FastEthernet0/0.1 and Serial0/0/0:1
     * Updated ShowInterfacesSwitchport:
         * Fixed the order of conditional statements, now the parser can parse the device output correctly
     * Updated ShowAccessLists:
@@ -51,7 +53,7 @@
         * Fixed regex for vlan name, now also supports multiple white spaces.
         * Added regex for toking ring table.
         * Added the following keys: 'token_ring', 'are_hops', 'ste_hops' and 'backup_crf'.
-
+        
 * NXOS
     * Updated ShowIpStaticRouteMulticast:
         * Change key 'address_family' into Optional
