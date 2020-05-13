@@ -856,7 +856,9 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
 
         # 0.0.0.0/0 (1 entry, 1 announced)
         # 10.1.0.0/24 (2 entries, 1 announced)
-        p2 = re.compile(r'^(?P<rt_destination>\S+)(\/(?P<rt_prefix_length>\d+))? +\((?P<format>(?P<text>\d+) +(entry|entries)), +(?P<announced>\d+) +announced\)$')
+        # 0.0.0.0 (1 entry, 1 announced)
+        p2 = re.compile(r'^(?P<rt_destination>\S+)(\/(?P<rt_prefix_length>\d+))? +'
+            r'\((?P<format>(?P<text>\d+) +(entry|entries)), +(?P<announced>\d+) +announced\)$')
 
         # State: <FlashAll>
         # State: <Active Int Ext>
@@ -864,10 +866,12 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
 
         # *OSPF   Preference: 150/10
         # *BGP    Preference: 170/-121
-        p4 = re.compile(r'^(?P<active_tag>\*)?(?P<protocol>\S+)\s+Preference:\s+(?P<preference>\d+)(\/(\-)?(?P<preference2>\d+))?$')
+        p4 = re.compile(r'^(?P<active_tag>\*)?(?P<protocol>\S+)\s+'
+            r'Preference:\s+(?P<preference>\d+)(\/(\-)?(?P<preference2>\d+))?$')
 
         # Next hop type: Router, Next hop index: 613
-        p5 = re.compile(r'^Next +hop type: +(?P<nh_type>\S+), +Next +hop +index: +(?P<nh_index>\d+)$')
+        p5 = re.compile(r'^Next +hop type: +(?P<nh_type>\S+), +Next +hop +'
+            r'index: +(?P<nh_index>\d+)$')
 
         # Address: 0xdfa7934
         p6 = re.compile(r'^Address: +(?P<nh_address>\S+)$')
@@ -877,10 +881,10 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
 
         # Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
         # Nexthop: 106.187.14.121 via ge-0/0/1.0
-        p8 = re.compile(r'^(?P<nh_string>Next *hop):( +(?P<to>\S+))? +via +(?P<via>\S+)( +weight +(?P<weight>\w+))?(, +(?P<selected_next_hop>\w+))?$')
+        p8 = re.compile(r'^(?P<nh_string>Next *hop):( +(?P<to>\S+))? +via +(?P<via>\S+)'
+            r'( +weight +(?P<weight>\w+))?(, +(?P<selected_next_hop>\w+))?$')
 
         # Protocol next hop: 106.187.14.240
-        # 
         p8_1 = re.compile(r'^Protocol +next +hop: +(?P<to>\S+)( +Metric: +(?P<metric>\d+))?$')
 
         # Session Id: 0x141
@@ -904,7 +908,8 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         p14 = re.compile(r'^Task: +(?P<task>\S+)$')
 
         # Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-        p15 = re.compile(r'^Announcement +bits +\((?P<announce_bits>\d+)\): +(?P<announce_tasks>[\S\s]+)$')
+        p15 = re.compile(r'^Announcement +bits +\((?P<announce_bits>\d+)\): +'
+            r'(?P<announce_tasks>[\S\s]+)$')
 
         # AS path: I 
         p16 = re.compile(r'^(?P<aspath_effective_string>AS +path:) +(?P<attr_value>\S+)$')
@@ -989,7 +994,8 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 group = m.groupdict()
                 route_table = ret_dict.setdefault('route-information', {}). \
                     setdefault('route-table', [])
-                route_table_dict = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                route_table_dict = {k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None}
                 route_table.append(route_table_dict)
                 continue
 
@@ -1111,14 +1117,15 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                         else:
                             nh_dict.update({key.replace('_', '-'): v})
                 continue
-
-            # p8_1 = re.compile(r'^Protocol +next +hop: +(?P<nh>\S+)( +Metric: +(?P<metric>\d+))?$')
+            
+            # Protocol Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
             m = p8_1.match(line)
             if m:
                 group = m.groupdict()
                 protocol_nh_found = True
                 protocol_nh_list = rt_entry_dict.setdefault('protocol-nh', [])
-                protocol_nh_dict = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                protocol_nh_dict = {k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None}
                 if forwarding_nh_count:
                     protocol_nh_dict.update({'forwarding-nh-count' : forwarding_nh_count})
                 protocol_nh_list.append(protocol_nh_dict)
@@ -1193,7 +1200,8 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 attr_as_path_dict = rt_entry_dict.setdefault('bgp-path-attributes', {}). \
                     setdefault('attr-as-path-effective', {})
                 rt_entry_dict.update({'as-path': line})
-                attr_as_path_dict.update({'aspath-effective-string': group['aspath_effective_string']})
+                attr_as_path_dict.update({'aspath-effective-string': 
+                    group['aspath_effective_string']})
                 attr_as_path_dict.update({'attr-value': group['attr_value']})
                 continue
 
@@ -1225,9 +1233,11 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             if m:
                 group = m.groupdict()
                 if protocol_nh_found:
-                    protocol_nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                    protocol_nh_dict.update({k.replace('_', '-'):
+                        v for k, v in group.items() if v is not None})
                 else:
-                    nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                    nh_dict.update({k.replace('_', '-'):
+                        v for k, v in group.items() if v is not None})
                 continue
 
             # Label TTL action: no-prop-ttl
@@ -1236,9 +1246,11 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             if m:
                 group = m.groupdict()
                 if protocol_nh_found:
-                    protocol_nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                    protocol_nh_dict.update({k.replace('_', '-'):
+                        v for k, v in group.items() if v is not None})
                 else:
-                    nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                    nh_dict.update({k.replace('_', '-'):
+                        v for k, v in group.items() if v is not None})
                 continue
 
             # Load balance label: Label 17000: None; Label 1650: None; Label 1913: None;
@@ -1246,9 +1258,11 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             if m:
                 group = m.groupdict()
                 if protocol_nh_found:
-                    protocol_nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                    protocol_nh_dict.update({k.replace('_', '-'):
+                        v for k, v in group.items() if v is not None})
                 else:
-                    nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                    nh_dict.update({k.replace('_', '-'):
+                        v for k, v in group.items() if v is not None})
                 continue
 
             # Label element ptr: 0xc5f6ec0
@@ -1256,44 +1270,51 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             if m:
                 group = m.groupdict()
                 if protocol_nh_found:
-                    protocol_nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                    protocol_nh_dict.update({k.replace('_', '-'):
+                        v for k, v in group.items() if v is not None})
                 else:
-                    nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                    nh_dict.update({k.replace('_', '-'):
+                        v for k, v in group.items() if v is not None})
                 continue
 
             # Label parent element ptr: 0x0
             m = p24.match(line)
             if m:
                 group = m.groupdict()
-                nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                nh_dict.update({k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None})
                 continue
             
             # Label element references: 2
             m = p25.match(line)
             if m:
                 group = m.groupdict()
-                nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                nh_dict.update({k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None})
                 continue
 
             # Label element child references: 1
             m = p26.match(line)
             if m:
                 group = m.groupdict()
-                nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                nh_dict.update({k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None})
                 continue
 
             # Label element lsp id: 0
             m = p27.match(line)
             if m:
                 group = m.groupdict()
-                nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                nh_dict.update({k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None})
                 continue
 
             # Task: OSPF3 I/O./var/run/ppmd_control
             m = p28.match(line)
             if m:
                 group = m.groupdict()
-                rt_entry_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                rt_entry_dict.update({k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None})
                 continue
             
             # OSPF3 realm ipv6-unicast area : 0.0.0.0, LSA ID : 0.0.0.1, LSA type : Extern
@@ -1330,15 +1351,14 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 continue
 
             # Indirect next hop: 0xc285884 1048574 INH Session ID: 0x1ac
-            # p32 = re.compile(r'^Indirect +next +hop: +(?P<indirect_nh>[\S\s]+)')
             m = p32.match(line)
             if m:
                 group = m.groupdict()
-                protocol_nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                protocol_nh_dict.update({k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None})
                 continue
 
             # Indirect next hops: 1
-            # p33 = re.compile(r'^Indirect +next +hops: +(?P<forwarding_nh_count>\d+)$')
             m = p33.match(line)
             if m:
                 group = m.groupdict()
@@ -1347,7 +1367,6 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 continue
 
             # 106.187.14.240/32 Originating RIB: inet.0
-            # p34 = re.compile(r'^\S+ +Originating +RIB: +[\S\s]+$')
             m = p34.match(line)
             if m:
                 originating_rib_found = True
@@ -1358,7 +1377,6 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
 
             # Node path count: 1
             # Forwarding nexthops: 1
-            # p35 = re.compile(r'^(Node +path +count: +)|(Forwarding +nexthops: +)[\S\s]+$')
             m = p35.match(line)
             if m:
                 proto_output = protocol_nh_dict.get('output', '')
@@ -1366,11 +1384,6 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 protocol_nh_dict.update({'output': proto_output})
                 continue
         
-        # import json
-        # json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
-        # f = open("dict.txt","w")
-        # f.write(json_data)
-        # f.close()
         return ret_dict
     
 class ShowRouteForwardingTableSummarySchema(MetaParser):

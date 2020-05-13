@@ -16,6 +16,13 @@
         * show interfaces descriptions
     * Added ShowPfeRouteSummary for:
         * show pfe route summary
+    * Added ShowInterfaces for:
+        * show interfaces
+    * Added ShowInterfacesExtensive for:
+        * show interfaces extensive
+        * show interfaces extensive {interface}
+    * Added ShowInterfacesExtensiveNoForwarding for:
+        * show interfaces extensive no-forwarding
     * Added ShowOspfDatabaseLsaidDetail for:
         * show ospf database lsa-id {ipaddress} detail
     * Added ShowOspfDatabaseNetworkLsaidDetail for:
@@ -45,6 +52,9 @@
         * Fixed regex for VRF name, now supports the '-' character in name.
     * Updated ShowInterfacesSwitchport:
         * Fixed the order of conditional statements, now the parser can parse the device output correctly
+    * Updated ShowAccessLists:
+        * Fixed a typo in code.
+
 * NXOS
     * Updated ShowIpStaticRouteMulticast:
         * Change key 'address_family' into Optional
@@ -52,6 +62,10 @@
         * Add regex to support various sample outputs
     * Updated ShowInterfaceStatus:
         * Fix a regex pattern to support various outputs
+    * Updated ShowInterface
+        * Added regex to support interfaces down for SFP Not Inserted
+        * Added regex to support interfaces down for ErrDisabled
+        * Added regex to support interfaces down due to being suspended (LACP)
 
 * IOSXR
     * Updated ShowBgpSessions:
@@ -71,3 +85,8 @@
         * show route extensive
         * show route extensive {destination}
 
+
+* IOS 
+    * Updated ShowIpArp
+        * Added argument 'output' into super().cli()
+                
