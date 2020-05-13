@@ -27,9 +27,6 @@ class ShowCdpNeighborsSchema(MetaParser):
             {Optional('index'):
                 {Any():
                     {'device_id': str,
-                     'local_interface': str,
-                     'hold_time': int,
-                     Optional('capability'): str,
                      Optional('platform'): str,
                      'port_id': str, }, }, },
     }
