@@ -58,6 +58,12 @@ class ShowVlanSchema(MetaParser):
                         Optional('type'): str,
                         Optional('ports'): list,
                     },
+                Optional('token_ring'):
+                    {
+                        Optional('are_hops'): int,
+                        Optional('ste_hops'): int,
+                        Optional('backup_crf'): str,
+                    }
                 },
             },
         }
@@ -75,6 +81,56 @@ class ShowVlan(ShowVlanSchema):
         else:
             out = output
 
+        # VLAN Name                             Status    Ports
+        # 1    default                          active    Gi1/0/1, Gi1/0/2, Gi1/0/3, Gi1/0/5, Gi1/0/6, Gi1/0/12,
+        # 2    VLAN_0002                        active
+        # 20   VLAN-0020                        active
+        # 100  V100                             suspended
+        # 105  Misc. Name                       active    Gi1/0/13, Gi1/0/14, Gi1/0/15, Gi1/0/16, Gi1/0/19
+        p1 = re.compile(r'^(?P<vlan_id>[0-9]+)\s+(?P<name>(?=\S).*(?<=\S))'
+                         '\s+(?P<status>(active|suspended|(.*)lshut|(.*)unsup)+)'
+                         '(?P<interfaces>[\s\S]+)?$')
+
+        #                                                Gi1/0/19, Gi1/0/20, Gi1/0/21, Gi1/0/22
+        p2 = re.compile(r'^\s*(?P<space>\s{48})(?P<interfaces>[\w\s\/\,]+)?$')
+
+        # VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
+        # ---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
+        # 1    enet  100001     1500  -      -      -        -    -        0      0
+        p3 = re.compile(r'^\s*(?P<vlan_id>[0-9]+) +(?P<type>[a-zA-Z]+)'
+                        ' +(?P<said>\d+) +(?P<mtu>[\d\-]+) +(?P<parent>[\w\-]+)?'
+                        ' +(?P<ring_no>[\w\-]+)? +(?P<bridge_no>[\w\-]+)? +(?P<stp>[\w\-]+)?'
+                        ' +(?P<bridge_mode>[\w\-]+)? +(?P<trans1>[\d\-]+) +(?P<trans2>[\d\-]+)$')
+
+        # Remote SPAN VLANs
+        # -------------------------------------
+        # 201-202
+        # 201,202
+        # 201,202-205
+        p4 = re.compile(r'^\s*(?P<remote_span_vlans>[^--][0-9\-\,]+)?$')
+
+        # Primary Secondary Type              Ports
+        # ------- --------- ----------------- ------------------------------------------
+        # 2       301       community         Fa5/3, Fa5/25
+        #  2       302       community
+        #          10        community
+        #  none    20        community
+        # 20      105       isolated
+        # 100     151       non-operational
+        # none    202       community
+        #         303       community
+        # 101     402       non-operational
+        p5 = re.compile(r'^\s*(?P<primary>[0-9a-zA-Z]+)? +(?P<secondary>\d+)'
+                        ' +(?P<type>[\w\-]+)( +(?P<interfaces>[\s\S]+))?')
+
+        # VLAN AREHops STEHops Backup CRF
+        # ---- ------- ------- ----------
+        # 1003 7       7       off
+        p6 = re.compile(r'^\s*(?P<vlan_id>\d+)\s+'
+                         '(?P<are_hops>\d+)\s+'
+                         '(?P<ste_hops>\d+)\s+'
+                         '(?P<backup_crf>\S+)\s*$')
+
         vlan_dict = {}
         primary = ""
         for line in out.splitlines():
@@ -82,6 +138,7 @@ class ShowVlan(ShowVlanSchema):
                 line = line.rstrip()
             else:
                 continue
+
             # VLAN Name                             Status    Ports
             # 1    default                          active    Gi1/0/1, Gi1/0/2, Gi1/0/3, Gi1/0/5, Gi1/0/6, Gi1/0/12,
             # 2    VLAN_0002                        active
@@ -91,11 +148,7 @@ class ShowVlan(ShowVlanSchema):
             # 102  VLAN_0102                        active
             # 103  VLAN-0103                        act/unsup
             # 104  VLAN_0104                        act/lshut
-
-            p1 = re.compile(r'^(?P<vlan_id>[0-9]+) +(?P<name>\S+)'
-                             ' +(?P<status>(active|suspended|(.*)lshut|(.*)unsup)+)(?P<interfaces>[\w\d\/\d, ]+)?$')
             m = p1.match(line)
-
             if m:
                 vlan_id = m.groupdict()['vlan_id']
                 if 'vlans' not in vlan_dict:
@@ -125,7 +178,6 @@ class ShowVlan(ShowVlanSchema):
                 continue
 
             #                                                Gi1/0/19, Gi1/0/20, Gi1/0/21, Gi1/0/22
-            p2 = re.compile(r'^\s*(?P<space>\s{48})(?P<interfaces>[\w\s\/\,]+)?$')
             m = p2.match(line)
             if m:
                 vlan_dict['vlans'][vlan_id]['interfaces'] = vlan_dict['vlans'][vlan_id]['interfaces']+\
@@ -135,10 +187,6 @@ class ShowVlan(ShowVlanSchema):
             # VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
             # ---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
             # 1    enet  100001     1500  -      -      -        -    -        0      0
-            p3 = re.compile(r'^\s*(?P<vlan_id>[0-9]+) +(?P<type>[a-zA-Z]+)'
-                            ' +(?P<said>\d+) +(?P<mtu>[\d\-]+) +(?P<parent>[\w\-]+)?'
-                            ' +(?P<ring_no>[\w\-]+)? +(?P<bridge_no>[\w\-]+)? +(?P<stp>[\w\-]+)?'
-                            ' +(?P<bridge_mode>[\w\-]+)? +(?P<trans1>[\d\-]+) +(?P<trans2>[\d\-]+)$')
             m = p3.match(line)
             if m:
                 vlan_id = m.groupdict()['vlan_id']
@@ -177,12 +225,36 @@ class ShowVlan(ShowVlanSchema):
 
                 continue
 
+            # VLAN AREHops STEHops Backup CRF
+            # ---- ------- ------- ----------
+            # 1003 7       7       off
+            m = p6.match(line)
+            if m:
+                vlan_id = m.groupdict()['vlan_id']
+                are_hops = m.groupdict()['are_hops']
+                ste_hops = m.groupdict()['ste_hops']
+                backup_crf = m.groupdict()['backup_crf']
+
+                if 'vlans' not in vlan_dict:
+                    vlan_dict['vlans'] = {}
+
+                if vlan_id not in vlan_dict['vlans']:
+                    vlan_dict['vlans'][vlan_id] = {}
+
+                if 'token_ring' not in vlan_dict['vlans'][vlan_id]:
+                    vlan_dict['vlans'][vlan_id]['token_ring'] = {}
+
+                vlan_dict['vlans'][vlan_id]['token_ring']['are_hops'] = int(are_hops)
+                vlan_dict['vlans'][vlan_id]['token_ring']['ste_hops'] = int(ste_hops)
+                vlan_dict['vlans'][vlan_id]['token_ring']['backup_crf'] = backup_crf
+
+                continue
+
             # Remote SPAN VLANs
             # -------------------------------------
             # 201-202
             # 201,202
             # 201,202-205
-            p4 = re.compile(r'^\s*(?P<remote_span_vlans>[^--][0-9\-\,]+)?$')
             m = p4.match(line)
             if m:
                 if m.groupdict()['remote_span_vlans']:
@@ -209,7 +281,6 @@ class ShowVlan(ShowVlanSchema):
 
                 continue
 
-
             # Primary Secondary Type              Ports
             # ------- --------- ----------------- ------------------------------------------
             # 2       301       community         Fa5/3, Fa5/25
@@ -221,11 +292,7 @@ class ShowVlan(ShowVlanSchema):
             # none    202       community
             #         303       community
             # 101     402       non-operational
-
-            p5 = re.compile(r'^\s*(?P<primary>[0-9a-zA-Z]+)? +(?P<secondary>\d+)'
-                             ' +(?P<type>[\w\-]+)( +(?P<interfaces>[\w\/, ]+))?')
             m = p5.match(line)
-
             if m:
                 if m.groupdict()['primary'] and m.groupdict()['primary'].lower() != "none":
                     primary = m.groupdict()['primary']
