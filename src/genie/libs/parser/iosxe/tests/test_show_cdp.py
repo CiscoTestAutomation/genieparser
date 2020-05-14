@@ -743,6 +743,70 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         'total_entries_displayed': 2
     }
 
+    device_output_8 = {'execute.return_value': '''
+        Device ID: router1
+        Entry address(es): 
+          IP address: 10.0.0.7
+        Platform: Cisco SG300-28 (PID:SRW2024-K9)-VSD,  Capabilities: Switch IGMP 
+        Interface: GigabitEthernet1/0/2,  Port ID (outgoing port): gi25
+        Holdtime : 155 sec
+        Version :
+        1.3.0.62
+        advertisement version: 2
+        Native VLAN: 1
+        Duplex: full
+        -------------------------
+        Device ID: Router02
+        Entry address(es): 
+          IP address: 10.0.0.8
+        Platform: MikroTik,  Capabilities: Router 
+        Interface: GigabitEthernet1/0/3,  Port ID (outgoing port): ether1
+        Holdtime : 90 sec
+        Version :
+        6.40.5 (stable)
+        advertisement version: 1
+        Total cdp entries displayed : 2
+    '''}
+
+    expected_parsed_output_8 = {
+        'total_entries_displayed': 2,
+        'index': {
+            1: {
+                'device_id': 'router1',
+                'duplex_mode': 'full',
+                'vtp_management_domain': '',
+                'native_vlan': '1',
+                'management_addresses': {},
+                'entry_addresses': {
+                    '10.0.0.7': {}
+                },
+                'capabilities': 'Switch IGMP',
+                'platform': 'Cisco SG300-28 (PID:SRW2024-K9)-VSD',
+                'port_id': 'gi25',
+                'local_interface': 'GigabitEthernet1/0/2',
+                'hold_time': 155,
+                'software_version': '1.3.0.62',
+                'advertisement_ver': 2},
+            2: {
+                'device_id': 'Router02',
+                'duplex_mode': '',
+                'vtp_management_domain': '',
+                'native_vlan': '',
+                'management_addresses': {
+                },
+                'entry_addresses': {
+                    '10.0.0.8': {}
+                },
+                'capabilities': 'Router',
+                'platform': 'MikroTik',
+                'port_id': 'ether1',
+                'local_interface': 'GigabitEthernet1/0/3',
+                'hold_time': 90,
+                'software_version': '6.40.5 (stable)',
+                'advertisement_ver': 1},
+        },
+    }
+
     def test_show_cdp_neighbors_detail_1(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_1)
@@ -791,6 +855,13 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         obj = ShowCdpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_7)
+
+    def test_show_cdp_neighbors_detail_colon_in_platform(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_8)
+        obj = ShowCdpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_8)
 
 if __name__ == '__main__':
     unittest.main()

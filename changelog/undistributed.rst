@@ -54,7 +54,8 @@
         * Fixed regex for description, now also supports messages like '{"SN":"SN-NR","Owner":"OWNER"}'.
         * Fixed regex for management addresses, now also supports IPv6 addresses.
         * Changed the following keys into Optional for 'med_information': 'f/w_revision', 'power_source', 'power_priority', 'wattage' and 'capabilities'.
-
+    * Update ShowCdpNeighborsDetail:
+        * Fixed regex for platform, now also supports ':'.
     * Update ShowVlan:
         * Fixed regex for vlan name, now also supports multiple white spaces.
         * Added regex for toking ring table.
