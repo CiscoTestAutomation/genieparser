@@ -1089,6 +1089,10 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         if not vrf:
             vrf = 'default'
 
+        # Routing Table: Mgmt-intf
+        # Routing Table: test_vrf1
+        p0 = re.complie(r'^Routing +Table: +(?P<routing_table>\S+)$')
+
         # initial regexp pattern
         # Routing entry for 10.151.0.0/24, 1 known subnets
         # Routing entry for 0.0.0.0/0, supernet
@@ -2284,6 +2288,7 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
         # label implicit-null
         # label [16073|16073]
         # label [51885|16073]-(local:28)
+        # label none
         p10 = re.compile(r'^label +(?P<label>.*)$')
 
         # <repair:  label 16061
@@ -2379,6 +2384,8 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
             m = p13.match(line)
             if m:
                 group = m.groupdict()
+                if 'feature_space_dict' not in prefix_dict:
+                    feature_space_dict = prefix_dict.setdefault('feature_space', {})
                 broker_dict = feature_space_dict.setdefault('broker', {})
                 if group['priority']:
                     broker_dict['distribution_priority'] = int(group['priority'])
@@ -2658,6 +2665,9 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
 
             if m10:
                 label_val = m10.groupdict()['label']
+                if label_val == 'none':
+                    continue
+
                 if 'path_list' in prefix_dict:
                     if 'tag_midchain' in output_chain_dict:
 
