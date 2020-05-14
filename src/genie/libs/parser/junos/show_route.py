@@ -693,7 +693,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                     Optional("rt-ospf-area"): str,
                     Optional("rt-tag"): str,
                     "task-name": str,
-                    "validation-state": str
+                    Optional("validation-state"): str
                 },
                 "rt-entry-count": {
                     "#text": str,
