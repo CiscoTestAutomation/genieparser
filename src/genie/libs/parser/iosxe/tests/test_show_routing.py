@@ -3279,124 +3279,801 @@ class TestShowIpCefInternal(unittest.TestCase):
     }
 
     golden_output_5 = {'execute.return_value': '''
-        show ip cef internal
-        IPv4 CEF is enabled for distributed and running
-        VRF Default
-         55 prefixes (54/1 fwd/non-fwd)
-         Table id 0x0
-         Database epoch:        2 (55 entries at this epoch)
 
-        0.0.0.0/0, epoch 2, flags [DefRtHndlr, defrt], refcnt 5, per-destination sharing
-          sources: DRH
-          ifnums: (none)
-          path list 7FEE80648560, 4 locks, per-destination, flags 0x41 [shble, hwcn]
-            path 7FEE80648DB0, share 1/1, type special prefix, for IPv4
-              no route
-          output chain:
-            no route
-        0.0.0.0/8, epoch 2, refcnt 6, per-destination sharing
-          sources: Spc
-          feature space:
-            Broker: linked, distributed at 4th priority
-          subblocks:
-            Special source: drop
-          ifnums: (none)
-          path list 7FEE54E132F0, 11 locks, per-destination, flags 0x41 [shble, hwcn]
-            path 7FEE54E13638, share 1/1, type special prefix, for IPv4
-              drop
-          output chain:
-            drop
-        0.0.0.0/32, epoch 2, flags [rcv], refcnt 6, per-destination sharing
-          sources: Spc
-          feature space:
-            Broker: linked, distributed at 4th priority
-          subblocks:
-            Special source: receive
-          ifnums: (none)
-          path list 7FEE54E13390, 11 locks, per-destination, flags 0x41 [shble, hwcn]
-            path 7FEE54E13708, share 1/1, type receive, for IPv4
-              receive
-          output chain:
-            receive
-        1.1.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
-          sources: I/F, RIB
-          feature space:
-            IPRM: 0x0003800C
-            Broker: linked, distributed at 2nd priority
-          subblocks:
-            gsb Connected receive chain(0): 0x7FEE86E00DB0
-            gsb Connected chain head(1): 0x7FEE86E00CA8
-            Interface source: Loopback0 flags: local, source eligible flags3: none
-          ifnums: (none)
-          path list 7FEE5AF88090, 3 locks, per-destination, flags 0x41 [shble, hwcn]
-            path 7FEE5AF88B40, share 1/1, type receive, for IPv4
-              receive for Loopback0
-          output chain:
-            receive
-        3.3.3.3/32, epoch 2, RIB[I], refcnt 6, per-destination sharing
-          sources: RIB, LTE
-          feature space:
-            IPRM: 0x00028000
-            Broker: linked, distributed at 4th priority
-            LFD: 3.3.3.3/32 1 local label
-            dflt local label info: global/16 [0x3]
-                contains path extension list
-                dflt disposition chain 0x7FEE86F48B90
-                  label none
-                  IP adj out of GigabitEthernet3.90, addr 10.13.90.3
-          ifnums:
-            GigabitEthernet3.90(29): 10.13.90.3
-          path list 7FEE5AC45458, 5 locks, per-destination, flags 0x49 [shble, rif, hwcn]
-            path 7FEE7ECE0A78, share 1/1, type attached nexthop, for IPv4
-              MPLS short path extensions: [none] MOI flags = 0x0 label none
-              nexthop 10.13.90.3 GigabitEthernet3.90, IP adj out of GigabitEthernet3.90, addr 10.13.90.3 7FEE874C9FE8
-          output chain:
-            IP adj out of GigabitEthernet3.90, addr 10.13.90.3 7FEE874C9FE8
-        10.12.90.0/24, epoch 2, flags [att, cnn, cover, deagg], RIB[C], refcnt 6, per-destination sharing
-          sources: RIB
-          feature space:
-            IPRM: 0x0003800C
-            Broker: linked, distributed at 2nd priority
-          subblocks:
-            gsb Connected chain head(1): 0x7FEE5B8FB520
-            Covered dependent prefixes: 3
-              need deagg: 2
-              notify cover updated: 1
-          ifnums:
-            GigabitEthernet2.90(21)
-          path list 7FEE874A8868, 3 locks, per-destination, flags 0x49 [shble, rif, hwcn]
-            path 7FEE5B901428, share 1/1, type connected prefix, for IPv4
-              connected to GigabitEthernet2.90, glean
-          output chain:
-            glean
-        10.12.90.0/32, epoch 2, flags [rcv], refcnt 6, per-destination sharing
-          sources: I/F
-          feature space:
-            Broker: linked, distributed at 4th priority
-          subblocks:
-            gsb Connected receive chain(0): 0x7FEE5A6464A0
-            Interface source: GigabitEthernet2.90 flags: none flags3: none
-              Dependent covered prefix type cover need deagg, cover 10.12.90.0/24
-          ifnums: (none)
-          path list 7FEE874A87C8, 5 locks, per-destination, flags 0x41 [shble, hwcn]
-            path 7FEE5B901358, share 1/1, type receive, for IPv4
-              receive for GigabitEthernet2.90
-          output chain:
-            receive
-        10.12.90.1/32, epoch 2, flags [rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
-          sources: I/F, RIB
-          feature space:
-            IPRM: 0x0003C00C
-            Broker: linked, distributed at 2nd priority
-          subblocks:
-            gsb Connected receive chain(0): 0x7FEE5A6464F8
-            Interface source: GigabitEthernet2.90 flags: local, source eligible flags3: none
-          ifnums: (none)
-          path list 7FEE874A87C8, 5 locks, per-destination, flags 0x41 [shble, hwcn]
-            path 7FEE5B901358, share 1/1, type receive, for IPv4
-              receive for GigabitEthernet2.90
-          output chain:
-            receive
+show ip cef internal
+IPv4 CEF is enabled for distributed and running
+VRF Default
+ 55 prefixes (54/1 fwd/non-fwd)
+ Table id 0x0
+ Database epoch:        2 (55 entries at this epoch)
+
+0.0.0.0/0, epoch 2, flags [DefRtHndlr, defrt], refcnt 5, per-destination sharing
+  sources: DRH
+  ifnums: (none)
+  path list 7FEE80648560, 4 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE80648DB0, share 1/1, type special prefix, for IPv4
+      no route
+  output chain:
+    no route
+0.0.0.0/8, epoch 2, refcnt 6, per-destination sharing
+  sources: Spc
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    Special source: drop
+  ifnums: (none)
+  path list 7FEE54E132F0, 11 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE54E13638, share 1/1, type special prefix, for IPv4
+      drop
+  output chain:
+    drop
+0.0.0.0/32, epoch 2, flags [rcv], refcnt 6, per-destination sharing
+  sources: Spc
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    Special source: receive
+  ifnums: (none)
+  path list 7FEE54E13390, 11 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE54E13708, share 1/1, type receive, for IPv4
+      receive
+  output chain:
+    receive
+1.1.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
+  sources: I/F, RIB
+  feature space:
+    IPRM: 0x0003800C
+    Broker: linked, distributed at 2nd priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE86E00DB0
+    gsb Connected chain head(1): 0x7FEE86E00CA8
+    Interface source: Loopback0 flags: local, source eligible flags3: none
+  ifnums: (none)
+  path list 7FEE5AF88090, 3 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5AF88B40, share 1/1, type receive, for IPv4
+      receive for Loopback0
+  output chain:
+    receive
+3.3.3.3/32, epoch 2, RIB[I], refcnt 6, per-destination sharing
+  sources: RIB, LTE
+  feature space:
+    IPRM: 0x00028000
+    Broker: linked, distributed at 4th priority
+    LFD: 3.3.3.3/32 1 local label
+    dflt local label info: global/16 [0x3]
+        contains path extension list
+        dflt disposition chain 0x7FEE86F48B90
+          label none
+          IP adj out of GigabitEthernet3.90, addr 10.13.90.3
+  ifnums:
+    GigabitEthernet3.90(29): 10.13.90.3
+  path list 7FEE5AC45458, 5 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7FEE7ECE0A78, share 1/1, type attached nexthop, for IPv4
+      MPLS short path extensions: [none] MOI flags = 0x0 label none
+      nexthop 10.13.90.3 GigabitEthernet3.90, IP adj out of GigabitEthernet3.90, addr 10.13.90.3 7FEE874C9FE8
+  output chain:
+    IP adj out of GigabitEthernet3.90, addr 10.13.90.3 7FEE874C9FE8
+10.12.90.0/24, epoch 2, flags [att, cnn, cover, deagg], RIB[C], refcnt 6, per-destination sharing
+  sources: RIB
+  feature space:
+    IPRM: 0x0003800C
+    Broker: linked, distributed at 2nd priority
+  subblocks:
+    gsb Connected chain head(1): 0x7FEE5B8FB520
+    Covered dependent prefixes: 3
+      need deagg: 2
+      notify cover updated: 1
+  ifnums:
+    GigabitEthernet2.90(21)
+  path list 7FEE874A8868, 3 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7FEE5B901428, share 1/1, type connected prefix, for IPv4
+      connected to GigabitEthernet2.90, glean
+  output chain:
+    glean
+10.12.90.0/32, epoch 2, flags [rcv], refcnt 6, per-destination sharing
+  sources: I/F
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE5A6464A0
+    Interface source: GigabitEthernet2.90 flags: none flags3: none
+      Dependent covered prefix type cover need deagg, cover 10.12.90.0/24
+  ifnums: (none)
+  path list 7FEE874A87C8, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B901358, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet2.90
+  output chain:
+    receive
+10.12.90.1/32, epoch 2, flags [rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
+  sources: I/F, RIB
+  feature space:
+    IPRM: 0x0003C00C
+    Broker: linked, distributed at 2nd priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE5A6464F8
+    Interface source: GigabitEthernet2.90 flags: local, source eligible flags3: none
+  ifnums: (none)
+  path list 7FEE874A87C8, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B901358, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet2.90
+  output chain:
+    receive
+10.12.90.2/32, epoch 2, flags [att], refcnt 5, per-destination sharing
+  sources: Adj
+  subblocks:
+    Adj source: IP adj out of GigabitEthernet2.90, addr 10.12.90.2 7FEE5BC35838
+      Dependent covered prefix type adjfib, cover 10.12.90.0/24
+  ifnums:
+    GigabitEthernet2.90(21): 10.12.90.2
+  path list 7FEE5AC44558, 2 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7FEE7ECDF6F8, share 1/1, type adjacency prefix, for IPv4
+      attached to GigabitEthernet2.90, IP adj out of GigabitEthernet2.90, addr 10.12.90.2 7FEE5BC35838
+  output chain:
+    IP adj out of GigabitEthernet2.90, addr 10.12.90.2 7FEE5BC35838
+10.12.90.255/32, epoch 2, flags [rcv], refcnt 6, per-destination sharing
+  sources: I/F
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE5A646448
+    Interface source: GigabitEthernet2.90 flags: none flags3: none
+      Dependent covered prefix type cover need deagg, cover 10.12.90.0/24
+  ifnums: (none)
+  path list 7FEE874A87C8, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B901358, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet2.90
+  output chain:
+    receive
+10.12.110.0/24, epoch 2, flags [att, cnn, cover, deagg], RIB[C], refcnt 6, per-destination sharing
+  sources: RIB
+  feature space:
+    IPRM: 0x0003800C
+    Broker: linked, distributed at 2nd priority
+    LFD: 10.12.110.0/24 0 local labels
+        contains path extension list
+  subblocks:
+    gsb Connected chain head(1): 0x7FEE5A646FA8
+    Covered dependent prefixes: 3
+      need deagg: 2
+      notify cover updated: 1
+  ifnums:
+    GigabitEthernet2.110(22)
+  path list 7FEE874A8728, 3 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7FEE5B901288, share 1/1, type connected prefix, for IPv4
+      MPLS short path extensions: [none] MOI flags = 0x1 label implicit-null
+      connected to GigabitEthernet2.110, glean
+  output chain:
+    glean
+10.12.110.0/32, epoch 2, flags [rcv], refcnt 6, per-destination sharing
+  sources: I/F
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE5A646398
+    Interface source: GigabitEthernet2.110 flags: none flags3: none
+      Dependent covered prefix type cover need deagg, cover 10.12.110.0/24
+  ifnums: (none)
+  path list 7FEE874A8688, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B9011B8, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet2.110
+  output chain:
+    receive
+10.12.110.1/32, epoch 2, flags [rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
+  sources: I/F, RIB
+  feature space:
+    IPRM: 0x0003C00C
+    Broker: linked, distributed at 2nd priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE5A6463F0
+    Interface source: GigabitEthernet2.110 flags: local, source eligible flags3: none
+  ifnums: (none)
+  path list 7FEE874A8688, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B9011B8, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet2.110
+  output chain:
+    receive
+10.12.110.2/32, epoch 2, flags [att], refcnt 5, per-destination sharing
+  sources: Adj
+  subblocks:
+    Adj source: IP adj out of GigabitEthernet2.110, addr 10.12.110.2 7FEE5BC368F8
+      Dependent covered prefix type adjfib, cover 10.12.110.0/24
+  ifnums:
+    GigabitEthernet2.110(22): 10.12.110.2
+  path list 7FEE5AC44878, 2 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7FEE7ECDFB08, share 1/1, type adjacency prefix, for IPv4
+      attached to GigabitEthernet2.110, IP adj out of GigabitEthernet2.110, addr 10.12.110.2 7FEE5BC368F8
+  output chain:
+    IP adj out of GigabitEthernet2.110, addr 10.12.110.2 7FEE5BC368F8
+10.12.110.255/32, epoch 2, flags [rcv], refcnt 6, per-destination sharing
+  sources: I/F
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE5A646340
+    Interface source: GigabitEthernet2.110 flags: none flags3: none
+      Dependent covered prefix type cover need deagg, cover 10.12.110.0/24
+  ifnums: (none)
+  path list 7FEE874A8688, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B9011B8, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet2.110
+  output chain:
+    receive
+10.12.115.0/24, epoch 2, flags [att, cnn, cover, deagg], RIB[C], refcnt 6, per-destination sharing
+  sources: RIB
+  feature space:
+    IPRM: 0x0003800C
+    Broker: linked, distributed at 2nd priority
+  subblocks:
+    gsb Connected chain head(1): 0x7FEE5A646F48
+    Covered dependent prefixes: 3
+      need deagg: 2
+      notify cover updated: 1
+  ifnums:
+    GigabitEthernet2.115(23)
+  path list 7FEE874A85E8, 3 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7FEE5B9010E8, share 1/1, type connected prefix, for IPv4
+      connected to GigabitEthernet2.115, glean
+  output chain:
+    glean
+10.12.115.0/32, epoch 2, flags [rcv], refcnt 6, per-destination sharing
+  sources: I/F
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE5A646290
+    Interface source: GigabitEthernet2.115 flags: none flags3: none
+      Dependent covered prefix type cover need deagg, cover 10.12.115.0/24
+  ifnums: (none)
+  path list 7FEE874A8548, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B901018, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet2.115
+  output chain:
+    receive
+10.12.115.1/32, epoch 2, flags [rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
+  sources: I/F, RIB
+  feature space:
+    IPRM: 0x0003C00C
+    Broker: linked, distributed at 2nd priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE5A6462E8
+    Interface source: GigabitEthernet2.115 flags: local, source eligible flags3: none
+  ifnums: (none)
+  path list 7FEE874A8548, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B901018, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet2.115
+  output chain:
+    receive
+10.12.115.2/32, epoch 2, flags [att], refcnt 5, per-destination sharing
+  sources: Adj
+  subblocks:
+    Adj source: IP adj out of GigabitEthernet2.115, addr 10.12.115.2 7FEE5BC36B10
+      Dependent covered prefix type adjfib, cover 10.12.115.0/24
+  ifnums:
+    GigabitEthernet2.115(23): 10.12.115.2
+  path list 7FEE5AC44918, 2 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7FEE7ECDFBD8, share 1/1, type adjacency prefix, for IPv4
+      attached to GigabitEthernet2.115, IP adj out of GigabitEthernet2.115, addr 10.12.115.2 7FEE5BC36B10
+  output chain:
+    IP adj out of GigabitEthernet2.115, addr 10.12.115.2 7FEE5BC36B10
+10.12.115.255/32, epoch 2, flags [rcv], refcnt 6, per-destination sharing
+  sources: I/F
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE5A646238
+    Interface source: GigabitEthernet2.115 flags: none flags3: none
+      Dependent covered prefix type cover need deagg, cover 10.12.115.0/24
+  ifnums: (none)
+  path list 7FEE874A8548, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B901018, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet2.115
+  output chain:
+    receive
+10.12.120.0/24, epoch 2, flags [att, cnn, cover, deagg], RIB[C], refcnt 6, per-destination sharing
+  sources: RIB
+  feature space:
+    IPRM: 0x0003800C
+    Broker: linked, distributed at 2nd priority
+  subblocks:
+    gsb Connected chain head(1): 0x7FEE5A646EE8
+    Covered dependent prefixes: 3
+      need deagg: 2
+      notify cover updated: 1
+  ifnums:
+    GigabitEthernet2.120(24)
+  path list 7FEE874A84A8, 3 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7FEE5B900F48, share 1/1, type connected prefix, for IPv4
+      connected to GigabitEthernet2.120, glean
+  output chain:
+    glean
+10.12.120.0/32, epoch 2, flags [rcv], refcnt 6, per-destination sharing
+  sources: I/F
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE5A646188
+    Interface source: GigabitEthernet2.120 flags: none flags3: none
+      Dependent covered prefix type cover need deagg, cover 10.12.120.0/24
+  ifnums: (none)
+  path list 7FEE874A8408, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B900E78, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet2.120
+  output chain:
+    receive
+10.12.120.1/32, epoch 2, flags [rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
+  sources: I/F, RIB
+  feature space:
+    IPRM: 0x0003C00C
+    Broker: linked, distributed at 2nd priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE5A6461E0
+    Interface source: GigabitEthernet2.120 flags: local, source eligible flags3: none
+  ifnums: (none)
+  path list 7FEE874A8408, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B900E78, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet2.120
+  output chain:
+    receive
+10.12.120.2/32, epoch 2, flags [att], refcnt 5, per-destination sharing
+  sources: Adj
+  subblocks:
+    Adj source: IP adj out of GigabitEthernet2.120, addr 10.12.120.2 7FEE5BC35E80
+      Dependent covered prefix type adjfib, cover 10.12.120.0/24
+  ifnums:
+    GigabitEthernet2.120(24): 10.12.120.2
+  path list 7FEE5AC44698, 2 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7FEE7ECDF898, share 1/1, type adjacency prefix, for IPv4
+      attached to GigabitEthernet2.120, IP adj out of GigabitEthernet2.120, addr 10.12.120.2 7FEE5BC35E80
+  output chain:
+    IP adj out of GigabitEthernet2.120, addr 10.12.120.2 7FEE5BC35E80
+10.12.120.255/32, epoch 2, flags [rcv], refcnt 6, per-destination sharing
+  sources: I/F
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE5A646130
+    Interface source: GigabitEthernet2.120 flags: none flags3: none
+      Dependent covered prefix type cover need deagg, cover 10.12.120.0/24
+  ifnums: (none)
+  path list 7FEE874A8408, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B900E78, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet2.120
+  output chain:
+    receive
+10.13.90.0/24, epoch 2, flags [att, cnn, cover, deagg], RIB[C], refcnt 6, per-destination sharing
+  sources: RIB
+  feature space:
+    IPRM: 0x0003800C
+    Broker: linked, distributed at 2nd priority
+  subblocks:
+    gsb Connected chain head(1): 0x7FEE5A646D08
+    Covered dependent prefixes: 3
+      need deagg: 2
+      notify cover updated: 1
+  ifnums:
+    GigabitEthernet3.90(29)
+  path list 7FEE874A7E68, 3 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7FEE5B900728, share 1/1, type connected prefix, for IPv4
+      connected to GigabitEthernet3.90, glean
+  output chain:
+    glean
+10.13.90.0/32, epoch 2, flags [rcv], refcnt 6, per-destination sharing
+  sources: I/F
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE877168E8
+    Interface source: GigabitEthernet3.90 flags: none flags3: none
+      Dependent covered prefix type cover need deagg, cover 10.13.90.0/24
+  ifnums: (none)
+  path list 7FEE874A7DC8, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B900658, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet3.90
+  output chain:
+    receive
+10.13.90.1/32, epoch 2, flags [rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
+  sources: I/F, RIB
+  feature space:
+    IPRM: 0x0003C00C
+    Broker: linked, distributed at 2nd priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE87716940
+    Interface source: GigabitEthernet3.90 flags: local, source eligible flags3: none
+  ifnums: (none)
+  path list 7FEE874A7DC8, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B900658, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet3.90
+  output chain:
+    receive
+10.13.90.3/32, epoch 2, flags [att], refcnt 5, per-destination sharing
+  sources: Adj
+  subblocks:
+    Adj source: IP adj out of GigabitEthernet3.90, addr 10.13.90.3 7FEE874C9FE8
+      Dependent covered prefix type adjfib, cover 10.13.90.0/24
+  ifnums:
+    GigabitEthernet3.90(29): 10.13.90.3
+  path list 7FEE5AC45778, 2 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7FEE7ECE0E88, share 1/1, type adjacency prefix, for IPv4
+      attached to GigabitEthernet3.90, IP adj out of GigabitEthernet3.90, addr 10.13.90.3 7FEE874C9FE8
+  output chain:
+    IP adj out of GigabitEthernet3.90, addr 10.13.90.3 7FEE874C9FE8
+10.13.90.255/32, epoch 2, flags [rcv], refcnt 6, per-destination sharing
+  sources: I/F
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE87716890
+    Interface source: GigabitEthernet3.90 flags: none flags3: none
+      Dependent covered prefix type cover need deagg, cover 10.13.90.0/24
+  ifnums: (none)
+  path list 7FEE874A7DC8, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B900658, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet3.90
+  output chain:
+    receive
+10.13.110.0/24, epoch 2, flags [att, cnn, cover, deagg], RIB[C], refcnt 6, per-destination sharing
+  sources: RIB
+  feature space:
+    IPRM: 0x0003800C
+    Broker: linked, distributed at 2nd priority
+    LFD: 10.13.110.0/24 0 local labels
+        contains path extension list
+  subblocks:
+    gsb Connected chain head(1): 0x7FEE5A646CA8
+    Covered dependent prefixes: 3
+      need deagg: 2
+      notify cover updated: 1
+  ifnums:
+    GigabitEthernet3.110(30)
+  path list 7FEE874A7D28, 3 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7FEE5B900588, share 1/1, type connected prefix, for IPv4
+      MPLS short path extensions: [none] MOI flags = 0x1 label implicit-null
+      connected to GigabitEthernet3.110, glean
+  output chain:
+    glean
+10.13.110.0/32, epoch 2, flags [rcv], refcnt 6, per-destination sharing
+  sources: I/F
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE877167E0
+    Interface source: GigabitEthernet3.110 flags: none flags3: none
+      Dependent covered prefix type cover need deagg, cover 10.13.110.0/24
+  ifnums: (none)
+  path list 7FEE874A7C88, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B9004B8, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet3.110
+  output chain:
+    receive
+10.13.110.1/32, epoch 2, flags [rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
+  sources: I/F, RIB
+  feature space:
+    IPRM: 0x0003C00C
+    Broker: linked, distributed at 2nd priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE87716838
+    Interface source: GigabitEthernet3.110 flags: local, source eligible flags3: none
+  ifnums: (none)
+  path list 7FEE874A7C88, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B9004B8, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet3.110
+  output chain:
+    receive
+10.13.110.3/32, epoch 2, flags [att], refcnt 5, per-destination sharing
+  sources: Adj
+  subblocks:
+    Adj source: IP adj out of GigabitEthernet3.110, addr 10.13.110.3 7FEE874C9788
+      Dependent covered prefix type adjfib, cover 10.13.110.0/24
+  ifnums:
+    GigabitEthernet3.110(30): 10.13.110.3
+  path list 7FEE5AC45598, 2 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7FEE7ECE0C18, share 1/1, type adjacency prefix, for IPv4
+      attached to GigabitEthernet3.110, IP adj out of GigabitEthernet3.110, addr 10.13.110.3 7FEE874C9788
+  output chain:
+    IP adj out of GigabitEthernet3.110, addr 10.13.110.3 7FEE874C9788
+10.13.110.255/32, epoch 2, flags [rcv], refcnt 6, per-destination sharing
+  sources: I/F
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE87716788
+    Interface source: GigabitEthernet3.110 flags: none flags3: none
+      Dependent covered prefix type cover need deagg, cover 10.13.110.0/24
+  ifnums: (none)
+  path list 7FEE874A7C88, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B9004B8, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet3.110
+  output chain:
+    receive
+10.13.115.0/24, epoch 2, flags [att, cnn, cover, deagg], RIB[C], refcnt 6, per-destination sharing
+  sources: RIB
+  feature space:
+    IPRM: 0x0003800C
+    Broker: linked, distributed at 2nd priority
+  subblocks:
+    gsb Connected chain head(1): 0x7FEE5A646C48
+    Covered dependent prefixes: 3
+      need deagg: 2
+      notify cover updated: 1
+  ifnums:
+    GigabitEthernet3.115(31)
+  path list 7FEE874A7BE8, 3 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7FEE5B9003E8, share 1/1, type connected prefix, for IPv4
+      connected to GigabitEthernet3.115, glean
+  output chain:
+    glean
+10.13.115.0/32, epoch 2, flags [rcv], refcnt 6, per-destination sharing
+  sources: I/F
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE877166D8
+    Interface source: GigabitEthernet3.115 flags: none flags3: none
+      Dependent covered prefix type cover need deagg, cover 10.13.115.0/24
+  ifnums: (none)
+  path list 7FEE874A7B48, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B900318, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet3.115
+  output chain:
+    receive
+10.13.115.1/32, epoch 2, flags [rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
+  sources: I/F, RIB
+  feature space:
+    IPRM: 0x0003C00C
+    Broker: linked, distributed at 2nd priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE87716730
+    Interface source: GigabitEthernet3.115 flags: local, source eligible flags3: none
+  ifnums: (none)
+  path list 7FEE874A7B48, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B900318, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet3.115
+  output chain:
+    receive
+10.13.115.3/32, epoch 2, flags [att], refcnt 5, per-destination sharing
+  sources: Adj
+  subblocks:
+    Adj source: IP adj out of GigabitEthernet3.115, addr 10.13.115.3 7FEE5BC37DE8
+      Dependent covered prefix type adjfib, cover 10.13.115.0/24
+  ifnums:
+    GigabitEthernet3.115(31): 10.13.115.3
+  path list 7FEE5AC45138, 2 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7FEE7ECE0668, share 1/1, type adjacency prefix, for IPv4
+      attached to GigabitEthernet3.115, IP adj out of GigabitEthernet3.115, addr 10.13.115.3 7FEE5BC37DE8
+  output chain:
+    IP adj out of GigabitEthernet3.115, addr 10.13.115.3 7FEE5BC37DE8
+10.13.115.255/32, epoch 2, flags [rcv], refcnt 6, per-destination sharing
+  sources: I/F
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE87716680
+    Interface source: GigabitEthernet3.115 flags: none flags3: none
+      Dependent covered prefix type cover need deagg, cover 10.13.115.0/24
+  ifnums: (none)
+  path list 7FEE874A7B48, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B900318, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet3.115
+  output chain:
+    receive
+10.13.120.0/24, epoch 2, flags [att, cnn, cover, deagg], RIB[C], refcnt 6, per-destination sharing
+  sources: RIB
+  feature space:
+    IPRM: 0x0003800C
+    Broker: linked, distributed at 2nd priority
+  subblocks:
+    gsb Connected chain head(1): 0x7FEE5A646BE8
+    Covered dependent prefixes: 3
+      need deagg: 2
+      notify cover updated: 1
+  ifnums:
+    GigabitEthernet3.120(32)
+  path list 7FEE874A7AA8, 3 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7FEE5B900248, share 1/1, type connected prefix, for IPv4
+      connected to GigabitEthernet3.120, glean
+  output chain:
+    glean
+10.13.120.0/32, epoch 2, flags [rcv], refcnt 6, per-destination sharing
+  sources: I/F
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE877165D0
+    Interface source: GigabitEthernet3.120 flags: none flags3: none
+      Dependent covered prefix type cover need deagg, cover 10.13.120.0/24
+  ifnums: (none)
+  path list 7FEE874A7A08, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B900178, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet3.120
+  output chain:
+    receive
+10.13.120.1/32, epoch 2, flags [rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
+  sources: I/F, RIB
+  feature space:
+    IPRM: 0x0003C00C
+    Broker: linked, distributed at 2nd priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE87716628
+    Interface source: GigabitEthernet3.120 flags: local, source eligible flags3: none
+  ifnums: (none)
+  path list 7FEE874A7A08, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B900178, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet3.120
+  output chain:
+    receive
+10.13.120.3/32, epoch 2, flags [att], refcnt 5, per-destination sharing
+  sources: Adj
+  subblocks:
+    Adj source: IP adj out of GigabitEthernet3.120, addr 10.13.120.3 7FEE5BC37588
+      Dependent covered prefix type adjfib, cover 10.13.120.0/24
+  ifnums:
+    GigabitEthernet3.120(32): 10.13.120.3
+  path list 7FEE5AC44AF8, 2 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7FEE7ECDFE48, share 1/1, type adjacency prefix, for IPv4
+      attached to GigabitEthernet3.120, IP adj out of GigabitEthernet3.120, addr 10.13.120.3 7FEE5BC37588
+  output chain:
+    IP adj out of GigabitEthernet3.120, addr 10.13.120.3 7FEE5BC37588
+10.13.120.255/32, epoch 2, flags [rcv], refcnt 6, per-destination sharing
+  sources: I/F
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    gsb Connected receive chain(0): 0x7FEE87716578
+    Interface source: GigabitEthernet3.120 flags: none flags3: none
+      Dependent covered prefix type cover need deagg, cover 10.13.120.0/24
+  ifnums: (none)
+  path list 7FEE874A7A08, 5 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE5B900178, share 1/1, type receive, for IPv4
+      receive for GigabitEthernet3.120
+  output chain:
+    receive
+10.23.90.0/24, epoch 2, RIB[I], refcnt 6, per-destination sharing
+  sources: RIB, LTE
+  feature space:
+    IPRM: 0x00028000
+    Broker: linked, distributed at 4th priority
+    LFD: 10.23.90.0/24 1 local label
+    dflt local label info: global/17 [0x3]
+        contains path extension list
+        dflt disposition chain 0x7FEE86F48AF8
+          label none
+          IP adj out of GigabitEthernet3.90, addr 10.13.90.3
+  ifnums:
+    GigabitEthernet3.90(29): 10.13.90.3
+  path list 7FEE5AC45458, 5 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7FEE7ECE0A78, share 1/1, type attached nexthop, for IPv4
+      MPLS short path extensions: [none] MOI flags = 0x0 label none
+      nexthop 10.13.90.3 GigabitEthernet3.90, IP adj out of GigabitEthernet3.90, addr 10.13.90.3 7FEE874C9FE8
+  output chain:
+    IP adj out of GigabitEthernet3.90, addr 10.13.90.3 7FEE874C9FE8
+10.23.110.0/24, epoch 2, RIB[I], refcnt 6, per-destination sharing
+  sources: RIB, LTE
+  feature space:
+    IPRM: 0x00028000
+    Broker: linked, distributed at 4th priority
+    LFD: 10.23.110.0/24 1 local label
+    dflt local label info: global/20 [0x3]
+        contains path extension list
+        dflt disposition chain 0x7FEE5BC441C0
+          label none
+          IP adj out of GigabitEthernet3.110, addr 10.13.110.3
+  ifnums:
+    GigabitEthernet3.110(30): 10.13.110.3
+  path list 7FEE5AC44FF8, 3 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7FEE7ECE04C8, share 1/1, type attached nexthop, for IPv4
+      MPLS short path extensions: [none] MOI flags = 0x0 label none
+      nexthop 10.13.110.3 GigabitEthernet3.110, IP adj out of GigabitEthernet3.110, addr 10.13.110.3 7FEE874C9788
+  output chain:
+    IP adj out of GigabitEthernet3.110, addr 10.13.110.3 7FEE874C9788
+10.23.115.0/24, epoch 2, RIB[I], refcnt 6, per-destination sharing
+  sources: RIB, LTE
+  feature space:
+    IPRM: 0x00028000
+    Broker: linked, distributed at 4th priority
+    LFD: 10.23.115.0/24 1 local label
+    dflt local label info: global/22 [0x3]
+        contains path extension list
+        dflt disposition chain 0x7FEE5BC442F0
+          label none
+          IP adj out of GigabitEthernet3.115, addr 10.13.115.3
+  ifnums:
+    GigabitEthernet3.115(31): 10.13.115.3
+  path list 7FEE5AC44EB8, 3 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7FEE7ECE0328, share 1/1, type attached nexthop, for IPv4
+      MPLS short path extensions: [none] MOI flags = 0x0 label none
+      nexthop 10.13.115.3 GigabitEthernet3.115, IP adj out of GigabitEthernet3.115, addr 10.13.115.3 7FEE5BC37DE8
+  output chain:
+    IP adj out of GigabitEthernet3.115, addr 10.13.115.3 7FEE5BC37DE8
+10.23.120.0/24, epoch 2, RIB[I], refcnt 6, per-destination sharing
+  sources: RIB, LTE
+  feature space:
+    IPRM: 0x00028000
+    Broker: linked, distributed at 4th priority
+    LFD: 10.23.120.0/24 1 local label
+    dflt local label info: global/24 [0x3]
+        contains path extension list
+        dflt disposition chain 0x7FEE5BC44420
+          label none
+          IP adj out of GigabitEthernet3.120, addr 10.13.120.3
+  ifnums:
+    GigabitEthernet3.120(32): 10.13.120.3
+  path list 7FEE5AC44CD8, 3 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+    path 7FEE7ECE00B8, share 1/1, type attached nexthop, for IPv4
+      MPLS short path extensions: [none] MOI flags = 0x0 label none
+      nexthop 10.13.120.3 GigabitEthernet3.120, IP adj out of GigabitEthernet3.120, addr 10.13.120.3 7FEE5BC37588
+  output chain:
+    IP adj out of GigabitEthernet3.120, addr 10.13.120.3 7FEE5BC37588
+127.0.0.0/8, epoch 2, refcnt 6, per-destination sharing
+  sources: Spc
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    Special source: drop
+  ifnums: (none)
+  path list 7FEE54E132F0, 11 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE54E13638, share 1/1, type special prefix, for IPv4
+      drop
+  output chain:
+    drop
+224.0.0.0/4, epoch 2, flags [cover], refcnt 6, per-destination sharing
+  sources: Spc
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    Covered dependent prefixes: 1
+      notify cover updated: 1
+    Special source: multicast
+  ifnums: (none)
+  path list 7FEE5AF881D0, 2 locks, per-destination, flags 0x42 [nonsh, hwcn]
+    path 7FEE5AF88CE0, share 1/1, type special prefix, for IPv4
+      multicast
+  output chain:
+    multicast
+224.0.0.0/24, epoch 2, flags [rcv], refcnt 6, per-destination sharing
+  sources: Spc
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    Special source: receive
+  ifnums: (none)
+  path list 7FEE54E13390, 11 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE54E13708, share 1/1, type receive, for IPv4
+      receive
+  output chain:
+    receive
+~225.0.0.0/32, epoch 2, refcnt 4
+  sources: Adj
+  subblocks:
+    Adj source: IP adj out of Loopback0, addr 225.0.0.0 (incomplete)
+                IP adj out of GigabitEthernet2.110, addr 225.0.0.0 7FEE874CD870
+                IP adj out of GigabitEthernet3.110, addr 225.0.0.0 7FEE874CD010
+      Dependent covered prefix type adjfib, cover 224.0.0.0/4
+  output chain:
+    unresolved
+240.0.0.0/4, epoch 2, refcnt 6, per-destination sharing
+  sources: Spc
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    Special source: drop
+  ifnums: (none)
+  path list 7FEE54E132F0, 11 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE54E13638, share 1/1, type special prefix, for IPv4
+      drop
+  output chain:
+    drop
+255.255.255.255/32, epoch 2, flags [rcv], refcnt 6, per-destination sharing
+  sources: Spc
+  feature space:
+    Broker: linked, distributed at 4th priority
+  subblocks:
+    Special source: receive
+  ifnums: (none)
+  path list 7FEE54E13390, 11 locks, per-destination, flags 0x41 [shble, hwcn]
+    path 7FEE54E13708, share 1/1, type receive, for IPv4
+      receive
+  output chain:
+    receive
 
         '''}
 

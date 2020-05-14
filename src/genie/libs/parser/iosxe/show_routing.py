@@ -1989,7 +1989,7 @@ class ShowIpCefInternalSchema(MetaParser):
                                         'dflt': {
                                             'disposition_chain': {
                                                 Any(): {
-                                                    'label': int,
+                                                    Optional('label'): int,
                                                     'frr': {
                                                         'primary': {
                                                             'primary': {
@@ -2005,7 +2005,7 @@ class ShowIpCefInternalSchema(MetaParser):
                                             },
                                             'label_switch_chain': {
                                                 Any(): {
-                                                    'label': int,
+                                                    Optional('label'): int,
                                                     'frr': {
                                                         'primary': {
                                                             'primary': {
@@ -2023,7 +2023,7 @@ class ShowIpCefInternalSchema(MetaParser):
                                         'sr': {
                                             'disposition_chain': {
                                                 Any(): {
-                                                    'label': int,
+                                                    Optional('label'): int,
                                                     'frr': {
                                                         'primary': {
                                                             'primary': {
@@ -2039,7 +2039,7 @@ class ShowIpCefInternalSchema(MetaParser):
                                             },
                                             'label_switch_chain': {
                                                 Any(): {
-                                                    'label': int,
+                                                    Optional('label'): int,
                                                     'frr': {
                                                         'primary': {
                                                             'primary': {
