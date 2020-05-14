@@ -89,7 +89,7 @@ class ShowVlan(ShowVlanSchema):
         # 105  Misc. Name                       active    Gi1/0/13, Gi1/0/14, Gi1/0/15, Gi1/0/16, Gi1/0/19
         p1 = re.compile(r'^(?P<vlan_id>[0-9]+)\s+(?P<name>(?=\S).*(?<=\S))'
                          '\s+(?P<status>(active|suspended|(.*)lshut|(.*)unsup)+)'
-                         '(?P<interfaces>[\w\d\/\d, ]+)?$')
+                         '(?P<interfaces>[\s\S]+)?$')
 
         #                                                Gi1/0/19, Gi1/0/20, Gi1/0/21, Gi1/0/22
         p2 = re.compile(r'^\s*(?P<space>\s{48})(?P<interfaces>[\w\s\/\,]+)?$')
@@ -121,14 +121,14 @@ class ShowVlan(ShowVlanSchema):
         #         303       community
         # 101     402       non-operational
         p5 = re.compile(r'^\s*(?P<primary>[0-9a-zA-Z]+)? +(?P<secondary>\d+)'
-                        ' +(?P<type>[\w\-]+)( +(?P<interfaces>[\w\/, ]+))?')
+                        ' +(?P<type>[\w\-]+)( +(?P<interfaces>[\s\S]+))?')
 
         # VLAN AREHops STEHops Backup CRF
         # ---- ------- ------- ----------
         # 1003 7       7       off
         p6 = re.compile(r'^\s*(?P<vlan_id>\d+)\s+'
-                         '(?P<are_hops>\d{1,2})\s+'
-                         '(?P<ste_hops>\d{1,2})\s+'
+                         '(?P<are_hops>\d+)\s+'
+                         '(?P<ste_hops>\d+)\s+'
                          '(?P<backup_crf>\S+)\s*$')
 
         vlan_dict = {}

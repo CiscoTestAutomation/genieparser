@@ -16,6 +16,13 @@
         * show interfaces descriptions
     * Added ShowPfeRouteSummary for:
         * show pfe route summary
+    * Added ShowInterfaces for:
+        * show interfaces
+    * Added ShowInterfacesExtensive for:
+        * show interfaces extensive
+        * show interfaces extensive {interface}
+    * Added ShowInterfacesExtensiveNoForwarding for:
+        * show interfaces extensive no-forwarding
     * Added ShowOspfDatabaseLsaidDetail for:
         * show ospf database lsa-id {ipaddress} detail
     * Added ShowOspfDatabaseNetworkLsaidDetail for:
@@ -80,6 +87,9 @@
         * Added regex to support various outputs
     * Updated ShowBgpInstanceNeighborsDetail:
         * Updated regex to support various outputs
+    * Updated ShowLldpNeighborsDetail:
+        * Updated regex to support various outputs
+
 * LINUX
     * Fixed Ifconfig parser issues.
 
@@ -88,6 +98,11 @@
         * Update regex to support various outputs.
     * Updated ShowRouteProtocolExtensive:
         * Update key 'validation-state' as Optional
+
+    * Update ShowRouteProtocolExtensive for:
+        * show route {route} extensive
+        * show route extensive
+        * show route extensive {destination}
 
 
 * IOS 

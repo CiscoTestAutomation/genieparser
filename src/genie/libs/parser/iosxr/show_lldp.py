@@ -16,6 +16,7 @@ from genie.metaparser.util.schemaengine import Schema, \
 # import parser utils
 from genie.libs.parser.utils.common import Common
 
+
 class ShowLldpSchema(MetaParser):
     """Schema for show lldp"""
     schema = {
@@ -104,6 +105,7 @@ class ShowLldpEntrySchema(MetaParser):
         }
     }
 
+
 class ShowLldpEntry(ShowLldpEntrySchema):
     """Parser for show lldp entry *"""
 
@@ -147,8 +149,10 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         # Port Description: 10G to bl2-genie port Ge8/8/8:GG8
         # Port Description: "10G link to Genie2 port Ge8/8/8/8/8"
         # Port Description: 10G link to genie3-genie port GEN 8/8/8/8 in BE 43 (with port 0/4/0/3)
+        # Port Description: PHY|BW|L3|CORE|type:CRAN-P2P|rhost:ASR-01|rport:TenGigE0/0/0/1
         p4 = re.compile(r'^Port +Description(\:|\s\-) '
-                        r'+(?P<port_description>[a-zA-Z0-9\s\/\(\)\,\"\:\-.]+)$')
+                        r'+(?P<port_description>[\s\S]+)$')
+
         # System Name: R1_csr1000v.openstacklocal
         p5 = re.compile(r'System +Name: +(?P<system_name>\S+)$')
         # System Description: 
@@ -315,6 +319,7 @@ class ShowLldpNeighborsDetail(ShowLldpEntry):
 
     def cli(self, output=None):
         return super().cli(cmd=self.cli_command, output=output)
+
 
 class ShowLldpTrafficSchema(MetaParser):
     """Schema for show lldp traffic"""
