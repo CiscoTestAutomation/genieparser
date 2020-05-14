@@ -89,7 +89,7 @@ class ShowVlan(ShowVlanSchema):
         # 105  Misc. Name                       active    Gi1/0/13, Gi1/0/14, Gi1/0/15, Gi1/0/16, Gi1/0/19
         p1 = re.compile(r'^(?P<vlan_id>[0-9]+)\s+(?P<name>(?=\S).*(?<=\S))'
                          '\s+(?P<status>(active|suspended|(.*)lshut|(.*)unsup)+)'
-                         '(?P<interfaces>[\w\d\/\d, ]+)?$')
+                         '(?P<interfaces>[\s\S]+)?$')
 
         #                                                Gi1/0/19, Gi1/0/20, Gi1/0/21, Gi1/0/22
         p2 = re.compile(r'^\s*(?P<space>\s{48})(?P<interfaces>[\w\s\/\,]+)?$')
