@@ -49,6 +49,8 @@
         * Fixed the order of conditional statements, now the parser can parse the device output correctly
     * Updated ShowAccessLists:
         * Fixed a typo in code.
+    * Update ShowVtpStatus:
+        * Changed the following keys into Optional: 'maximum_vlans' and 'md5_digest'.
     * Update ShowLldpEntry:
         * Fixed regex for chassis id, now also supports ':' and '-'.
         * Fixed regex for description, now also supports messages like '{"SN":"SN-NR","Owner":"OWNER"}'.
@@ -60,7 +62,7 @@
         * Fixed regex for vlan name, now also supports multiple white spaces.
         * Added regex for toking ring table.
         * Added the following keys: 'token_ring', 'are_hops', 'ste_hops' and 'backup_crf'.
-   
+
 * NXOS
     * Updated ShowIpStaticRouteMulticast:
         * Change key 'address_family' into Optional
