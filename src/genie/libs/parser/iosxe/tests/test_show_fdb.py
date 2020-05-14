@@ -173,77 +173,77 @@ class TestShowMacAddressTable(unittest.TestCase):
             'vlans': {
                 '101': {
                     'mac_addresses': {
-                        '701f.534d.0095': {
+                        '701f.53ff.4de2': {
                             'interfaces': {
                                 'GigabitEthernet2/0/30': {
                                     'entry_type': 'static',
                                     'interface': 'GigabitEthernet2/0/30',
                                 },
                             },
-                            'mac_address': '701f.534d.0095',
+                            'mac_address': '701f.53ff.4de2',
                         },
-                        'cc5a.5306.a6c1': {
+                        'cc5a.53ff.acc7': {
                             'interfaces': {
                                 'Vlan101': {
                                     'entry_type': 'static',
                                     'interface': 'Vlan101',
                                 },
                             },
-                            'mac_address': 'cc5a.5306.a6c1',
+                            'mac_address': 'cc5a.53ff.acc7',
                         },
-                        'cc98.9154.776e': {
+                        'cc98.91ff.cbc2': {
                             'interfaces': {
                                 'GigabitEthernet1/0/32': {
                                     'entry_type': 'dynamic',
                                     'interface': 'GigabitEthernet1/0/32',
                                 },
                             },
-                            'mac_address': 'cc98.9154.776e',
+                            'mac_address': 'cc98.91ff.cbc2',
                         },
-                        'cc98.9154.94fa': {
+                        'cc98.91ff.e84f': {
                             'interfaces': {
                                 'GigabitEthernet1/0/31': {
                                     'entry_type': 'dynamic',
                                     'interface': 'GigabitEthernet1/0/31',
                                 },
                             },
-                            'mac_address': 'cc98.9154.94fa',
+                            'mac_address': 'cc98.91ff.e84f',
                         },
-                        'cc98.9154.952a': {
+                        'cc98.91ff.e97e': {
                             'interfaces': {
                                 'GigabitEthernet1/0/28': {
                                     'entry_type': 'dynamic',
                                     'interface': 'GigabitEthernet1/0/28',
                                 },
                             },
-                            'mac_address': 'cc98.9154.952a',
+                            'mac_address': 'cc98.91ff.e97e',
                         },
-                        'cc98.9154.b464': {
+                        'cc98.91ff.09b8': {
                             'interfaces': {
                                 'GigabitEthernet1/0/34': {
                                     'entry_type': 'dynamic',
                                     'interface': 'GigabitEthernet1/0/34',
                                 },
                             },
-                            'mac_address': 'cc98.9154.b464',
+                            'mac_address': 'cc98.91ff.09b8',
                         },
-                        'cc98.9154.b770': {
+                        'cc98.91ff.0cc4': {
                             'interfaces': {
                                 'GigabitEthernet1/0/33': {
                                     'entry_type': 'dynamic',
                                     'interface': 'GigabitEthernet1/0/33',
                                 },
                             },
-                            'mac_address': 'cc98.9154.b770',
+                            'mac_address': 'cc98.91ff.0cc4',
                         },
-                        'cc98.9154.b840': {
+                        'cc98.91ff.0d94': {
                             'interfaces': {
                                 'GigabitEthernet1/0/29': {
                                     'entry_type': 'dynamic',
                                     'interface': 'GigabitEthernet1/0/29',
                                 },
                             },
-                            'mac_address': 'cc98.9154.b840',
+                            'mac_address': 'cc98.91ff.0d94',
                         },
                     },
                     'vlan': 101,
@@ -261,14 +261,14 @@ class TestShowMacAddressTable(unittest.TestCase):
 
         Vlan    Mac Address       Type        Ports
         ----    -----------       --------    -----
-        101    701f.534d.0095    STATIC      Gi2/0/30 
-        101    cc5a.5306.a6c1    STATIC      Vl101 
-        101    cc98.9154.776e    DYNAMIC     Gi1/0/32
-        101    cc98.9154.94fa    DYNAMIC     Gi1/0/31
-        101    cc98.9154.952a    DYNAMIC     Gi1/0/28
-        101    cc98.9154.b464    DYNAMIC     Gi1/0/34
-        101    cc98.9154.b770    DYNAMIC     Gi1/0/33
-        101    cc98.9154.b840    DYNAMIC     Gi1/0/29
+        101    701f.53ff.4de2    STATIC      Gi2/0/30 
+        101    cc5a.53ff.acc7    STATIC      Vl101 
+        101    cc98.91ff.cbc2    DYNAMIC     Gi1/0/32
+        101    cc98.91ff.e84f    DYNAMIC     Gi1/0/31
+        101    cc98.91ff.e97e    DYNAMIC     Gi1/0/28
+        101    cc98.91ff.09b8    DYNAMIC     Gi1/0/34
+        101    cc98.91ff.0cc4    DYNAMIC     Gi1/0/33
+        101    cc98.91ff.0d94    DYNAMIC     Gi1/0/29
         Total Mac Addresses for this criterion: 8
     '''}
 

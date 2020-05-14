@@ -1068,7 +1068,6 @@ class TestShowVersion(unittest.TestCase):
         }
     }
 
-    
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.dev1)
@@ -1122,6 +1121,7 @@ class TestShowVersion(unittest.TestCase):
         obj = ShowVersion(device=self.dev_1)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
 
 class TestDir(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -4535,7 +4535,7 @@ class TestShowBoot(unittest.TestCase):
 
     golden_output_cat9k_1 = {'execute.return_value': '''
         show boot
-        BOOT variable = tftp://202.153.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200428_021754.SSA.bin;bootflash:/cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20200429_051305.SSA_starfleet-1.bin;
+        BOOT variable = tftp://192.168.121.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200428_021754.SSA.bin;bootflash:/cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20200429_051305.SSA_starfleet-1.bin;
         Configuration Register is 0x102
         MANUAL_BOOT variable = no
         BAUD variable = 9600
@@ -4549,7 +4549,7 @@ class TestShowBoot(unittest.TestCase):
 
     golden_parsed_output_cat9k_1 = {
         'active': 
-            {'boot_variable': 'tftp://202.153.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200428_021754.SSA.bin;bootflash:/cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20200429_051305.SSA_starfleet-1.bin;',
+            {'boot_variable': 'tftp://192.168.121.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200428_021754.SSA.bin;bootflash:/cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20200429_051305.SSA_starfleet-1.bin;',
             'configuration_register': '0x102'}}
 
     golden_output_cat9k_2 = {'execute.return_value': '''

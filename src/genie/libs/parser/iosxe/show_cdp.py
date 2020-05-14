@@ -210,7 +210,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         # Platform: cisco WS_C6506_E,  Capabilities: Router Switch-6506 IGMP
         # Platform: cisco WS-C6506-E,  Capabilities: Router Switch_6506 IGMP
         # Platform: Meraki MV21 Cloud Managed Indoor HD Dom
-        platf_cap_re = re.compile(r'Platform:\s+(?P<platform>[\w +(\-|\_\/)]+)'
+        platf_cap_re = re.compile(r'Platform:\s+(?P<platform>[\w +(\-|\_\/:)]+)'
                                    '(\,\s*Capabilities:\s+(?P<capabilities>[\w\s\-]+))?$')
 
         # Interface: GigabitEthernet0/0,  Port ID (outgoing port): mgmt0
@@ -218,9 +218,11 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         # Interface: GigabitEthernet0/0,  Port ID (outgoing port): GigabitEthernet0/0
         # Interface: GigabitEthernet0/0/2,  Port ID (outgoing port): GigabitEthernet0/0/3
         # Interface: GigabitEthernet3/0/29,  Port ID (outgoing port): Port 0
+        # Interface: Serial0/0/0:1,  Port ID (outgoing port): Serial1/4:1
+        # Interface: FastEthernet0/0.1,  Port ID (outgoing port): GigabitEthernet7/27
         interface_port_re = re.compile(r'Interface:\s*'
-                                      '(?P<interface>[\w\s\-\/\/]+)\s*\,'
-                                      '*\s*Port\s*ID\s*[\(\w\)\s]+:\s*'
+                                      '(?P<interface>[\w\s\-\/\/\:\.]+)\s*\,'
+                                      '*\s*Port\s*ID\s*[\(\w\)\s\:]+:\s*'
                                       '(?P<port_id>[\S\s]+$)')
 
         # Native VLAN: 42
