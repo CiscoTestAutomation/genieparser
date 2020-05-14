@@ -121,14 +121,14 @@ class ShowVlan(ShowVlanSchema):
         #         303       community
         # 101     402       non-operational
         p5 = re.compile(r'^\s*(?P<primary>[0-9a-zA-Z]+)? +(?P<secondary>\d+)'
-                        ' +(?P<type>[\w\-]+)( +(?P<interfaces>[\w\/, ]+))?')
+                        ' +(?P<type>[\w\-]+)( +(?P<interfaces>[\s\S]+))?')
 
         # VLAN AREHops STEHops Backup CRF
         # ---- ------- ------- ----------
         # 1003 7       7       off
         p6 = re.compile(r'^\s*(?P<vlan_id>\d+)\s+'
-                         '(?P<are_hops>\d{1,2})\s+'
-                         '(?P<ste_hops>\d{1,2})\s+'
+                         '(?P<are_hops>\d+)\s+'
+                         '(?P<ste_hops>\d+)\s+'
                          '(?P<backup_crf>\S+)\s*$')
 
         vlan_dict = {}
