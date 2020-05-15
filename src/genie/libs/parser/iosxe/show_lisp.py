@@ -2134,7 +2134,7 @@ class ShowLispServiceSummary(ShowLispServiceSummarySchema):
                             setdefault(group['iid'], {})
                 vni_dict['interface'] = group['interface'] + '.' + group['iid']
                 vni_dict['db_size'] = int(group['db_size'])
-                if 'rloc_status' in group.keys():
+                if group['rloc_status']!=' ':
                     vni_dict['rloc_status'] = group['rloc_status']
                 vni_dict['db_no_route'] = int(group['db_no_route'])
                 vni_dict['cache_size'] = int(group['cache_size'])
