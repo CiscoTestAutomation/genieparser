@@ -53,14 +53,14 @@ class ShowVersionDetailSchema(MetaParser):
             raise SchemaTypeError('version_information is not a list')
         version_information_schema = Schema({
             "build-date": str,
-            "build-number": str,
+            Optional("build-number"): str,
             "builder": str,
             "component": str,
-            "major": str,
-            "minor": str,
+            Optional("major"): str,
+            Optional("minor"): str,
             "release": str,
-            "release-category": str,
-            "spin": str
+            Optional("release-category"): str,
+            Optional("spin"): str
         })
         # Validate each dictionary in list
         for item in value:
@@ -291,14 +291,9 @@ class ShowVersionDetail(ShowVersionDetailSchema):
                 group = m.groupdict()
                 entry_dict = {}
                 entry_dict["build-date"] = group["build_date"]
-                entry_dict["build-number"] = "1"
                 entry_dict["builder"] = group["builder"]
                 entry_dict["component"] = group["component"]
-                entry_dict["major"] = "19"
-                entry_dict["minor"] = "2"
                 entry_dict["release"] = group["release"]
-                entry_dict["release-category"] = "R"
-                entry_dict["spin"] = "8"
                 version_info_list.append(entry_dict)
                 if(group["component"].strip() == "vlans-ng-actions-dd"):
                     software_info_first_entry["version-information"] = version_info_list
