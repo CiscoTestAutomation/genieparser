@@ -6417,6 +6417,28 @@ class TestShowRunInterface(unittest.TestCase):
     '''
     }
 
+    # show running-config interface Eth1/4
+    golden_output_3 = {'execute.return_value': '''
+    !Time: ...
+    version ...
+    interface Ethernet1/4
+     description DeviceA-description
+     switchport access vlan x
+     speed 1000
+     duplex full
+    '''}
+
+    golden_parsed_output_3 = {
+        'interface': {
+            'Ethernet1/4': {
+                'duplex': 'full',
+                'access_vlan': 'x',
+                'speed': 1000,
+                'description': 'DeviceA-description',
+            },
+        },
+    }
+
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         intf_obj = ShowRunningConfigInterface(device=self.device)
@@ -6440,6 +6462,12 @@ class TestShowRunInterface(unittest.TestCase):
         intf_obj = ShowRunningConfigInterface(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse(interface='nve1')
+
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        intf_obj = ShowRunningConfigInterface(device=self.device)
+        parsed_output = intf_obj.parse(interface='Ethernet1/4')
+        self.assertEqual(parsed_output,self.golden_parsed_output_3)
 
 
 class TestShowNveInterface(unittest.TestCase):
@@ -6898,12 +6926,158 @@ class test_show_interface_status(unittest.TestCase):
         }
     }
 
-
     golden_interface_output = {'execute.return_value': '''
         Port          Name               Status    Vlan      Duplex  Speed   Type
         --------------------------------------------------------------------------------
         Eth1/1        AOTLXPRPBD10001    connected trunk     full    10G     10g     
     '''}
+
+    golden_output_2 = {'execute.return_value': '''
+    --------------------------------------------------------------------------------
+    Port          Name               Status    Vlan      Duplex  Speed   Type
+    --------------------------------------------------------------------------------    
+    Po135         DO-DD01            connected 51        full    a-10G   --         
+    Po140         DO-UCS01-B         connected trunk     full    a-10G   --         
+    mgmt0         --                 connected routed    full    a-1000  --         
+    Eth101/1/1    DODC01             connected 101       full    a-1000             
+    Eth101/1/2    DO-EXCH-01         connected 101       full    a-1000             
+    '''}
+
+    golden_parsed_output_2 = {
+        'interfaces': {
+            'Ethernet101/1/1': {
+                'duplex_code': 'full',
+                'name': 'DODC01',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'vlan': '101',
+            },
+            'Ethernet101/1/2': {
+                'duplex_code': 'full',
+                'name': 'DO-EXCH-01',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'vlan': '101',
+            },
+            'Port-channel135': {
+                'duplex_code': 'full',
+                'name': 'DO-DD01',
+                'port_speed': 'a-10G',
+                'status': 'connected',
+                'vlan': '51',
+            },
+            'Port-channel140': {
+                'duplex_code': 'full',
+                'name': 'DO-UCS01-B',
+                'port_speed': 'a-10G',
+                'status': 'connected',
+                'vlan': 'trunk',
+            },
+            'mgmt0': {
+                'duplex_code': 'full',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'vlan': 'routed',
+            },
+        },
+    }
+
+    golden_output_3 = {'execute.return_value': '''
+        N7K-1-LAB# show int status
+        
+        --------------------------------------------------------------------------------
+        Port Name Status Vlan Duplex Speed Type
+        --------------------------------------------------------------------------------
+        mgmt0 -- connected routed full a-1000 --
+        Eth1/1 *** N7K-2-FLEXP connected trunk full a-10G SFP-H10GB-C
+        Eth1/2 *** N7K-2-FLEXP connected trunk full a-10G SFP-H10GB-C
+        Eth1/3 *** P2P L3-CIS- connected routed full a-1000 1000base-T
+        Eth1/4 *** FEX 2248TP  connected 1      full a-10G  Fabric Exte
+        Eth1/5 *** L2 L3-CIS-N connected trunk full a-1000 1000base-T
+        Eth1/6 *** L2POE Gi1/0 connected trunk full a-1000 1000base-T
+        Eth1/7 *** To ACI leaf connected trunk full a-1000 1000base-SX
+        Eth1/8 -- sfpAbsent routed auto auto --
+        Eth1/9 -- sfpAbsent routed auto auto --
+    '''}
+
+    golden_parsed_output_3 = {
+        'interfaces': {
+            'Ethernet1/1': {
+                'duplex_code': 'full',
+                'name': '*** N7K-2-FLEXP',
+                'port_speed': 'a-10G',
+                'status': 'connected',
+                'type': 'SFP-H10GB-C',
+                'vlan': 'trunk',
+            },
+            'Ethernet1/2': {
+                'duplex_code': 'full',
+                'name': '*** N7K-2-FLEXP',
+                'port_speed': 'a-10G',
+                'status': 'connected',
+                'type': 'SFP-H10GB-C',
+                'vlan': 'trunk',
+            },
+            'Ethernet1/3': {
+                'duplex_code': 'full',
+                'name': '*** P2P L3-CIS-',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '1000base-T',
+                'vlan': 'routed',
+            },
+            'Ethernet1/4': {
+                'duplex_code': 'full',
+                'name': '*** FEX 2248TP ',
+                'port_speed': 'a-10G',
+                'status': 'connected',
+                'type': 'Fabric Exte',
+                'vlan': '1',
+            },
+            'Ethernet1/5': {
+                'duplex_code': 'full',
+                'name': '*** L2 L3-CIS-N',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '1000base-T',
+                'vlan': 'trunk',
+            },
+            'Ethernet1/6': {
+                'duplex_code': 'full',
+                'name': '*** L2POE Gi1/0',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '1000base-T',
+                'vlan': 'trunk',
+            },
+            'Ethernet1/7': {
+                'duplex_code': 'full',
+                'name': '*** To ACI leaf',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '1000base-SX',
+                'vlan': 'trunk',
+            },
+            'Ethernet1/8': {
+                'duplex_code': 'auto',
+                'port_speed': 'auto',
+                'status': 'sfpAbsent',
+                'vlan': 'routed',
+            },
+            'Ethernet1/9': {
+                'duplex_code': 'auto',
+                'port_speed': 'auto',
+                'status': 'sfpAbsent',
+                'vlan': 'routed',
+            },
+            'mgmt0': {
+                'duplex_code': 'full',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'vlan': 'routed',
+            },
+        },
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -6924,6 +7098,20 @@ class test_show_interface_status(unittest.TestCase):
         parsed_output = obj.parse(interface='Eth1/1')
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_interface_output)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowInterfaceStatus(device=self.device)
+        parsed_output = obj.parse(interface='Eth1/1')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowInterfaceStatus(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 
 if __name__ == '__main__':

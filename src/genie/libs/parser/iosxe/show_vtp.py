@@ -96,13 +96,13 @@ class ShowVtpStatusSchema(MetaParser):
                     'vlan': {
                         'enabled': bool,
                         'operating_mode': str,
-                        'maximum_vlans': int,
+                        Optional('maximum_vlans'): int,
                         'existing_vlans': int,
                         'existing_extended_vlans': int,
                         'configuration_revision': int,
                         'primary_id': str,
                         Optional('primary_description'): str,
-                        'md5_digest': str,
+                        Optional('md5_digest'): str,
                     },
                     'mst': {
                         'enabled': bool,

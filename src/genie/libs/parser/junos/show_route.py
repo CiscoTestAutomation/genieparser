@@ -14,6 +14,9 @@ JUNOS parsers for the following commands:
     * show route advertising-protocol {protocol} {ip_address}
     * show route forwarding-table summary
     * show route summary
+    * show route {route} extensive
+    * show route extensive
+    * show route extensive {destination}
 '''
 
 import re
@@ -358,13 +361,14 @@ class ShowRoute(ShowRouteSchema):
         # *[OSPF3/10] 3w1d 17:03:23, metric 5
         # 0.0.0.0/0          *[OSPF/150/10] 3w3d 03:24:58, metric 101, tag 0
         # 167963             *[LDP/9] 1w6d 20:41:01, metric 1, metric2 100, tag 65000500
+        # 10.16.2.2/32         *[Static/5] 00:00:02
         p2 = re.compile(r'^((?P<rt_destination>\S+) +)?(?P<active_tag>[\*\+\-])?'
-                r'\[(?P<protocol>[\w\-]+)\/(?P<preference>\d+)'
-                r'(\/(?P<preference2>\d+))?\] +(?P<text>\S+ +\S+)'
-                r'(, +metric +(?P<metric>\d+))?(, +metric2 +(?P<metric2>\d+))?'
-                r'(, +tag +(?P<rt_tag>\d+))?(, +MED +(?P<med>\w+))?'
-                r'(, +localpref +(?P<local_preference>\d+))?'
-                r'(, +from +(?P<learned_from>\S+))?$')
+            r'\[(?P<protocol>[\w\-]+)\/(?P<preference>\d+)'
+            r'(\/(?P<preference2>\d+))?\] +(?P<text>\S+( +\S+)?)'
+            r'(, +metric +(?P<metric>\d+))?(, +metric2 +(?P<metric2>\d+))?'
+            r'(, +tag +(?P<rt_tag>\d+))?(, +MED +(?P<med>\w+))?'
+            r'(, +localpref +(?P<local_preference>\d+))?'
+            r'(, +from +(?P<learned_from>\S+))?$')
 
         # MultiRecv
         p2_1 = re.compile(r'^(?P<nh_type>MultiRecv)$')
@@ -628,38 +632,88 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
             # Pass rt list of dict in value
             if not isinstance(value, list):
                 raise SchemaTypeError('rt is not a list')
-            def validate_nh_list(value):
-                # Pass nh list of dict in value
+            def validate_rt_entry_list(value):
+                if isinstance(value, dict):
+                    value = [value]
                 if not isinstance(value, list):
-                    raise SchemaTypeError('nh is not a list')
-                nh_schema = Schema({
-                    Optional("@junos:indent"): str,
-                    Optional("label-element"): str,
-                    Optional("label-element-childcount"): str,
-                    Optional("label-element-lspid"): str,
-                    Optional("label-element-parent"): str,
-                    Optional("label-element-refcount"): str,
-                    Optional("label-ttl-action"): str,
-                    Optional("load-balance-label"): str,
-                    Optional("mpls-label"): str,
-                    "nh-string": str,
-                    Optional("selected-next-hop"): str,
-                    Optional("session"): str,
-                    "to": str,
-                    "via": str,
-                    Optional("weight"): str
-                })
-                # Validate each dictionary in list
-                for item in value:
-                    nh_schema.validate(item)
-                return value
-
-            # Create rt Schema
-            rt_schema = Schema({
-                Optional("@junos:style"): str,
-                "rt-announced-count": str,
-                "rt-destination": str,
-                Optional("rt-entry"): {
+                    raise SchemaTypeError('rt-entry is not a list')
+                def validate_nh_list(value):
+                    # Pass nh list of dict in value
+                    if not isinstance(value, list):
+                        raise SchemaTypeError('nh is not a list')
+                    nh_schema = Schema({
+                        Optional("@junos:indent"): str,
+                        Optional("label-element"): str,
+                        Optional("label-element-childcount"): str,
+                        Optional("label-element-lspid"): str,
+                        Optional("label-element-parent"): str,
+                        Optional("label-element-refcount"): str,
+                        Optional("label-ttl-action"): str,
+                        Optional("load-balance-label"): str,
+                        Optional("mpls-label"): str,
+                        "nh-string": str,
+                        Optional("selected-next-hop"): str,
+                        Optional("session"): str,
+                        Optional("to"): str,
+                        "via": str,
+                        Optional("weight"): str
+                    })
+                    # Validate each dictionary in list
+                    for item in value:
+                        nh_schema.validate(item)
+                    return value
+                def validate_protocol_nh_list(value):
+                    # Pass nh list of dict in value
+                    if isinstance(value, dict):
+                        value = [value]
+                    if not isinstance(value, list):
+                        raise SchemaTypeError('protocol-nh is not a list')
+                    def validate_nh_list(value):
+                        # Pass nh list of dict in value
+                        if isinstance(value, dict):
+                            value = [value]
+                        if not isinstance(value, list):
+                            raise SchemaTypeError('nh is not a list')
+                        nh_schema = Schema({
+                            Optional("@junos:indent"): str,
+                            Optional("label-element"): str,
+                            Optional("label-element-childcount"): str,
+                            Optional("label-element-lspid"): str,
+                            Optional("label-element-parent"): str,
+                            Optional("label-element-refcount"): str,
+                            Optional("label-ttl-action"): str,
+                            Optional("load-balance-label"): str,
+                            Optional("mpls-label"): str,
+                            "nh-string": str,
+                            Optional("selected-next-hop"): str,
+                            Optional("session"): str,
+                            Optional("to"): str,
+                            "via": str,
+                            Optional("weight"): str
+                        })
+                        # Validate each dictionary in list
+                        for item in value:
+                            nh_schema.validate(item)
+                        return value
+                    protocol_nh_schema = Schema({
+                        Optional("@junos:indent"): str,
+                        Optional("forwarding-nh-count"): str,
+                        "indirect-nh": str,
+                        Optional("label-ttl-action"): str,
+                        Optional("load-balance-label"): str,
+                        Optional("metric"): str,
+                        Optional("mpls-label"): str,
+                        Optional("nh"): Use(validate_nh_list),
+                        Optional("nh-index"): str,
+                        Optional("nh-type"): str,
+                        Optional("output"): str,
+                        "to": str
+                    })
+                    # Validate each dictionary in list
+                    for item in value:
+                        protocol_nh_schema.validate(item)
+                    return value
+                rt_entry_schema = Schema({
                     Optional("active-tag"): str,
                     Optional("age"): {
                         "#text": str,
@@ -667,8 +721,8 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                     },
                     Optional("announce-bits"): str,
                     Optional("announce-tasks"): str,
-                    "as-path": str,
-                    "bgp-path-attributes": {
+                    Optional("as-path"): str,
+                    Optional("bgp-path-attributes"): {
                         "attr-as-path-effective": {
                             "aspath-effective-string": str,
                             "attr-value": str
@@ -681,19 +735,31 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                     Optional("metric"): str,
                     Optional("nh"): Use(validate_nh_list),
                     "nh-address": str,
-                    "nh-index": str,
+                    Optional("nh-index"): str,
                     Optional("nh-kernel-id"): str,
                     "nh-reference-count": str,
-                    "nh-type": str,
+                    Optional("nh-type"): str,
                     "preference": str,
                     Optional("preference2"): str,
                     "protocol-name": str,
+                    Optional("protocol-nh"): Use(validate_protocol_nh_list),
                     "rt-entry-state": str,
                     Optional("rt-ospf-area"): str,
                     Optional("rt-tag"): str,
                     "task-name": str,
-                    "validation-state": str
-                },
+                    Optional("validation-state"): str
+                })
+                # Validate each dictionary in list
+                for item in value:
+                    rt_entry_schema.validate(item)
+                return value
+
+            # Create rt Schema
+            rt_schema = Schema({
+                Optional("@junos:style"): str,
+                "rt-announced-count": str,
+                "rt-destination": str,
+                Optional("rt-entry"): Use(validate_rt_entry_list),
                 "rt-entry-count": {
                     "#text": str,
                     Optional("@junos:format"): str
@@ -739,31 +805,48 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             * show route protocol {protocol} extensive
             * show route protocol {protocol} table {table} extensive
             * show route protocol {protocol} table {table} extensive {destination}
+            * show route {route} extensive
+            * show route extensive
+            * show route extensive {destination}
     """
 
     cli_command = ['show route protocol {protocol} extensive',
                     'show route protocol {protocol} table {table} extensive',
-                    'show route protocol {protocol} table {table} extensive {destination}']
-    def cli(self, protocol, table=None, destination=None, output=None):
+                    'show route protocol {protocol} table {table} extensive {destination}',
+                    'show route {route} extensive',
+                    'show route extensive',
+                    'show route extensive {destination}']
+    def cli(self, protocol=None, table=None, destination=None, route=None, output=None):
         if not output:
-            if table and destination:
+            if protocol and table and destination:
                 cmd = self.cli_command[2].format(
                     protocol=protocol,
                     table=table,
                     destination=destination)
-            elif table:
+            elif table and protocol:
                 cmd = self.cli_command[1].format(
                     protocol=protocol,
                     table=table)
-            else:
+            elif protocol:
                 cmd = self.cli_command[0].format(
                     protocol=protocol)
+            elif route:
+                cmd = self.cli_command[3].format(
+                    route=route)
+            elif destination:
+                cmd = self.cli_command[5].format(
+                    destination=destination)
+            else:
+                cmd = self.cli_command[4]
             out = self.device.execute(cmd)
         else:
             out = output
 
         ret_dict = {}
         state_type = None
+        forwarding_nh_count = None
+        protocol_nh_found = None
+        originating_rib_found = None
 
         # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
         p1 = re.compile(r'^(?P<table_name>\S+): +(?P<destination_count>\d+) +'
@@ -773,17 +856,22 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
 
         # 0.0.0.0/0 (1 entry, 1 announced)
         # 10.1.0.0/24 (2 entries, 1 announced)
-        p2 = re.compile(r'^(?P<rt_destination>\S+)(\/(?P<rt_prefix_length>\d+))? +\((?P<format>(?P<text>\d+) +(entry|entries)), +(?P<announced>\d+) +announced\)$')
+        # 0.0.0.0 (1 entry, 1 announced)
+        p2 = re.compile(r'^(?P<rt_destination>\S+)(\/(?P<rt_prefix_length>\d+))? +'
+            r'\((?P<format>(?P<text>\d+) +(entry|entries)), +(?P<announced>\d+) +announced\)$')
 
         # State: <FlashAll>
         # State: <Active Int Ext>
         p3 = re.compile(r'State: +\<(?P<rt_state>[\S\s]+)\>$')
 
         # *OSPF   Preference: 150/10
-        p4 = re.compile(r'^(?P<active_tag>\*)?(?P<protocol>\S+)\s+Preference:\s+(?P<preference>\d+)(\/(?P<preference2>\d+))?$')
+        # *BGP    Preference: 170/-121
+        p4 = re.compile(r'^(?P<active_tag>\*)?(?P<protocol>\S+)\s+'
+            r'Preference:\s+(?P<preference>\d+)(\/(\-)?(?P<preference2>\d+))?$')
 
         # Next hop type: Router, Next hop index: 613
-        p5 = re.compile(r'^Next +hop type: +(?P<nh_type>\S+), +Next +hop +index: +(?P<nh_index>\d+)$')
+        p5 = re.compile(r'^Next +hop type: +(?P<nh_type>\S+), +Next +hop +'
+            r'index: +(?P<nh_index>\d+)$')
 
         # Address: 0xdfa7934
         p6 = re.compile(r'^Address: +(?P<nh_address>\S+)$')
@@ -792,7 +880,12 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         p7 = re.compile(r'^Next-hop +reference +count: +(?P<nh_reference_count>\d+)$')
 
         # Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
-        p8 = re.compile(r'^(?P<nh_string>Next +hop): +(?P<to>\S+) +via +(?P<via>\S+)( +weight +(?P<weight>\w+))?(, +(?P<selected_next_hop>\w+))?$')
+        # Nexthop: 10.169.14.121 via ge-0/0/1.0
+        p8 = re.compile(r'^(?P<nh_string>Next *hop):( +(?P<to>\S+))? +via +(?P<via>\S+)'
+            r'( +weight +(?P<weight>\w+))?(, +(?P<selected_next_hop>\w+))?$')
+
+        # Protocol next hop: 10.169.14.240
+        p8_1 = re.compile(r'^Protocol +next +hop: +(?P<to>\S+)( +Metric: +(?P<metric>\d+))?$')
 
         # Session Id: 0x141
         p9 = re.compile(r'^Session +Id: +\d+[a-z]+(?P<session_id>\w+)$')
@@ -802,7 +895,8 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
 
         # Age: 3w2d 4:43:35   Metric: 101 
         # Age: 3:07:25    Metric: 200
-        p11 = re.compile(r'^Age:\s+(?P<age>\w+(\s+\S+)?)\s+Metric:\s+(?P<metric>\d+)$')
+        # Age: 29w6d 21:42:46
+        p11 = re.compile(r'^Age:\s+(?P<age>\w+(\s+\S+)?)(\s+Metric:\s+(?P<metric>\d+))?$')
 
         # Validation State: unverified 
         p12 = re.compile(r'^Validation +State: +(?P<validation_state>\S+)$')
@@ -814,7 +908,8 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         p14 = re.compile(r'^Task: +(?P<task>\S+)$')
 
         # Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-        p15 = re.compile(r'^Announcement +bits +\((?P<announce_bits>\d+)\): +(?P<announce_tasks>[\S\s]+)$')
+        p15 = re.compile(r'^Announcement +bits +\((?P<announce_bits>\d+)\): +'
+            r'(?P<announce_tasks>[\S\s]+)$')
 
         # AS path: I 
         p16 = re.compile(r'^(?P<aspath_effective_string>AS +path:) +(?P<attr_value>\S+)$')
@@ -860,6 +955,37 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         # OSPF3 realm ipv6-unicast area : 0.0.0.0, LSA ID : 0.0.0.1, LSA type : Extern
         p29 = re.compile(r'^OSPF3\s+realm\s+ipv6-unicast\s+area\s:[\S\s]+$')
 
+        # Page 0 idx 1, (group hktGCS002 type Internal) Type 1 val 0x10c0b9b0 (adv_entry)
+        p30 = re.compile(r'^Page +\d+ +idx +\d+[\S\s]+$')
+
+        # Advertised metrics:
+        #     Flags: Nexthop Change
+        #     Nexthop: Self
+        #     MED: 12003
+        #     Localpref: 120
+        #     AS path: [65171] (65151 65000) I
+        #     Communities: 65001:10 65151:244
+        # Path 10.220.0.0
+        # from 10.169.14.240
+        # Vector len 4.  Val: 1
+        p31 = re.compile(r'^(Advertised +metrics:)|'
+                r'(Flags: +)|(Nexthop: +)|(MED: +)|'
+                r'(Localpref: +)|(AS +path:)|(Communities:)|'
+                r'(Path +\S+)|(from +\S+)|(Vector +len)')
+        
+        # Indirect next hop: 0xc285884 1048574 INH Session ID: 0x1ac
+        p32 = re.compile(r'^Indirect +next +hop: +(?P<indirect_nh>[\S\s]+)$')
+
+        # Indirect next hops: 1
+        p33 = re.compile(r'^Indirect +next +hops: +(?P<forwarding_nh_count>\d+)$')
+
+        # 10.169.14.240/32 Originating RIB: inet.0
+        p34 = re.compile(r'^\S+ +Originating +RIB: +[\S\s]+$')
+
+        # Node path count: 1
+        # Forwarding nexthops: 1
+        p35 = re.compile(r'^(Node +path +count: +)|(Forwarding +nexthops: +)[\S\s]+$')
+
         for line in out.splitlines():
             line = line.strip()
             # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
@@ -868,7 +994,8 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 group = m.groupdict()
                 route_table = ret_dict.setdefault('route-information', {}). \
                     setdefault('route-table', [])
-                route_table_dict = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                route_table_dict = {k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None}
                 route_table.append(route_table_dict)
                 continue
 
@@ -911,11 +1038,26 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             if m:
                 group = m.groupdict()
                 state_type = 'protocol'
+                protocol_nh_found = None
+                originating_rib_found = None
                 active_tag = group['active_tag']
                 protocol_name = group['protocol']
                 preference = group['preference']
                 preference2 = group['preference2']
-                rt_entry_dict = rt_dict.setdefault('rt-entry', {})
+                rt_entry_exist = rt_dict.get('rt-entry', None)
+                if not rt_entry_exist:
+                    rt_entry_dict = rt_dict.setdefault('rt-entry', {})
+                else:
+                    if isinstance(rt_entry_exist, list):
+                        rt_entry_dict = {}
+                        rt_entry_exist.append(rt_entry_dict)
+                    else:
+                        old_rt_entry_dict = rt_entry_exist
+                        rt_entry_dict = {}
+                        rt_dict['rt-entry'] = []
+                        rt_dict_list = rt_dict['rt-entry']
+                        rt_dict_list.append(old_rt_entry_dict)
+                        rt_dict_list.append(rt_entry_dict)
                 if active_tag:
                     rt_entry_dict.update({'active-tag': active_tag})
                 rt_entry_dict.update({'protocol-name': protocol_name})
@@ -952,22 +1094,56 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             m = p8.match(line)
             if m:
                 group = m.groupdict()
+                if originating_rib_found:
+                    proto_output = protocol_nh_dict.get('output', '')
+                    proto_output = '{}{}\n'.format(proto_output, line)
+                    protocol_nh_dict.update({'output': proto_output})
+                    continue
                 selected_next_hop = group['selected_next_hop']
-                nh_list = rt_entry_dict.setdefault('nh', [])
-                nh_dict = {}
-                nh_list.append(nh_dict)
+                if protocol_nh_found:
+                    nh_list = protocol_nh_dict.setdefault('nh', [])
+                    proto_nh_dict = {}
+                    nh_list.append(proto_nh_dict)
+                else:
+                    nh_list = rt_entry_dict.setdefault('nh', [])
+                    nh_dict = {}
+                    nh_list.append(nh_dict)
                 keys = ['to', 'via', 'weight', 'nh_string']
                 for key in keys:
                     v = group[key]
                     if v:
-                        nh_dict.update({key.replace('_', '-'): v})
+                        if protocol_nh_found:
+                            proto_nh_dict.update({key.replace('_', '-'): v})
+                        else:
+                            nh_dict.update({key.replace('_', '-'): v})
+                continue
+            
+            # Protocol Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
+            m = p8_1.match(line)
+            if m:
+                group = m.groupdict()
+                protocol_nh_found = True
+                protocol_nh_list = rt_entry_dict.setdefault('protocol-nh', [])
+                protocol_nh_dict = {k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None}
+                if forwarding_nh_count:
+                    protocol_nh_dict.update({'forwarding-nh-count' : forwarding_nh_count})
+                protocol_nh_list.append(protocol_nh_dict)
+                forwarding_nh_count = None
                 continue
 
             # Session Id: 0x141
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                nh_dict.update({'session': group['session_id']})
+                if originating_rib_found:
+                    proto_output = protocol_nh_dict.get('output', '')
+                    proto_output = '{}{}\n'.format(proto_output, line)
+                    protocol_nh_dict.update({'output': proto_output})
+                elif protocol_nh_found:
+                    proto_nh_dict.update({'session': group['session_id']})
+                else:
+                    nh_dict.update({'session': group['session_id']})
                 continue
 
             # Local AS: 65171 
@@ -983,7 +1159,9 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 group = m.groupdict()
                 age_dict = rt_entry_dict.setdefault('age', {})
                 age_dict.update({'#text': group['age']})
-                rt_entry_dict.update({'metric': group['metric']})
+                metric = group['metric']
+                if metric:
+                    rt_entry_dict.update({'metric': metric})
                 continue
 
             # Validation State: unverified 
@@ -1022,7 +1200,8 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 attr_as_path_dict = rt_entry_dict.setdefault('bgp-path-attributes', {}). \
                     setdefault('attr-as-path-effective', {})
                 rt_entry_dict.update({'as-path': line})
-                attr_as_path_dict.update({'aspath-effective-string': group['aspath_effective_string']})
+                attr_as_path_dict.update({'aspath-effective-string': 
+                    group['aspath_effective_string']})
                 attr_as_path_dict.update({'attr-value': group['attr_value']})
                 continue
 
@@ -1053,7 +1232,12 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             m = p20.match(line)
             if m:
                 group = m.groupdict()
-                nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                if protocol_nh_found:
+                    protocol_nh_dict.update({k.replace('_', '-'):
+                        v for k, v in group.items() if v is not None})
+                else:
+                    nh_dict.update({k.replace('_', '-'):
+                        v for k, v in group.items() if v is not None})
                 continue
 
             # Label TTL action: no-prop-ttl
@@ -1061,56 +1245,76 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             m = p21.match(line)
             if m:
                 group = m.groupdict()
-                nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                if protocol_nh_found:
+                    protocol_nh_dict.update({k.replace('_', '-'):
+                        v for k, v in group.items() if v is not None})
+                else:
+                    nh_dict.update({k.replace('_', '-'):
+                        v for k, v in group.items() if v is not None})
                 continue
 
             # Load balance label: Label 17000: None; Label 1650: None; Label 1913: None;
             m = p22.match(line)
             if m:
                 group = m.groupdict()
-                nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                if protocol_nh_found:
+                    protocol_nh_dict.update({k.replace('_', '-'):
+                        v for k, v in group.items() if v is not None})
+                else:
+                    nh_dict.update({k.replace('_', '-'):
+                        v for k, v in group.items() if v is not None})
                 continue
 
             # Label element ptr: 0xc5f6ec0
             m = p23.match(line)
             if m:
                 group = m.groupdict()
-                nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                if protocol_nh_found:
+                    protocol_nh_dict.update({k.replace('_', '-'):
+                        v for k, v in group.items() if v is not None})
+                else:
+                    nh_dict.update({k.replace('_', '-'):
+                        v for k, v in group.items() if v is not None})
                 continue
 
             # Label parent element ptr: 0x0
             m = p24.match(line)
             if m:
                 group = m.groupdict()
-                nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                nh_dict.update({k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None})
                 continue
             
             # Label element references: 2
             m = p25.match(line)
             if m:
                 group = m.groupdict()
-                nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                nh_dict.update({k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None})
                 continue
 
             # Label element child references: 1
             m = p26.match(line)
             if m:
                 group = m.groupdict()
-                nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                nh_dict.update({k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None})
                 continue
 
             # Label element lsp id: 0
             m = p27.match(line)
             if m:
                 group = m.groupdict()
-                nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                nh_dict.update({k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None})
                 continue
 
             # Task: OSPF3 I/O./var/run/ppmd_control
             m = p28.match(line)
             if m:
                 group = m.groupdict()
-                rt_entry_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                rt_entry_dict.update({k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None})
                 continue
             
             # OSPF3 realm ipv6-unicast area : 0.0.0.0, LSA ID : 0.0.0.1, LSA type : Extern
@@ -1120,7 +1324,66 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 text = tsi_dict.get('#text', '')
                 tsi_dict.update({'#text': '{}\n{}'.format(text, line)})
                 continue
+            
+            # Page 0 idx 1, (group hktGCS002 type Internal) Type 1 val 0x10c0b9b0 (adv_entry)
+            m = p30.match(line)
+            if m:
+                group = m.groupdict()
+                text = tsi_dict.get('#text', '')
+                tsi_dict.update({'#text': '{}\n{}'.format(text, line)})
+                continue
+            
+            # Advertised metrics:
+            #     Flags: Nexthop Change
+            #     Nexthop: Self
+            #     MED: 12003
+            #     Localpref: 120
+            #     AS path: [65171] (65151 65000) I
+            #     Communities: 65001:10 65151:244
+            # Path 10.220.0.0
+            # from 10.169.14.240
+            # Vector len 4.  Val: 1
+            m = p31.match(line)
+            if m:
+                group = m.groupdict()
+                text = tsi_dict.get('#text', '')
+                tsi_dict.update({'#text': '{}\n{}'.format(text, line)})
+                continue
 
+            # Indirect next hop: 0xc285884 1048574 INH Session ID: 0x1ac
+            m = p32.match(line)
+            if m:
+                group = m.groupdict()
+                protocol_nh_dict.update({k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Indirect next hops: 1
+            m = p33.match(line)
+            if m:
+                group = m.groupdict()
+                protocol_nh_found = True
+                forwarding_nh_count = group['forwarding_nh_count']
+                continue
+
+            # 10.169.14.240/32 Originating RIB: inet.0
+            m = p34.match(line)
+            if m:
+                originating_rib_found = True
+                proto_output = protocol_nh_dict.get('output', '')
+                proto_output = '{}{}\n'.format(proto_output, line)
+                protocol_nh_dict.update({'output': proto_output})
+                continue
+
+            # Node path count: 1
+            # Forwarding nexthops: 1
+            m = p35.match(line)
+            if m:
+                proto_output = protocol_nh_dict.get('output', '')
+                proto_output = '{}{}\n'.format(proto_output, line)
+                protocol_nh_dict.update({'output': proto_output})
+                continue
+        
         return ret_dict
     
 class ShowRouteForwardingTableSummarySchema(MetaParser):

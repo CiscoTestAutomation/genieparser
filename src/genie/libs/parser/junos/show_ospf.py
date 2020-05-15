@@ -22,6 +22,9 @@ JunOs parsers for the following show commands:
     * show ospf neighbor detail
     * show ospf neighbor {neighbor} detail
     * show ospf interface extensive
+    * show ospf database network lsa-id {ipaddress} detail
+    * show ospf database lsa-id {ipaddress} detail
+    * show ospf route brief
 """
 
 # Python
@@ -3167,3 +3170,772 @@ class ShowOspfNeighborDetail(ShowOspfNeighborExtensive):
             out = output
 
         return super().cli(output=out, neighbor=neighbor)
+
+class ShowOspfRouteBriefSchema(MetaParser):
+    """ Schema for:
+            * show ospf route brief
+    """
+
+    """
+    schema = {
+        "ospf-route-information": {
+            "ospf-topology-route-table": {
+                "ospf-route": [{
+                "ospf-route-entry": [{
+                    "address-prefix": str,
+                    "interface-cost": str,
+                    "next-hop-type": str,
+                    "ospf-next-hop": {
+                        Optional("next-hop-address"): {
+                            "interface-address": str
+                        },
+                        "next-hop-name": {
+                            "interface-name": str
+                        }
+                    },
+                    "route-path-type": str,
+                    "route-type": str,
+                    Optional("ospf-backup-next-hop"): {
+                        "ospf-backup-next-hop-type": str,
+                        "ospf-backup-next-hop-address": str,
+                        "ospf-backup-next-hop-interface": str
+                    }
+                }]
+            }],
+                Optional("ospf-topology-name"): str
+            }
+        }
+    }
+    """
+
+
+    def validate_ospf_route_entry_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-route-entry is not a list')
+        ospf_route_schema = Schema(
+                {
+            "address-prefix": str,
+            "interface-cost": str,
+            "next-hop-type": str,
+            "ospf-next-hop": {
+                Optional("next-hop-address"): {
+                    "interface-address": str
+                },
+                "next-hop-name": {
+                    "interface-name": str
+                }
+            },
+            "route-path-type": str,
+            "route-type": str,
+            Optional("ospf-backup-next-hop"): {
+                "ospf-backup-next-hop-type": str,
+                "ospf-backup-next-hop-address": str,
+                "ospf-backup-next-hop-interface": str
+            }
+        })
+        for item in value:
+            ospf_route_schema.validate(item)
+        return value
+
+    def validate_ospf_route_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-route is not a list')
+        ospf_route_schema = Schema(
+            {
+            "ospf-route-entry": Use(ShowOspfRouteBriefSchema.validate_ospf_route_entry_list)
+        })
+        for item in value:
+            ospf_route_schema.validate(item)
+        return value
+
+    schema = {
+        "ospf-route-information": {
+            "ospf-topology-route-table": {
+                "ospf-route": Use(validate_ospf_route_list),
+                Optional("ospf-topology-name"): str
+            }
+        }
+    }
+
+class ShowOspfRouteBrief(ShowOspfRouteBriefSchema):
+    """ Parser for:
+            * show ospf route brief
+    """
+    cli_command = 'show ospf route brief'
+
+    address_prefix = None
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # 10.36.3.3            Intra Router     IP         1201 ge-0/0/1.0    10.169.14.121
+        # 10.19.198.28/30    Intra Network    IP         1005 ge-0/0/0.0    10.189.5.94
+        # 2568 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+        # 10.169.14.120/30  Intra Network    IP          100 ge-0/0/1.0
+        p1 = re.compile(r'^(?P<address_prefix>[\d\.\/]+( \(S=\d+\))?) +(?P<route_path_type>\S+)'
+            r' +(?P<route_type>\S+|(AS BR)) +(?P<next_hop_type>\S+) +(?P<interface_cost>\S+)'
+            r' +(?P<interface_name>\S+)( +(?P<interface_address>[\d\.]+))?$')
+
+        # Bkup SPRING     ge-0/0/0.0    10.189.5.94
+        p2 = re.compile(r'^(?P<ospf_backup_next_hop_type>Bkup +\S+) +'
+        r'(?P<ospf_backup_next_hop_interface>\S+) +(?P<ospf_backup_next_hop_address>[\d\.]+)$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 10.36.3.3            Intra Router     IP         1201 ge-0/0/1.0    10.169.14.121
+            # 10.19.198.28/30    Intra Network    IP         1005 ge-0/0/0.0    10.189.5.94
+            # 2568 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+            # 10.169.14.120/30  Intra Network    IP          100 ge-0/0/1.0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault("ospf-route-information", {})\
+                    .setdefault("ospf-topology-route-table", {})\
+                        .setdefault("ospf-route", [])
+
+                entry = {}
+                entry.setdefault("address-prefix", group['address_prefix'])
+                entry.setdefault("route-path-type", group['route_path_type'])
+                entry.setdefault("route-type", group['route_type'])
+                entry.setdefault("next-hop-type", group['next_hop_type'])
+                entry.setdefault("interface-cost", group['interface_cost'])
+                entry.setdefault("ospf-next-hop", {}).setdefault("next-hop-name", {})\
+                        .setdefault("interface-name", group['interface_name'])
+
+                if "interface_address" in group and group['interface_address']:
+                    entry.setdefault("ospf-next-hop", {}).setdefault("next-hop-address", {})\
+                            .setdefault("interface-address", group['interface_address'])
+
+                if self.address_prefix == group['address_prefix']:
+                    ret_dict["ospf-route-information"]["ospf-topology-route-table"]\
+                        ["ospf-route"][-1]["ospf-route-entry"].append(entry)
+                else:
+                    ret_dict["ospf-route-information"]["ospf-topology-route-table"]\
+                        ["ospf-route"].append({"ospf-route-entry":[entry]})
+
+                self.address_prefix = group['address_prefix']
+                continue
+
+            # Bkup SPRING     ge-0/0/0.0    10.189.5.94
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+
+                last_route = ret_dict["ospf-route-information"]["ospf-topology-route-table"]\
+                    ["ospf-route"][-1]
+
+                last_route["ospf-route-entry"][-1]["ospf-backup-next-hop"] = {}
+
+                entry = last_route["ospf-route-entry"][-1]["ospf-backup-next-hop"]
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry[entry_key] = group_value
+                continue
+
+        return ret_dict
+
+class ShowOspfRouteDetail(ShowOspfRouteBrief):
+    """ Parser for:
+            * show ospf route detail
+    """
+
+    cli_command = 'show ospf route detail'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        return super().cli(output=out)
+
+
+class ShowOspfDatabaseNetworkLsaidDetailSchema(MetaParser):
+    """ Schema for:
+            * show ospf database network lsa-id {ipaddress} detail
+    """
+    """ schema = {
+    Optional("@xmlns:junos"): str,
+    "ospf-database-information": {
+        Optional("@xmlns"): str,
+        "ospf-area-header": {
+            "ospf-area": str
+        },
+        "ospf-database": {
+            Optional("@heading"): str,
+            "advertising-router": str,
+            "age": str,
+            "checksum": str,
+            "lsa-id": str,
+            "lsa-length": str,
+            "lsa-type": str,
+            "options": str,
+            "ospf-network-lsa": {
+                "address-mask": str,
+                "attached-router": "list",
+                "ospf-lsa-topology": {
+                    "ospf-lsa-topology-link": [
+                        {
+                            "link-type-name": str,
+                            "ospf-lsa-topology-link-metric": str,
+                            "ospf-lsa-topology-link-node-id": str,
+                            "ospf-lsa-topology-link-state": str
+                        }
+                    ],
+                    "ospf-topology-id": str,
+                    "ospf-topology-name": str
+                }
+            },
+            "our-entry": str,
+            "sequence-number": str
+            }
+        }
+    } """
+
+    def validate_ospf_lsa_topology_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-lsa is not a list')
+        ospf_lsa_schema = Schema({
+                "link-type-name": str,
+                "ospf-lsa-topology-link-metric": str,
+                "ospf-lsa-topology-link-node-id": str,
+                "ospf-lsa-topology-link-state": str
+            })
+        for item in value:
+            ospf_lsa_schema.validate(item)
+        return value
+
+    schema = {
+    Optional("@xmlns:junos"): str,
+    "ospf-database-information": {
+        Optional("@xmlns"): str,
+        "ospf-area-header": {
+            "ospf-area": str
+        },
+        "ospf-database": {
+            Optional("@heading"): str,
+            "advertising-router": str,
+            "age": str,
+            "checksum": str,
+            "lsa-id": str,
+            "lsa-length": str,
+            "lsa-type": str,
+            "options": str,
+            "ospf-network-lsa": {
+                "address-mask": str,
+                "attached-router": list,
+                "ospf-lsa-topology": {
+                    "ospf-lsa-topology-link": Use(validate_ospf_lsa_topology_list),
+                    "ospf-topology-id": str,
+                    "ospf-topology-name": str
+                }
+            },
+            Optional("our-entry"): bool,
+            "sequence-number": str
+            }
+        }
+    }
+
+
+class ShowOspfDatabaseNetworkLsaidDetail(ShowOspfDatabaseNetworkLsaidDetailSchema):
+    """ Parser for:
+            * show ospf database network lsa-id {ipaddress} detail
+    """
+    cli_command = 'show ospf database network lsa-id {ipaddress} detail'
+
+    def cli(self, ipaddress=None, output=None):
+        if not output:
+            cmd = self.cli_command.format(
+                ipaddress=ipaddress)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+        p0 = re.compile(r'^(?P<heading>Type \s+ID[\s\S]+)$')
+
+        # OSPF database, Area 192.168.76.0
+        p1 = re.compile(r'^OSPF +database, +Area +(?P<ospf_area>\S+)$')
+
+        # Network *10.69.197.1    192.168.219.235   0x80000026  1730  0x22 0x1b56  36
+        p2 = re.compile(r'^(?P<lsa_type>\S+) *(?P<our_entry>\*)?(?P<lsa_id>[\d\.]+) '
+                        r'+(?P<advertising_router>\S+) +(?P<sequence_number>\S+) +'
+                        r'(?P<age>\S+) +(?P<options>\S+) +(?P<checksum>\S+) +'
+                        r'(?P<lsa_length>\S+)$')
+
+        # mask 255.255.255.128
+        p3 = re.compile(r'^mask +(?P<address_mask>\S+)$')
+
+        # attached router 192.168.219.235
+        p4 = re.compile(r'^attached router +(?P<attached_router>\S+)$')
+
+        # Topology default (ID 0)
+        p5 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\S+)+\)$')
+
+        # Type: Transit, Node ID: 192.168.219.236
+        p6 = re.compile(r'^Type: +(?P<link_type_name>\S+)+, '
+                        r'+Node +ID: +(?P<ospf_lsa_topology_link_node_id>\S+)$')
+
+        # Metric: 0, Bidirectional
+        p7 = re.compile(r'^Metric: +(?P<ospf_lsa_topology_link_metric>\S+)+, '
+                        r'+(?P<ospf_lsa_topology_link_state>\S+)$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_database_dict["@heading"] = group["heading"]
+
+            # OSPF database, Area 192.168.76.0
+            m = p1.match(line)
+            if m:
+                ospf_database_information_entry = ret_dict.setdefault("ospf-database-information", {})
+                ospf_database_dict = ospf_database_information_entry.setdefault("ospf-database", {})
+                ospf_network_lsa = ospf_database_dict.setdefault("ospf-network-lsa", {})
+                attached_router = ospf_network_lsa.setdefault("attached-router", [])
+                ospf_lsa_topology = ospf_network_lsa.setdefault("ospf-lsa-topology", {})
+                ospf_lsa_topology_link = ospf_lsa_topology.setdefault("ospf-lsa-topology-link", [])
+                group = m.groupdict()
+                entry_dict = {}
+                entry_dict["ospf-area"] = group["ospf_area"]
+                ospf_database_information_entry["ospf-area-header"] = entry_dict
+                continue
+
+            # Network *10.69.197.1    192.168.219.235   0x80000026  1730  0x22 0x1b56  36
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    if(group_key == "our_entry"):
+                        if(group_value == '*'):
+                            ospf_database_dict['our-entry'] = True
+                    else:
+                        entry_key = group_key.replace('_','-')
+                        ospf_database_dict[entry_key] = group_value
+                continue
+
+            # mask 255.255.255.128
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_network_lsa["address-mask"] = group["address_mask"]
+                continue
+
+            # attached router 192.168.219.235
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                attached_router.append(group["attached_router"])
+                continue
+
+            # Topology default (ID 0)
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_lsa_topology["ospf-topology-id"] = group["ospf_topology_name"]
+                ospf_lsa_topology["ospf-topology-name"] = group["ospf_topology_name"]
+                continue
+
+            # Type: Transit, Node ID: 192.168.219.236
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict = {}
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry_dict[entry_key] = group_value
+                continue
+
+            # Metric: 0, Bidirectional
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry_dict[entry_key] = group_value
+                ospf_lsa_topology_link.append(entry_dict)
+                continue
+
+        return ret_dict
+
+class ShowOspfDatabaseLsaidDetailSchema(MetaParser):
+    """ Schema for:
+            * show ospf database lsa-id {ipaddress} detail
+    """
+    """ schema = {
+    Optional("@xmlns:junos"): str,
+    "ospf-database-information": {
+        Optional("@xmlns"): str,
+        "ospf-area-header": {
+            "ospf-area": str
+        },
+        "ospf-database": [
+            {
+                Optional("@external-heading"): str,
+                Optional("@heading"): str,
+                "advertising-router": str,
+                "age": str,
+                "checksum": str,
+                "lsa-id": str,
+                "lsa-length": str,
+                "lsa-type": str,
+                "options": str,
+                "ospf-external-lsa": {
+                    "address-mask": str,
+                    "ospf-external-lsa-topology": {
+                        "forward-address": str,
+                        "ospf-topology-id": str,
+                        "ospf-topology-metric": str,
+                        "ospf-topology-name": str,
+                        "tag": str,
+                        "type-value": str
+                    }
+                },
+                "ospf-router-lsa": {
+                    "bits": str,
+                    "link-count": str,
+                    "ospf-link": [
+                        {
+                            "link-data": str,
+                            "link-id": str,
+                            "link-type-name": str,
+                            "link-type-value": str,
+                            "metric": str,
+                            "ospf-topology-count": str
+                        }
+                    ],
+                    "ospf-lsa-topology": {
+                        "ospf-lsa-topology-link": [
+                            {
+                                "link-type-name": str,
+                                "ospf-lsa-topology-link-metric": str,
+                                "ospf-lsa-topology-link-node-id": str,
+                                "ospf-lsa-topology-link-state": str
+                            }
+                        ],
+                        "ospf-topology-id": str,
+                        "ospf-topology-name": str
+                    }
+                },
+                "our-entry": str,
+                "sequence-number": str
+                }
+            ]
+        }
+    } """
+
+    def validate_ospf_link_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError("ospf-link is not a list")
+        ospf_link_schema = Schema({
+            "link-type-name": str,
+            "ospf-lsa-topology-link-metric": str,
+            "ospf-lsa-topology-link-node-id": str,
+            "ospf-lsa-topology-link-state": str
+            })
+        # Validate each dictionary in list
+        for item in value:
+            ospf_link_schema.validate(item)
+        return value
+
+    def validate_ospf_topology_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError("ospf-topology is not a list")
+        ospf_topology_schema = Schema({
+            "link-data": str,
+            "link-id": str,
+            "link-type-name": str,
+            "link-type-value": str,
+            "metric": str,
+            "ospf-topology-count": str
+            })
+        # Validate each dictionary in list
+        for item in value:
+            ospf_topology_schema.validate(item)
+        return value
+
+    def validate_ospf_database_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError("ospf-database is not a list")
+        ospf_database_schema = Schema({
+            Optional("@external-heading"): str,
+                Optional("@heading"): str,
+                "advertising-router": str,
+                "age": str,
+                "checksum": str,
+                "lsa-id": str,
+                "lsa-length": str,
+                "lsa-type": str,
+                "options": str,
+                Optional("ospf-external-lsa"): {
+                    "address-mask": str,
+                    "ospf-external-lsa-topology": {
+                        "forward-address": str,
+                        "ospf-topology-id": str,
+                        "ospf-topology-metric": str,
+                        "ospf-topology-name": str,
+                        "tag": str,
+                        "type-value": str
+                    }
+                },
+                Optional("ospf-router-lsa"): {
+                    "bits": str,
+                    "link-count": str,
+                    "ospf-link": Use(ShowOspfDatabaseLsaidDetail.validate_ospf_topology_list),
+                    "ospf-lsa-topology": {
+                        "ospf-lsa-topology-link": Use(ShowOspfDatabaseLsaidDetail.validate_ospf_link_list),
+                        "ospf-topology-id": str,
+                        "ospf-topology-name": str
+                    }
+                },
+                Optional("our-entry"): bool,
+                "sequence-number": str
+            })
+        # Validate each dictionary in list
+        for item in value:
+            ospf_database_schema.validate(item)
+        return value
+
+    schema = {
+    Optional("@xmlns:junos"): str,
+    "ospf-database-information": {
+        Optional("@xmlns"): str,
+        "ospf-area-header": {
+            "ospf-area": str
+        },
+        "ospf-database": Use(validate_ospf_database_list)
+        }
+    }
+
+
+class ShowOspfDatabaseLsaidDetail(ShowOspfDatabaseLsaidDetailSchema):
+    """ Parser for:
+            * show ospf database lsa-id {ipaddress} detail
+    """
+    cli_command = 'show ospf database lsa-id {ipaddress} detail'
+
+    def cli(self, ipaddress=None, output=None):
+        if not output:
+            cmd = self.cli_command.format(
+                ipaddress=ipaddress)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+        p0 = re.compile(r'^(?P<heading>Type\s+ID[\s\S]+)$')
+
+        # OSPF database, Area 0.0.0.8
+        p1 = re.compile(r'^OSPF +database, +Area +(?P<ospf_area>\S+)$')
+
+        # Router   10.34.2.250     10.34.2.250     0x80000048  1598  0x22 0xed79 108
+        # Extern  *10.34.2.250     10.169.14.241   0x80000044   670  0x22 0xcffa  36
+        p2 = re.compile(r'^(?P<lsa_type>\S+) *(?P<our_entry>\*)?'
+                        r'(?P<lsa_id>[\d\.]+) +(?P<advertising_router>\S+) '
+                        r'+(?P<sequence_number>\S+) +(?P<age>\S+) '
+                        r'+(?P<options>\S+) +(?P<checksum>\S+) +(?P<lsa_length>\S+)$')
+
+        # bits 0x2, link count 7
+        p3 = re.compile(r'^bits +(?P<bits>\S+)+, +link +count +(?P<link_count>\d+)$')
+
+                        
+        # id 10.34.2.251, data 10.34.2.201, Type PointToPoint (1)
+        p4 = re.compile(r'^id +(?P<link_id>\S+)+, data '
+                        r'+(?P<link_data>\S+), Type +'
+                        r'(?P<link_type_name>\S+) +\('
+                        r'+(?P<link_type_value>\d+)+\)$')
+
+        # Topology count: 0, Default metric: 5
+        p5 = re.compile(r'^Topology +count: +'
+                        r'(?P<ospf_topology_count>\S+)+, '
+                        r'+Default metric: +(?P<metric>\S+)$')
+
+        # Topology default (ID 0)
+        p6 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) '
+                        r'+\(ID +(?P<ospf_topology_id>\S+)+\)$')
+
+        # Type: PointToPoint, Node ID: 10.169.14.240
+        p7 = re.compile(r'^Type: +(?P<link_type_name>\S+)+, '
+                        r'+Node +ID: +(?P<ospf_lsa_topology_link_node_id>\S+)$')
+
+        # Metric: 100, Bidirectional
+        p8 = re.compile(r'^Metric: +(?P<ospf_lsa_topology_link_metric>\S+)+, '
+                        r'+(?P<ospf_lsa_topology_link_state>\S+)$')
+
+        # OSPF AS SCOPE link state database
+        p9 = re.compile(r'^(?P<external_heading>OSPF +AS SCOPE[\s\S]+)$')
+
+        # mask 255.255.255.128
+        p10 = re.compile(r'^mask +(?P<address_mask>\S+)$')
+
+        #Type: 1, Metric: 1, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        p11 = re.compile(r'^Type: +(?P<type_value>\d+), Metric: '
+                         r'+(?P<ospf_topology_metric>\d+), '
+                         r'Fwd addr: +(?P<forward_address>[\w\.]+), '
+                         r'Tag: +(?P<tag>[\w\.\/]+)$')
+        
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+            m = p0.match(line)
+            if m:
+                ospf3_database_dict = {}
+                group = m.groupdict()
+                if(is_not_scope_link):
+                    ospf3_database_dict["@heading"] = group["heading"]
+                else:
+                    second_dict["@heading"] = group["heading"]
+
+            # OSPF database, Area 0.0.0.8
+            m = p1.match(line)
+            if m:
+                is_not_scope_link = True
+                ospf_database_information_entry = ret_dict.setdefault("ospf-database-information", {})
+                ospf3_database_list = ospf_database_information_entry.setdefault("ospf-database", [])
+
+                group = m.groupdict()
+                first_dict = {}
+                first_dict["ospf-area"] = group["ospf_area"]
+
+                ospf_database_information_entry["ospf-area-header"] = first_dict
+                continue
+
+            # Router   10.34.2.250     10.34.2.250     0x80000048  1598  0x22 0xed79 108
+            # Extern  *10.34.2.250     10.169.14.241   0x80000044   670  0x22 0xcffa  36
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    if(group_key != "our_entry"):
+                        entry_key = group_key.replace('_','-')
+                        if(is_not_scope_link):
+                            ospf3_database_dict[entry_key] = group_value
+                        else:
+                            second_dict[entry_key] = group_value
+                    else:
+                        if(group_value == '*'):
+                            if(is_not_scope_link):
+                                ospf3_database_dict['our-entry'] = True
+                            else:
+                                second_dict['our-entry'] = True
+                            
+                if(is_not_scope_link):
+                    ospf3_database_list.append(ospf3_database_dict)
+                else:
+                    ospf3_database_list.append(second_dict)
+                continue
+
+            # bits 0x2, link count 7
+            m = p3.match(line)
+            if m:
+                ospf_router_lsa_dict = {}
+                ospf_link_list = []
+
+                ospf_topology_dict = ospf_router_lsa_dict.setdefault("ospf-lsa-topology", {})
+                ospf_topology_link_list = ospf_topology_dict.setdefault("ospf-lsa-topology-link" , [])
+                group = m.groupdict()
+
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    ospf_router_lsa_dict[entry_key] = group_value
+                ospf_router_lsa_dict["ospf-link"] = ospf_link_list
+                ospf3_database_dict["ospf-router-lsa"] = ospf_router_lsa_dict
+                continue
+
+            # id 10.34.2.251, data 10.34.2.201, Type PointToPoint (1)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict = {}
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry_dict[entry_key] = group_value
+                continue
+
+            # Topology count: 0, Default metric: 5
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry_dict[entry_key] = group_value
+                ospf_link_list.append(entry_dict)
+                continue
+
+            # Topology default (ID 0)
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                inner_external_lsa_dict = {}
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    if(is_not_scope_link):
+                        ospf_topology_dict[entry_key] = group_value
+                    else:
+                        inner_external_lsa_dict[entry_key] = group_value
+                continue
+
+            # Type: PointToPoint, Node ID: 10.169.14.240
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict = {}
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry_dict[entry_key] = group_value
+                continue
+
+            # Metric: 100, Bidirectional
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    entry_dict[entry_key] = group_value
+                ospf_topology_link_list.append(entry_dict)
+                continue
+
+            # OSPF AS SCOPE link state database
+            m = p9.match(line)
+            if m:
+                is_not_scope_link = False
+                group = m.groupdict()
+                second_dict = {}
+                second_dict["@external-heading"] = group["external_heading"]
+                continue
+
+            # mask 255.255.255.128
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                inner_second_dict = {}
+                inner_second_dict["address-mask"] = group["address_mask"]
+                continue
+
+            #Type: 1, Metric: 1, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_','-')
+                    inner_external_lsa_dict[entry_key] = group_value
+                inner_second_dict["ospf-external-lsa-topology"] = inner_external_lsa_dict
+                second_dict["ospf-external-lsa"] = inner_second_dict
+                second_dict = {}
+                continue
+        
+        return ret_dict
