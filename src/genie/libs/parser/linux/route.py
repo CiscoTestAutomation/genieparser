@@ -36,6 +36,27 @@ class RouteSchema(MetaParser):
         }
     }
 
+    schema = {
+        'routes': {
+            Any(): { # 'destination'
+                'mask': {
+                    Any(): {
+                        'nexthop': {
+                            Any(): { # index: 1, 2, 3, etc
+                                'interface': str,
+                                'flags': str,
+                                'gateway': str,
+                                'metric': int,
+                                'ref': int,
+                                'use': int
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 # =======================================================
 # Parser for 'route'
 # =======================================================
