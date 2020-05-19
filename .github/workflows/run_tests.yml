@@ -37,6 +37,6 @@ jobs:
     
     - name: Make Json
       run: |
-        cd ..
+        pwd
         rm sdk_generator/outputs/github_parser.json
         make json
