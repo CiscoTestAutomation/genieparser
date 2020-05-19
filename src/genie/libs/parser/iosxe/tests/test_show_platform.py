@@ -5,7 +5,7 @@ from unittest.mock import Mock
 from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
-                                       SchemaMissingKeyError
+                                             SchemaMissingKeyError
 from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   Dir,\
                                                   ShowBootvar,\
@@ -64,9 +64,9 @@ class TestShowBootvar(unittest.TestCase):
 
     golden_parsed_output1 = {
         'active': 
-            {'boot_variable': 'harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12',
+            {'boot_variable': 'harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12;',
             'configuration_register': '0x2'},
-        'next_reload_boot_variable': 'harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12'}
+        'next_reload_boot_variable': 'harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12;'}
 
     golden_output2 = {'execute.return_value': '''
         asr-MIB-1#show bootvar
@@ -97,9 +97,9 @@ class TestShowBootvar(unittest.TestCase):
 
     golden_parsed_output3 = {
         'active': 
-            {'boot_variable': 'bootflash:12351822-iedge-asr-uut,12',
+            {'boot_variable': 'bootflash:12351822-iedge-asr-uut,12;',
             'configuration_register': '0x2102'},
-        'next_reload_boot_variable': 'bootflash:12351822-iedge-asr-uut,12'}
+        'next_reload_boot_variable': 'bootflash:12351822-iedge-asr-uut,12;'}
 
     golden_output4 = {'execute.return_value': '''
         SSR-4400-1#sh bootvar
@@ -111,15 +111,13 @@ class TestShowBootvar(unittest.TestCase):
         Standby not ready to show bootvar
 
         SSR-4400-1#
-    '''
-    }
+        '''}
+
     golden_parsed_output4 = {
         'active': {
             'configuration_register': '0x1'
             },
-            'config_file': 'bootflash:/taas/psan06_Golden_Config'
-    }
-
+            'config_file': 'bootflash:/taas/psan06_Golden_Config'}
 
     def test_show_bootvar_empty(self):
         self.device = Mock(**self.empty_output)
@@ -150,7 +148,6 @@ class TestShowBootvar(unittest.TestCase):
         obj = ShowBootvar(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
-
 
 class TestShowVersion(unittest.TestCase):
 
@@ -1071,7 +1068,6 @@ class TestShowVersion(unittest.TestCase):
         }
     }
 
-    
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.dev1)
@@ -1125,6 +1121,7 @@ class TestShowVersion(unittest.TestCase):
         obj = ShowVersion(device=self.dev_1)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
 
 class TestDir(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -2565,7 +2562,6 @@ class TestShowInventory(unittest.TestCase):
         PID: ASR-920-FAN-M     , VID: V01  , SN: CAT1903V028
         '''}
 
-
     golden_parsed_output_asr1002 = {
         'main': {
             'chassis': {
@@ -3006,6 +3002,7 @@ class TestShowInventory(unittest.TestCase):
             },
         },
     }
+
     golden_output = {'execute.return_value': '''
         show inventory
         NAME: "Chassis", DESCR: "Cisco ASR1002-HX Chassis"
@@ -3206,7 +3203,7 @@ class TestShowInventory(unittest.TestCase):
         }
     }
 
-    golden_output_1 ={'execute.return_value':'''
+    golden_output_1 = {'execute.return_value': '''
     NAME: "Chassis", DESCR: "Cisco ISR4451 Chassis"
     PID: ISR4451-X/K9 , VID: V01 , SN: FGL172511Q5
 
@@ -3249,6 +3246,166 @@ class TestShowInventory(unittest.TestCase):
     NAME: "module F0", DESCR: "Cisco ISR4451 Forwarding Processor"
     PID: ISR4451-X/K9 , VID: , SN:
     '''}
+
+    golden_output_2 = {'execute.return_value': '''
+        +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        
+        INFO: Please use "show license UDI" to get serial number for licensing.
+        
+        +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        
+         
+        
+        NAME: "Chassis", DESCR: "Cisco C1111-8PLTELA Chassis"
+        
+        PID: C1111-8PLTELA     , VID: V01  , SN: FGL221190VF
+        
+         
+        
+        NAME: "Power Supply Module 0", DESCR: "External Power Supply Module"
+        
+        PID: PWR-12V           , VID: V01  , SN: JAB0929092D
+        
+         
+        
+        NAME: "module 0", DESCR: "Cisco C1111-8PLTELA Built-In NIM controller"
+        
+        PID: C1111-8PLTELA     , VID:      , SN:
+        
+         
+        
+        NAME: "NIM subslot 0/0", DESCR: "Front Panel 2 port Gigabitethernet Module"
+        
+        PID: C1111-2x1GE       , VID: V01  , SN:
+        
+         
+        
+        NAME: "NIM subslot 0/1", DESCR: "C1111-ES-8"
+        
+        PID: C1111-ES-8        , VID: V01  , SN:
+        
+         
+        
+        NAME: "NIM subslot 0/2", DESCR: "C1111-LTE Module"
+        
+        PID: C1111-LTE         , VID: V01  , SN:
+        
+         
+        
+        NAME: "Modem 0 on Cellular0/2/0", DESCR: "Sierra Wireless EM7455/EM7430"
+        
+        PID: EM7455/EM7430     , VID: 1.0  , SN: 355813070074072
+        
+         
+        
+        NAME: "module R0", DESCR: "Cisco C1111-8PLTELA Route Processor"
+        
+        PID: C1111-8PLTELA     , VID: V01  , SN: FOC21520MF1
+        
+         
+        
+        NAME: "module F0", DESCR: "Cisco C1111-8PLTELA Forwarding Processor"
+        
+        PID: C1111-8PLTELA     , VID:      , SN:
+    '''}
+
+    golden_parsed_output_2 = {
+        'main': {
+            'chassis': {
+                'C1111-8PLTELA': {
+                    'descr': 'Cisco C1111-8PLTELA Chassis',
+                    'name': 'Chassis',
+                    'pid': 'C1111-8PLTELA',
+                    'sn': 'FGL221190VF',
+                    'vid': 'V01',
+                },
+            },
+        },
+        'slot': {
+            '0': {
+                'lc': {
+                    'C1111-8PLTELA': {
+                        'descr': 'Cisco C1111-8PLTELA Built-In NIM controller',
+                        'name': 'module 0',
+                        'pid': 'C1111-8PLTELA',
+                        'sn': '',
+                        'subslot': {
+                            '0': {
+                                'C1111-2x1GE': {
+                                    'descr': 'Front Panel 2 port Gigabitethernet Module',
+                                    'name': 'NIM subslot 0/0',
+                                    'pid': 'C1111-2x1GE',
+                                    'sn': '',
+                                    'vid': 'V01',
+                                },
+                            },
+                            '1': {
+                                'C1111-ES-8': {
+                                    'descr': 'C1111-ES-8',
+                                    'name': 'NIM subslot 0/1',
+                                    'pid': 'C1111-ES-8',
+                                    'sn': '',
+                                    'vid': 'V01',
+                                },
+                            },
+                            '2': {
+                                'C1111-LTE': {
+                                    'descr': 'C1111-LTE Module',
+                                    'name': 'NIM subslot 0/2',
+                                    'pid': 'C1111-LTE',
+                                    'sn': '',
+                                    'vid': 'V01',
+                                },
+                            },
+                            '2/0': {
+                                'EM7455/EM7430': {
+                                    'descr': 'Sierra Wireless EM7455/EM7430',
+                                    'name': 'Modem 0 on Cellular0/2/0',
+                                    'pid': 'EM7455/EM7430',
+                                    'sn': '355813070074072',
+                                    'vid': '1.0',
+                                },
+                            },
+                        },
+                        'vid': '',
+                    },
+                },
+            },
+            'F0': {
+                'other': {
+                    'C1111-8PLTELA': {
+                        'descr': 'Cisco C1111-8PLTELA Forwarding Processor',
+                        'name': 'module F0',
+                        'pid': 'C1111-8PLTELA',
+                        'sn': '',
+                        'vid': '',
+                    },
+                },
+            },
+            'P0': {
+                'other': {
+                    'PWR-12V': {
+                        'descr': 'External Power Supply Module',
+                        'name': 'Power Supply Module 0',
+                        'pid': 'PWR-12V',
+                        'sn': 'JAB0929092D',
+                        'vid': 'V01',
+                    },
+                },
+            },
+            'R0': {
+                'rp': {
+                    'C1111-8PLTELA': {
+                        'descr': 'Cisco C1111-8PLTELA Route Processor',
+                        'name': 'module R0',
+                        'pid': 'C1111-8PLTELA',
+                        'sn': 'FOC21520MF1',
+                        'vid': 'V01',
+                    },
+                },
+            },
+        },
+    }
 
     def test_show_inventory_empty(self):
         self.maxDiff = None
@@ -3312,6 +3469,14 @@ class TestShowInventory(unittest.TestCase):
         inventory_obj = ShowInventory(device=self.device)
         parsed_output = inventory_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        inventory_obj = ShowInventory(device=self.device)
+        parsed_output = inventory_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
 
 class TestShowPlatform(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -4235,16 +4400,16 @@ Switch#   Role        Priority      State
 
 
 class TestShowBoot(unittest.TestCase):
-    dev1 = Device(name='empty')
-    dev_asr1k = Device(name='asr1k')
-    dev_c3850 = Device(name='c3850')
+
+    maxDiff = None
+
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output_c3850 = {
         "ipxe_timeout": 0,
          "enable_break": True,
-         "current_boot_variable": "flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden",
-         "next_reload_boot_variable": "flash:ISSUCleanGolden",
+         "current_boot_variable": "flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden;",
+         "next_reload_boot_variable": "flash:ISSUCleanGolden;",
          "manual_boot": True,
          "boot_mode": "device"
     }
@@ -4271,7 +4436,7 @@ class TestShowBoot(unittest.TestCase):
             "configuration_register": "0x2002"
         },
         "active": {
-            "boot_variable": "bootflash:/asr1000rpx.bin,12",
+            "boot_variable": "bootflash:/asr1000rpx.bin,12;",
             "configuration_register": "0x2002"
         }
     }
@@ -4367,6 +4532,77 @@ class TestShowBoot(unittest.TestCase):
         },
         'timeout_config_download': '0 seconds'
     }
+
+    golden_output_cat9k_1 = {'execute.return_value': '''
+        show boot
+        BOOT variable = tftp://192.168.121.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200428_021754.SSA.bin;bootflash:/cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20200429_051305.SSA_starfleet-1.bin;
+        Configuration Register is 0x102
+        MANUAL_BOOT variable = no
+        BAUD variable = 9600
+        ENABLE_BREAK variable does not exist
+        BOOTMODE variable does not exist
+        IPXE_TIMEOUT variable does not exist
+        CONFIG_FILE variable =
+
+        starfleet-1#
+        '''}
+
+    golden_parsed_output_cat9k_1 = {
+        'active': 
+            {'boot_variable': 'tftp://192.168.121.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200428_021754.SSA.bin;bootflash:/cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20200429_051305.SSA_starfleet-1.bin;',
+            'configuration_register': '0x102'}}
+
+    golden_output_cat9k_2 = {'execute.return_value': '''
+        show boot
+        BOOT variable = tftp://10.1.0.41/cat9k_iosxe.16.12.03a.SPA.bin
+        Configuration Register is 0x102
+        MANUAL_BOOT variable = yes
+        BAUD variable = 9600
+        ENABLE_BREAK variable does not exist
+        BOOTMODE variable does not exist
+        IPXE_TIMEOUT variable does not exist
+        CONFIG_FILE variable =
+        '''}
+
+    golden_parsed_output_cat9k_2 = {
+        'active': 
+            {'boot_variable': 'tftp://10.1.0.41/cat9k_iosxe.16.12.03a.SPA.bin',
+            'configuration_register': '0x102'}}
+
+    golden_output_cat9k_3 = {'execute.return_value': '''
+        starfleet-1#show boot
+        BOOT variable = bootflash:cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200421_032634.SSA.bin;
+        Configuration Register is 0x102
+        MANUAL_BOOT variable = no
+        BAUD variable = 9600
+        ENABLE_BREAK variable does not exist
+        BOOTMODE variable does not exist
+        IPXE_TIMEOUT variable does not exist
+        CONFIG_FILE variable =
+        '''}
+
+    golden_parsed_output_cat9k_3 = {
+        'active': 
+            {'boot_variable': 'bootflash:cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200421_032634.SSA.bin;',
+            'configuration_register': '0x102'}}
+
+    golden_output_cat9k_4 = {'execute.return_value': '''
+        starfleet-1#show boot
+        BOOT variable = tftp://10.1.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200427_012602.SSA.bin
+        Configuration Register is 0x102
+        MANUAL_BOOT variable = yes
+        BAUD variable = 9600
+        ENABLE_BREAK variable does not exist
+        BOOTMODE variable does not exist
+        IPXE_TIMEOUT variable does not exist
+        CONFIG_FILE variable =
+        '''}
+
+    golden_parsed_output_cat9k_4 = {
+        'active': 
+            {'boot_variable': 'tftp://10.1.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200427_012602.SSA.bin',
+            'configuration_register': '0x102'}}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         platform_obj = ShowBoot(device=self.dev1)
@@ -4374,26 +4610,52 @@ class TestShowBoot(unittest.TestCase):
             parsed_output = platform_obj.parse()    
 
     def test_golden_c3850(self):
-        self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_c3850)
         platform_obj = ShowBoot(device=self.dev_c3850)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
 
     def test_golden_asr1k(self):
-        self.maxDiff = None
         self.dev_asr1k = Mock(**self.golden_output_asr1k)
         platform_obj = ShowBoot(device=self.dev_asr1k)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_asr1k)
     
     def test_golden_2900(self):
-        self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_2900)
         obj = ShowBoot(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2900)
 
+    def test_golden_cat9k_1(self):
+        self.dev_cat9k = Mock(**self.golden_output_cat9k_1)
+        obj = ShowBoot(device=self.dev_cat9k)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_cat9k_1)
+
+    def test_golden_cat9k_1(self):
+        self.dev_cat9k = Mock(**self.golden_output_cat9k_1)
+        obj = ShowBoot(device=self.dev_cat9k)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_cat9k_1)
+
+    def test_golden_cat9k_2(self):
+        self.dev_cat9k = Mock(**self.golden_output_cat9k_2)
+        obj = ShowBoot(device=self.dev_cat9k)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_cat9k_2)
+
+    def test_golden_cat9k_3(self):
+        self.dev_cat9k = Mock(**self.golden_output_cat9k_3)
+        obj = ShowBoot(device=self.dev_cat9k)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_cat9k_3)
+
+    def test_golden_cat9k_4(self):
+        self.dev_cat9k = Mock(**self.golden_output_cat9k_4)
+        obj = ShowBoot(device=self.dev_cat9k)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_cat9k_4)
 
 class TestShowSwitchDetail(unittest.TestCase):
     dev1 = Device(name='empty')

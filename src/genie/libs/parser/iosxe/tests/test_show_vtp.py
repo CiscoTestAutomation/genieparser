@@ -284,6 +284,71 @@ class test_show_vtp_status(unittest.TestCase):
             'version_capable': [1, 2, 3]
         }
     }
+
+    golden_output_5 = {'execute.return_value': '''\
+        show vtp status
+        VTP Version capable             : 1 to 3
+        VTP version running             : 3
+        VTP Domain Name                 : Domain-Name
+        VTP Pruning Mode                : Enabled
+        VTP Traps Generation            : Enabled
+        Device ID                       : ffff.aaaa.0000
+        
+        Feature VLAN:
+        --------------
+        VTP Operating Mode                : Client
+        Number of existing VLANs          : 40
+        Number of existing extended VLANs : 2
+        Configuration Revision            : 13
+        Primary ID                        : 3333.1111.2222
+        Primary Description               : description
+        MD5 digest                        : 
+        
+        
+        Feature MST:
+        --------------
+        VTP Operating Mode                : Transparent
+        
+        
+        Feature UNKNOWN:
+        --------------
+        VTP Operating Mode                : Transparent
+        '''}
+
+    golden_parsed_output_5 = {
+        'vtp': {
+            'version_capable': [
+              1,
+              2,
+              3
+            ],
+            'version': '3',
+            'feature': {
+              'vlan': {
+                'operating_mode': 'client',
+                'enabled': True,
+                'existing_vlans': 40,
+                'existing_extended_vlans': 2,
+                'configuration_revision': 13,
+                'primary_id': '3333.1111.2222',
+                'primary_description': 'description'
+              },
+              'mst': {
+                'operating_mode': 'transparent',
+                'enabled': False
+              },
+              'unknown': {
+                'operating_mode': 'transparent',
+                'enabled': False
+              }
+            },
+            'domain_name': 'Domain-Name',
+            'pruning_mode': True,
+            'traps_generation': True,
+            'device_id': 'ffff.aaaa.0000'
+        }
+    }
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         obj = ShowVtpStatus(device=self.device1)
@@ -317,6 +382,13 @@ class test_show_vtp_status(unittest.TestCase):
         parsed_output = obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output_4)
+
+    def test_golden_5(self):
+        self.device = Mock(**self.golden_output_5)
+        obj = ShowVtpStatus(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output_5)
 
 if __name__ == '__main__':
     unittest.main()

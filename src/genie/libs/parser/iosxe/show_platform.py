@@ -67,14 +67,17 @@ class ShowBootvar(ShowBootvarSchema):
 
         # BOOT variable = bootflash:/asr1000rpx.bin,12;
         # BOOT variable = flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden;
-        p1 = re.compile(r'^BOOT +variable +=( *(?P<var>\S+);)?$')
+        # BOOT variable = tftp:/auto/tftp-best/genie_images/genie_clean/asr1000-genie-image 255.255.255.255,12;
+        # BOOT variable = tftp:/auto/tftp-best/genie_images/genie_clean/asr1000-genie-image 255.255.255.255,12;harddisk:/asr1000-genie-image_asr-MIB-1,12;
+        p1 = re.compile(r'^BOOT +variable +=( *(?P<var>\S+);?)?$')
 
         # Standby BOOT variable = bootflash:/asr1000rpx.bin,12;
         p2 = re.compile(r'^Standby +BOOT +variable +=( *(?P<var>\S+);)?$')
 
         # Configuration register is 0x2002
         # Configuration register is 0x2 (will be 0x2102 at next reload)
-        p3 = re.compile(r'Configuration +register +is +(?P<var1>(\S+))'
+        # Configuration Register is 0x102
+        p3 = re.compile(r'Configuration +[R|r]egister +is +(?P<var1>(\S+))'
                         r'(?: +\(will +be +(?P<var2>(\S+)) +at +next +reload\))?$')
 
         # Standby Configuration register is 0x2002
@@ -140,20 +143,6 @@ class ShowBootvar(ShowBootvarSchema):
                     boot_dict.setdefault('standby', {})['bootldr'] = m.groupdict()['var']
                 continue
         return boot_dict
-
-
-class ShowBoot(ShowBootvar):
-    """Parser for show boot"""
-
-    cli_command = 'show boot'
-
-    def cli(self, output=None):
-
-        # Execute command if output not provided
-        if output is None:
-            output = self.device.execute(self.cli_command)
-
-        return super().cli(output=output)
 
 
 class ShowVersionSchema(MetaParser):
@@ -1753,8 +1742,34 @@ class ShowInventory(ShowInventorySchema):
         # NAME: "Switch 5 - Power Supply A", DESCR: "Switch 5 - Power Supply A"
         # NAME: "subslot 0/0 transceiver 2", DESCR: "GE T"
         # NAME: "NIM subslot 0/0", DESCR: "Front Panel 3 ports Gigabitethernet Module"
+        # NAME: "Modem 0 on Cellular0/2/0", DESCR: "Sierra Wireless EM7455/EM7430"
         p1 = re.compile(r'^NAME: +\"(?P<name>.*)\",'
-                        ' +DESCR: +\"(?P<descr>.*)\"$')
+                        r' +DESCR: +\"(?P<descr>.*)\"$')
+
+        # Switch 1
+        # module 0
+        p1_1 = re.compile(r'^(Switch|[Mm]odule) +(?P<slot>(\S+))')
+
+        # Power Supply Module 0
+        # Power Supply Module 1
+        p1_2 = re.compile(r'Power Supply Module')
+
+        # SPA subslot 0/0
+        # IM subslot 0/1
+        # NIM subslot 0/0
+        p1_3 = re.compile(r'^(SPA|IM|NIM|PVDM) +subslot +(?P<slot>(\d+))/(?P<subslot>(\d+))')
+
+        # subslot 0/0 transceiver 0
+        p1_4 = re.compile(r'^subslot +(?P<slot>(\d+))\/(?P<subslot>(.*))')
+
+        # StackPort1/1
+        p1_5 = re.compile(r'^StackPort(?P<slot>(\d+))/(?P<subslot>(\d+))$')
+
+        # Fan Tray
+        p1_6 = re.compile(r'^Fan +Tray$')
+
+        # Modem 0 on Cellular0/2/0
+        p1_7 = re.compile(r'^Modem +(?P<modem>\S+) +on +Cellular(?P<slot>\d+)\/(?P<subslot>.*)$')
 
         # PID: ASR-920-24SZ-IM   , VID: V01  , SN: CAT1902V19M
         # PID: SFP-10G-LR        , VID: CSCO , SN: CD180456291
@@ -1765,7 +1780,7 @@ class ShowInventory(ShowInventorySchema):
         # PID: ISR4331/K9        , VID:      , SN:
         # PID: , VID: 1.0  , SN: 1162722191
         p2 = re.compile(r'^PID: +(?P<pid>[\S\s]+)? *, +VID:(?: +(?P<vid>(\S+)))? *,'
-                        ' +SN:(?: +(?P<sn>(\S+)))?$')
+                        r' +SN:(?: +(?P<sn>(\S+)))?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1775,64 +1790,39 @@ class ShowInventory(ShowInventorySchema):
             # NAME: "Switch 5 - Power Supply A", DESCR: "Switch 5 - Power Supply A"
             # NAME: "subslot 0/0 transceiver 2", DESCR: "GE T"
             # NAME: "NIM subslot 0/0", DESCR: "Front Panel 3 ports Gigabitethernet Module"
+            # NAME: "Modem 0 on Cellular0/2/0", DESCR: "Sierra Wireless EM7455/EM7430"
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 name = group['name'].strip()
                 descr = group['descr'].strip()
 
-                # Switch 1
-                # module 0
-                p1_1 = re.compile(r'^(Switch|[Mm]odule) +(?P<slot>(\S+))')
+                # ------------------------------------------------------------------
+                # Define slot_dict
+                # ------------------------------------------------------------------
                 m1_1 = p1_1.match(name)
                 if m1_1:
                     slot = m1_1.groupdict()['slot']
                     # Creat slot_dict
                     slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
 
-                # Power Supply Module 0
-                # Power Supply Module 1
-                p1_2 = re.compile(r'Power Supply Module')
                 m1_2 = p1_2.match(name)
                 if m1_2:
                     slot = name.replace('Power Supply Module ', 'P')
                     # Creat slot_dict
                     slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
 
-                # SPA subslot 0/0
-                # IM subslot 0/1
-                # NIM subslot 0/0
-                p1_3 = re.compile(r'^(SPA|IM|NIM|PVDM) +subslot +(?P<slot>(\d+))/(?P<subslot>(\d+))')
-                m1_3 = p1_3.match(name)
-                if m1_3:
-                    group = m1_3.groupdict()
+                # ------------------------------------------------------------------
+                # Define subslot
+                # ------------------------------------------------------------------
+                m = p1_3.match(name) or p1_4.match(name) or p1_5.match(name) or p1_7.match(name)
+                if m:
+                    group = m.groupdict()
                     slot = group['slot']
                     subslot = group['subslot']
                     # Creat slot_dict
                     slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
 
-                # subslot 0/0 transceiver 0
-                p1_4 = re.compile(r'^subslot +(?P<slot>(\d+))\/(?P<subslot>(.*))')
-                m1_4 = p1_4.match(name)
-                if m1_4:
-                    group = m1_4.groupdict()
-                    slot = group['slot']
-                    subslot = group['subslot']
-                    # Creat slot_dict
-                    slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
-
-                # StackPort1/1
-                p1_5 = re.compile(r'^StackPort(?P<slot>(\d+))/(?P<subslot>(\d+))$')
-                m1_5 = p1_5.match(name)
-                if m1_5:
-                    group = m1_5.groupdict()
-                    slot = group['slot']
-                    subslot = group['subslot']
-                    # Create slot_dict
-                    slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
-
-                # Fan Tray
-                p1_6 = re.compile(r'^Fan +Tray$')
                 m1_6 = p1_6.match(name)
                 if m1_6:
                     slot = name.replace(' ', '_')
@@ -1848,6 +1838,7 @@ class ShowInventory(ShowInventorySchema):
             # PID: ISR4331-3x1GE     , VID: V01  , SN:
             # PID: ISR4331/K9        , VID:      , SN: FDO21520TGH
             # PID: ISR4331/K9        , VID:      , SN:
+            # PID: EM7455/EM7430     , VID: 1.0  , SN: 355813070074072
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -1920,12 +1911,16 @@ class ShowInventory(ShowInventorySchema):
 
                 # PID: SP7041-E          , VID: E    , SN: MTC164204VE
                 # PID: SFP-GE-T          , VID: V02  , SN: MTC2139029X
+                # PID: EM7455/EM7430     , VID: 1.0  , SN: 355813070074072
                 elif subslot:
                     if ('STACK' in pid) or asr900_rp:
                         subslot_dict = rp_dict.setdefault('subslot', {}).\
                             setdefault(subslot, {}).\
                             setdefault(pid, {})
                     else:
+                        if 'lc' not in slot_dict:
+                            lc_dict = slot_dict.setdefault('lc', {}). \
+                                setdefault(pid, {})
                         subslot_dict = lc_dict.setdefault('subslot', {}).\
                             setdefault(subslot, {}).\
                             setdefault(pid, {})
@@ -2344,9 +2339,11 @@ class ShowBoot(ShowBootSchema):
         'enabled': True,
         'yes': True
     }
+
     cli_command = 'show boot'
 
     def cli(self, output=None):
+
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
@@ -2376,7 +2373,9 @@ class ShowBoot(ShowBootSchema):
             # BOOT variable = bootflash:/asr1000rpx.bin,12;
             # BOOT variable = flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;
             #                 flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden;
-            p1_1 = re.compile(r'^BOOT +variable +=( *(?P<var>\S+);)?$')
+            # BOOT variable = tftp://10.1.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200427_012602.SSA.bin
+            # BOOT variable = tftp://10.1.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200428_021754.SSA.bin;bootflash:/cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20200429_051305.SSA_starfleet-1.bin;
+            p1_1 = re.compile(r'^BOOT +variable +=( *(?P<var>\S+);?)?$')
             m = p1_1.match(line)
             if m:
                 boot = m.groupdict()['var']
@@ -2402,7 +2401,8 @@ class ShowBoot(ShowBootSchema):
                 continue
 
             # Configuration register is 0x2002
-            p3 = re.compile(r'^Configuration +register +is +(?P<var>\w+)$')
+            # Configuration Register is 0x102
+            p3 = re.compile(r'^Configuration +[r|R]egister +is +(?P<var>\w+)$')
             m = p3.match(line)
             if m:
                 if 'active' not in boot_dict:
@@ -2446,7 +2446,7 @@ class ShowBoot(ShowBootSchema):
                 continue
 
             # iPXE Timeout = 0
-            p6 = re.compile(r'^iPXE +Timeout += +(?P<var>\w+)$')
+            p6 = re.compile(r'^iPXE +Timeout +=? +(?P<var>\w+)$')
             m = p6.match(line)
             if m:
                 boot_dict['ipxe_timeout'] = int(m.groupdict()['var'])
@@ -5942,10 +5942,10 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
     
     def yang(self, output=None):
         if not output:
-            out = self.device.netconf.get(self.cli_command)
+            out = self.device.get(filter=('xpath', '/boot-integrity-oper-data')).data_xml
         else:
             out = output
-        out = out.replace("]]>]]>", "")
+
         root = ET.fromstring(out)
         boot_integrity_oper_data = Common.retrieve_xml_child(root=root, key='boot-integrity-oper-data')
         boot_integrity = Common.retrieve_xml_child(root=boot_integrity_oper_data, key='boot-integrity')

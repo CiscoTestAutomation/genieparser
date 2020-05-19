@@ -55,7 +55,7 @@ class ShowInstallSummary(ShowInstallSummarySchema):
         p1 = re.compile(r'^\[ +(?P<location>[\S ]+)\] +Installed Package'
                         r'\(s\) +Information:$')
         # SMU   U    bootflash:utah.bm.smu.may15.bin
-        # IMG   C    17.1.1.0.66982
+        # IMG   C    10.69.1.0.66982
         p2 = re.compile(r'^(?P<type>\S+) + (?P<state>\w) +(?P<filename_version>\S+)$')
         
         # Auto abort timer: active on install_activate, time before rollback - 01:49:42
@@ -78,7 +78,7 @@ class ShowInstallSummary(ShowInstallSummarySchema):
                 continue
 
             # SMU   U    bootflash:utah.bm.smu.may15.bin
-            # IMG   C    17.1.1.0.66982
+            # IMG   C    10.69.1.0.66982
             m = p2.match(line)
             if m:
                 group = m.groupdict()
