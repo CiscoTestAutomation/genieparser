@@ -96,6 +96,7 @@ class Route(RouteSchema):
         # Initializes the Python dictionary variable
         parsed_dict = {}
 
+
         # Defines the "for" loop, to pattern match each line of output
 
         for line in out.splitlines():
@@ -105,10 +106,36 @@ class Route(RouteSchema):
             # 192.168.1.0     0.0.0.0         255.255.255.0   U     600    0        0 wlo1
             m = p1.match(line)
             if m:
+                if 'routes' not in parsed_dict:
+                    parsed_dict.setdefault('routes', {})
+       
                 group = m.groupdict()
                 destination = group['destination']
-                parsed_dict.setdefault(destination, {})
-                parsed_dict[destination].update({k: (int(v) if v.isdigit() else v) for k, v in group.items()})
+                mask = group['mask']
+
+                index_dict = {}
+                for str_k in ['interface', 'flags', 'gateway']:
+                    index_dict[str_k] = group[str_k]
+                
+                for int_k in ['metric', 'ref', 'use']:
+                    index_dict[int_k] = int(group[int_k])
+
+                if destination in parsed_dict['routes']:
+                    if mask in parsed_dict['routes'][destination]['mask']:
+                        parsed_dict['routes'][destination]['mask'][mask].\
+                                setdefault('nexthop', {index+1: index_dict})
+                    else:
+                        index = 1
+                        parsed_dict['routes'][destination]['mask'].\
+                            setdefault(mask, {}).\
+                                setdefault('nexthop', {index: index_dict})
+                else:
+                    index = 1
+                    parsed_dict['routes'].setdefault(destination, {}).\
+                        setdefault('mask', {}).\
+                            setdefault(mask, {}).\
+                                setdefault('nexthop', {index: index_dict})
+
                 continue
 
         return parsed_dict

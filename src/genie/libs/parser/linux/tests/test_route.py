@@ -12,7 +12,7 @@ from genie.libs.parser.linux.route import Route,\
 
 
 #############################################################################
-# unitest For route
+# unitest for 'route'
 #############################################################################
 
 class TestRoute(unittest.TestCase):
@@ -25,59 +25,6 @@ class TestRoute(unittest.TestCase):
     maxDiff = None
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {
-        '10.10.0.0': {
-            'destination': '10.10.0.0',
-            'flags': 'U',
-            'gateway': '0.0.0.0',
-            'interface': 'eth1-05',
-            'mask': '255.255.255.0',
-            'metric': 0,
-            'ref': 0,
-            'use': 0
-                },
-        '172.17.0.0': {
-            'destination': '172.17.0.0',
-            'flags': 'U',
-            'gateway': '0.0.0.0',
-            'interface': 'docker0',
-            'mask': '255.255.0.0',
-            'metric': 0,
-            'ref': 0,
-            'use': 0
-            },
-        '192.168.1.0': {
-            'destination': '192.168.1.0',
-            'flags': 'U',
-            'gateway': '0.0.0.0',
-            'interface': 'wlo1',
-            'mask': '255.255.255.0',
-            'metric': 600,
-            'ref': 0,
-            'use': 0
-            },
-        '192.168.122.0': {
-            'destination': '192.168.122.0',
-            'flags': 'U',
-            'gateway': '0.0.0.0',
-            'interface': 'virbr0',
-            'mask': '255.255.255.0',
-            'metric': 0,
-            'ref': 0,
-            'use': 0
-            },
-        'default': {
-            'destination': 'default',
-            'flags': 'UG',
-            'gateway': '_gateway',
-            'interface': 'wlo1',
-            'mask': '0.0.0.0',
-            'metric': 600,
-            'ref': 0,
-            'use': 0
-            }
-        }
-
     golden_output = {'execute.return_value': '''
         Kernel IP routing table
         Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
@@ -88,6 +35,90 @@ class TestRoute(unittest.TestCase):
         10.10.0.0       0.0.0.0         255.255.255.0   U     0      0        0 eth1-05
     '''}
 
+    golden_parsed_output = {
+        'routes': {
+            '10.10.0.0': {
+                'mask': {
+                    '255.255.255.0': {
+                        'nexthop': {
+                            1: {
+                                'flags': 'U',
+                                'gateway': '0.0.0.0',
+                                'interface': 'eth1-05',
+                                'metric': 0,
+                                'ref': 0,
+                                'use': 0,
+                            },
+                        },
+                    },
+                },
+            },
+            '172.17.0.0': {
+                'mask': {
+                    '255.255.0.0': {
+                        'nexthop': {
+                            1: {
+                                'flags': 'U',
+                                'gateway': '0.0.0.0',
+                                'interface': 'docker0',
+                                'metric': 0,
+                                'ref': 0,
+                                'use': 0,
+                            },
+                        },
+                    },
+                },
+            },
+            '192.168.1.0': {
+                'mask': {
+                    '255.255.255.0': {
+                        'nexthop': {
+                            1: {
+                                'flags': 'U',
+                                'gateway': '0.0.0.0',
+                                'interface': 'wlo1',
+                                'metric': 600,
+                                'ref': 0,
+                                'use': 0,
+                            },
+                        },
+                    },
+                },
+            },
+            '192.168.122.0': {
+                'mask': {
+                    '255.255.255.0': {
+                        'nexthop': {
+                            1: {
+                                'flags': 'U',
+                                'gateway': '0.0.0.0',
+                                'interface': 'virbr0',
+                                'metric': 0,
+                                'ref': 0,
+                                'use': 0,
+                            },
+                        },
+                    },
+                },
+            },
+            'default': {
+                'mask': {
+                    '0.0.0.0': {
+                        'nexthop': {
+                            1: {
+                                'flags': 'UG',
+                                'gateway': '_gateway',
+                                'interface': 'wlo1',
+                                'metric': 600,
+                                'ref': 0,
+                                'use': 0,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
