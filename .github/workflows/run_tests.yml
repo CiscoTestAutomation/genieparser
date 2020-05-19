@@ -35,8 +35,3 @@ jobs:
         cd tests
         python -m unittest
     
-    - name: Make Json
-      run: |
-        pwd
-        rm sdk_generator/outputs/github_parser.json
-        make json
