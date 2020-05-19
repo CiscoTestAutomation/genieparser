@@ -137,7 +137,7 @@ class TestRoute(unittest.TestCase):
 # unitest For netstat -rn
 #############################################################################
 
-class TestNetstatRn(unittest.TestCase):
+class TestShowNetworkStatusRoute(unittest.TestCase):
     '''
     Unit test for
         * netstat -rn
@@ -146,59 +146,6 @@ class TestNetstatRn(unittest.TestCase):
     device = Device(name='aDevice')
     maxDiff = None
     empty_output = {'execute.return_value': ''}
-
-    golden_parsed_output = {
-        '10.10.0.0': {
-            'destination': '10.10.0.0',
-            'flags': 'U',
-            'gateway': '0.0.0.0',
-            'interface': 'eth1-05',
-            'mask': '255.255.255.0',
-            'mss': 0,
-            'window': 0,
-            'irtt': 0
-                },
-        '172.17.0.0': {
-            'destination': '172.17.0.0',
-            'flags': 'U',
-            'gateway': '0.0.0.0',
-            'interface': 'docker0',
-            'mask': '255.255.0.0',
-            'mss': 0,
-            'window': 0,
-            'irtt': 0
-            },
-        '192.168.1.0': {
-            'destination': '192.168.1.0',
-            'flags': 'U',
-            'gateway': '0.0.0.0',
-            'interface': 'wlo1',
-            'mask': '255.255.255.0',
-            'mss': 0,
-            'window': 0,
-            'irtt': 0
-            },
-        '192.168.122.0': {
-            'destination': '192.168.122.0',
-            'flags': 'U',
-            'gateway': '0.0.0.0',
-            'interface': 'virbr0',
-            'mask': '255.255.255.0',
-            'mss': 0,
-            'window': 0,
-            'irtt': 0
-            },
-        '0.0.0.0': {
-            'destination': '0.0.0.0',
-            'flags': 'UG',
-            'gateway': '192.168.1.1',
-            'interface': 'wlo1',
-            'mask': '0.0.0.0',
-            'mss': 0,
-            'window': 0,
-            'irtt': 0
-            }
-        }
 
     golden_output = {'execute.return_value': '''
         Kernel IP routing table
@@ -210,6 +157,90 @@ class TestNetstatRn(unittest.TestCase):
         10.10.0.0       0.0.0.0         255.255.255.0   U         0 0          0 eth1-05
     '''}
 
+    golden_parsed_output = {
+        'routes': {
+            '0.0.0.0': {
+                'mask': {
+                    '0.0.0.0': {
+                        'nexthop': {
+                            1: {
+                                'flags': 'UG',
+                                'gateway': '192.168.1.1',
+                                'interface': 'wlo1',
+                                'metric': 0,
+                                'ref': 0,
+                                'use': 0,
+                            },
+                        },
+                    },
+                },
+            },
+            '10.10.0.0': {
+                'mask': {
+                    '255.255.255.0': {
+                        'nexthop': {
+                            1: {
+                                'flags': 'U',
+                                'gateway': '0.0.0.0',
+                                'interface': 'eth1-05',
+                                'metric': 0,
+                                'ref': 0,
+                                'use': 0,
+                            },
+                        },
+                    },
+                },
+            },
+            '172.17.0.0': {
+                'mask': {
+                    '255.255.0.0': {
+                        'nexthop': {
+                            1: {
+                                'flags': 'U',
+                                'gateway': '0.0.0.0',
+                                'interface': 'docker0',
+                                'metric': 0,
+                                'ref': 0,
+                                'use': 0,
+                            },
+                        },
+                    },
+                },
+            },
+            '192.168.1.0': {
+                'mask': {
+                    '255.255.255.0': {
+                        'nexthop': {
+                            1: {
+                                'flags': 'U',
+                                'gateway': '0.0.0.0',
+                                'interface': 'wlo1',
+                                'metric': 0,
+                                'ref': 0,
+                                'use': 0,
+                            },
+                        },
+                    },
+                },
+            },
+            '192.168.122.0': {
+                'mask': {
+                    '255.255.255.0': {
+                        'nexthop': {
+                            1: {
+                                'flags': 'U',
+                                'gateway': '0.0.0.0',
+                                'interface': 'virbr0',
+                                'metric': 0,
+                                'ref': 0,
+                                'use': 0,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
