@@ -1686,7 +1686,13 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         #            No Label   10.23.120.0/24[V]   \
         # None       No Label   10.0.0.16/30     0             Gi3        10.0.0.9
         # 39    [M]  16052      10.169.14.241/32   \
-        p1 = re.compile(r'^((?P<local_label>\d+|[Nn]one) +)?(?:\[(?P<t>(?:T|M)+)\] +)?(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>[\S]+) +\\$')
+        # 235        211        10.55.0.0/24     0             Te0/2/0.102  192.168.4.1   
+        # 37         142409     172.16.100.1/32   \
+        #                             0             Gi0/1/6    192.168.10.253
+        #            107829     172.16.100.1/32   \
+        #                             0             Gi0/1/7    192.168.10.254
+        p1 = re.compile(r'((?P<local_label>\d+|[Nn]one) +)?(?:\[(?P<t>(?:T|M)+)\] +)?'
+                        r'(?P<outgoing_label>(\w+|(No|Pop) +Label)) +(?P<prefix_or_tunnel_id>[\S]+) +\\$')
 
         p2 = re.compile(r'^(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
@@ -1890,18 +1896,23 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
 class ShowMplsForwardingTableDetail(ShowMplsForwardingTable):
     """Parser for
         show mpls forwarding-table detail
-        show mpls forwarding-table vrf <vrf> detail"""
+        show mpls forwarding-table vrf <vrf> detail
+        show mpls forwarding-table labels {label} detail
+        show mpls forwarding-table {route} detail"""
 
     cli_command = ['show mpls forwarding-table detail',
                    'show mpls forwarding-table vrf {vrf} detail',
-                   'show mpls forwarding-table labels {label} detail']
+                   'show mpls forwarding-table labels {label} detail',
+                   'show mpls forwarding-table {route} detail']
 
-    def cli(self, vrf='', label='', output=None):
+    def cli(self, vrf='', label='', route='', output=None):
         if output is None:
             if vrf:
                 cmd = self.cli_command[1].format(vrf=vrf)
             elif label:
                 cmd = self.cli_command[2].format(label=label)
+            elif route:
+                cmd = self.cli_command[3].format(route=route)
             else:
                 cmd = self.cli_command[0]
             out = self.device.execute(cmd)
@@ -1964,7 +1975,7 @@ class ShowMplsInterface(ShowMplsInterfaceSchema):
                    'show mpls interfaces {interface} detail',
                    'show mpls interfaces {interface}',
                    'show mpls interfaces {all}',
-                   'show mpls interfaces vrf {vrf} ']
+                   'show mpls interfaces vrf {vrf}']
 
     def cli(self, detail="", interface="",vrf="",all="", output=None):
         if output is None:

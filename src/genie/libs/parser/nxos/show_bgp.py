@@ -4832,7 +4832,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
 
                     # Set path
                     if m.groupdict()['path']:
-                        index_dict.udpate({'path': m.groupdict()['path'].strip()})
+                        index_dict.update({'path': m.groupdict()['path'].strip()})
 
                     continue
 

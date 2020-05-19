@@ -263,7 +263,7 @@ class ShowAccessLists(ShowAccessListsSchema):
         # permit 10.66.12.12
         # 10 permit 172.31.0.2 (1168716 matches)
         # 10 permit 172.31.0.0, wildcard bits 0.0.255.255 (8353358 matches)
-        # 10 deny   1.1.1.2 log (18 matches)
+        # 10 deny   10.4.1.2 log (18 matches)
         p_ip_acl_standard = re.compile(r'^(?P<seq>\d+)? '
                                        r'?(?P<actions_forwarding>permit|deny) '
                                        r'+(?P<src>\S+|any)( (?P<log>log))?(?:, +wildcard '
@@ -331,9 +331,11 @@ class ShowAccessLists(ShowAccessListsSchema):
         # 90 permit esp object-group vpn-endpoints-dummydpd host 10.4.1.1 (14 matches)
         # 100 permit ahp object-group vpn-endpoints-dummydpd host 10.4.1.1
         # 110 permit udp object-group vpn-endpoints-dummydpd host 10.4.1.1 eq isakmp (122 matches)
+        # 20 permit ip object-group GENIE any log-input
+        # 10 deny ip any object-group GENIE log-input
         p_ip_object_group = re.compile(
             r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny) +(?P<protocol>\w+) '
-            r'+(?P<src>(?:object-group+)(?: '
+            r'+(?P<src>(?:any )?(?:object-group+)(?: '
             r'+\S+)?)(?: +(?P<src_operator>eq|gt|lt|neq|range) '
             r'+(?P<src_port>[\S ]+\S))? +(?P<dst>(?:host|object-group+)'
             r'(?: +\d+\.\d+\.\d+\.\d+)?(?: [a-zA-Z\-]*(?!.*[eq])+)?)?(?: +(?P<dst_operator>eq|gt|lt|neq|range) '
@@ -461,7 +463,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                 protocol = 'ipv4' if protocol == 'ip' else protocol
                 actions_forwarding = group['actions_forwarding']
                 src = group['src'] if group['src'] else group['src1']
-                dst = group['dst']
+                dst = group.get('dst', None)
                 src = src.strip()
 
                 if dst:
@@ -496,8 +498,9 @@ class ShowAccessLists(ShowAccessListsSchema):
                 l3_dict['protocol'] = protocol
                 l3_dict.setdefault('source_network', {})\
                     .setdefault(src, {}).setdefault('source_network', src)
-                l3_dict.setdefault('destination_network', {})\
-                    .setdefault(dst, {}).setdefault('destination_network', dst)
+                if dst:
+                    l3_dict.setdefault('destination_network', {})\
+                        .setdefault(dst, {}).setdefault('destination_network', dst)
 
                 l3_dict.setdefault('dscp', re.search('dscp +(\w+)', left).groups()[0])\
                     if 'dscp' in left else None
@@ -523,7 +526,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                 l4_dict = seq_dict.setdefault('matches', {}).setdefault('l4', {})\
                     .setdefault(protocol, {})
                 if 'options' in left:
-                    options_name = re.sealrch('options +(\w+)', left).groups()[0]
+                    options_name = re.search('options +(\w+)', left).groups()[0]
                     if not options_name.isdigit():
                         try:
                             l4_dict['options'] = self.OPT_MAP[options_name]

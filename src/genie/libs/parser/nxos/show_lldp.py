@@ -192,7 +192,7 @@ class ShowLldpNeighborsDetailSchema(MetaParser):
                                     }
                                 },
                                 'management_address_v4': str,
-                                'management_address_v6': str,
+                                Optional('management_address_v6'): str,
                                 Optional('system_capabilities'): str,
                                 Optional('enabled_capabilities'): str,
                                 'vlan_id': str

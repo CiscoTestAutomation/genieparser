@@ -402,6 +402,7 @@ class ShowNveInterfaceDetailSchema(MetaParser):
             Optional('multisite_bgw_if_admin_state'): str,
             Optional('multisite_bgw_if_oper_state'): str,
             Optional('multisite_bgw_if_oper_state_down_reason'): str,
+            Optional('multisite_dci_advertise_pip'): bool,
         }
     }
 
@@ -412,14 +413,17 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
     """parser for:
         show nve interface <nve> detail"""
     cli_command = 'show nve interface {interface} detail'
-    def cli(self, interface=""):
+    def cli(self, interface="", output=None):
         nve_list = []
 
         if interface:
             nve_list.append(interface)
         if not interface:
             cmd1 = 'show interface | i nve'
-            out1 = self.device.execute(cmd1)
+            if not output:
+                out1 = self.device.execute(cmd1)
+            else:
+                out1 = output
             # Init vars
 
             # nve1 is down (other)
@@ -459,7 +463,8 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         p11 = re.compile(r'^\s*Source +Interface +hold-down-time: +(?P<hold_down_time>[\d]+)$')
         p12 = re.compile(r'^\s*Source +Interface +hold-up-time: +(?P<hold_up_time>[\d]+)$')
         p13 = re.compile(r'^\s*Remaining +hold-down +time: +(?P<hold_time_left>[\d]+) +seconds$')
-        p14 = re.compile(r'^\s*Virtual +Router +MAC: +(?P<v_router_mac>[\w\.]+)$')
+        # Virtual Router MAC: N/A
+        p14 = re.compile(r'^\s*Virtual +Router +MAC: +(?P<v_router_mac>\S+)$')
         p15 = re.compile(r'^\s*Virtual +Router +MAC +Re\-origination: +(?P<v_router_mac_re>[\w\.]+)$')
         p16 = re.compile(r'^\s*Interface +state: +(?P<intf_state>[\w\-]+)$')
         p17 = re.compile(r'^\s*unknown-peer-forwarding: +(?P<peer_forwarding>[\w]+)$')
@@ -476,7 +481,10 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         # Multi-Site delay-restore time left: 0 seconds
         p24 = re.compile(
             r'^\s*Multi(-S|s)ite +bgw\-if +oper +down +reason: +(?P<multisite_convergence_time_left>\d+) +seconds$')
-
+        p25 = re.compile(r'Multisite +delay-restore +time +left: +(?P<multisite_convergence_time_left>\d+) +seconds$')
+        # Multisite dci-advertise-pip configured: True
+        p26 = re.compile(r'Multisite +dci-advertise-pip +configured: +(?P<multisite_dci_advertise_pip>\S+)')
+        
         for nve in nve_list:
             out = self.device.execute(self.cli_command.format(interface=nve))
             for line in out.splitlines():
@@ -684,6 +692,19 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                     group = m.groupdict()
                     nve_dict.update({'multisite_convergence_time_left': int(group.pop('multisite_convergence_time_left'))})
                     continue
+
+                m = p25.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'multisite_convergence_time_left': int(group.pop('multisite_convergence_time_left'))})
+                    continue
+                # Multisite dci-advertise-pip configured: True
+                m = p26.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({'multisite_dci_advertise_pip': group.pop('multisite_dci_advertise_pip')=="True"})
+                    continue
+
         return result_dict
 
 
@@ -896,10 +917,12 @@ class ShowNveEthernetSegment(ShowNveEthernetSegmentSchema):
         p7 = re.compile(r'^\s*Host +Learning +Mode: +(?P<host_learning_mode>[\w\-]+)$')
         p8 = re.compile(r'^\s*Active +Vlans: +(?P<active_vlans>[\d\-\,]+)$')
         p9 = re.compile(r'^\s*DF Vlans: +(?P<df_vlans>[\d\-\,]+)$')
-        p10 = re.compile(r'^\s*,(?P<df_vlans>[\d\-\,]+)$')
+        # 1026,1028,1030,1032,1034,1036,1038
+        p10 = re.compile(r'^\s*,?(?P<df_vlans>[\d\-\,]+)$')
         p11 = re.compile(r'^\s*Active +VNIs: +(?P<active_vnis>[\d\-\,]+)$')
         p12 = re.compile(r'^\s*CC +failed +for +VLANs:( +(?P<cc_failed_vlans>[\w\/]+))?$')
-        p13 = re.compile(r'^\s*VLAN CC timer: +(?P<cc_timer_left>[\d]+)?$')
+        #   VLAN CC timer: no-timer
+        p13 = re.compile(r'^\s*VLAN +CC +timer: +(?P<cc_timer_left>\S+)?$')
         p14 = re.compile(r'^\s*Number +of +ES +members: +(?P<num_es_mem>[\d]+)?$')
         p15 = re.compile(r'^\s*My +ordinal: +(?P<local_ordinal>[\d]+)$')
         p16 = re.compile(r'^\s*DF +timer +start +time: +(?P<df_timer_start_time>[\w\:]+)$')

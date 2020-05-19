@@ -4,6 +4,7 @@
      *  show lldp entry *
      *  show lldp entry [<WORD>]
      *  show lldp interface [<WORD>]
+     *  show lldp neighbors
      *  show lldp neighbors detail
      *  show lldp traffic
 """
@@ -117,14 +118,14 @@ class ShowLldpEntrySchema(MetaParser):
             }
         },
         Optional('med_information'): {
-            'f/w_revision': str,
+            Optional('f/w_revision'): str,
             Optional('h/w_revision'): str,
             Optional('s/w_revision'): str,
-            'manufacturer': str,
-            'model': str,
-            'capabilities': list,
+            Optional('manufacturer'): str,
+            Optional('model'): str,
+            Optional('capabilities'): list,
             'device_type': str,
-            'network_policy': {
+            Optional('network_policy'): {
                 Any(): { # 'voice'; 'voice_signal'
                     'vlan': int, # 110
                     'tagged': bool,
@@ -133,9 +134,9 @@ class ShowLldpEntrySchema(MetaParser):
                 },
             },
             Optional('serial_number'): str,
-            'power_source': str,
-            'power_priority': str,
-            'wattage': float,
+            Optional('power_source'): str,
+            Optional('power_priority'): str,
+            Optional('wattage'): float,
             'location': str,
         }
     }
@@ -174,10 +175,11 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         p1 = re.compile(r'^Local\s+Intf:\s+(?P<intf>[\w\/\.\-]+)$')
 
         # Port id: Gi1/0/4
-        p1_1 = re.compile(r'^Port\s+id:\s+(?P<port_id>\S+)$')
+        p1_1 = re.compile(r'^Port\s+id:\s+(?P<port_id>[\S\s]+)$')
 
-        # Chassis id: 843d.c638.b980
-        p2 = re.compile(r'^Chassis\s+id:\s+(?P<chassis_id>[\w\.]+)$')
+        # Chassis id:  843d.c6ff.f1b8
+        # Chassis id: r2-rf2222-qwe
+        p2 = re.compile(r'^Chassis\s+id:\s+(?P<chassis_id>[\w\.\:\-]+)$')
 
         # Port Description: GigabitEthernet1/0/4
         p3 = re.compile(r'^Port\s+Description:\s+(?P<desc>[\w\/\.\-\s]+)$')
@@ -198,7 +200,8 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         # Compiled Thu 21-Jul-11 01:23 by prod_rel_team
         # Avaya 1220 IP Deskphone, Firmware:06Q
         # IP Phone, Firmware:90234AP
-        p5_2 = re.compile(r'^(?P<msg>(Compile|Avaya|IP Phone).*)$')
+        # {"SN":"SN-NR","Owner":"OWNER"}
+        p5_2 = re.compile(r'^(?P<msg>(Compile|Avaya|IP Phone|{).*)$')
 
         # Time remaining: 112 seconds
         p6 = re.compile(r'^Time\s+remaining:\s+(?P<time_remaining>\w+)\s+seconds$')
@@ -211,8 +214,10 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
         # Management Addresses:
         #     IP: 10.9.1.1
+        # Management Addresses:
+        #     IPV6: 0000:0000:0000:0000:0000:ffff:7f00:0001
         # Management Addresses - not advertised
-        p9 = re.compile(r'^IP:\s+(?P<ip>[\w\.]+)$')
+        p9 = re.compile(r'^(IP|IPV6):\s+(?P<ip>[\w\.:]+)$')
         p9_1 = re.compile(r'^Management\s+Addresses\s+-\s+(?P<ip>not\sadvertised)$')
 
         # Auto Negotiation - supported, enabled
@@ -238,6 +243,9 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         p14 = re.compile(r'^Total\s+entries\s+displayed:\s+(?P<entry>\d+)$')
 
         # ==== MED Information patterns =====
+        # MED Information:
+        med_p0 = re.compile(r'^MED\s+Information:.*$')
+
         # F/W revision: 06Q
         # S/W revision: SCCP42.9-3-1ES27S
         # H/W revision: 12
@@ -250,7 +258,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         med_p3 = re.compile(r'^Model:\s+(?P<model>[\S\s]+)$')
 
         # Capabilities: NP, LI, PD, IN
-        med_p4 = re.compile(r'^Capabilities:\s+(?P<capabilities>[\S\s]+)$')
+        med_p4 = re.compile(r'^Capabilities:\s*(?P<capabilities>[\S\s]+)$')
 
         # Device type: Endpoint Class III
         med_p5 = re.compile(r'^Device\s+type:\s+(?P<device_type>[\S\s]+)$')
@@ -283,7 +291,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 sub_dict = {}
                 continue
 
-            # Chassis id: 843d.c638.b980
+            # Chassis id:  843d.c6ff.f1b8
             m = p2.match(line)
             if m:
                 sub_dict = {}
@@ -422,13 +430,18 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 continue
 
             # ==== Med Information ====
+            # MED Information:
+            m = med_p0.match(line)
+            if m:
+                med_dict = ret_dict.setdefault('med_information', {})
+                continue
+
             # F/W revision: 06Q
             # S/W revision: SCCP42.9-3-1ES27S
             # H/W revision: 12
             m = med_p1.match(line)
             if m:
                 group = m.groupdict()
-                med_dict = ret_dict.setdefault('med_information', {})
                 med_dict[group['head'].lower()+'_revision'] = m.groupdict()['revision']
                 continue
 
@@ -442,6 +455,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 continue
 
             # Capabilities: NP, LI, PD, IN
+            # Capabilities:
             m = med_p4.match(line)
             if m:
                 list_capabilities = m.groupdict()['capabilities'].split(', ')
@@ -487,7 +501,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             # Serial number: FCH1610A5S5
             m = med_p9.match(line)
             if m:
-                med_dict['serial_number']: m.groupdict()['serial_number']
+                med_dict['serial_number'] = m.groupdict()['serial_number']
                 continue
 
         return ret_dict
@@ -629,3 +643,97 @@ class ShowLldpInterface(ShowLldpInterfaceSchema):
                 continue
         return ret_dict
 
+
+class ShowLldpNeighborsSchema(MetaParser):
+    """
+    Schema for show lldp neighbors
+    """
+    schema = {
+        'total_entries': int,
+        'interfaces': {
+            Any(): {
+                'port_id': {
+                    Any(): {
+                        'neighbors': {
+                            Any(): {
+                                'hold_time': int,
+                                Optional('capabilities'): list,
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowLldpNeighbors(ShowLldpNeighborsSchema):
+    """
+    Parser for show lldp neighbors
+    """
+    CAPABILITY_CODES = {'R': 'router',
+                        'B': 'mac_bridge',
+                        'T': 'telephone',
+                        'C': 'docsis_cable_device',
+                        'W': 'wlan_access_point',
+                        'P': 'repeater',
+                        'S': 'station_only',
+                        'O': 'other'}
+
+    cli_command = ['show lldp neighbors']
+
+    def cli(self, output=None):
+        if output is None:
+            cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        parsed_output = {}
+
+        # Total entries displayed: 4
+        p1 = re.compile(r'^Total\s+entries\s+displayed:\s+(?P<entry>\d+)$')
+
+        # Device ID           Local Intf     Hold-time  Capability      Port ID
+        # router               Gi1/0/52       117        R               Gi0/0/0
+        # 10.10.191.107       Gi1/0/14       155        B,T             7038.eeff.572d
+        # d89e.f3ff.58fe      Gi1/0/33       3070                       d89e.f3ff.58fe
+        p2 = re.compile(r'(?P<device_id>\S+)\s+(?P<interfaces>\S+)'
+                        r'\s+(?P<hold_time>\d+)\s+(?P<capabilities>[A-Z,]+)?'
+                        r'\s+(?P<port_id>\S+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Total entries displayed: 4
+            m = p1.match(line)
+            if m:
+                parsed_output['total_entries'] = int(m.groupdict()['entry'])
+                continue
+
+            # Device ID           Local Intf     Hold-time  Capability      Port ID
+            # router               Gi1/0/52       117        R               Gi0/0/0
+            # 10.10.191.107       Gi1/0/14       155        B,T             7038.eeff.572d
+            # d89e.f3ff.58fe      Gi1/0/33       3070                       d89e.f3ff.58fe
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+
+                intf = Common.convert_intf_name(group['interfaces'])
+                device_dict = parsed_output.setdefault('interfaces', {}). \
+                                          setdefault(intf, {}). \
+                                          setdefault('port_id', {}). \
+                                          setdefault(group['port_id'], {}).\
+                                          setdefault('neighbors', {}). \
+                                          setdefault(group['device_id'], {})
+
+                device_dict['hold_time'] = int(group['hold_time'])
+
+                if group['capabilities']:
+                    capabilities = list(map(lambda x: x.strip(), group['capabilities'].split(',')))
+                    device_dict['capabilities'] = capabilities
+
+
+            continue
+
+        return parsed_output

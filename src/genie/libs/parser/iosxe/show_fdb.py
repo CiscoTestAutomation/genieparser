@@ -1,6 +1,7 @@
 """show_fdb.py
    supported commands:
      *  show mac address-table
+     *  show mac address-table vlan {vlan}
      *  show mac address-table aging-time
      *  show mac address-table learning
 """
@@ -55,12 +56,16 @@ class ShowMacAddressTableSchema(MetaParser):
 class ShowMacAddressTable(ShowMacAddressTableSchema):
     """Parser for show mac address-table"""
 
-    cli_command = 'show mac address-table'
+    cli_command = ['show mac address-table',
+                   'show mac address-table vlan {vlan}']
 
-    def cli(self,output=None):
+    def cli(self, vlan='', output=None):
         if output is None:
             # get output from device
-            out = self.device.execute(self.cli_command)
+            if vlan:
+                out = self.device.execute(self.cli_command[1].format(vlan=vlan))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -75,7 +80,7 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
         p3 = re.compile(r'^(?P<intfs>(vPC Peer-Link)?[\w\/\,\(\)]+)$')
         p4 = re.compile(r'^(?P<entry>[\w\*] )?\s*(?P<vlan>All|[\d\-]+) +(?P<mac>[\w.]+)'
             ' +(?P<entry_type>\w+) +(?P<learn>\w+) +(?P<age>[\d\-\~]+) '
-            '+(?P<intfs>(vPC )?[\w\/\,\-\(\)]+)$')
+            '+(?P<intfs>(vPC )?[\w\/\,\-\(\)\s]+)$')
         p5 = re.compile(r'^(?P<entry>[\w\*] )?\s*(?P<vlan>All|[\d\-]+) +(?P<mac>[\w.]+)'
             ' +(?P<entry_type>\w+) +(?P<age>[\d\-\~]+) +(?P<secure>\w+) '
             '+(?P<ntfy>\w+) +(?P<intfs>(vPC )?[\w\/\,\-\(\)]+)$')

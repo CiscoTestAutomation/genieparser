@@ -25,40 +25,41 @@ class TracerouteSchema(MetaParser):
     '''
 
     schema = {
-        'traceroute':
-            {Any():
-                 {'hops':
-                      {Any():
-                           {'paths':
-                                {Any():
-                                     {'address': str,
-                                      Optional('name'): str,
-                                      Optional('probe_msec'): list,
-                                      Optional('vrf_in_name'): str,
-                                      Optional('vrf_out_name'): str,
-                                      Optional('vrf_in_id'): str,
-                                      Optional('vrf_out_id'): str,
-                                      Optional('label_info'):
-                                          {Optional('label_name'): str,
-                                           Optional('exp'): int,
-                                           Optional('MPLS'):
-                                               {'label': str,
-                                                'exp': int,
-                                                },
-                                           },
-                                      Optional('mru'): int,
-                                      },
-                                 },
-                            Optional('code'): str,
-                            }
-                       },
-                  Optional('timeout_seconds'): int,
-                  Optional('name_of_address'): str,
-                  'address': str,
-                  Optional('vrf'): str,
-                  Optional('mask'): str,
-                  },
-             },
+        'traceroute':{
+            Any():{
+                'hops':{
+                    Any():{
+                        'paths':{
+                            Any():{
+                                'address': str,
+                                Optional('asn'): int,
+                                Optional('name'): str,
+                                Optional('probe_msec'): list,
+                                Optional('vrf_in_name'): str,
+                                Optional('vrf_out_name'): str,
+                                Optional('vrf_in_id'): str,
+                                Optional('vrf_out_id'): str,
+                                Optional('label_info'):{
+                                    Optional('label_name'): str,
+                                    Optional('exp'): int,
+                                    Optional('MPLS'):{
+                                        'label': str,
+                                        'exp': int,
+                                    },
+                                },
+                                Optional('mru'): int,
+                            },
+                        },
+                        Optional('code'): str,
+                    }
+                },
+                Optional('timeout_seconds'): int,
+                Optional('name_of_address'): str,
+                'address': str,
+                Optional('vrf'): str,
+                Optional('mask'): str,
+            },
+        },
     }
 
 
@@ -91,33 +92,33 @@ class Traceroute(TracerouteSchema):
 
         # Tracing MPLS Label Switched Path to 172.31.165.220/32, timeout is 2 seconds
         p1_2 = re.compile(r'^Tracing +MPLS +Label +Switched +Path +to'
-                           ' +(?P<traceroute>\S+), +timeout +is'
-                           ' +(?P<timeout>(\d+)) +seconds$')
+                          r' +(?P<traceroute>\S+), +timeout +is'
+                          r' +(?P<timeout>(\d+)) +seconds$')
 
         # Tracing the route to www.cisco.com (10.36.3.3)
         p1_3 = re.compile(r'^Tracing +the +route +to +(?P<name_of_address>\S+)'
-                           ' \(+(?P<traceroute>\S+)\)$')
+                          r' \(+(?P<traceroute>\S+)\)$')
 
         # VRF info: (vrf in name/id, vrf out name/id)
 
         # 1 10.1.1.2 (red/1001, red/1001)
         # 2 10.2.1.2 (red/1001, red/1001)
         p2 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>([a-zA-Z0-9\.\:]+))'
-                         ' +\((?P<vrf_in_name>(\S+))\/(?P<vrf_in_id>(\d+)),'
-                         ' +(?P<vrf_out_name>(\S+))\/(?P<vrf_out_id>(\d+))\)$')
+                        r' +\((?P<vrf_in_name>(\S+))\/(?P<vrf_in_id>(\d+)),'
+                        r' +(?P<vrf_out_name>(\S+))\/(?P<vrf_out_id>(\d+))\)$')
 
         # L 1 10.169.197.93 MRU 1552 [Labels: implicit-null Exp: 0] 1 ms
         # ! 2 10.169.197.102 1 ms
         p3_1 = re.compile(r'^(?P<code>(!|Q|.|L|D|M|P|R|I|X)) +(?P<hop>(\d+))'
-                           ' +(?P<address>([a-zA-Z0-9\.\:]+))'
-                           '(?: +MRU +(?P<mru>(\d+)))?'
-                           '(?: +\[Labels: +(?P<label_name>(\S+)) +Exp: +(?P<exp>(\d+))\])?'
-                           ' +(?P<probe_msec>(.*))$')
+                          r' +(?P<address>([a-zA-Z0-9\.\:]+))'
+                          r'(?: +MRU +(?P<mru>(\d+)))?'
+                          r'(?: +\[Labels: +(?P<label_name>(\S+)) +Exp: +(?P<exp>(\d+))\])?'
+                          r' +(?P<probe_msec>(.*))$')
 
         # 0 192.168.197.94 MRU 1552 [Labels: 1015 Exp: 0]
         p3_2 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>([a-zA-Z0-9\.\:]+))'
-                           ' +MRU +(?P<mru>(\d+)) +\[Labels: +(?P<label_name>(\S+))'
-                           ' +Exp: +(?P<exp>(\d+))\]$')
+                          r' +MRU +(?P<mru>(\d+)) +\[Labels: +(?P<label_name>(\S+))'
+                          r' +Exp: +(?P<exp>(\d+))\]$')
 
         # 1 172.31.255.125 [MPLS: Label 624 Exp 0] 70 msec 200 msec 19 msec
         # 2 10.0.9.1 [MPLS: Label 300678 Exp 0] 177 msec 150 msec 9 msec
@@ -129,12 +130,20 @@ class Traceroute(TracerouteSchema):
         # 8 10.169.197.101 1 msec 1 msec *
         # 1 10.19.198.29 [MPLS: Labels 16052/16062/16063/39 Exp 0] 2 msec 2 msec 2 msec
         p4 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>([a-zA-Z0-9\.\:]+))(?: +\[(?P<label_name>(MPLS))'
-                ': +Labels? (?P<label>(\S+)) +Exp +(?P<exp>(\d+))\])? +(?P<probe_msec>(\d+.*))$')
+                        r': +Labels? (?P<label>(\S+)) +Exp +(?P<exp>(\d+))\])? +(?P<probe_msec>(\d+.*))$')
+
         # 1 p5DC5A26A.dip0.t-ipconnect.de (10.169.197.93) 0 msec *  1 msec *  0 msec
         p5 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<name>[\S]+)'
-                         ' +\(+(?P<address>([\d\.]+))\) +(?P<probe_msec>(.*))$')
+                        r' +\(+(?P<address>([\d\.]+))\) +(?P<probe_msec>(.*))$')
         # 1  *
-        p6 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>\*)$')
+        # 2  *  *
+        # 3  *  *  *
+        p6 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>\*( +\*)*)$')
+
+        # 192.168.100.18 [AS 2516] 2 msec
+        # 3  192.168.100.18 [AS 2516] 2 msec
+        p7 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>\S+) '
+                        r'+\[AS +(?P<asn>\d+)\] +(?P<probe_msec>(\d+.*))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -264,16 +273,21 @@ class Traceroute(TracerouteSchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                if group.get('hop'):
+                cur_hop = group.get('hop')
+                if cur_hop:
                     index = 1
                     path_dict = tr_dict.setdefault('hops', {}).\
-                                        setdefault(group['hop'], {}).setdefault('paths',{})
+                                        setdefault(cur_hop, {}).setdefault('paths',{})
+                    hop = cur_hop
+                else:
+                    path_dict = tr_dict.setdefault('hops', {}).\
+                                        setdefault(hop, {}).setdefault('paths',{})
+
                 index_dict = path_dict.setdefault(index, {})
                 index_dict['address'] = group['address']
-                index_dict['probe_msec'] = group['probe_msec'].strip().\
-                                            replace(" msec", "").\
-                                            replace(" ms", "").\
-                                            split()
+                index_dict.setdefault('probe_msec', []).extend(group['probe_msec'].strip().\
+                                        replace(" msec", "").replace(" ms", "").split())
+
                 if group['label_name']:
                     label_dict = index_dict.setdefault('label_info', {}).\
                                         setdefault(group['label_name'], {})
@@ -300,16 +314,58 @@ class Traceroute(TracerouteSchema):
                                             split()
                 index += 1
                 continue
+
+            # 1  *
+            # 2  *  *
+            # 3  *  *  *
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                if group.get('hop'):
+                cur_hop = group.get('hop')
+                stars = group['address'].replace(' ', '')
+                check_next_line = len(stars) == 2
+
+                if check_next_line:
+                    if cur_hop:
+                        index = 1
+                        path_dict = tr_dict.setdefault('hops', {}).\
+                            setdefault(cur_hop, {}).setdefault('paths',{})
+                        hop = cur_hop
+                    index_dict = path_dict.setdefault(index, {})
+                    index_dict['probe_msec'] = list(stars)
+                else:
+                    if cur_hop:
+                        index = 1
+                        path_dict = tr_dict.setdefault('hops', {}).\
+                            setdefault(cur_hop, {}).setdefault('paths',{})
+                        hop = cur_hop
+                    index_dict = path_dict.setdefault(index, {})
+                    index_dict['address'] = group['address']
+                    index += 1
+
+                continue
+
+            # 192.168.100.18 [AS 2516] 2 msec
+            # 3  192.168.100.18 [AS 2516] 2 msec
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                cur_hop = group.get('hop')
+                if cur_hop:
                     index = 1
                     path_dict = tr_dict.setdefault('hops', {}).\
-                        setdefault(group['hop'], {}).\
-                        setdefault('paths',{})
+                                        setdefault(cur_hop, {}).setdefault('paths',{})
+                    hop = cur_hop
+                else:
+                    path_dict = tr_dict.setdefault('hops', {}).\
+                                        setdefault(hop, {}).setdefault('paths',{})
+
                 index_dict = path_dict.setdefault(index, {})
                 index_dict['address'] = group['address']
+                index_dict['asn'] = int(group['asn'])
+                index_dict.setdefault('probe_msec', []).extend(group['probe_msec'].strip().\
+                            replace(" msec", "").replace(" ms", "").split())
+
                 index += 1
                 continue
         

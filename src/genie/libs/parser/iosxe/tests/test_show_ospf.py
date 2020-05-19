@@ -2375,10 +2375,10 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
 
         self.outputs = {}
         self.outputs['show ip ospf neighbor detail'] = raw1
-        self.outputs['show ip ospf interface | section GigabitEthernet2'] = raw2_1
-        self.outputs['show ip ospf interface | section GigabitEthernet1'] = raw2_2
-        self.outputs['show ip ospf interface | section OSPF_SL1'] = raw2_3
-        self.outputs['show ip ospf interface | section GigabitEthernet3'] = raw2_4
+        self.outputs['show ip ospf interface GigabitEthernet2'] = raw2_1
+        self.outputs['show ip ospf interface GigabitEthernet1'] = raw2_2
+        self.outputs['show ip ospf interface OSPF_SL1'] = raw2_3
+        self.outputs['show ip ospf interface GigabitEthernet3'] = raw2_4
         self.outputs['show ip ospf sham-links | i OSPF_SL1'] = raw3_1
         self.outputs['show running-config | i sham-link | i 10.151.22.22'] = raw3_2
         self.outputs['show running-config | section router ospf 1'] = raw4_1
@@ -2544,9 +2544,9 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
 
         self.outputs = {}
         self.outputs['show ip ospf neighbor detail'] = raw1
-        self.outputs['show ip ospf interface | section OSPF_VL1'] = raw2_1
-        self.outputs['show ip ospf interface | section GigabitEthernet0/1'] = raw2_2
-        self.outputs['show ip ospf interface | section GigabitEthernet0/0'] = raw2_3
+        self.outputs['show ip ospf interface OSPF_VL1'] = raw2_1
+        self.outputs['show ip ospf interface GigabitEthernet0/1'] = raw2_2
+        self.outputs['show ip ospf interface GigabitEthernet0/0'] = raw2_3
 
         self.outputs['show ip ospf virtual-links | i OSPF_VL1'] = raw3_1
         self.outputs['show running-config | i virtual-link | i 10.100.5.5'] = raw3_2
@@ -2783,11 +2783,11 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
 
         self.outputs = {}
         self.outputs['show ip ospf neighbor detail'] = raw1
-        self.outputs['show ip ospf interface | section TenGigabitEthernet3/1/1'] = raw2_1
-        self.outputs['show ip ospf interface | section TenGigabitEthernet3/1/2'] = raw2_2
-        self.outputs['show ip ospf interface | section TenGigabitEthernet3/1/3'] = raw2_3
-        self.outputs['show ip ospf interface | section TenGigabitEthernet3/1/4'] = raw2_4
-        self.outputs['show ip ospf interface | section TenGigabitEthernet3/1/5'] = raw2_5
+        self.outputs['show ip ospf interface TenGigabitEthernet3/1/1'] = raw2_1
+        self.outputs['show ip ospf interface TenGigabitEthernet3/1/2'] = raw2_2
+        self.outputs['show ip ospf interface TenGigabitEthernet3/1/3'] = raw2_3
+        self.outputs['show ip ospf interface TenGigabitEthernet3/1/4'] = raw2_4
+        self.outputs['show ip ospf interface TenGigabitEthernet3/1/5'] = raw2_5
 
         self.outputs['show running-config | section router ospf 1666'] = raw3_1
         self.outputs['show running-config | section router ospf 1668'] = raw3_2
@@ -3138,10 +3138,10 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
 
         self.outputs = {}
         self.outputs['show ip ospf neighbor detail'] = raw1
-        self.outputs['show ip ospf interface | section GigabitEthernet5'] = raw2_1
-        self.outputs['show ip ospf interface | section GigabitEthernet4'] = raw2_2
-        self.outputs['show ip ospf interface | section GigabitEthernet3'] = raw2_3
-        self.outputs['show ip ospf interface | section GigabitEthernet2'] = raw2_4
+        self.outputs['show ip ospf interface GigabitEthernet5'] = raw2_1
+        self.outputs['show ip ospf interface GigabitEthernet4'] = raw2_2
+        self.outputs['show ip ospf interface GigabitEthernet3'] = raw2_3
+        self.outputs['show ip ospf interface GigabitEthernet2'] = raw2_4
 
         self.outputs['show running-config | section router ospf 65109'] = raw3_1
 
@@ -3158,6 +3158,120 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
         obj = ShowIpOspfNeighborDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+    
+    golden_parsed_output5 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'instance': {
+                            '1668': {
+                                'areas': {
+                                    '0.0.0.0': {
+                                        'interfaces': {
+                                            'TenGigabitEthernet3/1/1': {
+                                                'neighbors': {
+                                                    '10.25.0.102': {
+                                                        'address': '10.16.255.210',
+                                                        'bdr_ip_addr': '0.0.0.0',
+                                                        'dead_timer': '00:00:07',
+                                                        'dr_ip_addr': '0.0.0.0',
+                                                        'first': '0x0(0)/0x0(0)',
+                                                        'index': '8/9,',
+                                                        'bfd_state': 'enabled',
+                                                        'interface': 'TenGigabitEthernet3/1/1',
+                                                        'neighbor_router_id': '10.25.0.102',
+                                                        'next': '0x0(0)/0x0(0)',
+                                                        'priority': 0,
+                                                        'state': 'full',
+                                                        'statistics': {
+                                                            'last_retrans_max_scan_length': 6,
+                                                            'last_retrans_max_scan_time_msec': 4,
+                                                            'last_retrans_scan_length': 0,
+                                                            'last_retrans_scan_time_msec': 0,
+                                                            'nbr_event_count': 6,
+                                                            'nbr_retrans_qlen': 0,
+                                                            'total_retransmission': 383,
+                                                        },
+                                                        'uptime': '8w0d',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    def test_show_ip_ospf_neighbor_detail_full5(self):
+
+        self.maxDiff = None
+
+        def mapper(key):
+            return self.outputs[key]
+        
+        raw1 = '''\
+            nhq-choke-VSS#sh ip ospf neighbor detail
+            show ip ospf neighbor detail
+            Neighbor 10.25.0.102, interface address 10.16.255.210
+                In the area 0 via interface TenGigabitEthernet3/1/1, BFD enabled
+                Neighbor priority is 0, State is FULL, 6 state changes
+                DR is 0.0.0.0 BDR is 0.0.0.0
+                Options is 0x12 in Hello (E-bit, L-bit)
+                Options is 0x52 in DBD (E-bit, L-bit, O-bit)
+                LLS Options is 0x1 (LR)
+                Dead timer due in 00:00:07
+                Neighbor is up for 8w0d    
+                Index 8/9, retransmission queue length 0, number of retransmission 383
+                First 0x0(0)/0x0(0) Next 0x0(0)/0x0(0)
+                Last retransmission scan length is 0, maximum is 6
+                Last retransmission scan time is 0 msec, maximum is 4 msec'''
+        raw2_1 = '''\
+            nhq-choke-VSS#show ip ospf interface | section TenGigabitEthernet3/1/1
+            TenGigabitEthernet3/1/1 is up, line protocol is up (connected) 
+                Internet Address 10.16.255.209/30, Area 0, Attached via Interface Enable
+                Process ID 1668, Router ID 10.31.208.123, Network Type POINT_TO_POINT, Cost: 100
+                Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                        0           100       no          no            Base
+                Enabled by interface config, including secondary ip addresses
+                Transmit Delay is 1 sec, State POINT_TO_POINT, BFD enabled
+                Timer intervals configured, Hello 2, Dead 6, Wait 6, Retransmit 5
+                    oob-resync timeout 40
+                    Hello due in 00:00:01
+                Supports Link-local Signaling (LLS)
+                Cisco NSF helper support enabled
+                IETF NSF helper support enabled
+                Can be protected by per-prefix Loop-Free FastReroute
+                Can be used for per-prefix Loop-Free FastReroute repair paths
+                Index 3/3, flood queue length 0
+                Next 0x0(0)/0x0(0)
+                Last flood scan length is 1, maximum is 51
+                Last flood scan time is 0 msec, maximum is 4 msec
+                Neighbor Count is 1, Adjacent neighbor count is 1 
+                    Adjacent with neighbor 10.25.0.102
+                Suppress hello for 0 neighbor(s)
+            '''
+        raw3_2 = '''\
+            R1_ospf_xe#show running-config | section router ospf 1668
+            show running-config | section router ospf 1668
+                router ospf 1668
+                router-id 10.31.208.123
+                default-information originate
+            '''
+        self.outputs = {}
+        self.outputs['show ip ospf interface TenGigabitEthernet3/1/1'] = raw2_1
+        self.outputs['show ip ospf neighbor detail'] = raw1
+        self.outputs['show running-config | section router ospf 1668'] = raw3_2
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
+        obj = ShowIpOspfNeighborDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
+
 
 
 # =======================================
@@ -3259,7 +3373,7 @@ class test_show_ip_ospf_sham_links(unittest.TestCase):
 
         self.outputs = {}
         self.outputs['show ip ospf sham-links'] = raw1
-        self.outputs['show ip ospf interface | section OSPF_SL0'] = raw2
+        self.outputs['show ip ospf interface OSPF_SL0'] = raw2
         self.outputs['show running-config | section router ospf 2'] = raw3
 
         self.device.execute = Mock()
@@ -3382,7 +3496,7 @@ class test_show_ip_ospf_virtual_links(unittest.TestCase):
 
         self.outputs = {}
         self.outputs['show ip ospf virtual-links'] = raw1
-        self.outputs['show ip ospf interface | section OSPF_VL0'] = raw2
+        self.outputs['show ip ospf interface OSPF_VL0'] = raw2
         self.outputs['show running-config | section router ospf 2'] = raw3
 
         self.device.execute = Mock()

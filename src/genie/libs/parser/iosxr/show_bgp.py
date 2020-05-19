@@ -2506,7 +2506,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         p1 = re.compile(r'^BGP +instance +(?P<instance_number>[0-9]+): +'
                             '(?P<instance>[a-zA-Z0-9\-\_\']+)$')
         p2 =  re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
-        p2_1 =  re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor>[a-zA-Z0-9\.\:]+), +vrf +(?P<vrf>[a-zA-Z0-9]+)$')
+        p2_1 =  re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor>[a-zA-Z0-9\.\:]+), +vrf +(?P<vrf>\S+)$')
         p3 = re.compile(r'^Remote +AS +(?P<remote_as>[0-9]+), +local +AS'
                             ' +(?P<local_as_as_no>[0-9]+)'
                             '(?:, +(?P<link_state>[a-zA-Z\s]+))?$')
@@ -2660,7 +2660,6 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
             
             # Remote AS 200, local AS 100, external link
-
             m = p3.match(line)
             if m:
                 sub_dict['remote_as'] = int(m.groupdict()['remote_as'])
@@ -4503,7 +4502,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                         ' *(?P<instance>[a-zA-Z0-9\-\_\']+)$')
         p2 = re.compile(r'^\s*VRF: *(?P<vrf>[\S]+)$')
         p3 = re.compile(r'^\s*Address *Family:'
-                        ' *(?P<address_family>[a-zA-Z0-9\s]+)$')
+                        ' *(?P<address_family>[\S\s]+)$')
         p4 = re.compile(r'^\s*BGP *VRF *(?P<bgp_vrf>[A-Z0-9]+), *state:'
                         ' *(?P<vrf_state>[a-zA-Z]+)$')
         p5 = re.compile(r'^\s*BGP *Route *Distinguisher:'
@@ -5372,7 +5371,15 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
         p1 = re.compile(r'^(?P<neighbor>\S+) +(?P<vrf>\S+) +(?P<spk>\d+) +'
             '(?P<as_number>\d+) +(?P<in_q>\d+) +(?P<out_q>\d+) +'
             '(?P<nbr_state>\w+) +(?P<nsr_state>[\w\s]+)$')
-        
+
+        # 2001:db8:4401:4453::6f9
+        p1_1 = re.compile(r'^(?P<neighbor>[\w\d:]+)$')
+
+        # default 0 65000 0 0 Established NSR Ready
+        p1_2 = re.compile(r'^(?P<vrf>\S+) +(?P<spk>\d+) +'
+                          r'(?P<as_number>\d+) +(?P<in_q>\d+) +(?P<out_q>\d+) +'
+                          r'(?P<nbr_state>\w+) +(?P<nsr_state>[\w\s]+)$')
+
         # BGP instance 0: 'default'
         p2 = re.compile(r'^BGP +instance +\d+: +\'(?P<instance>\S+)\'$')
 
@@ -5408,7 +5415,32 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
                 neighbor_dict.update({'nbr_state': nbr_state})
                 neighbor_dict.update({'nsr_state': nsr_state})
                 continue
-            
+
+            # 2001:db8:4401:4453::6f9
+            m = p1_1.match(line)
+            if m:
+                neighbor = m.groupdict()['neighbor']
+                continue
+
+            # default 0 65000 0 0 Established NSR Ready
+            m = p1_2.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_dict = ret_dict.setdefault('instance', {}). \
+                                            setdefault(instance, {}). \
+                                            setdefault('vrf', {}). \
+                                            setdefault(group['vrf'], {}). \
+                                            setdefault('neighbors', {}). \
+                                            setdefault(neighbor, {})
+
+                neighbor_dict['spk'] = int(group['spk'])
+                neighbor_dict['as_number'] = int(group['as_number'])
+                neighbor_dict['in_q'] = int(group['in_q'])
+                neighbor_dict['out_q'] = int(group['out_q'])
+                neighbor_dict['nbr_state'] = group['nbr_state']
+                neighbor_dict['nsr_state'] = group['nsr_state']
+                continue
+
             # BGP instance 0: 'default'
             m = p2.match(line)
             if m:

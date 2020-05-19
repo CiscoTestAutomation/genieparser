@@ -327,7 +327,6 @@ class TestShowInterfacesSwitchport(unittest.TestCase):
          }
     }
 
-
     golden_output = {'execute.return_value': '''
         Name: Gi1/0/2
         Switchport: Enabled
@@ -450,6 +449,112 @@ class TestShowInterfacesSwitchport(unittest.TestCase):
         Appliance trust: none
     '''}
 
+    golden_output_2 = {'execute.return_value': '''
+    Name: Te1/1/2
+    Switchport: Enabled
+    Administrative Mode: trunk
+    Operational Mode: trunk (member of bundle Po12)
+    Administrative Trunking Encapsulation: dot1q
+    Operational Trunking Encapsulation: dot1q
+    Operational Dot1q Ethertype:  0x8100
+    Negotiation of Trunking: Off
+    Access Mode VLAN: 1 (default)
+    Trunking Native Mode VLAN: 1 (default)
+    Administrative Native VLAN tagging: enabled
+    Operational Native VLAN tagging: disabled
+    Voice VLAN: none
+    Administrative private-vlan host-association: none 
+    Administrative private-vlan mapping: none 
+    Operational private-vlan: none
+    Trunking VLANs Enabled: 1,111,130,131,400,405,410,420,430,439-442,450,451,460,
+         470,480,490,500,616,619,700,709-712,720,723-725,760
+    Pruning VLANs Enabled: 2-1001
+    Capture Mode Disabled
+    Capture VLANs Allowed: ALL
+    
+    Unknown unicast blocked: disabled
+    Unknown multicast blocked: disabled
+    
+    Name: Po12
+    Switchport: Enabled
+    Administrative Mode: trunk
+    Operational Mode: trunk
+    Administrative Trunking Encapsulation: dot1q
+    Operational Trunking Encapsulation: dot1q
+    Operational Dot1q Ethertype:  0x8100
+    Negotiation of Trunking: Off
+    Access Mode VLAN: 1 (default)
+    Trunking Native Mode VLAN: 1 (default)
+    Administrative Native VLAN tagging: enabled
+    Operational Native VLAN tagging: disabled
+    Voice VLAN: none
+    Administrative private-vlan host-association: none 
+    Administrative private-vlan mapping: none 
+    Operational private-vlan: none
+    Trunking VLANs Enabled: 1,111,130,131,400,405,410,420,430,439-442,450,451,460,
+         470,480,490,500,616,619,700,709-712,720,723-725,760
+    Pruning VLANs Enabled: 2-1001
+    
+    Unknown unicast blocked: disabled
+    Unknown multicast blocked: disabled
+
+    '''}
+
+    golden_parsed_output_2 = {
+        'Port-channel12': {
+            'operational_mode': 'trunk',
+            'switchport_mode': 'trunk',
+            'access_vlan_name': 'default',
+            'private_vlan': {
+            },
+            'switchport_enable': True,
+            'native_vlan_tagging': True,
+            'negotiation_of_trunk': False,
+            'encapsulation': {
+                'native_vlan': '1',
+                'native_vlan_name': 'default',
+                'operational_encapsulation': 'dot1q',
+                'administrative_encapsulation': 'dot1q',
+            },
+            'port_channel': {
+                'port_channel_member_intfs': ['TenGigabitEthernet1/1/2'],
+                'port_channel_member': True,
+            },
+            'pruning_vlans': '2-1001',
+            'access_vlan': '1',
+            'unknown_multicast_blocked': False,
+            'trunk_vlans': '1,111,130,131,400,405,410,420,430,439-442,450,451,460,',
+            'unknown_unicast_blocked': False,
+        },
+        'TenGigabitEthernet1/1/2': {
+            'access_vlan': '1',
+            'operational_mode': 'trunk',
+            'switchport_mode': 'trunk',
+            'access_vlan_name': 'default',
+            'switchport_enable': True,
+            'private_vlan': {
+            },
+            'capture_mode': False,
+            'trunk_vlans': '1,111,130,131,400,405,410,420,430,439-442,450,451,460,',
+            'capture_vlans': 'all',
+            'negotiation_of_trunk': False,
+            'unknown_multicast_blocked': False,
+            'port_channel': {
+                'port_channel_int': 'Port-channel12',
+                'port_channel_member': True,
+            },
+            'native_vlan_tagging': True,
+            'encapsulation': {
+                'native_vlan': '1',
+                'native_vlan_name': 'default',
+                'operational_encapsulation': 'dot1q',
+                'administrative_encapsulation': 'dot1q',
+            },
+            'unknown_unicast_blocked': False,
+            'pruning_vlans': '2-1001',
+        },
+    }
+
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         intf_obj = ShowInterfacesSwitchport(device=self.device)
@@ -462,6 +567,13 @@ class TestShowInterfacesSwitchport(unittest.TestCase):
         intf_obj = ShowInterfacesSwitchport(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        intf_obj = ShowInterfacesSwitchport(device=self.device)
+        parsed_output = intf_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 
 #############################################################################
@@ -15806,6 +15918,7 @@ Tunnel10 is up, line protocol is up
                 'encapsulation': 'hdlc'
             },
             'keepalive': 10,
+            'dtr_pulsed': '1',
             'last_input': 'never',
             'last_output': 'never',
             'line_protocol': 'up',
@@ -16791,7 +16904,7 @@ class TestShowIpInterface(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
         "Vlan211": {
-            "sevurity_level": "default",
+            "security_level": "default",
             "ip_route_cache_flags": [
                  "CEF",
                  "Fast"
@@ -16820,7 +16933,7 @@ class TestShowIpInterface(unittest.TestCase):
                       "prefix_length": "24",
                       "ip": "192.168.76.1",
                       "secondary": False,
-                      "broadcase_address": "255.255.255.255"
+                      "broadcast_address": "255.255.255.255"
                  }
             },
             "ip_access_violation_accounting": False,
@@ -16843,7 +16956,7 @@ class TestShowIpInterface(unittest.TestCase):
             "ip_flow_switching": False
        },
        "GigabitEthernet0/0": {
-            "sevurity_level": "default",
+            "security_level": "default",
             'address_determined_by': 'setup command',
             "ip_route_cache_flags": [
                  "CEF",
@@ -16873,7 +16986,7 @@ class TestShowIpInterface(unittest.TestCase):
                       "prefix_length": "24",
                       "ip": "10.1.8.134",
                       "secondary": False,
-                      "broadcase_address": "255.255.255.255"
+                      "broadcast_address": "255.255.255.255"
                  }
             },
             "ip_access_violation_accounting": False,
@@ -16900,7 +17013,7 @@ class TestShowIpInterface(unittest.TestCase):
             "oper_status": "down"
        },
        "GigabitEthernet1/0/1": {
-            "sevurity_level": "default",
+            "security_level": "default",
             'address_determined_by': 'setup command',
             "ip_route_cache_flags": [
                  "CEF",
@@ -16929,7 +17042,7 @@ class TestShowIpInterface(unittest.TestCase):
                       "prefix_length": "24",
                       "ip": "10.1.1.1",
                       "secondary": False,
-                      "broadcase_address": "255.255.255.255"
+                      "broadcast_address": "255.255.255.255"
                  },
                  "10.2.2.2/24": {
                       "prefix_length": "24",
@@ -17173,7 +17286,7 @@ GigabitEthernet1 is up, line protocol is up
             ],
             "ip_cef_switching": True,
             "ip_fast_switching": True,
-            "sevurity_level": "default",
+            "security_level": "default",
             "directed_broadcast_forwarding": False,
             "proxy_arp": True,
             "ip_null_turbo_vector": True,
@@ -17189,7 +17302,7 @@ GigabitEthernet1 is up, line protocol is up
                 "172.16.1.243/24": {
                     "ip": "172.16.1.243",
                     "prefix_length": "24",
-                    "broadcase_address": "255.255.255.255",
+                    "broadcast_address": "255.255.255.255",
                     "secondary": False
                 }
             },
@@ -17218,7 +17331,7 @@ GigabitEthernet1 is up, line protocol is up
             'ip_route_cache_flags': ['CEF', 'Fast'],
             'ipv4': {
                 'dhcp_negotiated': {
-                    'broadcase_address': '255.255.255.255',
+                    'broadcast_address': '255.255.255.255',
                     'ip': 'dhcp_negotiated'}},
             'local_proxy_arp': False,
             'mtu': 1500,
@@ -17229,7 +17342,7 @@ GigabitEthernet1 is up, line protocol is up
             'proxy_arp': True,
             'router_discovery': False,
             'rtp_ip_header_compression': False,
-            'sevurity_level': 'default',
+            'security_level': 'default',
             'split_horizon': True,
             'tcp_ip_header_compression': False,
             'unicast_routing_topologies': {
@@ -18931,7 +19044,7 @@ class TestShowInterfacesStatus(unittest.TestCase):
     Gi1/2     TelenlqPOIU        notconnect   125          full    100 10/100/1000-TX
     Gi1/3     SE                 connected    132        a-full a-1000 10/100/1000-TX
     Gi1/7                        notconnect   99           auto   auto 10/100/1000-TX
-    Gi1/10    To cft123     connected    trunk      a-full a-1000 10/100/1000-TX
+    Gi1/10    To cft123          connected    trunk      a-full a-1000 10/100/1000-TX
     Gi1/44                       connected    550        a-full a-1000 10/100/1000-TX
     Gi1/45    ASDFGH             connected    trunk      a-full a-1000 10/100/1000-TX
     Gi1/46                       notconnect   99           auto   auto 10/100/1000-TX
@@ -18943,6 +19056,11 @@ class TestShowInterfacesStatus(unittest.TestCase):
     Gi3/4                        notconnect   99           full   1000 No Gbic
     Gi3/5     To loedutjb234     connected    trunk        full   1000 1000BaseSX
     Gi3/6     To loedutjb345     connected    trunk        full   1000 1000BaseSX
+    Gi1/1/0/1 FAST-HELLO         connected    4094       a-full a-1000 10/100/1000BaseTX
+    Te1/1/2   VSL                connected    trunk        full  a-10G 10GBase-SR
+    Te2/1/20                     disabled     1            full   auto No XCVR
+    Te2/1/21  VSL LINK1          disabled     1            full   auto No XCVR
+    Po10      VSL LINK2          connected    trunk      a-full  a-10G
     '''}
 
     golden_parsed_interface_output1 = {
@@ -18953,7 +19071,15 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'port_speed': 'auto',
                 'status': 'notconnect',
                 'type': '10/100/1000-TX',
-                'vlan': '1',
+                'vlan': '1'
+            },
+            'GigabitEthernet1/1/0/1': {
+                'duplex_code': 'a-full',
+                'name': 'FAST-HELLO',
+                'port_speed': 'a-1000',
+                'status': 'connected',
+                'type': '10/100/1000BaseTX',
+                'vlan': '4094'
             },
             'GigabitEthernet1/10': {
                 'duplex_code': 'a-full',
@@ -18961,7 +19087,7 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'port_speed': 'a-1000',
                 'status': 'connected',
                 'type': '10/100/1000-TX',
-                'vlan': 'trunk',
+                'vlan': 'trunk'
             },
             'GigabitEthernet1/2': {
                 'duplex_code': 'full',
@@ -18969,7 +19095,7 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'port_speed': '100',
                 'status': 'notconnect',
                 'type': '10/100/1000-TX',
-                'vlan': '125',
+                'vlan': '125'
             },
             'GigabitEthernet1/3': {
                 'duplex_code': 'a-full',
@@ -18977,14 +19103,14 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'port_speed': 'a-1000',
                 'status': 'connected',
                 'type': '10/100/1000-TX',
-                'vlan': '132',
+                'vlan': '132'
             },
             'GigabitEthernet1/44': {
                 'duplex_code': 'a-full',
                 'port_speed': 'a-1000',
                 'status': 'connected',
                 'type': '10/100/1000-TX',
-                'vlan': '550',
+                'vlan': '550'
             },
             'GigabitEthernet1/45': {
                 'duplex_code': 'a-full',
@@ -18992,21 +19118,21 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'port_speed': 'a-1000',
                 'status': 'connected',
                 'type': '10/100/1000-TX',
-                'vlan': 'trunk',
+                'vlan': 'trunk'
             },
             'GigabitEthernet1/46': {
                 'duplex_code': 'auto',
                 'port_speed': 'auto',
                 'status': 'notconnect',
                 'type': '10/100/1000-TX',
-                'vlan': '99',
+                'vlan': '99'
             },
             'GigabitEthernet1/7': {
                 'duplex_code': 'auto',
                 'port_speed': 'auto',
                 'status': 'notconnect',
                 'type': '10/100/1000-TX',
-                'vlan': '99',
+                'vlan': '99'
             },
             'GigabitEthernet2/11': {
                 'duplex_code': 'a-full',
@@ -19014,21 +19140,21 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'port_speed': 'a-1000',
                 'status': 'connected',
                 'type': '10/100/1000-TX',
-                'vlan': '136',
+                'vlan': '136'
             },
             'GigabitEthernet2/12': {
                 'duplex_code': 'auto',
                 'port_speed': 'auto',
                 'status': 'notconnect',
                 'type': '10/100/1000-TX',
-                'vlan': '99',
+                'vlan': '99'
             },
             'GigabitEthernet2/23': {
                 'duplex_code': 'a-full',
                 'port_speed': 'a-100',
                 'status': 'connected',
                 'type': '10/100/1000-TX',
-                'vlan': '140',
+                'vlan': '140'
             },
             'GigabitEthernet2/24': {
                 'duplex_code': 'a-full',
@@ -19036,15 +19162,14 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'port_speed': 'a-1000',
                 'status': 'connected',
                 'type': '10/100/1000-TX',
-                'vlan': 'trunk',
+                'vlan': 'trunk'
             },
             'GigabitEthernet3/4': {
-                'duplex_code': '1000',
-                'name': 'notconnect',
-                'port_speed': 'No',
-                'status': '99',
-                'type': 'Gbic',
-                'vlan': 'full',
+                'duplex_code': 'full',
+                'port_speed': '1000',
+                'status': 'notconnect',
+                'type': 'No Gbic',
+                'vlan': '99',
             },
             'GigabitEthernet3/5': {
                 'duplex_code': 'full',
@@ -19052,7 +19177,7 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'port_speed': '1000',
                 'status': 'connected',
                 'type': '1000BaseSX',
-                'vlan': 'trunk',
+                'vlan': 'trunk'
             },
             'GigabitEthernet3/6': {
                 'duplex_code': 'full',
@@ -19060,17 +19185,53 @@ class TestShowInterfacesStatus(unittest.TestCase):
                 'port_speed': '1000',
                 'status': 'connected',
                 'type': '1000BaseSX',
-                'vlan': 'trunk',
+                'vlan': 'trunk'
             },
             'TenGigabitEthernet3/2': {
-                'duplex_code': 'auto',
-                'name': 'inactive',
-                'port_speed': 'No',
-                'status': '1',
-                'type': 'XCVR',
-                'vlan': 'full',
+                'duplex_code': 'full',
+                'port_speed': 'auto',
+                'status': 'inactive',
+                'type': 'No XCVR',
+                'vlan': '1',
             },
-        },
+            'TenGigabitEthernet1/1/2': {
+                'duplex_code': 'full',
+                'name': 'VSL',
+                'port_speed': 'a-10G',
+                'status': 'connected',
+                'type': '10GBase-SR',
+                'vlan': 'trunk'
+            },
+            'TenGigabitEthernet2/1/20': {
+                'duplex_code': 'full',
+                'port_speed': 'auto',
+                'status': 'disabled',
+                'type': 'No XCVR',
+                'vlan': '1'
+            },
+            'TenGigabitEthernet2/1/21': {
+                'duplex_code': 'full',
+                'name': 'VSL LINK1',
+                'port_speed': 'auto',
+                'status': 'disabled',
+                'type': 'No XCVR',
+                'vlan': '1'
+            },
+            'Port-channel10': {
+                'duplex_code': 'a-full',
+                'name': 'VSL LINK2',
+                'port_speed': 'a-10G',
+                'status': 'connected',
+                'vlan': 'trunk'
+                },
+            'TenGigabitEthernet3/2': {
+                'duplex_code': 'full',
+                'port_speed': 'auto',
+                'status': 'inactive',
+                'type': 'No XCVR',
+                'vlan': '1'
+            }
+        }
     }
 
     def test_empty(self):

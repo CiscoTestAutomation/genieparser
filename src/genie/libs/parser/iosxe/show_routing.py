@@ -261,7 +261,8 @@ class ShowIpRoute(ShowIpRouteSchema):
 
             next_hop = interface = updated = metrics = route_preference = ""
             # Routing Table: VRF1
-            p1 = re.compile(r'^Routing Table: +(?P<vrf>[\w]+)$')
+            # Routing Table: VRF-infra
+            p1 = re.compile(r'^Routing Table: +(?P<vrf>[\w?-]+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -1439,7 +1440,7 @@ class ShowIpv6RouteWord(ShowIpv6RouteWordSchema, ShowIpRouteWord):
 #  schema for show ip cef
 # ====================================================
 class ShowIpCefSchema(MetaParser):
-    """Schema for show ip cef show ip cef
+    """Schema for show ip cef
                   show ip cef vrf <vrf>
                   show ip cef <prefix>
                   show ip cef <prefix> detail
@@ -1456,6 +1457,8 @@ class ShowIpCefSchema(MetaParser):
                                         Optional('outgoing_interface'): {
                                             Any(): {
                                                 Optional('local_label'): int,
+                                                Optional('sid'): str,
+                                                Optional('local_sid'): str,
                                                 Optional('outgoing_label'): list,
                                                 Optional('outgoing_label_backup'): str,
                                                 Optional('outgoing_label_info'): str,
@@ -1520,8 +1523,8 @@ class ShowIpCef(ShowIpCefSchema):
         # 2001:DB8:1:3::/64
         # 10.16.2.2/32, epoch 2, per-destination sharing
         p1 = re.compile(r'^(?P<prefix>[\w\:\.]+[\/]+[\d]+)'
-                         '(?:, +epoch +(?P<epoch>(\d+)))?'
-                         '(?:, +(?P<sharing>(per-destination sharing)))?$')
+                        r'(?:, +epoch +(?P<epoch>(\d+)))?'
+                        r'(?:, +(?P<sharing>(per-destination sharing)))?$')
 
         # sr local label info: global/16002 [0x1B]
         p1_1 = re.compile(r'^sr +local +label +info: +(?P<sr_local_label_info>(.*))$')
@@ -1531,16 +1534,19 @@ class ShowIpCef(ShowIpCefSchema):
         #     nexthop FE80::A8BB:CCFF:FE03:2101 FastEthernet0/0/0 label 18
         #     nexthop 10.2.3.3 FastEthernet1/0/0 label 17 24
         #     nexthop 10.1.2.2 GigabitEthernet0/1/6 label 16063(elc)-(local:17063)
+        #     nexthop 10.169.196.213 GigabitEthernet0/3/6 label 16051-(local:16051) 453955
         p2 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+)'
-                       '( +label +(?P<outgoing_label>[\w\-\ ]+)(\((?P<outgoing_label_info>\w+)\))?'
-                       '(-\(local:(?P<local_label>\w+)\))?)?$')
+                        r'( +label +(?P<outgoing_label>[\w\-\ ]+)(\((?P<outgoing_label_info>\w+)\))?'
+                        r'(-\(local:(?P<local_label>\w+)\))?)?( +(?P<sid>\d+))?(-\(local:(?P<local_sid>\d+)\))?$')
 
         # nexthop 10.0.0.5 GigabitEthernet2 label [16002|16002]-(local:16002)
         # nexthop 10.0.0.9 GigabitEthernet3 label [16022|implicit-null]-(local:16022)
         # nexthop 10.0.0.10 GigabitEthernet3 label [16022|16002](elc)-(local:16022)
-        p2_1 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+) +label +\['
-                           '(?P<outgoing_label>[\S]+)\|(?P<outgoing_label_backup>[\S]+)'
-                           '\](?:\((?P<outgoing_label_info>\w+)\))?\-\(local\:(?P<local_label>(\d+))\)$')
+        # nexthop 10.169.196.213 GigabitEthernet0/1/6 label [16051|16051]-(local:16051) 64588
+        # nexthop 10.169.196.213 GigabitEthernet0/3/6 label [16051|16051]-(local:16051) 453955-(local:223555)
+        p2_1 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+) +label +\[(?P<outgoing_label>[\S]+)\|'
+                          r'(?P<outgoing_label_backup>[\S]+)\](?:\((?P<outgoing_label_info>\w+)\))?'
+                          r'\-\(local\:(?P<local_label>(\d+))\)( +(?P<sid>\d+))?(-\(local:(?P<local_sid>\d+)\))?$')
 
         #     attached to GigabitEthernet3.100
         p3 = re.compile(r'^(?P<nexthop>\w+) +(to|for) +(?P<interface>\S+)$')
@@ -1606,6 +1612,10 @@ class ShowIpCef(ShowIpCefSchema):
                     nexthop_dict.update({'outgoing_label': group['outgoing_label'].split()})
                 if group['outgoing_label_info']:
                     nexthop_dict.update({'outgoing_label_info': group['outgoing_label_info']})
+                if group['sid']:
+                    nexthop_dict.update({'sid': group['sid']})
+                if group['local_sid']:
+                    nexthop_dict.update({'local_sid': group['local_sid']})
                 continue
 
             #     nexthop 10.0.0.5 GigabitEthernet2 label [16002|16002]-(local:16002)
@@ -1623,6 +1633,11 @@ class ShowIpCef(ShowIpCefSchema):
 
                 if group['outgoing_label_info']:
                     nexthop_dict.update({'outgoing_label_info': group['outgoing_label_info']})
+                
+                if group.get('sid', None):
+                    nexthop_dict.update({'sid': group['sid']})
+                if group['local_sid']:
+                    nexthop_dict.update({'local_sid': group['local_sid']})
                 continue
 
             # attached to GigabitEthernet3.100

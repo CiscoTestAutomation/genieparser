@@ -21,6 +21,8 @@ class test_show_msdp_peer(unittest.TestCase):
     '''
     device = Device(name='aDevice')
 
+    device_output_empty = {'execute.return_value': ''}
+
     expected_parsed_output_1 = {
         'vrf': {
             'default': {
@@ -85,9 +87,8 @@ class test_show_msdp_peer(unittest.TestCase):
                         'sa_learned_from': 0,
                         'signature_protection': False}}}}}
 
+    # show ip msdp peer
     device_output_1 = {'execute.return_value': '''
-    Router# show ip msdp peer
-
     MSDP Peer 10.1.100.4 (?), AS 1
       Connection status:
         State: Up, Resets: 0, Connection source: Loopback0 (10.1.100.2)
@@ -207,7 +208,105 @@ class test_show_msdp_peer(unittest.TestCase):
         Data Packets in/out: 0/1
     '''}
 
-    device_output_empty = {'execute.return_value': ''}
+    # show ip msdp peer
+    device_output_3 = {'execute.return_value': '''
+    MSDP Peer 10.4.1.2 (?), AS ?
+      Connection status:
+        State: Up, Resets: 1, Connection source: Loopback0 (10.4.1.1)
+        Uptime(Downtime): 2w2d, Messages sent/received: 23466/23498
+        Output messages discarded: 0
+        Connection and counters cleared 2w5d     ago
+        Elapsed time since last message: 00:00:58
+        Local Address of connection: 10.4.1.1
+        Local Port: 38793, Remote Port: 639
+        Peer is member of mesh-group ANYCAST-RP
+      SA Filtering:
+        Input (S,G) filter: none, route-map: none
+        Input RP filter: none, route-map: none
+        Output (S,G) filter: none, route-map: none
+        Output RP filter: none, route-map: none
+      SA-Requests:
+        Input filter: none
+      Peer ttl threshold: 0
+      SAs learned from this peer: 0
+      Number of connection transitions to Established state: 2
+        Input queue size: 0, Output queue size: 0
+      MD5 signature protection on MSDP TCP connection: not enabled
+      Message counters:
+        RPF Failure count: 0
+        SA Messages in/out: 135/31
+        SA Requests in: 0
+        SA Responses out: 0
+        Data Packets in/out: 32/0
+    '''}
+
+    expected_parsed_output_3 = {
+        'vrf': {
+            'default': {
+                'peer': {
+                    '10.4.1.2': {
+                        'conn_count_cleared': '2w5d',
+                        'connect_source': 'Loopback0',
+                        'connect_source_address': '10.4.1.1',
+                        'elapsed_time': '2w2d',
+                        'resets': '1',
+                        'sa_filter': {
+                            'in': {
+                                '(S,G)': {
+                                    'filter': 'none',
+                                    'route_map': 'none',
+                                },
+                                'RP': {
+                                    'filter': 'none',
+                                    'route_map': 'none',
+                                },
+                            },
+                            'out': {
+                                '(S,G)': {
+                                    'filter': 'none',
+                                    'route_map': 'none',
+                                },
+                                'RP': {
+                                    'filter': 'none',
+                                    'route_map': 'none',
+                                },
+                            },
+                        },
+                        'sa_learned_from': 0,
+                        'sa_request': {
+                            'input_filter': 'none',
+                        },
+                        'session_state': 'Up',
+                        'signature_protection': False,
+                        'statistics': {
+                            'error': {
+                                'rpf_failure': 0,
+                            },
+                            'established_transitions': 2,
+                            'output_msg_discarded': 0,
+                            'queue': {
+                                'size_in': 0,
+                                'size_out': 0,
+                            },
+                            'received': {
+                                'data_message': 23498,
+                                'data_packets': 32,
+                                'sa_message': 135,
+                                'sa_request': 0,
+                            },
+                            'sent': {
+                                'data_message': 23466,
+                                'data_packets': 0,
+                                'sa_message': 31,
+                                'sa_response': 0,
+                            },
+                        },
+                        'ttl_threshold': 0,
+                    },
+                },
+            },
+        },
+    }
 
     def test_test_show_msdp_peer_1(self):
         self.maxDiff = None
@@ -222,6 +321,13 @@ class test_show_msdp_peer(unittest.TestCase):
         obj = ShowIpMsdpPeer(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.expected_parsed_output_2)
+
+    def test_test_show_msdp_peer_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_3)
+        obj = ShowIpMsdpPeer(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_3)
 
     def test_test_show_msdp_peer_empty(self):
         self.maxDiff = None

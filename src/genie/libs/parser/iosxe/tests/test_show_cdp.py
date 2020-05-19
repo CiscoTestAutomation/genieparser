@@ -191,7 +191,14 @@ class test_show_cdp_neighbors(unittest.TestCase):
                     'hold_time': 134,
                     'local_interface': 'GigabitEthernet1',
                     'platform': 'N9K-9000v',
-                    'port_id': 'Ethernet0/0'}
+                    'port_id': 'Ethernet0/0'},
+                2: {
+                    'capability': 'S I',
+                    'device_id': 'another_device_with_a_long_name',
+                    'hold_time': 141,
+                    'local_interface': 'TwentyFiveGigE1/0/3',
+                    'platform': 'WS-C3850-',
+                    'port_id': 'TenGigabitEthernet1/1/4'}
             }
         }
     }
@@ -204,6 +211,8 @@ class test_show_cdp_neighbors(unittest.TestCase):
         Device ID        Local Intrfce     Holdtme    Capability  Platform  Port ID
         Device_With_A_Particularly_Long_Name
                          Gig 1             134             R S C  N9K-9000v Eth 0/0
+        another_device_with_a_long_name
+                         Twe 1/0/3         141              S I   WS-C3850- Ten 1/1/4
     '''}
 
     def test_show_cdp_neighbors_1(self):
@@ -562,6 +571,242 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         Total cdp entries displayed : 2
     '''}
 
+    device_output_6 = {'execute.return_value': '''
+        Device# show cdp neighbors detail
+        Device ID: e0553d849f1a
+        Entry address(es):
+          IP address: 10.0.0.7
+        Platform: Meraki MV21 Cloud Managed Indoor HD Dom
+        Interface: GigabitEthernet3/0/29,  Port ID (outgoing port): Port 0
+        Holdtime : 145 sec
+
+        Version :
+        1
+
+        advertisement version: 2
+        Power drawn: 0.000 Watts
+        Power request id: 31314, Power management id: 0
+        Power request levels are:15400 0 0 0 0
+
+        -------------------------
+        Device ID: System1
+        Entry address(es):
+          IP address: 10.0.0.8
+        Platform: cisco ISR4351/K9,  Capabilities: Router Switch IGMP
+        Interface: GigabitEthernet1/0/47,  Port ID (outgoing port): GigabitEthernet0/0/2
+        Holdtime : 129 sec
+
+        Version :
+        Cisco IOS Software [Fuji], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.9.4, RELEASE SOFTWARE (fc2)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2019 by Cisco Systems, Inc.
+        Compiled Thu 22-Aug-19 18:09 by mcpre
+
+        advertisement version: 2
+        VTP Management Domain: ''
+        Duplex: full
+        Management address(es):
+          IP address: 10.0.0.8
+
+        Total cdp entries displayed : 2
+    '''}
+
+    expected_parsed_output_6 = {
+        'total_entries_displayed': 2,
+        'index': {
+            1: {
+                'device_id': 'e0553d849f1a',
+                'duplex_mode': '',
+                'vtp_management_domain': '',
+                'native_vlan': '',
+                'management_addresses': {},
+                'entry_addresses': {
+                    '10.0.0.7': {}
+                },
+                'platform': 'Meraki MV21 Cloud Managed Indoor HD Dom',
+                'port_id': 'Port 0',
+                'local_interface': 'GigabitEthernet3/0/29',
+                'hold_time': 145,
+                'software_version': '1',
+                'advertisement_ver': 2},
+            2: {
+                'device_id': 'System1',
+                'duplex_mode': 'full',
+                'vtp_management_domain': ' ',
+                'native_vlan': '',
+                'management_addresses': {
+                    '10.0.0.8': {}
+                },
+                'entry_addresses': {
+                    '10.0.0.8': {}
+                },
+                'capabilities': 'Router Switch IGMP',
+                'platform': 'cisco ISR4351/K9',
+                'port_id': 'GigabitEthernet0/0/2',
+                'local_interface': 'GigabitEthernet1/0/47',
+                'hold_time': 129,
+                'software_version': 'Cisco IOS Software [Fuji], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.9.4, RELEASE SOFTWARE (fc2)\n'
+                                    'Technical Support: http://www.cisco.com/techsupport\n'
+                                    'Copyright (c) 1986-2019 by Cisco Systems, Inc.\n'
+                                    'Compiled Thu 22-Aug-19 18:09 by mcpre',
+                'advertisement_ver': 2},
+        },
+    }
+
+    device_output_7 = {'execute.return_value': '''
+        Device# show cdp neighbors detail
+        Device ID: MXMERCN5.cosmos.es.ftgroup
+        Entry address(es): 
+          IP address: 10.2.3.41
+        Platform: Cisco 3825,  Capabilities: Router Switch 
+        Interface: Serial0/0/0:1,  Port ID (outgoing port): Serial1/4:1
+        Holdtime : 160 sec
+        
+        Version :
+        Cisco IOS Software, 3800 Software (C3825-ENTSERVICESK9-M), Version 12.4(24)T8, RELEASE SOFTWARE (fc1)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2012 by Cisco Systems, Inc.
+        Compiled Sun 09-Sep-12 05:35 by prod_rel_team
+        
+        advertisement version: 2
+        VTP Management Domain: 'NotUsed'
+        
+        -------------------------
+        Device ID: BXPEDRCN2.cosmos.es.ftgroup
+        Entry address(es): 
+          IP address: 10.32.0.2
+        Platform: cisco WS-C6509-E,  Capabilities: Router Switch 
+        Interface: FastEthernet0/0.1,  Port ID (outgoing port): GigabitEthernet7/27
+        Holdtime : 164 sec
+        
+        Version :
+        Cisco IOS Software, s3223_rp Software (s3223_rp-IPSERVICESK9_WAN-M), Version 12.2(33)SXI14, RELEASE SOFTWARE (fc2)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2014 by Cisco Systems, Inc.
+        Compiled Wed 03-Sep-14 23:45 by prod_rel_team
+        
+        advertisement version: 2
+        VTP Management Domain: 'alpi'
+        Native VLAN: 1
+        Duplex: full
+        
+        Total cdp entries displayed : 2
+    '''}
+
+    expected_parsed_output_7 = {
+        'index': {
+            1: {
+                'advertisement_ver': 2,
+                'capabilities': 'Router Switch',
+                'device_id': 'MXMERCN5.cosmos.es.ftgroup',
+                'duplex_mode': '',
+                'entry_addresses': {'10.2.3.41': {}},
+                'hold_time': 160,
+                'local_interface': 'Serial0/0/0:1',
+                'management_addresses': {},
+                'native_vlan': '',
+                'platform': 'Cisco 3825',
+                'port_id': 'Serial1/4:1',
+                'software_version': 'Cisco IOS Software, 3800 Software '
+                                    '(C3825-ENTSERVICESK9-M), Version '
+                                    '12.4(24)T8, RELEASE SOFTWARE (fc1)\n'
+                                    'Technical Support: '
+                                    'http://www.cisco.com/techsupport\n'
+                                    'Copyright (c) 1986-2012 by Cisco Systems, '
+                                    'Inc.\n'
+                                    'Compiled Sun 09-Sep-12 05:35 by '
+                                    'prod_rel_team',
+                'vtp_management_domain': 'NotUsed'},
+            2: {
+                'advertisement_ver': 2,
+                'capabilities': 'Router Switch',
+                'device_id': 'BXPEDRCN2.cosmos.es.ftgroup',
+                'duplex_mode': 'full',
+                'entry_addresses': {'10.32.0.2': {}},
+                'hold_time': 164,
+                'local_interface': 'FastEthernet0/0.1',
+                'management_addresses': {},
+                'native_vlan': '1',
+                'platform': 'cisco WS-C6509-E',
+                'port_id': 'GigabitEthernet7/27',
+                'software_version': 'Cisco IOS Software, s3223_rp Software '
+                                    '(s3223_rp-IPSERVICESK9_WAN-M), Version '
+                                    '12.2(33)SXI14, RELEASE SOFTWARE (fc2)\n'
+                                    'Technical Support: '
+                                    'http://www.cisco.com/techsupport\n'
+                                    'Copyright (c) 1986-2014 by Cisco Systems, '
+                                    'Inc.\n'
+                                    'Compiled Wed 03-Sep-14 23:45 by '
+                                    'prod_rel_team',
+                'vtp_management_domain': 'alpi'}
+                },
+        'total_entries_displayed': 2
+    }
+
+    device_output_8 = {'execute.return_value': '''
+        Device ID: router1
+        Entry address(es): 
+          IP address: 10.0.0.7
+        Platform: Cisco SG300-28 (PID:SRW2024-K9)-VSD,  Capabilities: Switch IGMP 
+        Interface: GigabitEthernet1/0/2,  Port ID (outgoing port): gi25
+        Holdtime : 155 sec
+        Version :
+        1.3.0.62
+        advertisement version: 2
+        Native VLAN: 1
+        Duplex: full
+        -------------------------
+        Device ID: Router02
+        Entry address(es): 
+          IP address: 10.0.0.8
+        Platform: MikroTik,  Capabilities: Router 
+        Interface: GigabitEthernet1/0/3,  Port ID (outgoing port): ether1
+        Holdtime : 90 sec
+        Version :
+        6.40.5 (stable)
+        advertisement version: 1
+        Total cdp entries displayed : 2
+    '''}
+
+    expected_parsed_output_8 = {
+        'total_entries_displayed': 2,
+        'index': {
+            1: {
+                'device_id': 'router1',
+                'duplex_mode': 'full',
+                'vtp_management_domain': '',
+                'native_vlan': '1',
+                'management_addresses': {},
+                'entry_addresses': {
+                    '10.0.0.7': {}
+                },
+                'capabilities': 'Switch IGMP',
+                'platform': 'Cisco SG300-28 (PID:SRW2024-K9)-VSD',
+                'port_id': 'gi25',
+                'local_interface': 'GigabitEthernet1/0/2',
+                'hold_time': 155,
+                'software_version': '1.3.0.62',
+                'advertisement_ver': 2},
+            2: {
+                'device_id': 'Router02',
+                'duplex_mode': '',
+                'vtp_management_domain': '',
+                'native_vlan': '',
+                'management_addresses': {
+                },
+                'entry_addresses': {
+                    '10.0.0.8': {}
+                },
+                'capabilities': 'Router',
+                'platform': 'MikroTik',
+                'port_id': 'ether1',
+                'local_interface': 'GigabitEthernet1/0/3',
+                'hold_time': 90,
+                'software_version': '6.40.5 (stable)',
+                'advertisement_ver': 1},
+        },
+    }
+
     def test_show_cdp_neighbors_detail_1(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_1)
@@ -596,6 +841,27 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         obj = ShowCdpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_5)
+
+    def test_show_cdp_neighbors_detail_missing_capabilities(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_6)
+        obj = ShowCdpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_6)
+
+    def test_show_cdp_neighbors_detail_5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_7)
+        obj = ShowCdpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_7)
+
+    def test_show_cdp_neighbors_detail_colon_in_platform(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_8)
+        obj = ShowCdpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_8)
 
 if __name__ == '__main__':
     unittest.main()
