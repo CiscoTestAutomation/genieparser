@@ -151,27 +151,27 @@ class ShowSdwanBfdSummary(ShowSdwanBfdSummarySchema):
 
             m = p1.match(line)
             if m:
-                parsed_dict['sessions_total'] = m.groupdict()['sessions_total']
+                parsed_dict['sessions_total'] = int(m.groupdict()['sessions_total'])
                 continue
 
             m = p2.match(line)
             if m:
-                parsed_dict['sessions_up'] = m.groupdict()['sessions_up']
+                parsed_dict['sessions_up'] = int(m.groupdict()['sessions_up'])
                 continue
 
             m = p3.match(line)
             if m:
-                parsed_dict['sessions_max'] = m.groupdict()['sessions_max']
+                parsed_dict['sessions_max'] = int(m.groupdict()['sessions_max'])
                 continue
 
             m = p4.match(line)
             if m:
-                parsed_dict['sessions_flap'] = m.groupdict()['sessions_flap']
+                parsed_dict['sessions_flap'] = int(m.groupdict()['sessions_flap'])
                 continue
 
             m = p5.match(line)
             if m:
-                parsed_dict['poll_interval'] = m.groupdict()['poll_interval']
+                parsed_dict['poll_interval'] = int(m.groupdict()['poll_interval'])
                 continue
 
         return parsed_dict
