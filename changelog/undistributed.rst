@@ -120,4 +120,8 @@
 * IOS 
     * Updated ShowIpArp
         * Added argument 'output' into super().cli()
+
+* IOSXR
+    * Updated Dir
+        * Fixed regex to support various outputs
                 
