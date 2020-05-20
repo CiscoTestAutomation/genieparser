@@ -57,7 +57,7 @@ class MonitorInterfaceTraffic(MonitorInterfaceTrafficSchema):
             r'(?P<output_packets>\d+)(\s+\((?P<output_pps>\d+)\))?$')
         
         p3 = re.compile(r'Time:\s+(?P<monitor_time>\S+)$')
-
+        
         for line in out.splitlines():
             line = line.strip()
             m = p1.match(line)
