@@ -1526,10 +1526,10 @@ class Dir(DirSchema):
             # 14 -rw-r--r--. 1 10429 Oct 26 16:17 pnet_cfg.log
             # 10541310    -rwx  6142        Mon May 18 19:16:01 2020  prod2_vxlan_config
 
-            p3 = re.compile(r'^\s*(?P<index>[0-9]+) +(?P<permission>[a-z\-]+)(\.)?'
-                          '( +(?P<unknown>[0-9]+))? +(?P<size>[0-9]+)( +(?P<date>[a-zA-Z]{3}))? '
-                          '+(?P<month>[a-zA-Z]{3}) +(?P<day>[0-9]{,3})( +(?P<time>[0-9]{2}(\:[0-9]{2})'
-                          '?(\:[0-9]{2})?))?( +(?P<year>[0-9]{4}))? +(?P<file>[a-zA-Z0-9\.\/\_\-\+\>\s]+)$')
+            p3 = re.compile(r'^\s*(?P<index>[0-9]+) +(?P<permission>[a-z\-]+)(\.)?('
+                            ' +(?P<unknown>[0-9]+))? +(?P<size>[0-9]+)( +(?P<date>[a-zA-Z]{3}))? '
+                            '+(?P<month>[a-zA-Z]{3}) +(?P<day>[0-9]{,3})( +(?P<time>[\d\:]+))?( '
+                            '+(?P<year>[0-9]{4}))? +(?P<file>[a-zA-Z0-9\.\/\_\-\+\>\s]+)$')
             m = p3.match(line)
             if m:
                 file = m.groupdict()['file']
