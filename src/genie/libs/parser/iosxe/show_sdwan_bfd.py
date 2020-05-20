@@ -96,11 +96,11 @@ class ShowSdwanBfdSummarySchema(MetaParser):
     """ Schema for "show sdwan bfd summary" command """
 
     schema = {
-        "sessions_total": str,
-        "sessions_up": str,
-        "sessions_max": str,
-        "sessions_flap": str,
-        "poll_interval": str,
+        "sessions_total": int,
+        "sessions_up": int,
+        "sessions_max": int,
+        "sessions_flap": int,
+        "poll_interval": int,
     }
 
 
