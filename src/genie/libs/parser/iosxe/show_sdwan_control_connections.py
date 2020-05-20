@@ -17,7 +17,7 @@ class ShowSdwanControlConnectionsSchema(MetaParser):
     schema = {
         "local_color": {
             Any(): {
-                "system_peer_ip": {
+                "peer_system_ip": {
                     Any(): {
                         "controller_group_id": str,
                         "domain_id": str,
@@ -75,8 +75,8 @@ class ShowSdwanControlConnections(ShowSdwanControlConnectionsSchema):
             if m:
                 group = m.groupdict()
                 color = group["local_color"]
-                parsed_dict.setdefault("control_connections", {}).setdefault(color, {})
-                connection_dict = parsed_dict["control_connections"][color]
+                parsed_dict.setdefault("local_color", {}).setdefault(color, {})
+                connection_dict = parsed_dict["local_color"][color].setdefault("peer_system_ip", {})
                 color_dict = connection_dict.setdefault(group["peer_system_ip"], {})
                 color_dict["peer_type"] = group["peer_type"]
                 color_dict["peer_protocol"] = group["peer_protocol"]

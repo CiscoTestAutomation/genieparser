@@ -21,6 +21,7 @@ class ShowSdwanBfdSessionsSchema(MetaParser):
                         "encapsulation": str,
                         "site_id": str,
                         "source_ip": str,
+                        "remote_tloc_color": str,
                         "state": str,
                         "transitions": str,
                         "tx_interval": str,
@@ -67,8 +68,8 @@ class ShowSdwanBfdSessions(ShowSdwanBfdSessionsSchema):
             if m:
                 group = m.groupdict()
                 system_ip = group["system_ip"]
-                parsed_dict.setdefault("bfd_sessions", {}).setdefault(system_ip, {})
-                session_dict = parsed_dict["bfd_sessions"][system_ip]
+                parsed_dict.setdefault("system_ip", {}).setdefault(system_ip, {})
+                session_dict = parsed_dict["system_ip"][system_ip].setdefault("source_tloc_color", {})
                 ip_dict = session_dict.setdefault(group["source_tloc_color"], {})
                 ip_dict["site_id"] = group["site_id"]
                 ip_dict["state"] = group["state"]
