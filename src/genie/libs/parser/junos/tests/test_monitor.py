@@ -21,7 +21,7 @@ class TestMonitorInterfaceTraffic(unittest.TestCase):
     maxDiff = None
 
     golden_output = '''
-        genieDevice                      Seconds: 44                  Time: 01:07:48
+        genieDevice                      Seconds: 44                  
         Interface    Link  Input packets        (pps)     Output packets        (pps)
         ge-0/0/0      Up        5641273          (0)          3945678          (0)
         lc-0/0/0      Up              0                             0
@@ -46,12 +46,13 @@ class TestMonitorInterfaceTraffic(unittest.TestCase):
         fti4          Up              0                             0
         fti5          Up              0                             0
         fti6          Up              0                             0
-        fti7          Up              0                             0\
+        fti7          Up              0                             0
+        Bytes=b, Clear=c, Delta=d, Packets=p, Quit=q or ESC, Rate=r, Up=^U, Down=^D Time: 03:13:30
     '''
     
     golden_parsed_output = {
         'monitor-time': {
-            '01:07:48': {
+            '03:13:30': {
                 'hostname': 'genieDevice',
                 'interface': {
                     'demux0': {

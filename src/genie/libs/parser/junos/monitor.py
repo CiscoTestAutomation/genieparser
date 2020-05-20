@@ -34,45 +34,46 @@ class MonitorInterfaceTraffic(MonitorInterfaceTrafficSchema):
     
     cli_command = ['monitor interface traffic']
 
-    def cli(self, output=None, timeout=3):
+    def cli(self, output=None, timeout=10):
         if not output:
+            
             self.device.sendline(self.cli_command[0])
-            out = self.device.expect([r'(?P<hostname>\S+) +Seconds: +(?P<seconds>\d+) +Time:[\S\s]+Down=\^D'], 
+            out = self.device.expect([r'{}(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]Seconds:[\S\s]+Time:\s+\S+'.format(self.device._hostname)], 
                 timeout=timeout).match_output
             ansi_escape = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
             out = ansi_escape.sub('\t', out)
             self.device.sendline('q')
+            
         else:
             out = output
 
         ret_dict = {}
+        monitor_time_sub_dict = {}
         
-        p1 = re.compile(r'^(?P<hostname>\S+) +Seconds: +(?P<seconds>\d+) +'
-            r'Time: +(?P<monitor_time>\S+)$')
+        p1 = re.compile(r'^(?P<hostname>\S+)\s+Seconds:\s+(?P<seconds>\d+)$')
 
         p2 = re.compile(r'^(?P<interface>\S+)\s+(?P<link>Up|Down)\s+'
             r'(?P<input_packets>\d+)(\s+\((?P<input_pps>\d+)\))?\s+'
             r'(?P<output_packets>\d+)(\s+\((?P<output_pps>\d+)\))?$')
+        
+        p3 = re.compile(r'Time:\s+(?P<monitor_time>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
-
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                monitor_time = group['monitor_time']
                 seconds = group['seconds']
                 hostname = group['hostname']
-                monitor_time_dict = ret_dict.setdefault('monitor-time', {}). \
-                    setdefault(monitor_time, {})
-                monitor_time_dict.update({'hostname': hostname})
-                monitor_time_dict.update({'seconds': seconds})
+                monitor_time_sub_dict = {}
+                monitor_time_sub_dict.update({'hostname': hostname})
+                monitor_time_sub_dict.update({'seconds': seconds})
                 continue
 
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                interface_dict = monitor_time_dict.setdefault('interface', {}). \
+                interface_dict = monitor_time_sub_dict.setdefault('interface', {}). \
                     setdefault(group['interface'], {})
                 interface_dict.update({'link': group['link']})
                 interface_dict.update({'input-packets': int(group['input_packets'])})
@@ -84,5 +85,13 @@ class MonitorInterfaceTraffic(MonitorInterfaceTrafficSchema):
                 if output_pps:
                     interface_dict.update({'output-pps': int(output_pps)})
                 continue
-        
+            
+            m = p3.search(line)
+            if m:
+                group = m.groupdict()
+                monitor_time = group['monitor_time']
+                monitor_time_dict = ret_dict.setdefault('monitor-time', {}). \
+                    setdefault(monitor_time, monitor_time_sub_dict)
+                continue
+
         return ret_dict
