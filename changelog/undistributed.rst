@@ -17,6 +17,18 @@
         * show sdwan control connections
     * Added ShowSdwanControlLocalProperties for:
         * show sdwan control local-properties
+* LINUX
+    * Added ShowControllersNpuInterfaceInstanceLocation for:
+        * show controllers npu {npu} interface {interface} instance {instance} location {location}
+    * Added ShowControllersFiaDiagshellDiagEgrCalendarsLocation for:
+        * show controllers fia diagshell {diagshell} "diag egr_calendars" location {location} 
+    * Added ShowControllersFiaDiagshellDiagCosqQpairEgpMap for:
+        * show controllers fia diagshell 0 "diag cosq qpair egq map" location all
+    * Added ShowInstallSummary for 
+        * show install summary
+    * Added route
+    * Added netstat -rn
+
 
 * VIPTELA
     * Added ShowBfdSessions for:
