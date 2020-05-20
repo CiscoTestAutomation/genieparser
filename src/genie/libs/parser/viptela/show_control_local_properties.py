@@ -13,7 +13,7 @@ class ShowControlLocalPropertiesSchema(MetaParser):
 
     schema = {
         "personality": str,
-        "sp_organization_name": str,
+        Optional("sp_organization_name"): str,
         "organization_name": str,
         "root_ca_chain_status": str,
         "certificate_status": str,
@@ -33,7 +33,7 @@ class ShowControlLocalPropertiesSchema(MetaParser):
         "chassis_num_unique_id": str,
         "serial_num": str,
         Optional("enterprise_serial_num"): str,
-        "token": str,
+        Optional("token"): str,
         "keygen_interval": str,
         "retry_interval": str,
         "no_activity_exp_interval": str,
@@ -41,16 +41,16 @@ class ShowControlLocalPropertiesSchema(MetaParser):
         "port_hopped": str,
         "time_since_last_port_hop": str,
         Optional("pairwise_keying"): str,
-        "embargo_check": str,
+        Optional("embargo_check"): str,
         "number_vbond_peers": str,
         "number_active_wan_interfaces": str,
-        "vbond_peers": {
+        Optional("vbond_peers"): {
             Any(): { # INDEX
                 'ip': str,
                 'port': str,
             }
-        }
-        "wan_interfaces": {
+        },
+        "connection_summary": {
             Any(): {
                 "public_ipv4": str,
                 "public_port": str,
@@ -255,6 +255,12 @@ class ShowControlLocalProperties(ShowControlLocalPropertiesSchema):
         )
 
         # Match table output
+                                                                                                                                                                                          # VM
+        #            PUBLIC          PUBLIC PRIVATE         PRIVATE                                 PRIVATE                             MAX     CONTROL/            LAST         SPI TIME   NAT  CON
+        # INTERFACE  IPv4            PORT   IPv4            IPv6                                    PORT    VS/VM COLOR           STATE CNTRL   STUN         LR/LB  CONNECTION   REMAINING  TYPE PRF
+        # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        # ge0/0      10.1.15.15      12426  10.1.15.15      ::                                      12426    0/0  lte              up    2      no/yes/no   No/No  0:00:00:16   0:11:26:41  E    5
+
         p27 = re.compile(
             r"(?P<interface>\S+)\s+(?P<public_ipv4>(?:\d{1,3}\.){3}\d{1,3})\s+" \
             "(?P<public_port>\S+)\s+(?P<private_ipv4>(?:\d{1,3}\.){3}\d{1,3})\s+" \
