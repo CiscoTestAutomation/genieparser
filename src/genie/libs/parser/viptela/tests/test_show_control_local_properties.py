@@ -69,7 +69,7 @@ class TestShowControlLocalProperties(unittest.TestCase):
         'certificate_status': 'Installed',
         'certificate_validity': 'Valid',
         'chassis_num_unique_id': 'b5887dd3-3d70-4987-a3a4-6e06c1d64a8c',
-        'connection_summary': {
+        'wan_interfaces': {
             'ge0/0': {
                 'color': 'lte',
                 'control': 'yes',
@@ -131,7 +131,7 @@ class TestShowControlLocalProperties(unittest.TestCase):
         'system_ip': '172.16.255.11',
         'time_since_last_port_hop': '0:00:43:16',
         'tls_port': '0',
-    } 
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)

@@ -69,7 +69,7 @@ class TestShowSdwanControlLocalProperties(unittest.TestCase):
         'certificate_status': 'Installed',
         'certificate_validity': 'Valid',
         'chassis_num_unique_id': 'b5887dd3-3d70-4987-a3a4-6e06c1d64a8c',
-        'connection_summary': {
+        'wan_interfaces': {
             'ge0/0': {
                 'color': 'lte',
                 'control': 'yes',
