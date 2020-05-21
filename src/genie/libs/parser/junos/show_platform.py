@@ -257,23 +257,43 @@ class ShowVersion(ShowVersionSchema):
 # ===================================
 class FileListDetailSchema(MetaParser):
 
-    schema = {
-        'dir': {
-            Any(): {
-                Optional('files'): {
-                    Any(): {
-                        'permission': str,
-                        'number': str,
-                        'user': str,
-                        'group': str,
-                        'file_size': str,
-                        'date_time': str,
-                        'file_name': str,
-                    },
-                },
-                Optional('total_files'): int,
+    def validate_file_information_list(value):
+        # Pass file-information of dict in value
+        if not isinstance(value, list):
+            raise SchemaTypeError('file-information is not a list')
+        # Create protocols Schema
+        file_information_schema = Schema({
+            "file-date": {
+                Optional("#text"): str,
+                Optional("@junos:format"): str
             },
-        },
+            "file-group": str,
+            "file-links": str,
+            "file-name": str,
+            "file-owner": str,
+            "file-permissions": {
+                Optional("#text"): str,
+                Optional("@junos:format"): str
+            },
+            "file-size": str
+        })
+        # Validate each dictionary in list
+        for item in value:
+            file_information_schema.validate(item)
+        return value
+
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "directory-list": {
+            Optional("@junos:seconds"): str,
+            Optional("@junos:style"): str,
+            Optional("@root-path"): str,
+            "directory": {
+                Optional("@name"): str,
+                "file-information": Use(validate_file_information_list),
+                "total-files": str
+            }
+        }
     }
 
 # ===================================
@@ -282,20 +302,20 @@ class FileListDetailSchema(MetaParser):
 # ===================================
 class FileListDetail(FileListDetailSchema):
 
-    cli_command = ['file list {directory} detail']
-    def cli(self, directory, output=None):
+    cli_command = ['file list {root_path} detail']
+    def cli(self, root_path, output=None):
         if output is None:
             out = self.device.execute(self.cli_command[0].format(
-                directory=directory))
+                root_path=root_path))
         else:
             out = output
         
         ret_dict = {}
 
         # -rw-r-----  1 root  wheel     525672 May 22 02:40 /var/log/trace-static
-        p1 = re.compile(r'^(?P<permission>\S+)\s+(?P<number>\d+)\s+'
-            r'(?P<user>\S+)\s+(?P<group>\S+)\s+(?P<file_size>\d+)\s+'
-            r'(?P<date_time>[\S\s]+)\s+(?P<file_name>\S+)$')
+        p1 = re.compile(r'^(?P<file_permissions>\S+)\s+(?P<file_links>\d+)\s+'
+            r'(?P<file_owner>\S+)\s+(?P<file_group>\S+)\s+(?P<file_size>\d+)\s+'
+            r'(?P<file_date>[\S\s]+)\s+(?P<file_name>\S+)$')
         
         # total files: 2
         p2 = re.compile(r'^total\s+files:\s+(?P<total_files>\d+)$')
@@ -306,19 +326,25 @@ class FileListDetail(FileListDetailSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                dir_dict = ret_dict.setdefault('dir', {}). \
-                    setdefault(directory, {})
-                file_dict = dir_dict.setdefault('files', {}). \
-                    setdefault(group['file_name'], {})
-                file_dict.update({k:
-                    v for k, v in group.items() if v is not None})
+                dir_dict = ret_dict.setdefault('directory-list', {}). \
+                    setdefault('directory', {})
+                file_information_list = dir_dict.setdefault('file-information', [])
+                file_dict = {}
+                keys = ['file_group', 'file_links', 'file_name', 
+                    'file_owner', 'file_size']
+                for key in keys:
+                    file_dict.update({key.replace('_', '-') : group[key]})
+                file_dict.setdefault('file-date', {}). \
+                    update({'@junos:format': group['file_date']})
+                file_dict.setdefault('file-permissions', {}). \
+                    update({'@junos:format': group['file_permissions']})
+                file_information_list.append(file_dict)
                 continue
 
             # total files: 2 
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                dir_dict.update({'total_files': int(group['total_files'])})
+                dir_dict.update({'total-files': group['total_files']})
                 continue
-
         return ret_dict

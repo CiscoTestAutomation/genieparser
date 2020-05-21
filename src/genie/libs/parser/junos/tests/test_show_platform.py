@@ -177,29 +177,37 @@ class TestFileListDetail(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
-        "dir": {
-            "/var/log/trace-static*": {
-                "files": {
-                    "/var/log/trace-static": {
-                        "date_time": "May 22 02:40",
-                        "file_name": "/var/log/trace-static",
-                        "file_size": "525672",
-                        "group": "wheel",
-                        "number": "1",
-                        "permission": "-rw-r-----",
-                        "user": "root"
+        "directory-list": {
+            "directory": {
+                "file-information": [
+                    {
+                        "file-date": {
+                            "@junos:format": "May 22 02:40"
+                        },
+                        "file-group": "wheel",
+                        "file-links": "1",
+                        "file-name": "/var/log/trace-static",
+                        "file-owner": "root",
+                        "file-permissions": {
+                            "@junos:format": "-rw-r-----"
+                        },
+                        "file-size": "525672"
                     },
-                    "/var/log/trace-static.0.gz": {
-                        "date_time": "May 22 02:40",
-                        "file_name": "/var/log/trace-static.0.gz",
-                        "file_size": "131497",
-                        "group": "wheel",
-                        "number": "1",
-                        "permission": "-rw-r-----",
-                        "user": "root"
+                    {
+                        "file-date": {
+                            "@junos:format": "May 22 02:40"
+                        },
+                        "file-group": "wheel",
+                        "file-links": "1",
+                        "file-name": "/var/log/trace-static.0.gz",
+                        "file-owner": "root",
+                        "file-permissions": {
+                            "@junos:format": "-rw-r-----"
+                        },
+                        "file-size": "131497"
                     }
-                },
-                "total_files": 2
+                ],
+                "total-files": "2"
             }
         }
     }
@@ -217,13 +225,13 @@ class TestFileListDetail(unittest.TestCase):
         self.device = Mock(**self.empty_output)
         obj = FileListDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(directory='/var/log/trace-static*')
+            parsed_output = obj.parse(root_path='/var/log/trace-static*')
 
     def test_golden_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = FileListDetail(device=self.device)
-        parsed_output = obj.parse(directory='/var/log/trace-static*')
+        parsed_output = obj.parse(root_path='/var/log/trace-static*')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 if __name__ == '__main__':
