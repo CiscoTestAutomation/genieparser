@@ -39,6 +39,8 @@
         * show ospf3 database link advertising-router {ipaddress} detail
     * Added ShowOspf3DatabaseNetworkDetail for:
         * show ospf3 database network detail
+    * Added FileListDetail for:
+        * file list {root_path} detail
 
 * IOSXE
     * Updated ShowMacAddressTable for new commnad:
