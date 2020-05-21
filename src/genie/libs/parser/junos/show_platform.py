@@ -250,3 +250,75 @@ class ShowVersion(ShowVersionSchema):
             return {}
 
         return show_version_dict
+
+# ===================================
+# Schema for:
+#   * 'file list {directory} detail'
+# ===================================
+class FileListDetailSchema(MetaParser):
+
+    schema = {
+        'dir': {
+            Any(): {
+                Optional('files'): {
+                    Any(): {
+                        'permission': str,
+                        'number': str,
+                        'user': str,
+                        'group': str,
+                        'file_size': str,
+                        'date_time': str,
+                        'file_name': str,
+                    },
+                },
+                Optional('total_files'): int,
+            },
+        },
+    }
+
+# ===================================
+# Parser for:
+#   * 'file list {directory} detail'
+# ===================================
+class FileListDetail(FileListDetailSchema):
+
+    cli_command = ['file list {directory} detail']
+    def cli(self, directory, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0].format(
+                directory=directory))
+        else:
+            out = output
+        
+        ret_dict = {}
+
+        # -rw-r-----  1 root  wheel     525672 May 22 02:40 /var/log/trace-static
+        p1 = re.compile(r'^(?P<permission>\S+)\s+(?P<number>\d+)\s+'
+            r'(?P<user>\S+)\s+(?P<group>\S+)\s+(?P<file_size>\d+)\s+'
+            r'(?P<date_time>[\S\s]+)\s+(?P<file_name>\S+)$')
+        
+        # total files: 2
+        p2 = re.compile(r'^total\s+files:\s+(?P<total_files>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            # -rw-r-----  1 root  wheel     525672 May 22 02:40 /var/log/trace-static
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                dir_dict = ret_dict.setdefault('dir', {}). \
+                    setdefault(directory, {})
+                file_dict = dir_dict.setdefault('files', {}). \
+                    setdefault(group['file_name'], {})
+                file_dict.update({k:
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # total files: 2 
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                dir_dict.update({'total_files': int(group['total_files'])})
+                continue
+
+        return ret_dict
