@@ -265,6 +265,85 @@ Active Package(s):
                               }
                             }
 
+    golden_output4 = {'execute.return_value': '''
+ 
+        Cisco Nexus Operating System (NX-OS) Software
+        TAC support: http://www.cisco.com/tac
+        Documents: http://www.cisco.com/en/US/products/ps9372/tsd_products_support_series_home.html
+        Copyright (c) 2002-2017, Cisco Systems, Inc. All rights reserved.
+        The copyrights to certain works contained herein are owned by
+        other third parties and are used and distributed under license.
+        Some parts of this software are covered under the GNU Public
+        License. A copy of the license is available at
+        http://www.gnu.org/licenses/gpl.html.
+
+        Software
+          BIOS:      version 1.4.0
+          loader:    version N/A
+          kickstart: version 6.0(2)U6(10)
+          system:    version 6.0(2)U6(10)
+          Power Sequencer Firmware: 
+                     Module 1: version v4.4
+          BIOS compile time:       12/09/2013
+          kickstart image file is: bootflash:///n3000-uk9-kickstart.6.0.2.U6.10.bin
+          kickstart compile time:  3/30/2017 9:00:00 [03/30/2017 19:37:34]
+          system image file is:    bootflash:///n3000-uk10.225.0.2.U6.10.bin
+          system compile time:     3/30/2017 9:00:00 [03/30/2017 20:04:06]
+
+
+        Hardware
+          cisco Nexus 3048 Chassis ("48x1GE + 4x10G Supervisor")
+          Intel(R) Celeron(R) CPU        P4505  @ 1.87GHz with 3665288 kB of memory.
+          Processor Board ID FOC19243WQN
+
+          Device name: n3k
+          bootflash:    2007040 kB
+
+        Kernel uptime is 796 day(s), 15 hour(s), 58 minute(s), 29 second(s)
+
+        Last reset at 2131 usecs after  Thu Jan 18 21:17:51 2018
+
+          Reason: Disruptive upgrade
+          System version: 6.0(2)U6(5b)
+          Service: 
+
+        plugin
+          Core Plugin, Ethernet Plugin
+
+
+        '''}
+
+    golden_parsed_output4 = {'platform': {
+                               'os': 'NX-OS',
+                               'name': 'Nexus',
+                               'reason': 'Disruptive upgrade',
+                               'hardware':
+                                {'model': 'Nexus 3048',
+                                 'chassis': 'Nexus 3048',
+                                 'rp': '48x1GE + 4x10G Supervisor',
+                                 'slots': 'None',
+                                 'cpu': 'Intel(R) Celeron(R) CPU        P4505  @ 1.87GHz',
+                                 'device_name': 'n3k',
+                                 'memory': '3665288 kB',
+                                 'bootflash': '2007040 kB',
+                                 'processor_board_id': 'FOC19243WQN'}, 
+                              'kernel_uptime':
+                                {'days': 796,
+                                 'hours': 15,
+                                 'minutes': 58,
+                                 'seconds': 29},
+                              'software':
+                                {'bios_version': '1.4.0',
+                                 'kickstart_version': '6.0(2)U6(10)',
+                                 'system_version': '6.0(2)U6(10)',
+                                 'bios_compile_time': '12/09/2013',
+                                 'kickstart_image_file': 'bootflash:///n3000-uk9-kickstart.6.0.2.U6.10.bin',
+                                 'kickstart_compile_time': '3/30/2017 9:00:00 [03/30/2017 19:37:34]',
+                                 'system_image_file': 'bootflash:///n3000-uk10.225.0.2.U6.10.bin',
+                                 'system_compile_time': '3/30/2017 9:00:00 [03/30/2017 20:04:06]'}
+                              }
+                            }
+
     ats_mock.tcl.eval.return_value = 'nxos'
 
     def test_golden(self):
@@ -287,6 +366,13 @@ Active Package(s):
         version_obj = ShowVersion(device=self.device)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output3)
+
+    def test_golden4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output4)
+        version_obj = ShowVersion(device=self.device)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output4)
         
     def test_empty(self):
         self.device2 = Mock(**self.empty_output)

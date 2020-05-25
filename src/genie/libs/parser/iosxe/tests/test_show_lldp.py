@@ -1468,10 +1468,232 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
         },
         'power_priority': 'Unknown',
         'power_source': 'Unknown',
+        'serial_number': 'FCH1610A5S5',
         'wattage': 6.3,
     },
     'total_entries': 1,
 }
+
+    golden_output_3 = {'execute.return_value': '''     
+        ------------------------------------------------
+        Local Intf: Gi1/0/32
+        Chassis id: FE80::EC22:9A75:BBC7:71AF
+        Port id: 222
+        Port Description: Description
+        System Name - not advertised
+        
+        System Description: 
+        {"SN":"SN-NR","Owner":"OWNER"}
+        
+        Time remaining: 92 seconds
+        System Capabilities - not advertised
+        Enabled Capabilities - not advertised
+        Management Addresses:
+            IPV6: 0000:0000:0000:0000:0000:ffff:7f00:0001
+        Auto Negotiation - not supported
+        Physical media capabilities - not advertised
+        Media Attachment Unit type - not advertised
+        Vlan ID: - not advertised
+        
+        
+        Total entries displayed: 1
+    '''}
+
+    golden_parsed_output_3 = {
+        'interfaces': {
+            'GigabitEthernet1/0/32': {
+                'if_name': 'GigabitEthernet1/0/32',
+                'port_id': {
+                    '222': {
+                        'neighbors': {
+                            'not advertised': {
+                                'neighbor_id': 'not advertised',
+                                'chassis_id': 'FE80::EC22:9A75:BBC7:71AF',
+                                'port_id': '222',
+                                'port_description': 'Description',
+                                'system_name': 'not advertised',
+                                'system_description': '{"SN":"SN-NR","Owner":"OWNER"}',
+                                'time_remaining': 92,
+                                'management_address': '0000:0000:0000:0000:0000:ffff:7f00:0001',
+                                'auto_negotiation': 'not supported'
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        'total_entries': 1,
+    }
+
+    golden_output_4 = {'execute.return_value': '''     
+        ------------------------------------------------
+        Local Intf: Gi1/0/17
+        Chassis id: 127.0.0.2
+        Port id: c81f.7777.6666
+        Port Description - not advertised
+        System Name: TestName
+        System Description - not advertised
+        
+        Time remaining: 104 seconds
+        System Capabilities: B,T
+        Enabled Capabilities: B,T
+        Management Addresses:
+            IP: 127.0.0.2
+            OID:
+                1.3.6.1.4.1.6889.1.69.2.0.
+        Auto Negotiation - not supported
+        Physical media capabilities - not advertised
+        Media Attachment Unit type: 30
+        Vlan ID: - not advertised
+        
+        MED Information:
+        
+            MED Codes:
+                  (NP) Network Policy, (LI) Location Identification
+                  (PS) Power Source Entity, (PD) Power Device
+                  (IN) Inventory
+        
+            H/W revision: 9611GD02C
+            S/W revision: 6.6604
+            Serial number: 12389WET87
+            Manufacturer: Avaya
+            Model: 9611
+            Capabilities: NP, PD, IN
+            Device type: Endpoint Class III
+            Network Policy(Voice): VLAN 66, tagged, Layer-2 priority: 5, DSCP: 46
+            Power requirements - not advertised
+            Location - not advertised
+        
+        
+        Total entries displayed: 1
+        '''}
+
+    golden_parsed_output_4 = {
+      'interfaces': {
+        'GigabitEthernet1/0/17': {
+          'if_name': 'GigabitEthernet1/0/17',
+          'port_id': {
+            'C81f.7777.6666': {
+              'neighbors': {
+                'TestName': {
+                  'neighbor_id': 'TestName',
+                  'chassis_id': '127.0.0.2',
+                  'port_id': 'C81f.7777.6666',
+                  'system_name': 'TestName',
+                  'time_remaining': 104,
+                  'capabilities': {
+                    'mac_bridge': {
+                      'name': 'mac_bridge',
+                      'system': True,
+                      'enabled': True
+                    },
+                    'telephone': {
+                      'name': 'telephone',
+                      'system': True,
+                      'enabled': True
+                    }
+                  },
+                  'management_address': '127.0.0.2',
+                  'auto_negotiation': 'not supported',
+                  'unit_type': 30
+                }
+              }
+            }
+          }
+        }
+      },
+      'med_information': {
+        'h/w_revision': '9611GD02C',
+        's/w_revision': '6.6604',
+        'serial_number': '12389WET87',
+        'manufacturer': 'Avaya',
+        'model': '9611',
+        'capabilities': [
+          'NP',
+          'PD',
+          'IN'
+        ],
+        'device_type': 'Endpoint Class III',
+        'network_policy': {
+          'voice': {
+            'tagged': True,
+            'layer_2_priority': 5,
+            'dscp': 46,
+            'vlan': 66
+          }
+        },
+        'location': 'not advertised'
+      },
+      'total_entries': 1
+    }
+
+    golden_output_5 = {'execute.return_value': '''     
+        ------------------------------------------------
+        Local Intf: Gi1/0/19
+        Chassis id: 6400.3333.1111
+        Port id: 6400.3333.1111
+        Port Description - not advertised
+        System Name - not advertised
+        System Description - not advertised
+        
+        Time remaining: 3284 seconds
+        System Capabilities - not advertised
+        Enabled Capabilities - not advertised
+        Management Addresses - not advertised
+        Auto Negotiation - supported, enabled
+        Physical media capabilities:
+            1000baseT(FD)
+        Media Attachment Unit type - not advertised
+        Vlan ID: - not advertised
+        
+        MED Information:
+        
+            MED Codes:
+                  (NP) Network Policy, (LI) Location Identification
+                  (PS) Power Source Entity, (PD) Power Device
+                  (IN) Inventory
+        
+            Inventory information - not advertised
+            Capabilities: 
+            Device type: Endpoint Class I
+            Network Policies - not advertised
+            Power requirements - not advertised
+            Location - not advertised
+        
+        
+        Total entries displayed: 1
+        '''}
+
+    golden_parsed_output_5 = {
+        'interfaces': {
+            'GigabitEthernet1/0/19': {
+                'if_name': 'GigabitEthernet1/0/19',
+                'port_id': {
+                    '6400.3333.1111': {
+                        'neighbors': {
+                            'not advertised': {
+                                'neighbor_id': 'not advertised',
+                                'chassis_id': '6400.3333.1111',
+                                'port_id': '6400.3333.1111',
+                                'system_name': 'not advertised',
+                                'time_remaining': 3284,
+                                'management_address': 'not advertised',
+                                'auto_negotiation': 'supported, enabled',
+                                'physical_media_capabilities': [
+                                    '1000baseT(FD)'
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        'med_information': {
+            'device_type': 'Endpoint Class I',
+            'location': 'not advertised'
+        },
+        'total_entries': 1
+    }
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -1492,6 +1714,27 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
         obj = ShowLldpNeighborsDetail(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_3)
+        obj = ShowLldpNeighborsDetail(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+    def test_golden_4(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_4)
+        obj = ShowLldpNeighborsDetail(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
+
+    def test_golden_5(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_5)
+        obj = ShowLldpNeighborsDetail(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
 
 class test_show_lldp_traffic(unittest.TestCase):
@@ -1622,14 +1865,14 @@ class test_show_lldp_neighbors(unittest.TestCase):
             (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
         
         Device ID           Local Intf     Hold-time  Capability      Port ID
-        10.10.191.112       Gi1/0/44       171        B,T             7038.eec7.88dc
-        10.10.191.104       Gi1/0/16       166        B,T             7038.eec7.9085
-        10.10.191.93        Gi1/0/31       159        B,T             fca8.41f2.0189
-        10.10.191.91        Gi1/0/33       152        B,T             7052.c598.adae
+        10.10.191.112       Gi1/0/44       171        B,T             7038.eeff.50a4
+        10.10.191.104       Gi1/0/16       166        B,T             7038.eeff.584d
+        10.10.191.93        Gi1/0/31       159        B,T             fca8.41ff.f37c
+        10.10.191.91        Gi1/0/33       152        B,T             7052.c5ff.4647
         router               Gi1/0/52       117        R               Gi0/0/0
-        10.10.191.107       Gi1/0/14       155        B,T             7038.eec7.8f65
-        d89e.f33a.1ec4      Gi1/0/33       3070                       d89e.f33a.1ec4
-        6400.6a7f.fd89      Gi1/0/16       2781                       6400.6a7f.fd89
+        10.10.191.107       Gi1/0/14       155        B,T             7038.eeff.572d
+        d89e.f3ff.58fe      Gi1/0/33       3070                       d89e.f3ff.58fe
+        6400.6aff.7d09      Gi1/0/16       2781                       6400.6aff.7d09
         
         Total entries displayed: 8
         
@@ -1640,7 +1883,7 @@ class test_show_lldp_neighbors(unittest.TestCase):
         'interfaces': {
             'GigabitEthernet1/0/14': {
                 'port_id': {
-                    '7038.eec7.8f65': {
+                    '7038.eeff.572d': {
                         'neighbors': {
                             '10.10.191.107': {
                                 'capabilities': ['B', 'T'],
@@ -1652,14 +1895,14 @@ class test_show_lldp_neighbors(unittest.TestCase):
             },
             'GigabitEthernet1/0/16': {
                 'port_id': {
-                    '6400.6a7f.fd89': {
+                    '6400.6aff.7d09': {
                         'neighbors': {
-                            '6400.6a7f.fd89': {
+                            '6400.6aff.7d09': {
                                 'hold_time': 2781,
                             },
                         },
                     },
-                    '7038.eec7.9085': {
+                    '7038.eeff.584d': {
                         'neighbors': {
                             '10.10.191.104': {
                                 'capabilities': ['B', 'T'],
@@ -1671,7 +1914,7 @@ class test_show_lldp_neighbors(unittest.TestCase):
             },
             'GigabitEthernet1/0/31': {
                 'port_id': {
-                    'fca8.41f2.0189': {
+                    'fca8.41ff.f37c': {
                         'neighbors': {
                             '10.10.191.93': {
                                 'capabilities': ['B', 'T'],
@@ -1683,7 +1926,7 @@ class test_show_lldp_neighbors(unittest.TestCase):
             },
             'GigabitEthernet1/0/33': {
                 'port_id': {
-                    '7052.c598.adae': {
+                    '7052.c5ff.4647': {
                         'neighbors': {
                             '10.10.191.91': {
                                 'capabilities': ['B', 'T'],
@@ -1691,9 +1934,9 @@ class test_show_lldp_neighbors(unittest.TestCase):
                             },
                         },
                     },
-                    'd89e.f33a.1ec4': {
+                    'd89e.f3ff.58fe': {
                         'neighbors': {
-                            'd89e.f33a.1ec4': {
+                            'd89e.f3ff.58fe': {
                                 'hold_time': 3070,
                             },
                         },
@@ -1702,7 +1945,7 @@ class test_show_lldp_neighbors(unittest.TestCase):
             },
             'GigabitEthernet1/0/44': {
                 'port_id': {
-                    '7038.eec7.88dc': {
+                    '7038.eeff.50a4': {
                         'neighbors': {
                             '10.10.191.112': {
                                 'capabilities': ['B', 'T'],

@@ -54,3 +54,6 @@ uni.log
 # Files resulting from a git meld merge
 *.orig
 
+# vscode
+.vscode/*
+

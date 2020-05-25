@@ -46,7 +46,7 @@ class ShowIpArp(ShowArp_iosxe):
         if not vrf and not intf_or_ip:
             cmd = self.cli_command[0]
 
-        ret_dict = super().cli(self, cmd=cmd)
+        ret_dict = super().cli(self, cmd=cmd, output=output)
 
         return ret_dict
 
