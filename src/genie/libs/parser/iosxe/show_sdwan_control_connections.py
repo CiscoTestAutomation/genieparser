@@ -10,4 +10,12 @@ from genie.libs.parser.viptela.show_control_connections import ShowControlConnec
 class ShowSdwanControlConnections(ShowControlConnections_viptela):
 
     """ Parser for "show sdwan control connections" """
-    pass
+    cli_command = 'show sdwan control connections'
+
+    def cli(self, output = None):
+        if output is None:
+            show_output = self.device.execute(self.cli_command)
+        else:
+            show_output = output
+    
+        return super().cli(output = show_output)
