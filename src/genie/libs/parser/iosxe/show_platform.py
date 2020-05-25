@@ -527,36 +527,42 @@ class ShowVersion(ShowVersionSchema):
                          r'\s+(?P<group2>\S+)\s+Revision\s+(?P<group2_int>\d+)$')
 
         # power_supply_part_nr
+        # Power supply part number: 444-8888-00
         p51 = re.compile(r'^[Pp]ower\s+[Ss]upply\s+[Pp]art\s+[Nn]umber\s+\:\s+(?P<power_supply_part_nr>.+)$')
 
         # power_supply_sn
+        # Power supply serial number: CCC4466B6LL
         p52 = re.compile(r'^[Pp]ower\s+[Ss]upply\s+[Ss]erial\s+[Nn]umber\s+\:\s+(?P<power_supply_sn>.+)$')
 
-        # Daughterboard assembly number
+        # Daughterboard assembly number   : 73-11111-00
         # db_assembly_num
         p53 = re.compile(r'^[Dd]aughterboard\s+[Aa]ssembly\s+[Nn]umber\s+\:\s+(?P<db_assembly_num>.+)$')
 
-        # Daughterboard serial number
+        # Daughterboard serial number     : FOC87654CWW
         # db_sn
         p54 = re.compile(r'^[Dd]aughterboard\s+[Ss]erial\s+[Nn]umber\s+\:\s+(?P<db_sn>.+)$')
 
         # top_assembly_part_num
+        # Top Assembly Part Number        : 800-55555-11
         p55 = re.compile(r'^[Tt]op\s+[Aa]ssembly\s+[Pp]art\s+[Nn]umber\s+\:\s+(?P<top_assembly_part_num>.+)$')
 
         # top_assembly_rev_num
+        # Top Assembly Revision Number    : C0
         p56 = re.compile(r'^[Tt]op\s+[Aa]ssembly\s+[Rr]evision\s+[Nn]umber\s+\:\s+(?P<top_assembly_rev_num>.+)$')
 
         # version_id
+        # Version ID                      : V02
         p57 = re.compile(r'^[Vv]ersion\s+ID\s+\:\s+(?P<version_id>.+)$')
 
         # clei_code_num
+        # CLEI Code Number                : AAALJ00ERT
         p58 = re.compile(r'^CLEI\s+[Cc]ode\s+[Nn]umber\s+\:\s+(?P<clei_code_num>.+)$')
 
-        # Daughterboard revision number
+        # Daughterboard revision number   : A0
         # db_rev_num
         p59 = re.compile(r'^[Dd]aughterboard\s+[Rr]evision\s+[Nn]umber\s+\:\s+(?P<db_rev_num>.+)$')
 
-        # Hardware board revision number
+        # Hardware Board Revision Number  : 0x12
         # hb_rev_num
         p60 = re.compile(r'^[Hh]ardware\s+[Bb]oard\s+[Rr]evision\s+[Nn]umber\s+\:\s+(?P<hb_rev_num>.+)$')
 
