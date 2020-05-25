@@ -1068,6 +1068,475 @@ class TestShowVersion(unittest.TestCase):
         }
     }
 
+    golden_output_2 = {'execute.return_value': '''
+        Cisco Internetwork Operating System Software 
+        IOS (tm) C2940 Software (C2940-I6K2L2Q4-M), Version 12.1(22)EA12, RELEASE SOFTWARE (fc1)
+        Copyright (c) 1986-2008 by cisco Systems, Inc.
+        Compiled Tue 08-Jul-08 00:06 by amvarma
+        Image text-base: 0x80010000, data-base: 0x8068C000
+        
+        ROM: Bootstrap program is C2950 boot loader
+        
+        testsw01 uptime is 24 weeks, 1 day, 20 hours, 50 minutes
+        System returned to ROM by power-on
+        System restarted at 09:17:28 UTC Sun Oct 27 2019
+        System image file is "flash:f1111-aei43934-mz.121-22.EA12.bin"
+        
+        
+        This product contains cryptographic features and is subject to United
+        States and local country laws governing import, export, transfer and
+        use. Delivery of Cisco cryptographic products does not imply
+        third-party authority to import, export, distribute or use encryption.
+        Importers, exporters, distributors and users are responsible for
+        compliance with U.S. and local country laws. By using this product you
+        agree to comply with applicable laws and regulations. If you are unable
+        to comply with U.S. and local laws, return this product immediately.
+        
+        A summary of U.S. laws governing Cisco cryptographic products may be found at:
+        http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+        
+        If you require further assistance please contact us by sending email to
+        export@cisco.com.
+        
+        cisco WS-C2940-8TT-S (RC32300) processor (revision H0) with 19868K bytes of memory.
+        Processor board ID FOC2345C3DB
+        Last reset from system-reset
+        Running Standard Image
+        8 FastEthernet/IEEE 802.3 interface(s)
+        1 Gigabit Ethernet/IEEE 802.3 interface(s)
+        The password-recovery mechanism is disabled.
+        
+        32K bytes of flash-simulated non-volatile configuration memory.
+        Base ethernet MAC Address: 00:11:22:54:00:44
+        Motherboard assembly number: 99-6666-88
+        Power supply part number: 444-8888-00
+        Motherboard serial number: FOC99344ERT
+        Power supply serial number: CCC4466B6LL
+        Model revision number: H0
+        Motherboard revision number: A0
+        Model number: WS-C2940-8TT-S
+        System serial number: FOC6666U4BB
+        Configuration register is 0xF
+
+        '''}
+
+    golden_parsed_output_2 = {
+        'version': {
+        'version_short': '12.1',
+        'platform': 'C2940',
+        'version': '12.1(22)EA12',
+        'image_id': 'C2940-I6K2L2Q4-M',
+        'os': 'IOS',
+        'image_type': 'developer image',
+        'compiled_date': 'Tue 08-Jul-08 00:06',
+        'compiled_by': 'amvarma',
+        'image': {
+          'text_base': '0x80010000',
+          'data_base': '0x8068C000'
+        },
+        'rom': 'Bootstrap program is C2950 boot loader',
+        'hostname': 'testsw01',
+        'uptime': '24 weeks, 1 day, 20 hours, 50 minutes',
+        'returned_to_rom_by': 'power-on',
+        'system_restarted_at': '09:17:28 UTC Sun Oct 27 2019',
+        'system_image': 'flash:f1111-aei43934-mz.121-22.EA12.bin',
+        'chassis': 'WS-C2940-8TT-S',
+        'main_mem': '19868',
+        'processor_type': 'RC32300',
+        'rtr_type': 'WS-C2940-8TT-S',
+        'chassis_sn': 'FOC2345C3DB',
+        'last_reload_reason': 'system-reset',
+        'interfaces': {
+          'fastethernet': 8,
+          'gigabit_ethernet': 1
+        },
+        'mem_size': {
+          'flash-simulated non-volatile configuration': '32'
+        },
+        'curr_config_register': '0xF'
+      }
+    }
+
+    golden_output_3 = {'execute.return_value': '''
+            Cisco IOS Software, IOS-XE Software, Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Version 03.06.07E RELEASE SOFTWARE (fc3)
+            Technical Support: http://www.cisco.com/techsupport
+            Copyright (c) 1986-2017 by Cisco Systems, Inc.
+            Compiled Wed 12-Jul-17 16:55 by prod_rel_team
+            
+            
+            
+            Cisco IOS-XE software, Copyright (c) 2005-2015 by cisco Systems, Inc.
+            All rights reserved.  Certain components of Cisco IOS-XE software are
+            licensed under the GNU General Public License ("GPL") Version 2.0.  The
+            software code licensed under GPL Version 2.0 is free software that comes
+            with ABSOLUTELY NO WARRANTY.  You can redistribute and/or modify such
+            GPL code under the terms of GPL Version 2.0.
+            (http://www.gnu.org/licenses/gpl-2.0.html) For more details, see the
+            documentation or "License Notice" file accompanying the IOS-XE software,
+            or the applicable URL provided on the flyer accompanying the IOS-XE
+            software.
+            
+            
+            
+            ROM: IOS-XE ROMMON
+            BOOTLDR: CAT3K_CAA Boot Loader (CAT3K_CAA-HBOOT-M) Version 1.2, RELEASE SOFTWARE (P)
+            
+            testhost uptime is 1 year, 51 weeks, 2 days, 41 minutes
+            Uptime for this control processor is 1 year, 51 weeks, 2 days, 46 minutes
+            System returned to ROM by reload at 10:29:35 CEST Sat Apr 14 2018
+            System restarted at 10:36:03 CEST Sat Apr 14 2018
+            System image file is "flash:packages.conf"
+            Last reload reason: Reload command
+            
+            
+            
+            This product contains cryptographic features and is subject to United
+            States and local country laws governing import, export, transfer and
+            use. Delivery of Cisco cryptographic products does not imply
+            third-party authority to import, export, distribute or use encryption.
+            Importers, exporters, distributors and users are responsible for
+            compliance with U.S. and local country laws. By using this product you
+            agree to comply with applicable laws and regulations. If you are unable
+            to comply with U.S. and local laws, return this product immediately.
+            
+            A summary of U.S. laws governing Cisco cryptographic products may be found at:
+            http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+            
+            If you require further assistance please contact us by sending email to
+            export@cisco.com.
+            
+            License Level: License
+            License Type: Type
+            Next reload license Level: License
+            
+            cisco WS-C3650-48PD (MIPS) processor with 4194304K bytes of physical memory.
+            Processor board ID FDO0000E1C8
+            3 Virtual Ethernet interfaces
+            100 Gigabit Ethernet interfaces
+            4 Ten Gigabit Ethernet interfaces
+            2048K bytes of non-volatile configuration memory.
+            4194304K bytes of physical memory.
+            257008K bytes of Crash Files at crashinfo:.
+            257008K bytes of Crash Files at crashinfo-1:.
+            1550272K bytes of Flash at flash:.
+            1550272K bytes of Flash at flash-1:.
+            0K bytes of Dummy USB Flash at usbflash0:.
+            0K bytes of Dummy USB Flash at usbflash0-1:.
+            0K bytes of  at webui:.
+            
+            Base Ethernet MAC Address          : 88:88:00:ff:33:00
+            Motherboard Assembly Number        : 73-12345-67
+            Motherboard Serial Number          : FDO668866S6E
+            Model Revision Number              : D0
+            Motherboard Revision Number        : A0
+            Model Number                       : WS-C3650-48PD
+            System Serial Number               : FDO668866F908
+            
+            
+            Switch Ports Model              SW Version        SW Image              Mode   
+            ------ ----- -----              ----------        ----------            ----   
+                 1 52    WS-C3650-48PD      03.06.07E         cat3k_caa-universalk9 INSTALL
+            *    2 52    WS-C3650-48PD      03.06.07E         cat3k_caa-universalk9 INSTALL
+            
+            
+            Switch 01
+            ---------
+            Switch uptime                      : 1 year, 51 weeks, 2 days, 44 minutes 
+            Base Ethernet MAC Address          : bb:aa:77:00:aa:88
+            Motherboard Assembly Number        : 73-12345-89
+            Motherboard Serial Number          : FDO668866D8F
+            Model Revision Number              : D0
+            Motherboard Revision Number        : A0
+            Model Number                       : WS-C3650-48PD
+            System Serial Number               : FDO668866F910
+            
+            Configuration register is 0x102
+
+            '''}
+
+    golden_parsed_output_3 = {
+        'version': {
+        'version_short': '03.06',
+        'platform': 'Catalyst L3 Switch',
+        'version': '03.06.07E',
+        'image_id': 'CAT3K_CAA-UNIVERSALK9-M',
+        'os': 'IOS-XE',
+        'image_type': 'production image',
+        'compiled_date': 'Wed 12-Jul-17 16:55',
+        'compiled_by': 'prod_rel_team',
+        'rom': 'IOS-XE ROMMON',
+        'bootldr': 'CAT3K_CAA Boot Loader (CAT3K_CAA-HBOOT-M) Version 1.2, RELEASE SOFTWARE (P)',
+        'hostname': 'testhost',
+        'uptime': '1 year, 51 weeks, 2 days, 41 minutes',
+        'uptime_this_cp': '1 year, 51 weeks, 2 days, 46 minutes',
+        'returned_to_rom_by': 'reload',
+        'returned_to_rom_at': '10:29:35 CEST Sat Apr 14 2018',
+        'system_restarted_at': '10:36:03 CEST Sat Apr 14 2018',
+        'system_image': 'flash:packages.conf',
+        'last_reload_reason': 'Reload command',
+        'license_level': 'License',
+        'license_type': 'Type',
+        'next_reload_license_level': 'License',
+        'chassis': 'WS-C3650-48PD',
+        'main_mem': '4194304',
+        'processor_type': 'MIPS',
+        'rtr_type': 'Edison',
+        'chassis_sn': 'FDO0000E1C8',
+        'number_of_intfs': {
+          'Virtual Ethernet': '3',
+          'Gigabit Ethernet': '100',
+          'Ten Gigabit Ethernet': '4'
+        },
+        'mem_size': {
+          'non-volatile configuration': '2048',
+          'physical': '4194304'
+        },
+        'disks': {
+          'crashinfo:.': {
+            'disk_size': '257008',
+            'type_of_disk': 'Crash Files'
+          },
+          'crashinfo-1:.': {
+            'disk_size': '257008',
+            'type_of_disk': 'Crash Files'
+          },
+          'flash:.': {
+            'disk_size': '1550272',
+            'type_of_disk': 'Flash'
+          },
+          'flash-1:.': {
+            'disk_size': '1550272',
+            'type_of_disk': 'Flash'
+          },
+          'usbflash0:.': {
+            'disk_size': '0',
+            'type_of_disk': 'Dummy USB Flash'
+          },
+          'usbflash0-1:.': {
+            'disk_size': '0',
+            'type_of_disk': 'Dummy USB Flash'
+          },
+          'webui:.': {
+            'disk_size': '0',
+            'type_of_disk': ''
+          }
+        },
+        'switch_num': {
+          '1': {
+            'uptime': '1 year, 51 weeks, 2 days, 44 minutes',
+            'mac_address': 'bb:aa:77:00:aa:88',
+            'mb_assembly_num': '73-12345-89',
+            'mb_sn': 'FDO668866D8F',
+            'model_rev_num': 'D0',
+            'mb_rev_num': 'A0',
+            'model_num': 'WS-C3650-48PD',
+            'system_sn': 'FDO668866F910',
+            'ports': '52',
+            'model': 'WS-C3650-48PD',
+            'sw_ver': '03.06.07E',
+            'sw_image': 'cat3k_caa-universalk9',
+            'mode': 'INSTALL',
+            'active': False
+          },
+          '2': {
+            'ports': '52',
+            'model': 'WS-C3650-48PD',
+            'sw_ver': '03.06.07E',
+            'sw_image': 'cat3k_caa-universalk9',
+            'mode': 'INSTALL',
+            'uptime': '1 year, 51 weeks, 2 days, 46 minutes',
+            'active': True,
+            'mac_address': '88:88:00:ff:33:00',
+            'mb_assembly_num': '73-12345-67',
+            'mb_sn': 'FDO668866S6E',
+            'model_rev_num': 'D0',
+            'mb_rev_num': 'A0',
+            'model_num': 'WS-C3650-48PD',
+            'system_sn': 'FDO668866F908'
+          }
+        },
+        'curr_config_register': '0x102'
+      }
+    }
+
+    golden_output_4 = {'execute.return_value': '''
+            Cisco IOS Software, C2960X Software (C2960X-UNIVERSALK9-M), Version 15.2(2)E7, RELEASE SOFTWARE (fc3)
+            Technical Support: http://www.cisco.com/techsupport
+            Copyright (c) 1986-2017 by Cisco Systems, Inc.
+            Compiled Wed 12-Jul-17 13:06 by prod_rel_team
+            
+            ROM: Bootstrap program is C2960X boot loader
+            BOOTLDR: C2960X Boot Loader (C2960X-HBOOT-M) Version 15.2(2r)E1, RELEASE SOFTWARE (fc1)
+            
+            testname uptime is 25 weeks, 5 days, 15 hours, 45 minutes
+            System returned to ROM by power-on
+            System restarted at 19:24:47 UTC+2 Wed Oct 9 2019
+            System image file is "flash:c2960x-universalk9-mz.152-2.E7/c2960x-universalk9-mz.152-2.E7.bin"
+            Last reload reason: Reload command
+            
+            
+            
+            This product contains cryptographic features and is subject to United
+            States and local country laws governing import, export, transfer and
+            use. Delivery of Cisco cryptographic products does not imply
+            third-party authority to import, export, distribute or use encryption.
+            Importers, exporters, distributors and users are responsible for
+            compliance with U.S. and local country laws. By using this product you
+            agree to comply with applicable laws and regulations. If you are unable
+            to comply with U.S. and local laws, return this product immediately.
+            
+            A summary of U.S. laws governing Cisco cryptographic products may be found at:
+            http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+            
+            If you require further assistance please contact us by sending email to
+            export@cisco.com.
+            
+            cisco WS-C2960X-48FPD-L (APM86XXX) processor (revision F0) with 524288K bytes of memory.
+            Processor board ID FOC1913S46M
+            Last reset from power-on
+            4 Virtual Ethernet interfaces
+            1 FastEthernet interface
+            100 Gigabit Ethernet interfaces
+            4 Ten Gigabit Ethernet interfaces
+            The password-recovery mechanism is enabled.
+            
+            512K bytes of flash-simulated non-volatile configuration memory.
+            Base ethernet MAC Address       : CC:44:33:22:77:00
+            Motherboard assembly number     : 71-123456-02
+            Power supply part number        : 311-4567-11
+            Motherboard serial number       : FOC123456U12
+            Power supply serial number      : DCB324354RH
+            Model revision number           : F0
+            Motherboard revision number     : C0
+            Model number                    : WS-C2960X-48FPD-L
+            Daughterboard assembly number   : 73-11111-00
+            Daughterboard serial number     : FOC87654CWW
+            System serial number            : FOC4444S23V
+            Top Assembly Part Number        : 800-55555-11
+            Top Assembly Revision Number    : C0
+            Version ID                      : V02
+            CLEI Code Number                : AAALJ00ERT
+            Daughterboard revision number   : A0
+            Hardware Board Revision Number  : 0x12
+            
+            
+            Switch Ports Model                     SW Version            SW Image                 
+            ------ ----- -----                     ----------            ----------               
+                 1 52    WS-C2960X-48FPD-L         15.2(2)E7             C2960X-UNIVERSALK9-M     
+            *    2 52    WS-C2960X-48FPD-L         15.2(2)E7             C2960X-UNIVERSALK9-M     
+            
+            
+            Switch 01
+            ---------
+            Switch Uptime                   : 9 weeks, 5 days, 16 hours, 1 minute 
+            Base ethernet MAC Address       : 00:11:22:33:44:55
+            Motherboard assembly number     : 77-99999-00
+            Power supply part number        : 111-0111-03
+            Motherboard serial number       : FOC666777G4
+            Power supply serial number      : LIT122334DD
+            Model revision number           : V0
+            Motherboard revision number     : D0
+            Model number                    : WS-C2960X-48FPD-L
+            Daughterboard assembly number   : 73-12230-13
+            Daughterboard serial number     : FOC33144FDG
+            System serial number            : FOC3333S00A
+            Top assembly part number        : 00-100000-00
+            Top assembly revision number    : D0
+            Version ID                      : V07
+            CLEI Code Number                : CDFER00DFG
+            Daughterboard revision number   : B0
+            
+            Configuration register is 0xF
+
+    '''}
+
+    golden_parsed_output_4 = {
+        'version': {
+        'version_short': '15.2',
+        'platform': 'C2960X',
+        'version': '15.2(2)E7',
+        'image_id': 'C2960X-UNIVERSALK9-M',
+        'os': 'IOS',
+        'image_type': 'production image',
+        'compiled_date': 'Wed 12-Jul-17 13:06',
+        'compiled_by': 'prod_rel_team',
+        'rom': 'Bootstrap program is C2960X boot loader',
+        'bootldr': 'C2960X Boot Loader (C2960X-HBOOT-M) Version 15.2(2r)E1, RELEASE SOFTWARE (fc1)',
+        'hostname': 'testname',
+        'uptime': '25 weeks, 5 days, 15 hours, 45 minutes',
+        'returned_to_rom_by': 'power-on',
+        'system_restarted_at': '19:24:47 UTC+2 Wed Oct 9 2019',
+        'system_image': 'flash:c2960x-universalk9-mz.152-2.E7/c2960x-universalk9-mz.152-2.E7.bin',
+        'last_reload_reason': 'power-on',
+        'chassis': 'WS-C2960X-48FPD-L',
+        'main_mem': '524288',
+        'processor_type': 'APM86XXX',
+        'rtr_type': 'WS-C2960X-48FPD-L',
+        'chassis_sn': 'FOC1913S46M',
+        'number_of_intfs': {
+          'Virtual Ethernet': '4',
+          'FastEthernet': '1',
+          'Gigabit Ethernet': '100',
+          'Ten Gigabit Ethernet': '4'
+        },
+        'mem_size': {
+          'flash-simulated non-volatile configuration': '512'
+        },
+        'switch_num': {
+          '1': {
+            'uptime': '9 weeks, 5 days, 16 hours, 1 minute',
+            'mac_address': '00:11:22:33:44:55',
+            'mb_assembly_num': '77-99999-00',
+            'power_supply_part_nr': '111-0111-03',
+            'mb_sn': 'FOC666777G4',
+            'power_supply_sn': 'LIT122334DD',
+            'model_rev_num': 'V0',
+            'mb_rev_num': 'D0',
+            'model_num': 'WS-C2960X-48FPD-L',
+            'db_assembly_num': '73-12230-13',
+            'db_sn': 'FOC33144FDG',
+            'system_sn': 'FOC3333S00A',
+            'top_assembly_part_num': '00-100000-00',
+            'top_assembly_rev_num': 'D0',
+            'version_id': 'V07',
+            'clei_code_num': 'CDFER00DFG',
+            'db_rev_num': 'B0',
+            'ports': '52',
+            'model': 'WS-C2960X-48FPD-L',
+            'sw_ver': '15.2(2)E7',
+            'sw_image': 'C2960X-UNIVERSALK9-M',
+            'active': False
+          },
+          '2': {
+            'ports': '52',
+            'model': 'WS-C2960X-48FPD-L',
+            'sw_ver': '15.2(2)E7',
+            'sw_image': 'C2960X-UNIVERSALK9-M',
+            'active': True,
+            'mac_address': 'CC:44:33:22:77:00',
+            'mb_assembly_num': '71-123456-02',
+            'power_supply_part_nr': '311-4567-11',
+            'mb_sn': 'FOC123456U12',
+            'power_supply_sn': 'DCB324354RH',
+            'model_rev_num': 'F0',
+            'mb_rev_num': 'C0',
+            'model_num': 'WS-C2960X-48FPD-L',
+            'db_assembly_num': '73-11111-00',
+            'db_sn': 'FOC87654CWW',
+            'system_sn': 'FOC4444S23V',
+            'top_assembly_part_num': '800-55555-11',
+            'top_assembly_rev_num': 'C0',
+            'version_id': 'V02',
+            'clei_code_num': 'AAALJ00ERT',
+            'db_rev_num': 'A0',
+            'hb_rev_num': '0x12'
+          }
+        },
+        'curr_config_register': '0xF'
+      }
+    }
+    
+    
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.dev1)
@@ -1122,6 +1591,26 @@ class TestShowVersion(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.dev_1 = Mock(**self.golden_output_2)
+        obj = ShowVersion(device=self.dev_1)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.dev_1 = Mock(**self.golden_output_3)
+        obj = ShowVersion(device=self.dev_1)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+    def test_golden_4(self):
+        self.maxDiff = None
+        self.dev_1 = Mock(**self.golden_output_4)
+        obj = ShowVersion(device=self.dev_1)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 class TestDir(unittest.TestCase):
     dev1 = Device(name='empty')
