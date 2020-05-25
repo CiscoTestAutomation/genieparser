@@ -8,7 +8,29 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowSdwanBfdSessions for:
+        * show sdwan bfd sessions
+    * Added ShowSdwanBfdSummary for:
+        * show sdwan bfd summary
+    * Added ShowSdwanControlConnections for:
+        * show sdwan control connections
+    * Added ShowSdwanControlLocalProperties for:
+        * show sdwan control local-properties
+* LINUX
+    * Added route
+    * Added netstat -rn
 
+
+* VIPTELA
+    * Added ShowBfdSessions for:
+        * show bfd sessions
+    * Added ShowBfdSummary for:
+        * show bfd summary
+    * Added ShowControlConnections for:
+        * show control connections
+    * Added ShowControlLocalProperties for:
+        * show control local-properties
 * JUNOS
     * Added ShowOspfNeighborDetail for:
         * show ospf neighbor {neighbor} detail.
@@ -74,6 +96,10 @@
         * Changed the key 'virtual_ethernet' value to optional.
         * Added the following keys 'fastethernet', 'power_supply_part_nr', 'power_supply_sn', 'db_assembly_num', 'db_sn', 'top_assembly_part_num', 'top_assembly_rev_num', 'version_id', 'clei_code_num', 'db_rev_num' and 'hb_rev_num'
         * Added regex for swith table without 'Mode' column.
+    * Renamed ShowPowerInlineInterface to ShowPowerInline
+        * Added 'watts' information the schema, containing available, used and remaining watts.
+        * Added regex to parse watts information
+        * Changed the regex to also support white spaces in device names
 
 * NXOS
     * Updated ShowIpStaticRouteMulticast:
@@ -113,4 +139,8 @@
 * IOS 
     * Updated ShowIpArp
         * Added argument 'output' into super().cli()
-                
+* ASA
+    * Updated ShowRoute:
+        * Fixed the logic for overlapping prefixes.
+        * Fixed the OSPF protocol mappings.
+        * Parser optimization for dynamic routing protocols (EIGRP, OSPF, BGP, etc)
