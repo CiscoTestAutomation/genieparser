@@ -1470,7 +1470,8 @@ class DirSchema(MetaParser):
                      Optional('date'): str,
                      Optional('permission'): str,
                      Optional('index'): str,
-                     Optional('time'): str}
+                     Optional('time'): str,
+                     Optional('date'): str}
                 },
             },
         }
@@ -1523,16 +1524,27 @@ class Dir(DirSchema):
             # 15 lrwxrwxrwx 1    12 May 10  2017 config -> /misc/config
             # 11 drwx------ 2 16384 Mar 28 12:23 lost+found
             # 14 -rw-r--r--. 1 10429 Oct 26 16:17 pnet_cfg.log
-            p3 = re.compile(r'^\s*(?P<index>[0-9]+) +(?P<permission>[a-z\-]+)(\.)? '
-                '+(?P<unknown>[0-9]+) +(?P<size>[0-9]+) +(?P<month>[a-zA-Z]+) '
-                '+(?P<day>[0-9]+) +(?P<year>[0-9\:]+) '
-                '+(?P<file>[a-zA-Z0-9\.\/\_\-\+\>\s]+)$')
+            # 10541310    -rwx  6142        Mon May 18 19:16:01 2020  prod2_vxlan_config
+
+            p3 = re.compile(r'^\s*(?P<index>[0-9]+) +(?P<permission>[a-z\-]+)(\.)?('
+                            ' +(?P<unknown>[0-9]+))? +(?P<size>[0-9]+)( +(?P<date>[a-zA-Z]{3}))? '
+                            '+(?P<month>[a-zA-Z]{3}) +(?P<day>[0-9]{,3})( +(?P<time>[\d\:]+))?( '
+                            '+(?P<year>[0-9]{4}))? +(?P<file>[a-zA-Z0-9\.\/\_\-\+\>\s]+)$')
             m = p3.match(line)
             if m:
                 file = m.groupdict()['file']
                 date = m.groupdict()['month'].strip() \
-                    + ' ' + m.groupdict()['day'].strip() + ' ' \
-                    + m.groupdict()['year'].strip()
+                    + ' ' + m.groupdict()['day'].strip()
+
+                if m.groupdict()['time']:
+                    date = date + ' ' + m.groupdict()['time'].strip()
+
+                if m.groupdict()['year']:
+                    date = date + ' ' + m.groupdict()['year'].strip()
+
+                if m.groupdict()['date']:
+                    date = m.groupdict()['date'].strip() + ' ' + date
+
                 if 'files' not in dir_dict['dir']:
                     dir_dict['dir']['files'] = {}
                 dir_dict['dir']['files'][file] = {}

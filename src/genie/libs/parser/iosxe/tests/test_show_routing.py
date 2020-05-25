@@ -3278,6 +3278,298 @@ class TestShowIpCefInternal(unittest.TestCase):
         },
     }
 
+    golden_output_5 = {'execute.return_value': '''
+    show ip cef internal
+    IPv4 CEF is enabled for distributed and running
+    VRF Default
+     55 prefixes (54/1 fwd/non-fwd)
+     Table id 0x0
+     Database epoch:        2 (55 entries at this epoch)
+    
+    0.0.0.0/0, epoch 2, flags [DefRtHndlr, defrt], refcnt 5, per-destination sharing
+      sources: DRH
+      ifnums: (none)
+      path list 7FEE80648560, 4 locks, per-destination, flags 0x41 [shble, hwcn]
+        path 7FEE80648DB0, share 1/1, type special prefix, for IPv4
+          no route
+      output chain:
+        no route
+    0.0.0.0/8, epoch 2, refcnt 6, per-destination sharing
+      sources: Spc
+      feature space:
+        Broker: linked, distributed at 4th priority
+      subblocks:
+        Special source: drop
+      ifnums: (none)
+      path list 7FEE54E132F0, 11 locks, per-destination, flags 0x41 [shble, hwcn]
+        path 7FEE54E13638, share 1/1, type special prefix, for IPv4
+          drop
+      output chain:
+        drop
+    0.0.0.0/32, epoch 2, flags [rcv], refcnt 6, per-destination sharing
+      sources: Spc
+      feature space:
+        Broker: linked, distributed at 4th priority
+      subblocks:
+        Special source: receive
+      ifnums: (none)
+      path list 7FEE54E13390, 11 locks, per-destination, flags 0x41 [shble, hwcn]
+        path 7FEE54E13708, share 1/1, type receive, for IPv4
+          receive
+      output chain:
+        receive
+    1.1.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
+      sources: I/F, RIB
+      feature space:
+        IPRM: 0x0003800C
+        Broker: linked, distributed at 2nd priority
+      subblocks:
+        gsb Connected receive chain(0): 0x7FEE86E00DB0
+        gsb Connected chain head(1): 0x7FEE86E00CA8
+        Interface source: Loopback0 flags: local, source eligible flags3: none
+      ifnums: (none)
+      path list 7FEE5AF88090, 3 locks, per-destination, flags 0x41 [shble, hwcn]
+        path 7FEE5AF88B40, share 1/1, type receive, for IPv4
+          receive for Loopback0
+      output chain:
+        receive
+    3.3.3.3/32, epoch 2, RIB[I], refcnt 6, per-destination sharing
+      sources: RIB, LTE
+      feature space:
+        IPRM: 0x00028000
+        Broker: linked, distributed at 4th priority
+        LFD: 3.3.3.3/32 1 local label
+        dflt local label info: global/16 [0x3]
+            contains path extension list
+            dflt disposition chain 0x7FEE86F48B90
+              label none
+              IP adj out of GigabitEthernet3.90, addr 10.13.90.3
+      ifnums:
+        GigabitEthernet3.90(29): 10.13.90.3
+      path list 7FEE5AC45458, 5 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+        path 7FEE7ECE0A78, share 1/1, type attached nexthop, for IPv4
+          MPLS short path extensions: [none] MOI flags = 0x0 label none
+          nexthop 10.13.90.3 GigabitEthernet3.90, IP adj out of GigabitEthernet3.90, addr 10.13.90.3 7FEE874C9FE8
+      output chain:
+        IP adj out of GigabitEthernet3.90, addr 10.13.90.3 7FEE874C9FE8
+    10.12.90.0/24, epoch 2, flags [att, cnn, cover, deagg], RIB[C], refcnt 6, per-destination sharing
+      sources: RIB
+      feature space:
+        IPRM: 0x0003800C
+        Broker: linked, distributed at 2nd priority
+      subblocks:
+        gsb Connected chain head(1): 0x7FEE5B8FB520
+        Covered dependent prefixes: 3
+          need deagg: 2
+          notify cover updated: 1
+      ifnums:
+        GigabitEthernet2.90(21)
+      path list 7FEE874A8868, 3 locks, per-destination, flags 0x49 [shble, rif, hwcn]
+        path 7FEE5B901428, share 1/1, type connected prefix, for IPv4
+          connected to GigabitEthernet2.90, glean
+      output chain:
+        glean
+
+    '''}
+
+    golden_parsed_output_5 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'prefix': {
+                            '0.0.0.0/0': {
+                                'epoch': 2,
+                                'flags': ['DefRtHndlr', 'defrt'],
+                                'output_chain': {
+                                },
+                                'path_list': {
+                                    '7FEE80648560': {
+                                        'flags': '0x41 [shble, hwcn]',
+                                        'locks': 4,
+                                        'path': {
+                                            '7FEE80648DB0': {
+                                                'for': 'IPv4',
+                                                'share': '1/1',
+                                                'type': 'special prefix',
+                                            },
+                                        },
+                                        'sharing': 'per-destination',
+                                    },
+                                },
+                                'refcnt': 5,
+                                'sharing': 'per-destination',
+                                'sources': ['DRH'],
+                            },
+                            '0.0.0.0/32': {
+                                'epoch': 2,
+                                'feature_space': {
+                                    'broker': {
+                                        'distribution_priority': 4,
+                                    },
+                                },
+                                'flags': ['rcv'],
+                                'output_chain': {
+                                },
+                                'path_list': {
+                                    '7FEE54E13390': {
+                                        'flags': '0x41 [shble, hwcn]',
+                                        'locks': 11,
+                                        'path': {
+                                            '7FEE54E13708': {
+                                                'for': 'IPv4',
+                                                'share': '1/1',
+                                                'type': 'receive',
+                                            },
+                                        },
+                                        'sharing': 'per-destination',
+                                    },
+                                },
+                                'refcnt': 6,
+                                'sharing': 'per-destination',
+                                'sources': ['Spc'],
+                            },
+                            '0.0.0.0/8': {
+                                'epoch': 2,
+                                'feature_space': {
+                                    'broker': {
+                                        'distribution_priority': 4,
+                                    },
+                                },
+                                'output_chain': {
+                                },
+                                'path_list': {
+                                    '7FEE54E132F0': {
+                                        'flags': '0x41 [shble, hwcn]',
+                                        'locks': 11,
+                                        'path': {
+                                            '7FEE54E13638': {
+                                                'for': 'IPv4',
+                                                'share': '1/1',
+                                                'type': 'special prefix',
+                                            },
+                                        },
+                                        'sharing': 'per-destination',
+                                    },
+                                },
+                                'refcnt': 6,
+                                'sharing': 'per-destination',
+                                'sources': ['Spc'],
+                            },
+                            '1.1.1.1/32': {
+                                'epoch': 2,
+                                'feature_space': {
+                                    'broker': {
+                                        'distribution_priority': 2,
+                                    },
+                                    'iprm': '0x0003800C',
+                                },
+                                'flags': ['att', 'cnn', 'rcv', 'local', 'SrcElgbl'],
+                                'output_chain': {
+                                },
+                                'path_list': {
+                                    '7FEE5AF88090': {
+                                        'flags': '0x41 [shble, hwcn]',
+                                        'locks': 3,
+                                        'path': {
+                                            '7FEE5AF88B40': {
+                                                'for': 'IPv4',
+                                                'share': '1/1',
+                                                'type': 'receive',
+                                            },
+                                        },
+                                        'sharing': 'per-destination',
+                                    },
+                                },
+                                'refcnt': 6,
+                                'rib': '[C]',
+                                'sharing': 'per-destination',
+                            },
+                            '10.12.90.0/24': {
+                                'epoch': 2,
+                                'feature_space': {
+                                    'broker': {
+                                        'distribution_priority': 2,
+                                    },
+                                    'iprm': '0x0003800C',
+                                },
+                                'flags': ['att', 'cnn', 'cover', 'deagg'],
+                                'output_chain': {
+                                },
+                                'path_list': {
+                                    '7FEE874A8868': {
+                                        'flags': '0x49 [shble, rif, hwcn]',
+                                        'locks': 3,
+                                        'path': {
+                                            '7FEE5B901428': {
+                                                'for': 'IPv4',
+                                                'share': '1/1',
+                                                'type': 'connected prefix',
+                                            },
+                                        },
+                                        'sharing': 'per-destination',
+                                    },
+                                },
+                                'refcnt': 6,
+                                'rib': '[C]',
+                                'sharing': 'per-destination',
+                                'sources': ['RIB'],
+                            },
+                            '3.3.3.3/32': {
+                                'epoch': 2,
+                                'feature_space': {
+                                    'broker': {
+                                        'distribution_priority': 4,
+                                    },
+                                    'iprm': '0x00028000',
+                                    'local_label_info': {
+                                        'dflt': 'global/16 [0x3]',
+                                    },
+                                    'path_extension_list': {
+                                        'dflt': {
+                                            'disposition_chain': {
+                                                '0x7FEE86F48B90': {
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                                'output_chain': {
+                                },
+                                'path_list': {
+                                    '7FEE5AC45458': {
+                                        'flags': '0x49 [shble, rif, hwcn]',
+                                        'locks': 5,
+                                        'path': {
+                                            '7FEE7ECE0A78': {
+                                                'for': 'IPv4',
+                                                'nexthop': {
+                                                    '10.13.90.3': {
+                                                        'outgoing_interface': {
+                                                            'GigabitEthernet3.90': {
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                                'share': '1/1',
+                                                'type': 'attached nexthop',
+                                            },
+                                        },
+                                        'sharing': 'per-destination',
+                                    },
+                                },
+                                'refcnt': 6,
+                                'rib': '[I]',
+                                'sharing': 'per-destination',
+                                'sources': ['RIB,', 'LTE'],
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         obj = ShowIpCefInternal(device=self.device1)
@@ -3311,6 +3603,13 @@ class TestShowIpCefInternal(unittest.TestCase):
         obj = ShowIpCefInternal(device=self.device)
         parsed_output = obj.parse(ip='192.168.1.1', vrf='MG501')
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
+
+    def test_golden_5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_5)
+        obj = ShowIpCefInternal(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
 
 if __name__ == '__main__':

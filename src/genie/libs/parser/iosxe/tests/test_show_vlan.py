@@ -553,6 +553,211 @@ Primary Secondary Type              Ports
     },
 }
 
+    golden_output_vlan_4 = {'execute.return_value': '''
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------   
+3    Part1 Part2                      active    
+4    Part1 Part/2                     active        
+9    Misc. Name                       active    Gi1/0/13, Gi1/0/14, Gi1/0/15, Gi1/0/16, Gi1/0/19
+                                                Gi1/0/20
+130  SO MANY SPACES                   active    Gi1/0/21
+
+VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
+---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------ 
+3    enet  100003     1500  -      -      -        -    -        0      0   
+4    enet  100004     1500  -      -      -        -    -        0      0   
+9    enet  100009     1500  -      -      -        -    -        0      0   
+130  enet  100130     1500  -      -      -        -    -        0      0    
+          
+VLAN AREHops STEHops Backup CRF
+---- ------- ------- ----------
+
+Remote SPAN VLANs
+------------------------------------------------------------------------------
+
+
+Primary Secondary Type              Ports
+------- --------- ----------------- ------------------------------------------
+    '''}
+
+    golden_parsed_output_vlan_4 = {
+        'vlans': {
+            '3': {
+              'vlan_id': '3',
+              'name': 'Part1 Part2',
+              'shutdown': False,
+              'state': 'active',
+              'type': 'enet',
+              'said': 100003,
+              'mtu': 1500,
+              'trans1': 0,
+              'trans2': 0
+            },
+            '4': {
+              'vlan_id': '4',
+              'name': 'Part1 Part/2',
+              'shutdown': False,
+              'state': 'active',
+              'type': 'enet',
+              'said': 100004,
+              'mtu': 1500,
+              'trans1': 0,
+              'trans2': 0
+            },
+            '9': {
+              'vlan_id': '9',
+              'name': 'Misc. Name',
+              'shutdown': False,
+              'state': 'active',
+              'interfaces': [
+                'GigabitEthernet1/0/13',
+                'GigabitEthernet1/0/14',
+                'GigabitEthernet1/0/15',
+                'GigabitEthernet1/0/16',
+                'GigabitEthernet1/0/19',
+                'GigabitEthernet1/0/20'
+              ],
+              'type': 'enet',
+              'said': 100009,
+              'mtu': 1500,
+              'trans1': 0,
+              'trans2': 0
+            },
+            '130': {
+              'vlan_id': '130',
+              'name': 'SO MANY SPACES',
+              'shutdown': False,
+              'state': 'active',
+              'interfaces': [
+                'GigabitEthernet1/0/21'
+              ],
+              'type': 'enet',
+              'said': 100130,
+              'mtu': 1500,
+              'trans1': 0,
+              'trans2': 0
+            }
+        }
+    }
+
+    golden_output_vlan_5 = {'execute.return_value': '''
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------  
+1    default                          active    Gi1/0/23, Gi1/0/25, Gi1/0/26, Gi1/0/27, Gi1/0/28 
+2    Test                             active    
+1003 trcrf-default                    act/unsup 
+1004 fddinet-default                  act/unsup 
+1005 trbrf-default                    act/unsup 
+
+VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
+---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------ 
+1    enet  100001     1500  -      -      -        -    -        0      0   
+2    enet  100002     1500  -      -      -        -    -        0      0   
+1003 trcrf 101003     4472  1005   3276   -        -    srb      0      0
+1004 fdnet 101004     1500  -      -      -        ieee -        0      0   
+1005 trbrf 101005     4472  -      -      15       ibm  -        0      0   
+
+VLAN AREHops STEHops Backup CRF
+---- ------- ------- ----------
+1003 7       7       off
+
+Remote SPAN VLANs
+------------------------------------------------------------------------------
+
+
+Primary Secondary Type              Ports
+------- --------- ----------------- ------------------------------------------
+1       2         community
+        '''}
+
+    golden_parsed_output_vlan_5 = {
+        'vlans': {
+            '1': {
+              'vlan_id': '1',
+              'name': 'default',
+              'shutdown': False,
+              'state': 'active',
+              'interfaces': [
+                'GigabitEthernet1/0/23',
+                'GigabitEthernet1/0/25',
+                'GigabitEthernet1/0/26',
+                'GigabitEthernet1/0/27',
+                'GigabitEthernet1/0/28'
+              ],
+              'type': 'enet',
+              'said': 100001,
+              'mtu': 1500,
+              'trans1': 0,
+              'trans2': 0,
+              'private_vlan': {
+                'primary': True,
+                'association': [
+                  '2'
+                ]
+              }
+            },
+            '2': {
+              'vlan_id': '2',
+              'name': 'Test',
+              'shutdown': False,
+              'state': 'active',
+              'type': 'enet',
+              'said': 100002,
+              'mtu': 1500,
+              'trans1': 0,
+              'trans2': 0,
+              'private_vlan': {
+                'primary': False,
+                'type': 'community'
+              }
+            },
+            '1003': {
+              'vlan_id': '1003',
+              'name': 'trcrf-default',
+              'shutdown': False,
+              'state': 'unsupport',
+              'type': 'trcrf',
+              'said': 101003,
+              'mtu': 4472,
+              'parent': '1005',
+              'ring_no': '3276',
+              'bridge_mode': 'srb',
+              'trans1': 0,
+              'trans2': 0,
+              'token_ring': {
+                'are_hops': 7,
+                'ste_hops': 7,
+                'backup_crf': 'off'
+              }
+            },
+            '1004': {
+              'vlan_id': '1004',
+              'name': 'fddinet-default',
+              'shutdown': False,
+              'state': 'unsupport',
+              'type': 'fdnet',
+              'said': 101004,
+              'mtu': 1500,
+              'stp': 'ieee',
+              'trans1': 0,
+              'trans2': 0
+            },
+            '1005': {
+              'vlan_id': '1005',
+              'name': 'trbrf-default',
+              'shutdown': False,
+              'state': 'unsupport',
+              'type': 'trbrf',
+              'said': 101005,
+              'mtu': 4472,
+              'bridge_no': '15',
+              'stp': 'ibm',
+              'trans1': 0,
+              'trans2': 0
+            }
+        }
+    }
+
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowVlan(device=self.device)
@@ -579,6 +784,21 @@ Primary Secondary Type              Ports
         obj = ShowVlan(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_vlan_3)
+
+    def test_show_vlan_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_vlan_4)
+        obj = ShowVlan(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_vlan_4)
+
+    def test_show_vlan_5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_vlan_5)
+        obj = ShowVlan(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_vlan_5)
+
 
 ###########################################################################
 #
