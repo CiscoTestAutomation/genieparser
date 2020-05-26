@@ -5,6 +5,7 @@ JunOS parsers for the following show commands:
 """
 # Python
 import re
+import time
 
 # Metaparser
 from genie.metaparser import MetaParser
@@ -36,14 +37,15 @@ class MonitorInterfaceTraffic(MonitorInterfaceTrafficSchema):
 
     def cli(self, output=None, timeout=10):
         if not output:
-            
             self.device.sendline(self.cli_command[0])
-            out = self.device.expect([r'{}(\x9B|\x00|\x1B\[)[0-?]*[ -\/]*[@-~]Seconds:[\S\s]+Time:\s+\S+'.format(self.device._hostname)], 
-                timeout=timeout).match_output
-            ansi_escape = re.compile(r'(\x9B|\x00|\x1B\[)[0-?]*[ -\/]*[@-~]')
+            out = self.device.expect(
+                [r'{}[\S\s]+Time:\s+\S+'.format(self.device._hostname)],
+                timeout=3).match_output
+            ansi_escape = re.compile(r'(\x00|\x9B|\x1B\[[0-?]*[ -\/]*[@-~])')
             out = ansi_escape.sub('\t', out)
             self.device.sendline('q')
-            
+            time.sleep(10)
+            self.device.expect('.*')
         else:
             out = output
 
