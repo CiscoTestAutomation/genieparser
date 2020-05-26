@@ -15,7 +15,5 @@
                                 Fix
 --------------------------------------------------------------------------------
 * NXOS
-    * Updated ShowIpArpDetailVrfAll:
-        * Modified the regex patterns to support various outputs.
     * Updated ShowMacAddressTableBase:
         * Modified the regex patterns to support various outputs.
