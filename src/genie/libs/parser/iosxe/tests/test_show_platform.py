@@ -5273,6 +5273,143 @@ class TestShowSwitchDetail(unittest.TestCase):
         1       DOWN       DOWN             None     None
     '''}
 
+    golden_output2 = {'execute.return_value': '''\
+            Switch/Stack Mac Address : aaaa.dddd.0000 - Local Mac Address
+            Mac persistency wait time: Indefinite
+                                                         H/W   Current
+            Switch#   Role    Mac Address     Priority Version  State 
+            -------------------------------------------------------------------------------------
+            *1       Active   aaaa.dddd.0000     15     V02     Ready                
+             2       Standby  aaaa.dddd.0000     14             Ready                
+             3       Member   aaaa.dddd.0000     13     V02     Ready                
+            
+            
+            
+                     Stack Port Status             Neighbors     
+            Switch#  Port 1     Port 2           Port 1   Port 2 
+            --------------------------------------------------------
+              1         OK         OK               2        3 
+              2         OK         OK               3        1 
+              3         OK         OK               1        2 
+
+        '''}
+
+    golden_parsed_output2 = {
+        "switch": {
+             'mac_address': 'aaaa.dddd.0000',
+              'mac_persistency_wait_time': 'indefinite',
+              'stack': {
+                '1': {
+                  'role': 'active',
+                  'state': 'ready',
+                  'mac_address': 'aaaa.dddd.0000',
+                  'priority': '15',
+                  'hw_ver': 'V02',
+                  'ports': {
+                    '1': {
+                      'stack_port_status': 'ok',
+                      'neighbors_num': 2
+                    },
+                    '2': {
+                      'stack_port_status': 'ok',
+                      'neighbors_num': 3
+                    }
+                  }
+                },
+                '2': {
+                  'role': 'standby',
+                  'state': 'ready',
+                  'mac_address': 'aaaa.dddd.0000',
+                  'priority': '14',
+                  'ports': {
+                    '1': {
+                      'stack_port_status': 'ok',
+                      'neighbors_num': 3
+                    },
+                    '2': {
+                      'stack_port_status': 'ok',
+                      'neighbors_num': 1
+                    }
+                  }
+                },
+                '3': {
+                  'role': 'member',
+                  'state': 'ready',
+                  'mac_address': 'aaaa.dddd.0000',
+                  'priority': '13',
+                  'hw_ver': 'V02',
+                  'ports': {
+                    '1': {
+                      'stack_port_status': 'ok',
+                      'neighbors_num': 1
+                    },
+                    '2': {
+                      'stack_port_status': 'ok',
+                      'neighbors_num': 2
+                    }
+                  }
+                }
+              }
+        }
+    }
+
+    golden_output3 = {'execute.return_value': '''\
+        Switch/Stack Mac Address : aaaa.dddd.0000
+                                                   H/W   Current
+        Switch#  Role   Mac Address     Priority Version  State 
+        ----------------------------------------------------------
+        *1       Master aaaa.dddd.0000     15     4       Ready            
+         2       Member aaaa.dddd.0000     1      4       Ready                      
+        
+                 Stack Port Status             Neighbors     
+        Switch#  Port 1     Port 2           Port 1   Port 2 
+        --------------------------------------------------------
+          1        Ok         Ok                2        5 
+          2        Ok         Ok                3        1 
+            '''}
+
+    golden_parsed_output3 = {
+        "switch": {
+            'mac_address': 'aaaa.dddd.0000',
+            'stack': {
+            '1': {
+              'role': 'master',
+              'state': 'ready',
+              'mac_address': 'aaaa.dddd.0000',
+              'priority': '15',
+              'hw_ver': '4',
+              'ports': {
+                '1': {
+                  'stack_port_status': 'ok',
+                  'neighbors_num': 2
+                },
+                '2': {
+                  'stack_port_status': 'ok',
+                  'neighbors_num': 5
+                }
+              }
+            },
+            '2': {
+              'role': 'member',
+              'state': 'ready',
+              'mac_address': 'aaaa.dddd.0000',
+              'priority': '1',
+              'hw_ver': '4',
+              'ports': {
+                '1': {
+                  'stack_port_status': 'ok',
+                  'neighbors_num': 3
+                },
+                '2': {
+                  'stack_port_status': 'ok',
+                  'neighbors_num': 1
+                }
+              }
+            }
+            }
+        }
+    }
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         platform_obj = ShowSwitchDetail(device=self.dev1)
@@ -5292,6 +5429,20 @@ class TestShowSwitchDetail(unittest.TestCase):
         platform_obj = ShowSwitchDetail(device=self.dev_c3850)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output1)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output2)
+        platform_obj = ShowSwitchDetail(device=self.dev_c3850)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_golden3(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output3)
+        platform_obj = ShowSwitchDetail(device=self.dev_c3850)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 class TestShowSwitch(unittest.TestCase):
     dev1 = Device(name='empty')
