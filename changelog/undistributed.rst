@@ -15,3 +15,6 @@
                                 Fix
 --------------------------------------------------------------------------------
 
+* IOSXE
+    * Updated ShowIsisDatabaseDetail for code issue:
+        * show isis database detail
