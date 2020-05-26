@@ -2288,7 +2288,7 @@ class ShowPlatform(ShowPlatformSchema):
                     platform_dict['slot'] = {}
                 if slot not in platform_dict['slot']:
                     platform_dict['slot'][slot] = {}
-                if ('WS-C' in model) or ('C9500' in model):
+                if ('WS-C' in model) or ('C9500' in model) or ('C9300' in model):
                     lc_type = 'rp'
                 else:
                     lc_type = 'other'
