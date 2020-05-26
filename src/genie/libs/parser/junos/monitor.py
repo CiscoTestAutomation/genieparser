@@ -40,7 +40,7 @@ class MonitorInterfaceTraffic(MonitorInterfaceTrafficSchema):
             self.device.sendline(self.cli_command[0])
             out = self.device.expect(
                 [r'{}[\S\s]+Time:\s+\S+'.format(self.device._hostname)],
-                timeout=3).match_output
+                timeout=timeout).match_output
             ansi_escape = re.compile(r'(\x00|\x9B|\x1B\[[0-?]*[ -\/]*[@-~])')
             out = ansi_escape.sub('\t', out)
             self.device.sendline('q')
