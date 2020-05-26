@@ -2126,3 +2126,245 @@ class ShowRouteInstanceDetail(ShowRouteInstanceDetailSchema):
                 instance_interface_list.append({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
         return ret_dict
+
+class ShowRouteAdvertisingProtocolDetailSchema(MetaParser):
+    """ Schema for:
+        * show route advertising-protocol {protocol} {ip_address} {route} detail
+    """
+
+    # schema = {
+    #     Optional("@xmlns:junos"): str,
+    #     "route-information":{
+    #         Optional("@xmlns"): str,
+    #         "route-table": [{
+    #             Optional("@junos:style"): str,
+    #             "table-name": str,
+    #             "destination-count": str,
+    #             "total-route-count": str,
+    #             "active-route-count": str,
+    #             "holddown-route-count": str,
+    #             "hidden-route-count": str,
+    #             "rt-entry": {
+    #                 'active-tag': str,
+    #                 "rt-destination": str,
+    #                 "rt-prefix-length": str,
+    #                 "rt-entry-count": str,
+    #                 "rt-announced-count": str,
+    #                 Optional('route-label'): str,
+    #                 Optional("bgp-group"): {
+    #                     "bgp-group-name": str,
+    #                     "bgp-group-type": str,
+    #                 },
+    #                 "nh": {
+    #                     "to": str,
+    #                 },
+    #                 "med": str,
+    #                 "local-preference": str,
+    #                 "as-path": {
+    #                     Optional("as-number"): str,
+    #                     Optional("as-set"): str,
+    #                     Optional("confederation"): str,
+    #                     Optional("confederation-set"): str,
+    #                     Optional("as-origin"): str,
+    #                 },
+    #                 "communities": str,
+    #                 "flags": str,
+    #             }
+    #         }],
+    #     },
+    # }
+
+    def validate_rt_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('protocol information is not a list')
+
+        entry_schema = Schema({
+            Optional("@junos:style"): str,
+            "table-name": str,
+            "destination-count": str,
+            "total-route-count": str,
+            "active-route-count": str,
+            "holddown-route-count": str,
+            "hidden-route-count": str,
+            "rt-entry": {
+                'active-tag': str,
+                "rt-destination": str,
+                "rt-prefix-length": str,
+                "rt-entry-count": str,
+                "rt-announced-count": str,
+                Optional('route-label'): str,
+                Optional("bgp-group"): {
+                    "bgp-group-name": str,
+                    "bgp-group-type": str,
+                },
+                "nh": {
+                    "to": str,
+                },
+                "med": str,
+                "local-preference": str,
+                "as-path": {
+                    Optional("as-number"): str,
+                    Optional("as-set"): str,
+                    Optional("confederation"): str,
+                    Optional("confederation-set"): str,
+                    Optional("as-origin"): str,
+                },
+                "communities": str,
+                Optional("flags"): str,
+            }
+        })
+
+        for item in value:
+            entry_schema.validate(item)
+        return value
+
+    # Main schema
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "route-information":{
+            Optional("@xmlns"): str,
+            "route-table": Use(validate_rt_list),
+        },
+    }
+
+class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchema):
+    """ Schema for:
+        * show route advertising-protocol {protocol} {ip_address} {route} detail
+    """
+
+    cli_command = 'show route advertising-protocol {protocol} {ip_address} {route} detail'
+    def cli(self, protocol, ip_address, route="", output=None):
+        if not output:
+            cmd = self.cli_command.format(protocol=protocol,
+                    ip_address=ip_address, route=route)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # inet.0: 60 destinations, 66 routes (60 active, 1 holddown, 0 hidden)
+        p1 = re.compile(r'^(?P<table_name>[^:]+): +(?P<destination_count>\d+) +'
+        r'destinations, +(?P<total_route_count>\d+) +'
+        r'routes +\((?P<active_route_count>\d+) +'
+        r'active, +(?P<holddown_route_count>\d+) +'
+        r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
+
+        # * 61.200.255.252/32 (1 entry, 1 announced)
+        p2 = re.compile(r'^(?P<active_tag>\*)? *(?P<rt_destination>[\d\.]+)'
+        r'/(?P<rt_prefix_length>\d+)'
+        r' +\((?P<rt_entry_count>\d+) +\S+, +(?P<rt_announced_count>\d+) '
+        r'+announced\)$')
+
+        # BGP group lacGCS001 type External
+        p3 = re.compile(r'^ *?BGP group +(?P<bgp_group_name>\S+)'
+        r' +type +(?P<bgp_group_type>Internal|External)$')
+
+        # Route Label: 118071
+        p4 = re.compile(r'^ *Route Label: +(?P<route_label>\S+)$')
+
+        # Nexthop: 111.87.5.252
+        p5 = re.compile(r'^ *Nexthop: +(?P<to>\S+)$')
+
+        # MED: 29012
+        p6 = re.compile(r'^ *MED: +(?P<med>\S+)$')
+
+        # Localpref: 4294967285
+        p7 = re.compile(r'^ *Localpref: +(?P<local_preference>\S+)$')
+
+        # AS path: [65151] (65171) I
+        p8 = re.compile(r'^ *AS path: +(\[(?P<as_number>\d+)\] +)?'
+        r'({(?P<as_set>.*)} +)?(\((?P<confederation>\d+)\) +)?'
+        r'(\(\[(?P<confederation_set>.*)\]\) +)?(?P<as_origin>[IE\?])$')
+
+        # Communities: 65151:9996
+        p9 = re.compile(r'^ *Communities: +(?P<communities>\S+)$')
+
+        # Flags: Nexthop Change
+        p10 = re.compile(r'^ *Flags: +(?P<flags>.*)$')
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # inet.0: 60 destinations, 66 routes (60 active, 1 holddown, 0 hidden)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                route_list = ret_dict.setdefault('route-information', {}). \
+                    setdefault('route-table', [])
+                protocol_dict = {}
+                route_list.append(protocol_dict)
+                protocol_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # * 61.200.255.252/32 (1 entry, 1 announced)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                # protocol_dict = route_table_dict.setdefault('protocol-details', {})
+                rt_entry_dict = protocol_dict.setdefault('rt-entry', {})
+                rt_entry_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                rt_entry_dict.update({'active-tag': 'Active' if group['active_tag'] == '*' else 'Inactive'})
+                continue
+
+            # BGP group lacGCS001 type External
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                bgp_dict = rt_entry_dict.setdefault('bgp-group', {})
+                bgp_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # Route Label: 118071
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                rt_entry_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # Nexthop: 111.87.5.252
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                nh_dict = rt_entry_dict.setdefault('nh', {})
+                nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # MED: 29012
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                rt_entry_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # Localpref: 4294967285
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                rt_entry_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # AS path: [65151] (65171) I
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                as_dict = rt_entry_dict.setdefault('as-path', {})
+                as_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # Communities: 65151:9996
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                rt_entry_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # Flags: Nexthop Change
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                rt_entry_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+        return ret_dict
