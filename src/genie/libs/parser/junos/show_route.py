@@ -131,7 +131,7 @@ class ShowRouteTable(ShowRouteTableSchema):
 
                 continue
 
-            # 10.64.4.4/32         *[LDP/9] 03:40:50, metric 110
+            # 10.64.4.4/32         *[LDP/9] 03:40:50, metric 110 
             result = r2.match(line)
             if result:
                 group = result.groupdict()
@@ -2251,7 +2251,7 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
         r'active, +(?P<holddown_route_count>\d+) +'
         r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
 
-        # * 61.200.255.252/32 (1 entry, 1 announced)
+        # * 10.36.255.252/32 (1 entry, 1 announced)
         p2 = re.compile(r'^(?P<active_tag>\*)? *(?P<rt_destination>[\d\.]+)'
         r'/(?P<rt_prefix_length>\d+)'
         r' +\((?P<rt_entry_count>\d+) +\S+, +(?P<rt_announced_count>\d+) '
@@ -2264,7 +2264,7 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
         # Route Label: 118071
         p4 = re.compile(r'^ *Route Label: +(?P<route_label>\S+)$')
 
-        # Nexthop: 111.87.5.252
+        # Nexthop: 10.189.5.252
         p5 = re.compile(r'^ *Nexthop: +(?P<to>\S+)$')
 
         # MED: 29012
@@ -2278,7 +2278,7 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
         r'({(?P<as_set>.*)} +)?(\((?P<confederation>\d+)\) +)?'
         r'(\(\[(?P<confederation_set>.*)\]\) +)?(?P<as_origin>[IE\?])$')
 
-        # Communities: 65151:9996
+        # Communities: 65151:65109
         p9 = re.compile(r'^ *Communities: +(?P<communities>\S+)$')
 
         # Flags: Nexthop Change
@@ -2299,7 +2299,7 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
                 protocol_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
 
-            # * 61.200.255.252/32 (1 entry, 1 announced)
+            # * 10.36.255.252/32 (1 entry, 1 announced)
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -2324,7 +2324,7 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
                 rt_entry_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
 
-            # Nexthop: 111.87.5.252
+            # Nexthop: 10.189.5.252
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -2354,7 +2354,7 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
                 as_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
 
-            # Communities: 65151:9996
+            # Communities: 65151:65109
             m = p9.match(line)
             if m:
                 group = m.groupdict()

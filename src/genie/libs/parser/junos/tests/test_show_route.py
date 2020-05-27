@@ -47714,7 +47714,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Local AS: 65171 Peer AS: 65151
                         Age: 3w3d 3:19:15   Metric: 12003   Metric2: 0 
                         Validation State: unverified 
-                        Task: BGP_65151.10.169.14.240
+                        Task: BGP_65172.16.15.14.240
                         Announcement bits (3): 0-KRT 6-BGP_RT_Background 7-Resolve tree 3 
                         AS path: (65151 65000) I 
                         Communities: 65001:10 65151:244
@@ -47753,7 +47753,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Local AS: 65171 Peer AS: 65171
                         Age: 3w1d 16:57:57  Metric: 12003   Metric2: 5 
                         Validation State: unverified 
-                        Task: BGP_65171.10.189.5.253
+                        Task: BGP_65172.16.220.5.253
                         AS path: (65151 65000) I 
                         Communities: 65001:10 65151:244
                         Accepted
@@ -48134,7 +48134,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                         }
                                     ],
                                     "rt-entry-state": "Active Int Ext",
-                                    "task-name": "BGP_65151.10.169.14.240",
+                                    "task-name": "BGP_65172.16.15.14.240",
                                     "validation-state": "unverified"
                                 },
                                 {
@@ -48183,7 +48183,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                         }
                                     ],
                                     "rt-entry-state": "Int Ext Changed",
-                                    "task-name": "BGP_65171.10.189.5.253",
+                                    "task-name": "BGP_65172.16.220.5.253",
                                     "validation-state": "unverified"
                                 }
                             ],
@@ -49198,21 +49198,21 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output_1 = {'execute.return_value': '''
-        show route advertising-protocol bgp 106.187.14.240 61.200.255.252/32 detail
+        show route advertising-protocol bgp 10.169.14.240 10.36.255.252/32 detail
 
         inet.0: 62 destinations, 67 routes (62 active, 0 holddown, 0 hidden)
-        * 61.200.255.252/32 (1 entry, 1 announced)
+        * 10.36.255.252/32 (1 entry, 1 announced)
         BGP group sjkGCS001-EC11 type External
             Nexthop: Self
             Flags: Nexthop Change
             MED: 16011
             Localpref: 4294967285
             AS path: [65161] I
-            Communities: 65151:9996
+            Communities: 65151:65109
 
         inet.3: 27 destinations, 27 routes (27 active, 0 holddown, 0 hidden)
 
-        * 61.200.255.252/32 (1 entry, 1 announced)
+        * 10.36.255.252/32 (1 entry, 1 announced)
         BGP group sjkGCS001-EC11 type External
             Route Label: 118420
             Nexthop: Self
@@ -49220,7 +49220,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
             MED: 16011
             Localpref: 100
             AS path: [65161] I
-            Communities: 65151:9996
+            Communities: 65151:65109
             Entropy label capable
     '''}
 
@@ -49237,7 +49237,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                     "hidden-route-count": '0',
                     "rt-entry": {
                         "active-tag": "Active",
-                        "rt-destination": '61.200.255.252',
+                        "rt-destination": '10.36.255.252',
                         "rt-prefix-length": '32',
                         "rt-entry-count": '1',
                         "rt-announced-count": '1',
@@ -49254,7 +49254,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                             "as-number": '65161',
                             "as-origin": 'I'
                         },
-                        "communities": '65151:9996',
+                        "communities": '65151:65109',
                         "flags": 'Nexthop Change',
                     }
                 },
@@ -49268,7 +49268,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                     "hidden-route-count": '0',
                     "rt-entry": {
                         "active-tag": "Active",
-                        "rt-destination": '61.200.255.252',
+                        "rt-destination": '10.36.255.252',
                         "rt-prefix-length": '32',
                         "rt-entry-count": '1',
                         "rt-announced-count": '1',
@@ -49286,7 +49286,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                             "as-number": '65161',
                             "as-origin": 'I'
                         },
-                        "communities": '65151:9996',
+                        "communities": '65151:65109',
                         "flags": 'Nexthop Change',
                     }
                 }
@@ -49295,28 +49295,28 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
     }
 
     golden_output_2 = {'execute.return_value': '''
-        show route advertising-protocol bgp 59.128.2.250 106.162.196.254 detail
+        show route advertising-protocol bgp 10.34.2.250 10.169.196.254 detail
 
         inet.0: 60 destinations, 66 routes (60 active, 1 holddown, 0 hidden)
-        106.162.196.254/32 (2 entries, 2 announced)
+        10.169.196.254/32 (2 entries, 2 announced)
         BGP group lacGCS001 type External
-            Nexthop: 111.87.5.252
+            Nexthop: 10.189.5.252
             MED: 29012
             Localpref: 4294967285
             AS path: [65151] (65171) I
-            Communities: 65151:9996
+            Communities: 65151:65109
 
         inet.3: 27 destinations, 27 routes (27 active, 0 holddown, 0 hidden)
 
-        * 106.162.196.254/32 (1 entry, 1 announced)
+        * 10.169.196.254/32 (1 entry, 1 announced)
         BGP group lacGCS001 type External
             Route Label: 118071
-            Nexthop: 111.87.5.252
+            Nexthop: 10.189.5.252
             MED: 29012
             Localpref: 100
             AS path: [65151] (65171) I
-            Communities: 65151:9996
-            Entropy label capable
+            Communities: 65151:65109
+            Entropy label capable 
     '''}
 
     golden_parsed_output_2 = {
@@ -49332,7 +49332,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                     "hidden-route-count": '0',
                     "rt-entry": {
                         "active-tag": "Inactive",
-                        "rt-destination": '106.162.196.254',
+                        "rt-destination": '10.169.196.254',
                         "rt-prefix-length": '32',
                         "rt-entry-count": '2',
                         "rt-announced-count": '2',
@@ -49341,7 +49341,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                             "bgp-group-type": 'External',
                         },
                         "nh": {
-                            "to": '111.87.5.252'
+                            "to": '10.189.5.252'
                             },
                         "med": '29012',
                         "local-preference": '4294967285',
@@ -49350,7 +49350,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                             "confederation": "65171",
                             "as-origin": 'I'
                         },
-                        "communities": '65151:9996',
+                        "communities": '65151:65109',
                     }
                 },
 
@@ -49363,7 +49363,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                     "hidden-route-count": '0',
                     "rt-entry": {
                         "active-tag": "Active",
-                        "rt-destination": '106.162.196.254',
+                        "rt-destination": '10.169.196.254',
                         "rt-prefix-length": '32',
                         "rt-entry-count": '1',
                         "rt-announced-count": '1',
@@ -49373,7 +49373,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                             "bgp-group-type": 'External',
                         },
                         "nh": {
-                            "to": '111.87.5.252'
+                            "to": '10.189.5.252'
                             },
                         "med": '29012',
                         "local-preference": '100',
@@ -49382,7 +49382,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                             "confederation": '65171',
                             "as-origin": 'I'
                         },
-                        "communities": '65151:9996',
+                        "communities": '65151:65109',
                     }
                 }
             ]
@@ -49395,8 +49395,8 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(
                 protocol='bgp',
-                ip_address='59.128.2.250',
-                route="106.162.196.254",
+                ip_address='10.34.2.250',
+                route="10.169.196.254",
             )
 
     def test_golden_1(self):
@@ -49404,8 +49404,8 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
         obj = ShowRouteAdvertisingProtocolDetail(device=self.device)
         parsed_output = obj.parse(
             protocol='bgp',
-            ip_address='106.187.14.240',
-            route="61.200.255.252",
+            ip_address='10.169.14.240',
+            route="10.36.255.252",
         )
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
     
@@ -49414,8 +49414,8 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
         obj = ShowRouteAdvertisingProtocolDetail(device=self.device)
         parsed_output = obj.parse(
             protocol='bgp',
-            ip_address='59.128.2.250',
-            route="106.162.196.254",
+            ip_address='10.34.2.250',
+            route="10.169.196.254",
         )
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 

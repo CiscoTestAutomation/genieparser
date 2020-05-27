@@ -39,6 +39,8 @@
         * show ospf3 database link advertising-router {ipaddress} detail
     * Added ShowOspf3DatabaseNetworkDetail for:
         * show ospf3 database network detail
+    * Added ShowRouteAdvertisingProtocolDetail
+        * show route advertising-protocol {protocol} {ip_address} {route} detail
 
 * IOSXE
     * Updated ShowMacAddressTable for new commnad:
@@ -110,11 +112,12 @@
         * Update regex to support various outputs.
     * Updated ShowRouteProtocolExtensive:
         * Update key 'validation-state' as Optional
-
     * Update ShowRouteProtocolExtensive for:
         * show route {route} extensive
         * show route extensive
         * show route extensive {destination}
+    * Updated ShowRouteAdvertisingProtocol
+        * Added {route} parameter option
 
 
 * IOS 
