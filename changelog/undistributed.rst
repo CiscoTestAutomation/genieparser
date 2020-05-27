@@ -19,3 +19,7 @@
         * Modified the regex patterns to support various outputs.
     * Updated ShowIpArpDetailVrfAll:
         * Modified the regex patterns to support various outputs.
+
+* IOSXR
+    * Updated ShowVrfAllDetail:
+        * Modified the regex patterns to support various outputs.
