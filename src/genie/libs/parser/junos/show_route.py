@@ -316,29 +316,38 @@ class ShowRouteSchema(MetaParser):
 class ShowRoute(ShowRouteSchema):
     """ Parser for:
             * show route
+            * show route {ip_address}
             * show route protocol {protocol} {ip_address}
             * show route protocol {protocol}
             * show route protocol {protocol} table {table}
     """
     cli_command = [
                     'show route',
+                    'show route {ip_address}',
                     'show route protocol {protocol}',
                     'show route protocol {protocol} {ip_address}',
                     'show route protocol {protocol} table {table}']
 
     def cli(self, protocol=None, ip_address=None, table=None, output=None):
         if not output:
-            if ip_address:
-                cmd = self.cli_command[2].format(
+            if protocol and table:
+                cmd = self.cli_command[4].format(
                     protocol=protocol,
-                    ip_address=ip_address)
-            elif table:
-                cmd = self.cli_command[3].format(
-                    protocol=protocol,
-                    table=table)
-            elif protocol:
+                    table=table
+                )
+            elif ip_address and not protocol:
                 cmd = self.cli_command[1].format(
-                    protocol=protocol)
+                    ip_address=ip_address
+                )
+            elif protocol and not ip_address:
+                cmd = self.cli_command[2].format(
+                    protocol=protocol
+                )
+            elif ip_address and protocol:
+                cmd = self.cli_command[3].format(
+                    ip_address=ip_address,
+                    protocol=protocol
+                )
             else:
                 cmd = self.cli_command[0]
 
