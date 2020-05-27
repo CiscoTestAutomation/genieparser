@@ -12,6 +12,7 @@ JUNOS parsers for the following commands:
     * show route instance detail
     * show route protocol {protocol} table {table} extensive {destination}
     * show route advertising-protocol {protocol} {ip_address}
+    * show route advertising-protocol {protocol} {ip_address} {route} detail
     * show route forwarding-table summary
     * show route summary
     * show route {route} extensive
