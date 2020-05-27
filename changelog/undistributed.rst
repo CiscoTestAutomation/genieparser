@@ -85,6 +85,11 @@
         * Added regex to support interfaces down for SFP Not Inserted
         * Added regex to support interfaces down for ErrDisabled
         * Added regex to support interfaces down due to being suspended (LACP)
+    * Updated ShowRunningConfigInterface:
+        * Added regex to support vpc
+        * Added regex to support native vlan
+        * Added regex to support switchport_mode access
+        * Fixed regex to allow white spaces in description
 
 * IOSXR
     * Updated ShowBgpSessions:
