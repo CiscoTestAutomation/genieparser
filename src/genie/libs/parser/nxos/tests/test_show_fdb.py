@@ -827,7 +827,7 @@ class test_show_mac_address_table(unittest.TestCase):
     }
 
     golden_output_2 = {'execute.return_value': '''
-    +++ USSV-PRIFI-LF-B02-01: executing command 'show mac address-table' +++
+    +++ genie_device: executing command 'show mac address-table' +++
     
     show mac address-table
     
