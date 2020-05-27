@@ -208,11 +208,21 @@ class ShowVersionSchema(MetaParser):
                     Optional('uptime'): str,
                     Optional('mac_address'): str,
                     Optional('mb_assembly_num'): str,
+                    Optional('power_supply_part_nr'): str,
                     Optional('mb_sn'): str,
+                    Optional('power_supply_sn'): str,
                     Optional('model_rev_num'): str,
                     Optional('mb_rev_num'): str,
                     Optional('model_num'): str,
+                    Optional('db_assembly_num'): str,
+                    Optional('db_sn'): str,
                     Optional('system_sn'): str,
+                    Optional('top_assembly_part_num'): str,
+                    Optional('top_assembly_rev_num'): str,
+                    Optional('version_id'): str,
+                    Optional('clei_code_num'): str,
+                    Optional('db_rev_num'): str,
+                    Optional('hb_rev_num'): str,
                     Optional('mode'): str,
                     Optional('model'): str,
                     Optional('sw_image'): str,
@@ -250,7 +260,8 @@ class ShowVersionSchema(MetaParser):
                 'data_base': str,
             },
             Optional('interfaces'): {
-                'virtual_ethernet': int,
+                Optional('virtual_ethernet'): int,
+                Optional('fastethernet'): int,
                 'gigabit_ethernet': int,
             },
             Optional('revision'): {
@@ -418,7 +429,7 @@ class ShowVersion(ShowVersionSchema):
         p26 = re.compile(r'^[Ss]witch +0(?P<switch_number>\d+)$')
 
         # uptime
-        p27 = re.compile(r'^[Ss]witch +uptime +\: +(?P<uptime>.+)$')
+        p27 = re.compile(r'^[Ss]witch +[Uu]ptime +\: +(?P<uptime>.+)$')
 
         # mac_address
         p28 = re.compile(r'^[Bb]ase +[Ee]thernet +MAC +[Aa]ddress '
@@ -508,12 +519,52 @@ class ShowVersion(ShowVersionSchema):
 
         # 1 Virtual Ethernet/IEEE 802.3 interface(s)
         # 50 Gigabit Ethernet/IEEE 802.3 interface(s)
-        p48 = re.compile(r'^(?P<interface>\d+) +(?P<ethernet_type>Virtual Ethernet|Gigabit Ethernet)'
+        p48 = re.compile(r'^(?P<interface>\d+) +(?P<ethernet_type>Virtual Ethernet|Gigabit Ethernet|FastEthernet)'
                          r'/IEEE 802\.3 +interface\(s\)$')
 
         # Dagobah Revision 95, Swamp Revision 6
         p50 = re.compile(r'^(?P<group1>\S+)\s+Revision\s+(?P<group1_int>\d+),'
                          r'\s+(?P<group2>\S+)\s+Revision\s+(?P<group2_int>\d+)$')
+
+        # power_supply_part_nr
+        # Power supply part number: 444-8888-00
+        p51 = re.compile(r'^[Pp]ower\s+[Ss]upply\s+[Pp]art\s+[Nn]umber\s+\:\s+(?P<power_supply_part_nr>.+)$')
+
+        # power_supply_sn
+        # Power supply serial number: CCC4466B6LL
+        p52 = re.compile(r'^[Pp]ower\s+[Ss]upply\s+[Ss]erial\s+[Nn]umber\s+\:\s+(?P<power_supply_sn>.+)$')
+
+        # Daughterboard assembly number   : 73-11111-00
+        # db_assembly_num
+        p53 = re.compile(r'^[Dd]aughterboard\s+[Aa]ssembly\s+[Nn]umber\s+\:\s+(?P<db_assembly_num>.+)$')
+
+        # Daughterboard serial number     : FOC87654CWW
+        # db_sn
+        p54 = re.compile(r'^[Dd]aughterboard\s+[Ss]erial\s+[Nn]umber\s+\:\s+(?P<db_sn>.+)$')
+
+        # top_assembly_part_num
+        # Top Assembly Part Number        : 800-55555-11
+        p55 = re.compile(r'^[Tt]op\s+[Aa]ssembly\s+[Pp]art\s+[Nn]umber\s+\:\s+(?P<top_assembly_part_num>.+)$')
+
+        # top_assembly_rev_num
+        # Top Assembly Revision Number    : C0
+        p56 = re.compile(r'^[Tt]op\s+[Aa]ssembly\s+[Rr]evision\s+[Nn]umber\s+\:\s+(?P<top_assembly_rev_num>.+)$')
+
+        # version_id
+        # Version ID                      : V02
+        p57 = re.compile(r'^[Vv]ersion\s+ID\s+\:\s+(?P<version_id>.+)$')
+
+        # clei_code_num
+        # CLEI Code Number                : AAALJ00ERT
+        p58 = re.compile(r'^CLEI\s+[Cc]ode\s+[Nn]umber\s+\:\s+(?P<clei_code_num>.+)$')
+
+        # Daughterboard revision number   : A0
+        # db_rev_num
+        p59 = re.compile(r'^[Dd]aughterboard\s+[Rr]evision\s+[Nn]umber\s+\:\s+(?P<db_rev_num>.+)$')
+
+        # Hardware Board Revision Number  : 0x12
+        # hb_rev_num
+        p60 = re.compile(r'^[Hh]ardware\s+[Bb]oard\s+[Rr]evision\s+[Nn]umber\s+\:\s+(?P<hb_rev_num>.+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -722,7 +773,7 @@ class ShowVersion(ShowVersionSchema):
             m = p19.match(line)
             if m:
                 version_dict['version']['chassis_sn'] \
-                    = m.groupdict()['chassis_sn']
+                    = m.groupdict()['chassis_sn']   
                 continue
 
             # number_of_intfs
@@ -789,11 +840,12 @@ class ShowVersion(ShowVersionSchema):
             m = p26.match(line)
             if m:
                 switch_number = m.groupdict()['switch_number']
-                if 'Edison' in rtr_type:
-                    if 'switch_num' not in version_dict['version']:
-                        version_dict['version']['switch_num'] = {}
-                    if switch_number not in version_dict['version']['switch_num']:
-                        version_dict['version']['switch_num'][switch_number] = {}
+
+                if 'switch_num' not in version_dict['version']:
+                    version_dict['version']['switch_num'] = {}
+                if switch_number not in version_dict['version']['switch_num']:
+                    version_dict['version']['switch_num'][switch_number] = {}
+
                 continue
 
             # uptime
@@ -865,6 +917,96 @@ class ShowVersion(ShowVersionSchema):
                     active_dict.setdefault('system_sn', m.groupdict()['system_sn'])
                     continue
                 version_dict['version']['switch_num'][switch_number]['system_sn'] = m.groupdict()['system_sn']
+                continue
+
+            # power_supply_part_nr
+            m = p51.match(line)
+            if m:
+                if 'switch_num' not in version_dict['version']:
+                    active_dict.setdefault('power_supply_part_nr', m.groupdict()['power_supply_part_nr'])
+                    continue
+                version_dict['version']['switch_num'][switch_number]['power_supply_part_nr'] = m.groupdict()['power_supply_part_nr']
+                continue
+
+            # power_supply_sn
+            m = p52.match(line)
+            if m:
+                if 'switch_num' not in version_dict['version']:
+                    active_dict.setdefault('power_supply_sn', m.groupdict()['power_supply_sn'])
+                    continue
+                version_dict['version']['switch_num'][switch_number]['power_supply_sn'] = m.groupdict()['power_supply_sn']
+                continue
+
+            # db_assembly_num
+            m = p53.match(line)
+            if m:
+                if 'switch_num' not in version_dict['version']:
+                    active_dict.setdefault('db_assembly_num', m.groupdict()['db_assembly_num'])
+                    continue
+                version_dict['version']['switch_num'][switch_number]['db_assembly_num'] = m.groupdict()['db_assembly_num']
+                continue
+
+            # db_sn
+            m = p54.match(line)
+            if m:
+                if 'switch_num' not in version_dict['version']:
+                    active_dict.setdefault('db_sn', m.groupdict()['db_sn'])
+                    continue
+                version_dict['version']['switch_num'][switch_number]['db_sn'] = m.groupdict()['db_sn']
+                continue
+
+            # top_assembly_part_num
+            m = p55.match(line)
+            if m:
+                if 'switch_num' not in version_dict['version']:
+                    active_dict.setdefault('top_assembly_part_num', m.groupdict()['top_assembly_part_num'])
+                    continue
+                version_dict['version']['switch_num'][switch_number]['top_assembly_part_num'] = m.groupdict()['top_assembly_part_num']
+                continue
+
+            # top_assembly_rev_num
+            m = p56.match(line)
+            if m:
+                if 'switch_num' not in version_dict['version']:
+                    active_dict.setdefault('top_assembly_rev_num', m.groupdict()['top_assembly_rev_num'])
+                    continue
+                version_dict['version']['switch_num'][switch_number]['top_assembly_rev_num'] = m.groupdict()['top_assembly_rev_num']
+                continue
+
+            # version_id
+            m = p57.match(line)
+            if m:
+                if 'switch_num' not in version_dict['version']:
+                    active_dict.setdefault('version_id', m.groupdict()['version_id'])
+                    continue
+                version_dict['version']['switch_num'][switch_number]['version_id'] = m.groupdict()['version_id']
+                continue
+
+            # clei_code_num
+            m = p58.match(line)
+            if m:
+                if 'switch_num' not in version_dict['version']:
+                    active_dict.setdefault('clei_code_num', m.groupdict()['clei_code_num'])
+                    continue
+                version_dict['version']['switch_num'][switch_number]['clei_code_num'] = m.groupdict()['clei_code_num']
+                continue
+
+            # db_rev_num
+            m = p59.match(line)
+            if m:
+                if 'switch_num' not in version_dict['version']:
+                    active_dict.setdefault('db_rev_num', m.groupdict()['db_rev_num'])
+                    continue
+                version_dict['version']['switch_num'][switch_number]['db_rev_num'] = m.groupdict()['db_rev_num']
+                continue
+
+            # hb_rev_num
+            m = p60.match(line)
+            if m:
+                if 'switch_num' not in version_dict['version']:
+                    active_dict.setdefault('hb_rev_num', m.groupdict()['hb_rev_num'])
+                    continue
+                version_dict['version']['switch_num'][switch_number]['hb_rev_num'] = m.groupdict()['hb_rev_num']
                 continue
 
             # Compiled Mon 10-Apr-17 04:35 by mcpre
@@ -1062,10 +1204,27 @@ class ShowVersion(ShowVersionSchema):
                                                                'sw_image',
                                                                'mode'],
                                                  index=[0, ],
-                                                 table_terminal_pattern=r"^\n",
+                                                 table_terminal_pattern=r"(^\n|^\s*$)",
                                                  device_output=out,
                                                  device_os='iosxe')
 
+        if not tmp2.entries:
+            # table2 for IOS
+            tmp2 = genie.parsergen.oper_fill_tabular(right_justified=True,
+                                                     header_fields=["Switch",
+                                                                    "Ports",
+                                                                    "Model             ",
+                                                                    'SW Version       ',
+                                                                    "SW Image              "],
+                                                     label_fields=["switch_num",
+                                                                   "ports",
+                                                                   "model",
+                                                                   "sw_ver",
+                                                                   'sw_image'],
+                                                     index=[0, ],
+                                                     table_terminal_pattern=r"(^\n|^\s*$)",
+                                                     device_output=out,
+                                                     device_os='ios')
         # switch_number
         # license table for Cat3850
         tmp = genie.parsergen.oper_fill_tabular(right_justified=True,
@@ -1075,7 +1234,7 @@ class ShowVersion(ShowVersionSchema):
                                                 label_fields=["license_level",
                                                               "license_type",
                                                               "next_reload_license_level"],
-                                                table_terminal_pattern=r"^\n",
+                                                table_terminal_pattern=r"(^\n|^\s*$)",
                                                 device_output=out,
                                                 device_os='iosxe')
 
@@ -1084,32 +1243,36 @@ class ShowVersion(ShowVersionSchema):
             for key in res.entries.keys():
                 for k, v in res.entries[key].items():
                     version_dict['version'][k] = v
-            if tmp2.entries:
-                res2 = tmp2
-                for key in res2.entries.keys():
-                    if 'switch_num' not in version_dict['version']:
-                        version_dict['version']['switch_num'] = {}
-                    if '*' in key:
-                        p = re.compile(r'\**\ *(?P<new_key>\d)')
-                        m = p.match(key)
-                        switch_no = m.groupdict()['new_key']
-                        if m:
-                            if switch_no not in version_dict['version']['switch_num']:
-                                version_dict['version']['switch_num'][switch_no] = {}
-                            for k, v in res2.entries[key].items():
-                                if 'switch_num' != k:
-                                    version_dict['version']['switch_num'][switch_no][k] = v
-                            version_dict['version']['switch_num'][switch_no]['uptime'] = uptime_this_cp
-                            version_dict['version']['switch_num'][switch_no]['active'] = True
-                            version_dict['version']['switch_num'][switch_no].\
-                                update(active_dict) if active_dict else None
-                    else:
+
+        if tmp2.entries:
+            res2 = tmp2
+            for key in res2.entries.keys():
+                if 'switch_num' not in version_dict['version']:
+                    version_dict['version']['switch_num'] = {}
+                if '*' in key:
+                    p = re.compile(r'\**\ *(?P<new_key>\d)')
+                    m = p.match(key)
+                    switch_no = m.groupdict()['new_key']
+                    if m:
+                        if switch_no not in version_dict['version']['switch_num']:
+                            version_dict['version']['switch_num'][switch_no] = {}
                         for k, v in res2.entries[key].items():
-                            if key not in version_dict['version']['switch_num']:
-                                version_dict['version']['switch_num'][key] = {}
                             if 'switch_num' != k:
-                                version_dict['version']['switch_num'][key][k] = v
-                        version_dict['version']['switch_num'][key]['active'] = False
+                                version_dict['version']['switch_num'][switch_no][k] = v
+
+                        if 'uptime_this_cp' in locals():
+                            version_dict['version']['switch_num'][switch_no]['uptime'] = uptime_this_cp
+
+                        version_dict['version']['switch_num'][switch_no]['active'] = True
+                        version_dict['version']['switch_num'][switch_no].\
+                            update(active_dict) if active_dict else None
+                else:
+                    for k, v in res2.entries[key].items():
+                        if key not in version_dict['version']['switch_num']:
+                            version_dict['version']['switch_num'][key] = {}
+                        if 'switch_num' != k:
+                            version_dict['version']['switch_num'][key][k] = v
+                    version_dict['version']['switch_num'][key]['active'] = False
 
         return version_dict
 
@@ -2125,7 +2288,7 @@ class ShowPlatform(ShowPlatformSchema):
                     platform_dict['slot'] = {}
                 if slot not in platform_dict['slot']:
                     platform_dict['slot'][slot] = {}
-                if ('WS-C' in model) or ('C9500' in model):
+                if ('WS-C' in model) or ('C9500' in model) or ('C9300' in model):
                     lc_type = 'rp'
                 else:
                     lc_type = 'other'
@@ -2543,13 +2706,13 @@ class ShowSwitchDetailSchema(MetaParser):
     schema = {
         'switch': {
             'mac_address': str,
-            'mac_persistency_wait_time': str,
+            Optional('mac_persistency_wait_time'): str,
             'stack': {
                 Any(): {
                     'role': str,
                     'mac_address': str,
                     'priority': str,
-                    'hw_ver': str,
+                    Optional('hw_ver'): str,
                     'state': str,
                     'ports': {
                         Any(): {
@@ -2597,20 +2760,27 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
         # Switch#   Role    Mac Address     Priority Version  State
         # -----------------------------------------------------------
         # *1       Active   689c.e2ff.b9d9     3      V04     Ready
-        p3 = re.compile(r'^\*?(?P<switch>\d+) +(?P<role>\w+) +'
-                        '(?P<mac_address>[\w\.]+) +'
-                        '(?P<priority>\d+) +'
-                        '(?P<hw_ver>\w+) +'
-                        '(?P<state>[\w\s]+)$')
+        #  2       Standby  689c.e2ff.b9d9     14             Ready
+        p3_0 = re.compile(r'^Switch#\s+Role\s+Mac\sAddress\s+Priority\s+Version\s+State$')
+
+        p3_1 = re.compile(r'^\*?(?P<switch>\d+) +(?P<role>\w+) +'
+                           '(?P<mac_address>[\w\.]+) +'
+                           '(?P<priority>\d+) +'
+                           '(?P<hw_ver>\w+)? +'
+                           '(?P<state>[\w\s]+)$')
 
         #          Stack Port Status             Neighbors
         # Switch#  Port 1     Port 2           Port 1   Port 2
         #   1         OK         OK               3        2
         #   1       DOWN       DOWN             None     None
-        p4 = re.compile(r'^(?P<switch>\d+) +(?P<status1>\w+) +'
-                        '(?P<status2>\w+) +'
-                        '(?P<nbr_num_1>\w+) +'
-                        '(?P<nbr_num_2>\w+)$')
+        p4_0 = re.compile(r'^Switch#\s+Port\s1\s+Port\s2\s+Port\s1\s+Port\s2$')
+
+        p4_1 = re.compile(r'^(?P<switch>\d+) +(?P<status1>\w+) +'
+                           '(?P<status2>\w+) +'
+                           '(?P<nbr_num_1>\w+) +'
+                           '(?P<nbr_num_2>\w+)$')
+
+        active_table = 0
 
         for line in out.splitlines():
             line = line.strip()
@@ -2627,16 +2797,29 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
                 ret_dict['mac_persistency_wait_time'] = m.groupdict()['mac_persistency_wait_time'].lower()
                 continue
 
+            # In order to know which regex (p3_1 or p4_1) should be used, we use p3_0 and p4_0 to determine which table
+            # is currently parsed.
+            m = p3_0.match(line)
+            if m:
+                active_table = 1
+                continue
+
+            m = p4_0.match(line)
+            if m:
+                active_table = 2
+                continue
+
             #                                              H/W   Current
             # Switch#   Role    Mac Address     Priority Version  State
             # -----------------------------------------------------------
             # *1       Active   689c.e2ff.b9d9     3      V04     Ready
-            m = p3.match(line)
-            if m:
+            #  2       Standby  689c.e2ff.b9d9     14             Ready
+            m = p3_1.match(line)
+            if m and active_table == 1:
                 group = m.groupdict()
                 stack = group['switch']
                 match_dict = {k: v.lower()for k, v in group.items() if k in ['role', 'state']}
-                match_dict.update({k: v for k, v in group.items() if k in ['priority', 'mac_address', 'hw_ver']})
+                match_dict.update({k: v for k, v in group.items() if k in ['priority', 'mac_address', 'hw_ver'] and v})
                 ret_dict.setdefault('stack', {}).setdefault(stack, {}).update(match_dict)
                 continue
 
@@ -2645,8 +2828,8 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
             # --------------------------------------------------------
             #   1         OK         OK               3        2
             #   1       DOWN       DOWN             None     None
-            m = p4.match(line)
-            if m:
+            m = p4_1.match(line)
+            if m and active_table == 2:
                 group = m.groupdict()
                 stack = group['switch']
                 stack_ports = ret_dict.setdefault('stack', {}).setdefault(stack, {}).setdefault('ports', {})

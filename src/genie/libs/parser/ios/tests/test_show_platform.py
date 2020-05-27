@@ -176,7 +176,30 @@ class TestShowVersion(unittest.TestCase):
                         'data_base': '0x02800000',
                         'text_base': '0x00003000',
                         },
+                    'switch_num': {
+                        '1': {
+                            'ports': '30',
+                            'model': 'WS-C3750X-24P',
+                            'sw_ver': '12.2(55)SE8',
+                            'sw_image': 'C3750E-UNIVERSALK9-M',
+                            'active': True,
+                            'mac_address': '84:3D:C6:FF:F1:B8',
+                            'mb_assembly_num': '73-15476-04',
+                            'mb_sn': 'FDO202907UH',
+                            'model_rev_num': 'W0',
+                            'mb_rev_num': 'B0',
+                            'model_num': 'WS-C3750X-24P-L',
+                            'db_assembly_num': '800-32727-03',
+                            'db_sn': 'FDO202823P8',
+                            'system_sn': 'FDO2028F1WK',
+                            'top_assembly_part_num': '800-38990-01',
+                            'top_assembly_rev_num': 'F0',
+                            'version_id': 'V07',
+                            'clei_code_num': 'CMMPP00DRB',
+                            'hb_rev_num': '0x05'
+                        }
                     }
+        }
     }
 
     golden_output_ios = {'execute.return_value': '''\

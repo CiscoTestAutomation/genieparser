@@ -1,3 +1,5 @@
+# update on May 26, 2020: since now issues are distributed, this action is paused
+
 # This action is triggered when a user opens an issue.
 # It automatically assigns the issue to user 'xiaoxinz-cisco' when issue title or body contains keyword 'show'
 
