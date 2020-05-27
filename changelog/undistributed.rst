@@ -14,4 +14,6 @@
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
-
+* NXOS
+    * Updated ShowIpArpDetailVrfAll:
+        * Modified the regex patterns to support various outputs.

@@ -45,6 +45,7 @@ class ShowIpArpSchema(MetaParser):
 		}
 	}
 
+
 # =====================================
 # Parser for:
 # 	show ip arp
@@ -150,6 +151,7 @@ class ShowIpArp(ShowIpArpSchema):
 		
 		return res_dict
 
+
 # =======================================
 # Schema for 'show ip arp detail vrf all'
 # =======================================
@@ -174,6 +176,7 @@ class ShowIpArpDetailVrfAllSchema(MetaParser):
 			},
 		}
 	}
+
 
 # =======================================
 # Parser for 'show ip arp detail vrf all'
@@ -201,7 +204,7 @@ class ShowIpArpDetailVrfAll(ShowIpArpDetailVrfAllSchema):
 		else:
 			cmd = self.cli_command[1]
 
-		# excute command to get output
+		# execute command to get output
 		if output is None:
 			out = self.device.execute(cmd)
 		else:
@@ -210,10 +213,14 @@ class ShowIpArpDetailVrfAll(ShowIpArpDetailVrfAllSchema):
 		# initial variables
 		ret_dict = {}
 
+		# Address         Age       MAC Address     Interface        Physical Interface  Flags
 		# 10.1.7.1        00:17:15  0012.7fff.04d7  mgmt0            mgmt0
+		# 172.16.23.22    00:13:48  00a0.989a.7b32  Vlan651          port-channel1050    +
+		# 172.16.8.178    00:00:04  INCOMPLETE      Vlan392          Vlan392
 		p1 = re.compile(r'^(?P<address>[\d\.]+) +(?P<age>[\d+\-\:]+) '
-		  '+(?P<mac>[\w\.]+) +(?P<interface>[\w\/\.]+) '
-		  '+(?P<physical_interface>[\w\/\.]+)( +(?P<flag>[\*\w\+\#]+))?$')
+						r'+(?P<mac>[\w\.]+) +(?P<interface>\S+) '
+						r'+(?P<physical_interface>\S+)'
+						r'( +(?P<flag>[\*\w\+\#]+))?$')
 
 		for line in out.splitlines():
 			line = line.strip()
