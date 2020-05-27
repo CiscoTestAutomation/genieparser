@@ -23,6 +23,8 @@ class test_show_vrf_all_detail(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
+    maxDiff = None
+
     golden_parsed_output = {
         "VRF1": {
             "description": "not set",
@@ -321,14 +323,12 @@ class test_show_vrf_all_detail(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowVrfAllDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_golden_2(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
         obj = ShowVrfAllDetail(device=self.device)
         parsed_output = obj.parse()
