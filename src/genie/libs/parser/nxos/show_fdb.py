@@ -82,7 +82,8 @@ class ShowMacAddressTableBase(ShowMacAddressTableBaseSchema):
         # * 1001     0000.01ff.9191   dynamic  0     F      F    Eth1/11
         # G 2000     7e00.c0ff.0007    static       -       F    F  vPC Peer-Link(R)
         # 4000     5e00.c0ff.0007   static   ~~~         F      F    sup-eth1(R)
-        p1 = re.compile(r'^(?P<entry>[\w\*] )?\s*(?P<vlan>All|[\d\-]+) '
+        # +  390     000f.536c.b2b0   dynamic  0         F      F    Po125
+        p1 = re.compile(r'^(?P<entry>[\w\*\+] )?\s*(?P<vlan>All|[\d\-]+) '
             '+(?P<mac_address>[0-9a-z\.\:]+) +(?P<mac_type>[a-z]+) '
             '+(?P<age>[0-9\-\~]+) '
             '+(?P<secure>[A-Z]+) +(?P<ntfy>[A-Z]+) '
