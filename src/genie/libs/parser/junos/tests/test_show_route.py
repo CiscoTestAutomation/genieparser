@@ -49197,7 +49197,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_output = {'execute.return_value': '''
+    golden_output_1 = {'execute.return_value': '''
         show route advertising-protocol bgp 106.187.14.240 61.200.255.252/32 detail
 
         inet.0: 62 destinations, 67 routes (62 active, 0 holddown, 0 hidden)
@@ -49224,7 +49224,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
             Entropy label capable
     '''}
 
-    golden_parsed_output = {
+    golden_parsed_output_1 = {
         "route-information":{
             "route-table":
             [
@@ -49294,6 +49294,101 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
         },
     }
 
+    golden_output_2 = {'execute.return_value': '''
+        show route advertising-protocol bgp 59.128.2.250 106.162.196.254 detail
+
+        inet.0: 60 destinations, 66 routes (60 active, 1 holddown, 0 hidden)
+        106.162.196.254/32 (2 entries, 2 announced)
+        BGP group lacGCS001 type External
+            Nexthop: 111.87.5.252
+            MED: 29012
+            Localpref: 4294967285
+            AS path: [65151] (65171) I
+            Communities: 65151:9996
+
+        inet.3: 27 destinations, 27 routes (27 active, 0 holddown, 0 hidden)
+
+        * 106.162.196.254/32 (1 entry, 1 announced)
+        BGP group lacGCS001 type External
+            Route Label: 118071
+            Nexthop: 111.87.5.252
+            MED: 29012
+            Localpref: 100
+            AS path: [65151] (65171) I
+            Communities: 65151:9996
+            Entropy label capable
+    '''}
+
+    golden_parsed_output_2 = {
+        "route-information":{
+            "route-table":
+            [
+                {
+                    "table-name": 'inet.0',
+                    "destination-count": '60',
+                    "total-route-count": '66',
+                    "active-route-count": '60',
+                    "holddown-route-count": '1',
+                    "hidden-route-count": '0',
+                    "rt-entry": {
+                        "active-tag": "Inactive",
+                        "rt-destination": '106.162.196.254',
+                        "rt-prefix-length": '32',
+                        "rt-entry-count": '2',
+                        "rt-announced-count": '2',
+                        "bgp-group": {
+                            "bgp-group-name": 'lacGCS001',
+                            "bgp-group-type": 'External',
+                        },
+                        "nh": {
+                            "to": '111.87.5.252'
+                            },
+                        "med": '29012',
+                        "local-preference": '4294967285',
+                        "as-path": {
+                            "as-number": '65151',
+                            "confederation": "65171",
+                            "as-origin": 'I'
+                        },
+                        "communities": '65151:9996',
+                    }
+                },
+
+                {
+                    "table-name": 'inet.3',
+                    "destination-count": '27',
+                    "total-route-count": '27',
+                    "active-route-count": '27',
+                    "holddown-route-count": '0',
+                    "hidden-route-count": '0',
+                    "rt-entry": {
+                        "active-tag": "Active",
+                        "rt-destination": '106.162.196.254',
+                        "rt-prefix-length": '32',
+                        "rt-entry-count": '1',
+                        "rt-announced-count": '1',
+                        'route-label': '118071',
+                        "bgp-group": {
+                            "bgp-group-name": 'lacGCS001',
+                            "bgp-group-type": 'External',
+                        },
+                        "nh": {
+                            "to": '111.87.5.252'
+                            },
+                        "med": '29012',
+                        "local-preference": '100',
+                        "as-path": {
+                            "as-number": '65151',
+                            "confederation": '65171',
+                            "as-origin": 'I'
+                        },
+                        "communities": '65151:9996',
+                    }
+                }
+            ]
+        },
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteAdvertisingProtocolDetail(device=self.device)
@@ -49304,15 +49399,25 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                 route="106.162.196.254",
             )
 
-    def test_golden(self):
-        self.device = Mock(**self.golden_output)
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowRouteAdvertisingProtocolDetail(device=self.device)
+        parsed_output = obj.parse(
+            protocol='bgp',
+            ip_address='106.187.14.240',
+            route="61.200.255.252",
+        )
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+    
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
         obj = ShowRouteAdvertisingProtocolDetail(device=self.device)
         parsed_output = obj.parse(
             protocol='bgp',
             ip_address='59.128.2.250',
             route="106.162.196.254",
         )
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 if __name__ == '__main__':
     unittest.main()
