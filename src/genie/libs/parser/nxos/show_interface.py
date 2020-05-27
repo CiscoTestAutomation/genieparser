@@ -3397,13 +3397,14 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
 
         # Eth1/5 *** L2 L3-CIS-N connected trunk full a-1000 1000base-T
         # Eth1/4 *** FEX 2248TP  connected 1     full a-10G  Fabric Exte
-        p1_1 = re.compile(r'^(?P<interface>(\S+)) '
-                          r'+(?P<name>(\*\*\*\s)([\S\s]+)) '
-                          r'+(?P<status>\S+) '
-                          r'+(?P<vlan>\S+) '
-                          r'+(?P<duplex_code>([a-z]+)) '
-                          r'+(?P<port_speed>(\S+)) '
-                          r'+(?P<type>([\S\s]+))$')
+        p1_1 = re.compile(r'(?P<interface>(\S+)) +'
+                        r'(?P<name>([\S\s]+))(?<! ) +'
+                        r'(?P<status>(\S+)) +'
+                        r'(?P<vlan>(\S+)) +'
+                        r'(?P<duplex_code>([a-z]+)) +'
+                        r'(?P<port_speed>(\S+)) +'
+                        r'(?P<type>([\S\s]+))$')
+
 
         for line in out.splitlines():
             line = line.strip()

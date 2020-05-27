@@ -7028,7 +7028,7 @@ class test_show_interface_status(unittest.TestCase):
             },
             'Ethernet1/4': {
                 'duplex_code': 'full',
-                'name': '*** FEX 2248TP ',
+                'name': '*** FEX 2248TP',
                 'port_speed': 'a-10G',
                 'status': 'connected',
                 'type': 'Fabric Exte',
