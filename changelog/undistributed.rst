@@ -14,6 +14,10 @@
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
+
+* IOSXE
+    * Updated ShowIsisDatabaseDetail for code issue:
+        * show isis database detail
 * NXOS
     * Updated ShowMacAddressTableBase:
         * Modified the regex patterns to support various outputs.
