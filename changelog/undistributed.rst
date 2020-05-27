@@ -15,3 +15,9 @@
                                 Fix
 --------------------------------------------------------------------------------
 
+* NXOS
+    * Updated ShowRunningConfigInterface:
+        * Added regex to support vpc
+        * Added regex to support native vlan
+        * Added regex to support switchport_mode access
+        * Fixed regex to allow white spaces in description
