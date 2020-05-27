@@ -41,6 +41,7 @@ class ShowVrfAllDetailSchema(MetaParser):
             },
         }
 
+
 class ShowVrfAllDetail(ShowVrfAllDetailSchema):
     """Parser for show vrf all detail"""
 
@@ -107,7 +108,11 @@ class ShowVrfAllDetail(ShowVrfAllDetailSchema):
                 vrf_dict[vrf]['interfaces'] = []
                 continue
             #   GigabitEthernet0/0/0/0.390
-            p4_1 = re.compile(r'^(?P<intf>[\w]+\s*[\d\/\.\-]+)$')
+            #   Bundle-Ether15.514
+            p4_1 = re.compile(r'^(?P<intf>([G|g]i.*|[B|b]un.*|'
+                              r'[T|t]en.*|[P|p]o.*|[V|v]lan.*|'
+                              r'[L|l]o.*))$')
+
             m = p4_1.match(line)
             if m:
                 intf = m.groupdict()['intf']
