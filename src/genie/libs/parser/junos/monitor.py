@@ -1,7 +1,7 @@
 """ping.py
 
 JunOS parsers for the following show commands:
-    * 
+    * monitor interface traffic
 """
 # Python
 import re
@@ -11,7 +11,9 @@ import time
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import (Any, 
         Optional, Use, SchemaTypeError, Schema)
-
+""" Schema for:
+            * monitor interface traffic
+"""
 class MonitorInterfaceTrafficSchema(MetaParser):
     schema = {
         "monitor-time": {
@@ -31,6 +33,9 @@ class MonitorInterfaceTrafficSchema(MetaParser):
         } 
     }
 
+""" Parser for:
+            * monitor interface traffic
+"""
 class MonitorInterfaceTraffic(MonitorInterfaceTrafficSchema):
     
     cli_command = ['monitor interface traffic']
@@ -44,7 +49,7 @@ class MonitorInterfaceTraffic(MonitorInterfaceTrafficSchema):
             ansi_escape = re.compile(r'(\x00|\x9B|\x1B\[[0-?]*[ -\/]*[@-~])')
             out = ansi_escape.sub('\t', out)
             self.device.sendline('q')
-            time.sleep(10)
+            time.sleep(5)
             self.device.expect('.*')
         else:
             out = output
