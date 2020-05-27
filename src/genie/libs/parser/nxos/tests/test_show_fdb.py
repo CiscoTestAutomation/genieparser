@@ -826,6 +826,171 @@ class test_show_mac_address_table(unittest.TestCase):
         }
     }
 
+    golden_output_2 = {'execute.return_value': '''
+    +++ genie_device: executing command 'show mac address-table' +++
+    
+    show mac address-table
+    
+    Legend:
+    
+        * - primary entry, G - Gateway MAC, (R) - Routed MAC, O - Overlay MAC
+
+        age - seconds since last seen,+ - primary entry using vPC Peer-Link,
+
+        (T) - True, (F) - False, C - ControlPlane MAC, ~ - vsan
+    
+       VLAN     MAC Address      Type      age     Secure NTFY Ports
+    
+    ---------+-----------------+--------+---------+------+----+------------------
+    
+    *  390     000f.5354.9151   dynamic  0         F      F    Po113
+    
+    +  390     000f.5355.bef0   dynamic  0         F      F    Po103
+    
+    +  390     000f.5357.80b0   dynamic  0         F      F    Po115
+    
+    *  390     000f.5357.a620   dynamic  0         F      F    Po116
+    
+    *  390     000f.535c.74a0   dynamic  0         F      F    Po127
+    
+    *  390     000f.536c.9611   dynamic  0         F      F    Po133
+    
+    +  390     000f.536c.99b1   dynamic  0         F      F    Po132
+    
+    *  390     000f.536c.b130   dynamic  0         F      F    Po124
+    
+    +  390     000f.536c.b2b0   dynamic  0         F      F    Po125             
+    '''}
+
+    golden_parsed_output_2 = {
+        'mac_table': {
+            'vlans': {
+                '390': {
+                    'mac_addresses': {
+                        '000f.5354.9151': {
+                            'entry': '*',
+                            'interfaces': {
+                                'Port-channel113': {
+                                    'age': '0',
+                                    'interface': 'Port-channel113',
+                                    'mac_type': 'dynamic',
+                                },
+                            },
+                            'mac_address': '000f.5354.9151',
+                            'ntfy': 'F',
+                            'secure': 'F',
+                        },
+                        '000f.5355.bef0': {
+                            'entry': '+',
+                            'interfaces': {
+                                'Port-channel103': {
+                                    'age': '0',
+                                    'interface': 'Port-channel103',
+                                    'mac_type': 'dynamic',
+                                },
+                            },
+                            'mac_address': '000f.5355.bef0',
+                            'ntfy': 'F',
+                            'secure': 'F',
+                        },
+                        '000f.5357.80b0': {
+                            'entry': '+',
+                            'interfaces': {
+                                'Port-channel115': {
+                                    'age': '0',
+                                    'interface': 'Port-channel115',
+                                    'mac_type': 'dynamic',
+                                },
+                            },
+                            'mac_address': '000f.5357.80b0',
+                            'ntfy': 'F',
+                            'secure': 'F',
+                        },
+                        '000f.5357.a620': {
+                            'entry': '*',
+                            'interfaces': {
+                                'Port-channel116': {
+                                    'age': '0',
+                                    'interface': 'Port-channel116',
+                                    'mac_type': 'dynamic',
+                                },
+                            },
+                            'mac_address': '000f.5357.a620',
+                            'ntfy': 'F',
+                            'secure': 'F',
+                        },
+                        '000f.535c.74a0': {
+                            'entry': '*',
+                            'interfaces': {
+                                'Port-channel127': {
+                                    'age': '0',
+                                    'interface': 'Port-channel127',
+                                    'mac_type': 'dynamic',
+                                },
+                            },
+                            'mac_address': '000f.535c.74a0',
+                            'ntfy': 'F',
+                            'secure': 'F',
+                        },
+                        '000f.536c.9611': {
+                            'entry': '*',
+                            'interfaces': {
+                                'Port-channel133': {
+                                    'age': '0',
+                                    'interface': 'Port-channel133',
+                                    'mac_type': 'dynamic',
+                                },
+                            },
+                            'mac_address': '000f.536c.9611',
+                            'ntfy': 'F',
+                            'secure': 'F',
+                        },
+                        '000f.536c.99b1': {
+                            'entry': '+',
+                            'interfaces': {
+                                'Port-channel132': {
+                                    'age': '0',
+                                    'interface': 'Port-channel132',
+                                    'mac_type': 'dynamic',
+                                },
+                            },
+                            'mac_address': '000f.536c.99b1',
+                            'ntfy': 'F',
+                            'secure': 'F',
+                        },
+                        '000f.536c.b130': {
+                            'entry': '*',
+                            'interfaces': {
+                                'Port-channel124': {
+                                    'age': '0',
+                                    'interface': 'Port-channel124',
+                                    'mac_type': 'dynamic',
+                                },
+                            },
+                            'mac_address': '000f.536c.b130',
+                            'ntfy': 'F',
+                            'secure': 'F',
+                        },
+                        '000f.536c.b2b0': {
+                            'entry': '+',
+                            'interfaces': {
+                                'Port-channel125': {
+                                    'age': '0',
+                                    'interface': 'Port-channel125',
+                                    'mac_type': 'dynamic',
+                                },
+                            },
+                            'mac_address': '000f.536c.b2b0',
+                            'ntfy': 'F',
+                            'secure': 'F',
+                        },
+                    },
+                    'vlan': '390',
+                },
+            },
+        },
+    }
+
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -850,6 +1015,12 @@ class test_show_mac_address_table(unittest.TestCase):
         obj = ShowMacAddressTable(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_address_interface)
+
+    def test_address_table_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowMacAddressTable(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 class test_show_mac_address_table_limit(unittest.TestCase):
