@@ -109,7 +109,10 @@ class ShowVrfAllDetail(ShowVrfAllDetailSchema):
                 continue
             #   GigabitEthernet0/0/0/0.390
             #   Bundle-Ether15.514
-            p4_1 = re.compile(r'^(?P<intf>[\w]+\s*[\w\d\/\.\-]+)$')
+            p4_1 = re.compile(r'^(?P<intf>([G|g]i.*|[B|b]un.*|'
+                              r'[T|t]en.*|[P|p]o.*|[V|v]lan.*|'
+                              r'[L|l]o.*))$')
+
             m = p4_1.match(line)
             if m:
                 intf = m.groupdict()['intf']
