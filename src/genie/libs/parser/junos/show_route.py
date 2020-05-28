@@ -1669,7 +1669,7 @@ class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
 class ShowRouteAdvertisingProtocolSchema(MetaParser):
     """ Schema for:
             * show route advertising-protocol {protocol} {ip_address}
-            * show route advertising-protocol {protocol} {neighbor} [route]
+            * show route advertising-protocol {protocol} {neighbor} {route}
     """
     """
         schema = {
@@ -1751,14 +1751,24 @@ class ShowRouteAdvertisingProtocolSchema(MetaParser):
 class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
     """ Parser for:
             * show route advertising-protocol {protocol} {neighbor}
-            * show route advertising-protocol {protocol} {neighbor} [route]
+            * show route advertising-protocol {protocol} {neighbor} {route}
     """
 
-    cli_command = 'show route advertising-protocol {protocol} {neighbor} {route}'
-    def cli(self, protocol, neighbor, route="", output=None):
+    cli_command = [
+        'show route advertising-protocol {protocol} {neighbor}',
+        'show route advertising-protocol {protocol} {neighbor} {route}'
+        ]
+    def cli(self, protocol, neighbor, route=None, output=None):
         if not output:
-            cmd = self.cli_command.format(protocol=protocol,
-                    neighbor=neighbor, route=route)
+            if route:
+                cmd = self.cli_command[1].format(
+                    protocol=protocol,
+                    neighbor=neighbor,
+                    route=route)
+            else:
+                cmd = self.cli_command[0].format(
+                    protocol=protocol,
+                    neighbor=neighbor)
             out = self.device.execute(cmd)
         else:
             out = output
