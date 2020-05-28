@@ -843,23 +843,23 @@ class test_show_mac_address_table(unittest.TestCase):
     
     ---------+-----------------+--------+---------+------+----+------------------
     
-    *  390     000f.5354.9151   dynamic  0         F      F    Po113
+    *  390     000f.53ff.e5a5   dynamic  0         F      F    Po113
     
-    +  390     000f.5355.bef0   dynamic  0         F      F    Po103
+    +  390     000f.53ff.1446   dynamic  0         F      F    Po103
     
-    +  390     000f.5357.80b0   dynamic  0         F      F    Po115
+    +  390     000f.53ff.d708   dynamic  0         F      F    Po115
     
-    *  390     000f.5357.a620   dynamic  0         F      F    Po116
+    *  390     000f.53ff.fd77   dynamic  0         F      F    Po116
     
-    *  390     000f.535c.74a0   dynamic  0         F      F    Po127
+    *  390     000f.53ff.d0fc   dynamic  0         F      F    Po127
     
-    *  390     000f.536c.9611   dynamic  0         F      F    Po133
+    *  390     000f.53ff.037d   dynamic  0         F      F    Po133
     
-    +  390     000f.536c.99b1   dynamic  0         F      F    Po132
+    +  390     000f.53ff.061e   dynamic  0         F      F    Po132
     
-    *  390     000f.536c.b130   dynamic  0         F      F    Po124
+    *  390     000f.53ff.1e9c   dynamic  0         F      F    Po124
     
-    +  390     000f.536c.b2b0   dynamic  0         F      F    Po125             
+    +  390     000f.53ff.1f1d   dynamic  0         F      F    Po125             
     '''}
 
     golden_parsed_output_2 = {
@@ -867,7 +867,7 @@ class test_show_mac_address_table(unittest.TestCase):
             'vlans': {
                 '390': {
                     'mac_addresses': {
-                        '000f.5354.9151': {
+                        '000f.53ff.e5a5': {
                             'entry': '*',
                             'interfaces': {
                                 'Port-channel113': {
@@ -876,11 +876,11 @@ class test_show_mac_address_table(unittest.TestCase):
                                     'mac_type': 'dynamic',
                                 },
                             },
-                            'mac_address': '000f.5354.9151',
+                            'mac_address': '000f.53ff.e5a5',
                             'ntfy': 'F',
                             'secure': 'F',
                         },
-                        '000f.5355.bef0': {
+                        '000f.53ff.1446': {
                             'entry': '+',
                             'interfaces': {
                                 'Port-channel103': {
@@ -889,11 +889,11 @@ class test_show_mac_address_table(unittest.TestCase):
                                     'mac_type': 'dynamic',
                                 },
                             },
-                            'mac_address': '000f.5355.bef0',
+                            'mac_address': '000f.53ff.1446',
                             'ntfy': 'F',
                             'secure': 'F',
                         },
-                        '000f.5357.80b0': {
+                        '000f.53ff.d708': {
                             'entry': '+',
                             'interfaces': {
                                 'Port-channel115': {
@@ -902,11 +902,11 @@ class test_show_mac_address_table(unittest.TestCase):
                                     'mac_type': 'dynamic',
                                 },
                             },
-                            'mac_address': '000f.5357.80b0',
+                            'mac_address': '000f.53ff.d708',
                             'ntfy': 'F',
                             'secure': 'F',
                         },
-                        '000f.5357.a620': {
+                        '000f.53ff.fd77': {
                             'entry': '*',
                             'interfaces': {
                                 'Port-channel116': {
@@ -915,11 +915,11 @@ class test_show_mac_address_table(unittest.TestCase):
                                     'mac_type': 'dynamic',
                                 },
                             },
-                            'mac_address': '000f.5357.a620',
+                            'mac_address': '000f.53ff.fd77',
                             'ntfy': 'F',
                             'secure': 'F',
                         },
-                        '000f.535c.74a0': {
+                        '000f.53ff.d0fc': {
                             'entry': '*',
                             'interfaces': {
                                 'Port-channel127': {
@@ -928,11 +928,11 @@ class test_show_mac_address_table(unittest.TestCase):
                                     'mac_type': 'dynamic',
                                 },
                             },
-                            'mac_address': '000f.535c.74a0',
+                            'mac_address': '000f.53ff.d0fc',
                             'ntfy': 'F',
                             'secure': 'F',
                         },
-                        '000f.536c.9611': {
+                        '000f.53ff.037d': {
                             'entry': '*',
                             'interfaces': {
                                 'Port-channel133': {
@@ -941,11 +941,11 @@ class test_show_mac_address_table(unittest.TestCase):
                                     'mac_type': 'dynamic',
                                 },
                             },
-                            'mac_address': '000f.536c.9611',
+                            'mac_address': '000f.53ff.037d',
                             'ntfy': 'F',
                             'secure': 'F',
                         },
-                        '000f.536c.99b1': {
+                        '000f.53ff.061e': {
                             'entry': '+',
                             'interfaces': {
                                 'Port-channel132': {
@@ -954,11 +954,11 @@ class test_show_mac_address_table(unittest.TestCase):
                                     'mac_type': 'dynamic',
                                 },
                             },
-                            'mac_address': '000f.536c.99b1',
+                            'mac_address': '000f.53ff.061e',
                             'ntfy': 'F',
                             'secure': 'F',
                         },
-                        '000f.536c.b130': {
+                        '000f.53ff.1e9c': {
                             'entry': '*',
                             'interfaces': {
                                 'Port-channel124': {
@@ -967,11 +967,11 @@ class test_show_mac_address_table(unittest.TestCase):
                                     'mac_type': 'dynamic',
                                 },
                             },
-                            'mac_address': '000f.536c.b130',
+                            'mac_address': '000f.53ff.1e9c',
                             'ntfy': 'F',
                             'secure': 'F',
                         },
-                        '000f.536c.b2b0': {
+                        '000f.53ff.1f1d': {
                             'entry': '+',
                             'interfaces': {
                                 'Port-channel125': {
@@ -980,7 +980,7 @@ class test_show_mac_address_table(unittest.TestCase):
                                     'mac_type': 'dynamic',
                                 },
                             },
-                            'mac_address': '000f.536c.b2b0',
+                            'mac_address': '000f.53ff.1f1d',
                             'ntfy': 'F',
                             'secure': 'F',
                         },

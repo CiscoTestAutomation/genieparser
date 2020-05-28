@@ -201,7 +201,7 @@ class test_show_route_table(unittest.TestCase):
         + = Active Route, - = Last Active, * = Both
 
         118420             *[VPN/170] 31w3d 20:13:54
-                            >  to 27.86.198.66 via ge-0/0/3.0, Swap 78
+                            >  to 10.19.198.66 via ge-0/0/3.0, Swap 78
     '''}
 
     parsed_output_5 = {
@@ -221,7 +221,7 @@ class test_show_route_table(unittest.TestCase):
                         "next_hop": {
                             "next_hop_list": {
                                 1: {
-                                    "to": "27.86.198.66",
+                                    "to": "10.19.198.66",
                                     "via": "ge-0/0/3.0",
                                     "best_route": ">",
                                     "mpls_label": "Swap 78",
@@ -47762,7 +47762,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Local AS: 65171 Peer AS: 65151
                         Age: 3w3d 3:19:15   Metric: 12003   Metric2: 0 
                         Validation State: unverified 
-                        Task: BGP_65151.10.169.14.240
+                        Task: BGP_65172.16.15.14.240
                         Announcement bits (3): 0-KRT 6-BGP_RT_Background 7-Resolve tree 3 
                         AS path: (65151 65000) I 
                         Communities: 65001:10 65151:244
@@ -47801,7 +47801,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Local AS: 65171 Peer AS: 65171
                         Age: 3w1d 16:57:57  Metric: 12003   Metric2: 5 
                         Validation State: unverified 
-                        Task: BGP_65171.10.189.5.253
+                        Task: BGP_65172.16.220.5.253
                         AS path: (65151 65000) I 
                         Communities: 65001:10 65151:244
                         Accepted
@@ -48182,7 +48182,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                         }
                                     ],
                                     "rt-entry-state": "Active Int Ext",
-                                    "task-name": "BGP_65151.10.169.14.240",
+                                    "task-name": "BGP_65172.16.15.14.240",
                                     "validation-state": "unverified"
                                 },
                                 {
@@ -48231,7 +48231,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                         }
                                     ],
                                     "rt-entry-state": "Int Ext Changed",
-                                    "task-name": "BGP_65171.10.189.5.253",
+                                    "task-name": "BGP_65172.16.220.5.253",
                                     "validation-state": "unverified"
                                 }
                             ],
