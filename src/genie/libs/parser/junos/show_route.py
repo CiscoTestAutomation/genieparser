@@ -107,7 +107,7 @@ class ShowRouteTable(ShowRouteTableSchema):
         # 10.64.4.4/32   *[L-OSPF/9/5] 1d 02:16:51, metric 110
         # 118420             *[VPN/170] 31w3d 20:13:54
         r2 = re.compile(r'^ *(?P<rt_destination>\S+) +(?P<active_tag>\*)?'
-                        r'\[(?P<protocol_name>\w+)/(?P<preference>\d+)/?(?P<preference2>\d+)?\]'
+                        r'\[(?P<protocol_name>[\w\-]+)/(?P<preference>\d+)/?(?P<preference2>\d+)?\]'
                         r' +(?P<age>[^,]+)(, +metric +(?P<metric>\d+))?$')
 
         # > to 192.168.220.6 via ge-0/0/1.0
