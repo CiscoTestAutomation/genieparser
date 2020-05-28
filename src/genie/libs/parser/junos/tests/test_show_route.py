@@ -49250,10 +49250,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                             },
                         "med": '16011',
                         "local-preference": '4294967285',
-                        "as-path": {
-                            "as-number": '65161',
-                            "as-origin": 'I'
-                        },
+                        "as-path": "[65161] I",
                         "communities": '65151:65109',
                         "flags": 'Nexthop Change',
                     }
@@ -49282,10 +49279,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                             },
                         "med": '16011',
                         "local-preference": '100',
-                        "as-path": {
-                            "as-number": '65161',
-                            "as-origin": 'I'
-                        },
+                        "as-path": "[65161] I",
                         "communities": '65151:65109',
                         "flags": 'Nexthop Change',
                     }
@@ -49344,11 +49338,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                             },
                         "med": '29012',
                         "local-preference": '4294967285',
-                        "as-path": {
-                            "as-number": '65151',
-                            "confederation": "65171",
-                            "as-origin": 'I'
-                        },
+                        "as-path": "[65151] (65171) I",
                         "communities": '65151:65109',
                     }
                 },
@@ -49376,11 +49366,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                             },
                         "med": '29012',
                         "local-preference": '100',
-                        "as-path": {
-                            "as-number": '65151',
-                            "confederation": '65171',
-                            "as-origin": 'I'
-                        },
+                        "as-path": "[65151] (65171) I",
                         "communities": '65151:65109',
                     }
                 }

@@ -2156,7 +2156,7 @@ class ShowRouteAdvertisingProtocolDetailSchema(MetaParser):
     #             "holddown-route-count": str,
     #             "hidden-route-count": str,
     #             "rt-entry": {
-    #                 'active-tag': str,
+    #                 Optional('active-tag'): str,
     #                 "rt-destination": str,
     #                 "rt-prefix-length": str,
     #                 "rt-entry-count": str,
@@ -2171,13 +2171,7 @@ class ShowRouteAdvertisingProtocolDetailSchema(MetaParser):
     #                 },
     #                 "med": str,
     #                 "local-preference": str,
-    #                 "as-path": {
-    #                     Optional("as-number"): str,
-    #                     Optional("as-set"): str,
-    #                     Optional("confederation"): str,
-    #                     Optional("confederation-set"): str,
-    #                     Optional("as-origin"): str,
-    #                 },
+    #                 "as-path": str,
     #                 "communities": str,
     #                 "flags": str,
     #             }
@@ -2213,13 +2207,7 @@ class ShowRouteAdvertisingProtocolDetailSchema(MetaParser):
                 },
                 "med": str,
                 "local-preference": str,
-                "as-path": {
-                    Optional("as-number"): str,
-                    Optional("as-set"): str,
-                    Optional("confederation"): str,
-                    Optional("confederation-set"): str,
-                    Optional("as-origin"): str,
-                },
+                'as-path': str,
                 "communities": str,
                 Optional("flags"): str,
             }
@@ -2284,10 +2272,8 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
         p7 = re.compile(r'^ *Localpref: +(?P<local_preference>\S+)$')
 
         # AS path: [65151] (65171) I
-        p8 = re.compile(r'^ *AS path: +(\[(?P<as_number>\d+)\] +)?'
-                        r'({(?P<as_set>.*)} +)?(\((?P<confederation>\d+)\) +)?'
-                        r'(\(\[(?P<confederation_set>.*)\]\) +)?'
-                        r'(?P<as_origin>[IE\?])$')
+        p8 = re.compile(r'^ *AS +path: +(?P<as_path>.*)$')
+
 
         # Communities: 65151:65109
         p9 = re.compile(r'^ *Communities: +(?P<communities>\S+)$')
@@ -2314,7 +2300,6 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                # protocol_dict = route_table_dict.setdefault('protocol-details', {})
                 rt_entry_dict = protocol_dict.setdefault('rt-entry', {})
                 rt_entry_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
@@ -2360,8 +2345,7 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                as_dict = rt_entry_dict.setdefault('as-path', {})
-                as_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                rt_entry_dict.update({'as-path': group['as_path']})
                 continue
 
             # Communities: 65151:65109
