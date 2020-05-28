@@ -8,7 +8,9 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
-
+* JUNOS
+    * ShowRouteTable
+        * Added aditional testcase
 
 
 --------------------------------------------------------------------------------
@@ -19,3 +21,7 @@
         * Modified the regex patterns to support various outputs.
     * Updated ShowIpArpDetailVrfAll:
         * Modified the regex patterns to support various outputs.
+
+* JUNOS
+    * Updated ShowRouteTable
+        * Modified cli method to take an additional parameter
