@@ -22,9 +22,7 @@
 * IOSXE
     * Updated ShowIsisDatabaseDetail for code issue:
         * show isis database detail
-* IOS 
-    * Updated ShowIpArp
-        * Added argument 'output' into super().cli()
+* NXOS 
     * Updated ShowMacAddressTableBase:
         * Modified the regex patterns to support various outputs.
     * Updated ShowIpArpDetailVrfAll:
