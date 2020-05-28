@@ -751,7 +751,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         Interface: GigabitEthernet1/0/2,  Port ID (outgoing port): gi25
         Holdtime : 155 sec
         Version :
-        1.3.0.62
+        10.16.0.62
         advertisement version: 2
         Native VLAN: 1
         Duplex: full
@@ -785,7 +785,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                 'port_id': 'gi25',
                 'local_interface': 'GigabitEthernet1/0/2',
                 'hold_time': 155,
-                'software_version': '1.3.0.62',
+                'software_version': '10.16.0.62',
                 'advertisement_ver': 2},
             2: {
                 'device_id': 'Router02',

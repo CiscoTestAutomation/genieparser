@@ -1529,7 +1529,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
         ------------------------------------------------
         Local Intf: Gi1/0/17
         Chassis id: 127.0.0.2
-        Port id: c81f.7777.6666
+        Port id: c81f.77ff.dddd
         Port Description - not advertised
         System Name: TestName
         System Description - not advertised
@@ -1540,7 +1540,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
         Management Addresses:
             IP: 127.0.0.2
             OID:
-                1.3.6.1.4.1.6889.1.69.2.0.
+                10.16.6.1.4.1.6810.195.69.2.0.
         Auto Negotiation - not supported
         Physical media capabilities - not advertised
         Media Attachment Unit type: 30
@@ -1573,12 +1573,12 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
         'GigabitEthernet1/0/17': {
           'if_name': 'GigabitEthernet1/0/17',
           'port_id': {
-            'C81f.7777.6666': {
+            'C81f.77ff.dddd': {
               'neighbors': {
                 'TestName': {
                   'neighbor_id': 'TestName',
                   'chassis_id': '127.0.0.2',
-                  'port_id': 'C81f.7777.6666',
+                  'port_id': 'C81f.77ff.dddd',
                   'system_name': 'TestName',
                   'time_remaining': 104,
                   'capabilities': {
@@ -1630,8 +1630,8 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
     golden_output_5 = {'execute.return_value': '''     
         ------------------------------------------------
         Local Intf: Gi1/0/19
-        Chassis id: 6400.3333.1111
-        Port id: 6400.3333.1111
+        Chassis id: 6400.33ff.4444
+        Port id: 6400.33ff.4444
         Port Description - not advertised
         System Name - not advertised
         System Description - not advertised
@@ -1669,12 +1669,12 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
             'GigabitEthernet1/0/19': {
                 'if_name': 'GigabitEthernet1/0/19',
                 'port_id': {
-                    '6400.3333.1111': {
+                    '6400.33ff.4444': {
                         'neighbors': {
                             'not advertised': {
                                 'neighbor_id': 'not advertised',
-                                'chassis_id': '6400.3333.1111',
-                                'port_id': '6400.3333.1111',
+                                'chassis_id': '6400.33ff.4444',
+                                'port_id': '6400.33ff.4444',
                                 'system_name': 'not advertised',
                                 'time_remaining': 3284,
                                 'management_address': 'not advertised',
