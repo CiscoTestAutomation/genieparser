@@ -2322,7 +2322,7 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                rt_entry_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                rt_entry_dict.update({'route-label': group['route_label']})
                 continue
 
             # Nexthop: 10.189.5.252
@@ -2330,21 +2330,21 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
             if m:
                 group = m.groupdict()
                 nh_dict = rt_entry_dict.setdefault('nh', {})
-                nh_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                nh_dict.update({'to': group['to']})
                 continue
 
             # MED: 29012
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                rt_entry_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                rt_entry_dict.update({'med': group['med']})
                 continue
 
             # Localpref: 4294967285
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                rt_entry_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                rt_entry_dict.update({'local-preference': group['local_preference']})
                 continue
 
             # AS path: [65151] (65171) I
@@ -2359,14 +2359,14 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                rt_entry_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                rt_entry_dict.update({'communities': group['communities']})
                 continue
 
             # Flags: Nexthop Change
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                rt_entry_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                rt_entry_dict.update({'flags': group['flags']})
                 continue
 
         return ret_dict
