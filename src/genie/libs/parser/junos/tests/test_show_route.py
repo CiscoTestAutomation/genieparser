@@ -195,6 +195,45 @@ class test_show_route_table(unittest.TestCase):
                         'protocol_name': 'LDP'}},
                 'total_route_count': 5}}}
 
+    golden_output_5 = {'execute.return_value': '''
+        show route table mpls.0 label 118420
+
+        mpls.0: 54 destinations, 54 routes (54 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
+
+        118420             *[VPN/170] 31w3d 20:13:54
+                            >  to 10.19.198.66 via ge-0/0/3.0, Swap 78
+    '''}
+
+    parsed_output_5 = {
+        "table_name": {
+            "mpls.0": {
+                "destination_count": 54,
+                "total_route_count": 54,
+                "active_route_count": 54,
+                "holddown_route_count": 0,
+                "hidden_route_count": 0,
+                "routes": {
+                    "118420": {
+                        "active_tag": "*",
+                        "protocol_name": "VPN",
+                        "preference": "170",
+                        "age": "31w3d 20:13:54",
+                        "next_hop": {
+                            "next_hop_list": {
+                                1: {
+                                    "to": "10.19.198.66",
+                                    "via": "ge-0/0/3.0",
+                                    "best_route": ">",
+                                    "mpls_label": "Swap 78",
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     def test_show_route_table_empty(self):
         self.maxDiff = None
@@ -230,6 +269,16 @@ class test_show_route_table(unittest.TestCase):
         obj = ShowRouteTable(device=self.device)
         parsed_output = obj.parse(table='inet.3')
         self.assertEqual(parsed_output, self.parsed_output_4)
+
+    def test_show_route_table_5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_5)
+        obj = ShowRouteTable(device=self.device)
+        parsed_output = obj.parse(
+            table='mpls.0',
+            prefix='label',
+            destination='118420')
+        self.assertEqual(parsed_output, self.parsed_output_5)
 
 '''
 Unit test for:
@@ -11578,6 +11627,153 @@ class TestShowRoute(unittest.TestCase):
         }
     }
 
+    golden_output_6 = {'execute.return_value': '''
+    show route 10.36.255.252/32
+
+    inet.0: 60 destinations, 66 routes (60 active, 1 holddown, 0 hidden)
+    + = Active Route, - = Last Active, * = Both
+
+    10.36.255.252/32  *[OSPF/10/10] 4w5d 22:51:00, metric 1111
+                        >  to 10.169.14.158 via ge-0/0/2.0
+                        [BGP/170] 27w6d 12:53:14, MED 16011, localpref 4294967285, from 10.34.2.250
+                        AS path: (65161) I, validation-state: unverified
+                        >  to 10.169.14.158 via ge-0/0/2.0
+
+    inet.3: 27 destinations, 27 routes (27 active, 0 holddown, 0 hidden)
+    + = Active Route, - = Last Active, * = Both
+
+    10.36.255.252/32  *[BGP/170] 4w5d 22:51:00, MED 16011, localpref 100, from 10.34.2.250
+                        AS path: (65161) I, validation-state: unverified
+                        >  to 10.169.14.158 via ge-0/0/2.0, Push 118420
+
+    GIPV.inet.0: 34 destinations, 34 routes (34 active, 0 holddown, 0 hidden)
+    + = Active Route, - = Last Active, * = Both
+
+    10.36.255.252/32  *[OSPF/10/10] 4w5d 22:51:00, metric 0, tag 65151500
+                        >  to 10.169.14.158 via ge-0/0/2.0
+    '''}
+
+    golden_parsed_output_6 = {
+     "route-information": {
+            "route-table": [
+                {
+                    "active-route-count": "60",
+                    "destination-count": "60",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "1",
+                    "rt": [
+                        {
+                            "rt-destination": "10.36.255.252/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "4w5d 22:51:00"
+                                },
+                                "metric": "1111",
+                                "nh": [
+                                    {
+                                        "to": "10.169.14.158",
+                                        "via": "ge-0/0/2.0"
+                                    }
+                                ],
+                                "preference": "10",
+                                "preference2": "10",
+                                "protocol-name": "OSPF",
+                            }
+                        },
+                        {
+                            "rt-entry": {
+                                "age": {
+                                    "#text": "27w6d 12:53:14"
+                                },
+                                "med": "16011",
+                                "as-path": " (65161) I",
+                                "learned-from": "10.34.2.250",
+                                "local-preference": "4294967285",
+                                "nh": [
+                                    {
+                                        "to": "10.169.14.158",
+                                        "via": "ge-0/0/2.0"
+                                    }
+                                ],
+                                "preference": "170",
+                                "protocol-name": "BGP",
+                                "validation-state": "unverified"
+                            }
+                        },
+                    ],
+                    "table-name": "inet.0",
+                    "total-route-count": "66"
+                },
+                {
+                    "active-route-count": "27",
+                    "destination-count": "27",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": [
+                        {
+                            "rt-destination": "10.36.255.252/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "4w5d 22:51:00"
+                                },
+                                "med": "16011",
+                                "as-path": " (65161) I",
+                                "learned-from": "10.34.2.250",
+                                "local-preference": "100",
+                                "nh": [
+                                    {
+                                        "to": "10.169.14.158",
+                                        "via": "ge-0/0/2.0",
+                                        "mpls-label": "Push 118420",
+                                    }
+                                ],
+                                "preference": "170",
+                                "protocol-name": "BGP",
+                                "validation-state": "unverified"
+                            }
+                        },
+                    ],
+                    "table-name": "inet.3",
+                    "total-route-count": "27"
+                },
+                {
+                    "active-route-count": "34",
+                    "destination-count": "34",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": [
+                        {
+                            "rt-destination": "10.36.255.252/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "4w5d 22:51:00"
+                                },
+                                "metric": "0",
+                                "nh": [
+                                    {
+                                        "to": "10.169.14.158",
+                                        "via": "ge-0/0/2.0",
+                                    }
+                                ],
+                                "preference": "10",
+                                "preference2": "10",
+                                "protocol-name": "OSPF",
+                                "rt-tag": "65151500"
+                            }
+                        }
+                    ],
+                    "table-name": "GIPV.inet.0",
+                    "total-route-count": "34"
+                },
+            ]
+        }
+    }
+
+
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRoute(device=self.device)
@@ -11622,6 +11818,12 @@ class TestShowRoute(unittest.TestCase):
         obj = ShowRoute(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
+
+    def test_golden_6(self):
+        self.device = Mock(**self.golden_output_6)
+        obj = ShowRoute(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_6)
 
 '''
 Unit test for:

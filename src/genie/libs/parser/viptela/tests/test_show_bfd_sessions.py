@@ -26,10 +26,10 @@ class TestShowBfdSessions(unittest.TestCase):
                                         SOURCE TLOC      REMOTE TLOC                       DST PUBLIC       DST PUBLIC         DETECT      TX                              
     SYSTEM IP        SITE ID  STATE       COLOR            COLOR            SOURCE IP        IP               PORT        ENCAP  MULTIPLIER  INTERVAL(msec)  UPTIME        TRANSITIONS
     -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    172.16.241.1     30001001 up          mpls             mpls             184.116.102.2    174.11.1.2       12346       ipsec  20          1000           0:01:46:50      0           
-    172.16.241.1     30001001 up          private1         mpls             186.116.102.2    174.11.1.2       12346       ipsec  20          1000           0:01:46:51      0           
-    172.16.241.2     30001002 up          mpls             mpls             184.116.102.2    174.11.2.2       12346       ipsec  20          1000           0:01:41:27      2           
-    172.16.241.2     30001002 up          private1         mpls             186.116.102.2    174.11.2.2       12346       ipsec  20          1000           0:01:41:28      2         
+    172.16.241.1     30001001 up          mpls             mpls             172.16.189.2    172.16.171.2       12346       ipsec  20          1000           0:01:46:50      0           
+    172.16.241.1     30001001 up          private1         mpls             172.16.16.2    172.16.171.2       12346       ipsec  20          1000           0:01:46:51      0           
+    172.16.241.2     30001002 up          mpls             mpls             172.16.189.2    172.16.34.2       12346       ipsec  20          1000           0:01:41:27      2           
+    172.16.241.2     30001002 up          private1         mpls             172.16.16.2    172.16.34.2       12346       ipsec  20          1000           0:01:41:28      2         
     '''}
 
     golden_parsed_output = {
@@ -37,26 +37,26 @@ class TestShowBfdSessions(unittest.TestCase):
             '172.16.241.1': {
                 'source_tloc_color': {
                     'mpls': {
-                        'destination_public_ip': '174.11.1.2',
+                        'destination_public_ip': '172.16.171.2',
                         'destination_public_port': '12346',
                         'detect_multiplier': '20',
                         'encapsulation': 'ipsec',
                         'remote_tloc_color': 'mpls',
                         'site_id': '30001001',
-                        'source_ip': '184.116.102.2',
+                        'source_ip': '172.16.189.2',
                         'state': 'up',
                         'transitions': '0',
                         'tx_interval': '1000',
                         'uptime': '0:01:46:50',
                     },
                     'private1': {
-                        'destination_public_ip': '174.11.1.2',
+                        'destination_public_ip': '172.16.171.2',
                         'destination_public_port': '12346',
                         'detect_multiplier': '20',
                         'encapsulation': 'ipsec',
                         'remote_tloc_color': 'mpls',
                         'site_id': '30001001',
-                        'source_ip': '186.116.102.2',
+                        'source_ip': '172.16.16.2',
                         'state': 'up',
                         'transitions': '0',
                         'tx_interval': '1000',
@@ -67,26 +67,26 @@ class TestShowBfdSessions(unittest.TestCase):
             '172.16.241.2': {
                 'source_tloc_color': {
                     'mpls': {
-                        'destination_public_ip': '174.11.2.2',
+                        'destination_public_ip': '172.16.34.2',
                         'destination_public_port': '12346',
                         'detect_multiplier': '20',
                         'encapsulation': 'ipsec',
                         'remote_tloc_color': 'mpls',
                         'site_id': '30001002',
-                        'source_ip': '184.116.102.2',
+                        'source_ip': '172.16.189.2',
                         'state': 'up',
                         'transitions': '2',
                         'tx_interval': '1000',
                         'uptime': '0:01:41:27',
                     },
                     'private1': {
-                        'destination_public_ip': '174.11.2.2',
+                        'destination_public_ip': '172.16.34.2',
                         'destination_public_port': '12346',
                         'detect_multiplier': '20',
                         'encapsulation': 'ipsec',
                         'remote_tloc_color': 'mpls',
                         'site_id': '30001002',
-                        'source_ip': '186.116.102.2',
+                        'source_ip': '172.16.16.2',
                         'state': 'up',
                         'transitions': '2',
                         'tx_interval': '1000',

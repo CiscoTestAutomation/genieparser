@@ -51,7 +51,7 @@ class ShowRouteTableSchema(MetaParser):
                             'preference': str,
                             Optional('preference2'): str,
                             'age': str,
-                            'metric': str,
+                            Optional('metric'): str,
                             'next_hop': {
                                 'next_hop_list': {
                                     Any(): {
@@ -72,18 +72,25 @@ class ShowRouteTableSchema(MetaParser):
 Parser for:
     * show route table {table}
     * show route table {table} {prefix}
+    * show route table {table} {prefix} {destination}
 '''
 class ShowRouteTable(ShowRouteTableSchema):
 
     cli_command = [
         'show route table {table}',
         'show route table {table} {prefix}',
+        'show route table {table} {prefix} {destination}',
     ]
 
-    def cli(self, table, prefix=None, output=None):
+    def cli(self, table, prefix=None, destination=None, output=None):
 
         if output is None:
-            if table and prefix:
+            if table and prefix and destination:
+                command = self.cli_command[2].format(
+                    table=table, 
+                    prefix=prefix,
+                    destination=destination)
+            elif table and prefix:
                 command = self.cli_command[1].format(table=table, prefix=prefix)
             else:
                 command = self.cli_command[0].format(table=table)
@@ -100,10 +107,10 @@ class ShowRouteTable(ShowRouteTableSchema):
 
         # 10.64.4.4/32         *[LDP/9] 03:40:50, metric 110
         # 10.64.4.4/32   *[L-OSPF/9/5] 1d 02:16:51, metric 110
-        r2 = re.compile(r'(?P<rt_destination>\S+)\s+(?P<active_tag>\*|\-\*)'
-                         '\[(?P<protocol_name>[\w\-]+)\/(?P<preference>\d+)(?:\/'
-                         '(?P<preference2>\d+))?\]\s+(?P<age>[\S ]+)\,\s+'
-                         'metric\s+(?P<metric>\d+)$')
+        # 118420             *[VPN/170] 31w3d 20:13:54
+        r2 = re.compile(r'^ *(?P<rt_destination>\S+) +(?P<active_tag>\*)?'
+                        r'\[(?P<protocol_name>[\w\-]+)/(?P<preference>\d+)/?(?P<preference2>\d+)?\]'
+                        r' +(?P<age>[^,]+)(, +metric +(?P<metric>\d+))?$')
 
         # > to 192.168.220.6 via ge-0/0/1.0
         # > to 192.168.220.6 via ge-0/0/1.0, Push 305550
@@ -318,29 +325,38 @@ class ShowRouteSchema(MetaParser):
 class ShowRoute(ShowRouteSchema):
     """ Parser for:
             * show route
+            * show route {ip_address}
             * show route protocol {protocol} {ip_address}
             * show route protocol {protocol}
             * show route protocol {protocol} table {table}
     """
     cli_command = [
                     'show route',
+                    'show route {ip_address}',
                     'show route protocol {protocol}',
                     'show route protocol {protocol} {ip_address}',
                     'show route protocol {protocol} table {table}']
 
     def cli(self, protocol=None, ip_address=None, table=None, output=None):
         if not output:
-            if ip_address:
-                cmd = self.cli_command[2].format(
+            if protocol and table:
+                cmd = self.cli_command[4].format(
                     protocol=protocol,
-                    ip_address=ip_address)
-            elif table:
-                cmd = self.cli_command[3].format(
-                    protocol=protocol,
-                    table=table)
-            elif protocol:
+                    table=table
+                )
+            elif ip_address and not protocol:
                 cmd = self.cli_command[1].format(
-                    protocol=protocol)
+                    ip_address=ip_address
+                )
+            elif protocol and not ip_address:
+                cmd = self.cli_command[2].format(
+                    protocol=protocol
+                )
+            elif ip_address and protocol:
+                cmd = self.cli_command[3].format(
+                    ip_address=ip_address,
+                    protocol=protocol
+                )
             else:
                 cmd = self.cli_command[0]
 

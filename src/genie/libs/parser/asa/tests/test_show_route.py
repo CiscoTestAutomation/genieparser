@@ -403,7 +403,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'source_protocol': 'ospf',
                                 'source_protocol_codes': 'E2',
                             },
-                            '30.20.8.0/23': {
+                            '10.205.8.0/23': {
                                 'active': True,
                                 'candidate_default': False,
                                 'date': '7w0d',
@@ -417,7 +417,7 @@ class test_show_ip_route(unittest.TestCase):
                                         },
                                     },
                                 },
-                                'route': '30.20.8.0/23',
+                                'route': '10.205.8.0/23',
                                 'route_preference': 110,
                                 'source_protocol': 'ospf',
                                 'source_protocol_codes': 'O',
@@ -463,7 +463,7 @@ class test_show_ip_route(unittest.TestCase):
             O E2     10.30.79.64 255.255.255.192
                        [110/11] via 10.20.192.3, 1w1d, wan3
                        [110/11] via 10.20.192.4, 1w1d, wan4
-            O    30.20.8.0 255.255.254.0 [110/20] via 172.20.1.1, 7w0d, wan5
+            O    10.205.8.0 255.255.254.0 [110/20] via 172.20.1.1, 7w0d, wan5
             D    10.0.0.0 255.255.255.0 [90/30720] via 192.168.1.1, 0:19:52, inside
            O        10.121.65.0 255.255.255.0 [110/20] via 10.121.64.35, 7w0d, inside
                                               [110/20] via 10.121.64.34, 7w0d, inside

@@ -218,9 +218,9 @@ class TestShowIpArpDetailVrfAll(unittest.TestCase):
 	Total number of entries: 4
 	Address         Age       MAC Address     Interface        Physical Interface  Flags	
 	172.16.8.178    00:00:04  INCOMPLETE      Vlan392          Vlan392             
-	172.16.8.183    00:13:47  0050.5694.5852  Vlan392          port-channel105     
-	172.16.8.185    00:08:55  0050.56a3.1e78  Vlan392          port-channel110     + 
-	172.16.10.1        -      0000.0c9f.f189  Vlan393          -    	
+	172.16.8.183    00:13:47  0050.56ff.ece6  Vlan392          port-channel105     
+	172.16.8.185    00:08:55  0050.56ff.c11c  Vlan392          port-channel110     + 
+	172.16.10.1        -      0000.0cff.9129  Vlan393          -    	
 	'''}
 
 	golden_parsed_output_2 = {
@@ -238,7 +238,7 @@ class TestShowIpArpDetailVrfAll(unittest.TestCase):
 						'172.16.8.183': {
 							'age': '00:13:47',
 							'ip': '172.16.8.183',
-							'link_layer_address': '0050.5694.5852',
+							'link_layer_address': '0050.56ff.ece6',
 							'origin': 'dynamic',
 							'physical_interface': 'port-channel105',
 						},
@@ -246,7 +246,7 @@ class TestShowIpArpDetailVrfAll(unittest.TestCase):
 							'age': '00:08:55',
 							'flag': 'Adjacencies synced via CFSoE',
 							'ip': '172.16.8.185',
-							'link_layer_address': '0050.56a3.1e78',
+							'link_layer_address': '0050.56ff.c11c',
 							'origin': 'dynamic',
 							'physical_interface': 'port-channel110',
 						},
@@ -259,7 +259,7 @@ class TestShowIpArpDetailVrfAll(unittest.TestCase):
 						'172.16.10.1': {
 							'age': '-',
 							'ip': '172.16.10.1',
-							'link_layer_address': '0000.0c9f.f189',
+							'link_layer_address': '0000.0cff.9129',
 							'origin': 'static',
 							'physical_interface': '-',
 						},
