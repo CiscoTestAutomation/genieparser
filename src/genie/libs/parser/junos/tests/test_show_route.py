@@ -49236,7 +49236,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                     "holddown-route-count": '0',
                     "hidden-route-count": '0',
                     "rt-entry": {
-                        "active-tag": "Active",
+                        "active-tag": "*",
                         "rt-destination": '10.36.255.252',
                         "rt-prefix-length": '32',
                         "rt-entry-count": '1',
@@ -49267,7 +49267,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                     "holddown-route-count": '0',
                     "hidden-route-count": '0',
                     "rt-entry": {
-                        "active-tag": "Active",
+                        "active-tag": "*",
                         "rt-destination": '10.36.255.252',
                         "rt-prefix-length": '32',
                         "rt-entry-count": '1',
@@ -49331,7 +49331,6 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                     "holddown-route-count": '1',
                     "hidden-route-count": '0',
                     "rt-entry": {
-                        "active-tag": "Inactive",
                         "rt-destination": '10.169.196.254',
                         "rt-prefix-length": '32',
                         "rt-entry-count": '2',
@@ -49362,7 +49361,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                     "holddown-route-count": '0',
                     "hidden-route-count": '0',
                     "rt-entry": {
-                        "active-tag": "Active",
+                        "active-tag": "*",
                         "rt-destination": '10.169.196.254',
                         "rt-prefix-length": '32',
                         "rt-entry-count": '1',

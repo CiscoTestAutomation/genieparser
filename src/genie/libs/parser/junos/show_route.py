@@ -2198,7 +2198,7 @@ class ShowRouteAdvertisingProtocolDetailSchema(MetaParser):
             "holddown-route-count": str,
             "hidden-route-count": str,
             "rt-entry": {
-                'active-tag': str,
+                Optional('active-tag'): str,
                 "rt-destination": str,
                 "rt-prefix-length": str,
                 "rt-entry-count": str,
@@ -2317,7 +2317,6 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
                 # protocol_dict = route_table_dict.setdefault('protocol-details', {})
                 rt_entry_dict = protocol_dict.setdefault('rt-entry', {})
                 rt_entry_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
-                rt_entry_dict.update({'active-tag': 'Active' if group['active_tag'] == '*' else 'Inactive'})
                 continue
 
             # BGP group lacGCS001 type External
