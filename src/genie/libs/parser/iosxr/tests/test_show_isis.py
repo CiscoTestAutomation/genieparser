@@ -4521,15 +4521,21 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     "R5.03": {
                                         "metric": 40},
                                 },
-                                "ip_interarea": {
-                                    "10.7.8.0/24": {
-                                        "address_family": {
-                                            "ipv4 unicast": {
-                                                "metric": 40},
-                                            "IPv6 Unicast": {
-                                                "metric": 40},
-                                        }
-                                    }
+                                'ip_interarea': {
+                                    '10.7.8.0/24': {
+                                        'address_family': {
+                                            'ipv4 unicast': {
+                                                'metric': 40,
+                                            },
+                                        },
+                                    },
+                                    '2001:db8:10:7::/64': {
+                                        'address_family': {
+                                            'IPv6 Unicast': {
+                                                'metric': 40,
+                                            },
+                                        },
+                                    },
                                 },
                                 "extended_ipv4_reachability": {
                                     "10.196.7.7/32": {

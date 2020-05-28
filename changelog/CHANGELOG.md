@@ -2,6 +2,7 @@
 * [January](2020/JANUARY.md)
 * [February](2020/FEBRUARY.md)
 * [April](2020/APRIL.md)
+* [May](2020/MAY.md)
 
 
 # 2019
