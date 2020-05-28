@@ -195,13 +195,13 @@ class test_show_route_table(unittest.TestCase):
                 'total_route_count': 5}}}
 
     golden_output_5 = {'execute.return_value': '''
-    show route table mpls.0 label 118420
+        show route table mpls.0 label 118420
 
-    mpls.0: 54 destinations, 54 routes (54 active, 0 holddown, 0 hidden)
-    + = Active Route, - = Last Active, * = Both
+        mpls.0: 54 destinations, 54 routes (54 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
 
-    118420             *[VPN/170] 31w3d 20:13:54
-                        >  to 27.86.198.66 via ge-0/0/3.0, Swap 78
+        118420             *[VPN/170] 31w3d 20:13:54
+                            >  to 27.86.198.66 via ge-0/0/3.0, Swap 78
     '''}
 
     parsed_output_5 = {

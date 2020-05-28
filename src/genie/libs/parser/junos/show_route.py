@@ -106,8 +106,8 @@ class ShowRouteTable(ShowRouteTableSchema):
         # 10.64.4.4/32         *[LDP/9] 03:40:50, metric 110
         # 10.64.4.4/32   *[L-OSPF/9/5] 1d 02:16:51, metric 110
         r2 = re.compile(r'^ *(?P<rt_destination>\S+) +(?P<active_tag>\*)?'
-        r'\[(?P<protocol_name>\w+)/(?P<preference>\d+)/?(?P<preference2>\d+)?\]'
-        r' +(?P<age>[^,]+)(, +metric +(?P<metric>\d+))?$')
+                        r'\[(?P<protocol_name>\w+)/(?P<preference>\d+)/?(?P<preference2>\d+)?\]'
+                        r' +(?P<age>[^,]+)(, +metric +(?P<metric>\d+))?$')
 
         # > to 192.168.220.6 via ge-0/0/1.0
         # > to 192.168.220.6 via ge-0/0/1.0, Push 305550
