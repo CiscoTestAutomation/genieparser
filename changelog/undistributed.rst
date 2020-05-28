@@ -22,9 +22,6 @@
 * IOSXE
     * Updated ShowIsisDatabaseDetail for code issue:
         * show isis database detail
-* JUNOS
-    * Updated ShowRouteAdvertisingProtocol
-        * Added {route} parameter option
 * IOS 
     * Updated ShowIpArp
         * Added argument 'output' into super().cli()
@@ -40,3 +37,5 @@
         * Modified cli method to accept only ip_address as input
     * Updated ShowRouteTable
         * Modified cli method to take an additional parameter
+    * Updated ShowRouteAdvertisingProtocol
+        * Added {route} parameter option
