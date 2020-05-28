@@ -11578,29 +11578,29 @@ class TestShowRoute(unittest.TestCase):
     }
 
     golden_output_6 = {'execute.return_value': '''
-    show route 61.200.255.252/32
+    show route 10.36.255.252/32
 
     inet.0: 60 destinations, 66 routes (60 active, 1 holddown, 0 hidden)
     + = Active Route, - = Last Active, * = Both
 
-    61.200.255.252/32  *[OSPF/10/10] 4w5d 22:51:00, metric 1111
-                        >  to 106.187.14.158 via ge-0/0/2.0
-                        [BGP/170] 27w6d 12:53:14, MED 16011, localpref 4294967285, from 59.128.2.250
+    10.36.255.252/32  *[OSPF/10/10] 4w5d 22:51:00, metric 1111
+                        >  to 10.169.14.158 via ge-0/0/2.0
+                        [BGP/170] 27w6d 12:53:14, MED 16011, localpref 4294967285, from 10.34.2.250
                         AS path: (65161) I, validation-state: unverified
-                        >  to 106.187.14.158 via ge-0/0/2.0
+                        >  to 10.169.14.158 via ge-0/0/2.0
 
     inet.3: 27 destinations, 27 routes (27 active, 0 holddown, 0 hidden)
     + = Active Route, - = Last Active, * = Both
 
-    61.200.255.252/32  *[BGP/170] 4w5d 22:51:00, MED 16011, localpref 100, from 59.128.2.250
+    10.36.255.252/32  *[BGP/170] 4w5d 22:51:00, MED 16011, localpref 100, from 10.34.2.250
                         AS path: (65161) I, validation-state: unverified
-                        >  to 106.187.14.158 via ge-0/0/2.0, Push 118420
+                        >  to 10.169.14.158 via ge-0/0/2.0, Push 118420
 
     GIPV.inet.0: 34 destinations, 34 routes (34 active, 0 holddown, 0 hidden)
     + = Active Route, - = Last Active, * = Both
 
-    61.200.255.252/32  *[OSPF/10/10] 4w5d 22:51:00, metric 0, tag 65151500
-                        >  to 106.187.14.158 via ge-0/0/2.0
+    10.36.255.252/32  *[OSPF/10/10] 4w5d 22:51:00, metric 0, tag 65151500
+                        >  to 10.169.14.158 via ge-0/0/2.0
     '''}
 
     golden_parsed_output_6 = {
@@ -11613,7 +11613,7 @@ class TestShowRoute(unittest.TestCase):
                     "holddown-route-count": "1",
                     "rt": [
                         {
-                            "rt-destination": "61.200.255.252/32",
+                            "rt-destination": "10.36.255.252/32",
                             "rt-entry": {
                                 "active-tag": "*",
                                 "age": {
@@ -11622,7 +11622,7 @@ class TestShowRoute(unittest.TestCase):
                                 "metric": "1111",
                                 "nh": [
                                     {
-                                        "to": "106.187.14.158",
+                                        "to": "10.169.14.158",
                                         "via": "ge-0/0/2.0"
                                     }
                                 ],
@@ -11638,11 +11638,11 @@ class TestShowRoute(unittest.TestCase):
                                 },
                                 "med": "16011",
                                 "as-path": " (65161) I",
-                                "learned-from": "59.128.2.250",
+                                "learned-from": "10.34.2.250",
                                 "local-preference": "4294967285",
                                 "nh": [
                                     {
-                                        "to": "106.187.14.158",
+                                        "to": "10.169.14.158",
                                         "via": "ge-0/0/2.0"
                                     }
                                 ],
@@ -11662,7 +11662,7 @@ class TestShowRoute(unittest.TestCase):
                     "holddown-route-count": "0",
                     "rt": [
                         {
-                            "rt-destination": "61.200.255.252/32",
+                            "rt-destination": "10.36.255.252/32",
                             "rt-entry": {
                                 "active-tag": "*",
                                 "age": {
@@ -11670,11 +11670,11 @@ class TestShowRoute(unittest.TestCase):
                                 },
                                 "med": "16011",
                                 "as-path": " (65161) I",
-                                "learned-from": "59.128.2.250",
+                                "learned-from": "10.34.2.250",
                                 "local-preference": "100",
                                 "nh": [
                                     {
-                                        "to": "106.187.14.158",
+                                        "to": "10.169.14.158",
                                         "via": "ge-0/0/2.0",
                                         "mpls-label": "Push 118420",
                                     }
@@ -11695,7 +11695,7 @@ class TestShowRoute(unittest.TestCase):
                     "holddown-route-count": "0",
                     "rt": [
                         {
-                            "rt-destination": "61.200.255.252/32",
+                            "rt-destination": "10.36.255.252/32",
                             "rt-entry": {
                                 "active-tag": "*",
                                 "age": {
@@ -11704,7 +11704,7 @@ class TestShowRoute(unittest.TestCase):
                                 "metric": "0",
                                 "nh": [
                                     {
-                                        "to": "106.187.14.158",
+                                        "to": "10.169.14.158",
                                         "via": "ge-0/0/2.0",
                                     }
                                 ],
@@ -47866,7 +47866,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Local AS: 65171 Peer AS: 65151
                         Age: 3w3d 3:19:15   Metric: 12003   Metric2: 0 
                         Validation State: unverified 
-                        Task: BGP_65151.10.169.14.240
+                        Task: BGP_65172.16.15.14.240
                         Announcement bits (3): 0-KRT 6-BGP_RT_Background 7-Resolve tree 3 
                         AS path: (65151 65000) I 
                         Communities: 65001:10 65151:244
@@ -47905,7 +47905,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Local AS: 65171 Peer AS: 65171
                         Age: 3w1d 16:57:57  Metric: 12003   Metric2: 5 
                         Validation State: unverified 
-                        Task: BGP_65171.10.189.5.253
+                        Task: BGP_65172.16.220.5.253
                         AS path: (65151 65000) I 
                         Communities: 65001:10 65151:244
                         Accepted
@@ -48286,7 +48286,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                         }
                                     ],
                                     "rt-entry-state": "Active Int Ext",
-                                    "task-name": "BGP_65151.10.169.14.240",
+                                    "task-name": "BGP_65172.16.15.14.240",
                                     "validation-state": "unverified"
                                 },
                                 {
@@ -48335,7 +48335,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                         }
                                     ],
                                     "rt-entry-state": "Int Ext Changed",
-                                    "task-name": "BGP_65171.10.189.5.253",
+                                    "task-name": "BGP_65172.16.220.5.253",
                                     "validation-state": "unverified"
                                 }
                             ],

@@ -292,7 +292,7 @@ class test_show_vtp_status(unittest.TestCase):
         VTP Domain Name                 : Domain-Name
         VTP Pruning Mode                : Enabled
         VTP Traps Generation            : Enabled
-        Device ID                       : ffff.aaaa.0000
+        Device ID                       : ffff.aaff.aaaa
         
         Feature VLAN:
         --------------
@@ -300,7 +300,7 @@ class test_show_vtp_status(unittest.TestCase):
         Number of existing VLANs          : 40
         Number of existing extended VLANs : 2
         Configuration Revision            : 13
-        Primary ID                        : 3333.1111.2222
+        Primary ID                        : 3333.11ff.3333
         Primary Description               : description
         MD5 digest                        : 
         
@@ -330,7 +330,7 @@ class test_show_vtp_status(unittest.TestCase):
                 'existing_vlans': 40,
                 'existing_extended_vlans': 2,
                 'configuration_revision': 13,
-                'primary_id': '3333.1111.2222',
+                'primary_id': '3333.11ff.3333',
                 'primary_description': 'description'
               },
               'mst': {
@@ -345,7 +345,7 @@ class test_show_vtp_status(unittest.TestCase):
             'domain_name': 'Domain-Name',
             'pruning_mode': True,
             'traps_generation': True,
-            'device_id': 'ffff.aaaa.0000'
+            'device_id': 'ffff.aaff.aaaa'
         }
     }
 
