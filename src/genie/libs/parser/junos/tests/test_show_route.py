@@ -194,6 +194,45 @@ class test_show_route_table(unittest.TestCase):
                         'protocol_name': 'LDP'}},
                 'total_route_count': 5}}}
 
+    golden_output_5 = {'execute.return_value': '''
+        show route table mpls.0 label 118420
+
+        mpls.0: 54 destinations, 54 routes (54 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
+
+        118420             *[VPN/170] 31w3d 20:13:54
+                            >  to 10.19.198.66 via ge-0/0/3.0, Swap 78
+    '''}
+
+    parsed_output_5 = {
+        "table_name": {
+            "mpls.0": {
+                "destination_count": 54,
+                "total_route_count": 54,
+                "active_route_count": 54,
+                "holddown_route_count": 0,
+                "hidden_route_count": 0,
+                "routes": {
+                    "118420": {
+                        "active_tag": "*",
+                        "protocol_name": "VPN",
+                        "preference": "170",
+                        "age": "31w3d 20:13:54",
+                        "next_hop": {
+                            "next_hop_list": {
+                                1: {
+                                    "to": "10.19.198.66",
+                                    "via": "ge-0/0/3.0",
+                                    "best_route": ">",
+                                    "mpls_label": "Swap 78",
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     def test_show_route_table_empty(self):
         self.maxDiff = None
@@ -229,6 +268,16 @@ class test_show_route_table(unittest.TestCase):
         obj = ShowRouteTable(device=self.device)
         parsed_output = obj.parse(table='inet.3')
         self.assertEqual(parsed_output, self.parsed_output_4)
+
+    def test_show_route_table_5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_5)
+        obj = ShowRouteTable(device=self.device)
+        parsed_output = obj.parse(
+            table='mpls.0',
+            prefix='label',
+            destination='118420')
+        self.assertEqual(parsed_output, self.parsed_output_5)
 
 '''
 Unit test for:
