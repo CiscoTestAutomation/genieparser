@@ -2234,7 +2234,7 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
     """
 
     cli_command = 'show route advertising-protocol {protocol} {ip_address} {route} detail'
-    def cli(self, protocol, ip_address, route="", output=None):
+    def cli(self, protocol, ip_address, route, output=None):
         if not output:
             cmd = self.cli_command.format(protocol=protocol,
                     ip_address=ip_address, route=route)
