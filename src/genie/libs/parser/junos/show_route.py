@@ -364,19 +364,19 @@ class ShowRoute(ShowRouteSchema):
         # 167963             *[LDP/9] 1w6d 20:41:01, metric 1, metric2 100, tag 65000500
         # 10.16.2.2/32         *[Static/5] 00:00:02
         p2 = re.compile(r'^((?P<rt_destination>\S+) +)?(?P<active_tag>[\*\+\-])?'
-            r'\[(?P<protocol>[\w\-]+)\/(?P<preference>\d+)'
-            r'(\/(?P<preference2>\d+))?\] +(?P<text>\S+( +\S+)?)'
-            r'(, +metric +(?P<metric>\d+))?(, +metric2 +(?P<metric2>\d+))?'
-            r'(, +tag +(?P<rt_tag>\d+))?(, +MED +(?P<med>\w+))?'
-            r'(, +localpref +(?P<local_preference>\d+))?'
-            r'(, +from +(?P<learned_from>\S+))?$')
+                        r'\[(?P<protocol>[\w\-]+)\/(?P<preference>\d+)'
+                        r'(\/(?P<preference2>\d+))?\] +(?P<text>\S+( +\S+)?)'
+                        r'(, +metric +(?P<metric>\d+))?(, +metric2 +(?P<metric2>\d+))?'
+                        r'(, +tag +(?P<rt_tag>\d+))?(, +MED +(?P<med>\w+))?'
+                        r'(, +localpref +(?P<local_preference>\d+))?'
+                        r'(, +from +(?P<learned_from>\S+))?$')
 
         # MultiRecv
         p2_1 = re.compile(r'^(?P<nh_type>MultiRecv)$')
         
         # >  to 10.169.14.121 via ge-0/0/1.0
         p3 = re.compile(r'^(\> +)?(to +(?P<to>\S+) +)?via +(?P<via>\S+)'
-                r'(, +(?P<mpls_label>[\S\s]+))?$')
+                        r'(, +(?P<mpls_label>[\S\s]+))?$')
         
         # Local via fxp0.0
         p3_1 = re.compile(r'^Local +via +(?P<nh_local_interface>\S+)$')
@@ -384,7 +384,7 @@ class ShowRoute(ShowRouteSchema):
         # AS path: (65151 65000) I, validation-state: unverified
         # AS path: I
         p4 = re.compile(r'AS +path:(?P<as_path>( +\([\S\s]+\))? +\S+)'
-                r'(, validation-state: +(?P<validation_state>\S+))?$')
+                        r'(, validation-state: +(?P<validation_state>\S+))?$')
         
         # to table inet.0
         p5 = re.compile(r'^to +table +(?P<nh_table>\S+)$')
@@ -851,15 +851,15 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
 
         # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
         p1 = re.compile(r'^(?P<table_name>\S+): +(?P<destination_count>\d+) +'
-                r'destinations, +(?P<total_route_count>\d+) +routes +'
-                r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
-                r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
+                        r'destinations, +(?P<total_route_count>\d+) +routes +'
+                        r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
+                        r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
 
         # 0.0.0.0/0 (1 entry, 1 announced)
         # 10.1.0.0/24 (2 entries, 1 announced)
         # 0.0.0.0 (1 entry, 1 announced)
         p2 = re.compile(r'^(?P<rt_destination>\S+)(\/(?P<rt_prefix_length>\d+))? +'
-            r'\((?P<format>(?P<text>\d+) +(entry|entries)), +(?P<announced>\d+) +announced\)$')
+                        r'\((?P<format>(?P<text>\d+) +(entry|entries)), +(?P<announced>\d+) +announced\)$')
 
         # State: <FlashAll>
         # State: <Active Int Ext>
@@ -868,11 +868,11 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         # *OSPF   Preference: 150/10
         # *BGP    Preference: 170/-121
         p4 = re.compile(r'^(?P<active_tag>\*)?(?P<protocol>\S+)\s+'
-            r'Preference:\s+(?P<preference>\d+)(\/(\-)?(?P<preference2>\d+))?$')
+                        r'Preference:\s+(?P<preference>\d+)(\/(\-)?(?P<preference2>\d+))?$')
 
         # Next hop type: Router, Next hop index: 613
         p5 = re.compile(r'^Next +hop type: +(?P<nh_type>\S+), +Next +hop +'
-            r'index: +(?P<nh_index>\d+)$')
+                        r'index: +(?P<nh_index>\d+)$')
 
         # Address: 0xdfa7934
         p6 = re.compile(r'^Address: +(?P<nh_address>\S+)$')
@@ -883,7 +883,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         # Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
         # Nexthop: 10.169.14.121 via ge-0/0/1.0
         p8 = re.compile(r'^(?P<nh_string>Next *hop):( +(?P<to>\S+))? +via +(?P<via>\S+)'
-            r'( +weight +(?P<weight>\w+))?(, +(?P<selected_next_hop>\w+))?$')
+                        r'( +weight +(?P<weight>\w+))?(, +(?P<selected_next_hop>\w+))?$')
 
         # Protocol next hop: 10.169.14.240
         p8_1 = re.compile(r'^Protocol +next +hop: +(?P<to>\S+)( +Metric: +(?P<metric>\d+))?$')
@@ -910,7 +910,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
 
         # Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
         p15 = re.compile(r'^Announcement +bits +\((?P<announce_bits>\d+)\): +'
-            r'(?P<announce_tasks>[\S\s]+)$')
+                         r'(?P<announce_tasks>[\S\s]+)$')
 
         # AS path: I 
         p16 = re.compile(r'^(?P<aspath_effective_string>AS +path:) +(?P<attr_value>\S+)$')
@@ -970,9 +970,9 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         # from 10.169.14.240
         # Vector len 4.  Val: 1
         p31 = re.compile(r'^(Advertised +metrics:)|'
-                r'(Flags: +)|(Nexthop: +)|(MED: +)|'
-                r'(Localpref: +)|(AS +path:)|(Communities:)|'
-                r'(Path +\S+)|(from +\S+)|(Vector +len)')
+                         r'(Flags: +)|(Nexthop: +)|(MED: +)|'
+                         r'(Localpref: +)|(AS +path:)|(Communities:)|'
+                         r'(Path +\S+)|(from +\S+)|(Vector +len)')
         
         # Indirect next hop: 0xc285884 1048574 INH Session ID: 0x1ac
         p32 = re.compile(r'^Indirect +next +hop: +(?P<indirect_nh>[\S\s]+)$')
@@ -1623,15 +1623,15 @@ class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
         
         # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
         p1 = re.compile(r'^(?P<table_name>\S+): +(?P<destination_count>\d+) +'
-                r'destinations, +(?P<total_route_count>\d+) +routes +'
-                r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
-                r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
+                        r'destinations, +(?P<total_route_count>\d+) +routes +'
+                        r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
+                        r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
 
         # * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
         # 10.220.0.0/16           10.189.5.253         12003   120        (65151 65000) I
         p2 = re.compile(r'^((?P<active_tag>\*) +)?(?P<rt_destination>\S+) +'
-                r'(?P<to>\S+) +(?P<med>\d+) +(?P<local_preference>\d+) +'
-                r'(?P<as_path>\([\S\s]+\) +\w+)$')
+                        r'(?P<to>\S+) +(?P<med>\d+) +(?P<local_preference>\d+) +'
+                        r'(?P<as_path>\([\S\s]+\) +\w+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1767,14 +1767,14 @@ class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
         
         # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
         p1 = re.compile(r'^(?P<table_name>\S+): +(?P<destination_count>\d+) +'
-                r'destinations, +(?P<total_route_count>\d+) +routes +'
-                r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
-                r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
+                        r'destinations, +(?P<total_route_count>\d+) +routes +'
+                        r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
+                        r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
 
         # * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
         p2 = re.compile(r'^(?P<active_tag>\*) +(?P<rt_destination>\S+) +'
-                r'(?P<to>\S+) +(?P<med>\d+) +(?P<local_preference>\d+) +'
-                r'(?P<as_path>\([\S\s]+\) +\w+)$')
+                        r'(?P<to>\S+) +(?P<med>\d+) +(?P<local_preference>\d+) +'
+                        r'(?P<as_path>\([\S\s]+\) +\w+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1900,13 +1900,13 @@ class ShowRouteSummary(ShowRouteSummarySchema):
 
         # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
         p3 = re.compile(r'^(?P<table_name>\S+): +(?P<destination_count>\d+) +'
-                r'destinations, +(?P<total_route_count>\d+) +routes +'
-                r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
-                r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
+                        r'destinations, +(?P<total_route_count>\d+) +routes +'
+                        r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
+                        r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
         
         #  Direct:      6 routes,      6 active
         p4 = re.compile(r'^(?P<protocol_name>\S+): +(?P<protocol_route_count>\d+) +'
-                r'routes, +(?P<active_route_count>\d+) +\w+$')
+                        r'routes, +(?P<active_route_count>\d+) +\w+$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -2246,20 +2246,20 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
 
         # inet.0: 60 destinations, 66 routes (60 active, 1 holddown, 0 hidden)
         p1 = re.compile(r'^(?P<table_name>[^:]+): +(?P<destination_count>\d+) +'
-        r'destinations, +(?P<total_route_count>\d+) +'
-        r'routes +\((?P<active_route_count>\d+) +'
-        r'active, +(?P<holddown_route_count>\d+) +'
-        r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
+                        r'destinations, +(?P<total_route_count>\d+) +'
+                        r'routes +\((?P<active_route_count>\d+) +'
+                        r'active, +(?P<holddown_route_count>\d+) +'
+                        r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
 
         # * 10.36.255.252/32 (1 entry, 1 announced)
         p2 = re.compile(r'^(?P<active_tag>\*)? *(?P<rt_destination>[\d\.]+)'
-        r'/(?P<rt_prefix_length>\d+)'
-        r' +\((?P<rt_entry_count>\d+) +\S+, +(?P<rt_announced_count>\d+) '
-        r'+announced\)$')
+                        r'/(?P<rt_prefix_length>\d+)'
+                        r' +\((?P<rt_entry_count>\d+) +\S+, +'
+                        r'(?P<rt_announced_count>\d+) +announced\)$')
 
         # BGP group lacGCS001 type External
         p3 = re.compile(r'^ *?BGP group +(?P<bgp_group_name>\S+)'
-        r' +type +(?P<bgp_group_type>Internal|External)$')
+                        r' +type +(?P<bgp_group_type>Internal|External)$')
 
         # Route Label: 118071
         p4 = re.compile(r'^ *Route Label: +(?P<route_label>\S+)$')
@@ -2275,8 +2275,9 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
 
         # AS path: [65151] (65171) I
         p8 = re.compile(r'^ *AS path: +(\[(?P<as_number>\d+)\] +)?'
-        r'({(?P<as_set>.*)} +)?(\((?P<confederation>\d+)\) +)?'
-        r'(\(\[(?P<confederation_set>.*)\]\) +)?(?P<as_origin>[IE\?])$')
+                        r'({(?P<as_set>.*)} +)?(\((?P<confederation>\d+)\) +)?'
+                        r'(\(\[(?P<confederation_set>.*)\]\) +)?'
+                        r'(?P<as_origin>[IE\?])$')
 
         # Communities: 65151:65109
         p9 = re.compile(r'^ *Communities: +(?P<communities>\S+)$')
