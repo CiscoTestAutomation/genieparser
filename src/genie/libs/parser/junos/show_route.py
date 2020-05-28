@@ -12,6 +12,7 @@ JUNOS parsers for the following commands:
     * show route instance detail
     * show route protocol {protocol} table {table} extensive {destination}
     * show route advertising-protocol {protocol} {ip_address}
+    * show route advertising-protocol {protocol} {ip_address} {route}
     * show route advertising-protocol {protocol} {ip_address} {route} detail
     * show route forwarding-table summary
     * show route summary
@@ -2256,30 +2257,30 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
                         r'(?P<rt_announced_count>\d+) +announced\)$')
 
         # BGP group lacGCS001 type External
-        p3 = re.compile(r'^ *?BGP group +(?P<bgp_group_name>\S+)'
+        p3 = re.compile(r'^BGP group +(?P<bgp_group_name>\S+)'
                         r' +type +(?P<bgp_group_type>Internal|External)$')
 
         # Route Label: 118071
-        p4 = re.compile(r'^ *Route Label: +(?P<route_label>\S+)$')
+        p4 = re.compile(r'^Route Label: +(?P<route_label>\S+)$')
 
         # Nexthop: 10.189.5.252
-        p5 = re.compile(r'^ *Nexthop: +(?P<to>\S+)$')
+        p5 = re.compile(r'^Nexthop: +(?P<to>\S+)$')
 
         # MED: 29012
-        p6 = re.compile(r'^ *MED: +(?P<med>\S+)$')
+        p6 = re.compile(r'^MED: +(?P<med>\S+)$')
 
         # Localpref: 4294967285
-        p7 = re.compile(r'^ *Localpref: +(?P<local_preference>\S+)$')
+        p7 = re.compile(r'^Localpref: +(?P<local_preference>\S+)$')
 
         # AS path: [65151] (65171) I
-        p8 = re.compile(r'^ *AS +path: +(?P<as_path>.*)$')
+        p8 = re.compile(r'^AS +path: +(?P<as_path>.*)$')
 
 
         # Communities: 65151:65109
-        p9 = re.compile(r'^ *Communities: +(?P<communities>\S+)$')
+        p9 = re.compile(r'^Communities: +(?P<communities>\S+)$')
 
         # Flags: Nexthop Change
-        p10 = re.compile(r'^ *Flags: +(?P<flags>.*)$')
+        p10 = re.compile(r'^Flags: +(?P<flags>.*)$')
 
 
         for line in out.splitlines():
