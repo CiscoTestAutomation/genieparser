@@ -3318,7 +3318,7 @@ class TestShowIpCefInternal(unittest.TestCase):
           receive
       output chain:
         receive
-    1.1.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
+    10.4.1.1/32, epoch 2, flags [att, cnn, rcv, local, SrcElgbl], intf-rcv, RIB[C], refcnt 6, per-destination sharing
       sources: I/F, RIB
       feature space:
         IPRM: 0x0003800C
@@ -3333,12 +3333,12 @@ class TestShowIpCefInternal(unittest.TestCase):
           receive for Loopback0
       output chain:
         receive
-    3.3.3.3/32, epoch 2, RIB[I], refcnt 6, per-destination sharing
+    10.36.3.3/32, epoch 2, RIB[I], refcnt 6, per-destination sharing
       sources: RIB, LTE
       feature space:
         IPRM: 0x00028000
         Broker: linked, distributed at 4th priority
-        LFD: 3.3.3.3/32 1 local label
+        LFD: 10.36.3.3/32 1 local label
         dflt local label info: global/16 [0x3]
             contains path extension list
             dflt disposition chain 0x7FEE86F48B90
@@ -3456,7 +3456,7 @@ class TestShowIpCefInternal(unittest.TestCase):
                                 'sharing': 'per-destination',
                                 'sources': ['Spc'],
                             },
-                            '1.1.1.1/32': {
+                            '10.4.1.1/32': {
                                 'epoch': 2,
                                 'feature_space': {
                                     'broker': {
@@ -3515,7 +3515,7 @@ class TestShowIpCefInternal(unittest.TestCase):
                                 'sharing': 'per-destination',
                                 'sources': ['RIB'],
                             },
-                            '3.3.3.3/32': {
+                            '10.36.3.3/32': {
                                 'epoch': 2,
                                 'feature_space': {
                                     'broker': {

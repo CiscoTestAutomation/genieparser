@@ -858,7 +858,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
     
     Local Interface: TenGigE0/0/0/1
     
-    Chassis id: 0026.8855.6fc0
+    Chassis id: 0026.88ff.c416
     
     Port id: 655
     
@@ -898,7 +898,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
     
     Parent Interface: Bundle-Ether10
     
-    Chassis id: 444c.a896.a25f
+    Chassis id: 444c.a8ff.39f5
     
     Port id: Ethernet1/4
     
@@ -936,7 +936,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
     
     Local Interface: TenGigE0/2/0/11
     
-    Chassis id: 6c41.0e70.c6a1
+    Chassis id: 6c41.0eff.3712
     
     Port id: Te0/0/0/0
     
@@ -966,7 +966,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
     
       IPv4 address: 10.253.47.122
     
-      IPv6 address: 2001:558:ff02::4
+      IPv6 address: 2001:db8:fbd1:8e5c::4
     
      
     
@@ -978,7 +978,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
     
     Local Interface: TenGigE0/2/0/23
     
-    Chassis id: 7c31.0e5f.c0df
+    Chassis id: 7c31.0eff.203f
     
     Port id: TenGigE0/0/0/4
     
@@ -1032,7 +1032,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                                         'system': True,
                                     },
                                 },
-                                'chassis_id': '0026.8855.6fc0',
+                                'chassis_id': '0026.88ff.c416',
                                 'hold_time': 120,
                                 'management_address': '10.253.47.140',
                                 'neighbor_id': 'MX480-01.comcast.net',
@@ -1060,7 +1060,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                                         'system': True,
                                     },
                                 },
-                                'chassis_id': '444c.a896.a25f',
+                                'chassis_id': '444c.a8ff.39f5',
                                 'hold_time': 120,
                                 'management_address': '10.252.26.104',
                                 'neighbor_id': '7280CR2A-01.comcast.net',
@@ -1084,7 +1084,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                                         'system': True,
                                     },
                                 },
-                                'chassis_id': '6c41.0e70.c6a1',
+                                'chassis_id': '6c41.0eff.3712',
                                 'hold_time': 120,
                                 'management_address': '10.253.47.122',
                                 'neighbor_id': 'ASR9904.netlabs.nj.ula.comcast.net',
@@ -1108,7 +1108,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                                         'system': True,
                                     },
                                 },
-                                'chassis_id': '7c31.0e5f.c0df',
+                                'chassis_id': '7c31.0eff.203f',
                                 'hold_time': 120,
                                 'management_address': '10.253.47.30',
                                 'neighbor_id': 'NCS5501',
