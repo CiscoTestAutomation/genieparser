@@ -14,6 +14,7 @@ from genie.libs.parser.junos.show_route import (ShowRouteTable,
                                                 ShowRoute,
                                                 ShowRouteSummary,
                                                 ShowRouteAdvertisingProtocol,
+                                                ShowRouteAdvertisingProtocolDetail,
                                                 ShowRouteForwardingTableSummary,
                                                 ShowRouteReceiveProtocol)
 
@@ -49391,6 +49392,219 @@ class TestShowRouteInstanceDetail(unittest.TestCase):
         obj = ShowRouteInstanceDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output_1 = {'execute.return_value': '''
+        show route advertising-protocol bgp 10.169.14.240 10.36.255.252/32 detail
+
+        inet.0: 62 destinations, 67 routes (62 active, 0 holddown, 0 hidden)
+        * 10.36.255.252/32 (1 entry, 1 announced)
+        BGP group sjkGCS001-EC11 type External
+            Nexthop: Self
+            Flags: Nexthop Change
+            MED: 16011
+            Localpref: 4294967285
+            AS path: [65161] I
+            Communities: 65151:65109
+
+        inet.3: 27 destinations, 27 routes (27 active, 0 holddown, 0 hidden)
+
+        * 10.36.255.252/32 (1 entry, 1 announced)
+        BGP group sjkGCS001-EC11 type External
+            Route Label: 118420
+            Nexthop: Self
+            Flags: Nexthop Change
+            MED: 16011
+            Localpref: 100
+            AS path: [65161] I
+            Communities: 65151:65109
+            Entropy label capable
+    '''}
+
+    golden_parsed_output_1 = {
+        "route-information":{
+            "route-table":
+            [
+                {
+                    "table-name": 'inet.0',
+                    "destination-count": '62',
+                    "total-route-count": '67',
+                    "active-route-count": '62',
+                    "holddown-route-count": '0',
+                    "hidden-route-count": '0',
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "rt-destination": '10.36.255.252',
+                        "rt-prefix-length": '32',
+                        "rt-entry-count": '1',
+                        "rt-announced-count": '1',
+                        "bgp-group": {
+                            "bgp-group-name": 'sjkGCS001-EC11',
+                            "bgp-group-type": 'External',
+                        },
+                        "nh": {
+                            "to": 'Self'
+                            },
+                        "med": '16011',
+                        "local-preference": '4294967285',
+                        "as-path": "[65161] I",
+                        "communities": '65151:65109',
+                        "flags": 'Nexthop Change',
+                    }
+                },
+
+                {
+                    "table-name": 'inet.3',
+                    "destination-count": '27',
+                    "total-route-count": '27',
+                    "active-route-count": '27',
+                    "holddown-route-count": '0',
+                    "hidden-route-count": '0',
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "rt-destination": '10.36.255.252',
+                        "rt-prefix-length": '32',
+                        "rt-entry-count": '1',
+                        "rt-announced-count": '1',
+                        'route-label': '118420',
+                        "bgp-group": {
+                            "bgp-group-name": 'sjkGCS001-EC11',
+                            "bgp-group-type": 'External',
+                        },
+                        "nh": {
+                            "to": 'Self'
+                            },
+                        "med": '16011',
+                        "local-preference": '100',
+                        "as-path": "[65161] I",
+                        "communities": '65151:65109',
+                        "flags": 'Nexthop Change',
+                    }
+                }
+            ]
+        },
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+        show route advertising-protocol bgp 10.34.2.250 10.169.196.254 detail
+
+        inet.0: 60 destinations, 66 routes (60 active, 1 holddown, 0 hidden)
+        10.169.196.254/32 (2 entries, 2 announced)
+        BGP group lacGCS001 type External
+            Nexthop: 10.189.5.252
+            MED: 29012
+            Localpref: 4294967285
+            AS path: [65151] (65171) I
+            Communities: 65151:65109
+
+        inet.3: 27 destinations, 27 routes (27 active, 0 holddown, 0 hidden)
+
+        * 10.169.196.254/32 (1 entry, 1 announced)
+        BGP group lacGCS001 type External
+            Route Label: 118071
+            Nexthop: 10.189.5.252
+            MED: 29012
+            Localpref: 100
+            AS path: [65151] (65171) I
+            Communities: 65151:65109
+            Entropy label capable 
+    '''}
+
+    golden_parsed_output_2 = {
+        "route-information":{
+            "route-table":
+            [
+                {
+                    "table-name": 'inet.0',
+                    "destination-count": '60',
+                    "total-route-count": '66',
+                    "active-route-count": '60',
+                    "holddown-route-count": '1',
+                    "hidden-route-count": '0',
+                    "rt-entry": {
+                        "rt-destination": '10.169.196.254',
+                        "rt-prefix-length": '32',
+                        "rt-entry-count": '2',
+                        "rt-announced-count": '2',
+                        "bgp-group": {
+                            "bgp-group-name": 'lacGCS001',
+                            "bgp-group-type": 'External',
+                        },
+                        "nh": {
+                            "to": '10.189.5.252'
+                            },
+                        "med": '29012',
+                        "local-preference": '4294967285',
+                        "as-path": "[65151] (65171) I",
+                        "communities": '65151:65109',
+                    }
+                },
+
+                {
+                    "table-name": 'inet.3',
+                    "destination-count": '27',
+                    "total-route-count": '27',
+                    "active-route-count": '27',
+                    "holddown-route-count": '0',
+                    "hidden-route-count": '0',
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "rt-destination": '10.169.196.254',
+                        "rt-prefix-length": '32',
+                        "rt-entry-count": '1',
+                        "rt-announced-count": '1',
+                        'route-label': '118071',
+                        "bgp-group": {
+                            "bgp-group-name": 'lacGCS001',
+                            "bgp-group-type": 'External',
+                        },
+                        "nh": {
+                            "to": '10.189.5.252'
+                            },
+                        "med": '29012',
+                        "local-preference": '100',
+                        "as-path": "[65151] (65171) I",
+                        "communities": '65151:65109',
+                    }
+                }
+            ]
+        },
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRouteAdvertisingProtocolDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(
+                protocol='bgp',
+                ip_address='10.34.2.250',
+                route="10.169.196.254",
+            )
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowRouteAdvertisingProtocolDetail(device=self.device)
+        parsed_output = obj.parse(
+            protocol='bgp',
+            ip_address='10.169.14.240',
+            route="10.36.255.252",
+        )
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+    
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowRouteAdvertisingProtocolDetail(device=self.device)
+        parsed_output = obj.parse(
+            protocol='bgp',
+            ip_address='10.34.2.250',
+            route="10.169.196.254",
+        )
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 if __name__ == '__main__':
     unittest.main()
