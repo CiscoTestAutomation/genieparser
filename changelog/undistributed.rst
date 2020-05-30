@@ -14,6 +14,9 @@
         * Added aditional testcase
     * Added ShowRouteAdvertisingProtocolDetail
         * show route advertising-protocol {protocol} {ip_address} {route} detail
+    * Added ShowLldp
+        * show lldp
+
 
 --------------------------------------------------------------------------------
                                 Fix
