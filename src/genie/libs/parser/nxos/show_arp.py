@@ -215,7 +215,7 @@ class ShowIpArpDetailVrfAll(ShowIpArpDetailVrfAllSchema):
 
 		# Address         Age       MAC Address     Interface        Physical Interface  Flags
 		# 10.1.7.1        00:17:15  0012.7fff.04d7  mgmt0            mgmt0
-		# 172.16.23.22    00:13:48  00a0.989a.7b32  Vlan651          port-channel1050    +
+		# 172.16.23.22    00:13:48  00a0.98ff.16cc  Vlan651          port-channel1050    +
 		# 172.16.8.178    00:00:04  INCOMPLETE      Vlan392          Vlan392
 		p1 = re.compile(r'^(?P<address>[\d\.]+) +(?P<age>[\d+\-\:]+) '
 						r'+(?P<mac>[\w\.]+) +(?P<interface>\S+) '

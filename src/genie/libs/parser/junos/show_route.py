@@ -12,6 +12,8 @@ JUNOS parsers for the following commands:
     * show route instance detail
     * show route protocol {protocol} table {table} extensive {destination}
     * show route advertising-protocol {protocol} {ip_address}
+    * show route advertising-protocol {protocol} {ip_address} {route}
+    * show route advertising-protocol {protocol} {ip_address} {route} detail
     * show route forwarding-table summary
     * show route summary
     * show route {route} extensive
@@ -49,7 +51,7 @@ class ShowRouteTableSchema(MetaParser):
                             'preference': str,
                             Optional('preference2'): str,
                             'age': str,
-                            'metric': str,
+                            Optional('metric'): str,
                             'next_hop': {
                                 'next_hop_list': {
                                     Any(): {
@@ -70,18 +72,25 @@ class ShowRouteTableSchema(MetaParser):
 Parser for:
     * show route table {table}
     * show route table {table} {prefix}
+    * show route table {table} {prefix} {destination}
 '''
 class ShowRouteTable(ShowRouteTableSchema):
 
     cli_command = [
         'show route table {table}',
         'show route table {table} {prefix}',
+        'show route table {table} {prefix} {destination}',
     ]
 
-    def cli(self, table, prefix=None, output=None):
+    def cli(self, table, prefix=None, destination=None, output=None):
 
         if output is None:
-            if table and prefix:
+            if table and prefix and destination:
+                command = self.cli_command[2].format(
+                    table=table, 
+                    prefix=prefix,
+                    destination=destination)
+            elif table and prefix:
                 command = self.cli_command[1].format(table=table, prefix=prefix)
             else:
                 command = self.cli_command[0].format(table=table)
@@ -98,10 +107,10 @@ class ShowRouteTable(ShowRouteTableSchema):
 
         # 10.64.4.4/32         *[LDP/9] 03:40:50, metric 110
         # 10.64.4.4/32   *[L-OSPF/9/5] 1d 02:16:51, metric 110
-        r2 = re.compile(r'(?P<rt_destination>\S+)\s+(?P<active_tag>\*|\-\*)'
-                         '\[(?P<protocol_name>[\w\-]+)\/(?P<preference>\d+)(?:\/'
-                         '(?P<preference2>\d+))?\]\s+(?P<age>[\S ]+)\,\s+'
-                         'metric\s+(?P<metric>\d+)$')
+        # 118420             *[VPN/170] 31w3d 20:13:54
+        r2 = re.compile(r'^ *(?P<rt_destination>\S+) +(?P<active_tag>\*)?'
+                        r'\[(?P<protocol_name>[\w\-]+)/(?P<preference>\d+)/?(?P<preference2>\d+)?\]'
+                        r' +(?P<age>[^,]+)(, +metric +(?P<metric>\d+))?$')
 
         # > to 192.168.220.6 via ge-0/0/1.0
         # > to 192.168.220.6 via ge-0/0/1.0, Push 305550
@@ -130,7 +139,7 @@ class ShowRouteTable(ShowRouteTableSchema):
 
                 continue
 
-            # 10.64.4.4/32         *[LDP/9] 03:40:50, metric 110
+            # 10.64.4.4/32         *[LDP/9] 03:40:50, metric 110 
             result = r2.match(line)
             if result:
                 group = result.groupdict()
@@ -316,29 +325,38 @@ class ShowRouteSchema(MetaParser):
 class ShowRoute(ShowRouteSchema):
     """ Parser for:
             * show route
+            * show route {ip_address}
             * show route protocol {protocol} {ip_address}
             * show route protocol {protocol}
             * show route protocol {protocol} table {table}
     """
     cli_command = [
                     'show route',
+                    'show route {ip_address}',
                     'show route protocol {protocol}',
                     'show route protocol {protocol} {ip_address}',
                     'show route protocol {protocol} table {table}']
 
     def cli(self, protocol=None, ip_address=None, table=None, output=None):
         if not output:
-            if ip_address:
-                cmd = self.cli_command[2].format(
+            if protocol and table:
+                cmd = self.cli_command[4].format(
                     protocol=protocol,
-                    ip_address=ip_address)
-            elif table:
-                cmd = self.cli_command[3].format(
-                    protocol=protocol,
-                    table=table)
-            elif protocol:
+                    table=table
+                )
+            elif ip_address and not protocol:
                 cmd = self.cli_command[1].format(
-                    protocol=protocol)
+                    ip_address=ip_address
+                )
+            elif protocol and not ip_address:
+                cmd = self.cli_command[2].format(
+                    protocol=protocol
+                )
+            elif ip_address and protocol:
+                cmd = self.cli_command[3].format(
+                    ip_address=ip_address,
+                    protocol=protocol
+                )
             else:
                 cmd = self.cli_command[0]
 
@@ -363,19 +381,19 @@ class ShowRoute(ShowRouteSchema):
         # 167963             *[LDP/9] 1w6d 20:41:01, metric 1, metric2 100, tag 65000500
         # 10.16.2.2/32         *[Static/5] 00:00:02
         p2 = re.compile(r'^((?P<rt_destination>\S+) +)?(?P<active_tag>[\*\+\-])?'
-            r'\[(?P<protocol>[\w\-]+)\/(?P<preference>\d+)'
-            r'(\/(?P<preference2>\d+))?\] +(?P<text>\S+( +\S+)?)'
-            r'(, +metric +(?P<metric>\d+))?(, +metric2 +(?P<metric2>\d+))?'
-            r'(, +tag +(?P<rt_tag>\d+))?(, +MED +(?P<med>\w+))?'
-            r'(, +localpref +(?P<local_preference>\d+))?'
-            r'(, +from +(?P<learned_from>\S+))?$')
+                        r'\[(?P<protocol>[\w\-]+)\/(?P<preference>\d+)'
+                        r'(\/(?P<preference2>\d+))?\] +(?P<text>\S+( +\S+)?)'
+                        r'(, +metric +(?P<metric>\d+))?(, +metric2 +(?P<metric2>\d+))?'
+                        r'(, +tag +(?P<rt_tag>\d+))?(, +MED +(?P<med>\w+))?'
+                        r'(, +localpref +(?P<local_preference>\d+))?'
+                        r'(, +from +(?P<learned_from>\S+))?$')
 
         # MultiRecv
         p2_1 = re.compile(r'^(?P<nh_type>MultiRecv)$')
         
         # >  to 10.169.14.121 via ge-0/0/1.0
         p3 = re.compile(r'^(\> +)?(to +(?P<to>\S+) +)?via +(?P<via>\S+)'
-                r'(, +(?P<mpls_label>[\S\s]+))?$')
+                        r'(, +(?P<mpls_label>[\S\s]+))?$')
         
         # Local via fxp0.0
         p3_1 = re.compile(r'^Local +via +(?P<nh_local_interface>\S+)$')
@@ -383,7 +401,7 @@ class ShowRoute(ShowRouteSchema):
         # AS path: (65151 65000) I, validation-state: unverified
         # AS path: I
         p4 = re.compile(r'AS +path:(?P<as_path>( +\([\S\s]+\))? +\S+)'
-                r'(, validation-state: +(?P<validation_state>\S+))?$')
+                        r'(, validation-state: +(?P<validation_state>\S+))?$')
         
         # to table inet.0
         p5 = re.compile(r'^to +table +(?P<nh_table>\S+)$')
@@ -850,15 +868,15 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
 
         # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
         p1 = re.compile(r'^(?P<table_name>\S+): +(?P<destination_count>\d+) +'
-                r'destinations, +(?P<total_route_count>\d+) +routes +'
-                r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
-                r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
+                        r'destinations, +(?P<total_route_count>\d+) +routes +'
+                        r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
+                        r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
 
         # 0.0.0.0/0 (1 entry, 1 announced)
         # 10.1.0.0/24 (2 entries, 1 announced)
         # 0.0.0.0 (1 entry, 1 announced)
         p2 = re.compile(r'^(?P<rt_destination>\S+)(\/(?P<rt_prefix_length>\d+))? +'
-            r'\((?P<format>(?P<text>\d+) +(entry|entries)), +(?P<announced>\d+) +announced\)$')
+                        r'\((?P<format>(?P<text>\d+) +(entry|entries)), +(?P<announced>\d+) +announced\)$')
 
         # State: <FlashAll>
         # State: <Active Int Ext>
@@ -867,11 +885,11 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         # *OSPF   Preference: 150/10
         # *BGP    Preference: 170/-121
         p4 = re.compile(r'^(?P<active_tag>\*)?(?P<protocol>\S+)\s+'
-            r'Preference:\s+(?P<preference>\d+)(\/(\-)?(?P<preference2>\d+))?$')
+                        r'Preference:\s+(?P<preference>\d+)(\/(\-)?(?P<preference2>\d+))?$')
 
         # Next hop type: Router, Next hop index: 613
         p5 = re.compile(r'^Next +hop type: +(?P<nh_type>\S+), +Next +hop +'
-            r'index: +(?P<nh_index>\d+)$')
+                        r'index: +(?P<nh_index>\d+)$')
 
         # Address: 0xdfa7934
         p6 = re.compile(r'^Address: +(?P<nh_address>\S+)$')
@@ -882,7 +900,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         # Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
         # Nexthop: 10.169.14.121 via ge-0/0/1.0
         p8 = re.compile(r'^(?P<nh_string>Next *hop):( +(?P<to>\S+))? +via +(?P<via>\S+)'
-            r'( +weight +(?P<weight>\w+))?(, +(?P<selected_next_hop>\w+))?$')
+                        r'( +weight +(?P<weight>\w+))?(, +(?P<selected_next_hop>\w+))?$')
 
         # Protocol next hop: 10.169.14.240
         p8_1 = re.compile(r'^Protocol +next +hop: +(?P<to>\S+)( +Metric: +(?P<metric>\d+))?$')
@@ -909,7 +927,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
 
         # Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
         p15 = re.compile(r'^Announcement +bits +\((?P<announce_bits>\d+)\): +'
-            r'(?P<announce_tasks>[\S\s]+)$')
+                         r'(?P<announce_tasks>[\S\s]+)$')
 
         # AS path: I 
         p16 = re.compile(r'^(?P<aspath_effective_string>AS +path:) +(?P<attr_value>\S+)$')
@@ -969,9 +987,9 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         # from 10.169.14.240
         # Vector len 4.  Val: 1
         p31 = re.compile(r'^(Advertised +metrics:)|'
-                r'(Flags: +)|(Nexthop: +)|(MED: +)|'
-                r'(Localpref: +)|(AS +path:)|(Communities:)|'
-                r'(Path +\S+)|(from +\S+)|(Vector +len)')
+                         r'(Flags: +)|(Nexthop: +)|(MED: +)|'
+                         r'(Localpref: +)|(AS +path:)|(Communities:)|'
+                         r'(Path +\S+)|(from +\S+)|(Vector +len)')
         
         # Indirect next hop: 0xc285884 1048574 INH Session ID: 0x1ac
         p32 = re.compile(r'^Indirect +next +hop: +(?P<indirect_nh>[\S\s]+)$')
@@ -1622,15 +1640,15 @@ class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
         
         # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
         p1 = re.compile(r'^(?P<table_name>\S+): +(?P<destination_count>\d+) +'
-                r'destinations, +(?P<total_route_count>\d+) +routes +'
-                r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
-                r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
+                        r'destinations, +(?P<total_route_count>\d+) +routes +'
+                        r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
+                        r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
 
         # * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
         # 10.220.0.0/16           10.189.5.253         12003   120        (65151 65000) I
         p2 = re.compile(r'^((?P<active_tag>\*) +)?(?P<rt_destination>\S+) +'
-                r'(?P<to>\S+) +(?P<med>\d+) +(?P<local_preference>\d+) +'
-                r'(?P<as_path>\([\S\s]+\) +\w+)$')
+                        r'(?P<to>\S+) +(?P<med>\d+) +(?P<local_preference>\d+) +'
+                        r'(?P<as_path>\([\S\s]+\) +\w+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1668,6 +1686,7 @@ class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
 class ShowRouteAdvertisingProtocolSchema(MetaParser):
     """ Schema for:
             * show route advertising-protocol {protocol} {ip_address}
+            * show route advertising-protocol {protocol} {neighbor} {route}
     """
     """
         schema = {
@@ -1749,12 +1768,23 @@ class ShowRouteAdvertisingProtocolSchema(MetaParser):
 class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
     """ Parser for:
             * show route advertising-protocol {protocol} {neighbor}
+            * show route advertising-protocol {protocol} {neighbor} {route}
     """
 
-    cli_command = 'show route advertising-protocol {protocol} {neighbor}'
-    def cli(self, protocol, neighbor, output=None):
+    cli_command = [
+        'show route advertising-protocol {protocol} {neighbor}',
+        'show route advertising-protocol {protocol} {neighbor} {route}'
+        ]
+    def cli(self, protocol, neighbor, route=None, output=None):
         if not output:
-            cmd = self.cli_command.format(protocol=protocol,
+            if route:
+                cmd = self.cli_command[1].format(
+                    protocol=protocol,
+                    neighbor=neighbor,
+                    route=route)
+            else:
+                cmd = self.cli_command[0].format(
+                    protocol=protocol,
                     neighbor=neighbor)
             out = self.device.execute(cmd)
         else:
@@ -1764,14 +1794,14 @@ class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
         
         # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
         p1 = re.compile(r'^(?P<table_name>\S+): +(?P<destination_count>\d+) +'
-                r'destinations, +(?P<total_route_count>\d+) +routes +'
-                r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
-                r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
+                        r'destinations, +(?P<total_route_count>\d+) +routes +'
+                        r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
+                        r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
 
         # * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
         p2 = re.compile(r'^(?P<active_tag>\*) +(?P<rt_destination>\S+) +'
-                r'(?P<to>\S+) +(?P<med>\d+) +(?P<local_preference>\d+) +'
-                r'(?P<as_path>\([\S\s]+\) +\w+)$')
+                        r'(?P<to>\S+) +(?P<med>\d+) +(?P<local_preference>\d+) +'
+                        r'(?P<as_path>\([\S\s]+\) +\w+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1897,13 +1927,13 @@ class ShowRouteSummary(ShowRouteSummarySchema):
 
         # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
         p3 = re.compile(r'^(?P<table_name>\S+): +(?P<destination_count>\d+) +'
-                r'destinations, +(?P<total_route_count>\d+) +routes +'
-                r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
-                r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
+                        r'destinations, +(?P<total_route_count>\d+) +routes +'
+                        r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
+                        r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
         
         #  Direct:      6 routes,      6 active
         p4 = re.compile(r'^(?P<protocol_name>\S+): +(?P<protocol_route_count>\d+) +'
-                r'routes, +(?P<active_route_count>\d+) +\w+$')
+                        r'routes, +(?P<active_route_count>\d+) +\w+$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -2123,4 +2153,230 @@ class ShowRouteInstanceDetail(ShowRouteInstanceDetailSchema):
                 group = m.groupdict()
                 instance_interface_list.append({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
+        return ret_dict
+
+class ShowRouteAdvertisingProtocolDetailSchema(MetaParser):
+    """ Schema for:
+        * show route advertising-protocol {protocol} {ip_address} {route} detail
+    """
+
+    # schema = {
+    #     Optional("@xmlns:junos"): str,
+    #     "route-information":{
+    #         Optional("@xmlns"): str,
+    #         "route-table": [{
+    #             Optional("@junos:style"): str,
+    #             "table-name": str,
+    #             "destination-count": str,
+    #             "total-route-count": str,
+    #             "active-route-count": str,
+    #             "holddown-route-count": str,
+    #             "hidden-route-count": str,
+    #             "rt-entry": {
+    #                 Optional('active-tag'): str,
+    #                 "rt-destination": str,
+    #                 "rt-prefix-length": str,
+    #                 "rt-entry-count": str,
+    #                 "rt-announced-count": str,
+    #                 Optional('route-label'): str,
+    #                 Optional("bgp-group"): {
+    #                     "bgp-group-name": str,
+    #                     "bgp-group-type": str,
+    #                 },
+    #                 "nh": {
+    #                     "to": str,
+    #                 },
+    #                 "med": str,
+    #                 "local-preference": str,
+    #                 "as-path": str,
+    #                 "communities": str,
+    #                 "flags": str,
+    #             }
+    #         }],
+    #     },
+    # }
+
+    def validate_rt_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('protocol information is not a list')
+
+        entry_schema = Schema({
+            Optional("@junos:style"): str,
+            "table-name": str,
+            "destination-count": str,
+            "total-route-count": str,
+            "active-route-count": str,
+            "holddown-route-count": str,
+            "hidden-route-count": str,
+            "rt-entry": {
+                Optional('active-tag'): str,
+                "rt-destination": str,
+                "rt-prefix-length": str,
+                "rt-entry-count": str,
+                "rt-announced-count": str,
+                Optional('route-label'): str,
+                Optional("bgp-group"): {
+                    "bgp-group-name": str,
+                    "bgp-group-type": str,
+                },
+                "nh": {
+                    "to": str,
+                },
+                "med": str,
+                "local-preference": str,
+                'as-path': str,
+                "communities": str,
+                Optional("flags"): str,
+            }
+        })
+
+        for item in value:
+            entry_schema.validate(item)
+        return value
+
+    # Main schema
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "route-information":{
+            Optional("@xmlns"): str,
+            "route-table": Use(validate_rt_list),
+        },
+    }
+
+class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchema):
+    """ Schema for:
+        * show route advertising-protocol {protocol} {ip_address} {route} detail
+    """
+
+    cli_command = 'show route advertising-protocol {protocol} {ip_address} {route} detail'
+    def cli(self, protocol, ip_address, route, output=None):
+        if not output:
+            cmd = self.cli_command.format(protocol=protocol,
+                    ip_address=ip_address, route=route)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # inet.0: 60 destinations, 66 routes (60 active, 1 holddown, 0 hidden)
+        p1 = re.compile(r'^(?P<table_name>[^:]+): +(?P<destination_count>\d+) +'
+                        r'destinations, +(?P<total_route_count>\d+) +'
+                        r'routes +\((?P<active_route_count>\d+) +'
+                        r'active, +(?P<holddown_route_count>\d+) +'
+                        r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
+
+        # * 10.36.255.252/32 (1 entry, 1 announced)
+        p2 = re.compile(r'^(?P<active_tag>\*)? *(?P<rt_destination>[\d\.]+)'
+                        r'/(?P<rt_prefix_length>\d+)'
+                        r' +\((?P<rt_entry_count>\d+) +\S+, +'
+                        r'(?P<rt_announced_count>\d+) +announced\)$')
+
+        # BGP group lacGCS001 type External
+        p3 = re.compile(r'^BGP group +(?P<bgp_group_name>\S+)'
+                        r' +type +(?P<bgp_group_type>Internal|External)$')
+
+        # Route Label: 118071
+        p4 = re.compile(r'^Route Label: +(?P<route_label>\S+)$')
+
+        # Nexthop: 10.189.5.252
+        p5 = re.compile(r'^Nexthop: +(?P<to>\S+)$')
+
+        # MED: 29012
+        p6 = re.compile(r'^MED: +(?P<med>\S+)$')
+
+        # Localpref: 4294967285
+        p7 = re.compile(r'^Localpref: +(?P<local_preference>\S+)$')
+
+        # AS path: [65151] (65171) I
+        p8 = re.compile(r'^AS +path: +(?P<as_path>.*)$')
+
+
+        # Communities: 65151:65109
+        p9 = re.compile(r'^Communities: +(?P<communities>\S+)$')
+
+        # Flags: Nexthop Change
+        p10 = re.compile(r'^Flags: +(?P<flags>.*)$')
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # inet.0: 60 destinations, 66 routes (60 active, 1 holddown, 0 hidden)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                route_list = ret_dict.setdefault('route-information', {}). \
+                    setdefault('route-table', [])
+                protocol_dict = {}
+                route_list.append(protocol_dict)
+                protocol_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # * 10.36.255.252/32 (1 entry, 1 announced)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                rt_entry_dict = protocol_dict.setdefault('rt-entry', {})
+                rt_entry_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # BGP group lacGCS001 type External
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                bgp_dict = rt_entry_dict.setdefault('bgp-group', {})
+                bgp_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # Route Label: 118071
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                rt_entry_dict.update({'route-label': group['route_label']})
+                continue
+
+            # Nexthop: 10.189.5.252
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                nh_dict = rt_entry_dict.setdefault('nh', {})
+                nh_dict.update({'to': group['to']})
+                continue
+
+            # MED: 29012
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                rt_entry_dict.update({'med': group['med']})
+                continue
+
+            # Localpref: 4294967285
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                rt_entry_dict.update({'local-preference': group['local_preference']})
+                continue
+
+            # AS path: [65151] (65171) I
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                rt_entry_dict.update({'as-path': group['as_path']})
+                continue
+
+            # Communities: 65151:65109
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                rt_entry_dict.update({'communities': group['communities']})
+                continue
+
+            # Flags: Nexthop Change
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                rt_entry_dict.update({'flags': group['flags']})
+                continue
+
         return ret_dict
