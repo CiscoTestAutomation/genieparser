@@ -37,3 +37,5 @@
         * Modified cli method to take an additional parameter
     * Updated ShowRouteAdvertisingProtocol
         * Added {route} parameter option
+    * Added MonitorInterfaceTraffic for:
+        * monitor interface traffic
