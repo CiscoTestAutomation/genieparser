@@ -3934,7 +3934,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 ipv6_interarea = group['ipv6_interarea']
                 ip_interarea_dict = lspid_dict\
                     .setdefault('ip_interarea', {})\
-                    .setdefault(ip_extended_interarea, {})\
+                    .setdefault(ipv6_interarea, {})\
                     .setdefault('address_family', {})\
                     .setdefault(address_family, {})
                 ip_interarea_dict['metric'] = metric

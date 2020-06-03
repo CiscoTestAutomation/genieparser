@@ -75,7 +75,7 @@ class ShowDmvpn(ShowDmvpnSchema):
                 cmd = self.cli_command[0].format(interface=interface)
             else:
                 cmd = self.cli_command[1]
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -179,3 +179,4 @@ class ShowDmvpn(ShowDmvpnSchema):
                 continue
 
         return parsed_dict
+
