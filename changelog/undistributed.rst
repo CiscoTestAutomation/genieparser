@@ -16,6 +16,10 @@
         * show route advertising-protocol {protocol} {ip_address} {route} detail
     * Added ShowLldp
         * show lldp
+    * Added ShowSystemStatistics for:
+        * show system statistics
+    * Added ShowSystemStatisticsNoForwarding or:
+        * show system statistics no-forwarding
 
 
 --------------------------------------------------------------------------------
@@ -25,7 +29,7 @@
 * IOSXE
     * Updated ShowIsisDatabaseDetail for code issue:
         * show isis database detail
-* NXOS 
+* NXOS
     * Updated ShowMacAddressTableBase:
         * Modified the regex patterns to support various outputs.
     * Updated ShowIpArpDetailVrfAll:
