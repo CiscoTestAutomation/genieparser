@@ -422,8 +422,8 @@ class ShowControllersOpticsSchema(MetaParser):
                     Optional('detected_los_lol_fault'): list,
                 },
                 Optional('laser_bias_current'): str,
-                'actual_tx_power': str,
-                'rx_power': str,
+                Optional('actual_tx_power'): str,
+                Optional('rx_power'): str,
                 Optional('performance_monitoring'): str,
                 Optional('threshold_values'): {
                     Any() :{
@@ -432,6 +432,14 @@ class ShowControllersOpticsSchema(MetaParser):
                         'low_alarm': str,
                         'high_warning': str,
                         'low_warning': str,
+                    },
+                },
+                Optional('lane'): {
+                    Any() :{
+                        'laser_bias': str,
+                        'tx_power': str,
+                        'rx_power': str,
+                        'output_frequency': str,
                     },
                 },
                 Optional('lbc_high_threshold'): str,
@@ -560,8 +568,15 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
         # ------------------------  ----------  ---------  ------------  -----------
         # Rx Power Threshold(dBm)          2.0      -13.9          -1.0         -9.9
         p22 = re.compile(r'^(?P<parameter>[\w\s(.]+\)) +(?P<high_alarm>[\w\/.-]+) '
-                          '+(?P<low_alarm>[\w\/.-]+) +(?P<high_warning>[\w\/.-]+) '
-                          '+(?P<low_warning>[\w\/.-]+)$')
+                         r'+(?P<low_alarm>[\w\/.-]+) +(?P<high_warning>[\w\/.-]+) '
+                         r'+(?P<low_warning>[\w\/.-]+)$')
+
+        # Lane Laser Bias TX Power   RX Power    Output Frequency
+        # ---- ---------- ---------- ----------  ----------------
+        # 0    38.9 mA    1.42 dBm   -2.04 dBm   N/A
+        p22_2 = re.compile(r'^(?P<lane>\d+) +(?P<laser_bias>[\w.-]+ +\w+) '
+                           r'+(?P<tx_power>[\w.-]+ +\w+) +(?P<rx_power>[\w.-]+ +\w+) '
+                           r'+(?P<output_frequency>[\S\s]+)$')
 
         # Temperature = 35.00 Celsius 
         p23 = re.compile(r'^Temperature *= *(?P<temperature>[\s\S]+)$')
@@ -817,6 +832,17 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
                 parameter = group['parameter']
                 para_dict = status_dict.setdefault('threshold_values', {}).setdefault(parameter, {})
                 para_dict.update({k: v for k, v in group.items()})
+                continue
+
+            # Lane Laser Bias TX Power   RX Power    Output Frequency
+            # ---- ---------- ---------- ----------  ----------------
+            # 0    38.9 mA    1.42 dBm   -2.04 dBm   N/A
+            m = p22_2.match(line)
+            if m:
+                group = m.groupdict()
+                lane = group.pop('lane')
+                lane_dict = status_dict.setdefault('lane', {}).setdefault(lane, {})
+                lane_dict.update({k: v for k, v in group.items()})
                 continue
 
             # Temperature = 35.00 Celsius 
