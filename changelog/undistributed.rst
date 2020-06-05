@@ -28,9 +28,10 @@
 * JUNOS
     * Updated ShowRouteTable
         * Modified cli method to take an additional parameter
+    * Upated ShowRoute
+        * Modified cli method to accept only ip_address as input
 * IOSXR
     * Updated ShowVrfAllDetail:
         * Modified the regex patterns to support various outputs.
-* JUNOS
-    * Upated ShowRoute
-        * Modified cli method to accept only ip_address as input
+    * Updated ShowControllersOptics:
+        * Added more regex patterns to support various outputs.
