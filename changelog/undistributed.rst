@@ -8,9 +8,18 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
+
 * JUNOS
     * ShowRouteTable
         * Added aditional testcase
+    * Added ShowRouteAdvertisingProtocolDetail
+        * show route advertising-protocol {protocol} {ip_address} {route} detail
+    * Added ShowLldp
+        * show lldp
+    * Added ShowSystemStatistics for:
+        * show system statistics
+    * Added ShowSystemStatisticsNoForwarding or:
+        * show system statistics no-forwarding
 
 
 --------------------------------------------------------------------------------
@@ -25,13 +34,17 @@
         * Modified the regex patterns to support various outputs.
     * Updated ShowIpArpDetailVrfAll:
         * Modified the regex patterns to support various outputs.
-* JUNOS
-    * Updated ShowRouteTable
-        * Modified cli method to take an additional parameter
-    * Upated ShowRoute
-        * Modified cli method to accept only ip_address as input
 * IOSXR
     * Updated ShowVrfAllDetail:
         * Modified the regex patterns to support various outputs.
     * Updated ShowControllersOptics:
         * Added more regex patterns to support various outputs.
+* JUNOS
+    * Upated ShowRoute
+        * Modified cli method to accept only ip_address as input
+    * Updated ShowRouteTable
+        * Modified cli method to take an additional parameter
+    * Updated ShowRouteAdvertisingProtocol
+        * Added {route} parameter option
+    * Added MonitorInterfaceTraffic for:
+        * monitor interface traffic
