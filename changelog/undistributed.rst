@@ -29,6 +29,8 @@
 * IOSXE
     * Updated ShowIsisDatabaseDetail for code issue:
         * show isis database detail
+    * Updated ShowBootvar:
+        * Modified the regex patterns to support various outputs.
 * NXOS
     * Updated ShowMacAddressTableBase:
         * Modified the regex patterns to support various outputs.

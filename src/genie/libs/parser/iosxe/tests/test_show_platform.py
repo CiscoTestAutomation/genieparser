@@ -119,6 +119,33 @@ class TestShowBootvar(unittest.TestCase):
             },
             'config_file': 'bootflash:/taas/psan06_Golden_Config'}
 
+    golden_output5 = {'execute.return_value': '''
+        show bootvar
+        BOOT variable = harddisk:/c1100-universalk9.BLD_POLARIS_DEV_LATEST_20200517_102119.SSA.bin,12;harddisk:/genie-iedge-asr-uut,12;
+        CONFIG_FILE variable =
+        BOOTLDR variable does not exist
+        Configuration register is 0x1 (will be 0x2102 at next reload)
+
+        Standby BOOT variable = harddisk:/c1100-universalk9.BLD_POLARIS_DEV_LATEST_20200517_102119.SSA.bin,12;harddisk:/genie-iedge-asr-uut,12;
+        Standby CONFIG_FILE variable =
+        Standby BOOTLDR variable does not exist
+        Standby Configuration register is 0x1  (will be 0x2102 at next reload)
+    '''}
+
+    golden_parsed_output5 = {
+        "next_reload_boot_variable": "harddisk:/c1100-universalk9.BLD_POLARIS_DEV_LATEST_20200517_102119.SSA.bin,12;harddisk:/genie-iedge-asr-uut,12;",
+        "active": {
+            "boot_variable": "harddisk:/c1100-universalk9.BLD_POLARIS_DEV_LATEST_20200517_102119.SSA.bin,12;harddisk:/genie-iedge-asr-uut,12;",
+            "configuration_register": "0x1",
+            "next_reload_configuration_register": "0x2102"
+        },
+        "standby": {
+            "boot_variable": "harddisk:/c1100-universalk9.BLD_POLARIS_DEV_LATEST_20200517_102119.SSA.bin,12;harddisk:/genie-iedge-asr-uut,12",
+            "configuration_register": "0x1",
+            "next_reload_configuration_register": "0x2102"
+        }
+    }
+
     def test_show_bootvar_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBootvar(device=self.device)
@@ -148,6 +175,12 @@ class TestShowBootvar(unittest.TestCase):
         obj = ShowBootvar(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
+
+    def test_show_bootvar_full5(self):
+        self.device = Mock(**self.golden_output5)
+        obj = ShowBootvar(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
 
 class TestShowVersion(unittest.TestCase):
 
