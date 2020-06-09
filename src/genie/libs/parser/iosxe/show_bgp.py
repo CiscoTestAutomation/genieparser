@@ -920,8 +920,6 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         cmd_vrf = vrf if vrf else None
         default_vrf = None
 
-        
-
         # For address family: IPv4 Unicast
         # For address family: L2VPN E-VPN
         p1 = re.compile(r'^For +address +family:'
