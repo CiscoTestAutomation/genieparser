@@ -29,6 +29,13 @@
 * IOSXE
     * Updated ShowIsisDatabaseDetail for code issue:
         * show isis database detail
+    * Updated ShowBgpDetailSuperParser for code issue:
+        * 'show bgp all detail'
+        * 'show ip bgp all detail'
+        * 'show bgp {address_family} vrf {vrf} detail'
+        * 'show bgp {address_family} rd {rd} detail'
+        * 'show ip bgp {address_family} vrf {vrf} detail'
+        * 'show ip bgp {address_family} rd {rd} detail'
 * NXOS
     * Updated ShowMacAddressTableBase:
         * Modified the regex patterns to support various outputs.
