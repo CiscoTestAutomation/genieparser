@@ -2843,6 +2843,75 @@ class TestShowOspfOverview(unittest.TestCase):
         }
     }
 
+    golden_output2 = {
+        "execute.return_value": """
+            show ospf overview 
+
+            Instance: master
+
+            Router ID: 1.0.0.102
+
+            Route table index: 0
+
+            LSA refresh time: 50 minutes
+
+            Post Convergence Backup: Disabled
+
+            Area: 0.0.0.0
+
+                Stub type: Not Stub
+
+                Authentication Type: None
+
+                Area border routers: 0, AS boundary routers: 0
+
+                Neighbors
+
+                Up (in full state): 0
+
+            Topology: default (ID 0)
+
+                Prefix export count: 0
+
+                Full SPF runs: 2
+
+                SPF delay: 0.200000 sec, SPF holddown: 5 sec, SPF rapid runs: 3
+
+                Backup SPF: Not Needed
+        """
+    }
+
+    golden_parsed_output2 = {
+        "ospf-overview-information": {
+            "ospf-overview": {
+                "instance-name": "master",
+                "ospf-area-overview": {
+                    "authentication-type": "None",
+                    "ospf-abr-count": "0",
+                    "ospf-area": "0.0.0.0",
+                    "ospf-asbr-count": "0",
+                    "ospf-nbr-overview": {
+                        "ospf-nbr-up-count": "0"
+                    },
+                    "ospf-stub-type": "Not Stub"
+                },
+                "ospf-lsa-refresh-time": "50",
+                "ospf-route-table-index": "0",
+                "ospf-router-id": "1.0.0.102",
+                "ospf-topology-overview": {
+                    "ospf-backup-spf-status": "Not Needed",
+                    "ospf-full-spf-count": "2",
+                    "ospf-prefix-export-count": "0",
+                    "ospf-spf-delay": "0.200000",
+                    "ospf-spf-holddown": "5",
+                    "ospf-spf-rapid-runs": "3",
+                    "ospf-topology-id": "0",
+                    "ospf-topology-name": "default"
+                }
+            }
+        }
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowOspfOverview(device=self.device)
@@ -2854,6 +2923,12 @@ class TestShowOspfOverview(unittest.TestCase):
         obj = ShowOspfOverview(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowOspfOverview(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
 class TestShowOspfOverviewExtensive(unittest.TestCase):
