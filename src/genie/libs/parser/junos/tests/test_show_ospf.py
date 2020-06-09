@@ -2849,7 +2849,7 @@ class TestShowOspfOverview(unittest.TestCase):
 
             Instance: master
 
-            Router ID: 1.0.0.102
+            Router ID: 10.1.0.102
 
             Route table index: 0
 
@@ -2897,7 +2897,7 @@ class TestShowOspfOverview(unittest.TestCase):
                 },
                 "ospf-lsa-refresh-time": "50",
                 "ospf-route-table-index": "0",
-                "ospf-router-id": "1.0.0.102",
+                "ospf-router-id": "10.1.0.102",
                 "ospf-topology-overview": {
                     "ospf-backup-spf-status": "Not Needed",
                     "ospf-full-spf-count": "2",
