@@ -2781,7 +2781,9 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                         1: {
                                             'next_hop': '10.3.3.3',
                                             'gateway': '10.6.6.6',
+                                            'imported_path_from': '12:23:10.144.0.0/24',
                                             'originator': '10.6.6.6',
+                                            'route_info': '1',
                                             'next_hop_igp_metric': '21',
                                             'localpref': 200,
                                             'metric': 0,
@@ -2797,7 +2799,9 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                         2: {
                                             'next_hop': '10.13.13.13',
                                             'gateway': '10.13.13.13',
+                                            'imported_path_from': '12:23:10.144.0.0/24',
                                             'originator': '10.0.0.2',
+                                            'route_info': '1',
                                             'next_hop_via': 'green',
                                             'localpref': 100,
                                             'metric': 0,
@@ -2810,6 +2814,7 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                         3: {
                                             'next_hop': '10.3.3.3',
                                             'gateway': '10.7.7.7',
+                                            'imported_path_from': '12:23:10.144.0.0/24',
                                             'originator': '10.7.7.7',
                                             'next_hop_igp_metric': '21',
                                             'localpref': 200,
@@ -2819,6 +2824,7 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                                 'out': '37'
                                             },
                                             'origin_codes': '?',
+                                            'route_info': '1',
                                             'status_codes': '* i',
                                             'ext_community': 'RT:12:23',
                                             'update_group': 6
@@ -7398,7 +7404,6 @@ class TestShowBgpSummary(unittest.TestCase):
         self.device = Mock(**self.golden_output1)
         obj = ShowBgpSummary(device=self.device)
         parsed_output = obj.parse(address_family='vpnv4 unicast', rd='5918:51')
-        import pdb
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_show_bgp_summary_golden2(self):

@@ -920,6 +920,8 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         cmd_vrf = vrf if vrf else None
         default_vrf = None
 
+        
+
         # For address family: IPv4 Unicast
         # For address family: L2VPN E-VPN
         p1 = re.compile(r'^For +address +family:'
@@ -1514,20 +1516,20 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 2001:db8:4::1), (received & used)
             # 4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 FE80:CD00:0:CDE:1257:0:211E:729C), (received & used)
             m = p17.match(line)
-            if m and refresh_epoch_flag:
+            if m and refresh_epoch_flag or m and m.groupdict()['route_info']:
                 group = m.groupdict()
                 route_info = group['route_info']
 
                 if group['route_status']:
-                    route_status = group['route_status'].strip(' ')
-                    if route_status.startswith('(') and route_status.endswith(')'):
-                        route_status = route_status.strip("()")
-                    elif 'imported path from' in route_status:
-                        imported_path_from = route_status.lstrip('imported path from')
+                    temp_route_status = group['route_status'].strip(' ')
+                    if temp_route_status.startswith('(') and temp_route_status.endswith(')'):
+                        route_status = temp_route_status.strip("()")
+                    elif 'imported path from' in temp_route_status:
+                        imported_path_from = temp_route_status.lstrip('imported path from')
                         imported_safety_path = False
                         route_status = ''
-                    elif 'imported safety path from' in route_status:
-                        imported_path_from = route_status.lstrip('imported safety path from')
+                    elif 'imported safety path from' in temp_route_status:
+                        imported_path_from = temp_route_status.lstrip('imported safety path from')
                         imported_safety_path = True
                         route_status = ''
 
