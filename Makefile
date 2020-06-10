@@ -43,9 +43,7 @@ CYTHON_CMD	  = compileAll
 
 # Development pkg requirements
 RELATED_PKGS = genie.libs.parser
-DEPENDENCIES  = restview psutil Sphinx wheel asynctest
-DEPENDENCIES += setproctitle  sphinx-rtd-theme 
-DEPENDENCIES += Cython requests xmltodict
+DEPENDENCIES = xmltodict requests
 
 ifeq ($(MAKECMDGOALS), devnet)
 	BUILD_CMD += --devnet
