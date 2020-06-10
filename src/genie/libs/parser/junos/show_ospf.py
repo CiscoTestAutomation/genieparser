@@ -2779,26 +2779,26 @@ class ShowOspfNeighborExtensiveSchema(MetaParser):
         ospf_lsa_topology_ink_schema = Schema(
             {
             "activity-timer": str,
-            "adj-sid-list": {
+            Optional("adj-sid-list"): {
                 'spring-adjacency-labels': Use(validate_adjacency_labels_list)
             },
             "bdr-address": str,
             "dr-address": str,
             "interface-name": str,
             "neighbor-address": str,
-            "neighbor-adjacency-time": {
+            Optional("neighbor-adjacency-time"): {
                 "#text": str
             },
             "neighbor-id": str,
             "neighbor-priority": str,
-            "neighbor-up-time": {
+            Optional("neighbor-up-time"): {
                 "#text": str,
                 Optional("junos:seconds"): str,
             },
             "options": str,
             "ospf-area": str,
             "ospf-neighbor-state": str,
-            "ospf-neighbor-topology": {
+            Optional("ospf-neighbor-topology"): {
                 "ospf-neighbor-topology-state": str,
                 "ospf-topology-id": str,
                 "ospf-topology-name": str
