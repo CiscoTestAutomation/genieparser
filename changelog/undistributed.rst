@@ -44,7 +44,7 @@
     * Updated ShowControllersOptics:
         * Added more regex patterns to support various outputs.
 * JUNOS
-    * Upated ShowRoute
+    * Updated ShowRoute
         * Modified cli method to accept only ip_address as input
     * Updated ShowRouteTable
         * Modified cli method to take an additional parameter
@@ -54,3 +54,7 @@
         * monitor interface traffic
     * Updated ShowOspfOverview
         * Optional key issue resolved
+* IOSXE
+    * Updated ShowIpInterface
+        * Modified regex to accommodate different outputs
+
