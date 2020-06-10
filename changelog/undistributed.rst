@@ -42,7 +42,7 @@
     * Updated ShowControllersOptics:
         * Added more regex patterns to support various outputs.
 * JUNOS
-    * Upated ShowRoute
+    * Updated ShowRoute
         * Modified cli method to accept only ip_address as input
     * Updated ShowRouteTable
         * Modified cli method to take an additional parameter
@@ -50,3 +50,6 @@
         * Added {route} parameter option
     * Added MonitorInterfaceTraffic for:
         * monitor interface traffic
+* IOSXE
+    * Updated ShowIpInterface
+        * Modified regex to accommodate different outputs
