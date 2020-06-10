@@ -29,6 +29,8 @@
 * IOSXE
     * Updated ShowIsisDatabaseDetail for code issue:
         * show isis database detail
+    * Updated ShowBootvar:
+        * Modified the regex patterns to support various outputs.
 * NXOS
     * Updated ShowMacAddressTableBase:
         * Modified the regex patterns to support various outputs.
@@ -50,6 +52,9 @@
         * Added {route} parameter option
     * Added MonitorInterfaceTraffic for:
         * monitor interface traffic
+    * Updated ShowOspfOverview
+        * Optional key issue resolved
 * IOSXE
     * Updated ShowIpInterface
         * Modified regex to accommodate different outputs
+

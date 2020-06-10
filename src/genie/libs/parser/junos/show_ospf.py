@@ -1000,7 +1000,7 @@ class ShowOspfOverviewSchema(MetaParser):
             "ospf-lsa-refresh-time": str,
             "ospf-route-table-index": str,
             "ospf-router-id": str,
-            "ospf-spring-overview": {
+            Optional("ospf-spring-overview"): {
                 "ospf-node-segment": {
                     "ospf-node-segment-ipv4-index": str
                 },
@@ -1019,7 +1019,7 @@ class ShowOspfOverviewSchema(MetaParser):
                     "ospf-srgb-start-label": str
                 }
             },
-            "ospf-tilfa-overview": {
+            Optional("ospf-tilfa-overview"): {
                 "ospf-tilfa-ecmp-backup": str,
                 "ospf-tilfa-enabled": str,
                 "ospf-tilfa-max-labels": str,
@@ -1054,6 +1054,7 @@ class ShowOspfOverview(ShowOspfOverviewSchema):
             out = output
 
         ret_dict = {}
+        spring_dict = {}
 
 
         #Instance: master
@@ -1316,9 +1317,8 @@ class ShowOspfOverview(ShowOspfOverviewSchema):
             if m:
                 group = m.groupdict()
                 ospf_topology_entry_dict.update({'ospf-backup-spf-status': group['ospf_backup_spf_status']})
-
-                ospf_entry_list['ospf-spring-overview'] = spring_dict
-
+                if spring_dict:
+                    ospf_entry_list['ospf-spring-overview'] = spring_dict
                 continue
 
         return ret_dict
@@ -2779,26 +2779,26 @@ class ShowOspfNeighborExtensiveSchema(MetaParser):
         ospf_lsa_topology_ink_schema = Schema(
             {
             "activity-timer": str,
-            "adj-sid-list": {
+            Optional("adj-sid-list"): {
                 'spring-adjacency-labels': Use(validate_adjacency_labels_list)
             },
             "bdr-address": str,
             "dr-address": str,
             "interface-name": str,
             "neighbor-address": str,
-            "neighbor-adjacency-time": {
+            Optional("neighbor-adjacency-time"): {
                 "#text": str
             },
             "neighbor-id": str,
             "neighbor-priority": str,
-            "neighbor-up-time": {
+            Optional("neighbor-up-time"): {
                 "#text": str,
                 Optional("junos:seconds"): str,
             },
             "options": str,
             "ospf-area": str,
             "ospf-neighbor-state": str,
-            "ospf-neighbor-topology": {
+            Optional("ospf-neighbor-topology"): {
                 "ospf-neighbor-topology-state": str,
                 "ospf-topology-id": str,
                 "ospf-topology-name": str

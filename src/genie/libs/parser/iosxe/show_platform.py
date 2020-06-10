@@ -46,6 +46,7 @@ class ShowBootvarSchema(MetaParser):
         },
         Optional('standby'): {
             'configuration_register': str,
+            Optional("next_reload_configuration_register"): str,
             Optional('boot_variable'): str,
         },
     }
@@ -81,7 +82,9 @@ class ShowBootvar(ShowBootvarSchema):
                         r'(?: +\(will +be +(?P<var2>(\S+)) +at +next +reload\))?$')
 
         # Standby Configuration register is 0x2002
-        p4 = re.compile(r'^Standby +Configuration +register +is +(?P<var>\w+)$')
+        # Standby Configuration register is 0x1  (will be 0x2102 at next reload)
+        p4 = re.compile(r'^Standby +Configuration +register +is +(?P<var>\w+)'
+                        r'(?: +\(will +be +(?P<var2>\S+) +at +next +reload\))?$')
 
         # CONFIG_FILE variable =
         p5 = re.compile(r'^CONFIG_FILE +variable += +(?P<var>\S+)$')
@@ -127,6 +130,8 @@ class ShowBootvar(ShowBootvarSchema):
             m = p4.match(line)
             if m:
                 boot_dict.setdefault('standby', {})['configuration_register'] = m.groupdict()['var']
+                if m.groupdict()['var2']:
+                    boot_dict.setdefault('standby', {})['next_reload_configuration_register'] = m.groupdict()['var2']
                 continue
 
             # CONFIG_FILE variable =
