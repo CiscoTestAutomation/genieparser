@@ -199,7 +199,7 @@ class ShowOspf3NeighborExtensive(ShowOspf3NeighborExtensiveSchema):
 
         #Up 3w0d 17:07:00, adjacent 3w0d 17:07:00
         #Up 00:00:08
-        p5 = re.compile(r'^Up +(?P<up>\S+( +[\d\:]+)?)(, adjacent +(?P<adjacent>\S+ +[\d\:]+))?$')
+        p5 = re.compile(r'^Up +(?P<up>\S+( +[\d\:]+)?)(, +adjacent +(?P<adjacent>\S+ +[\d\:]+))?$')
 
         for line in out.splitlines():
             line = line.strip()
