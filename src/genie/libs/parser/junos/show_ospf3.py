@@ -139,12 +139,12 @@ class ShowOspf3NeighborExtensiveSchema(MetaParser):
             "dr-id": str,
             "interface-name": str,
             "neighbor-address": str,
-            "neighbor-adjacency-time": {
+            Optional("neighbor-adjacency-time"): {
                 "#text": str
             },
             "neighbor-id": str,
             "neighbor-priority": str,
-            "neighbor-up-time": {
+            Optional("neighbor-up-time"): {
                 "#text": str
             },
             "options": str,
@@ -198,7 +198,8 @@ class ShowOspf3NeighborExtensive(ShowOspf3NeighborExtensiveSchema):
         p4 = re.compile(r'^DR-ID +(?P<drid>\S+), BDR-ID +(?P<bdrid>\S+)$')
 
         #Up 3w0d 17:07:00, adjacent 3w0d 17:07:00
-        p5 = re.compile(r'^Up +(?P<up>\S+ +[\d\:]+), adjacent +(?P<adjacent>\S+ +[\d\:]+)$')
+        #Up 00:00:08
+        p5 = re.compile(r'^Up +(?P<up>\S+( +[\d\:]+)?)(, +adjacent +(?P<adjacent>\S+ +[\d\:]+))?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -215,7 +216,7 @@ class ShowOspf3NeighborExtensive(ShowOspf3NeighborExtensiveSchema):
                 ospf3_entry_dict['interface-name'] = group['interfacename']
                 ospf3_entry_dict['ospf-neighbor-state'] = group['ospfneighborstate']
                 ospf3_entry_dict['neighbor-priority'] = group['pri']
-
+                ospf3_entry_list.append(ospf3_entry_dict)
                 continue
 
             #Neighbor-address fe80::250:56ff:fe8d:53c0
@@ -246,9 +247,9 @@ class ShowOspf3NeighborExtensive(ShowOspf3NeighborExtensiveSchema):
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                ospf3_entry_dict['neighbor-adjacency-time'] = {'#text': group['adjacent']}
+                if group['adjacent']:
+                    ospf3_entry_dict['neighbor-adjacency-time'] = {'#text': group['adjacent']}
                 ospf3_entry_dict['neighbor-up-time'] = {'#text': group['up']}
-                ospf3_entry_list.append(ospf3_entry_dict)
                 continue
 
         return ret_dict

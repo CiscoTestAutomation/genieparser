@@ -36,6 +36,8 @@
         * 'show bgp {address_family} rd {rd} detail'
         * 'show ip bgp {address_family} vrf {vrf} detail'
         * 'show ip bgp {address_family} rd {rd} detail'
+    * Updated ShowBootvar:
+        * Modified the regex patterns to support various outputs.
 * NXOS
     * Updated ShowMacAddressTableBase:
         * Modified the regex patterns to support various outputs.
@@ -49,7 +51,7 @@
     * Updated ShowControllersOptics:
         * Added more regex patterns to support various outputs.
 * JUNOS
-    * Upated ShowRoute
+    * Updated ShowRoute
         * Modified cli method to accept only ip_address as input
     * Updated ShowRouteTable
         * Modified cli method to take an additional parameter
@@ -57,3 +59,9 @@
         * Added {route} parameter option
     * Added MonitorInterfaceTraffic for:
         * monitor interface traffic
+    * Updated ShowOspfOverview
+        * Optional key issue resolved
+* IOSXE
+    * Updated ShowIpInterface
+        * Modified regex to accommodate different outputs
+

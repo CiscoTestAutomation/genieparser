@@ -1000,7 +1000,7 @@ class ShowOspfOverviewSchema(MetaParser):
             "ospf-lsa-refresh-time": str,
             "ospf-route-table-index": str,
             "ospf-router-id": str,
-            "ospf-spring-overview": {
+            Optional("ospf-spring-overview"): {
                 "ospf-node-segment": {
                     "ospf-node-segment-ipv4-index": str
                 },
@@ -1019,7 +1019,7 @@ class ShowOspfOverviewSchema(MetaParser):
                     "ospf-srgb-start-label": str
                 }
             },
-            "ospf-tilfa-overview": {
+            Optional("ospf-tilfa-overview"): {
                 "ospf-tilfa-ecmp-backup": str,
                 "ospf-tilfa-enabled": str,
                 "ospf-tilfa-max-labels": str,
@@ -1054,6 +1054,7 @@ class ShowOspfOverview(ShowOspfOverviewSchema):
             out = output
 
         ret_dict = {}
+        spring_dict = {}
 
 
         #Instance: master
@@ -1316,9 +1317,8 @@ class ShowOspfOverview(ShowOspfOverviewSchema):
             if m:
                 group = m.groupdict()
                 ospf_topology_entry_dict.update({'ospf-backup-spf-status': group['ospf_backup_spf_status']})
-
-                ospf_entry_list['ospf-spring-overview'] = spring_dict
-
+                if spring_dict:
+                    ospf_entry_list['ospf-spring-overview'] = spring_dict
                 continue
 
         return ret_dict
