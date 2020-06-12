@@ -536,7 +536,6 @@ class ShowInterfacesSchema(MetaParser):
             Optional("ld-pdu-error"): str,
             Optional("link-level-type"): str,
             Optional("link-type"): str,
-            Optional("link-mode"): str,
             Optional("local-index"): str,
             Optional("logical-interface"): {
                 Optional("address-family"): Use(verify_address_family_list),
@@ -729,10 +728,11 @@ class ShowInterfaces(ShowInterfacesSchema):
         p3 = re.compile(r'^Description: +(?P<description>\S+)$')
 
         # Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
-        p4 = re.compile(r'(Type: +\S+, )?Link-level +type: +(?P<link_level_type>\S+), +'
-            r'MTU: +(?P<mtu>\d+),?(, +MRU: +(?P<mru>\d+),)?( +(?P<sonet_mode>\S+) +mode,)?'
-            r'( +Link-mode: +(?P<link_mode>[\S]+),)?( +Speed: +(?P<speed>\S+),)?'
-            r'( +BPDU +Error: +(?P<bpdu_error>\S+),)?')
+        p4 = re.compile(r'^(Type: +\S+, )?Link-level +type: +'
+            r'(?P<link_level_type>\S+), +MTU: +(?P<mtu>\S+)'
+            r'(, +MRU: +(?P<mru>\d+))?(, +(?P<sonet_mode>\S+) +mode)?(, +Link-mode: +[\S]+)?'
+            r'(, +Speed: +(?P<speed>\S+))?(, +BPDU +Error: +'
+            r'(?P<bpdu_error>\S+),)?$')
         
         # Speed: 800mbps
         p4_1 = re.compile(r'^Speed: +(?P<speed>\S+)$')
@@ -848,8 +848,8 @@ class ShowInterfaces(ShowInterfacesSchema):
         p27 = re.compile(r'^Output +packets *: +(?P<output_packets>\S+)$')
 
         # Protocol inet, MTU: 1500
-        p28 = re.compile(r'Protocol +(?P<address_family_name>\S+), +'
-            r'MTU: +(?P<mtu>\S+)(, +Maximum labels: +(?P<maximum_labels>\S+))?')
+        p28 = re.compile(r'^Protocol +(?P<address_family_name>\S+), +'
+            r'MTU: +(?P<mtu>\S+)(, +Maximum labels: +(?P<maximum_labels>\S+))?$')
 
         # Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
         p30 = re.compile(r'^Max +nh +cache: +(?P<max_local_cache>\d+), +'
