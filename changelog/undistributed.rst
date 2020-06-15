@@ -61,6 +61,8 @@
         * monitor interface traffic
     * Updated ShowOspfOverview
         * Optional key issue resolved
+    * Updated ShowInterfaceExtensive
+        * No longer breaks on use and previously unused data is now used
 * IOSXE
     * Updated ShowIpInterface
         * Modified regex to accommodate different outputs
