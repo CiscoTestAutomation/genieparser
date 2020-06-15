@@ -14562,7 +14562,6 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
         }
     }
 
-
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowOspfDatabaseLsaidDetail(device=self.device)
@@ -14580,9 +14579,6 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
         self.device = Mock(**self.golden_output_2)
         obj = ShowOspfDatabaseLsaidDetail(device=self.device)
         parsed_output = obj.parse(ipaddress='10.34.2.250')
-        import pprint
-        logFile = open('/Users/adelph/pyats_env2/data.txt', 'w')
-        pprint.pprint(parsed_output, logFile)
 
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
