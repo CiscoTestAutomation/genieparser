@@ -20,6 +20,9 @@
         * show system statistics
     * Added ShowSystemStatisticsNoForwarding or:
         * show system statistics no-forwarding
+    * Updated ShowOspfDatabaseLsaidDetail:
+        * added testcase
+        *extended from ShowOspfDatabaseAdvertisingRouterSelfDetail
 
 
 --------------------------------------------------------------------------------
