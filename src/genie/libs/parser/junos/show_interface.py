@@ -849,8 +849,9 @@ class ShowInterfaces(ShowInterfacesSchema):
         p27 = re.compile(r'^Output +packets *: +(?P<output_packets>\S+)$')
 
         # Protocol inet, MTU: 1500
-        p28 = re.compile(r'^Protocol +(?P<address_family_name>\S+), +'
-            r'MTU: +(?P<mtu>\S+)(, +Maximum labels: +(?P<maximum_labels>\S+))?$')
+        p28 = re.compile(r'^^Protocol +(?P<address_family_name>\S+), +'
+            r'MTU: +(?P<mtu>\S+)(, +Maximum labels: +(?P<maximum_labels>\S+))?'
+            r'(, +Generation: +\d+, +Route +table: +\d+)?$$')
 
         # Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
         p30 = re.compile(r'^Max +nh +cache: +(?P<max_local_cache>\d+), +'
