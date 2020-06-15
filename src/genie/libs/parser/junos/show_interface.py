@@ -459,6 +459,8 @@ class ShowInterfacesSchema(MetaParser):
                 Optional("max-local-cache"): str,
                 Optional("maximum-labels"): str,
                 "mtu": str,
+                Optional("generation"): str,
+                Optional("route-table"): str,
                 Optional("new-hold-limit"): str
             })
             # Validate each dictionary in list
@@ -849,9 +851,10 @@ class ShowInterfaces(ShowInterfacesSchema):
         p27 = re.compile(r'^Output +packets *: +(?P<output_packets>\S+)$')
 
         # Protocol inet, MTU: 1500
+        # Protocol vpls, MTU: Unlimited, Generation: 153, Route table: 1
         p28 = re.compile(r'^^Protocol +(?P<address_family_name>\S+), +'
             r'MTU: +(?P<mtu>\S+)(, +Maximum labels: +(?P<maximum_labels>\S+))?'
-            r'(, +Generation: +\d+, +Route +table: +\d+)?$$')
+            r'(, +Generation: +(?P<generation>\d+), +Route +table: +(?P<route_table>\d+))?$$')
 
         # Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
         p30 = re.compile(r'^Max +nh +cache: +(?P<max_local_cache>\d+), +'
@@ -1374,6 +1377,7 @@ class ShowInterfaces(ShowInterfacesSchema):
 
             # Protocol inet, MTU: 1500
             # Protocol mpls, MTU: 1488, Maximum labels: 3
+            # Protocol vpls, MTU: Unlimited, Generation: 153, Route table: 1
             m = p28.match(line)
             if m:
                 group = m.groupdict()
