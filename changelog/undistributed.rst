@@ -20,6 +20,8 @@
         * show system statistics
     * Added ShowSystemStatisticsNoForwarding or:
         * show system statistics no-forwarding
+    * Added ShowInterfacesExtensiveInterface for:
+        * show interfaces extensive {interface}
 
 
 --------------------------------------------------------------------------------
@@ -61,6 +63,10 @@
         * monitor interface traffic
     * Updated ShowOspfOverview
         * Optional key issue resolved
+    * Updated ShowInterfaces
+        * Optional key issue resolved
+        * Regex modified to support more output
+        * 'show interfaces extensive {interface}' changed to 'show interfaces {interface} extensive'
 * IOSXE
     * Updated ShowIpInterface
         * Modified regex to accommodate different outputs
