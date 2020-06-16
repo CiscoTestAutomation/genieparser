@@ -5547,6 +5547,24 @@ class TestShowInterfaces(unittest.TestCase):
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
                                 "new-hold-limit": "75000"
+                            },
+                            {
+                                "address-family-flags": {
+                                    "ifff-is-primary": True
+                                },
+                                "address-family-name": "mpls",
+                                "generation": "150",
+                                "maximum-labels": "3",
+                                "mtu": "1488"
+                            },
+                            {
+                                "address-family-flags": {
+                                    "ifff-is-primary": True
+                                },
+                                "address-family-name": "multiservice",
+                                "generation": "163",
+                                "mtu": "Unlimited",
+                                "route-table": "0",
                             }
                         ],
                         "encapsulation": "ENET2",
@@ -5677,7 +5695,16 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-packets": "0",
                             "output-bytes": "0",
                             "output-packets": "0"
-                        }
+                        },
+                        "address-family": [{
+                            "address-family-flags": {
+                                "ifff-is-primary": True
+                            },
+                            "address-family-name": "vpls",
+                            "generation": "155",
+                            "mtu": "Unlimited",
+                            "route-table": "1",
+                        }]
                     },
                     "name": "lc-0/0/0",
                     "output-error-list": {},
@@ -6028,7 +6055,20 @@ class TestShowInterfaces(unittest.TestCase):
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
                                 "new-hold-limit": "75000"
-                            }
+                            },
+                            {
+                                "address-family-name": "mpls",
+                                "generation": "156",
+                                "mtu": "1488",
+                                "maximum-labels": "3",
+                            },
+                            {
+                                "address-family-name": "multiservice",
+                                "generation": "166",
+                                "mtu": "Unlimited",
+                                "route-table": "0",
+                            },
+                            
                         ],
                         "encapsulation": "ENET2",
                         "if-config-flags": {
@@ -6231,6 +6271,19 @@ class TestShowInterfaces(unittest.TestCase):
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
                                 "new-hold-limit": "75000"
+                            },
+                            {
+                                "address-family-name": "mpls",
+                                "generation": "180",
+                                "maximum-labels": "3",
+                                "mtu": "1488",
+                                "route-table": "0",
+                            },
+                            {
+                                "address-family-name": "multiservice",
+                                "generation": "181",
+                                "mtu": "Unlimited",
+                                "route-table": "0",
                             }
                         ],
                         "encapsulation": "ENET2",
@@ -6417,6 +6470,12 @@ class TestShowInterfaces(unittest.TestCase):
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
                                 "new-hold-limit": "75000"
+                            },
+                            {
+                                "address-family-name": "multiservice",
+                                "generation": "175",
+                                "mtu": "Unlimited",
+                                "route-table": "0",
                             }
                         ],
                         "encapsulation": "ENET2",
@@ -7375,6 +7434,15 @@ class TestShowInterfaces(unittest.TestCase):
                                 "address-family-flags": {
                                     "ifff-none": True
                                 },
+                                "address-family-name": "iso",
+                                "generation": "132",
+                                "mtu": "Unlimited",
+                                "route-table": "0",
+                            },
+                            {
+                                "address-family-flags": {
+                                    "ifff-none": True
+                                },
                                 "address-family-name": "inet6",
                                 "interface-address": [
                                     {
@@ -7426,6 +7494,24 @@ class TestShowInterfaces(unittest.TestCase):
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
                                 "new-hold-limit": "0"
+                            },
+                            {
+                                "address-family-flags": {
+                                    "ifff-none": True
+                                },
+                                "address-family-name": "mpls",
+                                "generation": "149",
+                                "mtu": "Unlimited",
+                                "maximum-labels": "3",
+                            },
+                            {
+                                "address-family-flags": {
+                                    "ifff-none": True
+                                },
+                                "address-family-name": "85",
+                                "generation": "129",
+                                "mtu": "Unlimited",
+                                "route-table": "0",
                             },
                             {
                                 "address-family-flags": {
@@ -7488,30 +7574,9 @@ class TestShowInterfaces(unittest.TestCase):
                                 "address-family-flags": {
                                     "ifff-none": True
                                 },
-                                "address-family-name": "inet",
-                                "interface-address": {
-                                    "ifa-flags": {
-                                        "ifaf-is-primary": True
-                                    }
-                                },
-                                "intf-curr-cnt": "0",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "0",
+                                "address-family-name": "vpls",
+                                "generation": "132",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
-                            },
-                            {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
-                                "address-family-name": "inet",
-                                "intf-curr-cnt": "0",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "0",
-                                "mtu": "Unlimited",
-                                "new-hold-limit": "0"
                             },
                             {
                                 "address-family-flags": {
@@ -7541,6 +7606,44 @@ class TestShowInterfaces(unittest.TestCase):
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
                                 "new-hold-limit": "0"
+                            },
+                            {
+                                "address-family-flags": {
+                                    "ifff-none": True
+                                },
+                                "address-family-name": "inet",
+                                "interface-address": {
+                                    "ifa-flags": {
+                                        "ifaf-is-primary": True
+                                    }
+                                },
+                                "intf-curr-cnt": "0",
+                                "intf-dropcnt": "0",
+                                "intf-unresolved-cnt": "0",
+                                "max-local-cache": "0",
+                                "mtu": "Unlimited",
+                                "new-hold-limit": "0"
+                            },
+                            {
+                                "address-family-flags": {
+                                    "ifff-none": True
+                                },
+                                "address-family-name": "inet",
+                                "intf-curr-cnt": "0",
+                                "intf-dropcnt": "0",
+                                "intf-unresolved-cnt": "0",
+                                "max-local-cache": "0",
+                                "mtu": "Unlimited",
+                                "new-hold-limit": "0"
+                            },
+                            {
+                                "address-family-flags": {
+                                    "ifff-none": True
+                                },
+                                "address-family-name": "iso",
+                                "generation": "151",
+                                "mtu": "Unlimited",
+                                "route-table": "5",
                             },
                             {
                                 "address-family-flags": {
@@ -7553,6 +7656,25 @@ class TestShowInterfaces(unittest.TestCase):
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
                                 "new-hold-limit": "0"
+                            },
+                            {
+                                "address-family-flags": {
+                                    "ifff-none": True
+                                },
+                                "address-family-name": "mpls",
+                                "generation": "152",
+                                "maximum-labels": "3",
+                                "mtu": "Unlimited",
+                                "route-table": "6",
+                            },
+                            {
+                                "address-family-flags": {
+                                    "ifff-none": True
+                                },
+                                "address-family-name": "vpls",
+                                "generation": "154",
+                                "mtu": "Unlimited",
+                                "route-table": "7",
                             },
                             {
                                 "address-family-flags": {
@@ -7754,10 +7876,9 @@ class TestShowInterfaces(unittest.TestCase):
                                 "mtu": "1500",
                                 "new-hold-limit": "75000"
                             },
-                            {
+                            {  
                                 "address-family-flags": {
-                                    "ifff-is-primary": True,
-                                    "ifff-primary": True
+                                    "ifff-is-primary": True
                                 },
                                 "address-family-name": "inet6",
                                 "interface-address": [
@@ -7776,11 +7897,6 @@ class TestShowInterfaces(unittest.TestCase):
                                             "ifaf-is-primary": True
                                         },
                                         "ifa-local": "2001:db8:8d82::a:0:0:4"
-                                    },
-                                    {
-                                        "ifa-flags": {
-                                            "ifaf-none": True
-                                        }
                                     }
                                 ],
                                 "intf-curr-cnt": "1",
@@ -7789,6 +7905,20 @@ class TestShowInterfaces(unittest.TestCase):
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
                                 "new-hold-limit": "75000"
+                            },
+                            {
+                                "address-family-flags": {
+                                    "ifff-is-primary": True,
+                                    "ifff-primary": True,
+                                },
+                                "address-family-name": "tnp",
+                                "generation": "4",
+                                "mtu": "1500",
+                                "interface-address": {
+                                    "ifa-flags": {
+                                        "ifaf-none": True
+                                    }
+                                }
                             }
                         ],
                         "encapsulation": "ENET2",
