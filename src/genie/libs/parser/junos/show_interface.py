@@ -734,6 +734,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         p3 = re.compile(r'^Description: +(?P<description>\S+)$')
 
         # Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
+        # Link-level type: Ethernet, MTU: 1514, Link-mode: Full-duplex, Speed: 1000mbps,
         p4 = re.compile(r'^(Type: +\S+, )?Link-level +type: +'
             r'(?P<link_level_type>\S+), +MTU: +(?P<mtu>\S+)'
             r'(, +MRU: +(?P<mru>\d+))?(, +(?P<sonet_mode>\S+) +mode)?'
@@ -854,7 +855,8 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Output packets: 129243982
         p27 = re.compile(r'^Output +packets *: +(?P<output_packets>\S+)$')
 
-        # Protocol inet, MTU: 1500
+        # Protocol inet, MTU: 1500, Maximum labels: 2
+        # Protocol inet, MTU: 1500, Generation: 150, Route table: 0
         p28 = re.compile(r'^Protocol +(?P<address_family_name>\S+), +'
             r'MTU: +(?P<mtu>\S+)(, +Maximum labels: +'
             r'(?P<maximum_labels>\S+))?(, +Generation: +'
