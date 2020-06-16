@@ -1354,12 +1354,12 @@ class ShowOspf3DatabaseExtensiveSchema(MetaParser):
                     "ospf3-prefix-options": list,
                 },
                 Optional("ospf3-router-lsa"): {
-                    "bits": str,
-                    "ospf3-options": str,
-                    "ospf3-link": Use(
+                    Optional("bits"): str,
+                    Optional("ospf3-options"): str,
+                    Optional("ospf3-link"): Use(
                         ShowOspf3DatabaseExtensive.validate_ospf3_link_list
                     ),
-                    "ospf3-lsa-topology": {
+                    Optional("ospf3-lsa-topology"): {
                         "ospf-topology-id": str,
                         "ospf-topology-name": str,
                         "ospf3-lsa-topology-link": Use(

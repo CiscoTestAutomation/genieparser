@@ -1984,10 +1984,10 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
                     "aging-timer": {
                         "#text": str
                     },
-                    "expiration-time": {
+                    Optional("expiration-time"): {
                         "#text": str
                     },
-                    "installation-time": {
+                    Optional("installation-time"): {
                         "#text": str
                     },
                     Optional("generation-timer"): {

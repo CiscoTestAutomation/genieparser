@@ -63,6 +63,10 @@
         * Optional key issue resolved
     * Updated ShowInterfaceExtensive
         * No longer breaks on use and previously unused data is now used
+    * Updated ShowOspfDatabaseExtensiveSchema
+        * Optional key issue resolved
+    * Updated ShowOspf3DatabaseExtensiveSchema
+        * Optional key issue resolved
 * IOSXE
     * Updated ShowIpInterface
         * Modified regex to accommodate different outputs
