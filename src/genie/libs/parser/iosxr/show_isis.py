@@ -493,7 +493,7 @@ class ShowIsisSchema(MetaParser):
                                     Any(): {
                                         'distance': int,
                                         'adv_passive_only': bool,
-                                        'protocols_redistributed': bool,
+                                        Optional('protocols_redistributed'): bool,
                                         'level': {
                                             Any(): {
                                                 Optional('generate_style'): str,
