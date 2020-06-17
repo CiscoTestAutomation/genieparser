@@ -22,6 +22,7 @@ from genie.libs.parser.nxos.show_arp import ShowIpArpDetailVrfAll, \
 class TestShowIpArpDetailVrfAll(unittest.TestCase):
 
 	device = Device(name='aDevice')
+	maxDiff = None
 	empty_output = {'execute.return_value': ''}
 
 	golden_parsed_output = {
@@ -202,6 +203,71 @@ class TestShowIpArpDetailVrfAll(unittest.TestCase):
 	'''
 	}
 
+	golden_output_2 = {'execute.return_value': '''
+	show ip arp detail vrf all
+	
+	
+	Flags: * - Adjacencies learnt on non-active FHRP router
+		   + - Adjacencies synced via CFSoE
+		   # - Adjacencies Throttled for Glean
+		   CP - Added via L2RIB, Control plane Adjacencies
+		   PS - Added via L2RIB, Peer Sync
+		   RO - Re-Originated Peer Sync Entry
+	
+	IP ARP Table for all contexts
+	Total number of entries: 4
+	Address         Age       MAC Address     Interface        Physical Interface  Flags	
+	172.16.8.178    00:00:04  INCOMPLETE      Vlan392          Vlan392             
+	172.16.8.183    00:13:47  0050.56ff.ece6  Vlan392          port-channel105     
+	172.16.8.185    00:08:55  0050.56ff.c11c  Vlan392          port-channel110     + 
+	172.16.10.1        -      0000.0cff.9129  Vlan393          -    	
+	'''}
+
+	golden_parsed_output_2 = {
+		'interfaces': {
+			'Vlan392': {
+				'ipv4': {
+					'neighbors': {
+						'172.16.8.178': {
+							'age': '00:00:04',
+							'ip': '172.16.8.178',
+							'link_layer_address': 'INCOMPLETE',
+							'origin': 'dynamic',
+							'physical_interface': 'Vlan392',
+						},
+						'172.16.8.183': {
+							'age': '00:13:47',
+							'ip': '172.16.8.183',
+							'link_layer_address': '0050.56ff.ece6',
+							'origin': 'dynamic',
+							'physical_interface': 'port-channel105',
+						},
+						'172.16.8.185': {
+							'age': '00:08:55',
+							'flag': 'Adjacencies synced via CFSoE',
+							'ip': '172.16.8.185',
+							'link_layer_address': '0050.56ff.c11c',
+							'origin': 'dynamic',
+							'physical_interface': 'port-channel110',
+						},
+					},
+				},
+			},
+			'Vlan393': {
+				'ipv4': {
+					'neighbors': {
+						'172.16.10.1': {
+							'age': '-',
+							'ip': '172.16.10.1',
+							'link_layer_address': '0000.0cff.9129',
+							'origin': 'static',
+							'physical_interface': '-',
+						},
+					},
+				},
+			},
+		},
+	}
 
 	def test_empty(self):
 		self.device = Mock(**self.empty_output)
@@ -210,11 +276,17 @@ class TestShowIpArpDetailVrfAll(unittest.TestCase):
 			parsed_output = obj.parse()
 
 	def test_golden(self):
-		self.maxDiff = None
 		self.device = Mock(**self.golden_output)
 		obj = ShowIpArpDetailVrfAll(device=self.device)
 		parsed_output = obj.parse()
 		self.assertEqual(parsed_output, self.golden_parsed_output)
+
+	def test_golden2(self):
+		self.device = Mock(**self.golden_output_2)
+		obj = ShowIpArpDetailVrfAll(device=self.device)
+		parsed_output = obj.parse()
+		self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
 
 #=========================================================
 # Unit test for show ip arp summary vrf all
@@ -281,6 +353,7 @@ class TestShowIpArpSummaryVrfAll(unittest.TestCase):
 		obj = ShowIpArpSummaryVrfAll(device=self.device)
 		parsed_output = obj.parse(vrf='all')
 		self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
 
 #=========================================================
 # Unit test for show ip arp statistics vrf all

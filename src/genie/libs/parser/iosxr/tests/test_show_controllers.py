@@ -564,6 +564,167 @@ class test_show_controllers_optics(unittest.TestCase):
                  Date Code(yy/mm/dd)    : 17/01/03 
     '''}
 
+    golden_parsed_output5 = {
+        "0/0/0/0": {
+            "name": "Optics 0/0/0/0",
+            "controller_state": "Up",
+            "transport_admin_state": "In Service",
+            "laser_state": "On",
+            "led_state": "Green",
+            "optics_status": {
+                "optics_type": "QSFP28 100G LR4",
+                "wavelength": "1302.00 nm",
+                "alarm_status": {
+                    "detected_alarms": []
+                },
+                "los_lol_fault_status": {},
+                "performance_monitoring": "Enable",
+                "threshold_values": {
+                    "Rx Power Threshold(dBm)": {
+                        "parameter": "Rx Power Threshold(dBm)",
+                        "high_alarm": "7.4",
+                        "low_alarm": "-14.5",
+                        "high_warning": "4.5",
+                        "low_warning": "-10.5"
+                    },
+                    "Tx Power Threshold(dBm)": {
+                        "parameter": "Tx Power Threshold(dBm)",
+                        "high_alarm": "7.4",
+                        "low_alarm": "-8.3",
+                        "high_warning": "4.5",
+                        "low_warning": "-4.3"
+                    },
+                    "LBC Threshold(mA)": {
+                        "parameter": "LBC Threshold(mA)",
+                        "high_alarm": "60.00",
+                        "low_alarm": "20.00",
+                        "high_warning": "56.00",
+                        "low_warning": "24.00"
+                    },
+                    "Temp. Threshold(celsius)": {
+                        "parameter": "Temp. Threshold(celsius)",
+                        "high_alarm": "75.00",
+                        "low_alarm": "-5.00",
+                        "high_warning": "70.00",
+                        "low_warning": "0.00"
+                    },
+                    "Voltage Threshold(volt)": {
+                        "parameter": "Voltage Threshold(volt)",
+                        "high_alarm": "3.63",
+                        "low_alarm": "2.97",
+                        "high_warning": "3.46",
+                        "low_warning": "3.13"
+                    }
+                },
+                "polarization_parameters": "not supported by optics",
+                "lane": {
+                    "0": {
+                        "laser_bias": "38.9 mA",
+                        "tx_power": "1.42 dBm",
+                        "rx_power": "-2.04 dBm",
+                        "output_frequency": "N/A"
+                    },
+                    "1": {
+                        "laser_bias": "39.0 mA",
+                        "tx_power": "1.68 dBm",
+                        "rx_power": "-1.71 dBm",
+                        "output_frequency": "N/A"
+                    },
+                    "2": {
+                        "laser_bias": "37.9 mA",
+                        "tx_power": "1.17 dBm",
+                        "rx_power": "-1.68 dBm",
+                        "output_frequency": "N/A"
+                    },
+                    "3": {
+                        "laser_bias": "38.3 mA",
+                        "tx_power": "1.66 dBm",
+                        "rx_power": "-1.63 dBm",
+                        "output_frequency": "N/A"
+                    }
+                },
+                "temperature": "39.91 Celsius",
+                "voltage": "3.22 V"
+            },
+            "transceiver_vendor_details": {
+                "form_factor": "QSFP28",
+                "optics_type": "QSFP28 100G LR4",
+                "name": "CISCO-SUMITOMO",
+                "oui_number": "00.00.5f",
+                "part_number": "SQF1002L4LNC101P",
+                "rev_number": "A",
+                "serial_number": "SPC221100FB",
+                "pid": "QSFP-100G-LR4-S",
+                "vid": "V02",
+                "date_code": "18/03/08"
+            }
+        }
+    } 
+
+    golden_output5 = {'execute.return_value': '''
+        #show controllers optics 0/0/0/0
+
+        Controller State: Up
+
+        Transport Admin State: In Service
+
+        Laser State: On
+
+        LED State: Green
+
+        Optics Status
+
+                Optics Type: QSFP28 100G LR4
+                Wavelength = 1302.00 nm
+
+                Alarm Status:
+                -------------
+                Detected Alarms: None
+
+
+                LOS/LOL/Fault Status:
+
+
+                Performance Monitoring: Enable
+
+                THRESHOLD VALUES
+                ----------------
+
+                Parameter                High Alarm Low Alarm High Warning Low Warning
+                ------------------------ ---------- --------- ------------ -----------
+                Rx Power Threshold(dBm)         7.4     -14.5          4.5       -10.5
+                Tx Power Threshold(dBm)         7.4      -8.3          4.5        -4.3
+                LBC Threshold(mA)             60.00     20.00        56.00       24.00
+                Temp. Threshold(celsius)      75.00     -5.00        70.00        0.00
+                Voltage Threshold(volt)        3.63      2.97         3.46        3.13
+
+                Polarization parameters not supported by optics
+
+                Lane Laser Bias TX Power   RX Power    Output Frequency
+                ---- ---------- ---------- ---------- ----------------
+                0    38.9 mA    1.42 dBm   -2.04 dBm   N/A
+                1    39.0 mA    1.68 dBm   -1.71 dBm   N/A
+                2    37.9 mA    1.17 dBm   -1.68 dBm   N/A
+                3    38.3 mA    1.66 dBm   -1.63 dBm   N/A
+
+                Temperature = 39.91 Celsius
+                Voltage = 3.22 V
+
+        Transceiver Vendor Details
+
+                Form Factor            : QSFP28
+                Optics type            : QSFP28 100G LR4
+                Name                   : CISCO-SUMITOMO
+                OUI Number             : 00.00.5f
+                Part Number            : SQF1002L4LNC101P
+                Rev Number             : A
+                Serial Number          : SPC221100FB
+                PID                    : QSFP-100G-LR4-S
+                VID                    : V02
+                Date Code(yy/mm/dd)    : 18/03/08
+
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowControllersOptics(device=self.device)
@@ -593,6 +754,12 @@ class test_show_controllers_optics(unittest.TestCase):
         obj = ShowControllersOptics(device=self.device)
         parsed_output = obj.parse(port='0/0/0/18')
         self.assertEqual(parsed_output, self.golden_parsed_output4)
+
+    def test_golden5(self):
+        self.device = Mock(**self.golden_output5)
+        obj = ShowControllersOptics(device=self.device)
+        parsed_output = obj.parse(port='0/0/0/0')
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
 
 
 # ==============================================================================================

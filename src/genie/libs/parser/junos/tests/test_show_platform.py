@@ -9,7 +9,8 @@ from pyats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # Parser
-from genie.libs.parser.junos.show_platform import FileList, ShowVersion
+from genie.libs.parser.junos.show_platform import (FileList, ShowVersion,
+                                                   FileListDetail)
 
 
 #==========================
@@ -166,6 +167,72 @@ class TestShowVersion(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+# =============================================
+# Unit test for 'file list {directory} detail'
+# =============================================
+class TestFileListDetail(unittest.TestCase):
+    maxDiff = None
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        "directory-list": {
+            "directory": {
+                "file-information": [
+                    {
+                        "file-date": {
+                            "@junos:format": "May 22 02:40"
+                        },
+                        "file-group": "wheel",
+                        "file-links": "1",
+                        "file-name": "/var/log/trace-static",
+                        "file-owner": "root",
+                        "file-permissions": {
+                            "@junos:format": "-rw-r-----"
+                        },
+                        "file-size": "525672"
+                    },
+                    {
+                        "file-date": {
+                            "@junos:format": "May 22 02:40"
+                        },
+                        "file-group": "wheel",
+                        "file-links": "1",
+                        "file-name": "/var/log/trace-static.0.gz",
+                        "file-owner": "root",
+                        "file-permissions": {
+                            "@junos:format": "-rw-r-----"
+                        },
+                        "file-size": "131497"
+                    }
+                ],
+                "total-files": "2"
+            }
+        }
+    }
+
+    golden_output1 = {'execute.return_value': '''
+        file list /var/log/trace-static* detail 
+        -rw-r-----  1 root  wheel     525672 May 22 02:40 /var/log/trace-static
+
+        -rw-r-----  1 root  wheel     131497 May 22 02:40 /var/log/trace-static.0.gz
+
+        total files: 2
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = FileListDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(root_path='/var/log/trace-static*')
+
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = FileListDetail(device=self.device)
+        parsed_output = obj.parse(root_path='/var/log/trace-static*')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 if __name__ == '__main__':
     unittest.main()

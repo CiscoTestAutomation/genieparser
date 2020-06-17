@@ -119,6 +119,33 @@ class TestShowBootvar(unittest.TestCase):
             },
             'config_file': 'bootflash:/taas/psan06_Golden_Config'}
 
+    golden_output5 = {'execute.return_value': '''
+        show bootvar
+        BOOT variable = harddisk:/c1100-universalk9.BLD_POLARIS_DEV_LATEST_20200517_102119.SSA.bin,12;harddisk:/genie-iedge-asr-uut,12;
+        CONFIG_FILE variable =
+        BOOTLDR variable does not exist
+        Configuration register is 0x1 (will be 0x2102 at next reload)
+
+        Standby BOOT variable = harddisk:/c1100-universalk9.BLD_POLARIS_DEV_LATEST_20200517_102119.SSA.bin,12;harddisk:/genie-iedge-asr-uut,12;
+        Standby CONFIG_FILE variable =
+        Standby BOOTLDR variable does not exist
+        Standby Configuration register is 0x1  (will be 0x2102 at next reload)
+    '''}
+
+    golden_parsed_output5 = {
+        "next_reload_boot_variable": "harddisk:/c1100-universalk9.BLD_POLARIS_DEV_LATEST_20200517_102119.SSA.bin,12;harddisk:/genie-iedge-asr-uut,12;",
+        "active": {
+            "boot_variable": "harddisk:/c1100-universalk9.BLD_POLARIS_DEV_LATEST_20200517_102119.SSA.bin,12;harddisk:/genie-iedge-asr-uut,12;",
+            "configuration_register": "0x1",
+            "next_reload_configuration_register": "0x2102"
+        },
+        "standby": {
+            "boot_variable": "harddisk:/c1100-universalk9.BLD_POLARIS_DEV_LATEST_20200517_102119.SSA.bin,12;harddisk:/genie-iedge-asr-uut,12",
+            "configuration_register": "0x1",
+            "next_reload_configuration_register": "0x2102"
+        }
+    }
+
     def test_show_bootvar_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBootvar(device=self.device)
@@ -148,6 +175,12 @@ class TestShowBootvar(unittest.TestCase):
         obj = ShowBootvar(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
+
+    def test_show_bootvar_full5(self):
+        self.device = Mock(**self.golden_output5)
+        obj = ShowBootvar(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
 
 class TestShowVersion(unittest.TestCase):
 
@@ -1107,7 +1140,7 @@ class TestShowVersion(unittest.TestCase):
         The password-recovery mechanism is disabled.
         
         32K bytes of flash-simulated non-volatile configuration memory.
-        Base ethernet MAC Address: 00:11:22:54:00:44
+        Base ethernet MAC Address: 00:11:22:ff:54:98
         Motherboard assembly number: 99-6666-88
         Power supply part number: 444-8888-00
         Motherboard serial number: FOC99344ERT
@@ -1242,7 +1275,7 @@ class TestShowVersion(unittest.TestCase):
             Switch 01
             ---------
             Switch uptime                      : 1 year, 51 weeks, 2 days, 44 minutes 
-            Base Ethernet MAC Address          : bb:aa:77:00:aa:88
+            Base Ethernet MAC Address          : bb:aa:77:ff:aa:88
             Motherboard Assembly Number        : 73-12345-89
             Motherboard Serial Number          : FDO668866D8F
             Model Revision Number              : D0
@@ -1324,7 +1357,7 @@ class TestShowVersion(unittest.TestCase):
         'switch_num': {
           '1': {
             'uptime': '1 year, 51 weeks, 2 days, 44 minutes',
-            'mac_address': 'bb:aa:77:00:aa:88',
+            'mac_address': 'bb:aa:77:ff:aa:88',
             'mb_assembly_num': '73-12345-89',
             'mb_sn': 'FDO668866D8F',
             'model_rev_num': 'D0',
@@ -1401,7 +1434,7 @@ class TestShowVersion(unittest.TestCase):
             The password-recovery mechanism is enabled.
             
             512K bytes of flash-simulated non-volatile configuration memory.
-            Base ethernet MAC Address       : CC:44:33:22:77:00
+            Base ethernet MAC Address       : CC:44:33:FF:99:22
             Motherboard assembly number     : 71-123456-02
             Power supply part number        : 311-4567-11
             Motherboard serial number       : FOC123456U12
@@ -1429,7 +1462,7 @@ class TestShowVersion(unittest.TestCase):
             Switch 01
             ---------
             Switch Uptime                   : 9 weeks, 5 days, 16 hours, 1 minute 
-            Base ethernet MAC Address       : 00:11:22:33:44:55
+            Base ethernet MAC Address       : 00:11:22:ff:77:88
             Motherboard assembly number     : 77-99999-00
             Power supply part number        : 111-0111-03
             Motherboard serial number       : FOC666777G4
@@ -1485,7 +1518,7 @@ class TestShowVersion(unittest.TestCase):
         'switch_num': {
           '1': {
             'uptime': '9 weeks, 5 days, 16 hours, 1 minute',
-            'mac_address': '00:11:22:33:44:55',
+            'mac_address': '00:11:22:ff:77:88',
             'mb_assembly_num': '77-99999-00',
             'power_supply_part_nr': '111-0111-03',
             'mb_sn': 'FOC666777G4',
@@ -1513,7 +1546,7 @@ class TestShowVersion(unittest.TestCase):
             'sw_ver': '15.2(2)E7',
             'sw_image': 'C2960X-UNIVERSALK9-M',
             'active': True,
-            'mac_address': 'CC:44:33:22:77:00',
+            'mac_address': 'CC:44:33:FF:99:22',
             'mb_assembly_num': '71-123456-02',
             'power_supply_part_nr': '311-4567-11',
             'mb_sn': 'FOC123456U12',
@@ -5274,14 +5307,14 @@ class TestShowSwitchDetail(unittest.TestCase):
     '''}
 
     golden_output2 = {'execute.return_value': '''\
-            Switch/Stack Mac Address : aaaa.dddd.0000 - Local Mac Address
+            Switch/Stack Mac Address : aaaa.ddff.dddd - Local Mac Address
             Mac persistency wait time: Indefinite
                                                          H/W   Current
             Switch#   Role    Mac Address     Priority Version  State 
             -------------------------------------------------------------------------------------
-            *1       Active   aaaa.dddd.0000     15     V02     Ready                
-             2       Standby  aaaa.dddd.0000     14             Ready                
-             3       Member   aaaa.dddd.0000     13     V02     Ready                
+            *1       Active   aaaa.ddff.dddd     15     V02     Ready                
+             2       Standby  aaaa.ddff.dddd     14             Ready                
+             3       Member   aaaa.ddff.dddd     13     V02     Ready                
             
             
             
@@ -5296,13 +5329,13 @@ class TestShowSwitchDetail(unittest.TestCase):
 
     golden_parsed_output2 = {
         "switch": {
-             'mac_address': 'aaaa.dddd.0000',
+             'mac_address': 'aaaa.ddff.dddd',
               'mac_persistency_wait_time': 'indefinite',
               'stack': {
                 '1': {
                   'role': 'active',
                   'state': 'ready',
-                  'mac_address': 'aaaa.dddd.0000',
+                  'mac_address': 'aaaa.ddff.dddd',
                   'priority': '15',
                   'hw_ver': 'V02',
                   'ports': {
@@ -5319,7 +5352,7 @@ class TestShowSwitchDetail(unittest.TestCase):
                 '2': {
                   'role': 'standby',
                   'state': 'ready',
-                  'mac_address': 'aaaa.dddd.0000',
+                  'mac_address': 'aaaa.ddff.dddd',
                   'priority': '14',
                   'ports': {
                     '1': {
@@ -5335,7 +5368,7 @@ class TestShowSwitchDetail(unittest.TestCase):
                 '3': {
                   'role': 'member',
                   'state': 'ready',
-                  'mac_address': 'aaaa.dddd.0000',
+                  'mac_address': 'aaaa.ddff.dddd',
                   'priority': '13',
                   'hw_ver': 'V02',
                   'ports': {
@@ -5354,12 +5387,12 @@ class TestShowSwitchDetail(unittest.TestCase):
     }
 
     golden_output3 = {'execute.return_value': '''\
-        Switch/Stack Mac Address : aaaa.dddd.0000
+        Switch/Stack Mac Address : aaaa.ddff.dddd
                                                    H/W   Current
         Switch#  Role   Mac Address     Priority Version  State 
         ----------------------------------------------------------
-        *1       Master aaaa.dddd.0000     15     4       Ready            
-         2       Member aaaa.dddd.0000     1      4       Ready                      
+        *1       Master aaaa.ddff.dddd     15     4       Ready            
+         2       Member aaaa.ddff.dddd     1      4       Ready                      
         
                  Stack Port Status             Neighbors     
         Switch#  Port 1     Port 2           Port 1   Port 2 
@@ -5370,12 +5403,12 @@ class TestShowSwitchDetail(unittest.TestCase):
 
     golden_parsed_output3 = {
         "switch": {
-            'mac_address': 'aaaa.dddd.0000',
+            'mac_address': 'aaaa.ddff.dddd',
             'stack': {
             '1': {
               'role': 'master',
               'state': 'ready',
-              'mac_address': 'aaaa.dddd.0000',
+              'mac_address': 'aaaa.ddff.dddd',
               'priority': '15',
               'hw_ver': '4',
               'ports': {
@@ -5392,7 +5425,7 @@ class TestShowSwitchDetail(unittest.TestCase):
             '2': {
               'role': 'member',
               'state': 'ready',
-              'mac_address': 'aaaa.dddd.0000',
+              'mac_address': 'aaaa.ddff.dddd',
               'priority': '1',
               'hw_ver': '4',
               'ports': {

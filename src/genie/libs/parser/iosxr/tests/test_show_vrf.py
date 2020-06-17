@@ -23,6 +23,8 @@ class test_show_vrf_all_detail(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
+    maxDiff = None
+
     golden_parsed_output = {
         "VRF1": {
             "description": "not set",
@@ -163,19 +165,174 @@ class test_show_vrf_all_detail(unittest.TestCase):
           No export route policy
     '''}
 
-    def test_golden(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output)
-        obj = ShowVrfAllDetail(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+    golden_output_2 = {'execute.return_value': '''
+    show vrf all detail
+    
+    Wed Apr 29 12:45:39.793 CET
+    
+    VRF AWS-DNB-AppSharedServices-PROD; RD 201627:373; VPN ID not set
+    VRF mode: Regular
+    Description not set
+    Interfaces:
+      Bundle-Ether15.244
+    Address family IPV4 Unicast
+      Import VPN route-target communities:
+        RT:201627:373
+      Export VPN route-target communities:
+        RT:201627:373
+      No import route policy
+      No export route policy
+    Address family IPV6 Unicast
+      No import VPN route-target communities
+      No export VPN route-target communities
+      No import route policy
+      No export route policy
+    
+    VRF Administrasjon; RD not set; VPN ID not set
+    VRF mode: Regular
+    Description not set
+    Address family IPV4 Unicast
+      Import VPN route-target communities:
+        RT:65100:30
+      Export VPN route-target communities:
+        RT:65100:30
+      No import route policy
+      No export route policy
+    Address family IPV6 Unicast
+      No import VPN route-target communities
+      No export VPN route-target communities
+      No import route policy
+      No export route policy
+    
+    VRF BT-HCL-DNB; RD 201627:600; VPN ID not set
+    VRF mode: Regular
+    Description not set
+    Interfaces:
+      Bundle-Ether15.2942
+    Address family IPV4 Unicast
+      Import VPN route-target communities:
+        RT:201627:600
+      Export VPN route-target communities:
+        RT:201627:600
+      No import route policy
+      No export route policy
+    Address family IPV6 Unicast
+      No import VPN route-target communities
+      No export VPN route-target communities
+      No import route policy
+      No export route policy
 
+    VRF DNB-TATA; RD 201627:241; VPN ID not set
+    VRF mode: Regular
+    Description not set
+    Interfaces:
+      Bundle-Ether15.514
+      Bundle-Ether15.1285
+      TenGigE0/0/2/1.600
+    Address family IPV4 Unicast
+      Import VPN route-target communities:
+        RT:201627:241
+      Export VPN route-target communities:
+        RT:201627:241
+      No import route policy
+      No export route policy
+    Address family IPV6 Unicast
+      No import VPN route-target communities
+      No export VPN route-target communities
+      No import route policy
+      No export route policy
+    '''}
+
+    golden_parsed_output_2 = {
+        'AWS-DNB-AppSharedServices-PROD': {
+            'address_family': {
+                'ipv4 unicast': {
+                    'route_target': {
+                        '201627:373': {
+                            'route_target': '201627:373',
+                            'rt_type': 'both',
+                        },
+                    },
+                },
+                'ipv6 unicast': {
+                },
+            },
+            'description': 'not set',
+            'interfaces': ['Bundle-Ether15.244'],
+            'route_distinguisher': '201627:373',
+            'vrf_mode': 'regular',
+        },
+        'Administrasjon': {
+            'address_family': {
+                'ipv4 unicast': {
+                    'route_target': {
+                        '65100:30': {
+                            'route_target': '65100:30',
+                            'rt_type': 'both',
+                        },
+                    },
+                },
+                'ipv6 unicast': {
+                },
+            },
+            'description': 'not set',
+            'vrf_mode': 'regular',
+        },
+        'BT-HCL-DNB': {
+            'address_family': {
+                'ipv4 unicast': {
+                    'route_target': {
+                        '201627:600': {
+                            'route_target': '201627:600',
+                            'rt_type': 'both',
+                        },
+                    },
+                },
+                'ipv6 unicast': {
+                },
+            },
+            'description': 'not set',
+            'interfaces': ['Bundle-Ether15.2942'],
+            'route_distinguisher': '201627:600',
+            'vrf_mode': 'regular',
+        },
+        'DNB-TATA': {
+            'address_family': {
+                'ipv4 unicast': {
+                    'route_target': {
+                        '201627:241': {
+                            'route_target': '201627:241',
+                            'rt_type': 'both',
+                        },
+                    },
+                },
+                'ipv6 unicast': {
+                },
+            },
+            'description': 'not set',
+            'interfaces': ['Bundle-Ether15.514', 'Bundle-Ether15.1285', 'TenGigE0/0/2/1.600'],
+            'route_distinguisher': '201627:241',
+            'vrf_mode': 'regular',
+        },
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowVrfAllDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowVrfAllDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowVrfAllDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 if __name__ == '__main__':

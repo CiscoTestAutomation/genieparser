@@ -2781,7 +2781,9 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                         1: {
                                             'next_hop': '10.3.3.3',
                                             'gateway': '10.6.6.6',
+                                            'imported_path_from': '12:23:10.144.0.0/24',
                                             'originator': '10.6.6.6',
+                                            'route_info': '1',
                                             'next_hop_igp_metric': '21',
                                             'localpref': 200,
                                             'metric': 0,
@@ -2797,7 +2799,9 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                         2: {
                                             'next_hop': '10.13.13.13',
                                             'gateway': '10.13.13.13',
+                                            'imported_path_from': '12:23:10.144.0.0/24',
                                             'originator': '10.0.0.2',
+                                            'route_info': '1',
                                             'next_hop_via': 'green',
                                             'localpref': 100,
                                             'metric': 0,
@@ -2810,6 +2814,7 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                         3: {
                                             'next_hop': '10.3.3.3',
                                             'gateway': '10.7.7.7',
+                                            'imported_path_from': '12:23:10.144.0.0/24',
                                             'originator': '10.7.7.7',
                                             'next_hop_igp_metric': '21',
                                             'localpref': 200,
@@ -2819,6 +2824,7 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                                 'out': '37'
                                             },
                                             'origin_codes': '?',
+                                            'route_info': '1',
                                             'status_codes': '* i',
                                             'ext_community': 'RT:12:23',
                                             'update_group': 6
@@ -2869,6 +2875,102 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
           Extended Community: RT:11:12 , recursive-via-connected
     '''}
 
+
+
+
+
+
+
+    golden_parsed_output3 = { 
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'default': 
+                        {'address_family': 
+                            {'': {'prefixes': 
+                                {'0.0.0.0/0': 
+                                    {'available_path': '2',
+                                        'best_path': '1',
+                                        'index': {1: {'community': '65100:106 '
+                                                                '65100:500 '
+                                                                '65100:601 '
+                                                                '65351:1 '
+                                                                'no-export',
+                                                    'gateway': '1.1.1.1',
+                                                    'localpref': 150,
+                                                    'next_hop': '1.1.1.1',
+                                                    'origin_codes': 'i',
+                                                    'originator': '2.2.2.2',
+                                                    'route_info': '65000 '
+                                                                    '65191 '
+                                                                    '1111111002 '
+                                                                    '1111111502 '
+                                                                    '1111111001 '
+                                                                    '1111111505 '
+                                                                    '1111111005 '
+                                                                    '1111111504 '
+                                                                    '222222 '
+                                                                    '333',
+                                                    'status_codes': '*>',
+                                                    'update_group': 8},
+                                                2: {'community': '65100:106 '
+                                                                '65100:500 '
+                                                                '65100:601 '
+                                                                '65351:1',
+                                                    'gateway': '1.1.1.1',
+                                                    'localpref': 100,
+                                                    'next_hop': '1.1.1.1',
+                                                    'origin_codes': 'i',
+                                                    'originator': '2.2.2.2',
+                                                    'route_info': '65000 '
+                                                                    '65191 '
+                                                                    '1111111002 '
+                                                                    '1111111502 '
+                                                                    '1111111001 '
+                                                                    '1111111505 '
+                                                                    '1111111005 '
+                                                                    '1111111504 '
+                                                                    '222222 '
+                                                                    '333',
+                                                    'route_status': 'received-only',
+                                                    'status_codes': '* ',
+                                                    'update_group': 8}},
+                                        'paths': '2 '
+                                                'available, '
+                                                'best '
+                                                '#1, '
+                                                'table '
+                                                'default, '
+                                                'not '
+                                                'advertised '
+                                                'to '
+                                                'EBGP '
+                                                'peer',
+                                        'table_version': '791832'}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+    golden_output3 = {'execute.return_value': '''
+       BGP routing table entry for 0.0.0.0/0, version 791832
+        Paths: (2 available, best #1, table default, not advertised to EBGP peer)
+        Advertised to update-groups:
+        8
+        65000 65191 1111111002 1111111502 1111111001 1111111505 1111111005 1111111504 222222 333
+        1.1.1.1 from 1.1.1.1 (2.2.2.2)
+        Origin IGP, localpref 150, valid, external, best
+        Community: 65100:106 65100:500 65100:601 65351:1 no-export
+        65000 65191 1111111002 1111111502 1111111001 1111111505 1111111005 1111111504 222222 333, (received-only)
+        1.1.1.1 from 1.1.1.1 (2.2.2.2)
+        Origin IGP, localpref 100, valid, external
+        Community: 65100:106 65100:500 65100:601 65351:1
+
+    '''}
+
     def test_show_ip_bgp_all_detail_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpBgpAllDetail(device=self.device)
@@ -2889,6 +2991,13 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
         parsed_output = obj.parse(vrf='blue', 
                 route='10.0.0.0', address_family='vpnv4')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+    def test_show_ip_bgp_vrf_route_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowIpBgpAllDetail(device=self.device)
+        parsed_output = obj.parse(route='0.0.0.0')
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
 
 
 # ===============================================
@@ -7398,7 +7507,6 @@ class TestShowBgpSummary(unittest.TestCase):
         self.device = Mock(**self.golden_output1)
         obj = ShowBgpSummary(device=self.device)
         parsed_output = obj.parse(address_family='vpnv4 unicast', rd='5918:51')
-        import pdb
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_show_bgp_summary_golden2(self):

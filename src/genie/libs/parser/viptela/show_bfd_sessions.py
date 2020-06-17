@@ -54,7 +54,7 @@ class ShowBfdSessions(ShowBfdSessionsSchema):
 
         parsed_dict = {}
 
-        # 172.16.241.1     30001001 up          mpls             mpls             184.116.102.2    174.11.1.2       12346       ipsec  20          1000           0:01:46:50      0            
+        # 172.16.241.1     30001001 up          mpls             mpls             172.16.189.2    172.16.171.2       12346       ipsec  20          1000           0:01:46:50      0            
         p1 = re.compile(
             r"(?P<system_ip>\S+)\s+(?P<site_id>\d+)\s+(?P<state>\w+)\s+"
             r"(?P<source_tloc_color>\S+)\s+(?P<remote_tloc_color>\S+)\s+"
