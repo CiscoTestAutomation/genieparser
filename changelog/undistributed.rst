@@ -99,6 +99,8 @@
 * IOSXR
     * Update ShowBgpInstanceSummary
         * Update regex to support various output
+    * Update ShowIpv4VrfAllInterface
+        * Update regex to support ':' character in VRF Name.
 
 --------------------------------------------------------------------------------
                                 common.py
