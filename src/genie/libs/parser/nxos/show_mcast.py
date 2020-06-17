@@ -104,6 +104,7 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
 
             # (*, 232.0.0.0/8), uptime: 9w2d, pim ip 
             # (*, 228.0.0.0/8), bidir, uptime: 10w5d, pim ip 
+            # (*, ff03:0:0:1::1/128), uptime: 3d23h, pim6 ipv6 
             p2 = re.compile(r'^\s*\((?P<source_address>[0-9\.\*\/]+),'
                             r' +(?P<multicast_group>[a-zA-Z0-9\.\/\:]+)\),'
                             r' *(?P<bidir>(\S+))? *uptime:'
@@ -175,6 +176,7 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
                 continue
 
             # loopback2, uptime: 3d11h, igmp 
+            # port-channel80, uptime: 3d23h, pim6
             p5 = re.compile(r'^\s*(?:(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+),)?'
                             r' +uptime: +(?:(?P<oil_uptime>[a-zA-Z0-9\:]+),)?'
                             r' +(?:(?P<oil_flags>[a-zA-Z0-9\(\)\s]+))?( *\((?P<rpf>\w+)\))?$')
@@ -359,6 +361,7 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
                 continue
 
             # loopback2, uptime: 3d11h, igmp
+            # port-channel80, uptime: 3d23h, pim6
             p5 = re.compile(r'^\s*(?:(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+),'
                             r')? +uptime: +(?:(?P<oil_uptime>[a-zA-Z0-9\:]+),)?'
                             r' +(?:(?P<rpf>[a-zA-Z0-9\s]+),)?(?P<oil_flags>\w+)$')
