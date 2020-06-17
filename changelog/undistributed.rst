@@ -48,11 +48,17 @@
         * Modified the regex patterns to support various outputs.
     * Update ShowIpRoute:
         * Modified the regex patterns to support various outputs.
+    * Update ShowIpMrouteVrfAll:
+        * Modified the regex patterns to support various outputs.
+    * Update ShowIpv6MrouteVrfAll:
+        * Modified the regex patterns to support various outputs.
 * IOSXR
     * Updated ShowVrfAllDetail:
         * Modified the regex patterns to support various outputs.
     * Updated ShowControllersOptics:
         * Added more regex patterns to support various outputs.
+    * Updated ShowIsisSchema:
+        * Made the key 'protocols_redistributed' optional.
 * JUNOS
     * Updated ShowRoute
         * Modified cli method to accept only ip_address as input
