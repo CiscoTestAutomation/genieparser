@@ -20,6 +20,9 @@
         * show system statistics
     * Added ShowSystemStatisticsNoForwarding or:
         * show system statistics no-forwarding
+    * Updated ShowOspfDatabaseLsaidDetail:
+        * added testcase
+        *extended from ShowOspfDatabaseAdvertisingRouterSelfDetail
 
 
 --------------------------------------------------------------------------------
@@ -61,6 +64,8 @@
         * monitor interface traffic
     * Updated ShowOspfOverview
         * Optional key issue resolved
+    * Updated ShowInterfaceExtensive
+        * No longer breaks on use and previously unused data is now used
     * Updated ShowOspfDatabaseExtensiveSchema
         * Optional key issue resolved
     * Updated ShowOspf3DatabaseExtensiveSchema
