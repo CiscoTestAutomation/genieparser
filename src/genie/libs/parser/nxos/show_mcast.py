@@ -105,10 +105,10 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
             # (*, 232.0.0.0/8), uptime: 9w2d, pim ip 
             # (*, 228.0.0.0/8), bidir, uptime: 10w5d, pim ip 
             p2 = re.compile(r'^\s*\((?P<source_address>[0-9\.\*\/]+),'
-                             ' +(?P<multicast_group>[0-9\.\/]+)\),'
-                             ' *(?P<bidir>(\S+))? *uptime:'
-                             ' +(?P<uptime>[0-9a-zA-Z\:\.]+)(,)?(?:'
-                             ' *(?P<flag>[a-zA-Z\(\)\s]+))?$')
+                            r' +(?P<multicast_group>[a-zA-Z0-9\.\/\:]+)\),'
+                            r' *(?P<bidir>(\S+))? *uptime:'
+                            r' +(?P<uptime>[0-9a-zA-Z\:\.]+)(,)?(?:'
+                            r' *(?P<flag>[0-9a-zA-Z\(\)\s]+))?$')
             m = p2.match(line)
             if m:
                 source_address = m.groupdict()['source_address']
@@ -176,8 +176,8 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
 
             # loopback2, uptime: 3d11h, igmp 
             p5 = re.compile(r'^\s*(?:(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+),)?'
-                             ' +uptime: +(?:(?P<oil_uptime>[a-zA-Z0-9\:]+),)?'
-                             ' +(?:(?P<oil_flags>[a-zA-Z\(\)\s]+))?( *\((?P<rpf>\w+)\))?$')
+                            r' +uptime: +(?:(?P<oil_uptime>[a-zA-Z0-9\:]+),)?'
+                            r' +(?:(?P<oil_flags>[a-zA-Z0-9\(\)\s]+))?( *\((?P<rpf>\w+)\))?$')
             m = p5.match(line)
             if m:
                 outgoing_interface = m.groupdict()['outgoing_interface']
@@ -268,8 +268,8 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
 
             # IPv6 Multicast Routing Table for VRF "default
             p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) [mM]ulticast'
-                             ' +[rR]outing +[tT]able +for +VRF'
-                             ' +(?P<vrf>[a-zA-Z0-9\"]+)$')
+                            r' +[rR]outing +[tT]able +for +VRF'
+                            r' +(?P<vrf>[a-zA-Z0-9\"]+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -288,10 +288,10 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
             # (*, ff30::/12), uptime: 3d11h, pim6 ipv6
             # (*, ff03:3::/64), bidir, uptime: 10w5d, pim6 
             p2 = re.compile(r'^\s*\((?P<source_address>(\S+)),'
-                             ' +(?P<multicast_group>(\S+))\),'
-                             ' *(?P<bidir>(\S+),)? *uptime:'
-                             ' +(?P<uptime>[0-9a-zA-Z\:\.]+)(,)?(?:'
-                             ' *(?P<flag>[a-zA-Z0-9\s]+))?$')
+                            r' +(?P<multicast_group>(\S+))\),'
+                            r' *(?P<bidir>(\S+),)? *uptime:'
+                            r' +(?P<uptime>[0-9a-zA-Z\:\.]+)(,)?(?:'
+                            r' *(?P<flag>[a-zA-Z0-9\s]+))?$')
             m = p2.match(line)
             if m:
                 source_address = m.groupdict()['source_address']
@@ -327,7 +327,7 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
 
             # Incoming interface: Null, RPF nbr: 0::
             p3 =  re.compile(r'^\s*Incoming +interface: +(?P<incoming_interface>[a-zA-Z0-9\/\.]+),'
-                              ' +RPF +nbr: +(?P<rpf_nbr>[a-zA-Z0-9\:\,\s]+)$')
+                             r' +RPF +nbr: +(?P<rpf_nbr>[a-zA-Z0-9\:\,\s]+)$')
             m = p3.match(line)
             if m:
                 incoming_interface = m.groupdict()['incoming_interface']
@@ -360,8 +360,8 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
 
             # loopback2, uptime: 3d11h, igmp
             p5 = re.compile(r'^\s*(?:(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+),'
-                             ')? +uptime: +(?:(?P<oil_uptime>[a-zA-Z0-9\:]+),)?'
-                             ' +(?:(?P<oil_flags>[a-zA-Z0-9\s]+),)?$')
+                            r')? +uptime: +(?:(?P<oil_uptime>[a-zA-Z0-9\:]+),)?'
+                            r' +(?:(?P<rpf>[a-zA-Z0-9\s]+),)?(?P<oil_flags>\w+)$')
             m = p5.match(line)
             if m:
                 outgoing_interface = m.groupdict()['outgoing_interface']
@@ -387,9 +387,9 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
                 continue
 
             p5_1 = re.compile(r'^\s*(?:(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+)'
-                               ',)? +uptime: +(?:(?P<oil_uptime>[a-zA-Z0-9\:]+),)?'
-                               ' +(?:(?P<oil_flags>[a-zA-Z0-9\s]+),)?'
-                               ' +(?P<oif_rpf>(\(RPF\))+)*$')
+                              r',)? +uptime: +(?:(?P<oil_uptime>[a-zA-Z0-9\:]+),)?'
+                              r' +(?:(?P<oif_rpf>[a-zA-Z0-9\s]+),)?'
+                              r' +(?P<oil_flags>(\(RPF\))+)*$')
             m = p5_1.match(line)
             if m:
                 outgoing_interface = m.groupdict()['outgoing_interface']
