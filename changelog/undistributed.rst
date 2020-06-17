@@ -52,6 +52,11 @@
         * Modified the regex patterns to support various outputs.
     * Update ShowIpv6MrouteVrfAll:
         * Modified the regex patterns to support various outputs.
+    * Updated ShowRunningConfigInterface:
+        * Added regex to support vpc
+        * Added regex to support native vlan
+        * Added regex to support switchport_mode access
+        * Fixed regex to allow white spaces in description
 * IOSXR
     * Updated ShowVrfAllDetail:
         * Modified the regex patterns to support various outputs.
@@ -79,4 +84,3 @@
 * IOSXE
     * Updated ShowIpInterface
         * Modified regex to accommodate different outputs
-
