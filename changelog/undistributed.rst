@@ -70,6 +70,8 @@
         * Optional key issue resolved
     * Updated ShowOspf3DatabaseExtensiveSchema
         * Optional key issue resolved
+    * Updated ShowSystemUsers
+        * Regex issues resolved
 * IOSXE
     * Updated ShowIpInterface
         * Modified regex to accommodate different outputs
