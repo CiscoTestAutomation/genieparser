@@ -84,3 +84,7 @@
 * IOSXE
     * Updated ShowIpInterface
         * Modified regex to accommodate different outputs
+
+* IOSXE
+    * Updated ShowClnsNeighborsDetail
+        * Modified regex to accommodate diffrent outputs
