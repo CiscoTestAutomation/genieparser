@@ -8,7 +8,7 @@
 '''
 
 # metadata
-__version__ = '20.5'
+__version__ = '20.5.1b0'
 __author__ = 'Cisco Systems Inc.'
 __contact__ = ['pyats-support@cisco.com', 'pyats-support-ext@cisco.com']
 __copyright__ = 'Copyright (c) 2018, Cisco Systems Inc.'
