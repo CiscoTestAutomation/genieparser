@@ -58,8 +58,6 @@
         * Added regex to support switchport_mode access
         * Fixed regex to allow white spaces in description
 * IOSXR
-    * Update ShowBgpInstanceSummary
-        * Update regex to support various output
     * Update ShowIpv4VrfAllInterface
         * Update regex to support ':' character in VRF Name.
     * Updated ShowVrfAllDetail:
