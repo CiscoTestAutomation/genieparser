@@ -675,6 +675,8 @@ class ShowIpRoute(ShowIpRouteSchema):
         else:
             out = output
 
+        if not cmd:
+            cmd = 'ipv4'
         af = 'ipv6' if 'v6' in cmd else 'ipv4'
         result_dict = {}
 
@@ -706,7 +708,8 @@ class ShowIpRoute(ShowIpRouteSchema):
         # **via 10.36.3.3%default, [33/0], 5w0d, bgp-100, internal, tag 100 (mpls-vpn)
         # *via vrf default, Null0, [20/0], 18:11:28, bgp-333, external, tag 333
         # *via 10.55.130.3%default, [33/0], 3d10h, bgp-1, internal, tag 1 (evpn), segid: 50051 tunnelid: 0x64008203 encap: VXLAN
-        p3 = re.compile(r'^\s*(?P<star>[*]+)?via +(?P<next_hop>[\s\w\:\.\%]+),'
+        # *via 2001:db8:626b:2101::3/128, [200/7], 01:51:32, bgp-10001, internal, tag 20001
+        p3 = re.compile(r'^\s*(?P<star>[*]+)?via +(?P<next_hop>[\s\w\:\.\/\%]+),'
                         r'( +(?P<interface>[\w\/\.]+))?,? +\[(?P<route_preference>[\d\/]+)\],'
                         r' +(?P<date>[0-9][\w\:]+)?,?( +(?P<source_protocol>[\w\-]+))?,?'
                         r'( +(?P<source_protocol_status>[\w-]+))?,?( +tag +(?P<tag>[\d]+))?,?'

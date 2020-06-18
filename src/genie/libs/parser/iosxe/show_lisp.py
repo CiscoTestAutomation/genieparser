@@ -59,7 +59,7 @@ class ShowLispSessionSchema(MetaParser):
                 {'sessions':
                     {'total': int,
                     'established': int,
-                    'peers': 
+                    'peers':
                         {Any():
                             {'state': str,
                             'time': str,
@@ -265,7 +265,7 @@ class ShowLispExtranetSchema(MetaParser):
                 {Optional('service'):
                     {Any():
                         {Optional('map_server'):
-                            {Optional('virtual_network_ids'): 
+                            {Optional('virtual_network_ids'):
                                 {'total_extranet_entries': int,
                                 Any():
                                     {'vni': str,
@@ -566,7 +566,7 @@ class ShowLispDynamicEidDetail(ShowLispDynamicEidDetailSchema):
                                     setdefault(instance_id, {}).\
                                     setdefault('dynamic_eids', {}).\
                                     setdefault(dyn_eid, {})
-                
+
                 # Set values
                 dynamic_eids_dict['dynamic_eid_name'] =  dynamic_eid_name
                 dynamic_eids_dict['id'] =  dyn_eid
@@ -847,7 +847,7 @@ class ShowLispService(ShowLispServiceSchema):
         # NAT-traversal Router (NAT-RTR):      disabled
         p8 = re.compile(r'NAT-traversal +Router +\(NAT\-RTR\) *:'
                          ' +(?P<state>(enabled|disabled))$')
-        
+
         # Mobility First-Hop Router:           disabled
         p9 = re.compile(r'Mobility +First-Hop +Router *:'
                           ' +(?P<state>(enabled|disabled))$')
@@ -878,7 +878,7 @@ class ShowLispService(ShowLispServiceSchema):
 
         # ETR Map-Server(s):                   10.64.4.4 (17:49:58), 10.166.13.13 (00:00:35)
         p16 = re.compile(r'ETR +Map\-Server\(s\) *: +(?P<servers>(.*))$')
- 
+
         #                                      10.84.66.66 (never)
         p16_1 = re.compile(r'(?P<server>([0-9\.\:]+))(?: +\((?P<uptime>(\S+))\))?$')
 
@@ -1001,7 +1001,7 @@ class ShowLispService(ShowLispServiceSchema):
         # import-site-reg database size/limit0/65535
         p49 = re.compile(r'import\-site\-reg +database +size\/limit *:?'
                           ' *(?P<size>(\d+))\/(?P<limit>(\d+))$')
-        
+
         # proxy database size:               0
         p50 = re.compile(r'proxy +database +size *: +(?P<size>(\d+))$')
 
@@ -1375,7 +1375,7 @@ class ShowLispService(ShowLispServiceSchema):
                 src_locator_vlan_dict['interface'] = m.groupdict()['intf']
                 continue
 
-            # Database:   
+            # Database:
             m = p42.match(line)
             if m:
                 db_dict = iid_dict.setdefault('database', {})
@@ -1431,7 +1431,7 @@ class ShowLispService(ShowLispServiceSchema):
                 db_dict['import_site_db_size'] = int(m.groupdict()['size'])
                 db_dict['import_site_db_limit'] = int(m.groupdict()['limit'])
                 continue
-        
+
             # proxy database size:               0
             m = p50.match(line)
             if m:
@@ -1491,6 +1491,8 @@ class ShowLispServiceMapCacheSchema(MetaParser):
                                             Optional('negative_mapping'):
                                                 {'map_reply_action': str,
                                                 },
+                                            Optional('encap_to_petr'): bool,
+                                            Optional('encap_to_petr_iid'): str,
                                             Optional('positive_mapping'):
                                                 {'rlocs':
                                                     {Any():
@@ -1582,10 +1584,15 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
 
         #   Locator  Uptime    State      Pri/Wgt     Encap-IID
         #   10.1.8.8 00:04:02  up          50/50        -
+        # State can be: 'up', 'down', 'route-rejec', 'up, self' and etc
         p5 = re.compile(r'(?P<locator>(\S+)) +(?P<uptime>(\S+))'
-                         ' +(?P<state>(up|down))'
+                         ' +(?P<state>(\S+|up, self))'
                          ' +(?P<priority>(\d+))\/(?P<weight>(\d+))'
                          '(?: +(?P<encap_iid>(\S+)))?$')
+
+        # Encapsulating to proxy ETR
+        # Encapsulating to proxy ETR Encap-IID 3
+        p6 = re.compile(r'Encapsulating\s+to\s+proxy\s+ETR(\s+Encap-IID\s+(?P<encap_to_petr_iid>\S+))?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1689,6 +1696,16 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
                     locator_dict['address_type'] = 'ipv4-afi'
                 # Increment entry
                 rloc_id += 1
+                continue
+
+            # Encapsulating to proxy ETR
+            # Encapsulating to proxy ETR Encap-IID 3
+            m = p6.match(line)
+            if m:
+                mapping_dict['encap_to_petr'] = True
+                encap_to_petr_iid = m.groupdict()['encap_to_petr_iid']
+                if encap_to_petr_iid:
+                    mapping_dict['encap_to_petr_iid'] = encap_to_petr_iid
                 continue
 
         return parsed_dict
@@ -1962,6 +1979,7 @@ class ShowLispServiceSummarySchema(MetaParser):
                                 'interface': str,
                                 'db_size': int,
                                 'db_no_route': int,
+                                Optional('rloc_status'): str,
                                 'cache_size': int,
                                 'incomplete': str,
                                 'cache_idle': str,
@@ -2031,17 +2049,19 @@ class ShowLispServiceSummary(ShowLispServiceSummarySchema):
         # Cache - Remote EID mapping cache size, IID - Instance ID,
         # Role - Configured Role
 
-        #                       Interface    DB  DB no  Cache  Incom  Cache 
+        #                       Interface    DB  DB no  Cache  Incom  Cache
         # EID VRF name             (.IID)  size  route   size  plete  Idle  Role
         # red                   LISP0.101     1      0      2   0.0%  0.0%  ITR-ETR
         # blue                  LISP0.102     1      0      1   0.0%    0%  ITR-ETR
+        # blue                  LISP0.102     1@     0      1   0.0%    0%  ITR-ETR
+        # blue                  LISP0.102     1*     0      1   0.0%    0%  ITR-ETR
         p4_1 = re.compile(r'(?P<vrf>(\S+)) +(?P<interface>(\S+))\.(?P<iid>(\d+))'
-                         ' +(?P<db_size>(\d+)) +(?P<db_no_route>(\d+))'
+                         ' +(?P<db_size>(\d+))(?P<rloc_status>(\W))? +(?P<db_no_route>(\d+))'
                          ' +(?P<cache_size>(\d+)) +(?P<incomplete>(\S+))'
                          ' +(?P<cache_idle>(\S+)) +(?P<role>(\S+))$')
 
         p4_2 = re.compile(r'(?P<interface>(\S+))\.(?P<iid>(\d+))'
-                         ' +(?P<db_size>(\d+)) +(?P<db_no_route>(\d+))'
+                         ' +(?P<db_size>(\d+))(?P<rloc_status>(\W))? +(?P<db_no_route>(\d+))'
                          ' +(?P<cache_size>(\d+)) +(?P<incomplete>(\S+))'
                          ' +(?P<cache_idle>(\S+)) +(?P<role>(\S+))$')
 
@@ -2114,6 +2134,8 @@ class ShowLispServiceSummary(ShowLispServiceSummarySchema):
                             setdefault(group['iid'], {})
                 vni_dict['interface'] = group['interface'] + '.' + group['iid']
                 vni_dict['db_size'] = int(group['db_size'])
+                if group['rloc_status']!=' ':
+                    vni_dict['rloc_status'] = group['rloc_status']
                 vni_dict['db_no_route'] = int(group['db_no_route'])
                 vni_dict['cache_size'] = int(group['cache_size'])
                 vni_dict['incomplete'] = group['incomplete']
@@ -2190,7 +2212,7 @@ class ShowLispServiceDatabaseSchema(MetaParser):
                     {Optional(Any()):
                         {'etr':
                             {'local_eids':
-                                {Any(): 
+                                {Any():
                                     {'vni': str,
                                     'total_eid_entries': int,
                                     'no_route_eid_entries': int,
@@ -2448,7 +2470,7 @@ class ShowLispServiceServerSummary(ShowLispServiceServerSummarySchema):
         p1 = re.compile(r'Output +for +router +lisp +(?P<router_id>(\S+))'
                          '(?: +instance-id +(?P<instance_id>(\d+)))?$')
 
-        #                      -----------  IPv4 ----------- 
+        #                      -----------  IPv4 -----------
         #  Site name            Configured Registered Incons
         # xtr1_1                        1          1      0
         # xtr2                          1          1      0
@@ -2627,11 +2649,11 @@ class ShowLispServiceServerDetailInternalSchema(MetaParser):
                                             'proxy_reply': bool,
                                             'ttl': str,
                                             'state': str,
-                                            'registration_errors': 
+                                            'registration_errors':
                                                 {'authentication_failures': int,
                                                 'allowed_locators_mismatch': int,
                                                 },
-                                            Optional('mapping_records'): 
+                                            Optional('mapping_records'):
                                                 {Any():
                                                     {'xtr_id': str,
                                                     'site_id': str,
@@ -2663,7 +2685,7 @@ class ShowLispServiceServerDetailInternalSchema(MetaParser):
                                                     'state': str,
                                                     'security_capability': bool,
                                                     'sourced_by': str,
-                                                    'locator': 
+                                                    'locator':
                                                         {Any():
                                                             {'local': bool,
                                                             'state': str,

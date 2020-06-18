@@ -7,15 +7,17 @@ from pyats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from genie.libs.parser.asa.show_vpn import (ShowVPNLoadBalancing)
+from genie.libs.parser.asa.show_vpn import ShowVPNLoadBalancing
+
 
 # ============================================
 # unit test for 'show vpn load-balancing'
 # =============================================
 class TestShowVPNLoadBalancing(unittest.TestCase):
-    '''
-       unit test for show vpn load-balancing
-    '''
+    """
+    unit test for show vpn load-balancing
+    """
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     maxDiff = None
@@ -107,6 +109,7 @@ class TestShowVPNLoadBalancing(unittest.TestCase):
         route_obj = ShowVPNLoadBalancing(device=self.device)
         parsed_output = route_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 if __name__ == '__main__':
     unittest.main()

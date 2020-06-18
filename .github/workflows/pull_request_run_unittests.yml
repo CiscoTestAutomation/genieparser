@@ -1,0 +1,20 @@
+name: Run Unit Tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with: 
+          python-version: 3.6
+
+      - name: Prepare repo
+        uses: actions/checkout@master
+        
+      - name: Run Test
+        uses: xiaoxinz-cisco/pyats_run_tests@master
+        with:
+#         current path is: github/workspace == this repository
+          path: 'tests'
+          deps_list: 'requirement'

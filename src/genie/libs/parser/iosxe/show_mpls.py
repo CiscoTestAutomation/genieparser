@@ -1975,7 +1975,7 @@ class ShowMplsInterface(ShowMplsInterfaceSchema):
                    'show mpls interfaces {interface} detail',
                    'show mpls interfaces {interface}',
                    'show mpls interfaces {all}',
-                   'show mpls interfaces vrf {vrf} ']
+                   'show mpls interfaces vrf {vrf}']
 
     def cli(self, detail="", interface="",vrf="",all="", output=None):
         if output is None:

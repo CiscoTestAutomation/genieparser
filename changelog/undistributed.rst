@@ -8,101 +8,83 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
-* IOSXE
-    * Added ShowIpBgpRouteDistributer for:
-        * show ip bgp {route}
-        * show ip bgp {address_family}
-    * Added ShowLldpNeighbors for
-        * show lldp neighbors
-* NXOS
-    * Added ShowIpRouteSummary for:
-        * show ip route summary
-        * show ip route summary vrf {vrf}
-    * Added ShowInterfaceStatus for:
-        * show interface status
-        * show interface {interface} status
-* ASA 
-    * Added ShowVPNSessionDBSummary for:
-        * show vpn-sessiondb summary
-    * Added ShowVPNLoadBalancing for:
-        * show vpn load-balancing
-    * Added ShowIpLocalPool for:
-        * show ip local pool {pool}
-    * Added ShowServicePolicy for:
-        * show service-policy
-    * Added ShowVpnSessiondb for:
-        * show vpn-sessiondb
-        * show vpn-sessiondb anyconnect
-        * show vpn-sessiondb anyconnect sort inactivity
-        * show vpn-sessiondb webvpn
-    * Added ShowResourceUsage for:
-        * show resource usage
-    * Added ShowAspDrop for
-        * show asp drop
+
+* JUNOS
+    * ShowRouteTable
+        * Added aditional testcase
+    * Added ShowRouteAdvertisingProtocolDetail
+        * show route advertising-protocol {protocol} {ip_address} {route} detail
+    * Added ShowLldp
+        * show lldp
+    * Added ShowSystemStatistics for:
+        * show system statistics
+    * Added ShowSystemStatisticsNoForwarding or:
+        * show system statistics no-forwarding
+    * Updated ShowOspfDatabaseLsaidDetail:
+        * added testcase
+        *extended from ShowOspfDatabaseAdvertisingRouterSelfDetail
 
 
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
+
 * IOSXE
-    * Updated ShowMplsForwardingTable:
-        * Modified wrong regex
-    * Updated ShowIpCef:
-        * Modified regex to support SID
-        * update regex and schema to support local sid
-    * Updated ShowMplsForwardingTableDetail:
-        * show mpls forwarding-table {route} detail
-    * Updated Traceroute:
-        * Updated regex to support various outputs.
-        * Updated schema and regex to support AS number.
-    * Updated ShowBootvar
-        * Fixed crash
-        * Added unittest
-    * Updated ShowInterfacesStatus
-        * Change key mandatory 'type' into optional
-        * Updated regex to support various output
-    * Updated ShowNveEthernetSegment
-        * Updated regex to support various output
-    * Updated ShowIpInterfaceVrfAll
-        * Update regex to support more various output
-    * Update ShowEnvironment
-        * Update regex to support more various output
-    * Update ShowIpNatTranslations
-        * Fix typo in cli_command
-    * Update ShowNveInterfaceDetail
-        * Update regex to support more various output
-    * Update ShowIpOspfNeighborDetail
-        * Update regex to support more various output
-    * Update ShowCdpNeighborsDetail
-        * Change key mandatory 'capabilities' into optional
-    * Update ShowMacAddressTable
-        * Update regex to support various output
-    * Update ShowAccessLists
-        * Update regex to support various output
-    * Update ShowLldpEntry
-        * Fix typo in the code
-
+    * Updated ShowIsisDatabaseDetail for code issue:
+        * show isis database detail
+    * Updated ShowBgpDetailSuperParser for code issue:
+        * 'show bgp all detail'
+        * 'show ip bgp all detail'
+        * 'show bgp {address_family} vrf {vrf} detail'
+        * 'show bgp {address_family} rd {rd} detail'
+        * 'show ip bgp {address_family} vrf {vrf} detail'
+        * 'show ip bgp {address_family} rd {rd} detail'
+    * Updated ShowBootvar:
+        * Modified the regex patterns to support various outputs.
 * NXOS
-    * Updated ShowInterface
-        * Update regex to cover both 'IP' and 'ip', both 'Rx' and 'RX'
-        * Clean code and correctly assign values to the key 'enabled'
-    * Updated ShowIpRoute
-        * Add keys into the schema, modify regex
-    * Updated ShowRouting
-        * Change its parent class from ShowRoutingVrfAll into ShowIpRoute
-    * Update ShowIpInterfaceVrfAll
-        * Changed wccp_* keys to be optional from mandatory to support new output
-    * Update ShowPlatformInternalHalPolicyRedirdst:
-        * Changed keys rewrite_mac, rewrite_vnid, outgoing_l2_ifindex, 
-            outgoing_ifname, packets_hash as optional
-
+    * Updated ShowMacAddressTableBase:
+        * Modified the regex patterns to support various outputs.
+    * Updated ShowIpArpDetailVrfAll:
+        * Modified the regex patterns to support various outputs.
+    * Update ShowIpRoute:
+        * Modified the regex patterns to support various outputs.
+    * Update ShowIpMrouteVrfAll:
+        * Modified the regex patterns to support various outputs.
+    * Update ShowIpv6MrouteVrfAll:
+        * Modified the regex patterns to support various outputs.
+    * Updated ShowRunningConfigInterface:
+        * Added regex to support vpc
+        * Added regex to support native vlan
+        * Added regex to support switchport_mode access
+        * Fixed regex to allow white spaces in description
 * IOSXR
     * Update ShowBgpInstanceSummary
         * Update regex to support various output
     * Update ShowIpv4VrfAllInterface
         * Update regex to support ':' character in VRF Name.
-
---------------------------------------------------------------------------------
-                                common.py
---------------------------------------------------------------------------------
-* updated _find_command to find command for nxos in aci mode
+    * Updated ShowVrfAllDetail:
+        * Modified the regex patterns to support various outputs.
+    * Updated ShowControllersOptics:
+        * Added more regex patterns to support various outputs.
+    * Updated ShowIsisSchema:
+        * Made the key 'protocols_redistributed' optional.
+* JUNOS
+    * Updated ShowRoute
+        * Modified cli method to accept only ip_address as input
+    * Updated ShowRouteTable
+        * Modified cli method to take an additional parameter
+    * Updated ShowRouteAdvertisingProtocol
+        * Added {route} parameter option
+    * Added MonitorInterfaceTraffic for:
+        * monitor interface traffic
+    * Updated ShowOspfOverview
+        * Optional key issue resolved
+    * Updated ShowInterfaceExtensive
+        * No longer breaks on use and previously unused data is now used
+    * Updated ShowOspfDatabaseExtensiveSchema
+        * Optional key issue resolved
+    * Updated ShowOspf3DatabaseExtensiveSchema
+        * Optional key issue resolved
+* IOSXE
+    * Updated ShowIpInterface
+        * Modified regex to accommodate different outputs

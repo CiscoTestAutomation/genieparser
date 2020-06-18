@@ -11,13 +11,12 @@ from genie.libs.parser.ios.show_fdb import ShowMacAddressTable,\
                                             ShowMacAddressTableLearning
 
 from genie.libs.parser.iosxe.tests.test_show_fdb import \
-            test_show_mac_address_table as test_show_mac_address_table_iosxe,\
-            test_show_mac_address_table_aging_time as test_show_mac_address_table_aging_time_iosxe,\
-            test_show_mac_address_table_learning as test_show_mac_address_table_learning_iosxe
+            TestShowMacAddressTable as TestShowMacAddressTableIosxe,\
+            TestShowMacAddressTableAgingTime as TestShowMacAddressTableAgingTimeIosxe,\
+            TestShowMacAddressTableLearning as TestShowMacAddressTableLearningIosxe
 
 
-
-class test_show_mac_address_table(test_show_mac_address_table_iosxe):
+class TestShowMacAddressTable(TestShowMacAddressTableIosxe):
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -33,7 +32,7 @@ class test_show_mac_address_table(test_show_mac_address_table_iosxe):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
-class test_show_mac_address_table_aging_time(test_show_mac_address_table_aging_time_iosxe):
+class TestShowMacAddressTableAgingTime(TestShowMacAddressTableAgingTimeIosxe):
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -49,7 +48,7 @@ class test_show_mac_address_table_aging_time(test_show_mac_address_table_aging_t
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
-class test_show_mac_address_table_learning(test_show_mac_address_table_learning_iosxe):
+class TestShowMacAddressTableLearning(TestShowMacAddressTableLearningIosxe):
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)

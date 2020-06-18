@@ -5,7 +5,7 @@ from unittest.mock import Mock
 from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
-                                       SchemaMissingKeyError
+                                             SchemaMissingKeyError
 from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   Dir,\
                                                   ShowBootvar,\
@@ -37,7 +37,8 @@ from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   ShowPlatformHardwareQfpStatisticsDrop, \
                                                   ShowProcessesCpuHistory, \
                                                   ShowProcessesMemory, \
-                                                  ShowProcessesMemorySorted
+                                                  ShowProcessesMemorySorted, \
+                                                  ShowPlatformIntegrity
 
 # ============================
 # Unit test for 'show bootvar'
@@ -63,9 +64,9 @@ class TestShowBootvar(unittest.TestCase):
 
     golden_parsed_output1 = {
         'active': 
-            {'boot_variable': 'harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12',
+            {'boot_variable': 'harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12;',
             'configuration_register': '0x2'},
-        'next_reload_boot_variable': 'harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12'}
+        'next_reload_boot_variable': 'harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12;'}
 
     golden_output2 = {'execute.return_value': '''
         asr-MIB-1#show bootvar
@@ -96,9 +97,9 @@ class TestShowBootvar(unittest.TestCase):
 
     golden_parsed_output3 = {
         'active': 
-            {'boot_variable': 'bootflash:12351822-iedge-asr-uut,12',
+            {'boot_variable': 'bootflash:12351822-iedge-asr-uut,12;',
             'configuration_register': '0x2102'},
-        'next_reload_boot_variable': 'bootflash:12351822-iedge-asr-uut,12'}
+        'next_reload_boot_variable': 'bootflash:12351822-iedge-asr-uut,12;'}
 
     golden_output4 = {'execute.return_value': '''
         SSR-4400-1#sh bootvar
@@ -110,15 +111,40 @@ class TestShowBootvar(unittest.TestCase):
         Standby not ready to show bootvar
 
         SSR-4400-1#
-    '''
-    }
+        '''}
+
     golden_parsed_output4 = {
         'active': {
             'configuration_register': '0x1'
             },
-            'config_file': 'bootflash:/taas/psan06_Golden_Config'
-    }
+            'config_file': 'bootflash:/taas/psan06_Golden_Config'}
 
+    golden_output5 = {'execute.return_value': '''
+        show bootvar
+        BOOT variable = harddisk:/c1100-universalk9.BLD_POLARIS_DEV_LATEST_20200517_102119.SSA.bin,12;harddisk:/genie-iedge-asr-uut,12;
+        CONFIG_FILE variable =
+        BOOTLDR variable does not exist
+        Configuration register is 0x1 (will be 0x2102 at next reload)
+
+        Standby BOOT variable = harddisk:/c1100-universalk9.BLD_POLARIS_DEV_LATEST_20200517_102119.SSA.bin,12;harddisk:/genie-iedge-asr-uut,12;
+        Standby CONFIG_FILE variable =
+        Standby BOOTLDR variable does not exist
+        Standby Configuration register is 0x1  (will be 0x2102 at next reload)
+    '''}
+
+    golden_parsed_output5 = {
+        "next_reload_boot_variable": "harddisk:/c1100-universalk9.BLD_POLARIS_DEV_LATEST_20200517_102119.SSA.bin,12;harddisk:/genie-iedge-asr-uut,12;",
+        "active": {
+            "boot_variable": "harddisk:/c1100-universalk9.BLD_POLARIS_DEV_LATEST_20200517_102119.SSA.bin,12;harddisk:/genie-iedge-asr-uut,12;",
+            "configuration_register": "0x1",
+            "next_reload_configuration_register": "0x2102"
+        },
+        "standby": {
+            "boot_variable": "harddisk:/c1100-universalk9.BLD_POLARIS_DEV_LATEST_20200517_102119.SSA.bin,12;harddisk:/genie-iedge-asr-uut,12",
+            "configuration_register": "0x1",
+            "next_reload_configuration_register": "0x2102"
+        }
+    }
 
     def test_show_bootvar_empty(self):
         self.device = Mock(**self.empty_output)
@@ -150,6 +176,11 @@ class TestShowBootvar(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
 
+    def test_show_bootvar_full5(self):
+        self.device = Mock(**self.golden_output5)
+        obj = ShowBootvar(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
 
 class TestShowVersion(unittest.TestCase):
 
@@ -1070,6 +1101,474 @@ class TestShowVersion(unittest.TestCase):
         }
     }
 
+    golden_output_2 = {'execute.return_value': '''
+        Cisco Internetwork Operating System Software 
+        IOS (tm) C2940 Software (C2940-I6K2L2Q4-M), Version 12.1(22)EA12, RELEASE SOFTWARE (fc1)
+        Copyright (c) 1986-2008 by cisco Systems, Inc.
+        Compiled Tue 08-Jul-08 00:06 by amvarma
+        Image text-base: 0x80010000, data-base: 0x8068C000
+        
+        ROM: Bootstrap program is C2950 boot loader
+        
+        testsw01 uptime is 24 weeks, 1 day, 20 hours, 50 minutes
+        System returned to ROM by power-on
+        System restarted at 09:17:28 UTC Sun Oct 27 2019
+        System image file is "flash:f1111-aei43934-mz.121-22.EA12.bin"
+        
+        
+        This product contains cryptographic features and is subject to United
+        States and local country laws governing import, export, transfer and
+        use. Delivery of Cisco cryptographic products does not imply
+        third-party authority to import, export, distribute or use encryption.
+        Importers, exporters, distributors and users are responsible for
+        compliance with U.S. and local country laws. By using this product you
+        agree to comply with applicable laws and regulations. If you are unable
+        to comply with U.S. and local laws, return this product immediately.
+        
+        A summary of U.S. laws governing Cisco cryptographic products may be found at:
+        http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+        
+        If you require further assistance please contact us by sending email to
+        export@cisco.com.
+        
+        cisco WS-C2940-8TT-S (RC32300) processor (revision H0) with 19868K bytes of memory.
+        Processor board ID FOC2345C3DB
+        Last reset from system-reset
+        Running Standard Image
+        8 FastEthernet/IEEE 802.3 interface(s)
+        1 Gigabit Ethernet/IEEE 802.3 interface(s)
+        The password-recovery mechanism is disabled.
+        
+        32K bytes of flash-simulated non-volatile configuration memory.
+        Base ethernet MAC Address: 00:11:22:ff:54:98
+        Motherboard assembly number: 99-6666-88
+        Power supply part number: 444-8888-00
+        Motherboard serial number: FOC99344ERT
+        Power supply serial number: CCC4466B6LL
+        Model revision number: H0
+        Motherboard revision number: A0
+        Model number: WS-C2940-8TT-S
+        System serial number: FOC6666U4BB
+        Configuration register is 0xF
+
+        '''}
+
+    golden_parsed_output_2 = {
+        'version': {
+        'version_short': '12.1',
+        'platform': 'C2940',
+        'version': '12.1(22)EA12',
+        'image_id': 'C2940-I6K2L2Q4-M',
+        'os': 'IOS',
+        'image_type': 'developer image',
+        'compiled_date': 'Tue 08-Jul-08 00:06',
+        'compiled_by': 'amvarma',
+        'image': {
+          'text_base': '0x80010000',
+          'data_base': '0x8068C000'
+        },
+        'rom': 'Bootstrap program is C2950 boot loader',
+        'hostname': 'testsw01',
+        'uptime': '24 weeks, 1 day, 20 hours, 50 minutes',
+        'returned_to_rom_by': 'power-on',
+        'system_restarted_at': '09:17:28 UTC Sun Oct 27 2019',
+        'system_image': 'flash:f1111-aei43934-mz.121-22.EA12.bin',
+        'chassis': 'WS-C2940-8TT-S',
+        'main_mem': '19868',
+        'processor_type': 'RC32300',
+        'rtr_type': 'WS-C2940-8TT-S',
+        'chassis_sn': 'FOC2345C3DB',
+        'last_reload_reason': 'system-reset',
+        'interfaces': {
+          'fastethernet': 8,
+          'gigabit_ethernet': 1
+        },
+        'mem_size': {
+          'flash-simulated non-volatile configuration': '32'
+        },
+        'curr_config_register': '0xF'
+      }
+    }
+
+    golden_output_3 = {'execute.return_value': '''
+            Cisco IOS Software, IOS-XE Software, Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Version 03.06.07E RELEASE SOFTWARE (fc3)
+            Technical Support: http://www.cisco.com/techsupport
+            Copyright (c) 1986-2017 by Cisco Systems, Inc.
+            Compiled Wed 12-Jul-17 16:55 by prod_rel_team
+            
+            
+            
+            Cisco IOS-XE software, Copyright (c) 2005-2015 by cisco Systems, Inc.
+            All rights reserved.  Certain components of Cisco IOS-XE software are
+            licensed under the GNU General Public License ("GPL") Version 2.0.  The
+            software code licensed under GPL Version 2.0 is free software that comes
+            with ABSOLUTELY NO WARRANTY.  You can redistribute and/or modify such
+            GPL code under the terms of GPL Version 2.0.
+            (http://www.gnu.org/licenses/gpl-2.0.html) For more details, see the
+            documentation or "License Notice" file accompanying the IOS-XE software,
+            or the applicable URL provided on the flyer accompanying the IOS-XE
+            software.
+            
+            
+            
+            ROM: IOS-XE ROMMON
+            BOOTLDR: CAT3K_CAA Boot Loader (CAT3K_CAA-HBOOT-M) Version 1.2, RELEASE SOFTWARE (P)
+            
+            testhost uptime is 1 year, 51 weeks, 2 days, 41 minutes
+            Uptime for this control processor is 1 year, 51 weeks, 2 days, 46 minutes
+            System returned to ROM by reload at 10:29:35 CEST Sat Apr 14 2018
+            System restarted at 10:36:03 CEST Sat Apr 14 2018
+            System image file is "flash:packages.conf"
+            Last reload reason: Reload command
+            
+            
+            
+            This product contains cryptographic features and is subject to United
+            States and local country laws governing import, export, transfer and
+            use. Delivery of Cisco cryptographic products does not imply
+            third-party authority to import, export, distribute or use encryption.
+            Importers, exporters, distributors and users are responsible for
+            compliance with U.S. and local country laws. By using this product you
+            agree to comply with applicable laws and regulations. If you are unable
+            to comply with U.S. and local laws, return this product immediately.
+            
+            A summary of U.S. laws governing Cisco cryptographic products may be found at:
+            http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+            
+            If you require further assistance please contact us by sending email to
+            export@cisco.com.
+            
+            License Level: License
+            License Type: Type
+            Next reload license Level: License
+            
+            cisco WS-C3650-48PD (MIPS) processor with 4194304K bytes of physical memory.
+            Processor board ID FDO0000E1C8
+            3 Virtual Ethernet interfaces
+            100 Gigabit Ethernet interfaces
+            4 Ten Gigabit Ethernet interfaces
+            2048K bytes of non-volatile configuration memory.
+            4194304K bytes of physical memory.
+            257008K bytes of Crash Files at crashinfo:.
+            257008K bytes of Crash Files at crashinfo-1:.
+            1550272K bytes of Flash at flash:.
+            1550272K bytes of Flash at flash-1:.
+            0K bytes of Dummy USB Flash at usbflash0:.
+            0K bytes of Dummy USB Flash at usbflash0-1:.
+            0K bytes of  at webui:.
+            
+            Base Ethernet MAC Address          : 88:88:00:ff:33:00
+            Motherboard Assembly Number        : 73-12345-67
+            Motherboard Serial Number          : FDO668866S6E
+            Model Revision Number              : D0
+            Motherboard Revision Number        : A0
+            Model Number                       : WS-C3650-48PD
+            System Serial Number               : FDO668866F908
+            
+            
+            Switch Ports Model              SW Version        SW Image              Mode   
+            ------ ----- -----              ----------        ----------            ----   
+                 1 52    WS-C3650-48PD      03.06.07E         cat3k_caa-universalk9 INSTALL
+            *    2 52    WS-C3650-48PD      03.06.07E         cat3k_caa-universalk9 INSTALL
+            
+            
+            Switch 01
+            ---------
+            Switch uptime                      : 1 year, 51 weeks, 2 days, 44 minutes 
+            Base Ethernet MAC Address          : bb:aa:77:ff:aa:88
+            Motherboard Assembly Number        : 73-12345-89
+            Motherboard Serial Number          : FDO668866D8F
+            Model Revision Number              : D0
+            Motherboard Revision Number        : A0
+            Model Number                       : WS-C3650-48PD
+            System Serial Number               : FDO668866F910
+            
+            Configuration register is 0x102
+
+            '''}
+
+    golden_parsed_output_3 = {
+        'version': {
+        'version_short': '03.06',
+        'platform': 'Catalyst L3 Switch',
+        'version': '03.06.07E',
+        'image_id': 'CAT3K_CAA-UNIVERSALK9-M',
+        'os': 'IOS-XE',
+        'image_type': 'production image',
+        'compiled_date': 'Wed 12-Jul-17 16:55',
+        'compiled_by': 'prod_rel_team',
+        'rom': 'IOS-XE ROMMON',
+        'bootldr': 'CAT3K_CAA Boot Loader (CAT3K_CAA-HBOOT-M) Version 1.2, RELEASE SOFTWARE (P)',
+        'hostname': 'testhost',
+        'uptime': '1 year, 51 weeks, 2 days, 41 minutes',
+        'uptime_this_cp': '1 year, 51 weeks, 2 days, 46 minutes',
+        'returned_to_rom_by': 'reload',
+        'returned_to_rom_at': '10:29:35 CEST Sat Apr 14 2018',
+        'system_restarted_at': '10:36:03 CEST Sat Apr 14 2018',
+        'system_image': 'flash:packages.conf',
+        'last_reload_reason': 'Reload command',
+        'license_level': 'License',
+        'license_type': 'Type',
+        'next_reload_license_level': 'License',
+        'chassis': 'WS-C3650-48PD',
+        'main_mem': '4194304',
+        'processor_type': 'MIPS',
+        'rtr_type': 'Edison',
+        'chassis_sn': 'FDO0000E1C8',
+        'number_of_intfs': {
+          'Virtual Ethernet': '3',
+          'Gigabit Ethernet': '100',
+          'Ten Gigabit Ethernet': '4'
+        },
+        'mem_size': {
+          'non-volatile configuration': '2048',
+          'physical': '4194304'
+        },
+        'disks': {
+          'crashinfo:.': {
+            'disk_size': '257008',
+            'type_of_disk': 'Crash Files'
+          },
+          'crashinfo-1:.': {
+            'disk_size': '257008',
+            'type_of_disk': 'Crash Files'
+          },
+          'flash:.': {
+            'disk_size': '1550272',
+            'type_of_disk': 'Flash'
+          },
+          'flash-1:.': {
+            'disk_size': '1550272',
+            'type_of_disk': 'Flash'
+          },
+          'usbflash0:.': {
+            'disk_size': '0',
+            'type_of_disk': 'Dummy USB Flash'
+          },
+          'usbflash0-1:.': {
+            'disk_size': '0',
+            'type_of_disk': 'Dummy USB Flash'
+          },
+          'webui:.': {
+            'disk_size': '0',
+            'type_of_disk': ''
+          }
+        },
+        'switch_num': {
+          '1': {
+            'uptime': '1 year, 51 weeks, 2 days, 44 minutes',
+            'mac_address': 'bb:aa:77:ff:aa:88',
+            'mb_assembly_num': '73-12345-89',
+            'mb_sn': 'FDO668866D8F',
+            'model_rev_num': 'D0',
+            'mb_rev_num': 'A0',
+            'model_num': 'WS-C3650-48PD',
+            'system_sn': 'FDO668866F910',
+            'ports': '52',
+            'model': 'WS-C3650-48PD',
+            'sw_ver': '03.06.07E',
+            'sw_image': 'cat3k_caa-universalk9',
+            'mode': 'INSTALL',
+            'active': False
+          },
+          '2': {
+            'ports': '52',
+            'model': 'WS-C3650-48PD',
+            'sw_ver': '03.06.07E',
+            'sw_image': 'cat3k_caa-universalk9',
+            'mode': 'INSTALL',
+            'uptime': '1 year, 51 weeks, 2 days, 46 minutes',
+            'active': True,
+            'mac_address': '88:88:00:ff:33:00',
+            'mb_assembly_num': '73-12345-67',
+            'mb_sn': 'FDO668866S6E',
+            'model_rev_num': 'D0',
+            'mb_rev_num': 'A0',
+            'model_num': 'WS-C3650-48PD',
+            'system_sn': 'FDO668866F908'
+          }
+        },
+        'curr_config_register': '0x102'
+      }
+    }
+
+    golden_output_4 = {'execute.return_value': '''
+            Cisco IOS Software, C2960X Software (C2960X-UNIVERSALK9-M), Version 15.2(2)E7, RELEASE SOFTWARE (fc3)
+            Technical Support: http://www.cisco.com/techsupport
+            Copyright (c) 1986-2017 by Cisco Systems, Inc.
+            Compiled Wed 12-Jul-17 13:06 by prod_rel_team
+            
+            ROM: Bootstrap program is C2960X boot loader
+            BOOTLDR: C2960X Boot Loader (C2960X-HBOOT-M) Version 15.2(2r)E1, RELEASE SOFTWARE (fc1)
+            
+            testname uptime is 25 weeks, 5 days, 15 hours, 45 minutes
+            System returned to ROM by power-on
+            System restarted at 19:24:47 UTC+2 Wed Oct 9 2019
+            System image file is "flash:c2960x-universalk9-mz.152-2.E7/c2960x-universalk9-mz.152-2.E7.bin"
+            Last reload reason: Reload command
+            
+            
+            
+            This product contains cryptographic features and is subject to United
+            States and local country laws governing import, export, transfer and
+            use. Delivery of Cisco cryptographic products does not imply
+            third-party authority to import, export, distribute or use encryption.
+            Importers, exporters, distributors and users are responsible for
+            compliance with U.S. and local country laws. By using this product you
+            agree to comply with applicable laws and regulations. If you are unable
+            to comply with U.S. and local laws, return this product immediately.
+            
+            A summary of U.S. laws governing Cisco cryptographic products may be found at:
+            http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+            
+            If you require further assistance please contact us by sending email to
+            export@cisco.com.
+            
+            cisco WS-C2960X-48FPD-L (APM86XXX) processor (revision F0) with 524288K bytes of memory.
+            Processor board ID FOC1913S46M
+            Last reset from power-on
+            4 Virtual Ethernet interfaces
+            1 FastEthernet interface
+            100 Gigabit Ethernet interfaces
+            4 Ten Gigabit Ethernet interfaces
+            The password-recovery mechanism is enabled.
+            
+            512K bytes of flash-simulated non-volatile configuration memory.
+            Base ethernet MAC Address       : CC:44:33:FF:99:22
+            Motherboard assembly number     : 71-123456-02
+            Power supply part number        : 311-4567-11
+            Motherboard serial number       : FOC123456U12
+            Power supply serial number      : DCB324354RH
+            Model revision number           : F0
+            Motherboard revision number     : C0
+            Model number                    : WS-C2960X-48FPD-L
+            Daughterboard assembly number   : 73-11111-00
+            Daughterboard serial number     : FOC87654CWW
+            System serial number            : FOC4444S23V
+            Top Assembly Part Number        : 800-55555-11
+            Top Assembly Revision Number    : C0
+            Version ID                      : V02
+            CLEI Code Number                : AAALJ00ERT
+            Daughterboard revision number   : A0
+            Hardware Board Revision Number  : 0x12
+            
+            
+            Switch Ports Model                     SW Version            SW Image                 
+            ------ ----- -----                     ----------            ----------               
+                 1 52    WS-C2960X-48FPD-L         15.2(2)E7             C2960X-UNIVERSALK9-M     
+            *    2 52    WS-C2960X-48FPD-L         15.2(2)E7             C2960X-UNIVERSALK9-M     
+            
+            
+            Switch 01
+            ---------
+            Switch Uptime                   : 9 weeks, 5 days, 16 hours, 1 minute 
+            Base ethernet MAC Address       : 00:11:22:ff:77:88
+            Motherboard assembly number     : 77-99999-00
+            Power supply part number        : 111-0111-03
+            Motherboard serial number       : FOC666777G4
+            Power supply serial number      : LIT122334DD
+            Model revision number           : V0
+            Motherboard revision number     : D0
+            Model number                    : WS-C2960X-48FPD-L
+            Daughterboard assembly number   : 73-12230-13
+            Daughterboard serial number     : FOC33144FDG
+            System serial number            : FOC3333S00A
+            Top assembly part number        : 00-100000-00
+            Top assembly revision number    : D0
+            Version ID                      : V07
+            CLEI Code Number                : CDFER00DFG
+            Daughterboard revision number   : B0
+            
+            Configuration register is 0xF
+
+    '''}
+
+    golden_parsed_output_4 = {
+        'version': {
+        'version_short': '15.2',
+        'platform': 'C2960X',
+        'version': '15.2(2)E7',
+        'image_id': 'C2960X-UNIVERSALK9-M',
+        'os': 'IOS',
+        'image_type': 'production image',
+        'compiled_date': 'Wed 12-Jul-17 13:06',
+        'compiled_by': 'prod_rel_team',
+        'rom': 'Bootstrap program is C2960X boot loader',
+        'bootldr': 'C2960X Boot Loader (C2960X-HBOOT-M) Version 15.2(2r)E1, RELEASE SOFTWARE (fc1)',
+        'hostname': 'testname',
+        'uptime': '25 weeks, 5 days, 15 hours, 45 minutes',
+        'returned_to_rom_by': 'power-on',
+        'system_restarted_at': '19:24:47 UTC+2 Wed Oct 9 2019',
+        'system_image': 'flash:c2960x-universalk9-mz.152-2.E7/c2960x-universalk9-mz.152-2.E7.bin',
+        'last_reload_reason': 'power-on',
+        'chassis': 'WS-C2960X-48FPD-L',
+        'main_mem': '524288',
+        'processor_type': 'APM86XXX',
+        'rtr_type': 'WS-C2960X-48FPD-L',
+        'chassis_sn': 'FOC1913S46M',
+        'number_of_intfs': {
+          'Virtual Ethernet': '4',
+          'FastEthernet': '1',
+          'Gigabit Ethernet': '100',
+          'Ten Gigabit Ethernet': '4'
+        },
+        'mem_size': {
+          'flash-simulated non-volatile configuration': '512'
+        },
+        'switch_num': {
+          '1': {
+            'uptime': '9 weeks, 5 days, 16 hours, 1 minute',
+            'mac_address': '00:11:22:ff:77:88',
+            'mb_assembly_num': '77-99999-00',
+            'power_supply_part_nr': '111-0111-03',
+            'mb_sn': 'FOC666777G4',
+            'power_supply_sn': 'LIT122334DD',
+            'model_rev_num': 'V0',
+            'mb_rev_num': 'D0',
+            'model_num': 'WS-C2960X-48FPD-L',
+            'db_assembly_num': '73-12230-13',
+            'db_sn': 'FOC33144FDG',
+            'system_sn': 'FOC3333S00A',
+            'top_assembly_part_num': '00-100000-00',
+            'top_assembly_rev_num': 'D0',
+            'version_id': 'V07',
+            'clei_code_num': 'CDFER00DFG',
+            'db_rev_num': 'B0',
+            'ports': '52',
+            'model': 'WS-C2960X-48FPD-L',
+            'sw_ver': '15.2(2)E7',
+            'sw_image': 'C2960X-UNIVERSALK9-M',
+            'active': False
+          },
+          '2': {
+            'ports': '52',
+            'model': 'WS-C2960X-48FPD-L',
+            'sw_ver': '15.2(2)E7',
+            'sw_image': 'C2960X-UNIVERSALK9-M',
+            'active': True,
+            'mac_address': 'CC:44:33:FF:99:22',
+            'mb_assembly_num': '71-123456-02',
+            'power_supply_part_nr': '311-4567-11',
+            'mb_sn': 'FOC123456U12',
+            'power_supply_sn': 'DCB324354RH',
+            'model_rev_num': 'F0',
+            'mb_rev_num': 'C0',
+            'model_num': 'WS-C2960X-48FPD-L',
+            'db_assembly_num': '73-11111-00',
+            'db_sn': 'FOC87654CWW',
+            'system_sn': 'FOC4444S23V',
+            'top_assembly_part_num': '800-55555-11',
+            'top_assembly_rev_num': 'C0',
+            'version_id': 'V02',
+            'clei_code_num': 'AAALJ00ERT',
+            'db_rev_num': 'A0',
+            'hb_rev_num': '0x12'
+          }
+        },
+        'curr_config_register': '0xF'
+      }
+    }
+    
     
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -1124,6 +1623,27 @@ class TestShowVersion(unittest.TestCase):
         obj = ShowVersion(device=self.dev_1)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.dev_1 = Mock(**self.golden_output_2)
+        obj = ShowVersion(device=self.dev_1)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.dev_1 = Mock(**self.golden_output_3)
+        obj = ShowVersion(device=self.dev_1)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+    def test_golden_4(self):
+        self.maxDiff = None
+        self.dev_1 = Mock(**self.golden_output_4)
+        obj = ShowVersion(device=self.dev_1)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 class TestDir(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -2316,112 +2836,124 @@ class TestShowInventory(unittest.TestCase):
         '''}
 
     golden_parsed_output_isr4k = {
-        'main': 
-            {'chassis': 
-                {'ISR4331/K9': 
-                    {'sn': 'FDO2201A0SR',
-                    'pid': 'ISR4331/K9',
-                    'descr': 'Cisco ISR4331 Chassis',
-                    'name': 'Chassis',
-                    'vid': 'V04',
-                    },
-                },
-            },
-        'slot': 
-            {'0': 
-                {'lc': 
-                    {'ISR4331-3x1GE': 
-                        {'descr': 'Front Panel 3 ports Gigabitethernet Module',
-                        'name': 'NIM subslot 0/0',
-                        'pid': 'ISR4331-3x1GE',
-                        'sn': '',
-                        'subslot': 
-                            {'0 transceiver 2': 
-                                {'SFP-GE-T': 
-                                    {'descr': 'GE T',
-                                    'name': 'subslot 0/0 transceiver 2',
-                                    'pid': 'SFP-GE-T',
-                                    'sn': 'MTC2139029X',
-                                    'vid': 'V02'}}},
-                        'vid': 'V01'},
-                    'ISR4331/K9': 
-                        {'descr': 'Cisco ISR4331 Built-In NIM controller',
-                        'name': 'module 0',
-                        'pid': 'ISR4331/K9',
-                        'sn': '',
-                        'subslot': 
-                            {'1': 
-                                {'NIM-ES2-4': 
-                                    {'descr': 'NIM-ES2-4',
-                                    'name': 'NIM subslot 0/1',
-                                    'pid': 'NIM-ES2-4',
-                                    'sn': 'FOC21486SRL',
-                                    'vid': 'V01'}},
-                            '2': 
-                                {'NIM-ES2-8': 
-                                    {'descr': 'NIM-ES2-8',
-                                    'name': 'NIM subslot 0/2',
-                                    'pid': 'NIM-ES2-8',
-                                    'sn': 'FOC22384AXC',
-                                    'vid': 'V01'}}},
-                        'vid': ''}}},
-            '1': 
-                {'lc': 
-                    {'ISR4331/K9': 
-                        {'sn': '',
-                        'pid': 'ISR4331/K9',
-                        'descr': 'Cisco ISR4331 Built-In SM controller',
-                        'name': 'module 1',
-                        'vid': '',
+        "main":{
+            "chassis":{
+                "ISR4331/K9":{
+                    "descr":"Cisco ISR4331 Chassis",
+                    "name":"Chassis",
+                    "pid":"ISR4331/K9",
+                    "sn":"FDO2201A0SR",
+                    "vid":"V04"
+                }
+            }
+        },
+        "slot":{
+            "0":{
+                "lc":{
+                    "ISR4331/K9":{
+                    "descr":"Cisco ISR4331 Built-In NIM controller",
+                    "name":"module 0",
+                    "pid":"ISR4331/K9",
+                    "sn":"",
+                    "subslot":{
+                        "0":{
+                            "ISR4331-3x1GE":{
+                                "descr":"Front Panel 3 ports Gigabitethernet Module",
+                                "name":"NIM subslot 0/0",
+                                "pid":"ISR4331-3x1GE",
+                                "sn":"",
+                                "vid":"V01"
+                            }
                         },
-                    },
-                },
-            'F0': 
-                {'lc': 
-                    {'ISR4331/K9': 
-                        {'sn': '',
-                        'pid': 'ISR4331/K9',
-                        'descr': 'Cisco ISR4331 Forwarding Processor',
-                        'name': 'module F0',
-                        'vid': '',
+                        "0 transceiver 2":{
+                            "SFP-GE-T":{
+                                "descr":"GE T",
+                                "name":"subslot 0/0 transceiver 2",
+                                "pid":"SFP-GE-T",
+                                "sn":"MTC2139029X",
+                                "vid":"V02"
+                            }
                         },
-                    },
-                },
-            'P0': 
-                {'other': 
-                    {'PWR-4330-AC': 
-                        {'sn': 'PST2150N1E2',
-                        'pid': 'PWR-4330-AC',
-                        'descr': '250W AC Power Supply for Cisco ISR 4330',
-                        'name': 'Power Supply Module 0',
-                        'vid': 'V02',
+                        "1":{
+                            "NIM-ES2-4":{
+                                "descr":"NIM-ES2-4",
+                                "name":"NIM subslot 0/1",
+                                "pid":"NIM-ES2-4",
+                                "sn":"FOC21486SRL",
+                                "vid":"V01"
+                            }
                         },
+                        "2":{
+                            "NIM-ES2-8":{
+                                "descr":"NIM-ES2-8",
+                                "name":"NIM subslot 0/2",
+                                "pid":"NIM-ES2-8",
+                                "sn":"FOC22384AXC",
+                                "vid":"V01"
+                            }
+                        }
                     },
-                },
-            'Fan_Tray': {
-                'other': {
-                    'ACS-4330-FANASSY': {
-                        'descr': 'Cisco ISR4330 Fan Assembly',
-                        'name': 'Fan Tray',
-                        'pid': 'ACS-4330-FANASSY',
-                        'sn': '',
-                        'vid': '',
+                    "vid":""
                     }
                 }
             },
-            'R0': 
-                {'rp': 
-                    {'ISR4331/K9': 
-                        {'sn': 'FDO21520TGH',
-                        'pid': 'ISR4331/K9',
-                        'descr': 'Cisco ISR4331 Route Processor',
-                        'name': 'module R0',
-                        'vid': 'V04',
-                        },
-                    },
-                },
+            "1":{
+                "lc":{
+                    "ISR4331/K9":{
+                    "descr":"Cisco ISR4331 Built-In SM controller",
+                    "name":"module 1",
+                    "pid":"ISR4331/K9",
+                    "sn":"",
+                    "vid":""
+                    }
+                }
             },
+            "F0":{
+                "other":{
+                    "ISR4331/K9":{
+                    "descr":"Cisco ISR4331 Forwarding Processor",
+                    "name":"module F0",
+                    "pid":"ISR4331/K9",
+                    "sn":"",
+                    "vid":""
+                    }
+                }
+            },
+            "Fan_Tray":{
+                "other":{
+                    "ACS-4330-FANASSY":{
+                    "descr":"Cisco ISR4330 Fan Assembly",
+                    "name":"Fan Tray",
+                    "pid":"ACS-4330-FANASSY",
+                    "sn":"",
+                    "vid":""
+                    }
+                }
+            },
+            "P0":{
+                "other":{
+                    "PWR-4330-AC":{
+                    "descr":"250W AC Power Supply for Cisco ISR 4330",
+                    "name":"Power Supply Module 0",
+                    "pid":"PWR-4330-AC",
+                    "sn":"PST2150N1E2",
+                    "vid":"V02"
+                    }
+                }
+            },
+            "R0":{
+                "rp":{
+                    "ISR4331/K9":{
+                    "descr":"Cisco ISR4331 Route Processor",
+                    "name":"module R0",
+                    "pid":"ISR4331/K9",
+                    "sn":"FDO21520TGH",
+                    "vid":"V04"
+                    }
+                }
+            }
         }
+    }
 
     golden_output_isr4k = {'execute.return_value': '''
         show inventory
@@ -2551,7 +3083,6 @@ class TestShowInventory(unittest.TestCase):
         NAME: "Fan Tray", DESCR: "ASR 920 Fan tray"
         PID: ASR-920-FAN-M     , VID: V01  , SN: CAT1903V028
         '''}
-
 
     golden_parsed_output_asr1002 = {
         'main': {
@@ -2708,6 +3239,126 @@ class TestShowInventory(unittest.TestCase):
         NAME: "module F0", DESCR: "Cisco ASR1002-X Embedded Services Processor"
         PID: ASR1002-X         , VID:    , SN:         
         '''}
+
+    golden_parsed_output_c8300 = {
+        "main":{
+            "chassis":{
+                "C8300-1N1S-6G":{
+                    "descr":"Cisco isr9000 Series Chassis",
+                    "name":"Chassis",
+                    "pid":"C8300-1N1S-6G",
+                    "sn":"FDO2319A1RM",
+                    "vid":"V00"
+                }
+            }
+        },
+        "slot":{
+            "0":{
+                "lc":{
+                    "C8300-1N1S-6G":{
+                        "descr":"Cisco isr9000 series Unknown Module",
+                        "name":"module 0",
+                        "pid":"C8300-1N1S-6G",
+                        "vid":"",
+                        "sn":"",
+                        "subslot":{
+                            "0":{
+                                "4x1G-2xSFP":{
+                                    "descr":"Front Panel 6 ports Gigabitethernet Module",
+                                    "name":"NIM subslot 0/0",
+                                    "pid":"4x1G-2xSFP",
+                                    "sn":"",
+                                    "vid":"V01"
+                                },
+                            }
+                        },
+                    }
+                }
+            },
+            "1":{
+                "lc":{
+                    "C-SM-NIM-ADPT":{
+                        "descr":"Cisco C-SM-NIM-ADPT SM to NIM adapter",
+                        "name":"module 1",
+                        "pid":"C-SM-NIM-ADPT",
+                        "sn":"FDO23370TB8",
+                        "vid":"V01",
+                        "subslot":{
+                            "0":{
+                                "NIM-8MFT-T1/E1":{
+                                    "descr":"NIM-8MFT-T1/E1 - T1/E1 Serial Module",
+                                    "name":"NIM subslot 1/0",
+                                    "pid":"NIM-8MFT-T1/E1",
+                                    "sn":"FOC21032R9L",
+                                    "vid":"V04"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "F0":{
+                "other":{
+                    "C8300-1N1S-6G":{
+                        "descr":"Cisco isr9000 Series Forwarding Processor",
+                        "name":"module F0",
+                        "pid":"C8300-1N1S-6G",
+                        "sn":"",
+                        "vid":""
+                    }
+                }
+            },
+            "Fan_Tray":{
+                "other":{
+                    "C8300-FAN-1R":{
+                        "descr":"Cisco C8300 1RU Fan Assembly",
+                        "name":"Fan Tray",
+                        "pid":"C8300-FAN-1R",
+                        "sn":"",
+                        "vid":""
+                    }
+                }
+            },
+            "R0":{
+                "rp":{
+                    "C8300-1N1S-6G":{
+                        "descr":"Cisco isr9000 Series Route Processor",
+                        "name":"module R0",
+                        "pid":"C8300-1N1S-6G",
+                        "sn":"FDO231403QN",
+                        "vid":"V00"
+                    }
+                }
+            }
+        }      
+    }
+
+    golden_output_c8300= {'execute.return_value':'''
+    
+    NAME: "Chassis", DESCR: "Cisco isr9000 Series Chassis"
+    PID: C8300-1N1S-6G , VID: V00 , SN: FDO2319A1RM
+
+    NAME: "Fan Tray", DESCR: "Cisco C8300 1RU Fan Assembly"
+    PID: C8300-FAN-1R , VID: , SN:
+
+    NAME: "module 0", DESCR: "Cisco isr9000 series Unknown Module"
+    PID: C8300-1N1S-6G , VID: , SN:
+
+    NAME: "NIM subslot 0/0", DESCR: "Front Panel 6 ports Gigabitethernet Module"
+    PID: 4x1G-2xSFP , VID: V01 , SN:
+
+    NAME: "module 1", DESCR: "Cisco C-SM-NIM-ADPT SM to NIM adapter"
+    PID: C-SM-NIM-ADPT , VID: V01 , SN: FDO23370TB8
+
+    NAME: "NIM subslot 1/0", DESCR: "NIM-8MFT-T1/E1 - T1/E1 Serial Module"
+    PID: NIM-8MFT-T1/E1 , VID: V04 , SN: FOC21032R9L
+
+    NAME: "module R0", DESCR: "Cisco isr9000 Series Route Processor"
+    PID: C8300-1N1S-6G , VID: V00 , SN: FDO231403QN
+
+    NAME: "module F0", DESCR: "Cisco isr9000 Series Forwarding Processor"
+    PID: C8300-1N1S-6G , VID: , SN:
+    '''}
 
     golden_parsed_output = {
         'main': {
@@ -2873,6 +3524,7 @@ class TestShowInventory(unittest.TestCase):
             },
         },
     }
+
     golden_output = {'execute.return_value': '''
         show inventory
         NAME: "Chassis", DESCR: "Cisco ASR1002-HX Chassis"
@@ -2924,6 +3576,359 @@ class TestShowInventory(unittest.TestCase):
         PID: ASR1002-HX        , VID:      , SN:
     '''}
 
+    golden_parsed_output_1 = {
+        "main":{
+            "chassis":{
+                "ISR4451-X/K9":{
+                    "descr":"Cisco ISR4451 Chassis",
+                    "name":"Chassis",
+                    "pid":"ISR4451-X/K9",
+                    "sn":"FGL172511Q5",
+                    "vid":"V01"
+                }
+            }
+        },
+        "slot":{
+            "0":{
+                "lc":{
+                    "ISR4451-X/K9":{
+                    "descr":"Cisco ISR4451 Built-In NIM controller",
+                    "name":"module 0",
+                    "pid":"ISR4451-X/K9",
+                    "sn":"",
+                    "subslot":{
+                        "0":{
+                            "ISR4451-X-4x1GE":{
+                                "descr":"Front Panel 4 ports Gigabitethernet Module",
+                                "name":"NIM subslot 0/0",
+                                "pid":"ISR4451-X-4x1GE",
+                                "sn":"",
+                                "vid":"V01"
+                            }
+                        },
+                        "1":{
+                            "NIM-ES2-4":{
+                                "descr":"NIM-ES2-4",
+                                "name":"NIM subslot 0/1",
+                                "pid":"NIM-ES2-4",
+                                "sn":"FOC1831B0TS",
+                                "vid":"V01"
+                            }
+                        },
+                        "2":{
+                            "NIM-24A":{
+                                "descr":"24 ports Async Serial NIM",
+                                "name":"NIM subslot 0/2",
+                                "pid":"NIM-24A",
+                                "sn":"DNI2047033J",
+                                "vid":"V01"
+                            }
+                        },
+                        "3":{
+                            "NIM-SSD":{
+                                "descr":"NIM SSD Module",
+                                "name":"NIM subslot 0/3",
+                                "pid":"NIM-SSD",
+                                "sn":"FOC17356NWR",
+                                "vid":"V01"
+                            }
+                        },
+                        "3 disk1":{
+                            "Samsung SSD 860 EVO 250GB":{
+                                "descr":"harddisk",
+                                "name":"subslot 0/3 disk1",
+                                "pid":"Samsung SSD 860 EVO 250GB",
+                                "sn":"S3Y9NX0M604745D",
+                                "vid":"RVT03B6Q"
+                            }
+                        },
+                        "4":{
+                            "PVDM4-32":{
+                                "descr":"PVDM4-32 Voice DSP Module",
+                                "name":"PVDM subslot 0/4",
+                                "pid":"PVDM4-32",
+                                "sn":"FOC17176BKC",
+                                "vid":"V01"
+                            }
+                        }
+                    },
+                    "vid":""
+                    }
+                }
+            },
+            "1":{
+                "lc":{
+                    "ISR4451-X/K9":{
+                    "descr":"Cisco ISR4451 Built-In SM controller",
+                    "name":"module 1",
+                    "pid":"ISR4451-X/K9",
+                    "sn":"",
+                    "vid":""
+                    }
+                }
+            },
+            "2":{
+                "lc":{
+                    "ISR4451-X/K9":{
+                    "descr":"Cisco ISR4451 Built-In SM controller",
+                    "name":"module 2",
+                    "pid":"ISR4451-X/K9",
+                    "sn":"",
+                    "vid":""
+                    }
+                }
+            },
+            "F0":{
+                "lc":{
+                    "ISR4451-X/K9":{
+                    "descr":"Cisco ISR4451 Forwarding Processor",
+                    "name":"module F0",
+                    "pid":"ISR4451-X/K9",
+                    "sn":"",
+                    "vid":""
+                    }
+                }
+            },
+            "Fan_Tray":{
+                "other":{
+                    "ACS-4450-FANASSY":{
+                    "descr":"Cisco ISR4450, ISR4350 Fan Assembly",
+                    "name":"Fan Tray",
+                    "pid":"ACS-4450-FANASSY",
+                    "sn":"",
+                    "vid":""
+                    }
+                }
+            },
+            "P0":{
+                "other":{
+                    "PWR-4450-AC":{
+                    "descr":"450W AC Power Supply for Cisco ISR4450, ISR4350",
+                    "name":"Power Supply Module 0",
+                    "pid":"PWR-4450-AC",
+                    "sn":"DCA1645X0EK",
+                    "vid":"V01"
+                    }
+                }
+            },
+            "R0":{
+                "rp":{
+                    "ISR4451-X/K9":{
+                    "descr":"Cisco ISR4451 Route Processor",
+                    "name":"module R0",
+                    "pid":"ISR4451-X/K9",
+                    "sn":"FOC17042FN5",
+                    "vid":"V01"
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+    NAME: "Chassis", DESCR: "Cisco ISR4451 Chassis"
+    PID: ISR4451-X/K9 , VID: V01 , SN: FGL172511Q5
+
+    NAME: "Power Supply Module 0", DESCR: "450W AC Power Supply for Cisco ISR4450, ISR4350"
+    PID: PWR-4450-AC , VID: V01 , SN: DCA1645X0EK
+
+    NAME: "Fan Tray", DESCR: "Cisco ISR4450, ISR4350 Fan Assembly"
+    PID: ACS-4450-FANASSY , VID: , SN:
+
+    NAME: "module 0", DESCR: "Cisco ISR4451 Built-In NIM controller"
+    PID: ISR4451-X/K9 , VID: , SN:
+
+    NAME: "NIM subslot 0/1", DESCR: "NIM-ES2-4"
+    PID: NIM-ES2-4 , VID: V01 , SN: FOC1831B0TS
+
+    NAME: "NIM subslot 0/2", DESCR: "24 ports Async Serial NIM"
+    PID: NIM-24A , VID: V01 , SN: DNI2047033J
+
+    NAME: "NIM subslot 0/3", DESCR: "NIM SSD Module"
+    PID: NIM-SSD , VID: V01 , SN: FOC17356NWR
+
+    NAME: "subslot 0/3 disk1", DESCR: "harddisk"
+    PID: Samsung SSD 860 EVO 250GB , VID: RVT03B6Q, SN: S3Y9NX0M604745D
+
+    NAME: "PVDM subslot 0/4", DESCR: "PVDM4-32 Voice DSP Module"
+    PID: PVDM4-32 , VID: V01 , SN: FOC17176BKC
+
+    NAME: "NIM subslot 0/0", DESCR: "Front Panel 4 ports Gigabitethernet Module"
+    PID: ISR4451-X-4x1GE , VID: V01 , SN:
+
+    NAME: "module 1", DESCR: "Cisco ISR4451 Built-In SM controller"
+    PID: ISR4451-X/K9 , VID: , SN:
+
+    NAME: "module 2", DESCR: "Cisco ISR4451 Built-In SM controller"
+    PID: ISR4451-X/K9 , VID: , SN:
+
+    NAME: "module R0", DESCR: "Cisco ISR4451 Route Processor"
+    PID: ISR4451-X/K9 , VID: V01 , SN: FOC17042FN5
+
+    NAME: "module F0", DESCR: "Cisco ISR4451 Forwarding Processor"
+    PID: ISR4451-X/K9 , VID: , SN:
+    '''}
+
+    golden_output_2 = {'execute.return_value': '''
+        +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        
+        INFO: Please use "show license UDI" to get serial number for licensing.
+        
+        +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        
+         
+        
+        NAME: "Chassis", DESCR: "Cisco C1111-8PLTELA Chassis"
+        
+        PID: C1111-8PLTELA     , VID: V01  , SN: FGL221190VF
+        
+         
+        
+        NAME: "Power Supply Module 0", DESCR: "External Power Supply Module"
+        
+        PID: PWR-12V           , VID: V01  , SN: JAB0929092D
+        
+         
+        
+        NAME: "module 0", DESCR: "Cisco C1111-8PLTELA Built-In NIM controller"
+        
+        PID: C1111-8PLTELA     , VID:      , SN:
+        
+         
+        
+        NAME: "NIM subslot 0/0", DESCR: "Front Panel 2 port Gigabitethernet Module"
+        
+        PID: C1111-2x1GE       , VID: V01  , SN:
+        
+         
+        
+        NAME: "NIM subslot 0/1", DESCR: "C1111-ES-8"
+        
+        PID: C1111-ES-8        , VID: V01  , SN:
+        
+         
+        
+        NAME: "NIM subslot 0/2", DESCR: "C1111-LTE Module"
+        
+        PID: C1111-LTE         , VID: V01  , SN:
+        
+         
+        
+        NAME: "Modem 0 on Cellular0/2/0", DESCR: "Sierra Wireless EM7455/EM7430"
+        
+        PID: EM7455/EM7430     , VID: 1.0  , SN: 355813070074072
+        
+         
+        
+        NAME: "module R0", DESCR: "Cisco C1111-8PLTELA Route Processor"
+        
+        PID: C1111-8PLTELA     , VID: V01  , SN: FOC21520MF1
+        
+         
+        
+        NAME: "module F0", DESCR: "Cisco C1111-8PLTELA Forwarding Processor"
+        
+        PID: C1111-8PLTELA     , VID:      , SN:
+    '''}
+
+    golden_parsed_output_2 = {
+        'main': {
+            'chassis': {
+                'C1111-8PLTELA': {
+                    'descr': 'Cisco C1111-8PLTELA Chassis',
+                    'name': 'Chassis',
+                    'pid': 'C1111-8PLTELA',
+                    'sn': 'FGL221190VF',
+                    'vid': 'V01',
+                },
+            },
+        },
+        'slot': {
+            '0': {
+                'lc': {
+                    'C1111-8PLTELA': {
+                        'descr': 'Cisco C1111-8PLTELA Built-In NIM controller',
+                        'name': 'module 0',
+                        'pid': 'C1111-8PLTELA',
+                        'sn': '',
+                        'subslot': {
+                            '0': {
+                                'C1111-2x1GE': {
+                                    'descr': 'Front Panel 2 port Gigabitethernet Module',
+                                    'name': 'NIM subslot 0/0',
+                                    'pid': 'C1111-2x1GE',
+                                    'sn': '',
+                                    'vid': 'V01',
+                                },
+                            },
+                            '1': {
+                                'C1111-ES-8': {
+                                    'descr': 'C1111-ES-8',
+                                    'name': 'NIM subslot 0/1',
+                                    'pid': 'C1111-ES-8',
+                                    'sn': '',
+                                    'vid': 'V01',
+                                },
+                            },
+                            '2': {
+                                'C1111-LTE': {
+                                    'descr': 'C1111-LTE Module',
+                                    'name': 'NIM subslot 0/2',
+                                    'pid': 'C1111-LTE',
+                                    'sn': '',
+                                    'vid': 'V01',
+                                },
+                            },
+                            '2/0': {
+                                'EM7455/EM7430': {
+                                    'descr': 'Sierra Wireless EM7455/EM7430',
+                                    'name': 'Modem 0 on Cellular0/2/0',
+                                    'pid': 'EM7455/EM7430',
+                                    'sn': '355813070074072',
+                                    'vid': '1.0',
+                                },
+                            },
+                        },
+                        'vid': '',
+                    },
+                },
+            },
+            'F0': {
+                'other': {
+                    'C1111-8PLTELA': {
+                        'descr': 'Cisco C1111-8PLTELA Forwarding Processor',
+                        'name': 'module F0',
+                        'pid': 'C1111-8PLTELA',
+                        'sn': '',
+                        'vid': '',
+                    },
+                },
+            },
+            'P0': {
+                'other': {
+                    'PWR-12V': {
+                        'descr': 'External Power Supply Module',
+                        'name': 'Power Supply Module 0',
+                        'pid': 'PWR-12V',
+                        'sn': 'JAB0929092D',
+                        'vid': 'V01',
+                    },
+                },
+            },
+            'R0': {
+                'rp': {
+                    'C1111-8PLTELA': {
+                        'descr': 'Cisco C1111-8PLTELA Route Processor',
+                        'name': 'module R0',
+                        'pid': 'C1111-8PLTELA',
+                        'sn': 'FOC21520MF1',
+                        'vid': 'V01',
+                    },
+                },
+            },
+        },
+    }
+
     def test_show_inventory_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -2966,12 +3971,33 @@ class TestShowInventory(unittest.TestCase):
         parsed_output = inventory_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_asr1002)
 
+    def test_show_inventory_golden_c8300(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_c8300)
+        inventory_obj = ShowInventory(device=self.device)
+        parsed_output = inventory_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_c8300)
+
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         inventory_obj = ShowInventory(device=self.device)
         parsed_output = inventory_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        inventory_obj = ShowInventory(device=self.device)
+        parsed_output = inventory_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        inventory_obj = ShowInventory(device=self.device)
+        parsed_output = inventory_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 class TestShowPlatform(unittest.TestCase):
@@ -3896,16 +4922,16 @@ Switch#   Role        Priority      State
 
 
 class TestShowBoot(unittest.TestCase):
-    dev1 = Device(name='empty')
-    dev_asr1k = Device(name='asr1k')
-    dev_c3850 = Device(name='c3850')
+
+    maxDiff = None
+
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output_c3850 = {
         "ipxe_timeout": 0,
          "enable_break": True,
-         "current_boot_variable": "flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden",
-         "next_reload_boot_variable": "flash:ISSUCleanGolden",
+         "current_boot_variable": "flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden;",
+         "next_reload_boot_variable": "flash:ISSUCleanGolden;",
          "manual_boot": True,
          "boot_mode": "device"
     }
@@ -3932,7 +4958,7 @@ class TestShowBoot(unittest.TestCase):
             "configuration_register": "0x2002"
         },
         "active": {
-            "boot_variable": "bootflash:/asr1000rpx.bin,12",
+            "boot_variable": "bootflash:/asr1000rpx.bin,12;",
             "configuration_register": "0x2002"
         }
     }
@@ -4028,6 +5054,77 @@ class TestShowBoot(unittest.TestCase):
         },
         'timeout_config_download': '0 seconds'
     }
+
+    golden_output_cat9k_1 = {'execute.return_value': '''
+        show boot
+        BOOT variable = tftp://192.168.121.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200428_021754.SSA.bin;bootflash:/cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20200429_051305.SSA_starfleet-1.bin;
+        Configuration Register is 0x102
+        MANUAL_BOOT variable = no
+        BAUD variable = 9600
+        ENABLE_BREAK variable does not exist
+        BOOTMODE variable does not exist
+        IPXE_TIMEOUT variable does not exist
+        CONFIG_FILE variable =
+
+        starfleet-1#
+        '''}
+
+    golden_parsed_output_cat9k_1 = {
+        'active': 
+            {'boot_variable': 'tftp://192.168.121.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200428_021754.SSA.bin;bootflash:/cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20200429_051305.SSA_starfleet-1.bin;',
+            'configuration_register': '0x102'}}
+
+    golden_output_cat9k_2 = {'execute.return_value': '''
+        show boot
+        BOOT variable = tftp://10.1.0.41/cat9k_iosxe.16.12.03a.SPA.bin
+        Configuration Register is 0x102
+        MANUAL_BOOT variable = yes
+        BAUD variable = 9600
+        ENABLE_BREAK variable does not exist
+        BOOTMODE variable does not exist
+        IPXE_TIMEOUT variable does not exist
+        CONFIG_FILE variable =
+        '''}
+
+    golden_parsed_output_cat9k_2 = {
+        'active': 
+            {'boot_variable': 'tftp://10.1.0.41/cat9k_iosxe.16.12.03a.SPA.bin',
+            'configuration_register': '0x102'}}
+
+    golden_output_cat9k_3 = {'execute.return_value': '''
+        starfleet-1#show boot
+        BOOT variable = bootflash:cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200421_032634.SSA.bin;
+        Configuration Register is 0x102
+        MANUAL_BOOT variable = no
+        BAUD variable = 9600
+        ENABLE_BREAK variable does not exist
+        BOOTMODE variable does not exist
+        IPXE_TIMEOUT variable does not exist
+        CONFIG_FILE variable =
+        '''}
+
+    golden_parsed_output_cat9k_3 = {
+        'active': 
+            {'boot_variable': 'bootflash:cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200421_032634.SSA.bin;',
+            'configuration_register': '0x102'}}
+
+    golden_output_cat9k_4 = {'execute.return_value': '''
+        starfleet-1#show boot
+        BOOT variable = tftp://10.1.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200427_012602.SSA.bin
+        Configuration Register is 0x102
+        MANUAL_BOOT variable = yes
+        BAUD variable = 9600
+        ENABLE_BREAK variable does not exist
+        BOOTMODE variable does not exist
+        IPXE_TIMEOUT variable does not exist
+        CONFIG_FILE variable =
+        '''}
+
+    golden_parsed_output_cat9k_4 = {
+        'active': 
+            {'boot_variable': 'tftp://10.1.144.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200427_012602.SSA.bin',
+            'configuration_register': '0x102'}}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         platform_obj = ShowBoot(device=self.dev1)
@@ -4035,26 +5132,52 @@ class TestShowBoot(unittest.TestCase):
             parsed_output = platform_obj.parse()    
 
     def test_golden_c3850(self):
-        self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_c3850)
         platform_obj = ShowBoot(device=self.dev_c3850)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
 
     def test_golden_asr1k(self):
-        self.maxDiff = None
         self.dev_asr1k = Mock(**self.golden_output_asr1k)
         platform_obj = ShowBoot(device=self.dev_asr1k)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_asr1k)
     
     def test_golden_2900(self):
-        self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_2900)
         obj = ShowBoot(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2900)
 
+    def test_golden_cat9k_1(self):
+        self.dev_cat9k = Mock(**self.golden_output_cat9k_1)
+        obj = ShowBoot(device=self.dev_cat9k)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_cat9k_1)
+
+    def test_golden_cat9k_1(self):
+        self.dev_cat9k = Mock(**self.golden_output_cat9k_1)
+        obj = ShowBoot(device=self.dev_cat9k)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_cat9k_1)
+
+    def test_golden_cat9k_2(self):
+        self.dev_cat9k = Mock(**self.golden_output_cat9k_2)
+        obj = ShowBoot(device=self.dev_cat9k)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_cat9k_2)
+
+    def test_golden_cat9k_3(self):
+        self.dev_cat9k = Mock(**self.golden_output_cat9k_3)
+        obj = ShowBoot(device=self.dev_cat9k)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_cat9k_3)
+
+    def test_golden_cat9k_4(self):
+        self.dev_cat9k = Mock(**self.golden_output_cat9k_4)
+        obj = ShowBoot(device=self.dev_cat9k)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_cat9k_4)
 
 class TestShowSwitchDetail(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -4183,6 +5306,143 @@ class TestShowSwitchDetail(unittest.TestCase):
         1       DOWN       DOWN             None     None
     '''}
 
+    golden_output2 = {'execute.return_value': '''\
+            Switch/Stack Mac Address : aaaa.ddff.dddd - Local Mac Address
+            Mac persistency wait time: Indefinite
+                                                         H/W   Current
+            Switch#   Role    Mac Address     Priority Version  State 
+            -------------------------------------------------------------------------------------
+            *1       Active   aaaa.ddff.dddd     15     V02     Ready                
+             2       Standby  aaaa.ddff.dddd     14             Ready                
+             3       Member   aaaa.ddff.dddd     13     V02     Ready                
+            
+            
+            
+                     Stack Port Status             Neighbors     
+            Switch#  Port 1     Port 2           Port 1   Port 2 
+            --------------------------------------------------------
+              1         OK         OK               2        3 
+              2         OK         OK               3        1 
+              3         OK         OK               1        2 
+
+        '''}
+
+    golden_parsed_output2 = {
+        "switch": {
+             'mac_address': 'aaaa.ddff.dddd',
+              'mac_persistency_wait_time': 'indefinite',
+              'stack': {
+                '1': {
+                  'role': 'active',
+                  'state': 'ready',
+                  'mac_address': 'aaaa.ddff.dddd',
+                  'priority': '15',
+                  'hw_ver': 'V02',
+                  'ports': {
+                    '1': {
+                      'stack_port_status': 'ok',
+                      'neighbors_num': 2
+                    },
+                    '2': {
+                      'stack_port_status': 'ok',
+                      'neighbors_num': 3
+                    }
+                  }
+                },
+                '2': {
+                  'role': 'standby',
+                  'state': 'ready',
+                  'mac_address': 'aaaa.ddff.dddd',
+                  'priority': '14',
+                  'ports': {
+                    '1': {
+                      'stack_port_status': 'ok',
+                      'neighbors_num': 3
+                    },
+                    '2': {
+                      'stack_port_status': 'ok',
+                      'neighbors_num': 1
+                    }
+                  }
+                },
+                '3': {
+                  'role': 'member',
+                  'state': 'ready',
+                  'mac_address': 'aaaa.ddff.dddd',
+                  'priority': '13',
+                  'hw_ver': 'V02',
+                  'ports': {
+                    '1': {
+                      'stack_port_status': 'ok',
+                      'neighbors_num': 1
+                    },
+                    '2': {
+                      'stack_port_status': 'ok',
+                      'neighbors_num': 2
+                    }
+                  }
+                }
+              }
+        }
+    }
+
+    golden_output3 = {'execute.return_value': '''\
+        Switch/Stack Mac Address : aaaa.ddff.dddd
+                                                   H/W   Current
+        Switch#  Role   Mac Address     Priority Version  State 
+        ----------------------------------------------------------
+        *1       Master aaaa.ddff.dddd     15     4       Ready            
+         2       Member aaaa.ddff.dddd     1      4       Ready                      
+        
+                 Stack Port Status             Neighbors     
+        Switch#  Port 1     Port 2           Port 1   Port 2 
+        --------------------------------------------------------
+          1        Ok         Ok                2        5 
+          2        Ok         Ok                3        1 
+            '''}
+
+    golden_parsed_output3 = {
+        "switch": {
+            'mac_address': 'aaaa.ddff.dddd',
+            'stack': {
+            '1': {
+              'role': 'master',
+              'state': 'ready',
+              'mac_address': 'aaaa.ddff.dddd',
+              'priority': '15',
+              'hw_ver': '4',
+              'ports': {
+                '1': {
+                  'stack_port_status': 'ok',
+                  'neighbors_num': 2
+                },
+                '2': {
+                  'stack_port_status': 'ok',
+                  'neighbors_num': 5
+                }
+              }
+            },
+            '2': {
+              'role': 'member',
+              'state': 'ready',
+              'mac_address': 'aaaa.ddff.dddd',
+              'priority': '1',
+              'hw_ver': '4',
+              'ports': {
+                '1': {
+                  'stack_port_status': 'ok',
+                  'neighbors_num': 3
+                },
+                '2': {
+                  'stack_port_status': 'ok',
+                  'neighbors_num': 1
+                }
+              }
+            }
+            }
+        }
+    }
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         platform_obj = ShowSwitchDetail(device=self.dev1)
@@ -4202,6 +5462,20 @@ class TestShowSwitchDetail(unittest.TestCase):
         platform_obj = ShowSwitchDetail(device=self.dev_c3850)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output1)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output2)
+        platform_obj = ShowSwitchDetail(device=self.dev_c3850)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_golden3(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output3)
+        platform_obj = ShowSwitchDetail(device=self.dev_c3850)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 class TestShowSwitch(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -19490,6 +20764,177 @@ class TestShowProcessMemorySorted(unittest.TestCase):
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_sorted)
 
+class TestShowPlatformIntegrity(unittest.TestCase):
+
+    dev1 = Device(name='empty')
+    dev_c9500 = Device(name='c9300')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_c9300 = {
+        'boot': {
+            'loader': {
+                'hash': '51CE6FB9AE606330810EBFFE99D71D56640FD48F780EDE0C19FB5A75E31EF2192A58A196D18B244ADF67D18BF6B3AA6A16229C66DCC03D8A900753760B252C57',
+                'version': 'System Bootstrap, Version 16.10.1r[FC2], DEVELOPMENT SOFTWARE',
+            },
+            0: {
+                'hash': '523DD459C650AF0F5AB5396060605E412C1BE99AF51F4FA88AD26049612921FF',
+                'version': 'F01144R16.216e68ad62019-02-13',
+            },
+        },
+        'os_hashes': {
+            'PCR0': 'BB33E3FE338B82635B1BD3F1401CF442ACC9BB12A405A424FBE0A5776569884E',
+            'PCR8': '1C6B134C5932F40257F1CF4CADE48BC3E76B1F545EB9C659D3F5DC071D9A6CF6',
+            'cat9k-cc_srdriver.2019-07-11_16.25_mzafar.SSA.pkg': '0DC44C89FF1D483AB74C8D0D1DE8B2BF08221B93DC6FED5EB9B2C9F064918DA41CBAB990652650BC1FA04EEF0A1DE75948B4D81CD1903BDD82B0628605CD8E48',
+            'cat9k-espbase.2019-07-11_16.25_mzafar.SSA.pkg': 'FF3FAF589D0EE29663CDC29A4F04942B71240718373BB3F43778DF517740A7AF141A7B966B68CACAE2526804CE5B93B9D2B7A7410CB8B20797310779C78EFBE6',
+            'cat9k-guestshell.2019-07-11_16.25_mzafar.SSA.pkg': '3AD2036AAF458CF57AC058B4025F70B44BCE3DDF231C9666BCD105FE5910DCF287D2B80F6953717B4CDDA3877B1D112386CB9BAC06D594950DDEC959B3265295',
+            'cat9k-rpbase.2019-07-11_16.25_mzafar.SSA.pkg': '51C2AE55EE9FF671D37DE63994B9C97A9775E541D67304B6E5EFA10F76293863D9F890114F47C7C83D8BD5BA4A013CFC62F20726B1EC62F906681B0A6DE0E97F',
+            'cat9k-sipbase.2019-07-11_16.25_mzafar.SSA.pkg': '5791879D1C6FC17F92DB77AAD53CD15D0EF51F490334B07D49A717DBB4861CD6FB1AF9B33B3AA40F0DDD84AE86DC1852A9EFF54549942D6D5CCA44843035A7F1',
+            'cat9k-sipspa.2019-07-11_16.25_mzafar.SSA.pkg': 'AA925FAD9A5770C638B62E770513D6310CDE1491BCBB1323E31D8CADC8A752455C8323F702DE612EFCD21F5340D222A08A4CA2B7A933EE6E1C4D62E6C94FB39A',
+            'cat9k-srdriver.2019-07-11_16.25_mzafar.SSA.pkg': 'A14599C664D858675990FB7CAC886E0AE0EC73E99B50C12E1704A91C50DB1BBF27CA55D18EF9800D6BC4E39B6952F3077B48394F4DFEF2B65B471A8E872C15CB',
+            'cat9k-webui.2019-07-11_16.25_mzafar.SSA.pkg': 'D73DAE3793E6BE06EEC01DF677579227015DDFBE871C8922504E5A1A90D399D57D92834933508177433BD4AD05A4DA6B1DD6AFD458967D5DBED51FF0D2C902A2',
+            'cat9k-wlc.2019-07-11_16.25_mzafar.SSA.pkg': '6E71EDFACE945DA86CE565F557B00CD9527198CDACC2F4EADB860712D141EE1378E1033882E2C22502A175428EA5EF5C777E5D81702055B9A4387E7EDEFAC448',
+            'cat9k_iosxe.2019-07-11_16.25_mzafar.SSA.bin': 'F3D73D330E81CDF682FDB0A55510B48EEF2A1D3F79AD48736493C50B1DA58A32F794A3868D9706BBDE82883CE76A90A74CF458173A7B43CF21DC223D90E204C8',
+        },
+        'os_version': '2019-07-11_16.25_mzafar',
+        'platform': 'C9300-24U',
+    }
+
+    golden_output_c9300 = {'execute.return_value': '''\
+        C9300#show platform integrity
+        Platform: C9300-24U
+        Boot 0 Version: F01144R16.216e68ad62019-02-13
+        Boot 0 Hash: 523DD459C650AF0F5AB5396060605E412C1BE99AF51F4FA88AD26049612921FF
+        Boot Loader Version: System Bootstrap, Version 16.10.1r[FC2], DEVELOPMENT SOFTWARE
+        Boot Loader Hash: 51CE6FB9AE606330810EBFFE99D71D56640FD48F780EDE0C19FB5A75E31EF2192A58A196D18B244ADF67D18BF6B3AA6A16229C66DCC03D8A900753760B252C57
+        OS Version: 2019-07-11_16.25_mzafar
+        OS Hashes:
+        cat9k_iosxe.2019-07-11_16.25_mzafar.SSA.bin: F3D73D330E81CDF682FDB0A55510B48EEF2A1D3F79AD48736493C50B1DA58A32F794A3868D9706BBDE82883CE76A90A74CF458173A7B43CF21DC223D90E204C8
+        cat9k-wlc.2019-07-11_16.25_mzafar.SSA.pkg: 6E71EDFACE945DA86CE565F557B00CD9527198CDACC2F4EADB860712D141EE1378E1033882E2C22502A175428EA5EF5C777E5D81702055B9A4387E7EDEFAC448
+        cat9k-guestshell.2019-07-11_16.25_mzafar.SSA.pkg: 3AD2036AAF458CF57AC058B4025F70B44BCE3DDF231C9666BCD105FE5910DCF287D2B80F6953717B4CDDA3877B1D112386CB9BAC06D594950DDEC959B3265295
+        cat9k-webui.2019-07-11_16.25_mzafar.SSA.pkg: D73DAE3793E6BE06EEC01DF677579227015DDFBE871C8922504E5A1A90D399D57D92834933508177433BD4AD05A4DA6B1DD6AFD458967D5DBED51FF0D2C902A2
+        cat9k-cc_srdriver.2019-07-11_16.25_mzafar.SSA.pkg: 0DC44C89FF1D483AB74C8D0D1DE8B2BF08221B93DC6FED5EB9B2C9F064918DA41CBAB990652650BC1FA04EEF0A1DE75948B4D81CD1903BDD82B0628605CD8E48
+        cat9k-srdriver.2019-07-11_16.25_mzafar.SSA.pkg: A14599C664D858675990FB7CAC886E0AE0EC73E99B50C12E1704A91C50DB1BBF27CA55D18EF9800D6BC4E39B6952F3077B48394F4DFEF2B65B471A8E872C15CB
+        cat9k-sipbase.2019-07-11_16.25_mzafar.SSA.pkg: 5791879D1C6FC17F92DB77AAD53CD15D0EF51F490334B07D49A717DBB4861CD6FB1AF9B33B3AA40F0DDD84AE86DC1852A9EFF54549942D6D5CCA44843035A7F1
+        cat9k-sipspa.2019-07-11_16.25_mzafar.SSA.pkg: AA925FAD9A5770C638B62E770513D6310CDE1491BCBB1323E31D8CADC8A752455C8323F702DE612EFCD21F5340D222A08A4CA2B7A933EE6E1C4D62E6C94FB39A
+        cat9k-espbase.2019-07-11_16.25_mzafar.SSA.pkg: FF3FAF589D0EE29663CDC29A4F04942B71240718373BB3F43778DF517740A7AF141A7B966B68CACAE2526804CE5B93B9D2B7A7410CB8B20797310779C78EFBE6
+        cat9k-rpbase.2019-07-11_16.25_mzafar.SSA.pkg: 51C2AE55EE9FF671D37DE63994B9C97A9775E541D67304B6E5EFA10F76293863D9F890114F47C7C83D8BD5BA4A013CFC62F20726B1EC62F906681B0A6DE0E97F
+        PCR0: BB33E3FE338B82635B1BD3F1401CF442ACC9BB12A405A424FBE0A5776569884E
+        PCR8: 1C6B134C5932F40257F1CF4CADE48BC3E76B1F545EB9C659D3F5DC071D9A6CF6
+
+    '''}
+
+    golden_parsed_output_c9300_xml = {
+        'boot': {
+            'loader': {
+                'hash': '51CE6FB9AE606330810EBFFE99D71D56640FD48F780EDE0C19FB5A75E31EF2192A58A196D18B244ADF67D18BF6B3AA6A16229C66DCC03D8A900753760B252C57',
+                'version': 'System Bootstrap, Version 16.10.1r[FC2], DEVELOPMENT SOFTWARE',
+            },
+            0: {
+                'hash': '523DD459C650AF0F5AB5396060605E412C1BE99AF51F4FA88AD26049612921FF',
+                'version': 'F01144R16.216e68ad62019-02-13',
+            },
+        }, 
+        'os_hashes': {
+            'PCR0': 'BB33E3FE338B82635B1BD3F1401CF442ACC9BB12A405A424FBE0A5776569884E',
+            'PCR8': '1C6B134C5932F40257F1CF4CADE48BC3E76B1F545EB9C659D3F5DC071D9A6CF6',
+            'cat9k-cc_srdriver.2019-07-11_16.25_mzafar.SSA.pkg': '0DC44C89FF1D483AB74C8D0D1DE8B2BF08221B93DC6FED5EB9B2C9F064918DA41CBAB990652650BC1FA04EEF0A1DE75948B4D81CD1903BDD82B0628605CD8E48',
+            'cat9k-espbase.2019-07-11_16.25_mzafar.SSA.pkg': 'FF3FAF589D0EE29663CDC29A4F04942B71240718373BB3F43778DF517740A7AF141A7B966B68CACAE2526804CE5B93B9D2B7A7410CB8B20797310779C78EFBE6',
+            'cat9k-guestshell.2019-07-11_16.25_mzafar.SSA.pkg': '3AD2036AAF458CF57AC058B4025F70B44BCE3DDF231C9666BCD105FE5910DCF287D2B80F6953717B4CDDA3877B1D112386CB9BAC06D594950DDEC959B3265295',
+            'cat9k-rpbase.2019-07-11_16.25_mzafar.SSA.pkg': '51C2AE55EE9FF671D37DE63994B9C97A9775E541D67304B6E5EFA10F76293863D9F890114F47C7C83D8BD5BA4A013CFC62F20726B1EC62F906681B0A6DE0E97F',
+            'cat9k-sipbase.2019-07-11_16.25_mzafar.SSA.pkg': '5791879D1C6FC17F92DB77AAD53CD15D0EF51F490334B07D49A717DBB4861CD6FB1AF9B33B3AA40F0DDD84AE86DC1852A9EFF54549942D6D5CCA44843035A7F1',
+            'cat9k-sipspa.2019-07-11_16.25_mzafar.SSA.pkg': 'AA925FAD9A5770C638B62E770513D6310CDE1491BCBB1323E31D8CADC8A752455C8323F702DE612EFCD21F5340D222A08A4CA2B7A933EE6E1C4D62E6C94FB39A',
+            'cat9k-srdriver.2019-07-11_16.25_mzafar.SSA.pkg': 'A14599C664D858675990FB7CAC886E0AE0EC73E99B50C12E1704A91C50DB1BBF27CA55D18EF9800D6BC4E39B6952F3077B48394F4DFEF2B65B471A8E872C15CB',
+            'cat9k-webui.2019-07-11_16.25_mzafar.SSA.pkg': 'D73DAE3793E6BE06EEC01DF677579227015DDFBE871C8922504E5A1A90D399D57D92834933508177433BD4AD05A4DA6B1DD6AFD458967D5DBED51FF0D2C902A2',
+            'cat9k-wlc.2019-07-11_16.25_mzafar.SSA.pkg': '6E71EDFACE945DA86CE565F557B00CD9527198CDACC2F4EADB860712D141EE1378E1033882E2C22502A175428EA5EF5C777E5D81702055B9A4387E7EDEFAC448',
+        },
+        'os_version': '2019-07-11_16.25_mzafar',
+        'platform': 'C9300-24U',
+    }
+
+    golden_output_c9300_xml = '''
+        <rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="urn:uuid:4679c98c-647b-43fa-8349-de852d77b775">
+            <data>
+                <boot-integrity-oper-data xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-boot-integrity-oper">
+                <boot-integrity>
+                    <platform>C9300-24U</platform>
+                    <boot-ver>F01144R16.216e68ad62019-02-13</boot-ver>
+                    <boot-loader-ver>System Bootstrap, Version 16.10.1r[FC2], DEVELOPMENT SOFTWARE</boot-loader-ver>
+                    <os-version>2019-07-11_16.25_mzafar</os-version>
+                    <boot-hash>523DD459C650AF0F5AB5396060605E412C1BE99AF51F4FA88AD26049612921FF</boot-hash>
+                    <boot-loader-hash>51CE6FB9AE606330810EBFFE99D71D56640FD48F780EDE0C19FB5A75E31EF2192A58A196D18B244ADF67D18BF6B3AA6A16229C66DCC03D8A900753760B252C57</boot-loader-hash>
+                    <os-hash>F3D73D330E81CDF682FDB0A55510B48EEF2A1D3F79AD48736493C50B1DA58A32F794A3868D9706BBDE82883CE76A90A74CF458173A7B43CF21DC223D90E204C8</os-hash>
+                    <package-count>9</package-count>
+                    <pcr-register>
+                    <index>0</index>
+                    <pcr-content>BB33E3FE338B82635B1BD3F1401CF442ACC9BB12A405A424FBE0A5776569884E</pcr-content>
+                    </pcr-register>
+                    <pcr-register>
+                    <index>8</index>
+                    <pcr-content>1C6B134C5932F40257F1CF4CADE48BC3E76B1F545EB9C659D3F5DC071D9A6CF6</pcr-content>
+                    </pcr-register>
+                    <package-signature>
+                    <name>cat9k-wlc.2019-07-11_16.25_mzafar.SSA.pkg</name>
+                    <hash>6E71EDFACE945DA86CE565F557B00CD9527198CDACC2F4EADB860712D141EE1378E1033882E2C22502A175428EA5EF5C777E5D81702055B9A4387E7EDEFAC448</hash>
+                    </package-signature>
+                    <package-signature>
+                    <name>cat9k-webui.2019-07-11_16.25_mzafar.SSA.pkg</name>
+                    <hash>D73DAE3793E6BE06EEC01DF677579227015DDFBE871C8922504E5A1A90D399D57D92834933508177433BD4AD05A4DA6B1DD6AFD458967D5DBED51FF0D2C902A2</hash>
+                    </package-signature>
+                    <package-signature>
+                    <name>cat9k-rpbase.2019-07-11_16.25_mzafar.SSA.pkg</name>
+                    <hash>51C2AE55EE9FF671D37DE63994B9C97A9775E541D67304B6E5EFA10F76293863D9F890114F47C7C83D8BD5BA4A013CFC62F20726B1EC62F906681B0A6DE0E97F</hash>
+                    </package-signature>
+                    <package-signature>
+                    <name>cat9k-sipspa.2019-07-11_16.25_mzafar.SSA.pkg</name>
+                    <hash>AA925FAD9A5770C638B62E770513D6310CDE1491BCBB1323E31D8CADC8A752455C8323F702DE612EFCD21F5340D222A08A4CA2B7A933EE6E1C4D62E6C94FB39A</hash>
+                    </package-signature>
+                    <package-signature>
+                    <name>cat9k-espbase.2019-07-11_16.25_mzafar.SSA.pkg</name>
+                    <hash>FF3FAF589D0EE29663CDC29A4F04942B71240718373BB3F43778DF517740A7AF141A7B966B68CACAE2526804CE5B93B9D2B7A7410CB8B20797310779C78EFBE6</hash>
+                    </package-signature>
+                    <package-signature>
+                    <name>cat9k-sipbase.2019-07-11_16.25_mzafar.SSA.pkg</name>
+                    <hash>5791879D1C6FC17F92DB77AAD53CD15D0EF51F490334B07D49A717DBB4861CD6FB1AF9B33B3AA40F0DDD84AE86DC1852A9EFF54549942D6D5CCA44843035A7F1</hash>
+                    </package-signature>
+                    <package-signature>
+                    <name>cat9k-srdriver.2019-07-11_16.25_mzafar.SSA.pkg</name>
+                    <hash>A14599C664D858675990FB7CAC886E0AE0EC73E99B50C12E1704A91C50DB1BBF27CA55D18EF9800D6BC4E39B6952F3077B48394F4DFEF2B65B471A8E872C15CB</hash>
+                    </package-signature>
+                    <package-signature>
+                    <name>cat9k-guestshell.2019-07-11_16.25_mzafar.SSA.pkg</name>
+                    <hash>3AD2036AAF458CF57AC058B4025F70B44BCE3DDF231C9666BCD105FE5910DCF287D2B80F6953717B4CDDA3877B1D112386CB9BAC06D594950DDEC959B3265295</hash>
+                    </package-signature>
+                    <package-signature>
+                    <name>cat9k-cc_srdriver.2019-07-11_16.25_mzafar.SSA.pkg</name>
+                    <hash>0DC44C89FF1D483AB74C8D0D1DE8B2BF08221B93DC6FED5EB9B2C9F064918DA41CBAB990652650BC1FA04EEF0A1DE75948B4D81CD1903BDD82B0628605CD8E48</hash>
+                    </package-signature>
+                    <signature>138ABFFAC76AFBDB43C533601D29A5DA5163D47741D970F406E43CF7081DB0B3CFCDD4D54A059BF64A55B7FB9BFA363B2EEB43526DC7F01E19622A76349988196A16A40B5874658D125F6BE260823DDC485AD9666C88E1FB23DF22181C2BF19F59DA656C0C3064FFAE0522F3440D1C625D75B8474A265191D25BEA028202206B211DBE634CF6DA81871336F13CF4A4497ED34A35ACBACE9BD56193DB71393C3EB062E2C5DACB40D1B6FC7940B0DA9391AF99F8D645354F5AEBC5684401FE69914DF554C0F3233129E12215ECB8778F3BE7C854640CC60373A006174D8910CCF024196C9E7D7E622552DEFA4D2650128A94C3098B7CAF7097A4D6F3770E401488</signature>
+                    <sig-version>1</sig-version>
+                </boot-integrity>
+                </boot-integrity-oper-data>
+            </data>
+            </rpc-reply>
+
+        '''
+
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        version_obj = ShowPlatformIntegrity(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsered_output = version_obj.parse()
+
+    def test_golden_c9300(self):
+        self.maxDiff = None
+        self.dev_c9300 = Mock(**self.golden_output_c9300)
+        version_obj = ShowPlatformIntegrity(device=self.dev_c9300)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_c9300)
+    
+    def test_golden_c9300_xml(self):
+        self.maxDiff = None
+        version_obj = ShowPlatformIntegrity(device=None)
+        parsed_output = version_obj.yang(output=self.golden_output_c9300_xml)
+        self.assertEqual(parsed_output, self.golden_parsed_output_c9300_xml)
 
 if __name__ == '__main__':
     unittest.main()
