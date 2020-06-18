@@ -604,7 +604,7 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
         # System Id       Interface     SNPA                State  Holdtime  Type Protocol
         # R7              Gi4           5e00.c0ff.060d      Up     26        L2   M-ISIS
         # R2_xr           Gi2.115       fa16.3eff.9418      Up     26        L1L2 M-ISIS
-        # 1K1A     Te0/3/0       3c51.0ebc.4980      Up     25        L1   IS-IS //missing neighbor, instead RT2 shows in JSON.
+        # Genie           Te0/3/0       sdfs.0asd.49sd      Up     25        L1   IS-IS //missing neighbor, instead Genie2 shows in JSON.
         p2 = re.compile(r'^(?P<system_id>[\w\.]+) +(?P<interface>\S+) '
                         r'+(?P<snpa>[\w\.]+) +(?P<state>\w+) +'
                         r'(?P<holdtime>\d+) +(?P<level>[L\d]+) +'
