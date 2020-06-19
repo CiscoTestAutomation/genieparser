@@ -410,7 +410,7 @@ class ShowSystemUsers(ShowSystemUsersSchema):
         # 1:08AM up 8 days, 5 hrs, 1 user, load averages: 0.07, 0.02, 0.01
         p1 = re.compile(
             r'^(?P<time>[\d\:a-zA-Z]+) +up +'
-            r'(?P<up_time>(\d+ +days, +)?([\d:]+( +mins)?( +\hrs)?)), +'
+            r'(?P<up_time>(\d+ +days, +)?([\d:]+( +mins)?( +hrs)?)), +'
             r'(?P<user_count>\d+) +user(s)?, +'
             r'load +averages: (?P<avg1>[\d\.]+), +'
             r'(?P<avg2>[\d\.]+), +(?P<avg3>[\d\.]+)$')
