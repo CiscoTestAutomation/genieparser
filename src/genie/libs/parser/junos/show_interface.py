@@ -759,9 +759,11 @@ class ShowInterfaces(ShowInterfacesSchema):
         p3 = re.compile(r'^Description: +(?P<description>\S+)$')
 
         # Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
+        # Link-level type: Ethernet, MTU: 1514, Link-mode: Full-duplex, Speed: 1000mbps,
         p4 = re.compile(r'^(Type: +\S+, )?Link-level +type: +'
             r'(?P<link_level_type>\S+), +MTU: +(?P<mtu>\S+)'
             r'(, +MRU: +(?P<mru>\d+))?(, +(?P<sonet_mode>\S+) +mode)?'
+            r'(, +Link-mode: +(?P<link_mode>\S+))?'
             r'(, +Speed: +(?P<speed>\S+))?(, +BPDU +Error: +'
             r'(?P<bpdu_error>\S+),)?$')
         
@@ -879,11 +881,13 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Output packets: 129243982
         p27 = re.compile(r'^Output +packets *: +(?P<output_packets>\S+)$')
 
-        # Protocol inet, MTU: 1500
-        # Protocol vpls, MTU: Unlimited, Generation: 153, Route table: 1
-        p28 = re.compile(r'^^Protocol +(?P<address_family_name>\S+), +'
-            r'MTU: +(?P<mtu>\S+)(, +Maximum labels: +(?P<maximum_labels>\S+))?'
-            r'(, +Generation: +(?P<generation>\d+), +Route +table: +(?P<route_table>\d+))?$$')
+        # Protocol inet, MTU: 1500, Maximum labels: 2
+        # Protocol inet, MTU: 1500, Generation: 150, Route table: 0
+        p28 = re.compile(r'^Protocol +(?P<address_family_name>\S+), +'
+            r'MTU: +(?P<mtu>\S+)(, +Maximum labels: +'
+            r'(?P<maximum_labels>\S+))?(, +Generation: +'
+            r'(?P<generation>\S+))?(, +Route table: +'
+            r'(?P<route_table>\S+))?$')
 
         # Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
         p30 = re.compile(r'^Max +nh +cache: +(?P<max_local_cache>\d+), +'
@@ -1187,6 +1191,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 statistics_type = 'transit_statistics'
                 continue
 
+
             # Input rate     : 2952 bps (5 pps)
             m = p14.match(line)
             if m:
@@ -1381,6 +1386,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 logical_interface_list.append(logical_interface_dict)
                 continue
 
+
             # Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
             m = p25.match(line)
             if m:
@@ -1435,8 +1441,12 @@ class ShowInterfaces(ShowInterfacesSchema):
                 group = m.groupdict()
                 address_family_flags_dict = address_family_dict.setdefault('address-family-flags', {})
                 for flag in group['flags'].split(','):
-                    key = 'ifff-{}'.format(flag.strip().lower())
-                    address_family_flags_dict.update({key: True})
+                    if "encapsulation" in flag.lower():
+                        value = flag.split(":")[-1].strip().lower()
+                        address_family_flags_dict.update({"ifff-encapsulation": value})
+                    else:
+                        key = 'ifff-{}'.format(flag.strip().lower())
+                        address_family_flags_dict.update({key: True})
                 continue
 
             # Addresses, Flags: Is-Preferred Is-Primary
@@ -1683,6 +1693,17 @@ class ShowInterfacesExtensive(ShowInterfaces):
         
         return super().cli(output=out)
 
+class ShowInterfacesExtensiveNoForwarding(ShowInterfacesExtensive):
+    cli_command = ['show interfaces extensive no-forwarding']
+    def cli(self, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+        
+        return super().cli(output=out)
+
 class ShowInterfacesExtensiveInterface(ShowInterfaces):
     cli_command = 'show interfaces extensive {interface}'
     def cli(self, interface, output=None):
@@ -1691,17 +1712,6 @@ class ShowInterfacesExtensiveInterface(ShowInterfaces):
             out = self.device.execute(self.cli_command.format(
                 interface=interface
             ))
-        else:
-            out = output
-        
-        return super().cli(output=out)
-
-class ShowInterfacesExtensiveNoForwarding(ShowInterfacesExtensive):
-    cli_command = ['show interfaces extensive no-forwarding']
-    def cli(self, output=None):
-
-        if not output:
-            out = self.device.execute(self.cli_command[0])
         else:
             out = output
         
