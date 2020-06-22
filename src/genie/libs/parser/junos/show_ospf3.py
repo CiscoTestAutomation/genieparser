@@ -553,10 +553,6 @@ class ShowOspf3Database(ShowOspf3DatabaseSchema):
 
                 continue
 
-        import pprint
-        logFile = open('/Users/adelph/pyats_env2/data.txt', 'w')
-        pprint.pprint(ret_dict, logFile)
-
         return ret_dict
 
 
