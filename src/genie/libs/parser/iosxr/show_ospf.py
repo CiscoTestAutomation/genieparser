@@ -30,16 +30,16 @@ class ShowOspfVrfAllInclusiveInterfaceSchema(MetaParser):
     """Schema for show ospf vrf all-inclusive interface"""
 
     schema = {
-        'vrf': 
-            {Any(): 
-                {'address_family': 
-                    {Any(): 
-                        {'instance': 
-                            {Any(): 
-                                {'areas': 
-                                    {Any(): 
-                                        {Optional('interfaces'): 
-                                            {Any(): 
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'instance':
+                            {Any():
+                                {'areas':
+                                    {Any():
+                                        {Optional('interfaces'):
+                                            {Any():
                                                 {'name': str,
                                                 'enable': bool,
                                                 'line_protocol': bool,
@@ -48,7 +48,7 @@ class ShowOspfVrfAllInclusiveInterfaceSchema(MetaParser):
                                                 'process_id': str,
                                                 'router_id': str,
                                                 'interface_type': str,
-                                                'bfd': 
+                                                'bfd':
                                                     {'enable': bool,
                                                     Optional('interval'): int,
                                                     Optional('min_interval'): int,
@@ -83,22 +83,22 @@ class ShowOspfVrfAllInclusiveInterfaceSchema(MetaParser):
                                                 Optional('high_water_mark'): int,
                                                 Optional('total_dcbitless_lsa'): int,
                                                 Optional('donotage_lsa'): bool,
-                                                Optional('statistics'): 
+                                                Optional('statistics'):
                                                     {Optional('adj_nbr_count'): int,
                                                     Optional('nbr_count'): int,
                                                     Optional('num_nbrs_suppress_hello'): int,
                                                     Optional('multi_area_intf_count'): int,
                                                     },
-                                                Optional('neighbors'): 
-                                                    {Any(): 
+                                                Optional('neighbors'):
+                                                    {Any():
                                                         {Optional('dr_router_id'): str,
                                                         Optional('bdr_router_id'): str,
                                                         },
                                                     },
                                                 },
                                             },
-                                        Optional('virtual_links'): 
-                                            {Any(): 
+                                        Optional('virtual_links'):
+                                            {Any():
                                                 {'name': str,
                                                 'enable': bool,
                                                 'line_protocol': bool,
@@ -107,7 +107,7 @@ class ShowOspfVrfAllInclusiveInterfaceSchema(MetaParser):
                                                 'process_id': str,
                                                 'router_id': str,
                                                 'interface_type': str,
-                                                'bfd': 
+                                                'bfd':
                                                     {'enable': bool,
                                                     Optional('interval'): int,
                                                     Optional('min_interval'): int,
@@ -142,22 +142,22 @@ class ShowOspfVrfAllInclusiveInterfaceSchema(MetaParser):
                                                 Optional('high_water_mark'): int,
                                                 Optional('total_dcbitless_lsa'): int,
                                                 Optional('donotage_lsa'): bool,
-                                                Optional('statistics'): 
+                                                Optional('statistics'):
                                                     {Optional('adj_nbr_count'): int,
                                                     Optional('nbr_count'): int,
                                                     Optional('num_nbrs_suppress_hello'): int,
                                                     Optional('multi_area_intf_count'): int,
                                                     },
-                                                Optional('neighbors'): 
-                                                    {Any(): 
+                                                Optional('neighbors'):
+                                                    {Any():
                                                         {Optional('dr_router_id'): str,
                                                         Optional('bdr_router_id'): str,
                                                         },
                                                     },
                                                 },
                                             },
-                                        Optional('sham_links'): 
-                                            {Any(): 
+                                        Optional('sham_links'):
+                                            {Any():
                                                 {'name': str,
                                                 'enable': bool,
                                                 'line_protocol': bool,
@@ -166,7 +166,7 @@ class ShowOspfVrfAllInclusiveInterfaceSchema(MetaParser):
                                                 'process_id': str,
                                                 'router_id': str,
                                                 'interface_type': str,
-                                                'bfd': 
+                                                'bfd':
                                                     {'enable': bool,
                                                     Optional('interval'): int,
                                                     Optional('min_interval'): int,
@@ -201,14 +201,14 @@ class ShowOspfVrfAllInclusiveInterfaceSchema(MetaParser):
                                                 Optional('high_water_mark'): int,
                                                 Optional('total_dcbitless_lsa'): int,
                                                 Optional('donotage_lsa'): bool,
-                                                Optional('statistics'): 
+                                                Optional('statistics'):
                                                     {Optional('adj_nbr_count'): int,
                                                     Optional('nbr_count'): int,
                                                     Optional('num_nbrs_suppress_hello'): int,
                                                     Optional('multi_area_intf_count'): int,
                                                     },
-                                                Optional('neighbors'): 
-                                                    {Any(): 
+                                                Optional('neighbors'):
+                                                    {Any():
                                                         {Optional('dr_router_id'): str,
                                                         Optional('bdr_router_id'): str,
                                                         },
@@ -719,16 +719,16 @@ class ShowOspfVrfAllInclusiveNeighborDetailSchema(MetaParser):
     """Schema for show ospf vrf all-inclusive neighbor detail"""
 
     schema = {
-        'vrf': 
-            {Any(): 
-                {'address_family': 
-                    {Any(): 
-                        {'instance': 
-                            {Any(): 
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'instance':
+                            {Any():
                                 {Optional('total_neighbor_count'): int,
-                                'areas': 
-                                    {Any(): 
-                                        {Optional('interfaces'): 
+                                'areas':
+                                    {Any():
+                                        {Optional('interfaces'):
                                             {Any(): {
                                                 'neighbors': {
                                                     Any():
@@ -750,7 +750,7 @@ class ShowOspfVrfAllInclusiveNeighborDetailSchema(MetaParser):
                                                         Optional('ls_ack_list'): str,
                                                         Optional('ls_ack_list_pending'): int,
                                                         Optional('high_water_mark'): int,
-                                                        Optional('statistics'): 
+                                                        Optional('statistics'):
                                                             {Optional('total_dbd_retrans'): int,
                                                             Optional('nbr_event_count'): int,
                                                             Optional('nbr_retrans_qlen'): int,
@@ -763,10 +763,10 @@ class ShowOspfVrfAllInclusiveNeighborDetailSchema(MetaParser):
                                                     },
                                                 },
                                             },
-                                        Optional('virtual_links'): 
-                                            {Any(): 
-                                                {'neighbors': 
-                                                    {Any(): 
+                                        Optional('virtual_links'):
+                                            {Any():
+                                                {'neighbors':
+                                                    {Any():
                                                         {'neighbor_router_id': str,
                                                         'address': str,
                                                         'priority': int,
@@ -783,7 +783,7 @@ class ShowOspfVrfAllInclusiveNeighborDetailSchema(MetaParser):
                                                         Optional('ls_ack_list'): str,
                                                         Optional('ls_ack_list_pending'): int,
                                                         Optional('high_water_mark'): int,
-                                                        Optional('statistics'): 
+                                                        Optional('statistics'):
                                                             {Optional('total_dbd_retrans'): int,
                                                             Optional('nbr_event_count'): int,
                                                             Optional('nbr_retrans_qlen'): int,
@@ -939,7 +939,7 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
                     # Set values for dict
                     intf_type = 'virtual_links'
                     vl_transit_area_id = None
-                    
+
                     # Get interface name
                     n = re.match('(?P<ignore>\S+)_VL(?P<num>(\d+))', interface)
                     if n:
@@ -1133,38 +1133,38 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
     """Schema for show ospf vrf all-inclusive"""
 
     schema = {
-        'vrf': 
-            {Any(): 
-                {'address_family': 
-                    {Any(): 
-                        {'instance': 
-                            {Any(): 
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'instance':
+                            {Any():
                                 {'router_id': str,
                                 'role': str,
-                                'nsr': 
+                                'nsr':
                                     {'enable': bool},
                                 Optional('maximum_interfaces'): int,
-                                Optional('redistribution'): 
-                                    {Optional('max_prefix'): 
+                                Optional('redistribution'):
+                                    {Optional('max_prefix'):
                                         {Optional('num_of_prefix'): int,
                                         Optional('prefix_thld'): int,
                                         Optional('warn_only'): bool},
-                                    Optional('connected'): 
+                                    Optional('connected'):
                                         {'enabled': bool,
                                         Optional('metric'): int},
-                                    Optional('static'): 
+                                    Optional('static'):
                                         {'enabled': bool,
                                         Optional('metric'): int},
-                                    Optional('bgp'): 
+                                    Optional('bgp'):
                                         {'bgp_id': int,
                                         Optional('metric'): int},
-                                    Optional('isis'): 
+                                    Optional('isis'):
                                         {'isis_pid': str,
                                         Optional('metric'): int}},
-                                Optional('database_control'): 
+                                Optional('database_control'):
                                     {'max_lsa': int},
-                                Optional('stub_router'): 
-                                    {Optional('always'): 
+                                Optional('stub_router'):
+                                    {Optional('always'):
                                         {
                                         Optional('always'): bool,
                                         Optional('include_stub'): bool,
@@ -1173,7 +1173,7 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                         Optional('summary_lsa_metric'): int,
                                         Optional('external_lsa_metric'): int,
                                         Optional('state'): str},
-                                    Optional('on_startup'): 
+                                    Optional('on_startup'):
                                         {
                                         Optional('on_startup'): int,
                                         Optional('include_stub'): bool,
@@ -1182,7 +1182,7 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                         Optional('external_lsa'): bool,
                                         Optional('external_lsa_metric'): int,
                                         'state': str},
-                                    Optional('on_switchover'): 
+                                    Optional('on_switchover'):
                                         {
                                         Optional('on_switchover'): int,
                                         Optional('include_stub'): bool,
@@ -1191,7 +1191,7 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                         Optional('external_lsa'): bool,
                                         Optional('external_lsa_metric'): int,
                                         Optional('state'): str},
-                                    Optional('on_procrestart'): 
+                                    Optional('on_procrestart'):
                                         {
                                         Optional('on_procrestart'): int,
                                         Optional('include_stub'): bool,
@@ -1201,14 +1201,14 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                         Optional('external_lsa_metric'): int,
                                         'state': str},
                                     },
-                                Optional('spf_control'): 
+                                Optional('spf_control'):
                                     {Optional('paths'): str,
-                                    'throttle': 
-                                        {'spf': 
+                                    'throttle':
+                                        {'spf':
                                             {'start': int,
                                             'hold': int,
                                             'maximum': int},
-                                        'lsa': 
+                                        'lsa':
                                             {'start': int,
                                             'hold': int,
                                             'maximum': int,
@@ -1217,22 +1217,22 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                             'refresh_interval': int},
                                         },
                                     },
-                                Optional('mpls'): 
-                                    {'ldp': 
+                                Optional('mpls'):
+                                    {'ldp':
                                         {'ldp_igp_sync': bool,
                                         'ldp_sync_status': str}},
-                                Optional('adjacency_stagger'): 
+                                Optional('adjacency_stagger'):
                                     {'disable': bool,
                                     'initial_number': int,
                                     'maximum_number': int,
                                     'nbrs_forming': int,
                                     'nbrs_full': int,
                                     },
-                                Optional('graceful_restart'): 
-                                    {Any(): 
+                                Optional('graceful_restart'):
+                                    {Any():
                                         {'enable': bool,
                                         'type': str}},
-                                Optional('numbers'): 
+                                Optional('numbers'):
                                     {Optional('external_lsa'): int,
                                     Optional('external_lsa_checksum'): str,
                                     Optional('opaque_as_lsa'): int,
@@ -1252,23 +1252,23 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                 Optional('segment_routing_global_block_default'): str,
                                 Optional('segment_routing_global_block_status'): str,
                                 Optional('strict_spf'): bool,
-                                Optional('flags'): 
+                                Optional('flags'):
                                     {Optional('abr'): bool,
                                     Optional('asbr'): bool},
-                                Optional('areas'): 
-                                    {Any(): 
+                                Optional('areas'):
+                                    {Any():
                                         {'area_id': str,
                                         'area_type': str,
                                         Optional('summary'): bool,
                                         Optional('default_cost'): int,
                                         Optional('lsa_translation'): str,
-                                        Optional('ranges'): 
-                                            {Any(): 
+                                        Optional('ranges'):
+                                            {Any():
                                                 {'prefix': str,
                                                 'advertise': bool}},
                                         Optional('rrr_enabled'): bool,
                                         Optional('topology_version'): int,
-                                        Optional('statistics'): 
+                                        Optional('statistics'):
                                             {Optional('spf_runs_count'): int,
                                             Optional('interfaces_count'): int,
                                             Optional('area_scope_lsa_count'): int,
@@ -1286,6 +1286,18 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                             Optional('nbrs_full'): int},
                                         },
                                     },
+                                Optional('IPFRR_per_prefix_tiebreakers'): {
+                                    Optional('name'): str,
+                                    Optional('no_tunnel'): str,
+                                    Optional('node_protection'): str,
+                                    Optional('line_card_disjoint'): str,
+                                    Optional('lowest_metric'): str,
+                                    Optional('primary_path'): str,
+                                    Optional('downstream'): str,
+                                    Optional('secondary_path'): str,
+                                    Optional('SRLG_Disjoint'): str,
+                                    Optional('Post_Convergence_Path'): str,
+                                }
                                 },
                             },
                         },
@@ -1317,6 +1329,7 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
         # Init vars
         ret_dict = {}
         af = 'ipv4' # this is ospf - always ipv4
+        condition = "always"
         p1 = re.compile(r'(?:^VRF +(?P<vrf>(\S+)) +in +)?Routing +Process'
                             ' +\"(?:ospf)? +(?P<instance>([a-zA-Z0-9\s]+))\"'
                             ' +with +ID +(?P<router_id>(\S+))$')
@@ -1436,6 +1449,28 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
         p41 = re.compile(r'^Maximum +number +of +non +self-generated +LSA'
                             ' +allowed +(?P<max_lsa>(\d+))$')
         p42 = re.compile(r'^Non-Stop +Forwarding +enabled$')
+        #  IPFRR per-prefix tiebreakers:
+        p43_2 = re.compile(r'^(?P<per_prefix_tiebreakers>\S+) +per-prefix +tiebreakers:$')
+        # Name                    Index
+        p44 = re.compile(r'^Name +(?P<name>\S+)$')
+        # No Tunnel (Implicit)    255
+        p45 = re.compile(r'^No +Tunnel +\(Implicit\) +(?P<no_tunnel>\S+)$')
+        # Node Protection         40
+        p46 = re.compile(r'^Node +Protection +(?P<node_protection>\S+)$')
+        # Line-card Disjoint      30
+        p47 = re.compile(r'^Line-card +Disjoint +(?P<line_card_disjoint>\S+)$')
+        # Lowest Metric           20
+        p48 = re.compile(r'^Lowest +Metric +(?P<lowest_metric>\S+)$')
+        # Primary Path            10
+        p49 = re.compile(r'^Primary +Path +(?P<primary_path>\S+)$')
+        # Downstream              0
+        p50 = re.compile(r'^Downstream +(?P<downstream>\S+)$')
+        # Secondary Path          0
+        p51 = re.compile(r'^Secondary +Path +(?P<secondary_path>\S+)$')
+        # SRLG Disjoint           0
+        p52 = re.compile(r'^SRLG +Disjoint +(?P<SRLG_Disjoint>\S+)$')
+        # Post Convergence Path   0
+        p53 = re.compile(r'^Post +Convergence +Path +(?P<Post_Convergence_Path>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1510,7 +1545,7 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                     sub_dict['redistribution'] = {}
                     continue
 
-            # connected 
+            # connected
             # connected with metric mapped to 10
             # static
             # static with metric mapped to 10
@@ -1625,6 +1660,9 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             # Advertise stub links with maximum metric in router-LSAs
             m = p5_4.match(line)
             if m:
+                import pprint
+                pprint.pprint(sub_dict)
+                sub_dict.setdefault("stub_router",{}).setdefault(condition, {})
                 sub_dict['stub_router'][condition]['include_stub'] = True
                 continue
 
@@ -1887,7 +1925,7 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             if m:
                 parsed_area = str(m.groupdict()['area'])
                 n = re.match('BACKBONE\((?P<area_num>(\S+))\)', parsed_area)
-                if n:                    
+                if n:
                     area = str(n.groupdict()['area_num'])
                     if area.isdigit():
                         area = str(IPAddress(area))
@@ -1901,7 +1939,7 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                     sub_dict['areas'] = {}
                 if area not in sub_dict['areas']:
                     sub_dict['areas'][area] = {}
-                
+
                 # Set default values
                 sub_dict['areas'][area]['area_id'] = area
                 sub_dict['areas'][area]['area_type'] = 'normal'
@@ -1944,7 +1982,7 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                     continue
 
             # 10.16.2.0/24 Passive Advertise
-            # 10.4.0.0/16 Passive DoNotAdvertise 
+            # 10.4.0.0/16 Passive DoNotAdvertise
             m = p28_6.match(line)
             if m:
                 prefix = str(m.groupdict()['prefix'])
@@ -2086,7 +2124,7 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 sub_dict['database_control']['max_lsa'] = \
                     int(m.groupdict()['max_lsa'])
                 continue
-        
+
             # Non-Stop Forwarding enabled
             m = p42.match(line)
             if m:
@@ -2118,6 +2156,83 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                             sub_dict['graceful_restart'][gr_type]['type'] = gr_type
                             continue
 
+            #  IPFRR per-prefix tiebreakers:
+            m = p43_2.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers",{})
+                continue
+
+            # Name                    Index
+            m = p44.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers",{})['name'] = group['name']
+                continue
+
+            # No Tunnel (Implicit)    255
+            m = p45.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers",{})['no_tunnel'] = group['no_tunnel']
+                continue
+
+            # Node Protection         40
+            m = p46.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers",{})['node_protection'] = group['node_protection']
+                continue
+
+            # Line-card Disjoint      30
+            m = p47.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers",{})['line_card_disjoint'] = group['line_card_disjoint']
+                continue
+
+            # Lowest Metric           20
+            m = p48.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers",{})['lowest_metric'] = group['lowest_metric']
+                continue
+
+            # Primary Path            10
+            m = p49.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers",{})['primary_path'] = group['primary_path']
+                continue
+
+            # Downstream              0
+            m = p50.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers",{})['downstream'] = group['downstream']
+                continue
+
+            # Secondary Path          0
+            m = p51.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers",{})['secondary_path'] = group['secondary_path']
+                continue
+
+            # SRLG Disjoint           0m = p40.match(line)
+            m = p52.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers",{})['SRLG_Disjoint'] = group['SRLG_Disjoint']
+                continue
+
+            # Post Convergence Path   0
+            m = p53.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers",{})['Post_Convergence_Path'] = group['Post_Convergence_Path']
+                continue
+
         return ret_dict
 
 
@@ -2136,7 +2251,7 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
             out = self.device.execute(cmd)
         else:
             out = output
-        
+
         # Init vars
         ret_dict = {}
         af = 'ipv4'
@@ -2370,8 +2485,8 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
             m = p9.match(line)
             if m:
                 sub_dict['hello_timer'] = str(m.groupdict()['hello_timer'])
-                continue          
-          
+                continue
+
             # Non-Stop Forwarding (NSF) enabled, last NSF restart 00:18:16 ago
             p10 = re.compile(r'^Non-Stop +Forwarding +\(NSF\)'
                               ' +(?P<state>(enabled|disabled)), +last +NSF'
@@ -2386,7 +2501,7 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
                     sub_dict['nsf']['enable'] = False
                 sub_dict['nsf']['last_restart'] = str(m.groupdict()['restart'])
                 continue
-            
+
             # Clear text authentication enabled
             # Message digest authentication enabled
             p11 = re.compile(r'^(?P<auth>([a-zA-Z\s]+)) +authentication +enabled$')
@@ -2423,16 +2538,16 @@ class ShowOspfVrfAllInclusiveShamLinksSchema(MetaParser):
     """Schema for show ospf vrf all-inclusive sham-links"""
 
     schema = {
-        'vrf': 
-            {Any(): 
-                {'address_family': 
-                    {Any(): 
-                        {'instance': 
-                            {Any(): 
-                                {'areas': 
-                                    {Any(): 
-                                        {'sham_links': 
-                                            {Any(): 
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'instance':
+                            {Any():
+                                {'areas':
+                                    {Any():
+                                        {'sham_links':
+                                            {Any():
                                                 {'name': str,
                                                 'link_state': str,
                                                 'local_id': str,
@@ -2450,11 +2565,11 @@ class ShowOspfVrfAllInclusiveShamLinksSchema(MetaParser):
                                                 'if_index': int,
                                                 Optional('dcbitless_lsa_count'): int,
                                                 Optional('donotage_lsa'): str,
-                                                Optional('nsf'): 
+                                                Optional('nsf'):
                                                     {'enable': bool,
                                                     'last_restart': str},
-                                                Optional('authentication'): 
-                                                    {'auth_trailer_key': 
+                                                Optional('authentication'):
+                                                    {'auth_trailer_key':
                                                         {'crypto_algorithm': str,
                                                         Optional('youngest_key_id'): int,
                                                         },
@@ -2495,16 +2610,16 @@ class ShowOspfVrfAllInclusiveVirtualLinksSchema(MetaParser):
     """Schema for show ospf vrf all-inclusive virtual-links"""
 
     schema = {
-        'vrf': 
-            {Any(): 
-                {'address_family': 
-                    {Any(): 
-                        {'instance': 
-                            {Any(): 
-                                {'areas': 
-                                    {Any(): 
-                                        {'virtual_links': 
-                                            {Any(): 
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'instance':
+                            {Any():
+                                {'areas':
+                                    {Any():
+                                        {'virtual_links':
+                                            {Any():
                                                 {'name': str,
                                                 'link_state': str,
                                                 'router_id': str,
@@ -2521,11 +2636,11 @@ class ShowOspfVrfAllInclusiveVirtualLinksSchema(MetaParser):
                                                 Optional('interface'): str,
                                                 Optional('dcbitless_lsa_count'): int,
                                                 Optional('donotage_lsa'): str,
-                                                Optional('nsf'): 
+                                                Optional('nsf'):
                                                     {'enable': bool,
                                                     'last_restart': str},
-                                                Optional('authentication'): 
-                                                   {'auth_trailer_key': 
+                                                Optional('authentication'):
+                                                   {'auth_trailer_key':
                                                         {'crypto_algorithm': str,
                                                         Optional('youngest_key_id'): int,
                                                         },
@@ -2567,25 +2682,25 @@ class ShowOspfMplsTrafficEngLinkSchema(MetaParser):
     """Schema for show ospf mpls traffic-eng link"""
 
     schema = {
-        'vrf': 
-            {Any(): 
-                {'address_family': 
-                    {Any(): 
-                        {'instance': 
-                            {Any(): 
-                                {'mpls': 
-                                    {'te': 
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'instance':
+                            {Any():
+                                {'mpls':
+                                    {'te':
                                         {'router_id': str},
                                     },
-                                'areas': 
-                                    {Any(): 
-                                        {'mpls': 
-                                            {'te': 
+                                'areas':
+                                    {Any():
+                                        {'mpls':
+                                            {'te':
                                                 {'enable': bool,
                                                 Optional('total_links'): int,
                                                 Optional('area_instance'): int,
-                                                Optional('link_fragments'): 
-                                                    {Any(): 
+                                                Optional('link_fragments'):
+                                                    {Any():
                                                         {'link_instance': int,
                                                         'network_type': str,
                                                         'link_id': str,
@@ -2597,14 +2712,14 @@ class ShowOspfMplsTrafficEngLinkSchema(MetaParser):
                                                         'out_interface_id': int,
                                                         'affinity_bit': str,
                                                         'total_extended_admin_group': int,
-                                                        'unreserved_bandwidths' : 
-                                                            {Any(): 
+                                                        'unreserved_bandwidths' :
+                                                            {Any():
                                                                 {'priority': int,
                                                                 'unreserved_bandwidth': int,
                                                                 },
                                                             },
-                                                        'extended_admin_groups': 
-                                                            {Any(): 
+                                                        'extended_admin_groups':
+                                                            {Any():
                                                                 {'value': int,
                                                                 },
                                                             },
@@ -2637,7 +2752,7 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        
+
         # Init vars
         ret_dict = {}
         af = 'ipv4'
@@ -2830,7 +2945,7 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
                 link_dict['total_priority'] = int(m.groupdict()['priority'])
                 continue
 
-            # Global pool unreserved BW 
+            # Global pool unreserved BW
 
             # Priority 0 :             93750000  Priority 1 :           93750000
             # Priority 2 :             93750000  Priority 3 :           93750000
@@ -3000,7 +3115,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
         p36 = re.compile(r'^Extended +Administrative +Group *: +Length *:'
                             ' +(?P<eag_length>(\d+))$')
         p37 = re.compile(r'^EAG\[(?P<group_num>(\d+))\]: +(?P<val>(\d+))$')
-        
+
         # --regex for opaque-- #
         # Router Information TLV: Length: 4
         p38 = re.compile(r'^Router +Information +TLV: +Length: +(?P<length>\d+)$')
@@ -3115,7 +3230,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
             m = p2.match(line)
             if m:
                 lsa_type = lsa_type_mapping[db_type]
-                
+
                 # Set area
                 if m.groupdict()['area']:
                     try:
@@ -3175,14 +3290,14 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
             if m:
                 adv_router = str(m.groupdict()['adv_router'])
                 lsa = lsa_id + ' ' + adv_router
-                
+
                 # Reset counters for this lsa
                 tlv_idx = 0
                 unknown_tlvs_counter = 0
 
                 # Create schema structure
                 lsa_dict = type_dict.setdefault('lsas', {}).setdefault(lsa, {})
-                
+
                 # Set keys under 'lsa'
                 lsa_dict['adv_router'] = adv_router
                 try:
@@ -3368,7 +3483,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                     db_dict['links'][link_id]['type'] = link_type
                 except Exception:
                     pass
-                
+
                 # Create topology dict under link_id
                 if 'topologies' not in db_dict['links'][link_id]:
                     db_dict['links'][link_id]['topologies'] = {}
@@ -3394,7 +3509,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                     db_dict['links'][link_id]['type'] = link_type
                 except Exception:
                     pass
-                
+
                 # Create topology dict under link_id
                 if 'topologies' not in db_dict['links'][link_id]:
                     db_dict['links'][link_id]['topologies'] = {}
@@ -3420,7 +3535,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                     db_dict['links'][link_id]['type'] = link_type
                 except Exception:
                     pass
-                
+
                 # Create topology dict under link_id
                 if 'topologies' not in db_dict['links'][link_id]:
                     db_dict['links'][link_id]['topologies'] = {}
@@ -3455,7 +3570,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
             if m:
                 opaque_type = int(m.groupdict()['type'])
                 continue
-            
+
             # Opaque ID: 38
             m = p23.match(line)
             if m:
@@ -3500,7 +3615,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                     opaque_link_type = 1
                 tlv_dict['link_type'] = opaque_link_type
                 tlv_dict['link_name'] = opaque_link
-                
+
                 # Set remote_if_ipv4_addrs (if needed)
                 if opaque_link_type == 2:
                     if_dict = tlv_dict.setdefault('remote_if_ipv4_addrs', {})
@@ -3561,7 +3676,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
             if m:
                 tlv_dict['total_priority'] = int(m.groupdict()['num'])
                 continue
-            
+
             # Priority 0 : 93750000    Priority 1 : 93750000
             m = p34.match(line)
             if m:
@@ -3857,24 +3972,24 @@ class ShowOspfVrfAllInclusiveDatabaseRouterSchema(MetaParser):
     """Schema for show ospf vrf all-inclusive database router"""
 
     schema = {
-        'vrf': 
-            {Any(): 
-                {'address_family': 
-                    {Any(): 
-                        {'instance': 
-                            {Any(): 
-                                {Optional('areas'): 
-                                    {Any(): 
-                                        {'database': 
-                                            {'lsa_types': 
-                                                {Any(): 
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'instance':
+                            {Any():
+                                {Optional('areas'):
+                                    {Any():
+                                        {'database':
+                                            {'lsa_types':
+                                                {Any():
                                                     {'lsa_type': int,
-                                                    'lsas': 
-                                                        {Any(): 
+                                                    'lsas':
+                                                        {Any():
                                                             {'lsa_id': str,
                                                             'adv_router': str,
-                                                            'ospfv2': 
-                                                                {'header': 
+                                                            'ospfv2':
+                                                                {'header':
                                                                     {'option': str,
                                                                     'option_desc': str,
                                                                     'lsa_id': str,
@@ -3888,18 +4003,18 @@ class ShowOspfVrfAllInclusiveDatabaseRouterSchema(MetaParser):
                                                                     Optional('as_boundary_router'): bool,
                                                                     Optional('area_border_router'): bool,
                                                                     },
-                                                                'body': 
-                                                                    {'router': 
+                                                                'body':
+                                                                    {'router':
                                                                         {Optional('flags'): str,
                                                                         'num_of_links': int,
                                                                         'links':
-                                                                            {Any(): 
+                                                                            {Any():
                                                                                 {'link_id': str,
                                                                                 'link_data': str,
                                                                                 'type': str,
                                                                                 'num_tos_metrics': int,
-                                                                                'topologies': 
-                                                                                    {Any(): 
+                                                                                'topologies':
+                                                                                    {Any():
                                                                                         {'mt_id': int,
                                                                                         Optional('metric'): int,
                                                                                         Optional('tos'): int,
@@ -3956,24 +4071,24 @@ class ShowOspfVrfAllInclusiveDatabaseExternalSchema(MetaParser):
     """Schema for show ospf vrf all-inclusive database external"""
 
     schema = {
-        'vrf': 
-            {Any(): 
-                {'address_family': 
-                    {Any(): 
-                        {'instance': 
-                            {Any(): 
-                                {Optional('areas'): 
-                                    {Any(): 
-                                        {'database': 
-                                            {'lsa_types': 
-                                                {Any(): 
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'instance':
+                            {Any():
+                                {Optional('areas'):
+                                    {Any():
+                                        {'database':
+                                            {'lsa_types':
+                                                {Any():
                                                     {'lsa_type': int,
-                                                    'lsas': 
-                                                        {Any(): 
+                                                    'lsas':
+                                                        {Any():
                                                             {'lsa_id': str,
                                                             'adv_router': str,
-                                                            'ospfv2': 
-                                                                {'header': 
+                                                            'ospfv2':
+                                                                {'header':
                                                                     {'option': str,
                                                                     'option_desc': str,
                                                                     'lsa_id': str,
@@ -3985,11 +4100,11 @@ class ShowOspfVrfAllInclusiveDatabaseExternalSchema(MetaParser):
                                                                     'length': int,
                                                                     Optional('routing_bit_enable'): bool,
                                                                     },
-                                                                'body': 
-                                                                    {'external': 
+                                                                'body':
+                                                                    {'external':
                                                                         {'network_mask': str,
-                                                                        'topologies': 
-                                                                            {Any(): 
+                                                                        'topologies':
+                                                                            {Any():
                                                                                 {'mt_id': int,
                                                                                 'tos': int,
                                                                                 Optional('flags'): str,
@@ -4046,24 +4161,24 @@ class ShowOspfVrfAllInclusiveDatabaseNetworkSchema(MetaParser):
     """Schema for show ospf vrf all-inclusive database network"""
 
     schema = {
-        'vrf': 
-            {Any(): 
-                {'address_family': 
-                    {Any(): 
-                        {'instance': 
-                            {Any(): 
-                                {Optional('areas'): 
-                                    {Any(): 
-                                        {'database': 
-                                            {'lsa_types': 
-                                                {Any(): 
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'instance':
+                            {Any():
+                                {Optional('areas'):
+                                    {Any():
+                                        {'database':
+                                            {'lsa_types':
+                                                {Any():
                                                     {'lsa_type': int,
-                                                    'lsas': 
-                                                        {Any(): 
+                                                    'lsas':
+                                                        {Any():
                                                             {'lsa_id': str,
                                                             'adv_router': str,
-                                                            'ospfv2': 
-                                                                {'header': 
+                                                            'ospfv2':
+                                                                {'header':
                                                                     {'option': str,
                                                                     'option_desc': str,
                                                                     'lsa_id': str,
@@ -4075,10 +4190,10 @@ class ShowOspfVrfAllInclusiveDatabaseNetworkSchema(MetaParser):
                                                                     'length': int,
                                                                     Optional('routing_bit_enable'): bool,
                                                                     },
-                                                                'body': 
-                                                                    {'network': 
+                                                                'body':
+                                                                    {'network':
                                                                         {'network_mask': str,
-                                                                        'attached_routers': 
+                                                                        'attached_routers':
                                                                             {Any(): {},
                                                                             },
                                                                         },
@@ -4130,24 +4245,24 @@ class ShowOspfVrfAllInclusiveDatabaseSummarySchema(MetaParser):
     """Schema for show ospf vrf all-inclusive database summary"""
 
     schema = {
-        'vrf': 
-            {Any(): 
-                {'address_family': 
-                    {Any(): 
-                        {'instance': 
-                            {Any(): 
-                                {Optional('areas'): 
-                                    {Any(): 
-                                        {'database': 
-                                            {'lsa_types': 
-                                                {Any(): 
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'instance':
+                            {Any():
+                                {Optional('areas'):
+                                    {Any():
+                                        {'database':
+                                            {'lsa_types':
+                                                {Any():
                                                     {'lsa_type': int,
-                                                    'lsas': 
-                                                        {Any(): 
+                                                    'lsas':
+                                                        {Any():
                                                             {'lsa_id': str,
                                                             'adv_router': str,
-                                                            'ospfv2': 
-                                                                {'header': 
+                                                            'ospfv2':
+                                                                {'header':
                                                                     {'option': str,
                                                                     'option_desc': str,
                                                                     'lsa_id': str,
@@ -4159,11 +4274,11 @@ class ShowOspfVrfAllInclusiveDatabaseSummarySchema(MetaParser):
                                                                     'length': int,
                                                                     Optional('routing_bit_enable'): bool,
                                                                     },
-                                                                'body': 
-                                                                    {'summary': 
+                                                                'body':
+                                                                    {'summary':
                                                                         {'network_mask': str,
-                                                                        'topologies': 
-                                                                            {Any(): 
+                                                                        'topologies':
+                                                                            {Any():
                                                                                 {'mt_id': int,
                                                                                 'tos': int,
                                                                                 'metric': int},
@@ -4217,24 +4332,24 @@ class ShowOspfVrfAllInclusiveDatabaseOpaqueAreaSchema(MetaParser):
     """Schema for show ospf vrf all-inclusive database opaque-area"""
 
     schema = {
-        'vrf': 
-            {Any(): 
-                {'address_family': 
-                    {Any(): 
-                        {'instance': 
-                            {Any(): 
-                                {Optional('areas'): 
-                                    {Any(): 
-                                        {'database': 
-                                            {'lsa_types': 
-                                                {Any(): 
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'instance':
+                            {Any():
+                                {Optional('areas'):
+                                    {Any():
+                                        {'database':
+                                            {'lsa_types':
+                                                {Any():
                                                     {'lsa_type': int,
-                                                    'lsas': 
-                                                        {Any(): 
+                                                    'lsas':
+                                                        {Any():
                                                             {'lsa_id': str,
                                                             'adv_router': str,
-                                                            'ospfv2': 
-                                                                {'header': 
+                                                            'ospfv2':
+                                                                {'header':
                                                                     {'option': str,
                                                                     'option_desc': str,
                                                                     'lsa_id': str,
@@ -4249,11 +4364,11 @@ class ShowOspfVrfAllInclusiveDatabaseOpaqueAreaSchema(MetaParser):
                                                                     Optional('fragment_number'): int,
                                                                     Optional('mpls_te_router_id'): str,
                                                                     Optional('num_links'): int},
-                                                                'body': 
+                                                                'body':
                                                                     {'opaque': {
                                                                         Optional('num_of_links'): int,
-                                                                        Optional('link_tlvs'): 
-                                                                            {Any(): 
+                                                                        Optional('link_tlvs'):
+                                                                            {Any():
                                                                                 {'link_type': int,
                                                                                 'link_name': str,
                                                                                 'link_id': str,
@@ -4264,27 +4379,27 @@ class ShowOspfVrfAllInclusiveDatabaseOpaqueAreaSchema(MetaParser):
                                                                                 Optional('igp_metric'): int,
                                                                                 Optional('total_priority'): int,
                                                                                 Optional('neighbor_address'): str,
-                                                                                Optional('local_if_ipv4_addrs'): 
+                                                                                Optional('local_if_ipv4_addrs'):
                                                                                     {Any(): {}},
-                                                                                Optional('remote_if_ipv4_addrs'): 
+                                                                                Optional('remote_if_ipv4_addrs'):
                                                                                     {
                                                                                         Optional('remote_if_ipv4_addr'): Or(str, {})
                                                                                     },
-                                                                                Optional('unreserved_bandwidths'): 
-                                                                                    {Any(): 
+                                                                                Optional('unreserved_bandwidths'):
+                                                                                    {Any():
                                                                                         {'priority': int,
                                                                                         'unreserved_bandwidth': int},
                                                                                     },
-                                                                                Optional('unknown_tlvs'): 
-                                                                                    {Any(): 
+                                                                                Optional('unknown_tlvs'):
+                                                                                    {Any():
                                                                                         {'type': int,
                                                                                         'length': int,
                                                                                         'value': str},
                                                                                     },
                                                                                 Optional('extended_admin_group'):
                                                                                     {'length': int,
-                                                                                    Optional('groups'): 
-                                                                                        {Any(): 
+                                                                                    Optional('groups'):
+                                                                                        {Any():
                                                                                             {'value': int,},
                                                                                         },
                                                                                     },
