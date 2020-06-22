@@ -418,7 +418,7 @@ class ShowOspf3DatabaseSchema(MetaParser):
             },
             "ospf3-database":
             Use(ShowOspf3DatabaseSchema.validate_ospf3_database_list),
-            "ospf3-intf-header":
+            Optional("ospf3-intf-header"):
             Use(ShowOspf3DatabaseSchema.validate_ospf3_intf_header_list),
         })
         for item in value:
