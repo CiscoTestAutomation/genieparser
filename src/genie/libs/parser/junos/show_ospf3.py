@@ -409,6 +409,21 @@ class ShowOspf3DatabaseSchema(MetaParser):
         }
     }
     '''
+    def validate_ospf3_database_information(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf3-database-information')
+        ospf3_database_information_schema = Schema({
+            "ospf3-area-header": {
+                "ospf-area": str
+            },
+            "ospf3-database":
+            Use(ShowOspf3DatabaseSchema.validate_ospf3_database_list),
+            "ospf3-intf-header":
+            Use(ShowOspf3DatabaseSchema.validate_ospf3_intf_header_list),
+        })
+        for item in value:
+            ospf3_database_information_schema.validate(item)
+        return value
 
     # Sub Schema ospf3-database
     def validate_ospf3_database_list(value):
@@ -443,13 +458,7 @@ class ShowOspf3DatabaseSchema(MetaParser):
 
     # Main Schema
     schema = {
-        "ospf3-database-information": {
-            "ospf3-area-header": {
-                "ospf-area": str
-            },
-            "ospf3-database": Use(validate_ospf3_database_list),
-            "ospf3-intf-header": Use(validate_ospf3_intf_header_list),
-        }
+        "ospf3-database-information": Use(validate_ospf3_database_information)
     }
 
 
@@ -491,20 +500,26 @@ class ShowOspf3Database(ShowOspf3DatabaseSchema):
             #    OSPF3 database, Area 0.0.0.8
             m = p1.match(line)
             if m:
-                ospf_area = ret_dict.setdefault("ospf3-database-information", {})\
-                    .setdefault("ospf3-area-header", {}).setdefault("ospf-area", None)
+                entry_list = ret_dict.setdefault("ospf3-database-information",
+                                                 [])
+
+                entry = {}
 
                 group = m.groupdict()
 
-                ret_dict["ospf3-database-information"]["ospf3-area-header"]["ospf-area"]\
-                     = group["ospf_area"]
+                entry.setdefault("ospf3-area-header",
+                                 {}).setdefault("ospf-area",
+                                                group["ospf_area"])
+
+                entry_list.append(entry)
                 continue
 
             # Router      0.0.0.0          10.34.2.250     0x800018ed  2407  0xaf2d  56
             m = p2.match(line)
             if m:
-                entry_list = ret_dict.setdefault("ospf3-database-information", {})\
-                    .setdefault("ospf3-database", [])
+                entry_list = ret_dict.setdefault("ospf3-database-information",
+                                                 [])[-1].setdefault(
+                                                     "ospf3-database", [])
 
                 group = m.groupdict()
                 entry = {}
@@ -518,13 +533,15 @@ class ShowOspf3Database(ShowOspf3DatabaseSchema):
                     entry['our-entry'] = True
 
                 entry_list.append(entry)
+
                 continue
 
             # OSPF3 Link-Local database, interface ge-0/0/0.0 Area 0.0.0.8
             m = p3.match(line)
             if m:
-                entry_list = ret_dict.setdefault("ospf3-database-information", {})\
-                    .setdefault("ospf3-intf-header", [])
+                entry_list = ret_dict.setdefault("ospf3-database-information",
+                                                 [])[-1].setdefault(
+                                                     "ospf3-intf-header", [])
 
                 group = m.groupdict()
                 entry = {}
@@ -535,6 +552,10 @@ class ShowOspf3Database(ShowOspf3DatabaseSchema):
                 entry_list.append(entry)
 
                 continue
+
+        import pprint
+        logFile = open('/Users/adelph/pyats_env2/data.txt', 'w')
+        pprint.pprint(ret_dict, logFile)
 
         return ret_dict
 
