@@ -1660,8 +1660,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             # Advertise stub links with maximum metric in router-LSAs
             m = p5_4.match(line)
             if m:
-                import pprint
-                pprint.pprint(sub_dict)
                 sub_dict.setdefault("stub_router",{}).setdefault(condition, {})
                 sub_dict['stub_router'][condition]['include_stub'] = True
                 continue
