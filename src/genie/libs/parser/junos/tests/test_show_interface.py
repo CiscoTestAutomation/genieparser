@@ -9296,11 +9296,6 @@ class TestShowInterfaces(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse()
-        import json
-        json_data = json.dumps(parsed_output, indent=4, sort_keys=True)
-        f = open("dict.txt","w")
-        f.write(json_data.replace('": true', '": True'))
-        f.close()
         self.assertEqual(parsed_output, self.golden_parsed_output)
     
     def test_golden_2(self):

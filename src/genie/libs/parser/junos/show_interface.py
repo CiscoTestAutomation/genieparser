@@ -453,6 +453,9 @@ class ShowInterfacesSchema(MetaParser):
                         Optional("ifff-sendbcast-pkt-to-re"): bool,
                         Optional("internal-flags"): bool,
                         Optional("ifff-primary"): bool,
+                        Optional("ifff-receive-ttl-exceeded"): bool,
+                        Optional("ifff-receive-options"): bool,
+                        Optional("ifff-encapsulation"): str,
                     },
                     "address-family-name": str,
                     Optional("interface-address"): Use(verify_interface_address_list),
@@ -1167,9 +1170,9 @@ class ShowInterfaces(ShowInterfacesSchema):
             # IPv6 transit statistics:
             m = p36.match(line)
             if m:
-                statistics_type = 'ipv6_transit'
                 group = m.groupdict()
                 traffic_statistics_dict = traffic_statistics_dict.setdefault('ipv6-transit-statistics', {})
+                statistics_type = 'ipv6_transit'
                 continue
             
             # Dropped traffic statistics due to STP State:
