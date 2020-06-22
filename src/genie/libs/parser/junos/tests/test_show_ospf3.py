@@ -16,6 +16,7 @@ from genie.libs.parser.junos.show_ospf3 import ShowOspf3Interface, \
                                                ShowOspf3DatabaseNetworkDetail,\
                                                ShowOspf3DatabaseLinkAdvertisingRouter
 
+
 class TestShowOspf3Interface(unittest.TestCase):
 
     maxDiff = None
@@ -24,42 +25,41 @@ class TestShowOspf3Interface(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        'execute.return_value':
+        '''
         show ospf3 interface | no-more
         Interface           State   Area            DR ID           BDR ID          Nbrs
         ge-0/0/0.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
         ge-0/0/1.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
         lo0.0               DR      0.0.0.8         10.189.5.252    0.0.0.0            0
-    '''}
+    '''
+    }
 
     golden_parsed_output = {
         "ospf3-interface-information": {
-            "ospf3-interface": [
-                {
-                    "bdr-id": "0.0.0.0",
-                    "dr-id": "0.0.0.0",
-                    "interface-name": "ge-0/0/0.0",
-                    "neighbor-count": "1",
-                    "ospf-area": "0.0.0.8",
-                    "ospf-interface-state": "PtToPt"
-                },
-                {
-                    "bdr-id": "0.0.0.0",
-                    "dr-id": "0.0.0.0",
-                    "interface-name": "ge-0/0/1.0",
-                    "neighbor-count": "1",
-                    "ospf-area": "0.0.0.8",
-                    "ospf-interface-state": "PtToPt"
-                },
-                {
-                    "bdr-id": "0.0.0.0",
-                    "dr-id": "10.189.5.252",
-                    "interface-name": "lo0.0",
-                    "neighbor-count": "0",
-                    "ospf-area": "0.0.0.8",
-                    "ospf-interface-state": "DR"
-                }
-            ]
+            "ospf3-interface": [{
+                "bdr-id": "0.0.0.0",
+                "dr-id": "0.0.0.0",
+                "interface-name": "ge-0/0/0.0",
+                "neighbor-count": "1",
+                "ospf-area": "0.0.0.8",
+                "ospf-interface-state": "PtToPt"
+            }, {
+                "bdr-id": "0.0.0.0",
+                "dr-id": "0.0.0.0",
+                "interface-name": "ge-0/0/1.0",
+                "neighbor-count": "1",
+                "ospf-area": "0.0.0.8",
+                "ospf-interface-state": "PtToPt"
+            }, {
+                "bdr-id": "0.0.0.0",
+                "dr-id": "10.189.5.252",
+                "interface-name": "lo0.0",
+                "neighbor-count": "0",
+                "ospf-area": "0.0.0.8",
+                "ospf-interface-state": "DR"
+            }]
         }
     }
 
@@ -75,6 +75,7 @@ class TestShowOspf3Interface(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
 class TestShowOspf3NeighborExtensive(unittest.TestCase):
     """ Unit tests for:
             * show ospf3 neighbor extensive
@@ -85,7 +86,9 @@ class TestShowOspf3NeighborExtensive(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        'execute.return_value':
+        '''
         show ospf3 neighbor extensive
         ID               Interface              State     Pri   Dead
         10.189.5.253     ge-0/0/0.0             Full      128     35
@@ -98,50 +101,48 @@ class TestShowOspf3NeighborExtensive(unittest.TestCase):
          Area 0.0.0.8, opt 0x13, OSPF3-Intf-Index 3
           DR-ID 0.0.0.0, BDR-ID 0.0.0.0
           Up 3w0d 17:06:59, adjacent 3w0d 17:06:55
-    '''}
+    '''
+    }
 
     golden_parsed_output = {
         "ospf3-neighbor-information": {
-            "ospf3-neighbor": [
-                {
-                    "activity-timer": "35",
-                    "bdr-id": "0.0.0.0",
-                    "dr-id": "0.0.0.0",
-                    "interface-name": "ge-0/0/0.0",
-                    "neighbor-address": "fe80::250:56ff:fe8d:53c0",
-                    "neighbor-adjacency-time": {
-                        "#text": "3w0d 17:07:00"
-                    },
-                    "neighbor-id": "10.189.5.253",
-                    "neighbor-priority": "128",
-                    "neighbor-up-time": {
-                        "#text": "3w0d 17:07:00"
-                    },
-                    "options": "0x13",
-                    "ospf-area": "0.0.0.8",
-                    "ospf-neighbor-state": "Full",
-                    "ospf3-interface-index": "2"
+            "ospf3-neighbor": [{
+                "activity-timer": "35",
+                "bdr-id": "0.0.0.0",
+                "dr-id": "0.0.0.0",
+                "interface-name": "ge-0/0/0.0",
+                "neighbor-address": "fe80::250:56ff:fe8d:53c0",
+                "neighbor-adjacency-time": {
+                    "#text": "3w0d 17:07:00"
                 },
-                {
-                    "activity-timer": "33",
-                    "bdr-id": "0.0.0.0",
-                    "dr-id": "0.0.0.0",
-                    "interface-name": "ge-0/0/1.0",
-                    "neighbor-address": "fe80::250:56ff:fe8d:72bd",
-                    "neighbor-adjacency-time": {
-                        "#text": "3w0d 17:06:55"
-                    },
-                    "neighbor-id": "10.169.14.240",
-                    "neighbor-priority": "128",
-                    "neighbor-up-time": {
-                        "#text": "3w0d 17:06:59"
-                    },
-                    "options": "0x13",
-                    "ospf-area": "0.0.0.8",
-                    "ospf-neighbor-state": "Full",
-                    "ospf3-interface-index": "3"
-                }
-            ]
+                "neighbor-id": "10.189.5.253",
+                "neighbor-priority": "128",
+                "neighbor-up-time": {
+                    "#text": "3w0d 17:07:00"
+                },
+                "options": "0x13",
+                "ospf-area": "0.0.0.8",
+                "ospf-neighbor-state": "Full",
+                "ospf3-interface-index": "2"
+            }, {
+                "activity-timer": "33",
+                "bdr-id": "0.0.0.0",
+                "dr-id": "0.0.0.0",
+                "interface-name": "ge-0/0/1.0",
+                "neighbor-address": "fe80::250:56ff:fe8d:72bd",
+                "neighbor-adjacency-time": {
+                    "#text": "3w0d 17:06:55"
+                },
+                "neighbor-id": "10.169.14.240",
+                "neighbor-priority": "128",
+                "neighbor-up-time": {
+                    "#text": "3w0d 17:06:59"
+                },
+                "options": "0x13",
+                "ospf-area": "0.0.0.8",
+                "ospf-neighbor-state": "Full",
+                "ospf3-interface-index": "3"
+            }]
         }
     }
 
@@ -168,7 +169,9 @@ class TestShowOspf3NeighborDetail(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        'execute.return_value':
+        '''
         show ospf3 neighbor detail
         ID               Interface              State     Pri   Dead
         10.189.5.253     ge-0/0/0.0             Full      128     34
@@ -181,52 +184,51 @@ class TestShowOspf3NeighborDetail(unittest.TestCase):
           Area 0.0.0.8, opt 0x13, OSPF3-Intf-Index 3
           DR-ID 0.0.0.0, BDR-ID 0.0.0.0
           Up 3w0d 17:06:44, adjacent 3w0d 17:06:40
-    '''}
+    '''
+    }
 
     golden_parsed_output = {
         "ospf3-neighbor-information": {
-            "ospf3-neighbor": [
-                {
-                    "activity-timer": "34",
-                    "bdr-id": "0.0.0.0",
-                    "dr-id": "0.0.0.0",
-                    "interface-name": "ge-0/0/0.0",
-                    "neighbor-address": "fe80::250:56ff:fe8d:53c0",
-                    "neighbor-adjacency-time": {
-                        "#text": "3w0d 17:06:45"
-                    },
-                    "neighbor-id": "10.189.5.253",
-                    "neighbor-priority": "128",
-                    "neighbor-up-time": {
-                        "#text": "3w0d 17:06:45"
-                    },
-                    "options": "0x13",
-                    "ospf-area": "0.0.0.8",
-                    "ospf-neighbor-state": "Full",
-                    "ospf3-interface-index": "2"
+            "ospf3-neighbor": [{
+                "activity-timer": "34",
+                "bdr-id": "0.0.0.0",
+                "dr-id": "0.0.0.0",
+                "interface-name": "ge-0/0/0.0",
+                "neighbor-address": "fe80::250:56ff:fe8d:53c0",
+                "neighbor-adjacency-time": {
+                    "#text": "3w0d 17:06:45"
                 },
-                {
-                    "activity-timer": "31",
-                    "bdr-id": "0.0.0.0",
-                    "dr-id": "0.0.0.0",
-                    "interface-name": "ge-0/0/1.0",
-                    "neighbor-address": "fe80::250:56ff:fe8d:72bd",
-                    "neighbor-adjacency-time": {
-                        "#text": "3w0d 17:06:40"
-                    },
-                    "neighbor-id": "10.169.14.240",
-                    "neighbor-priority": "128",
-                    "neighbor-up-time": {
-                        "#text": "3w0d 17:06:44"
-                    },
-                    "options": "0x13",
-                    "ospf-area": "0.0.0.8",
-                    "ospf-neighbor-state": "Full",
-                    "ospf3-interface-index": "3"
-                    }
-            ]
+                "neighbor-id": "10.189.5.253",
+                "neighbor-priority": "128",
+                "neighbor-up-time": {
+                    "#text": "3w0d 17:06:45"
+                },
+                "options": "0x13",
+                "ospf-area": "0.0.0.8",
+                "ospf-neighbor-state": "Full",
+                "ospf3-interface-index": "2"
+            }, {
+                "activity-timer": "31",
+                "bdr-id": "0.0.0.0",
+                "dr-id": "0.0.0.0",
+                "interface-name": "ge-0/0/1.0",
+                "neighbor-address": "fe80::250:56ff:fe8d:72bd",
+                "neighbor-adjacency-time": {
+                    "#text": "3w0d 17:06:40"
+                },
+                "neighbor-id": "10.169.14.240",
+                "neighbor-priority": "128",
+                "neighbor-up-time": {
+                    "#text": "3w0d 17:06:44"
+                },
+                "options": "0x13",
+                "ospf-area": "0.0.0.8",
+                "ospf-neighbor-state": "Full",
+                "ospf3-interface-index": "3"
+            }]
         }
     }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowOspf3NeighborDetail(device=self.device)
@@ -238,6 +240,8 @@ class TestShowOspf3NeighborDetail(unittest.TestCase):
         obj = ShowOspf3NeighborDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
 class TestShowOspf3Neighbor(unittest.TestCase):
     """ Unit tests for:
             * show ospf3 neighbor
@@ -248,35 +252,35 @@ class TestShowOspf3Neighbor(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        'execute.return_value':
+        '''
         show ospf3 neighbor
         ID               Interface              State     Pri   Dead
         10.189.5.253     ge-0/0/0.0             Full      128     35
           Neighbor-address fe80::250:56ff:fe8d:53c0
         10.169.14.240   ge-0/0/1.0             Full      128     33
           Neighbor-address fe80::250:56ff:fe8d:72bd
-    '''}
+    '''
+    }
 
     golden_parsed_output = {
         "ospf3-neighbor-information": {
-            "ospf3-neighbor": [
-                {
-                    "activity-timer": "35",
-                    "interface-name": "ge-0/0/0.0",
-                    "neighbor-address": "fe80::250:56ff:fe8d:53c0",
-                    "neighbor-id": "10.189.5.253",
-                    "neighbor-priority": "128",
-                    "ospf-neighbor-state": "Full"
-                },
-                {
-                    "activity-timer": "33",
-                    "interface-name": "ge-0/0/1.0",
-                    "neighbor-address": "fe80::250:56ff:fe8d:72bd",
-                    "neighbor-id": "10.169.14.240",
-                    "neighbor-priority": "128",
-                    "ospf-neighbor-state": "Full"
-                }
-            ]
+            "ospf3-neighbor": [{
+                "activity-timer": "35",
+                "interface-name": "ge-0/0/0.0",
+                "neighbor-address": "fe80::250:56ff:fe8d:53c0",
+                "neighbor-id": "10.189.5.253",
+                "neighbor-priority": "128",
+                "ospf-neighbor-state": "Full"
+            }, {
+                "activity-timer": "33",
+                "interface-name": "ge-0/0/1.0",
+                "neighbor-address": "fe80::250:56ff:fe8d:72bd",
+                "neighbor-id": "10.169.14.240",
+                "neighbor-priority": "128",
+                "ospf-neighbor-state": "Full"
+            }]
         }
     }
 
@@ -292,6 +296,7 @@ class TestShowOspf3Neighbor(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
 class TestShowOspf3Database(unittest.TestCase):
 
     maxDiff = None
@@ -300,8 +305,9 @@ class TestShowOspf3Database(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_output = {'execute.return_value':
-    '''
+    golden_output = {
+        'execute.return_value':
+        '''
 
         OSPF3 database, Area 0.0.0.8
         Type       ID               Adv Rtr           Seq         Age  Cksum  Len
@@ -350,335 +356,297 @@ class TestShowOspf3Database(unittest.TestCase):
         Type       ID               Adv Rtr           Seq         Age  Cksum  Len
         Link       *0.0.0.1          10.189.5.252     0x8000178b  2413  0xa440  44
 
-    '''}
-
-    golden_parsed_output = {
-        "ospf3-database-information": {
-            "ospf3-area-header": {
-                "ospf-area": "0.0.0.8"
-            },
-            "ospf3-database": [
-                {
-                    "advertising-router": "10.34.2.250",
-                    "age": "2407",
-                    "checksum": "0xaf2d",
-                    "lsa-id": "0.0.0.0",
-                    "lsa-length": "56",
-                    "lsa-type": "Router",
-                    "sequence-number": "0x800018ed"
-                },
-                {
-                    "advertising-router": "10.34.2.251",
-                    "age": "532",
-                    "checksum": "0x1d57",
-                    "lsa-id": "0.0.0.0",
-                    "lsa-length": "56",
-                    "lsa-type": "Router",
-                    "sequence-number": "0x80001841"
-                },
-                {
-                    "advertising-router": "10.169.14.240",
-                    "age": "2956",
-                    "checksum": "0x52ba",
-                    "lsa-id": "0.0.0.0",
-                    "lsa-length": "72",
-                    "lsa-type": "Router",
-                    "sequence-number": "0x80001a0b"
-                },
-                {
-                    "advertising-router": "10.169.14.241",
-                    "age": "1259",
-                    "checksum": "0x94a3",
-                    "lsa-id": "0.0.0.0",
-                    "lsa-length": "72",
-                    "lsa-type": "Router",
-                    "sequence-number": "0x800018b7"
-                },
-                {
-                    "advertising-router": "10.189.5.252",
-                    "age": "913",
-                    "checksum": "0xae6c",
-                    "lsa-id": "0.0.0.0",
-                    "lsa-length": "56",
-                    "lsa-type": "Router",
-                    "our-entry": True,
-                    "sequence-number": "0x80001890"
-                },
-                {
-                    "advertising-router": "10.189.5.253",
-                    "age": "915",
-                    "checksum": "0x8fdc",
-                    "lsa-id": "0.0.0.0",
-                    "lsa-length": "56",
-                    "lsa-type": "Router",
-                    "sequence-number": "0x8000182a"
-                },
-                {
-                    "advertising-router": "10.34.2.250",
-                    "age": "1657",
-                    "checksum": "0xc4fc",
-                    "lsa-id": "0.0.0.1",
-                    "lsa-length": "76",
-                    "lsa-type": "IntraArPfx",
-                    "sequence-number": "0x8000178c"
-                },
-                {
-                    "advertising-router": "10.34.2.251",
-                    "age": "907",
-                    "checksum": "0x9e2d",
-                    "lsa-id": "0.0.0.1",
-                    "lsa-length": "76",
-                    "lsa-type": "IntraArPfx",
-                    "sequence-number": "0x8000178b"
-                },
-                {
-                    "advertising-router": "10.169.14.240",
-                    "age": "2683",
-                    "checksum": "0x6948",
-                    "lsa-id": "0.0.0.1",
-                    "lsa-length": "88",
-                    "lsa-type": "IntraArPfx",
-                    "sequence-number": "0x80001808"
-                },
-                {
-                    "advertising-router": "10.169.14.241",
-                    "age": "926",
-                    "checksum": "0xa81e",
-                    "lsa-id": "0.0.0.1",
-                    "lsa-length": "88",
-                    "lsa-type": "IntraArPfx",
-                    "sequence-number": "0x800017e6"
-                },
-                {
-                    "advertising-router": "10.189.5.252",
-                    "age": "1413",
-                    "checksum": "0x9b24",
-                    "lsa-id": "0.0.0.1",
-                    "lsa-length": "76",
-                    "lsa-type": "IntraArPfx",
-                    "our-entry": True,
-                    "sequence-number": "0x8000178a"
-                },
-                {
-                    "advertising-router": "10.189.5.253",
-                    "age": "415",
-                    "checksum": "0x8820",
-                    "lsa-id": "0.0.0.1",
-                    "lsa-length": "76",
-                    "lsa-type": "IntraArPfx",
-                    "sequence-number": "0x80001788"
-                },
-                {
-                    "advertising-router": "10.34.2.250",
-                    "age": "1282",
-                    "checksum": "0x3c81",
-                    "lsa-id": "0.0.0.1",
-                    "lsa-length": "28",
-                    "lsa-type": "Extern",
-                    "sequence-number": "0x8000178e"
-                },
-                {
-                    "advertising-router": "10.34.2.250",
-                    "age": "907",
-                    "checksum": "0x21bf",
-                    "lsa-id": "0.0.0.3",
-                    "lsa-length": "44",
-                    "lsa-type": "Extern",
-                    "sequence-number": "0x8000178e"
-                },
-                {
-                    "advertising-router": "10.34.2.250",
-                    "age": "2783",
-                    "checksum": "0xcc71",
-                    "lsa-id": "0.0.0.4",
-                    "lsa-length": "44",
-                    "lsa-type": "Extern",
-                    "sequence-number": "0x80000246"
-                },
-                {
-                    "advertising-router": "10.34.2.251",
-                    "age": "1282",
-                    "checksum": "0x4081",
-                    "lsa-id": "0.0.0.1",
-                    "lsa-length": "28",
-                    "lsa-type": "Extern",
-                    "sequence-number": "0x80001789"
-                },
-                {
-                    "advertising-router": "10.34.2.251",
-                    "age": "2782",
-                    "checksum": "0x17d0",
-                    "lsa-id": "0.0.0.2",
-                    "lsa-length": "44",
-                    "lsa-type": "Extern",
-                    "sequence-number": "0x80001788"
-                },
-                {
-                    "advertising-router": "10.34.2.251",
-                    "age": "157",
-                    "checksum": "0xea52",
-                    "lsa-id": "0.0.0.3",
-                    "lsa-length": "44",
-                    "lsa-type": "Extern",
-                    "sequence-number": "0x80000246"
-                },
-                {
-                    "advertising-router": "10.169.14.240",
-                    "age": "1592",
-                    "checksum": "0xbddb",
-                    "lsa-id": "0.0.0.18",
-                    "lsa-length": "28",
-                    "lsa-type": "Extern",
-                    "sequence-number": "0x80000349"
-                },
-                {
-                    "advertising-router": "10.169.14.240",
-                    "age": "774",
-                    "checksum": "0x3603",
-                    "lsa-id": "0.0.0.19",
-                    "lsa-length": "44",
-                    "lsa-type": "Extern",
-                    "sequence-number": "0x8000034d"
-                },
-                {
-                    "advertising-router": "10.169.14.240",
-                    "age": "2138",
-                    "checksum": "0xab95",
-                    "lsa-id": "0.0.0.22",
-                    "lsa-length": "44",
-                    "lsa-type": "Extern",
-                    "sequence-number": "0x800002b9"
-                },
-                {
-                    "advertising-router": "10.169.14.240",
-                    "age": "501",
-                    "checksum": "0x7049",
-                    "lsa-id": "0.0.0.23",
-                    "lsa-length": "44",
-                    "lsa-type": "Extern",
-                    "sequence-number": "0x80000247"
-                },
-                {
-                    "advertising-router": "10.169.14.240",
-                    "age": "2410",
-                    "checksum": "0x4e6c",
-                    "lsa-id": "0.0.0.24",
-                    "lsa-length": "44",
-                    "lsa-type": "Extern",
-                    "sequence-number": "0x80000246"
-                },
-                {
-                    "advertising-router": "10.169.14.241",
-                    "age": "2593",
-                    "checksum": "0xd341",
-                    "lsa-id": "0.0.0.9",
-                    "lsa-length": "44",
-                    "lsa-type": "Extern",
-                    "sequence-number": "0x800002f0"
-                },
-                {
-                    "advertising-router": "10.169.14.241",
-                    "age": "593",
-                    "checksum": "0xd4f2",
-                    "lsa-id": "0.0.0.10",
-                    "lsa-length": "44",
-                    "lsa-type": "Extern",
-                    "sequence-number": "0x80000246"
-                },
-                {
-                    "advertising-router": "10.169.14.241",
-                    "age": "2926",
-                    "checksum": "0xe6df",
-                    "lsa-id": "0.0.0.11",
-                    "lsa-length": "44",
-                    "lsa-type": "Extern",
-                    "sequence-number": "0x80000245"
-                },
-                {
-                    "advertising-router": "10.189.5.252",
-                    "age": "1913",
-                    "checksum": "0x3ff4",
-                    "lsa-id": "0.0.0.1",
-                    "lsa-length": "44",
-                    "lsa-type": "Extern",
-                    "our-entry": True,
-                    "sequence-number": "0x8000063f"
-                },
-                {
-                    "advertising-router": "10.189.5.253",
-                    "age": "1915",
-                    "checksum": "0x7dcd",
-                    "lsa-id": "0.0.0.1",
-                    "lsa-length": "44",
-                    "lsa-type": "Extern",
-                    "sequence-number": "0x80000e1e"
-                },
-                {
-                    "advertising-router": "10.189.5.252",
-                    "age": "413",
-                    "checksum": "0xae5c",
-                    "lsa-id": "0.0.0.2",
-                    "lsa-length": "56",
-                    "lsa-type": "Link",
-                    "our-entry": True,
-                    "sequence-number": "0x8000178a"
-                },
-                {
-                    "advertising-router": "10.189.5.253",
-                    "age": "2415",
-                    "checksum": "0x13d7",
-                    "lsa-id": "0.0.0.2",
-                    "lsa-length": "56",
-                    "lsa-type": "Link",
-                    "sequence-number": "0x80001787"
-                },
-                {
-                    "advertising-router": "10.169.14.240",
-                    "age": "1047",
-                    "checksum": "0xbe92",
-                    "lsa-id": "0.0.0.3",
-                    "lsa-length": "56",
-                    "lsa-type": "Link",
-                    "sequence-number": "0x8000179e"
-                },
-                {
-                    "advertising-router": "10.189.5.252",
-                    "age": "2913",
-                    "checksum": "0x607c",
-                    "lsa-id": "0.0.0.3",
-                    "lsa-length": "56",
-                    "lsa-type": "Link",
-                    "our-entry": True,
-                    "sequence-number": "0x80001789"
-                },
-                {
-                    "advertising-router": "10.189.5.252",
-                    "age": "2413",
-                    "checksum": "0xa440",
-                    "lsa-id": "0.0.0.1",
-                    "lsa-length": "44",
-                    "lsa-type": "Link",
-                    "our-entry": True,
-                    "sequence-number": "0x8000178b"
-                }
-            ],
-            "ospf3-intf-header": [
-                {
-                    "ospf-area": "0.0.0.8",
-                    "ospf-intf": "ge-0/0/0.0"
-                },
-                {
-                    "ospf-area": "0.0.0.8",
-                    "ospf-intf": "ge-0/0/1.0"
-                },
-                {
-                    "ospf-area": "0.0.0.8",
-                    "ospf-intf": "lo0.0"
-                }
-            ]
-        }
+    '''
     }
 
+    golden_parsed_output = {
+        'ospf3-database-information': [{
+            'ospf3-area-header': {
+                'ospf-area': '0.0.0.8'
+            },
+            'ospf3-database': [{
+                'advertising-router': '10.34.2.250',
+                'age': '2407',
+                'checksum': '0xaf2d',
+                'lsa-id': '0.0.0.0',
+                'lsa-length': '56',
+                'lsa-type': 'Router',
+                'sequence-number': '0x800018ed'
+            }, {
+                'advertising-router': '10.34.2.251',
+                'age': '532',
+                'checksum': '0x1d57',
+                'lsa-id': '0.0.0.0',
+                'lsa-length': '56',
+                'lsa-type': 'Router',
+                'sequence-number': '0x80001841'
+            }, {
+                'advertising-router': '10.169.14.240',
+                'age': '2956',
+                'checksum': '0x52ba',
+                'lsa-id': '0.0.0.0',
+                'lsa-length': '72',
+                'lsa-type': 'Router',
+                'sequence-number': '0x80001a0b'
+            }, {
+                'advertising-router': '10.169.14.241',
+                'age': '1259',
+                'checksum': '0x94a3',
+                'lsa-id': '0.0.0.0',
+                'lsa-length': '72',
+                'lsa-type': 'Router',
+                'sequence-number': '0x800018b7'
+            }, {
+                'advertising-router': '10.189.5.252',
+                'age': '913',
+                'checksum': '0xae6c',
+                'lsa-id': '0.0.0.0',
+                'lsa-length': '56',
+                'lsa-type': 'Router',
+                'our-entry': True,
+                'sequence-number': '0x80001890'
+            }, {
+                'advertising-router': '10.189.5.253',
+                'age': '915',
+                'checksum': '0x8fdc',
+                'lsa-id': '0.0.0.0',
+                'lsa-length': '56',
+                'lsa-type': 'Router',
+                'sequence-number': '0x8000182a'
+            }, {
+                'advertising-router': '10.34.2.250',
+                'age': '1657',
+                'checksum': '0xc4fc',
+                'lsa-id': '0.0.0.1',
+                'lsa-length': '76',
+                'lsa-type': 'IntraArPfx',
+                'sequence-number': '0x8000178c'
+            }, {
+                'advertising-router': '10.34.2.251',
+                'age': '907',
+                'checksum': '0x9e2d',
+                'lsa-id': '0.0.0.1',
+                'lsa-length': '76',
+                'lsa-type': 'IntraArPfx',
+                'sequence-number': '0x8000178b'
+            }, {
+                'advertising-router': '10.169.14.240',
+                'age': '2683',
+                'checksum': '0x6948',
+                'lsa-id': '0.0.0.1',
+                'lsa-length': '88',
+                'lsa-type': 'IntraArPfx',
+                'sequence-number': '0x80001808'
+            }, {
+                'advertising-router': '10.169.14.241',
+                'age': '926',
+                'checksum': '0xa81e',
+                'lsa-id': '0.0.0.1',
+                'lsa-length': '88',
+                'lsa-type': 'IntraArPfx',
+                'sequence-number': '0x800017e6'
+            }, {
+                'advertising-router': '10.189.5.252',
+                'age': '1413',
+                'checksum': '0x9b24',
+                'lsa-id': '0.0.0.1',
+                'lsa-length': '76',
+                'lsa-type': 'IntraArPfx',
+                'our-entry': True,
+                'sequence-number': '0x8000178a'
+            }, {
+                'advertising-router': '10.189.5.253',
+                'age': '415',
+                'checksum': '0x8820',
+                'lsa-id': '0.0.0.1',
+                'lsa-length': '76',
+                'lsa-type': 'IntraArPfx',
+                'sequence-number': '0x80001788'
+            }, {
+                'advertising-router': '10.34.2.250',
+                'age': '1282',
+                'checksum': '0x3c81',
+                'lsa-id': '0.0.0.1',
+                'lsa-length': '28',
+                'lsa-type': 'Extern',
+                'sequence-number': '0x8000178e'
+            }, {
+                'advertising-router': '10.34.2.250',
+                'age': '907',
+                'checksum': '0x21bf',
+                'lsa-id': '0.0.0.3',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'sequence-number': '0x8000178e'
+            }, {
+                'advertising-router': '10.34.2.250',
+                'age': '2783',
+                'checksum': '0xcc71',
+                'lsa-id': '0.0.0.4',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'sequence-number': '0x80000246'
+            }, {
+                'advertising-router': '10.34.2.251',
+                'age': '1282',
+                'checksum': '0x4081',
+                'lsa-id': '0.0.0.1',
+                'lsa-length': '28',
+                'lsa-type': 'Extern',
+                'sequence-number': '0x80001789'
+            }, {
+                'advertising-router': '10.34.2.251',
+                'age': '2782',
+                'checksum': '0x17d0',
+                'lsa-id': '0.0.0.2',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'sequence-number': '0x80001788'
+            }, {
+                'advertising-router': '10.34.2.251',
+                'age': '157',
+                'checksum': '0xea52',
+                'lsa-id': '0.0.0.3',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'sequence-number': '0x80000246'
+            }, {
+                'advertising-router': '10.169.14.240',
+                'age': '1592',
+                'checksum': '0xbddb',
+                'lsa-id': '0.0.0.18',
+                'lsa-length': '28',
+                'lsa-type': 'Extern',
+                'sequence-number': '0x80000349'
+            }, {
+                'advertising-router': '10.169.14.240',
+                'age': '774',
+                'checksum': '0x3603',
+                'lsa-id': '0.0.0.19',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'sequence-number': '0x8000034d'
+            }, {
+                'advertising-router': '10.169.14.240',
+                'age': '2138',
+                'checksum': '0xab95',
+                'lsa-id': '0.0.0.22',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'sequence-number': '0x800002b9'
+            }, {
+                'advertising-router': '10.169.14.240',
+                'age': '501',
+                'checksum': '0x7049',
+                'lsa-id': '0.0.0.23',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'sequence-number': '0x80000247'
+            }, {
+                'advertising-router': '10.169.14.240',
+                'age': '2410',
+                'checksum': '0x4e6c',
+                'lsa-id': '0.0.0.24',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'sequence-number': '0x80000246'
+            }, {
+                'advertising-router': '10.169.14.241',
+                'age': '2593',
+                'checksum': '0xd341',
+                'lsa-id': '0.0.0.9',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'sequence-number': '0x800002f0'
+            }, {
+                'advertising-router': '10.169.14.241',
+                'age': '593',
+                'checksum': '0xd4f2',
+                'lsa-id': '0.0.0.10',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'sequence-number': '0x80000246'
+            }, {
+                'advertising-router': '10.169.14.241',
+                'age': '2926',
+                'checksum': '0xe6df',
+                'lsa-id': '0.0.0.11',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'sequence-number': '0x80000245'
+            }, {
+                'advertising-router': '10.189.5.252',
+                'age': '1913',
+                'checksum': '0x3ff4',
+                'lsa-id': '0.0.0.1',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'our-entry': True,
+                'sequence-number': '0x8000063f'
+            }, {
+                'advertising-router': '10.189.5.253',
+                'age': '1915',
+                'checksum': '0x7dcd',
+                'lsa-id': '0.0.0.1',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'sequence-number': '0x80000e1e'
+            }, {
+                'advertising-router': '10.189.5.252',
+                'age': '413',
+                'checksum': '0xae5c',
+                'lsa-id': '0.0.0.2',
+                'lsa-length': '56',
+                'lsa-type': 'Link',
+                'our-entry': True,
+                'sequence-number': '0x8000178a'
+            }, {
+                'advertising-router': '10.189.5.253',
+                'age': '2415',
+                'checksum': '0x13d7',
+                'lsa-id': '0.0.0.2',
+                'lsa-length': '56',
+                'lsa-type': 'Link',
+                'sequence-number': '0x80001787'
+            }, {
+                'advertising-router': '10.169.14.240',
+                'age': '1047',
+                'checksum': '0xbe92',
+                'lsa-id': '0.0.0.3',
+                'lsa-length': '56',
+                'lsa-type': 'Link',
+                'sequence-number': '0x8000179e'
+            }, {
+                'advertising-router': '10.189.5.252',
+                'age': '2913',
+                'checksum': '0x607c',
+                'lsa-id': '0.0.0.3',
+                'lsa-length': '56',
+                'lsa-type': 'Link',
+                'our-entry': True,
+                'sequence-number': '0x80001789'
+            }, {
+                'advertising-router': '10.189.5.252',
+                'age': '2413',
+                'checksum': '0xa440',
+                'lsa-id': '0.0.0.1',
+                'lsa-length': '44',
+                'lsa-type': 'Link',
+                'our-entry': True,
+                'sequence-number': '0x8000178b'
+            }],
+            'ospf3-intf-header': [{
+                'ospf-area': '0.0.0.8',
+                'ospf-intf': 'ge-0/0/0.0'
+            }, {
+                'ospf-area': '0.0.0.8',
+                'ospf-intf': 'ge-0/0/1.0'
+            }, {
+                'ospf-area': '0.0.0.8',
+                'ospf-intf': 'lo0.0'
+            }]
+        }]
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -690,7 +658,9 @@ class TestShowOspf3Database(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowOspf3Database(device=self.device)
         parsed_output = obj.parse()
+
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 class TestShowOspf3InterfaceExtensive(unittest.TestCase):
 
@@ -700,7 +670,9 @@ class TestShowOspf3InterfaceExtensive(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_output = {'execute.return_value': """
+    golden_output = {
+        'execute.return_value':
+        """
                     show ospf3 interface extensive | no-more
             Interface           State   Area            DR ID           BDR ID          Nbrs
             ge-0/0/0.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
@@ -723,76 +695,72 @@ class TestShowOspf3InterfaceExtensive(unittest.TestCase):
             Hello 10, Dead 40, ReXmit 5, Not Stub
             Protection type: None
         """
-        }
+    }
 
     golden_parsed_output = {
         "ospf3-interface-information": {
-            "ospf3-interface": [
-                {
-                    "adj-count": "1",
-                    "bdr-id": "0.0.0.0",
-                    "dead-interval": "40",
-                    "dr-id": "0.0.0.0",
-                    "hello-interval": "10",
-                    "interface-address": "fe80::250:56ff:fe8d:c829",
-                    "interface-cost": "5",
-                    "interface-name": "ge-0/0/0.0",
-                    "interface-type": "P2P",
-                    "mtu": "1500",
-                    "neighbor-count": "1",
-                    "ospf-area": "0.0.0.8",
-                    "ospf-interface-protection-type": "None",
-                    "ospf-interface-state": "PtToPt",
-                    "ospf-stub-type": "Not Stub",
-                    "ospf3-interface-index": "2",
-                    "ospf3-router-lsa-id": "0",
-                    "prefix-length": "64",
-                    "retransmit-interval": "5"
-                },
-                {
-                    "adj-count": "1",
-                    "bdr-id": "0.0.0.0",
-                    "dead-interval": "40",
-                    "dr-id": "0.0.0.0",
-                    "hello-interval": "10",
-                    "interface-address": "fe80::250:56ff:fe8d:a96c",
-                    "interface-cost": "100",
-                    "interface-name": "ge-0/0/1.0",
-                    "interface-type": "P2P",
-                    "mtu": "1500",
-                    "neighbor-count": "1",
-                    "ospf-area": "0.0.0.8",
-                    "ospf-interface-protection-type": "None",
-                    "ospf-interface-state": "PtToPt",
-                    "ospf-stub-type": "Not Stub",
-                    "ospf3-interface-index": "3",
-                    "ospf3-router-lsa-id": "0",
-                    "prefix-length": "64",
-                    "retransmit-interval": "5"
-                },
-                {
-                    "adj-count": "0",
-                    "bdr-id": "0.0.0.0",
-                    "dead-interval": "40",
-                    "dr-address": "fe80::250:560f:fc8d:7c08",
-                    "dr-id": "10.189.5.252",
-                    "hello-interval": "10",
-                    "interface-address": "fe80::250:560f:fc8d:7c08",
-                    "interface-cost": "0",
-                    "interface-name": "lo0.0",
-                    "interface-type": "LAN",
-                    "mtu": "65535",
-                    "neighbor-count": "0",
-                    "ospf-area": "0.0.0.8",
-                    "ospf-interface-protection-type": "None",
-                    "ospf-interface-state": "DR",
-                    "ospf-stub-type": "Not Stub",
-                    "ospf3-interface-index": "1",
-                    "prefix-length": "128",
-                    "retransmit-interval": "5",
-                    "router-priority": "128"
-                }
-            ]
+            "ospf3-interface": [{
+                "adj-count": "1",
+                "bdr-id": "0.0.0.0",
+                "dead-interval": "40",
+                "dr-id": "0.0.0.0",
+                "hello-interval": "10",
+                "interface-address": "fe80::250:56ff:fe8d:c829",
+                "interface-cost": "5",
+                "interface-name": "ge-0/0/0.0",
+                "interface-type": "P2P",
+                "mtu": "1500",
+                "neighbor-count": "1",
+                "ospf-area": "0.0.0.8",
+                "ospf-interface-protection-type": "None",
+                "ospf-interface-state": "PtToPt",
+                "ospf-stub-type": "Not Stub",
+                "ospf3-interface-index": "2",
+                "ospf3-router-lsa-id": "0",
+                "prefix-length": "64",
+                "retransmit-interval": "5"
+            }, {
+                "adj-count": "1",
+                "bdr-id": "0.0.0.0",
+                "dead-interval": "40",
+                "dr-id": "0.0.0.0",
+                "hello-interval": "10",
+                "interface-address": "fe80::250:56ff:fe8d:a96c",
+                "interface-cost": "100",
+                "interface-name": "ge-0/0/1.0",
+                "interface-type": "P2P",
+                "mtu": "1500",
+                "neighbor-count": "1",
+                "ospf-area": "0.0.0.8",
+                "ospf-interface-protection-type": "None",
+                "ospf-interface-state": "PtToPt",
+                "ospf-stub-type": "Not Stub",
+                "ospf3-interface-index": "3",
+                "ospf3-router-lsa-id": "0",
+                "prefix-length": "64",
+                "retransmit-interval": "5"
+            }, {
+                "adj-count": "0",
+                "bdr-id": "0.0.0.0",
+                "dead-interval": "40",
+                "dr-address": "fe80::250:560f:fc8d:7c08",
+                "dr-id": "10.189.5.252",
+                "hello-interval": "10",
+                "interface-address": "fe80::250:560f:fc8d:7c08",
+                "interface-cost": "0",
+                "interface-name": "lo0.0",
+                "interface-type": "LAN",
+                "mtu": "65535",
+                "neighbor-count": "0",
+                "ospf-area": "0.0.0.8",
+                "ospf-interface-protection-type": "None",
+                "ospf-interface-state": "DR",
+                "ospf-stub-type": "Not Stub",
+                "ospf3-interface-index": "1",
+                "prefix-length": "128",
+                "retransmit-interval": "5",
+                "router-priority": "128"
+            }]
         }
     }
 
@@ -817,7 +785,9 @@ class TestShowOspf3DatabaseExternalExtensive(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        'execute.return_value':
+        '''
                 show ospf3 database external extensive | no-more
             OSPF3 AS SCOPE link state database
         Type       ID               Adv Rtr           Seq         Age  Cksum  Len
@@ -918,306 +888,546 @@ class TestShowOspf3DatabaseExternalExtensive(unittest.TestCase):
         Aging timer 00:25:54
         Installed 00:34:02 ago, expires in 00:25:55, sent 00:34:01 ago
         Last changed 3w3d 00:31:46 ago, Change count: 15
-    '''}
+    '''
+    }
 
-    golden_parsed_output = {'ospf3-database-information':
-    {'ospf3-database': [
-        {'advertising-router': '10.34.2.250',
-            'age': '1412',
-            'checksum': '0x3c81',
-            'lsa-id': '0.0.0.1',
-            'lsa-length': '28',
-            'lsa-type': 'Extern',
-            'ospf-database-extensive': {
-                'aging-timer': {
-                    '#text': '00:36:27'
+    golden_parsed_output = {
+        'ospf3-database-information': {
+            'ospf3-database': [{
+                'advertising-router': '10.34.2.250',
+                'age': '1412',
+                'checksum': '0x3c81',
+                'lsa-id': '0.0.0.1',
+                'lsa-length': '28',
+                'lsa-type': 'Extern',
+                'ospf-database-extensive': {
+                    'aging-timer': {
+                        '#text': '00:36:27'
                     },
-                'expiration-time': {'#text': '00:36:28'},
-                'installation-time': {'#text': '00:23:26'},
-                'lsa-change-count': '1',
-                'lsa-changed-time': {'#text': '29w5d 21:04:29'},
-                'send-time': {'#text': '00:23:24'}
+                    'expiration-time': {
+                        '#text': '00:36:28'
+                    },
+                    'installation-time': {
+                        '#text': '00:23:26'
+                    },
+                    'lsa-change-count': '1',
+                    'lsa-changed-time': {
+                        '#text': '29w5d 21:04:29'
+                    },
+                    'send-time': {
+                        '#text': '00:23:24'
+                    }
                 },
-            'ospf3-external-lsa': {
-                'metric': '1',
-                'ospf3-prefix': '::/0',
-                'ospf3-prefix-options': '0x0',
-                'type-value': '1'},
-            'sequence-number': '0x8000178e'
-            },
-            {'advertising-router': '10.34.2.250',
-            'age': '1037',
-            'checksum': '0x21bf',
-            'lsa-id': '0.0.0.3',
-            'lsa-length': '44',
-            'lsa-type': 'Extern',
-            'ospf-database-extensive': {'aging-timer': {'#text': '00:42:42'},
-                                        'expiration-time': {'#text': '00:42:43'},
-                                        'installation-time': {'#text': '00:17:11'},
-                                        'lsa-change-count': '1',
-                                        'lsa-changed-time': {'#text': '29w5d '
-                                                                        '21:04:29'},
-                                        'send-time': {'#text': '00:17:09'}},
-            'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:db8:eb18:ca45::2/128',
-                                    'ospf3-prefix-options': '0x0',
-                                    'type-value': '1'},
-            'sequence-number': '0x8000178e'},
-            {'advertising-router': '10.34.2.250',
-            'age': '2913',
-            'checksum': '0xcc71',
-            'lsa-id': '0.0.0.4',
-            'lsa-length': '44',
-            'lsa-type': 'Extern',
-            'ospf-database-extensive': {'aging-timer': {'#text': '00:11:26'},
-                                        'expiration-time': {'#text': '00:11:27'},
-                                        'installation-time': {'#text': '00:48:26'},
-                                        'lsa-change-count': '1',
-                                        'lsa-changed-time': {'#text': '2w6d '
-                                                                        '04:51:00'},
-                                        'send-time': {'#text': '00:48:24'}},
-            'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:db8:eb18:ca45::1/128',
-                                    'ospf3-prefix-options': '0x0',
-                                    'type-value': '1'},
-            'sequence-number': '0x80000246'},
-            {'advertising-router': '10.34.2.251',
-            'age': '1412',
-            'checksum': '0x4081',
-            'lsa-id': '0.0.0.1',
-            'lsa-length': '28',
-            'lsa-type': 'Extern',
-            'ospf-database-extensive': {'aging-timer': {'#text': '00:36:27'},
-                                        'expiration-time': {'#text': '00:36:28'},
-                                        'installation-time': {'#text': '00:23:23'},
-                                        'lsa-change-count': '1',
-                                        'lsa-changed-time': {'#text': '29w5d '
-                                                                        '21:04:28'},
-                                        'send-time': {'#text': '00:23:21'}},
-            'ospf3-external-lsa': {'metric': '1',
-                                    'ospf3-prefix': '::/0',
-                                    'ospf3-prefix-options': '0x0',
-                                    'type-value': '1'},
-            'sequence-number': '0x80001789'},
-            {'advertising-router': '10.34.2.251',
-            'age': '2912',
-            'checksum': '0x17d0',
-            'lsa-id': '0.0.0.2',
-            'lsa-length': '44',
-            'lsa-type': 'Extern',
-            'ospf-database-extensive': {'aging-timer': {'#text': '00:11:27'},
-                                        'expiration-time': {'#text': '00:11:28'},
-                                        'installation-time': {'#text': '00:48:23'},
-                                        'lsa-change-count': '1',
-                                        'lsa-changed-time': {'#text': '29w5d '
-                                                                        '21:04:28'},
-                                        'send-time': {'#text': '00:48:21'}},
-            'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:db8:eb18:ca45::1/128',
-                                    'ospf3-prefix-options': '0x0',
-                                    'type-value': '1'},
-            'sequence-number': '0x80001788'},
-            {'advertising-router': '10.34.2.251',
-            'age': '287',
-            'checksum': '0xea52',
-            'lsa-id': '0.0.0.3',
-            'lsa-length': '44',
-            'lsa-type': 'Extern',
-            'ospf-database-extensive': {'aging-timer': {'#text': '00:55:12'},
-                                        'expiration-time': {'#text': '00:55:13'},
-                                        'installation-time': {'#text': '00:04:38'},
-                                        'lsa-change-count': '1',
-                                        'lsa-changed-time': {'#text': '2w6d '
-                                                                        '04:10:55'},
-                                        'send-time': {'#text': '00:04:36'}},
-            'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:db8:eb18:ca45::2/128',
-                                    'ospf3-prefix-options': '0x0',
-                                    'type-value': '1'},
-            'sequence-number': '0x80000246'},
-            {'advertising-router': '10.169.14.240',
-            'age': '1722',
-            'checksum': '0xbddb',
-            'lsa-id': '0.0.0.18',
-            'lsa-length': '28',
-            'lsa-type': 'Extern',
-            'ospf-database-extensive': {'aging-timer': {'#text': '00:31:17'},
-                                        'expiration-time': {'#text': '00:31:18'},
-                                        'installation-time': {'#text': '00:28:39'},
-                                        'lsa-change-count': '1',
-                                        'lsa-changed-time': {'#text': '4w1d '
-                                                                        '01:48:00'},
-                                        'send-time': {'#text': '00:28:37'}},
-            'ospf3-external-lsa': {'metric': '1',
-                                    'ospf3-prefix': '::/0',
-                                    'ospf3-prefix-options': '0x0',
-                                    'type-value': '1'},
-            'sequence-number': '0x80000349'},
-            {'advertising-router': '10.169.14.240',
-            'age': '904',
-            'checksum': '0x3603',
-            'lsa-id': '0.0.0.19',
-            'lsa-length': '44',
-            'lsa-type': 'Extern',
-            'ospf-database-extensive': {'aging-timer': {'#text': '00:44:55'},
-                                        'expiration-time': {'#text': '00:44:56'},
-                                        'installation-time': {'#text': '00:15:01'},
-                                        'lsa-change-count': '3',
-                                        'lsa-changed-time': {'#text': '3w3d '
-                                                                        '02:05:47'},
-                                        'send-time': {'#text': '00:14:59'}},
-            'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:db8:6aa8:6a53::1001/128',
-                                    'ospf3-prefix-options': '0x0',
-                                    'type-value': '1'},
-            'sequence-number': '0x8000034d'},
-            {'advertising-router': '10.169.14.240',
-            'age': '2268',
-            'checksum': '0xab95',
-            'lsa-id': '0.0.0.22',
-            'lsa-length': '44',
-            'lsa-type': 'Extern',
-            'ospf-database-extensive': {'aging-timer': {'#text': '00:22:11'},
-                                        'expiration-time': {'#text': '00:22:12'},
-                                        'installation-time': {'#text': '00:37:45'},
-                                        'lsa-change-count': '1',
-                                        'lsa-changed-time': {'#text': '3w0d '
-                                                                        '17:02:47'},
-                                        'send-time': {'#text': '00:37:43'}},
-            'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:db8:223c:ca45::b/128',
-                                    'ospf3-prefix-options': '0x0',
-                                    'type-value': '1'},
-            'sequence-number': '0x800002b9'},
-            {'advertising-router': '10.169.14.240',
-            'age': '631',
-            'checksum': '0x7049',
-            'lsa-id': '0.0.0.23',
-            'lsa-length': '44',
-            'lsa-type': 'Extern',
-            'ospf-database-extensive': {'aging-timer': {'#text': '00:49:28'},
-                                        'expiration-time': {'#text': '00:49:29'},
-                                        'installation-time': {'#text': '00:10:28'},
-                                        'lsa-change-count': '1',
-                                        'lsa-changed-time': {'#text': '2w6d '
-                                                                        '04:51:04'},
-                                        'send-time': {'#text': '00:10:26'}},
-            'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:db8:b0f8:ca45::14/128',
-                                    'ospf3-prefix-options': '0x0',
-                                    'type-value': '1'},
-            'sequence-number': '0x80000247'},
-            {'advertising-router': '10.169.14.240',
-            'age': '2540',
-            'checksum': '0x4e6c',
-            'lsa-id': '0.0.0.24',
-            'lsa-length': '44',
-            'lsa-type': 'Extern',
-            'ospf-database-extensive': {'aging-timer': {'#text': '00:17:39'},
-                                        'expiration-time': {'#text': '00:17:40'},
-                                        'installation-time': {'#text': '00:42:17'},
-                                        'lsa-change-count': '1',
-                                        'lsa-changed-time': {'#text': '2w6d '
-                                                                        '04:50:58'},
-                                        'send-time': {'#text': '00:42:15'}},
-            'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:db8:b0f8:ca45::13/128',
-                                    'ospf3-prefix-options': '0x0',
-                                    'type-value': '1'},
-            'sequence-number': '0x80000246'},
-            {'advertising-router': '10.169.14.241',
-            'age': '2723',
-            'checksum': '0xd341',
-            'lsa-id': '0.0.0.9',
-            'lsa-length': '44',
-            'lsa-type': 'Extern',
-            'ospf-database-extensive': {'aging-timer': {'#text': '00:14:36'},
-                                        'expiration-time': {'#text': '00:14:37'},
-                                        'installation-time': {'#text': '00:45:17'},
-                                        'lsa-change-count': '11',
-                                        'lsa-changed-time': {'#text': '3w2d '
-                                                                        '03:24:20'},
-                                        'send-time': {'#text': '00:45:15'}},
-            'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:db8:223c:ca45::c/128',
-                                    'ospf3-prefix-options': '0x0',
-                                    'type-value': '1'},
-            'sequence-number': '0x800002f0'},
-            {'advertising-router': '10.169.14.241',
-            'age': '723',
-            'checksum': '0xd4f2',
-            'lsa-id': '0.0.0.10',
-            'lsa-length': '44',
-            'lsa-type': 'Extern',
-            'ospf-database-extensive': {'aging-timer': {'#text': '00:47:56'},
-                                        'expiration-time': {'#text': '00:47:57'},
-                                        'installation-time': {'#text': '00:11:57'},
-                                        'lsa-change-count': '1',
-                                        'lsa-changed-time': {'#text': '2w6d '
-                                                                        '04:10:59'},
-                                        'send-time': {'#text': '00:11:55'}},
-            'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:db8:b0f8:ca45::13/128',
-                                    'ospf3-prefix-options': '0x0',
-                                    'type-value': '1'},
-            'sequence-number': '0x80000246'},
-            {'advertising-router': '10.169.14.241',
-            'age': '56',
-            'checksum': '0xe4e0',
-            'lsa-id': '0.0.0.11',
-            'lsa-length': '44',
-            'lsa-type': 'Extern',
-            'ospf-database-extensive': {'aging-timer': {'#text': '00:59:03'},
-                                        'expiration-time': {'#text': '00:59:04'},
-                                        'installation-time': {'#text': '00:00:50'},
-                                        'lsa-change-count': '1',
-                                        'lsa-changed-time': {'#text': '2w6d '
-                                                                        '04:10:53'},
-                                        'send-time': {'#text': '00:00:48'}},
-            'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:db8:b0f8:ca45::14/128',
-                                    'ospf3-prefix-options': '0x0',
-                                    'type-value': '1'},
-            'sequence-number': '0x80000246'},
-            {'advertising-router': '10.189.5.252',
-            'age': '2043',
-            'checksum': '0x3ff4',
-            'lsa-id': '0.0.0.1',
-            'lsa-length': '44',
-            'lsa-type': 'Extern',
-            'ospf-database-extensive': {'aging-timer': {'#text': '00:25:56'},
-                                        'database-entry-state': 'Ours',
-                                        'expiration-time': {'#text': '00:25:57'},
-                                        'generation-timer': {'#text': '00:15:56'},
-                                        'installation-time': {'#text': '00:34:03'},
-                                        'lsa-change-count': '2',
-                                        'lsa-changed-time': {'#text': '3w0d '
-                                                                        '17:02:47'},
-                                        'send-time': {'#text': '00:34:01'}},
-            'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:db8:eb18:ca45::1/128',
-                                    'ospf3-prefix-options': '0x0',
-                                    'type-value': '1'},
-            'our-entry': True,
-            'sequence-number': '0x8000063f'},
-            {'advertising-router': '10.189.5.253',
-            'age': '2045',
-            'checksum': '0x7dcd',
-            'lsa-id': '0.0.0.1',
-            'lsa-length': '44',
-            'lsa-type': 'Extern',
-            'ospf-database-extensive': {'aging-timer': {'#text': '00:25:54'},
-                                        'expiration-time': {'#text': '00:25:55'},
-                                        'installation-time': {'#text': '00:34:02'},
-                                        'lsa-change-count': '15',
-                                        'lsa-changed-time': {'#text': '3w3d '
-                                                                        '00:31:46'},
-                                        'send-time': {'#text': '00:34:01'}},
-            'ospf3-external-lsa': {'metric': '50',
-                                    'ospf3-prefix': '2001:db8:eb18:ca45::2/128',
-                                    'ospf3-prefix-options': '0x0',
-                                    'type-value': '1'},
-            'sequence-number': '0x80000e1e'}]}}
+                'ospf3-external-lsa': {
+                    'metric': '1',
+                    'ospf3-prefix': '::/0',
+                    'ospf3-prefix-options': '0x0',
+                    'type-value': '1'
+                },
+                'sequence-number': '0x8000178e'
+            }, {
+                'advertising-router': '10.34.2.250',
+                'age': '1037',
+                'checksum': '0x21bf',
+                'lsa-id': '0.0.0.3',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'ospf-database-extensive': {
+                    'aging-timer': {
+                        '#text': '00:42:42'
+                    },
+                    'expiration-time': {
+                        '#text': '00:42:43'
+                    },
+                    'installation-time': {
+                        '#text': '00:17:11'
+                    },
+                    'lsa-change-count': '1',
+                    'lsa-changed-time': {
+                        '#text': '29w5d '
+                        '21:04:29'
+                    },
+                    'send-time': {
+                        '#text': '00:17:09'
+                    }
+                },
+                'ospf3-external-lsa': {
+                    'metric': '50',
+                    'ospf3-prefix': '2001:db8:eb18:ca45::2/128',
+                    'ospf3-prefix-options': '0x0',
+                    'type-value': '1'
+                },
+                'sequence-number': '0x8000178e'
+            }, {
+                'advertising-router': '10.34.2.250',
+                'age': '2913',
+                'checksum': '0xcc71',
+                'lsa-id': '0.0.0.4',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'ospf-database-extensive': {
+                    'aging-timer': {
+                        '#text': '00:11:26'
+                    },
+                    'expiration-time': {
+                        '#text': '00:11:27'
+                    },
+                    'installation-time': {
+                        '#text': '00:48:26'
+                    },
+                    'lsa-change-count': '1',
+                    'lsa-changed-time': {
+                        '#text': '2w6d '
+                        '04:51:00'
+                    },
+                    'send-time': {
+                        '#text': '00:48:24'
+                    }
+                },
+                'ospf3-external-lsa': {
+                    'metric': '50',
+                    'ospf3-prefix': '2001:db8:eb18:ca45::1/128',
+                    'ospf3-prefix-options': '0x0',
+                    'type-value': '1'
+                },
+                'sequence-number': '0x80000246'
+            }, {
+                'advertising-router': '10.34.2.251',
+                'age': '1412',
+                'checksum': '0x4081',
+                'lsa-id': '0.0.0.1',
+                'lsa-length': '28',
+                'lsa-type': 'Extern',
+                'ospf-database-extensive': {
+                    'aging-timer': {
+                        '#text': '00:36:27'
+                    },
+                    'expiration-time': {
+                        '#text': '00:36:28'
+                    },
+                    'installation-time': {
+                        '#text': '00:23:23'
+                    },
+                    'lsa-change-count': '1',
+                    'lsa-changed-time': {
+                        '#text': '29w5d '
+                        '21:04:28'
+                    },
+                    'send-time': {
+                        '#text': '00:23:21'
+                    }
+                },
+                'ospf3-external-lsa': {
+                    'metric': '1',
+                    'ospf3-prefix': '::/0',
+                    'ospf3-prefix-options': '0x0',
+                    'type-value': '1'
+                },
+                'sequence-number': '0x80001789'
+            }, {
+                'advertising-router': '10.34.2.251',
+                'age': '2912',
+                'checksum': '0x17d0',
+                'lsa-id': '0.0.0.2',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'ospf-database-extensive': {
+                    'aging-timer': {
+                        '#text': '00:11:27'
+                    },
+                    'expiration-time': {
+                        '#text': '00:11:28'
+                    },
+                    'installation-time': {
+                        '#text': '00:48:23'
+                    },
+                    'lsa-change-count': '1',
+                    'lsa-changed-time': {
+                        '#text': '29w5d '
+                        '21:04:28'
+                    },
+                    'send-time': {
+                        '#text': '00:48:21'
+                    }
+                },
+                'ospf3-external-lsa': {
+                    'metric': '50',
+                    'ospf3-prefix': '2001:db8:eb18:ca45::1/128',
+                    'ospf3-prefix-options': '0x0',
+                    'type-value': '1'
+                },
+                'sequence-number': '0x80001788'
+            }, {
+                'advertising-router': '10.34.2.251',
+                'age': '287',
+                'checksum': '0xea52',
+                'lsa-id': '0.0.0.3',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'ospf-database-extensive': {
+                    'aging-timer': {
+                        '#text': '00:55:12'
+                    },
+                    'expiration-time': {
+                        '#text': '00:55:13'
+                    },
+                    'installation-time': {
+                        '#text': '00:04:38'
+                    },
+                    'lsa-change-count': '1',
+                    'lsa-changed-time': {
+                        '#text': '2w6d '
+                        '04:10:55'
+                    },
+                    'send-time': {
+                        '#text': '00:04:36'
+                    }
+                },
+                'ospf3-external-lsa': {
+                    'metric': '50',
+                    'ospf3-prefix': '2001:db8:eb18:ca45::2/128',
+                    'ospf3-prefix-options': '0x0',
+                    'type-value': '1'
+                },
+                'sequence-number': '0x80000246'
+            }, {
+                'advertising-router': '10.169.14.240',
+                'age': '1722',
+                'checksum': '0xbddb',
+                'lsa-id': '0.0.0.18',
+                'lsa-length': '28',
+                'lsa-type': 'Extern',
+                'ospf-database-extensive': {
+                    'aging-timer': {
+                        '#text': '00:31:17'
+                    },
+                    'expiration-time': {
+                        '#text': '00:31:18'
+                    },
+                    'installation-time': {
+                        '#text': '00:28:39'
+                    },
+                    'lsa-change-count': '1',
+                    'lsa-changed-time': {
+                        '#text': '4w1d '
+                        '01:48:00'
+                    },
+                    'send-time': {
+                        '#text': '00:28:37'
+                    }
+                },
+                'ospf3-external-lsa': {
+                    'metric': '1',
+                    'ospf3-prefix': '::/0',
+                    'ospf3-prefix-options': '0x0',
+                    'type-value': '1'
+                },
+                'sequence-number': '0x80000349'
+            }, {
+                'advertising-router': '10.169.14.240',
+                'age': '904',
+                'checksum': '0x3603',
+                'lsa-id': '0.0.0.19',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'ospf-database-extensive': {
+                    'aging-timer': {
+                        '#text': '00:44:55'
+                    },
+                    'expiration-time': {
+                        '#text': '00:44:56'
+                    },
+                    'installation-time': {
+                        '#text': '00:15:01'
+                    },
+                    'lsa-change-count': '3',
+                    'lsa-changed-time': {
+                        '#text': '3w3d '
+                        '02:05:47'
+                    },
+                    'send-time': {
+                        '#text': '00:14:59'
+                    }
+                },
+                'ospf3-external-lsa': {
+                    'metric': '50',
+                    'ospf3-prefix': '2001:db8:6aa8:6a53::1001/128',
+                    'ospf3-prefix-options': '0x0',
+                    'type-value': '1'
+                },
+                'sequence-number': '0x8000034d'
+            }, {
+                'advertising-router': '10.169.14.240',
+                'age': '2268',
+                'checksum': '0xab95',
+                'lsa-id': '0.0.0.22',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'ospf-database-extensive': {
+                    'aging-timer': {
+                        '#text': '00:22:11'
+                    },
+                    'expiration-time': {
+                        '#text': '00:22:12'
+                    },
+                    'installation-time': {
+                        '#text': '00:37:45'
+                    },
+                    'lsa-change-count': '1',
+                    'lsa-changed-time': {
+                        '#text': '3w0d '
+                        '17:02:47'
+                    },
+                    'send-time': {
+                        '#text': '00:37:43'
+                    }
+                },
+                'ospf3-external-lsa': {
+                    'metric': '50',
+                    'ospf3-prefix': '2001:db8:223c:ca45::b/128',
+                    'ospf3-prefix-options': '0x0',
+                    'type-value': '1'
+                },
+                'sequence-number': '0x800002b9'
+            }, {
+                'advertising-router': '10.169.14.240',
+                'age': '631',
+                'checksum': '0x7049',
+                'lsa-id': '0.0.0.23',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'ospf-database-extensive': {
+                    'aging-timer': {
+                        '#text': '00:49:28'
+                    },
+                    'expiration-time': {
+                        '#text': '00:49:29'
+                    },
+                    'installation-time': {
+                        '#text': '00:10:28'
+                    },
+                    'lsa-change-count': '1',
+                    'lsa-changed-time': {
+                        '#text': '2w6d '
+                        '04:51:04'
+                    },
+                    'send-time': {
+                        '#text': '00:10:26'
+                    }
+                },
+                'ospf3-external-lsa': {
+                    'metric': '50',
+                    'ospf3-prefix': '2001:db8:b0f8:ca45::14/128',
+                    'ospf3-prefix-options': '0x0',
+                    'type-value': '1'
+                },
+                'sequence-number': '0x80000247'
+            }, {
+                'advertising-router': '10.169.14.240',
+                'age': '2540',
+                'checksum': '0x4e6c',
+                'lsa-id': '0.0.0.24',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'ospf-database-extensive': {
+                    'aging-timer': {
+                        '#text': '00:17:39'
+                    },
+                    'expiration-time': {
+                        '#text': '00:17:40'
+                    },
+                    'installation-time': {
+                        '#text': '00:42:17'
+                    },
+                    'lsa-change-count': '1',
+                    'lsa-changed-time': {
+                        '#text': '2w6d '
+                        '04:50:58'
+                    },
+                    'send-time': {
+                        '#text': '00:42:15'
+                    }
+                },
+                'ospf3-external-lsa': {
+                    'metric': '50',
+                    'ospf3-prefix': '2001:db8:b0f8:ca45::13/128',
+                    'ospf3-prefix-options': '0x0',
+                    'type-value': '1'
+                },
+                'sequence-number': '0x80000246'
+            }, {
+                'advertising-router': '10.169.14.241',
+                'age': '2723',
+                'checksum': '0xd341',
+                'lsa-id': '0.0.0.9',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'ospf-database-extensive': {
+                    'aging-timer': {
+                        '#text': '00:14:36'
+                    },
+                    'expiration-time': {
+                        '#text': '00:14:37'
+                    },
+                    'installation-time': {
+                        '#text': '00:45:17'
+                    },
+                    'lsa-change-count': '11',
+                    'lsa-changed-time': {
+                        '#text': '3w2d '
+                        '03:24:20'
+                    },
+                    'send-time': {
+                        '#text': '00:45:15'
+                    }
+                },
+                'ospf3-external-lsa': {
+                    'metric': '50',
+                    'ospf3-prefix': '2001:db8:223c:ca45::c/128',
+                    'ospf3-prefix-options': '0x0',
+                    'type-value': '1'
+                },
+                'sequence-number': '0x800002f0'
+            }, {
+                'advertising-router': '10.169.14.241',
+                'age': '723',
+                'checksum': '0xd4f2',
+                'lsa-id': '0.0.0.10',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'ospf-database-extensive': {
+                    'aging-timer': {
+                        '#text': '00:47:56'
+                    },
+                    'expiration-time': {
+                        '#text': '00:47:57'
+                    },
+                    'installation-time': {
+                        '#text': '00:11:57'
+                    },
+                    'lsa-change-count': '1',
+                    'lsa-changed-time': {
+                        '#text': '2w6d '
+                        '04:10:59'
+                    },
+                    'send-time': {
+                        '#text': '00:11:55'
+                    }
+                },
+                'ospf3-external-lsa': {
+                    'metric': '50',
+                    'ospf3-prefix': '2001:db8:b0f8:ca45::13/128',
+                    'ospf3-prefix-options': '0x0',
+                    'type-value': '1'
+                },
+                'sequence-number': '0x80000246'
+            }, {
+                'advertising-router': '10.169.14.241',
+                'age': '56',
+                'checksum': '0xe4e0',
+                'lsa-id': '0.0.0.11',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'ospf-database-extensive': {
+                    'aging-timer': {
+                        '#text': '00:59:03'
+                    },
+                    'expiration-time': {
+                        '#text': '00:59:04'
+                    },
+                    'installation-time': {
+                        '#text': '00:00:50'
+                    },
+                    'lsa-change-count': '1',
+                    'lsa-changed-time': {
+                        '#text': '2w6d '
+                        '04:10:53'
+                    },
+                    'send-time': {
+                        '#text': '00:00:48'
+                    }
+                },
+                'ospf3-external-lsa': {
+                    'metric': '50',
+                    'ospf3-prefix': '2001:db8:b0f8:ca45::14/128',
+                    'ospf3-prefix-options': '0x0',
+                    'type-value': '1'
+                },
+                'sequence-number': '0x80000246'
+            }, {
+                'advertising-router': '10.189.5.252',
+                'age': '2043',
+                'checksum': '0x3ff4',
+                'lsa-id': '0.0.0.1',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'ospf-database-extensive': {
+                    'aging-timer': {
+                        '#text': '00:25:56'
+                    },
+                    'database-entry-state': 'Ours',
+                    'expiration-time': {
+                        '#text': '00:25:57'
+                    },
+                    'generation-timer': {
+                        '#text': '00:15:56'
+                    },
+                    'installation-time': {
+                        '#text': '00:34:03'
+                    },
+                    'lsa-change-count': '2',
+                    'lsa-changed-time': {
+                        '#text': '3w0d '
+                        '17:02:47'
+                    },
+                    'send-time': {
+                        '#text': '00:34:01'
+                    }
+                },
+                'ospf3-external-lsa': {
+                    'metric': '50',
+                    'ospf3-prefix': '2001:db8:eb18:ca45::1/128',
+                    'ospf3-prefix-options': '0x0',
+                    'type-value': '1'
+                },
+                'our-entry': True,
+                'sequence-number': '0x8000063f'
+            }, {
+                'advertising-router': '10.189.5.253',
+                'age': '2045',
+                'checksum': '0x7dcd',
+                'lsa-id': '0.0.0.1',
+                'lsa-length': '44',
+                'lsa-type': 'Extern',
+                'ospf-database-extensive': {
+                    'aging-timer': {
+                        '#text': '00:25:54'
+                    },
+                    'expiration-time': {
+                        '#text': '00:25:55'
+                    },
+                    'installation-time': {
+                        '#text': '00:34:02'
+                    },
+                    'lsa-change-count': '15',
+                    'lsa-changed-time': {
+                        '#text': '3w3d '
+                        '00:31:46'
+                    },
+                    'send-time': {
+                        '#text': '00:34:01'
+                    }
+                },
+                'ospf3-external-lsa': {
+                    'metric': '50',
+                    'ospf3-prefix': '2001:db8:eb18:ca45::2/128',
+                    'ospf3-prefix-options': '0x0',
+                    'type-value': '1'
+                },
+                'sequence-number': '0x80000e1e'
+            }]
+        }
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -1238,7 +1448,9 @@ class TestShowOspf3Overview(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        'execute.return_value':
+        '''
         show ospf3 overview
         Instance: master
           Router ID: 10.189.5.252
@@ -1256,82 +1468,11 @@ class TestShowOspf3Overview(unittest.TestCase):
               Full SPF runs: 1934
               SPF delay: 0.200000 sec, SPF holddown: 2 sec, SPF rapid runs: 3
               Backup SPF: Not Needed
-    '''}
+    '''
+    }
 
     golden_parsed_output = {
-            "ospf3-overview-information": {
-                "ospf-overview": {
-                    "instance-name": "master",
-                    "ospf-area-overview": {
-                        "ospf-abr-count": "0",
-                        "ospf-area": "0.0.0.8",
-                        "ospf-asbr-count": "5",
-                        "ospf-nbr-overview": {
-                            "ospf-nbr-up-count": "2"
-                        },
-                        "ospf-stub-type": "Not Stub"
-                    },
-                    "ospf-lsa-refresh-time": "50",
-                    "ospf-route-table-index": "0",
-                    "ospf-router-id": "10.189.5.252",
-                    "ospf-tilfa-overview": {
-                        "ospf-tilfa-enabled": "Disabled"
-                    },
-                    "ospf-topology-overview": {
-                        "ospf-backup-spf-status": "Not Needed",
-                        "ospf-full-spf-count": "1934",
-                        "ospf-prefix-export-count": "1",
-                        "ospf-spf-delay": "0.200000",
-                        "ospf-spf-holddown": "2",
-                        "ospf-spf-rapid-runs": "3",
-                        "ospf-topology-id": "0",
-                        "ospf-topology-name": "default"
-                    }
-            }
-        }
-        }
-
-    def test_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowOspf3Overview(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            obj.parse()
-
-    def test_golden(self):
-        self.device = Mock(**self.golden_output)
-        obj = ShowOspf3Overview(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
-
-
-class TestShowOspf3OverviewExtensive(unittest.TestCase):
-
-    device = Device(name='aDevice')
-
-    empty_output = {'execute.return_value': ''}
-
-    golden_output = {'execute.return_value': '''
-        show ospf3 overview extensive
-        Instance: master
-          Router ID: 10.189.5.252
-          Route table index: 0
-          AS boundary router
-          LSA refresh time: 50 minutes
-          Post Convergence Backup: Disabled
-          Area: 0.0.0.8
-            Stub type: Not Stub
-            Area border routers: 0, AS boundary routers: 5
-            Neighbors
-              Up (in full state): 2
-          Topology: default (ID 0)
-            Prefix export count: 1
-            Full SPF runs: 1934
-            SPF delay: 0.200000 sec, SPF holddown: 2 sec, SPF rapid runs: 3
-            Backup SPF: Not Needed
-    '''}
-
-    golden_parsed_output = {
-            "ospf3-overview-information": {
+        "ospf3-overview-information": {
             "ospf-overview": {
                 "instance-name": "master",
                 "ospf-area-overview": {
@@ -1361,7 +1502,82 @@ class TestShowOspf3OverviewExtensive(unittest.TestCase):
                 }
             }
         }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspf3Overview(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspf3Overview(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class TestShowOspf3OverviewExtensive(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {
+        'execute.return_value':
+        '''
+        show ospf3 overview extensive
+        Instance: master
+          Router ID: 10.189.5.252
+          Route table index: 0
+          AS boundary router
+          LSA refresh time: 50 minutes
+          Post Convergence Backup: Disabled
+          Area: 0.0.0.8
+            Stub type: Not Stub
+            Area border routers: 0, AS boundary routers: 5
+            Neighbors
+              Up (in full state): 2
+          Topology: default (ID 0)
+            Prefix export count: 1
+            Full SPF runs: 1934
+            SPF delay: 0.200000 sec, SPF holddown: 2 sec, SPF rapid runs: 3
+            Backup SPF: Not Needed
+    '''
+    }
+
+    golden_parsed_output = {
+        "ospf3-overview-information": {
+            "ospf-overview": {
+                "instance-name": "master",
+                "ospf-area-overview": {
+                    "ospf-abr-count": "0",
+                    "ospf-area": "0.0.0.8",
+                    "ospf-asbr-count": "5",
+                    "ospf-nbr-overview": {
+                        "ospf-nbr-up-count": "2"
+                    },
+                    "ospf-stub-type": "Not Stub"
+                },
+                "ospf-lsa-refresh-time": "50",
+                "ospf-route-table-index": "0",
+                "ospf-router-id": "10.189.5.252",
+                "ospf-tilfa-overview": {
+                    "ospf-tilfa-enabled": "Disabled"
+                },
+                "ospf-topology-overview": {
+                    "ospf-backup-spf-status": "Not Needed",
+                    "ospf-full-spf-count": "1934",
+                    "ospf-prefix-export-count": "1",
+                    "ospf-spf-delay": "0.200000",
+                    "ospf-spf-holddown": "2",
+                    "ospf-spf-rapid-runs": "3",
+                    "ospf-topology-id": "0",
+                    "ospf-topology-name": "default"
+                }
+            }
         }
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -1376,7 +1592,6 @@ class TestShowOspf3OverviewExtensive(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
-
 class TestShowOspf3DatabaseExtensive(unittest.TestCase):
 
     maxDiff = None
@@ -1386,7 +1601,8 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
     empty_output = {"execute.return_value": ""}
 
     golden_output = {
-        "execute.return_value": """
+        "execute.return_value":
+        """
 
         show ospf3 database extensive
 
@@ -1698,7 +1914,9 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
 
     golden_parsed_output = {
         "ospf3-database-information": {
-            "ospf3-area-header": {"ospf-area": "0.0.0.8"},
+            "ospf3-area-header": {
+                "ospf-area": "0.0.0.8"
+            },
             "ospf3-database": [
                 {
                     "advertising-router": "10.34.2.250",
@@ -1708,15 +1926,26 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "56",
                     "lsa-type": "Router",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:18:16"},
-                        "expiration-time": {"#text": "00:18:16"},
-                        "installation-time": {"#text": "00:41:38"},
+                        "aging-timer": {
+                            "#text": "00:18:16"
+                        },
+                        "expiration-time": {
+                            "#text": "00:18:16"
+                        },
+                        "installation-time": {
+                            "#text": "00:41:38"
+                        },
                         "lsa-change-count": "196",
-                        "lsa-changed-time": {"#text": "2w6d 04:50:31"},
-                        "send-time": {"#text": "00:41:36"},
+                        "lsa-changed-time": {
+                            "#text": "2w6d 04:50:31"
+                        },
+                        "send-time": {
+                            "#text": "00:41:36"
+                        },
                     },
                     "ospf3-router-lsa": {
-                        "bits": "0x2",
+                        "bits":
+                        "0x2",
                         "ospf3-link": [
                             {
                                 "link-intf-id": "2",
@@ -1736,24 +1965,35 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                             },
                         ],
                         "ospf3-lsa-topology": {
-                            "ospf-topology-id": "0",
-                            "ospf-topology-name": "default",
+                            "ospf-topology-id":
+                            "0",
+                            "ospf-topology-name":
+                            "default",
                             "ospf3-lsa-topology-link": [
                                 {
-                                    "link-type-name": "PointToPoint",
-                                    "ospf-lsa-topology-link-metric": "100",
-                                    "ospf-lsa-topology-link-node-id": "10.169.14.240",
-                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                    "link-type-name":
+                                    "PointToPoint",
+                                    "ospf-lsa-topology-link-metric":
+                                    "100",
+                                    "ospf-lsa-topology-link-node-id":
+                                    "10.169.14.240",
+                                    "ospf-lsa-topology-link-state":
+                                    "Bidirectional",
                                 },
                                 {
-                                    "link-type-name": "PointToPoint",
-                                    "ospf-lsa-topology-link-metric": "5",
-                                    "ospf-lsa-topology-link-node-id": "10.34.2.251",
-                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                    "link-type-name":
+                                    "PointToPoint",
+                                    "ospf-lsa-topology-link-metric":
+                                    "5",
+                                    "ospf-lsa-topology-link-node-id":
+                                    "10.34.2.251",
+                                    "ospf-lsa-topology-link-state":
+                                    "Bidirectional",
                                 },
                             ],
                         },
-                        "ospf3-options": "0x33",
+                        "ospf3-options":
+                        "0x33",
                     },
                     "sequence-number": "0x800018ed",
                 },
@@ -1765,15 +2005,27 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "56",
                     "lsa-type": "Router",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:49:31"},
-                        "expiration-time": {"#text": "00:49:31"},
-                        "installation-time": {"#text": "00:10:20"},
+                        "aging-timer": {
+                            "#text": "00:49:31"
+                        },
+                        "expiration-time": {
+                            "#text": "00:49:31"
+                        },
+                        "installation-time": {
+                            "#text": "00:10:20"
+                        },
                         "lsa-change-count": "208",
-                        "lsa-changed-time": {"#text": "2w6d " "04:10:26"},
-                        "send-time": {"#text": "00:10:18"},
+                        "lsa-changed-time": {
+                            "#text": "2w6d "
+                            "04:10:26"
+                        },
+                        "send-time": {
+                            "#text": "00:10:18"
+                        },
                     },
                     "ospf3-router-lsa": {
-                        "bits": "0x2",
+                        "bits":
+                        "0x2",
                         "ospf3-link": [
                             {
                                 "link-intf-id": "2",
@@ -1793,24 +2045,35 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                             },
                         ],
                         "ospf3-lsa-topology": {
-                            "ospf-topology-id": "0",
-                            "ospf-topology-name": "default",
+                            "ospf-topology-id":
+                            "0",
+                            "ospf-topology-name":
+                            "default",
                             "ospf3-lsa-topology-link": [
                                 {
-                                    "link-type-name": "PointToPoint",
-                                    "ospf-lsa-topology-link-metric": "120",
-                                    "ospf-lsa-topology-link-node-id": "10.169.14.241",
-                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                    "link-type-name":
+                                    "PointToPoint",
+                                    "ospf-lsa-topology-link-metric":
+                                    "120",
+                                    "ospf-lsa-topology-link-node-id":
+                                    "10.169.14.241",
+                                    "ospf-lsa-topology-link-state":
+                                    "Bidirectional",
                                 },
                                 {
-                                    "link-type-name": "PointToPoint",
-                                    "ospf-lsa-topology-link-metric": "5",
-                                    "ospf-lsa-topology-link-node-id": "10.34.2.250",
-                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                    "link-type-name":
+                                    "PointToPoint",
+                                    "ospf-lsa-topology-link-metric":
+                                    "5",
+                                    "ospf-lsa-topology-link-node-id":
+                                    "10.34.2.250",
+                                    "ospf-lsa-topology-link-state":
+                                    "Bidirectional",
                                 },
                             ],
                         },
-                        "ospf3-options": "0x33",
+                        "ospf3-options":
+                        "0x33",
                     },
                     "sequence-number": "0x80001841",
                 },
@@ -1822,15 +2085,27 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "72",
                     "lsa-type": "Router",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:59:06"},
-                        "expiration-time": {"#text": "00:59:07"},
-                        "installation-time": {"#text": "00:00:50"},
+                        "aging-timer": {
+                            "#text": "00:59:06"
+                        },
+                        "expiration-time": {
+                            "#text": "00:59:07"
+                        },
+                        "installation-time": {
+                            "#text": "00:00:50"
+                        },
                         "lsa-change-count": "341",
-                        "lsa-changed-time": {"#text": "2w6d " "04:50:31"},
-                        "send-time": {"#text": "00:00:48"},
+                        "lsa-changed-time": {
+                            "#text": "2w6d "
+                            "04:50:31"
+                        },
+                        "send-time": {
+                            "#text": "00:00:48"
+                        },
                     },
                     "ospf3-router-lsa": {
-                        "bits": "0x2",
+                        "bits":
+                        "0x2",
                         "ospf3-link": [
                             {
                                 "link-intf-id": "2",
@@ -1858,30 +2133,45 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                             },
                         ],
                         "ospf3-lsa-topology": {
-                            "ospf-topology-id": "0",
-                            "ospf-topology-name": "default",
+                            "ospf-topology-id":
+                            "0",
+                            "ospf-topology-name":
+                            "default",
                             "ospf3-lsa-topology-link": [
                                 {
-                                    "link-type-name": "PointToPoint",
-                                    "ospf-lsa-topology-link-metric": "100",
-                                    "ospf-lsa-topology-link-node-id": "10.34.2.250",
-                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                    "link-type-name":
+                                    "PointToPoint",
+                                    "ospf-lsa-topology-link-metric":
+                                    "100",
+                                    "ospf-lsa-topology-link-node-id":
+                                    "10.34.2.250",
+                                    "ospf-lsa-topology-link-state":
+                                    "Bidirectional",
                                 },
                                 {
-                                    "link-type-name": "PointToPoint",
-                                    "ospf-lsa-topology-link-metric": "100",
-                                    "ospf-lsa-topology-link-node-id": "10.189.5.252",
-                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                    "link-type-name":
+                                    "PointToPoint",
+                                    "ospf-lsa-topology-link-metric":
+                                    "100",
+                                    "ospf-lsa-topology-link-node-id":
+                                    "10.189.5.252",
+                                    "ospf-lsa-topology-link-state":
+                                    "Bidirectional",
                                 },
                                 {
-                                    "link-type-name": "PointToPoint",
-                                    "ospf-lsa-topology-link-metric": "5",
-                                    "ospf-lsa-topology-link-node-id": "10.169.14.241",
-                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                    "link-type-name":
+                                    "PointToPoint",
+                                    "ospf-lsa-topology-link-metric":
+                                    "5",
+                                    "ospf-lsa-topology-link-node-id":
+                                    "10.169.14.241",
+                                    "ospf-lsa-topology-link-state":
+                                    "Bidirectional",
                                 },
                             ],
                         },
-                        "ospf3-options": "0x33",
+                        "ospf3-options":
+                        "0x33",
                     },
                     "sequence-number": "0x80001a0c",
                 },
@@ -1893,15 +2183,27 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "72",
                     "lsa-type": "Router",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:37:23"},
-                        "expiration-time": {"#text": "00:37:24"},
-                        "installation-time": {"#text": "00:22:30"},
+                        "aging-timer": {
+                            "#text": "00:37:23"
+                        },
+                        "expiration-time": {
+                            "#text": "00:37:24"
+                        },
+                        "installation-time": {
+                            "#text": "00:22:30"
+                        },
                         "lsa-change-count": "280",
-                        "lsa-changed-time": {"#text": "2w6d " "04:10:26"},
-                        "send-time": {"#text": "00:22:28"},
+                        "lsa-changed-time": {
+                            "#text": "2w6d "
+                            "04:10:26"
+                        },
+                        "send-time": {
+                            "#text": "00:22:28"
+                        },
                     },
                     "ospf3-router-lsa": {
-                        "bits": "0x2",
+                        "bits":
+                        "0x2",
                         "ospf3-link": [
                             {
                                 "link-intf-id": "2",
@@ -1929,30 +2231,45 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                             },
                         ],
                         "ospf3-lsa-topology": {
-                            "ospf-topology-id": "0",
-                            "ospf-topology-name": "default",
+                            "ospf-topology-id":
+                            "0",
+                            "ospf-topology-name":
+                            "default",
                             "ospf3-lsa-topology-link": [
                                 {
-                                    "link-type-name": "PointToPoint",
-                                    "ospf-lsa-topology-link-metric": "120",
-                                    "ospf-lsa-topology-link-node-id": "10.34.2.251",
-                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                    "link-type-name":
+                                    "PointToPoint",
+                                    "ospf-lsa-topology-link-metric":
+                                    "120",
+                                    "ospf-lsa-topology-link-node-id":
+                                    "10.34.2.251",
+                                    "ospf-lsa-topology-link-state":
+                                    "Bidirectional",
                                 },
                                 {
-                                    "link-type-name": "PointToPoint",
-                                    "ospf-lsa-topology-link-metric": "120",
-                                    "ospf-lsa-topology-link-node-id": "10.189.5.253",
-                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                    "link-type-name":
+                                    "PointToPoint",
+                                    "ospf-lsa-topology-link-metric":
+                                    "120",
+                                    "ospf-lsa-topology-link-node-id":
+                                    "10.189.5.253",
+                                    "ospf-lsa-topology-link-state":
+                                    "Bidirectional",
                                 },
                                 {
-                                    "link-type-name": "PointToPoint",
-                                    "ospf-lsa-topology-link-metric": "5",
-                                    "ospf-lsa-topology-link-node-id": "10.169.14.240",
-                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                    "link-type-name":
+                                    "PointToPoint",
+                                    "ospf-lsa-topology-link-metric":
+                                    "5",
+                                    "ospf-lsa-topology-link-node-id":
+                                    "10.169.14.240",
+                                    "ospf-lsa-topology-link-state":
+                                    "Bidirectional",
                                 },
                             ],
                         },
-                        "ospf3-options": "0x33",
+                        "ospf3-options":
+                        "0x33",
                     },
                     "sequence-number": "0x800018b7",
                 },
@@ -1964,17 +2281,31 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "56",
                     "lsa-type": "Router",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:43:09"},
+                        "aging-timer": {
+                            "#text": "00:43:09"
+                        },
                         "database-entry-state": "Ours",
-                        "expiration-time": {"#text": "00:43:10"},
-                        "generation-timer": {"#text": "00:33:09"},
-                        "installation-time": {"#text": "00:16:50"},
+                        "expiration-time": {
+                            "#text": "00:43:10"
+                        },
+                        "generation-timer": {
+                            "#text": "00:33:09"
+                        },
+                        "installation-time": {
+                            "#text": "00:16:50"
+                        },
                         "lsa-change-count": "6",
-                        "lsa-changed-time": {"#text": "3w0d " "17:02:09"},
-                        "send-time": {"#text": "00:16:48"},
+                        "lsa-changed-time": {
+                            "#text": "3w0d "
+                            "17:02:09"
+                        },
+                        "send-time": {
+                            "#text": "00:16:48"
+                        },
                     },
                     "ospf3-router-lsa": {
-                        "bits": "0x2",
+                        "bits":
+                        "0x2",
                         "ospf3-link": [
                             {
                                 "link-intf-id": "2",
@@ -1994,24 +2325,35 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                             },
                         ],
                         "ospf3-lsa-topology": {
-                            "ospf-topology-id": "0",
-                            "ospf-topology-name": "default",
+                            "ospf-topology-id":
+                            "0",
+                            "ospf-topology-name":
+                            "default",
                             "ospf3-lsa-topology-link": [
                                 {
-                                    "link-type-name": "PointToPoint",
-                                    "ospf-lsa-topology-link-metric": "100",
-                                    "ospf-lsa-topology-link-node-id": "10.169.14.240",
-                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                    "link-type-name":
+                                    "PointToPoint",
+                                    "ospf-lsa-topology-link-metric":
+                                    "100",
+                                    "ospf-lsa-topology-link-node-id":
+                                    "10.169.14.240",
+                                    "ospf-lsa-topology-link-state":
+                                    "Bidirectional",
                                 },
                                 {
-                                    "link-type-name": "PointToPoint",
-                                    "ospf-lsa-topology-link-metric": "5",
-                                    "ospf-lsa-topology-link-node-id": "10.189.5.253",
-                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                    "link-type-name":
+                                    "PointToPoint",
+                                    "ospf-lsa-topology-link-metric":
+                                    "5",
+                                    "ospf-lsa-topology-link-node-id":
+                                    "10.189.5.253",
+                                    "ospf-lsa-topology-link-state":
+                                    "Bidirectional",
                                 },
                             ],
                         },
-                        "ospf3-options": "0x33",
+                        "ospf3-options":
+                        "0x33",
                     },
                     "our-entry": True,
                     "sequence-number": "0x80001890",
@@ -2024,15 +2366,27 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "56",
                     "lsa-type": "Router",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:43:07"},
-                        "expiration-time": {"#text": "00:43:08"},
-                        "installation-time": {"#text": "00:16:49"},
+                        "aging-timer": {
+                            "#text": "00:43:07"
+                        },
+                        "expiration-time": {
+                            "#text": "00:43:08"
+                        },
+                        "installation-time": {
+                            "#text": "00:16:49"
+                        },
                         "lsa-change-count": "181",
-                        "lsa-changed-time": {"#text": "3w0d " "17:02:14"},
-                        "send-time": {"#text": "00:16:48"},
+                        "lsa-changed-time": {
+                            "#text": "3w0d "
+                            "17:02:14"
+                        },
+                        "send-time": {
+                            "#text": "00:16:48"
+                        },
                     },
                     "ospf3-router-lsa": {
-                        "bits": "0x2",
+                        "bits":
+                        "0x2",
                         "ospf3-link": [
                             {
                                 "link-intf-id": "2",
@@ -2052,24 +2406,35 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                             },
                         ],
                         "ospf3-lsa-topology": {
-                            "ospf-topology-id": "0",
-                            "ospf-topology-name": "default",
+                            "ospf-topology-id":
+                            "0",
+                            "ospf-topology-name":
+                            "default",
                             "ospf3-lsa-topology-link": [
                                 {
-                                    "link-type-name": "PointToPoint",
-                                    "ospf-lsa-topology-link-metric": "120",
-                                    "ospf-lsa-topology-link-node-id": "10.169.14.241",
-                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                    "link-type-name":
+                                    "PointToPoint",
+                                    "ospf-lsa-topology-link-metric":
+                                    "120",
+                                    "ospf-lsa-topology-link-node-id":
+                                    "10.169.14.241",
+                                    "ospf-lsa-topology-link-state":
+                                    "Bidirectional",
                                 },
                                 {
-                                    "link-type-name": "PointToPoint",
-                                    "ospf-lsa-topology-link-metric": "5",
-                                    "ospf-lsa-topology-link-node-id": "10.189.5.252",
-                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                    "link-type-name":
+                                    "PointToPoint",
+                                    "ospf-lsa-topology-link-metric":
+                                    "5",
+                                    "ospf-lsa-topology-link-node-id":
+                                    "10.189.5.252",
+                                    "ospf-lsa-topology-link-state":
+                                    "Bidirectional",
                                 },
                             ],
                         },
-                        "ospf3-options": "0x33",
+                        "ospf3-options":
+                        "0x33",
                     },
                     "sequence-number": "0x8000182a",
                 },
@@ -2081,12 +2446,23 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "76",
                     "lsa-type": "IntraArPfx",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:30:46"},
-                        "expiration-time": {"#text": "00:30:46"},
-                        "installation-time": {"#text": "00:29:08"},
+                        "aging-timer": {
+                            "#text": "00:30:46"
+                        },
+                        "expiration-time": {
+                            "#text": "00:30:46"
+                        },
+                        "installation-time": {
+                            "#text": "00:29:08"
+                        },
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "29w5d " "21:33:07"},
-                        "send-time": {"#text": "00:29:06"},
+                        "lsa-changed-time": {
+                            "#text": "29w5d "
+                            "21:33:07"
+                        },
+                        "send-time": {
+                            "#text": "00:29:06"
+                        },
                     },
                     "ospf3-intra-area-prefix-lsa": {
                         "ospf3-prefix": [
@@ -2096,10 +2472,14 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                         ],
                         "ospf3-prefix-metric": ["5", "100", "0"],
                         "ospf3-prefix-options": ["0x0", "0x0", "0x2"],
-                        "prefix-count": "3",
-                        "reference-lsa-id": "0.0.0.0",
-                        "reference-lsa-router-id": "10.34.2.250",
-                        "reference-lsa-type": "Router",
+                        "prefix-count":
+                        "3",
+                        "reference-lsa-id":
+                        "0.0.0.0",
+                        "reference-lsa-router-id":
+                        "10.34.2.250",
+                        "reference-lsa-type":
+                        "Router",
                     },
                     "sequence-number": "0x8000178c",
                 },
@@ -2111,12 +2491,23 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "76",
                     "lsa-type": "IntraArPfx",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:43:16"},
-                        "expiration-time": {"#text": "00:43:16"},
-                        "installation-time": {"#text": "00:16:35"},
+                        "aging-timer": {
+                            "#text": "00:43:16"
+                        },
+                        "expiration-time": {
+                            "#text": "00:43:16"
+                        },
+                        "installation-time": {
+                            "#text": "00:16:35"
+                        },
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "29w5d " "21:33:07"},
-                        "send-time": {"#text": "00:16:33"},
+                        "lsa-changed-time": {
+                            "#text": "29w5d "
+                            "21:33:07"
+                        },
+                        "send-time": {
+                            "#text": "00:16:33"
+                        },
                     },
                     "ospf3-intra-area-prefix-lsa": {
                         "ospf3-prefix": [
@@ -2126,10 +2517,14 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                         ],
                         "ospf3-prefix-metric": ["5", "120", "0"],
                         "ospf3-prefix-options": ["0x0", "0x0", "0x2"],
-                        "prefix-count": "3",
-                        "reference-lsa-id": "0.0.0.0",
-                        "reference-lsa-router-id": "10.34.2.251",
-                        "reference-lsa-type": "Router",
+                        "prefix-count":
+                        "3",
+                        "reference-lsa-id":
+                        "0.0.0.0",
+                        "reference-lsa-router-id":
+                        "10.34.2.251",
+                        "reference-lsa-type":
+                        "Router",
                     },
                     "sequence-number": "0x8000178b",
                 },
@@ -2141,12 +2536,23 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "88",
                     "lsa-type": "IntraArPfx",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:13:39"},
-                        "expiration-time": {"#text": "00:13:40"},
-                        "installation-time": {"#text": "00:46:17"},
+                        "aging-timer": {
+                            "#text": "00:13:39"
+                        },
+                        "expiration-time": {
+                            "#text": "00:13:40"
+                        },
+                        "installation-time": {
+                            "#text": "00:46:17"
+                        },
                         "lsa-change-count": "147",
-                        "lsa-changed-time": {"#text": "2w6d " "04:50:31"},
-                        "send-time": {"#text": "00:46:15"},
+                        "lsa-changed-time": {
+                            "#text": "2w6d "
+                            "04:50:31"
+                        },
+                        "send-time": {
+                            "#text": "00:46:15"
+                        },
                     },
                     "ospf3-intra-area-prefix-lsa": {
                         "ospf3-prefix": [
@@ -2157,10 +2563,14 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                         ],
                         "ospf3-prefix-metric": ["5", "100", "100", "0"],
                         "ospf3-prefix-options": ["0x0", "0x0", "0x0", "0x2"],
-                        "prefix-count": "4",
-                        "reference-lsa-id": "0.0.0.0",
-                        "reference-lsa-router-id": "10.169.14.240",
-                        "reference-lsa-type": "Router",
+                        "prefix-count":
+                        "4",
+                        "reference-lsa-id":
+                        "0.0.0.0",
+                        "reference-lsa-router-id":
+                        "10.169.14.240",
+                        "reference-lsa-type":
+                        "Router",
                     },
                     "sequence-number": "0x80001808",
                 },
@@ -2172,12 +2582,23 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "88",
                     "lsa-type": "IntraArPfx",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:42:56"},
-                        "expiration-time": {"#text": "00:42:57"},
-                        "installation-time": {"#text": "00:16:57"},
+                        "aging-timer": {
+                            "#text": "00:42:56"
+                        },
+                        "expiration-time": {
+                            "#text": "00:42:57"
+                        },
+                        "installation-time": {
+                            "#text": "00:16:57"
+                        },
                         "lsa-change-count": "111",
-                        "lsa-changed-time": {"#text": "2w6d " "04:10:26"},
-                        "send-time": {"#text": "00:16:55"},
+                        "lsa-changed-time": {
+                            "#text": "2w6d "
+                            "04:10:26"
+                        },
+                        "send-time": {
+                            "#text": "00:16:55"
+                        },
                     },
                     "ospf3-intra-area-prefix-lsa": {
                         "ospf3-prefix": [
@@ -2188,10 +2609,14 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                         ],
                         "ospf3-prefix-metric": ["5", "120", "120", "0"],
                         "ospf3-prefix-options": ["0x0", "0x0", "0x0", "0x2"],
-                        "prefix-count": "4",
-                        "reference-lsa-id": "0.0.0.0",
-                        "reference-lsa-router-id": "10.169.14.241",
-                        "reference-lsa-type": "Router",
+                        "prefix-count":
+                        "4",
+                        "reference-lsa-id":
+                        "0.0.0.0",
+                        "reference-lsa-router-id":
+                        "10.169.14.241",
+                        "reference-lsa-type":
+                        "Router",
                     },
                     "sequence-number": "0x800017e6",
                 },
@@ -2203,14 +2628,27 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "76",
                     "lsa-type": "IntraArPfx",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:34:49"},
+                        "aging-timer": {
+                            "#text": "00:34:49"
+                        },
                         "database-entry-state": "Ours",
-                        "expiration-time": {"#text": "00:34:50"},
-                        "generation-timer": {"#text": "00:24:49"},
-                        "installation-time": {"#text": "00:25:10"},
+                        "expiration-time": {
+                            "#text": "00:34:50"
+                        },
+                        "generation-timer": {
+                            "#text": "00:24:49"
+                        },
+                        "installation-time": {
+                            "#text": "00:25:10"
+                        },
                         "lsa-change-count": "2",
-                        "lsa-changed-time": {"#text": "29w5d " "21:40:56"},
-                        "send-time": {"#text": "00:25:08"},
+                        "lsa-changed-time": {
+                            "#text": "29w5d "
+                            "21:40:56"
+                        },
+                        "send-time": {
+                            "#text": "00:25:08"
+                        },
                     },
                     "ospf3-intra-area-prefix-lsa": {
                         "ospf3-prefix": [
@@ -2220,10 +2658,14 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                         ],
                         "ospf3-prefix-metric": ["5", "100", "0"],
                         "ospf3-prefix-options": ["0x0", "0x0", "0x2"],
-                        "prefix-count": "3",
-                        "reference-lsa-id": "0.0.0.0",
-                        "reference-lsa-router-id": "10.189.5.252",
-                        "reference-lsa-type": "Router",
+                        "prefix-count":
+                        "3",
+                        "reference-lsa-id":
+                        "0.0.0.0",
+                        "reference-lsa-router-id":
+                        "10.189.5.252",
+                        "reference-lsa-type":
+                        "Router",
                     },
                     "our-entry": True,
                     "sequence-number": "0x8000178a",
@@ -2236,12 +2678,23 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "76",
                     "lsa-type": "IntraArPfx",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:51:27"},
-                        "expiration-time": {"#text": "00:51:28"},
-                        "installation-time": {"#text": "00:08:29"},
+                        "aging-timer": {
+                            "#text": "00:51:27"
+                        },
+                        "expiration-time": {
+                            "#text": "00:51:28"
+                        },
+                        "installation-time": {
+                            "#text": "00:08:29"
+                        },
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "29w5d " "21:33:18"},
-                        "send-time": {"#text": "00:08:27"},
+                        "lsa-changed-time": {
+                            "#text": "29w5d "
+                            "21:33:18"
+                        },
+                        "send-time": {
+                            "#text": "00:08:27"
+                        },
                     },
                     "ospf3-intra-area-prefix-lsa": {
                         "ospf3-prefix": [
@@ -2251,10 +2704,14 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                         ],
                         "ospf3-prefix-metric": ["5", "120", "0"],
                         "ospf3-prefix-options": ["0x0", "0x0", "0x2"],
-                        "prefix-count": "3",
-                        "reference-lsa-id": "0.0.0.0",
-                        "reference-lsa-router-id": "10.189.5.253",
-                        "reference-lsa-type": "Router",
+                        "prefix-count":
+                        "3",
+                        "reference-lsa-id":
+                        "0.0.0.0",
+                        "reference-lsa-router-id":
+                        "10.189.5.253",
+                        "reference-lsa-type":
+                        "Router",
                     },
                     "sequence-number": "0x80001788",
                 },
@@ -2266,12 +2723,23 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "28",
                     "lsa-type": "Extern",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:37:01"},
-                        "expiration-time": {"#text": "00:37:01"},
-                        "installation-time": {"#text": "00:22:53"},
+                        "aging-timer": {
+                            "#text": "00:37:01"
+                        },
+                        "expiration-time": {
+                            "#text": "00:37:01"
+                        },
+                        "installation-time": {
+                            "#text": "00:22:53"
+                        },
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "29w5d " "21:03:56"},
-                        "send-time": {"#text": "00:22:51"},
+                        "lsa-changed-time": {
+                            "#text": "29w5d "
+                            "21:03:56"
+                        },
+                        "send-time": {
+                            "#text": "00:22:51"
+                        },
                     },
                     "ospf3-external-lsa": {
                         "metric": "1",
@@ -2289,12 +2757,23 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "44",
                     "lsa-type": "Extern",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:43:16"},
-                        "expiration-time": {"#text": "00:43:16"},
-                        "installation-time": {"#text": "00:16:38"},
+                        "aging-timer": {
+                            "#text": "00:43:16"
+                        },
+                        "expiration-time": {
+                            "#text": "00:43:16"
+                        },
+                        "installation-time": {
+                            "#text": "00:16:38"
+                        },
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "29w5d " "21:03:56"},
-                        "send-time": {"#text": "00:16:36"},
+                        "lsa-changed-time": {
+                            "#text": "29w5d "
+                            "21:03:56"
+                        },
+                        "send-time": {
+                            "#text": "00:16:36"
+                        },
                     },
                     "ospf3-external-lsa": {
                         "metric": "50",
@@ -2312,12 +2791,23 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "44",
                     "lsa-type": "Extern",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:12:00"},
-                        "expiration-time": {"#text": "00:12:00"},
-                        "installation-time": {"#text": "00:47:53"},
+                        "aging-timer": {
+                            "#text": "00:12:00"
+                        },
+                        "expiration-time": {
+                            "#text": "00:12:00"
+                        },
+                        "installation-time": {
+                            "#text": "00:47:53"
+                        },
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "2w6d " "04:50:27"},
-                        "send-time": {"#text": "00:47:51"},
+                        "lsa-changed-time": {
+                            "#text": "2w6d "
+                            "04:50:27"
+                        },
+                        "send-time": {
+                            "#text": "00:47:51"
+                        },
                     },
                     "ospf3-external-lsa": {
                         "metric": "50",
@@ -2335,12 +2825,23 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "28",
                     "lsa-type": "Extern",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:37:01"},
-                        "expiration-time": {"#text": "00:37:01"},
-                        "installation-time": {"#text": "00:22:50"},
+                        "aging-timer": {
+                            "#text": "00:37:01"
+                        },
+                        "expiration-time": {
+                            "#text": "00:37:01"
+                        },
+                        "installation-time": {
+                            "#text": "00:22:50"
+                        },
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "29w5d " "21:03:55"},
-                        "send-time": {"#text": "00:22:48"},
+                        "lsa-changed-time": {
+                            "#text": "29w5d "
+                            "21:03:55"
+                        },
+                        "send-time": {
+                            "#text": "00:22:48"
+                        },
                     },
                     "ospf3-external-lsa": {
                         "metric": "1",
@@ -2358,12 +2859,23 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "44",
                     "lsa-type": "Extern",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:12:01"},
-                        "expiration-time": {"#text": "00:12:01"},
-                        "installation-time": {"#text": "00:47:50"},
+                        "aging-timer": {
+                            "#text": "00:12:01"
+                        },
+                        "expiration-time": {
+                            "#text": "00:12:01"
+                        },
+                        "installation-time": {
+                            "#text": "00:47:50"
+                        },
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "29w5d " "21:03:55"},
-                        "send-time": {"#text": "00:47:48"},
+                        "lsa-changed-time": {
+                            "#text": "29w5d "
+                            "21:03:55"
+                        },
+                        "send-time": {
+                            "#text": "00:47:48"
+                        },
                     },
                     "ospf3-external-lsa": {
                         "metric": "50",
@@ -2381,12 +2893,23 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "44",
                     "lsa-type": "Extern",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:55:46"},
-                        "expiration-time": {"#text": "00:55:46"},
-                        "installation-time": {"#text": "00:04:05"},
+                        "aging-timer": {
+                            "#text": "00:55:46"
+                        },
+                        "expiration-time": {
+                            "#text": "00:55:46"
+                        },
+                        "installation-time": {
+                            "#text": "00:04:05"
+                        },
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "2w6d " "04:10:22"},
-                        "send-time": {"#text": "00:04:03"},
+                        "lsa-changed-time": {
+                            "#text": "2w6d "
+                            "04:10:22"
+                        },
+                        "send-time": {
+                            "#text": "00:04:03"
+                        },
                     },
                     "ospf3-external-lsa": {
                         "metric": "50",
@@ -2404,12 +2927,23 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "28",
                     "lsa-type": "Extern",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:31:50"},
-                        "expiration-time": {"#text": "00:31:51"},
-                        "installation-time": {"#text": "00:28:06"},
+                        "aging-timer": {
+                            "#text": "00:31:50"
+                        },
+                        "expiration-time": {
+                            "#text": "00:31:51"
+                        },
+                        "installation-time": {
+                            "#text": "00:28:06"
+                        },
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "4w1d " "01:47:27"},
-                        "send-time": {"#text": "00:28:04"},
+                        "lsa-changed-time": {
+                            "#text": "4w1d "
+                            "01:47:27"
+                        },
+                        "send-time": {
+                            "#text": "00:28:04"
+                        },
                     },
                     "ospf3-external-lsa": {
                         "metric": "1",
@@ -2427,12 +2961,23 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "44",
                     "lsa-type": "Extern",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:45:28"},
-                        "expiration-time": {"#text": "00:45:29"},
-                        "installation-time": {"#text": "00:14:28"},
+                        "aging-timer": {
+                            "#text": "00:45:28"
+                        },
+                        "expiration-time": {
+                            "#text": "00:45:29"
+                        },
+                        "installation-time": {
+                            "#text": "00:14:28"
+                        },
                         "lsa-change-count": "3",
-                        "lsa-changed-time": {"#text": "3w3d " "02:05:14"},
-                        "send-time": {"#text": "00:14:26"},
+                        "lsa-changed-time": {
+                            "#text": "3w3d "
+                            "02:05:14"
+                        },
+                        "send-time": {
+                            "#text": "00:14:26"
+                        },
                     },
                     "ospf3-external-lsa": {
                         "metric": "50",
@@ -2450,12 +2995,23 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "44",
                     "lsa-type": "Extern",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:22:45"},
-                        "expiration-time": {"#text": "00:22:45"},
-                        "installation-time": {"#text": "00:37:12"},
+                        "aging-timer": {
+                            "#text": "00:22:45"
+                        },
+                        "expiration-time": {
+                            "#text": "00:22:45"
+                        },
+                        "installation-time": {
+                            "#text": "00:37:12"
+                        },
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "3w0d " "17:02:14"},
-                        "send-time": {"#text": "00:37:10"},
+                        "lsa-changed-time": {
+                            "#text": "3w0d "
+                            "17:02:14"
+                        },
+                        "send-time": {
+                            "#text": "00:37:10"
+                        },
                     },
                     "ospf3-external-lsa": {
                         "metric": "50",
@@ -2473,12 +3029,23 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "44",
                     "lsa-type": "Extern",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:50:01"},
-                        "expiration-time": {"#text": "00:50:02"},
-                        "installation-time": {"#text": "00:09:55"},
+                        "aging-timer": {
+                            "#text": "00:50:01"
+                        },
+                        "expiration-time": {
+                            "#text": "00:50:02"
+                        },
+                        "installation-time": {
+                            "#text": "00:09:55"
+                        },
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "2w6d " "04:50:31"},
-                        "send-time": {"#text": "00:09:53"},
+                        "lsa-changed-time": {
+                            "#text": "2w6d "
+                            "04:50:31"
+                        },
+                        "send-time": {
+                            "#text": "00:09:53"
+                        },
                     },
                     "ospf3-external-lsa": {
                         "metric": "50",
@@ -2496,12 +3063,23 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "44",
                     "lsa-type": "Extern",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:18:12"},
-                        "expiration-time": {"#text": "00:18:13"},
-                        "installation-time": {"#text": "00:41:44"},
+                        "aging-timer": {
+                            "#text": "00:18:12"
+                        },
+                        "expiration-time": {
+                            "#text": "00:18:13"
+                        },
+                        "installation-time": {
+                            "#text": "00:41:44"
+                        },
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "2w6d " "04:50:25"},
-                        "send-time": {"#text": "00:41:42"},
+                        "lsa-changed-time": {
+                            "#text": "2w6d "
+                            "04:50:25"
+                        },
+                        "send-time": {
+                            "#text": "00:41:42"
+                        },
                     },
                     "ospf3-external-lsa": {
                         "metric": "50",
@@ -2519,12 +3097,23 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "44",
                     "lsa-type": "Extern",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:15:10"},
-                        "expiration-time": {"#text": "00:15:10"},
-                        "installation-time": {"#text": "00:44:44"},
+                        "aging-timer": {
+                            "#text": "00:15:10"
+                        },
+                        "expiration-time": {
+                            "#text": "00:15:10"
+                        },
+                        "installation-time": {
+                            "#text": "00:44:44"
+                        },
                         "lsa-change-count": "11",
-                        "lsa-changed-time": {"#text": "3w2d " "03:23:47"},
-                        "send-time": {"#text": "00:44:42"},
+                        "lsa-changed-time": {
+                            "#text": "3w2d "
+                            "03:23:47"
+                        },
+                        "send-time": {
+                            "#text": "00:44:42"
+                        },
                     },
                     "ospf3-external-lsa": {
                         "metric": "50",
@@ -2542,12 +3131,23 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "44",
                     "lsa-type": "Extern",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:48:30"},
-                        "expiration-time": {"#text": "00:48:30"},
-                        "installation-time": {"#text": "00:11:24"},
+                        "aging-timer": {
+                            "#text": "00:48:30"
+                        },
+                        "expiration-time": {
+                            "#text": "00:48:30"
+                        },
+                        "installation-time": {
+                            "#text": "00:11:24"
+                        },
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "2w6d " "04:10:26"},
-                        "send-time": {"#text": "00:11:22"},
+                        "lsa-changed-time": {
+                            "#text": "2w6d "
+                            "04:10:26"
+                        },
+                        "send-time": {
+                            "#text": "00:11:22"
+                        },
                     },
                     "ospf3-external-lsa": {
                         "metric": "50",
@@ -2565,12 +3165,23 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "44",
                     "lsa-type": "Extern",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:59:36"},
-                        "expiration-time": {"#text": "00:59:37"},
-                        "installation-time": {"#text": "00:00:17"},
+                        "aging-timer": {
+                            "#text": "00:59:36"
+                        },
+                        "expiration-time": {
+                            "#text": "00:59:37"
+                        },
+                        "installation-time": {
+                            "#text": "00:00:17"
+                        },
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "2w6d " "04:10:20"},
-                        "send-time": {"#text": "00:00:15"},
+                        "lsa-changed-time": {
+                            "#text": "2w6d "
+                            "04:10:20"
+                        },
+                        "send-time": {
+                            "#text": "00:00:15"
+                        },
                     },
                     "ospf3-external-lsa": {
                         "metric": "50",
@@ -2588,14 +3199,27 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "44",
                     "lsa-type": "Extern",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:26:29"},
+                        "aging-timer": {
+                            "#text": "00:26:29"
+                        },
                         "database-entry-state": "Ours",
-                        "expiration-time": {"#text": "00:26:30"},
-                        "generation-timer": {"#text": "00:16:29"},
-                        "installation-time": {"#text": "00:33:30"},
+                        "expiration-time": {
+                            "#text": "00:26:30"
+                        },
+                        "generation-timer": {
+                            "#text": "00:16:29"
+                        },
+                        "installation-time": {
+                            "#text": "00:33:30"
+                        },
                         "lsa-change-count": "2",
-                        "lsa-changed-time": {"#text": "3w0d " "17:02:14"},
-                        "send-time": {"#text": "00:33:28"},
+                        "lsa-changed-time": {
+                            "#text": "3w0d "
+                            "17:02:14"
+                        },
+                        "send-time": {
+                            "#text": "00:33:28"
+                        },
                     },
                     "ospf3-external-lsa": {
                         "metric": "50",
@@ -2614,12 +3238,23 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "44",
                     "lsa-type": "Extern",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:26:27"},
-                        "expiration-time": {"#text": "00:26:28"},
-                        "installation-time": {"#text": "00:33:29"},
+                        "aging-timer": {
+                            "#text": "00:26:27"
+                        },
+                        "expiration-time": {
+                            "#text": "00:26:28"
+                        },
+                        "installation-time": {
+                            "#text": "00:33:29"
+                        },
                         "lsa-change-count": "15",
-                        "lsa-changed-time": {"#text": "3w3d " "00:31:13"},
-                        "send-time": {"#text": "00:33:28"},
+                        "lsa-changed-time": {
+                            "#text": "3w3d "
+                            "00:31:13"
+                        },
+                        "send-time": {
+                            "#text": "00:33:28"
+                        },
                     },
                     "ospf3-external-lsa": {
                         "metric": "50",
@@ -2637,14 +3272,27 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "56",
                     "lsa-type": "Link",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:51:29"},
+                        "aging-timer": {
+                            "#text": "00:51:29"
+                        },
                         "database-entry-state": "Ours",
-                        "expiration-time": {"#text": "00:51:30"},
-                        "generation-timer": {"#text": "00:41:29"},
-                        "installation-time": {"#text": "00:08:30"},
+                        "expiration-time": {
+                            "#text": "00:51:30"
+                        },
+                        "generation-timer": {
+                            "#text": "00:41:29"
+                        },
+                        "installation-time": {
+                            "#text": "00:08:30"
+                        },
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "29w5d " "21:40:56"},
-                        "send-time": {"#text": "00:08:28"},
+                        "lsa-changed-time": {
+                            "#text": "29w5d "
+                            "21:40:56"
+                        },
+                        "send-time": {
+                            "#text": "00:08:28"
+                        },
                     },
                     "ospf3-link-lsa": {
                         "linklocal-address": "fe80::250:56ff:fe8d:c829",
@@ -2665,11 +3313,20 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "56",
                     "lsa-type": "Link",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:18:07"},
-                        "expiration-time": {"#text": "00:18:08"},
-                        "installation-time": {"#text": "00:41:49"},
+                        "aging-timer": {
+                            "#text": "00:18:07"
+                        },
+                        "expiration-time": {
+                            "#text": "00:18:08"
+                        },
+                        "installation-time": {
+                            "#text": "00:41:49"
+                        },
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "29w5d " "21:33:17"},
+                        "lsa-changed-time": {
+                            "#text": "29w5d "
+                            "21:33:17"
+                        },
                     },
                     "ospf3-link-lsa": {
                         "linklocal-address": "fe80::250:56ff:fe8d:53c0",
@@ -2689,12 +3346,24 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "56",
                     "lsa-type": "Link",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:40:56"},
-                        "expiration-time": {"#text": "00:40:56"},
-                        "installation-time": {"#text": "00:19:01"},
+                        "aging-timer": {
+                            "#text": "00:40:56"
+                        },
+                        "expiration-time": {
+                            "#text": "00:40:56"
+                        },
+                        "installation-time": {
+                            "#text": "00:19:01"
+                        },
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "29w5d " "21:33:04"},
-                        "send-time": {"#text": "6w2d " "02:47:58"},
+                        "lsa-changed-time": {
+                            "#text": "29w5d "
+                            "21:33:04"
+                        },
+                        "send-time": {
+                            "#text": "6w2d "
+                            "02:47:58"
+                        },
                     },
                     "ospf3-link-lsa": {
                         "linklocal-address": "fe80::250:56ff:fe8d:72bd",
@@ -2714,14 +3383,27 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "56",
                     "lsa-type": "Link",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:59:49"},
+                        "aging-timer": {
+                            "#text": "00:59:49"
+                        },
                         "database-entry-state": "Ours",
-                        "expiration-time": {"#text": "00:59:50"},
-                        "generation-timer": {"#text": "00:49:49"},
-                        "installation-time": {"#text": "00:00:10"},
+                        "expiration-time": {
+                            "#text": "00:59:50"
+                        },
+                        "generation-timer": {
+                            "#text": "00:49:49"
+                        },
+                        "installation-time": {
+                            "#text": "00:00:10"
+                        },
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "29w5d " "21:40:56"},
-                        "send-time": {"#text": "00:00:08"},
+                        "lsa-changed-time": {
+                            "#text": "29w5d "
+                            "21:40:56"
+                        },
+                        "send-time": {
+                            "#text": "00:00:08"
+                        },
                     },
                     "ospf3-link-lsa": {
                         "linklocal-address": "fe80::250:56ff:fe8d:a96c",
@@ -2742,13 +3424,24 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     "lsa-length": "44",
                     "lsa-type": "Link",
                     "ospf-database-extensive": {
-                        "aging-timer": {"#text": "00:18:09"},
+                        "aging-timer": {
+                            "#text": "00:18:09"
+                        },
                         "database-entry-state": "Ours",
-                        "expiration-time": {"#text": "00:18:10"},
-                        "generation-timer": {"#text": "00:08:09"},
-                        "installation-time": {"#text": "00:41:50"},
+                        "expiration-time": {
+                            "#text": "00:18:10"
+                        },
+                        "generation-timer": {
+                            "#text": "00:08:09"
+                        },
+                        "installation-time": {
+                            "#text": "00:41:50"
+                        },
                         "lsa-change-count": "1",
-                        "lsa-changed-time": {"#text": "29w5d " "21:46:59"},
+                        "lsa-changed-time": {
+                            "#text": "29w5d "
+                            "21:46:59"
+                        },
                     },
                     "ospf3-link-lsa": {
                         "linklocal-address": "fe80::250:560f:fc8d:7c08",
@@ -2761,9 +3454,18 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                 },
             ],
             "ospf3-intf-header": [
-                {"ospf-area": "0.0.0.8", "ospf-intf": "ge-0/0/0.0"},
-                {"ospf-area": "0.0.0.8", "ospf-intf": "ge-0/0/1.0"},
-                {"ospf-area": "0.0.0.8", "ospf-intf": "lo0.0"},
+                {
+                    "ospf-area": "0.0.0.8",
+                    "ospf-intf": "ge-0/0/0.0"
+                },
+                {
+                    "ospf-area": "0.0.0.8",
+                    "ospf-intf": "ge-0/0/1.0"
+                },
+                {
+                    "ospf-area": "0.0.0.8",
+                    "ospf-intf": "lo0.0"
+                },
             ],
         }
     }
@@ -2792,7 +3494,9 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        'execute.return_value':
+        '''
         show ospf3 database network detail
 
         OSPF3 database, Area 0.0.0.0
@@ -2825,160 +3529,171 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
       Attached router 192.168.219.235
       Type: Transit, Node ID: 192.168.219.235, Metric: 0, Bidirectional
       Type: Transit, Node ID: 192.168.219.236, Metric: 0, Bidirectional
-    '''}
+    '''
+    }
 
     golden_parsed_output = {
         "ospf3-database-information": {
             "ospf3-area-header": {
                 "ospf-area": "0.0.0.0"
             },
-            "ospf3-database": [
-                {
-                    "advertising-router": "192.168.219.235",
-                    "age": "892",
-                    "checksum": "0xf99f",
-                    "lsa-id": "0.0.0.9",
-                    "lsa-length": "36",
-                    "lsa-type": "Network",
-                    "ospf3-network-lsa": {
-                        "attached-router": [
+            "ospf3-database": [{
+                "advertising-router": "192.168.219.235",
+                "age": "892",
+                "checksum": "0xf99f",
+                "lsa-id": "0.0.0.9",
+                "lsa-length": "36",
+                "lsa-type": "Network",
+                "ospf3-network-lsa": {
+                    "attached-router":
+                    ["192.168.219.235", "10.69.198.249", "192.168.219.236"],
+                    "ospf3-lsa-topology": {
+                        "ospf3-lsa-topology-link": [{
+                            "link-type-name":
+                            "Transit",
+                            "ospf-lsa-topology-link-metric":
+                            "0",
+                            "ospf-lsa-topology-link-node-id":
+                            "192.168.219.236",
+                            "ospf-lsa-topology-link-state":
+                            "Bidirectional"
+                        }, {
+                            "link-type-name":
+                            "Transit",
+                            "ospf-lsa-topology-link-metric":
+                            "0",
+                            "ospf-lsa-topology-link-node-id":
+                            "10.69.198.249",
+                            "ospf-lsa-topology-link-state":
+                            "Bidirectional"
+                        }, {
+                            "link-type-name":
+                            "Transit",
+                            "ospf-lsa-topology-link-metric":
+                            "0",
+                            "ospf-lsa-topology-link-node-id":
                             "192.168.219.235",
+                            "ospf-lsa-topology-link-state":
+                            "Bidirectional"
+                        }]
+                    },
+                    "ospf3-options":
+                    "0x33"
+                },
+                "our-entry": True,
+                "sequence-number": "0x8000001d"
+            }, {
+                "advertising-router": "192.168.219.236",
+                "age": "2142",
+                "checksum": "0x1983",
+                "lsa-id": "0.0.0.3",
+                "lsa-length": "36",
+                "lsa-type": "Network",
+                "ospf3-network-lsa": {
+                    "attached-router":
+                    ["192.168.219.236", "10.69.198.249", "192.168.219.235"],
+                    "ospf3-lsa-topology": {
+                        "ospf3-lsa-topology-link": [{
+                            "link-type-name":
+                            "Transit",
+                            "ospf-lsa-topology-link-metric":
+                            "0",
+                            "ospf-lsa-topology-link-node-id":
+                            "192.168.219.235",
+                            "ospf-lsa-topology-link-state":
+                            "Bidirectional"
+                        }, {
+                            "link-type-name":
+                            "Transit",
+                            "ospf-lsa-topology-link-metric":
+                            "0",
+                            "ospf-lsa-topology-link-node-id":
                             "10.69.198.249",
-                            "192.168.219.236"
-                        ],
-                        "ospf3-lsa-topology": {
-                            "ospf3-lsa-topology-link": [
-                                {
-                                    "link-type-name": "Transit",
-                                    "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "192.168.219.236",
-                                    "ospf-lsa-topology-link-state": "Bidirectional"
-                                },
-                                {
-                                    "link-type-name": "Transit",
-                                    "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "10.69.198.249",
-                                    "ospf-lsa-topology-link-state": "Bidirectional"
-                                },
-                                {
-                                    "link-type-name": "Transit",
-                                    "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "192.168.219.235",
-                                    "ospf-lsa-topology-link-state": "Bidirectional"
-                                }
-                            ]
-                        },
-                        "ospf3-options": "0x33"
-                    },
-                    "our-entry": True,
-                    "sequence-number": "0x8000001d"
-                },
-                {
-                    "advertising-router": "192.168.219.236",
-                    "age": "2142",
-                    "checksum": "0x1983",
-                    "lsa-id": "0.0.0.3",
-                    "lsa-length": "36",
-                    "lsa-type": "Network",
-                    "ospf3-network-lsa": {
-                        "attached-router": [
+                            "ospf-lsa-topology-link-state":
+                            "Bidirectional"
+                        }, {
+                            "link-type-name":
+                            "Transit",
+                            "ospf-lsa-topology-link-metric":
+                            "0",
+                            "ospf-lsa-topology-link-node-id":
                             "192.168.219.236",
-                            "10.69.198.249",
-                            "192.168.219.235"
-                        ],
-                        "ospf3-lsa-topology": {
-                            "ospf3-lsa-topology-link": [
-                                {
-                                    "link-type-name": "Transit",
-                                    "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "192.168.219.235",
-                                    "ospf-lsa-topology-link-state": "Bidirectional"
-                                },
-                                {
-                                    "link-type-name": "Transit",
-                                    "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "10.69.198.249",
-                                    "ospf-lsa-topology-link-state": "Bidirectional"
-                                },
-                                {
-                                    "link-type-name": "Transit",
-                                    "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "192.168.219.236",
-                                    "ospf-lsa-topology-link-state": "Bidirectional"
-                                }
-                            ]
-                        },
-                        "ospf3-options": "0x33"
+                            "ospf-lsa-topology-link-state":
+                            "Bidirectional"
+                        }]
                     },
-                    "sequence-number": "0x80000b14"
+                    "ospf3-options":
+                    "0x33"
                 },
-                {
-                    "advertising-router": "192.168.219.236",
-                    "age": "1092",
-                    "checksum": "0xa3d1",
-                    "lsa-id": "0.0.0.4",
-                    "lsa-length": "32",
-                    "lsa-type": "Network",
-                    "ospf3-network-lsa": {
-                        "attached-router": [
+                "sequence-number": "0x80000b14"
+            }, {
+                "advertising-router": "192.168.219.236",
+                "age": "1092",
+                "checksum": "0xa3d1",
+                "lsa-id": "0.0.0.4",
+                "lsa-length": "32",
+                "lsa-type": "Network",
+                "ospf3-network-lsa": {
+                    "attached-router": ["192.168.219.236", "192.168.219.235"],
+                    "ospf3-lsa-topology": {
+                        "ospf3-lsa-topology-link": [{
+                            "link-type-name":
+                            "Transit",
+                            "ospf-lsa-topology-link-metric":
+                            "0",
+                            "ospf-lsa-topology-link-node-id":
+                            "192.168.219.235",
+                            "ospf-lsa-topology-link-state":
+                            "Bidirectional"
+                        }, {
+                            "link-type-name":
+                            "Transit",
+                            "ospf-lsa-topology-link-metric":
+                            "0",
+                            "ospf-lsa-topology-link-node-id":
                             "192.168.219.236",
-                            "192.168.219.235"
-                        ],
-                        "ospf3-lsa-topology": {
-                            "ospf3-lsa-topology-link": [
-                                {
-                                    "link-type-name": "Transit",
-                                    "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "192.168.219.235",
-                                    "ospf-lsa-topology-link-state": "Bidirectional"
-                                },
-                                {
-                                    "link-type-name": "Transit",
-                                    "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "192.168.219.236",
-                                    "ospf-lsa-topology-link-state": "Bidirectional"
-                                }
-                            ]
-                        },
-                        "ospf3-options": "0x33"
+                            "ospf-lsa-topology-link-state":
+                            "Bidirectional"
+                        }]
                     },
-                    "sequence-number": "0x80000b11"
+                    "ospf3-options": "0x33"
                 },
-                {
-                    "advertising-router": "192.168.219.236",
-                    "age": "1692",
-                    "checksum": "0x8fe3",
-                    "lsa-id": "0.0.0.6",
-                    "lsa-length": "32",
-                    "lsa-type": "Network",
-                    "ospf3-network-lsa": {
-                        "attached-router": [
+                "sequence-number": "0x80000b11"
+            }, {
+                "advertising-router": "192.168.219.236",
+                "age": "1692",
+                "checksum": "0x8fe3",
+                "lsa-id": "0.0.0.6",
+                "lsa-length": "32",
+                "lsa-type": "Network",
+                "ospf3-network-lsa": {
+                    "attached-router": ["192.168.219.236", "192.168.219.235"],
+                    "ospf3-lsa-topology": {
+                        "ospf3-lsa-topology-link": [{
+                            "link-type-name":
+                            "Transit",
+                            "ospf-lsa-topology-link-metric":
+                            "0",
+                            "ospf-lsa-topology-link-node-id":
+                            "192.168.219.235",
+                            "ospf-lsa-topology-link-state":
+                            "Bidirectional"
+                        }, {
+                            "link-type-name":
+                            "Transit",
+                            "ospf-lsa-topology-link-metric":
+                            "0",
+                            "ospf-lsa-topology-link-node-id":
                             "192.168.219.236",
-                            "192.168.219.235"
-                        ],
-                        "ospf3-lsa-topology": {
-                            "ospf3-lsa-topology-link": [
-                                {
-                                    "link-type-name": "Transit",
-                                    "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "192.168.219.235",
-                                    "ospf-lsa-topology-link-state": "Bidirectional"
-                                },
-                                {
-                                    "link-type-name": "Transit",
-                                    "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "192.168.219.236",
-                                    "ospf-lsa-topology-link-state": "Bidirectional"
-                                }
-                            ]
-                        },
-                        "ospf3-options": "0x33"
+                            "ospf-lsa-topology-link-state":
+                            "Bidirectional"
+                        }]
                     },
-                    "sequence-number": "0x80000b11"
-                }
-            ]
+                    "ospf3-options": "0x33"
+                },
+                "sequence-number": "0x80000b11"
+            }]
         }
-        
     }
 
     def test_empty(self):
@@ -2993,6 +3708,7 @@ class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
 class TestShowOspf3DatabaseLinkAdvertisingRouter(unittest.TestCase):
     """ Unit tests for:
             * show ospf3 database link advertising-router {ipaddress} detail
@@ -3004,7 +3720,9 @@ class TestShowOspf3DatabaseLinkAdvertisingRouter(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        'execute.return_value':
+        '''
         show ospf3 database link advertising-router 192.168.219.235 detail
 
         OSPF3 Link-Local database, interface ge-0/0/2.0 Area 0.0.0.0
@@ -3045,146 +3763,136 @@ class TestShowOspf3DatabaseLinkAdvertisingRouter(unittest.TestCase):
     fe80::20c:290f:fc40:a033
     Options 0x33, Priority 128
     Prefix-count 0
-    '''}
+    '''
+    }
 
     golden_parsed_output = {
         "ospf3-database-information": {
-            "ospf3-database": [
-                {
-                    "@heading": "Type       ID               Adv Rtr           Seq         Age  Cksum  Len",
-                    "advertising-router": "192.168.219.235",
-                    "age": "1379",
-                    "checksum": "0xd3b0",
-                    "lsa-id": "0.0.0.9",
-                    "lsa-length": "56",
-                    "lsa-type": "Link",
-                    "ospf3-link-lsa": {
-                        "linklocal-address": "fe80::20c:2900:3367:243d",
-                        "ospf3-options": "0x33",
-                        "ospf3-prefix": "2001:db8:dae9:cf16::/64",
-                        "ospf3-prefix-options": "0x0",
-                        "prefix-count": "1",
-                        "router-priority": "20"
-                    },
-                    "our-entry": True,
-                    "sequence-number": "0x80000b10"
+            "ospf3-database": [{
+                "@heading":
+                "Type       ID               Adv Rtr           Seq         Age  Cksum  Len",
+                "advertising-router": "192.168.219.235",
+                "age": "1379",
+                "checksum": "0xd3b0",
+                "lsa-id": "0.0.0.9",
+                "lsa-length": "56",
+                "lsa-type": "Link",
+                "ospf3-link-lsa": {
+                    "linklocal-address": "fe80::20c:2900:3367:243d",
+                    "ospf3-options": "0x33",
+                    "ospf3-prefix": "2001:db8:dae9:cf16::/64",
+                    "ospf3-prefix-options": "0x0",
+                    "prefix-count": "1",
+                    "router-priority": "20"
                 },
-                {
-                    "@heading": "Type       ID               Adv Rtr           Seq         Age  Cksum  Len",
-                    "advertising-router": "192.168.219.235",
-                    "age": "1979",
-                    "checksum": "0x974d",
-                    "lsa-id": "0.0.0.10",
-                    "lsa-length": "56",
-                    "lsa-type": "Link",
-                    "ospf3-link-lsa": {
-                        "linklocal-address": "fe80::20c:2900:3467:243d",
-                        "ospf3-options": "0x33",
-                        "ospf3-prefix": "2001:db8:dae9:c9df::/64",
-                        "ospf3-prefix-options": "0x0",
-                        "prefix-count": "1",
-                        "router-priority": "128"
-                    },
-                    "our-entry": True,
-                    "sequence-number": "0x80000b0f"
+                "our-entry": True,
+                "sequence-number": "0x80000b10"
+            }, {
+                "@heading":
+                "Type       ID               Adv Rtr           Seq         Age  Cksum  Len",
+                "advertising-router": "192.168.219.235",
+                "age": "1979",
+                "checksum": "0x974d",
+                "lsa-id": "0.0.0.10",
+                "lsa-length": "56",
+                "lsa-type": "Link",
+                "ospf3-link-lsa": {
+                    "linklocal-address": "fe80::20c:2900:3467:243d",
+                    "ospf3-options": "0x33",
+                    "ospf3-prefix": "2001:db8:dae9:c9df::/64",
+                    "ospf3-prefix-options": "0x0",
+                    "prefix-count": "1",
+                    "router-priority": "128"
                 },
-                {
-                    "@heading": "Type       ID               Adv Rtr           Seq         Age  Cksum  Len",
-                    "advertising-router": "192.168.219.235",
-                    "age": "1829",
-                    "checksum": "0x94c2",
-                    "lsa-id": "0.0.0.11",
-                    "lsa-length": "56",
-                    "lsa-type": "Link",
-                    "ospf3-link-lsa": {
-                        "linklocal-address": "fe80::20c:2900:3667:2465",
-                        "ospf3-options": "0x33",
-                        "ospf3-prefix": "2001:db8:dae9:d3e9::/64",
-                        "ospf3-prefix-options": "0x0",
-                        "prefix-count": "1",
-                        "router-priority": "20"
-                    },
-                    "our-entry": True,
-                    "sequence-number": "0x80000b0f"
+                "our-entry": True,
+                "sequence-number": "0x80000b0f"
+            }, {
+                "@heading":
+                "Type       ID               Adv Rtr           Seq         Age  Cksum  Len",
+                "advertising-router": "192.168.219.235",
+                "age": "1829",
+                "checksum": "0x94c2",
+                "lsa-id": "0.0.0.11",
+                "lsa-length": "56",
+                "lsa-type": "Link",
+                "ospf3-link-lsa": {
+                    "linklocal-address": "fe80::20c:2900:3667:2465",
+                    "ospf3-options": "0x33",
+                    "ospf3-prefix": "2001:db8:dae9:d3e9::/64",
+                    "ospf3-prefix-options": "0x0",
+                    "prefix-count": "1",
+                    "router-priority": "20"
                 },
-                {
-                    "@heading": "Type       ID               Adv Rtr           Seq         Age  Cksum  Len",
-                    "advertising-router": "192.168.219.235",
-                    "age": "1679",
-                    "checksum": "0x5660",
-                    "lsa-id": "0.0.0.12",
-                    "lsa-length": "56",
-                    "lsa-type": "Link",
-                    "ospf3-link-lsa": {
-                        "linklocal-address": "fe80::20c:2900:3767:2465",
-                        "ospf3-options": "0x33",
-                        "ospf3-prefix": "2001:db8:dae9:cf16::/64",
-                        "ospf3-prefix-options": "0x0",
-                        "prefix-count": "1",
-                        "router-priority": "128"
-                    },
-                    "our-entry": True,
-                    "sequence-number": "0x80000b0f"
+                "our-entry": True,
+                "sequence-number": "0x80000b0f"
+            }, {
+                "@heading":
+                "Type       ID               Adv Rtr           Seq         Age  Cksum  Len",
+                "advertising-router": "192.168.219.235",
+                "age": "1679",
+                "checksum": "0x5660",
+                "lsa-id": "0.0.0.12",
+                "lsa-length": "56",
+                "lsa-type": "Link",
+                "ospf3-link-lsa": {
+                    "linklocal-address": "fe80::20c:2900:3767:2465",
+                    "ospf3-options": "0x33",
+                    "ospf3-prefix": "2001:db8:dae9:cf16::/64",
+                    "ospf3-prefix-options": "0x0",
+                    "prefix-count": "1",
+                    "router-priority": "128"
                 },
-                {
-                    "@heading": "Type       ID               Adv Rtr           Seq         Age  Cksum  Len",
-                    "advertising-router": "192.168.219.235",
-                    "age": "2729",
-                    "checksum": "0xd0a6",
-                    "lsa-id": "0.0.0.7",
-                    "lsa-length": "44",
-                    "lsa-type": "Link",
-                    "ospf3-link-lsa": {
-                        "linklocal-address": "fe80::20c:290f:fc40:a033",
-                        "ospf3-options": "0x33",
-                        "prefix-count": "0",
-                        "router-priority": "128"
-                    },
-                    "our-entry": True,
-                    "sequence-number": "0x80000f62"
-                }
-            ],
-            "ospf3-intf-header": [
-                {
-                    "ospf-area": "0.0.0.0",
-                    "ospf-intf": "ge-0/0/2.0"
+                "our-entry": True,
+                "sequence-number": "0x80000b0f"
+            }, {
+                "@heading":
+                "Type       ID               Adv Rtr           Seq         Age  Cksum  Len",
+                "advertising-router": "192.168.219.235",
+                "age": "2729",
+                "checksum": "0xd0a6",
+                "lsa-id": "0.0.0.7",
+                "lsa-length": "44",
+                "lsa-type": "Link",
+                "ospf3-link-lsa": {
+                    "linklocal-address": "fe80::20c:290f:fc40:a033",
+                    "ospf3-options": "0x33",
+                    "prefix-count": "0",
+                    "router-priority": "128"
                 },
-                {
-                    "ospf-area": "0.0.0.0",
-                    "ospf-intf": "ge-0/0/2.1"
-                },
-                {
-                    "ospf-area": "0.0.0.0",
-                    "ospf-intf": "ge-0/0/3.0"
-                },
-                {
-                    "ospf-area": "0.0.0.0",
-                    "ospf-intf": "ge-0/0/3.1"
-                },
-                {
-                    "ospf-area": "0.0.0.0",
-                    "ospf-intf": "lo0.0"
-                }
-            ]
+                "our-entry": True,
+                "sequence-number": "0x80000f62"
+            }],
+            "ospf3-intf-header": [{
+                "ospf-area": "0.0.0.0",
+                "ospf-intf": "ge-0/0/2.0"
+            }, {
+                "ospf-area": "0.0.0.0",
+                "ospf-intf": "ge-0/0/2.1"
+            }, {
+                "ospf-area": "0.0.0.0",
+                "ospf-intf": "ge-0/0/3.0"
+            }, {
+                "ospf-area": "0.0.0.0",
+                "ospf-intf": "ge-0/0/3.1"
+            }, {
+                "ospf-area": "0.0.0.0",
+                "ospf-intf": "lo0.0"
+            }]
         }
-        
     }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowOspf3DatabaseLinkAdvertisingRouter(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(
-                ipaddress='192.168.219.235'
-            )
+            parsed_output = obj.parse(ipaddress='192.168.219.235')
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowOspf3DatabaseLinkAdvertisingRouter(device=self.device)
-        parsed_output = obj.parse(
-                ipaddress='192.168.219.235'
-            )
+        parsed_output = obj.parse(ipaddress='192.168.219.235')
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 if __name__ == '__main__':
     unittest.main()
