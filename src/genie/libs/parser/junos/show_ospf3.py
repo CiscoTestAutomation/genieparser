@@ -1444,6 +1444,9 @@ class ShowOspf3DatabaseExtensiveSchema(MetaParser):
                 "aging-timer": {
                     "#text": str
                 },
+                "expiration-time": {
+                    "#text": str
+                },
                 Optional("ospf3-intra-area-prefix-lsa"): {
                     Optional("prefix-count"): str,
                     Optional("reference-lsa-id"): str,
