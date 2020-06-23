@@ -1336,6 +1336,15 @@ class ShowOspf3DatabaseExtensiveSchema(MetaParser):
                         "ospf3-prefix-options": [],
                         "ospf3-prefix-metric": []
                     },
+                    "ospf3-inter-area-prefix-lsa" : {
+                        "reference-lsa-type": str,
+                        "reference-lsa-id": str,
+                        "reference-lsa-router-id": str,
+                        "prefix-count": str,
+                        "ospf3-prefix": [],
+                        "ospf3-prefix-options": [],
+                        "ospf3-prefix-metric": []
+                    },
                     "ospf3-router-lsa": {
                         "bits": str,
                         "ospf3-options": str,
@@ -1437,6 +1446,24 @@ class ShowOspf3DatabaseExtensiveSchema(MetaParser):
                 },
                 "expiration-time": {
                     "#text": str
+                },
+                Optional("ospf3-intra-area-prefix-lsa"): {
+                    Optional("prefix-count"): str,
+                    Optional("reference-lsa-id"): str,
+                    Optional("reference-lsa-router-id"): str,
+                    Optional("reference-lsa-type"): str,
+                    "ospf3-prefix": list,
+                    "ospf3-prefix-metric": list,
+                    "ospf3-prefix-options": list,
+                },
+                Optional("ospf3-inter-area-prefix-lsa"): {
+                    Optional("prefix-count"): str,
+                    Optional("reference-lsa-id"): str,
+                    Optional("reference-lsa-router-id"): str,
+                    Optional("reference-lsa-type"): str,
+                    "ospf3-prefix": list,
+                    "ospf3-prefix-metric": list,
+                    "ospf3-prefix-options": list,
                 },
                 "installation-time": {
                     "#text": str
@@ -1774,8 +1801,10 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
                 last_entry = ret_dict["ospf3-database-information"][
                     "ospf3-database"][-1]
 
-                entry = last_entry.setdefault("ospf3-intra-area-prefix-lsa",
-                                              {})
+                if self.state == "IntraArPfx":
+                    entry = last_entry.setdefault("ospf3-intra-area-prefix-lsa", {})
+                elif self.state == "InterArPfx":
+                    entry = last_entry.setdefault("ospf3-inter-area-prefix-lsa", {})
 
                 group = m.groupdict()
                 for group_key, group_value in group.items():
@@ -1791,8 +1820,9 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
                     "ospf3-database"][-1]
 
                 if self.state == "IntraArPfx":
-                    entry = last_entry.setdefault(
-                        "ospf3-intra-area-prefix-lsa", {})
+                    entry = last_entry.setdefault("ospf3-intra-area-prefix-lsa", {})
+                elif self.state == "InterArPfx":
+                    entry = last_entry.setdefault("ospf3-inter-area-prefix-lsa", {})
                 elif self.state == "Link":
                     entry = last_entry.setdefault("ospf3-link-lsa", {})
 
@@ -1816,6 +1846,12 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
                         "ospf3-intra-area-prefix-lsa",
                         {}).setdefault("ospf3-prefix", [])
                     entry_list.append(group["ospf3_prefix"])
+                
+                elif self.state == "InterArPfx":
+                    entry_list = last_database.setdefault(
+                        "ospf3-inter-area-prefix-lsa", {}
+                    ).setdefault("ospf3-prefix", [])
+                    entry_list.append(group["ospf3_prefix"])
 
                 elif self.state == "Extern":
 
@@ -1835,12 +1871,14 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
 
                 group = m.groupdict()
 
-                entry = last_database.setdefault("ospf3-intra-area-prefix-lsa",
-                                                 {})
-                entry.setdefault("ospf3-prefix-options",
-                                 []).append(group["ospf3_prefix_options"])
-                entry.setdefault("ospf3-prefix-metric",
-                                 []).append(group["metric"])
+                if self.state == "IntraArPfx":
+                    entry = last_database.setdefault("ospf3-intra-area-prefix-lsa", {})
+                elif self.state == "InterArPfx":
+                    entry = last_database.setdefault("ospf3-inter-area-prefix-lsa", {})
+                entry.setdefault("ospf3-prefix-options", []).append(
+                    group["ospf3_prefix_options"]
+                )
+                entry.setdefault("ospf3-prefix-metric", []).append(group["metric"])
 
                 continue
 
