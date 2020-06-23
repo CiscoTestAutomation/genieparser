@@ -81,6 +81,8 @@
         * Optional key issue resolved
     * Updated ShowOspf3DatabaseExtensiveSchema
         * Optional key issue resolved
+    * Updated ShowOspfDatabaseLsaidDetail
+        * Resolved issue where empty output would cause error
 * IOSXE
     * Updated ShowIpInterface
         * Modified regex to accommodate different outputs
