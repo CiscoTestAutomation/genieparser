@@ -83,6 +83,10 @@
         * Optional key issue resolved
     * Updated ShowOspfDatabaseLsaidDetail
         * Resolved issue where empty output would cause error
+    * Updated ShowOspf3DatabaseExtensive
+        * Missing key issue resolved
+    * Updated ShowOspf3Database
+        * List ospf-area
 * IOSXE
     * Updated ShowIpInterface
         * Modified regex to accommodate different outputs
