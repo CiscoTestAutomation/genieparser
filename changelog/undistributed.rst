@@ -41,6 +41,8 @@
         * 'show ip bgp {address_family} rd {rd} detail'
     * Updated ShowBootvar:
         * Modified the regex patterns to support various outputs.
+    * Update ShowPolicyMapInterfaceInput:
+        * Fixed issue if no top level dict
 * NXOS
     * Updated ShowMacAddressTableBase:
         * Modified the regex patterns to support various outputs.
