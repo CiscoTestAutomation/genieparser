@@ -6752,7 +6752,7 @@ class TestShowBgpInstanceAllAllAllNeighborsRoutes(unittest.TestCase):
                             "nsr_issu_sync_group_versions": "0/0",
                             "scan_interval": 60,
                             "routes": {
-                                "[V][L2][I1x1][N[c1234][b0.0.0.0][s09.93.9.98]]/328": {
+                                "[V][L2][I1x1][N[c1234][b0.0.0.0][s10.204.9.98]]/328": {
                                     "index": {
                                         1: {
                                             "next_hop": "10.4.1.1",
@@ -6845,7 +6845,7 @@ class TestShowBgpInstanceAllAllAllNeighborsRoutes(unittest.TestCase):
                       i if-address, n nbr-address, o OSPF Route-type, p IP-prefix
                       d designated router address
            Network            Next Hop            Metric LocPrf Weight Path
-        *>i[V][L2][I1x1][N[c1234][b0.0.0.0][s09.93.9.98]]/328
+        *>i[V][L2][I1x1][N[c1234][b0.0.0.0][s10.204.9.98]]/328
                               10.4.1.1                  100      0 i
         *>i[V][L2][I2x2][N[c5678][b0.0.0.0][s10.100.5.5]]/328
                               10.16.2.2                  100      0 i
