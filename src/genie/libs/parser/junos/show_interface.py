@@ -1739,7 +1739,7 @@ class ShowInterfacesQueueSchema(MetaParser):
                         "intf-cos-num-queues-supported": str,
                         "intf-cos-queue-type": str
                     },
-                    "queue": Use(validate_queue())
+                    "queue": Use(validate_queue)
                 }
             }
         }
@@ -1798,20 +1798,20 @@ class ShowInterfacesQueue(ShowInterfacesQueueSchema):
         #             Bytes                :          564883280956                     0 bps
         #             Tail-dropped packets :                     0                     0 pps
         #             RED-dropped packets  :                     0                     0 pps
-        p9 = re.compile(r"^(?P<name>RED-dropped packets) +: +(?P<counts>\S+) +(?P<rates>\S+)pps$")
+        p9 = re.compile(r"^(?P<name>RED-dropped packets) +: +(?P<counts>\S+) +(?P<rates>\S+) +pps$")
         #              Low                 :                     0                     0 pps
         #              Medium-low          :                     0                     0 pps
         #              Medium-high         :                     0                     0 pps
         #              High                :                     0                     0 pps
         #             RED-dropped bytes    :                     0                     0 bps
-        p10 = re.compile(r"^(?P<name>RED-dropped bytes) +: +(?P<counts>\S+) +(?P<rates>\S+)pps$")
+        p10 = re.compile(r"^(?P<name>RED-dropped bytes) +: +(?P<counts>\S+) +(?P<rates>\S+) +bps$")
         #              Low                 :                     0                     0 bps
         #              Medium-low          :                     0                     0 bps
         #              Medium-high         :                     0                     0 bps
         #              High                :                     0                     0 bps
         p7 = re.compile(r"^(?P<name>Packets|Bytes|Tail-dropped packets|"
                         r"Low|Medium-low|Medium-high|High) +: "
-                        r"+(?P<counts>\S+) +(?P<rates>\S+)pps$")
+                        r"+(?P<counts>\S+) +(?P<rates>\S+) +[p|b]ps$")
 
         # -------------------------------------------------
         # Build parsed output
@@ -1823,7 +1823,8 @@ class ShowInterfacesQueue(ShowInterfacesQueueSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                physical_interface_dict = ret_dict.setdefault('physical-interface', {})
+                physical_interface_dict = ret_dict.setdefault('interface-information', {}).\
+                                                    setdefault('physical-interface', {})
                 physical_interface_dict['name'] = group['name']
                 physical_interface_dict['oper-status'] = group['oper_status']
                 continue
@@ -1847,7 +1848,7 @@ class ShowInterfacesQueue(ShowInterfacesQueueSchema):
             #         Egress queues: 8 supported, 5 in use
             m = p4.match(line) or p5.match(line)
             if m:
-                if not interface_cos_summary_dict:
+                if 'queue-counters' not in physical_interface_dict:
                     interface_cos_summary_dict = physical_interface_dict.\
                                                  setdefault('queue-counters', {}).\
                                                  setdefault('interface-cos-summary', {})
@@ -1863,14 +1864,13 @@ class ShowInterfacesQueue(ShowInterfacesQueueSchema):
                 group = m.groupdict()
                 if "queue" not in physical_interface_dict['queue-counters']:
                     physical_interface_dict['queue-counters']['queue'] = []
-                    queue_list = physical_interface_dict['queue-counters']['queue']
                 current_queue_dict = {}
 
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_', '-')
                     current_queue_dict[entry_key] = group_value
 
-                queue_list.append(current_queue_dict)
+                physical_interface_dict['queue-counters']['queue'].append(current_queue_dict)
                 continue
 
             #             Packets              :            1470816406                      0 pps
@@ -1889,6 +1889,7 @@ class ShowInterfacesQueue(ShowInterfacesQueueSchema):
 
                 # RED-dropped bytes
                 if red_dropped_bytes:
+                    red_dropped_bytes = None
                     if group['name'] == 'Low':
                         current_queue_dict['queue-counters-red-bytes-low'] = counts
                         current_queue_dict['queue-counters-red-bytes-rate-low'] = rates
@@ -1904,6 +1905,7 @@ class ShowInterfacesQueue(ShowInterfacesQueueSchema):
 
                 # RED-dropped packets
                 elif red_dropped_packets:
+                    red_dropped_packets = None
                     if group['name'] == 'Low':
                         current_queue_dict['queue-counters-red-packets-low'] = counts
                         current_queue_dict['queue-counters-red-packets-rate-low'] = rates
@@ -1919,6 +1921,7 @@ class ShowInterfacesQueue(ShowInterfacesQueueSchema):
 
                 # Transmitted
                 elif transmitted:
+                    transmitted = None
                     if group['name'] == 'Packets':
                         current_queue_dict['queue-counters-trans-packets'] = counts
                         current_queue_dict['queue-counters-trans-packets-rate'] = rates
@@ -1937,6 +1940,7 @@ class ShowInterfacesQueue(ShowInterfacesQueueSchema):
                     elif group['name'] == 'Bytes':
                         current_queue_dict['queue-counters-queued-bytes'] = counts
                         current_queue_dict['queue-counters-queued-bytes-rate'] = rates
+
                 continue
 
             #           Transmitted:
