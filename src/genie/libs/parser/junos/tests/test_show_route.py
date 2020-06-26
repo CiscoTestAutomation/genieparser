@@ -31,10 +31,10 @@ class test_show_route_table(unittest.TestCase):
 
     golden_output_1 = {'execute.return_value': '''
         #show route table inet.3 10.64.4.4
-     
+
         inet.3: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
         + = Active Route, - = Last Active, * = Both
-         
+
         10.64.4.4/32         *[LDP/9] 03:40:50, metric 110
                             > to 192.168.220.6 via ge-0/0/1.0
 
@@ -64,10 +64,10 @@ class test_show_route_table(unittest.TestCase):
 
     golden_output_2 = {'execute.return_value': '''
         #show route table inet.3 192.168.36.220
-     
+
         inet.3: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
         + = Active Route, - = Last Active, * = Both
-         
+
         192.168.36.220/32 *[LDP/9] 03:41:19, metric 1111
                             > to 192.168.220.6 via ge-0/0/1.0, Push 305550
 
@@ -111,7 +111,7 @@ class test_show_route_table(unittest.TestCase):
                             > to 192.168.220.6 via ge-0/0/1.0, Push 307742
     '''}
 
-    parsed_output_3 = {        
+    parsed_output_3 = {
         'table_name': {
             'inet.3': {
                 'active_route_count': 3,
@@ -892,20 +892,20 @@ class TestShowRoute(unittest.TestCase):
         + = Active Route, - = Last Active, * = Both
 
         2567               *[L-OSPF/10/5] 2w0d 19:07:25, metric 0
-                            >  to 10.169.14.121 via ge-0/0/1.0, Pop      
+                            >  to 10.169.14.121 via ge-0/0/1.0, Pop
                             to 10.189.5.94 via ge-0/0/0.0, Swap 16051, Push 1913(top)
         2567(S=0)          *[L-OSPF/10/5] 2w0d 19:07:25, metric 0
-                            >  to 10.169.14.121 via ge-0/0/1.0, Pop      
+                            >  to 10.169.14.121 via ge-0/0/1.0, Pop
                             to 10.189.5.94 via ge-0/0/0.0, Swap 16051, Push 1913(top)
         2568               *[L-OSPF/10/5] 3w3d 03:24:58, metric 0
-                            >  to 10.169.14.121 via ge-0/0/1.0, Pop      
+                            >  to 10.169.14.121 via ge-0/0/1.0, Pop
         2568(S=0)          *[L-OSPF/10/5] 3w3d 03:24:58, metric 0
-                            >  to 10.169.14.121 via ge-0/0/1.0, Pop      
+                            >  to 10.169.14.121 via ge-0/0/1.0, Pop
         16051              *[L-OSPF/10/5] 3w1d 17:03:14, metric 100
-                            >  to 10.169.14.121 via ge-0/0/1.0, Pop      
+                            >  to 10.169.14.121 via ge-0/0/1.0, Pop
                             to 10.189.5.94 via ge-0/0/0.0, Swap 16051, Push 1913(top)
         16051(S=0)         *[L-OSPF/10/5] 3w1d 17:03:14, metric 100
-                            >  to 10.169.14.121 via ge-0/0/1.0, Pop      
+                            >  to 10.169.14.121 via ge-0/0/1.0, Pop
                             to 10.189.5.94 via ge-0/0/0.0, Swap 16051, Push 1913(top)
         16052              *[L-OSPF/10/5] 3w3d 03:24:58, metric 105
                             >  to 10.169.14.121 via ge-0/0/1.0, Swap 16052
@@ -917,36 +917,36 @@ class TestShowRoute(unittest.TestCase):
                             >  to 10.169.14.121 via ge-0/0/1.0, Swap 16063
                             to 10.189.5.94 via ge-0/0/0.0, Swap 16063, Push 1650, Push 1913(top)
         16072              *[L-OSPF/10/5] 3w1d 17:03:19, metric 5
-                            >  to 10.189.5.94 via ge-0/0/0.0, Pop      
+                            >  to 10.189.5.94 via ge-0/0/0.0, Pop
         16072(S=0)         *[L-OSPF/10/5] 3w1d 17:03:19, metric 5
-                            >  to 10.189.5.94 via ge-0/0/0.0, Pop      
+                            >  to 10.189.5.94 via ge-0/0/0.0, Pop
         16073              *[L-OSPF/10/5] 1w6d 20:52:49, metric 1001
-                            >  to 10.19.198.26 via ge-0/0/2.0, Pop      
+                            >  to 10.19.198.26 via ge-0/0/2.0, Pop
                             to 10.189.5.94 via ge-0/0/0.0, Swap 16073
         16073(S=0)         *[L-OSPF/10/5] 1w6d 20:52:49, metric 1001
-                            >  to 10.19.198.26 via ge-0/0/2.0, Pop      
+                            >  to 10.19.198.26 via ge-0/0/2.0, Pop
                             to 10.189.5.94 via ge-0/0/0.0, Swap 16073
         17000              *[L-OSPF/10/5] 3w0d 04:11:34, metric 1201
                             >  to 10.169.14.121 via ge-0/0/1.0, Swap 17000
                             to 10.189.5.94 via ge-0/0/0.0, Swap 17000, Push 1650, Push 1913(top)
         28985              *[L-OSPF/10/5] 3w1d 17:03:19, metric 0
-                            >  to 10.189.5.94 via ge-0/0/0.0, Pop      
+                            >  to 10.189.5.94 via ge-0/0/0.0, Pop
         28985(S=0)         *[L-OSPF/10/5] 3w1d 17:03:19, metric 0
-                            >  to 10.189.5.94 via ge-0/0/0.0, Pop      
+                            >  to 10.189.5.94 via ge-0/0/0.0, Pop
         28986              *[L-OSPF/10/5] 3w1d 17:03:19, metric 0
-                            >  to 10.189.5.94 via ge-0/0/0.0, Pop      
+                            >  to 10.189.5.94 via ge-0/0/0.0, Pop
         28986(S=0)         *[L-OSPF/10/5] 3w1d 17:03:19, metric 0
-                            >  to 10.189.5.94 via ge-0/0/0.0, Pop      
+                            >  to 10.189.5.94 via ge-0/0/0.0, Pop
         167966             *[L-OSPF/10/5] 1w6d 20:52:49, metric 0
-                            >  to 10.19.198.26 via ge-0/0/2.0, Pop      
+                            >  to 10.19.198.26 via ge-0/0/2.0, Pop
                             to 10.189.5.94 via ge-0/0/0.0, Swap 16073
         167966(S=0)        *[L-OSPF/10/5] 1w6d 20:52:49, metric 0
-                            >  to 10.19.198.26 via ge-0/0/2.0, Pop      
+                            >  to 10.19.198.26 via ge-0/0/2.0, Pop
                             to 10.189.5.94 via ge-0/0/0.0, Swap 16073
         167967             *[L-OSPF/10/5] 1w6d 20:52:58, metric 0
-                            >  to 10.19.198.26 via ge-0/0/2.0, Pop      
+                            >  to 10.19.198.26 via ge-0/0/2.0, Pop
         167967(S=0)        *[L-OSPF/10/5] 1w6d 20:52:58, metric 0
-                            >  to 10.19.198.26 via ge-0/0/2.0, Pop      
+                            >  to 10.19.198.26 via ge-0/0/2.0, Pop
 
         inet6.0: 22 destinations, 23 routes (22 active, 0 holddown, 0 hidden)
         + = Active Route, - = Last Active, * = Both
@@ -11414,7 +11414,7 @@ class TestShowRoute(unittest.TestCase):
     }
 
     golden_output_5 = {'execute.return_value': '''
-        show route 
+        show route
 
         inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
         + = Active Route, - = Last Active, * = Both
@@ -11789,7 +11789,7 @@ class TestShowRoute(unittest.TestCase):
             protocol='static',
             ip_address='10.169.14.240/32')
         self.assertEqual(parsed_output, self.golden_parsed_output)
-    
+
     def test_golden_2(self):
         self.device = Mock(**self.golden_output_2)
         obj = ShowRoute(device=self.device)
@@ -11797,7 +11797,7 @@ class TestShowRoute(unittest.TestCase):
             protocol='static',
             ip_address='2001:db8:eb18:ca45::1')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
-    
+
     def test_golden_3(self):
         self.device = Mock(**self.golden_output_3)
         obj = ShowRoute(device=self.device)
@@ -11812,7 +11812,7 @@ class TestShowRoute(unittest.TestCase):
             protocol='ospf',
             table='inet.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
-    
+
     def test_golden_5(self):
         self.device = Mock(**self.golden_output_5)
         obj = ShowRoute(device=self.device)
@@ -11852,13 +11852,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int Ext>
-                        Local AS: 65171 
-                        Age: 3w2d 4:43:35 	Metric: 101 
-                        Validation State: unverified 
-                            Tag: 0 
+                        Local AS: 65171
+                        Age: 3w2d 4:43:35 	Metric: 101
+                        Validation State: unverified
+                            Tag: 0
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.1.0.0/24 (2 entries, 1 announced)
                 State: <FlashAll>
@@ -11870,12 +11870,12 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Session Id: 0x141
                         State: <Int Ext>
                         Inactive reason: Route Preference
-                        Local AS: 65171 
-                        Age: 3w2d 4:43:35 	Metric: 20 
-                        Validation State: unverified 
-                            Tag: 0 
+                        Local AS: 65171
+                        Age: 3w2d 4:43:35 	Metric: 20
+                        Validation State: unverified
+                            Tag: 0
                         Task: OSPF
-                        AS path: I 
+                        AS path: I
 
         10.36.3.3/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -11888,13 +11888,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.16.0.0/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -11907,13 +11907,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:10:26 	Metric: 1200 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:10:26 	Metric: 1200
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.100.5.5/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -11926,13 +11926,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:10:26 	Metric: 1201 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:10:26 	Metric: 1201
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 0-KRT 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 0-KRT 7-Resolve tree 3
+                        AS path: I
 
         10.19.198.28/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -11945,13 +11945,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0x1, selected
                         Session Id: 0x140
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 18:21:56 	Metric: 1005 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 18:21:56 	Metric: 1005
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.19.198.239/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -11964,13 +11964,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.19.198.26 via ge-0/0/2.0 weight 0x1, selected
                         Session Id: 0x1ae
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 1w5d 22:11:35 	Metric: 1001 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 1w5d 22:11:35 	Metric: 1001
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 0-KRT 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 0-KRT 7-Resolve tree 3
+                        AS path: I
 
         10.174.132.237/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -11983,13 +11983,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int Ext>
-                        Local AS: 65171 
-                        Age: 3w2d 4:43:35 	Metric: 150 
-                        Validation State: unverified 
-                            Tag: 0 
+                        Local AS: 65171
+                        Age: 3w2d 4:43:35 	Metric: 150
+                        Validation State: unverified
+                            Tag: 0
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.34.2.200/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12002,13 +12002,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:10:26 	Metric: 205 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:10:26 	Metric: 205
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.34.2.250/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12021,13 +12021,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:10:26 	Metric: 200 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:10:26 	Metric: 200
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 0-KRT 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 0-KRT 7-Resolve tree 3
+                        AS path: I
 
         10.34.2.251/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12040,13 +12040,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:10:26 	Metric: 205 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:10:26 	Metric: 205
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 0-KRT 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 0-KRT 7-Resolve tree 3
+                        AS path: I
 
         10.15.0.0/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12059,13 +12059,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.19.198.26 via ge-0/0/2.0 weight 0x1, selected
                         Session Id: 0x1ae
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 1w5d 22:11:35 	Metric: 1001 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 1w5d 22:11:35 	Metric: 1001
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.64.0.0/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12078,13 +12078,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1201 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1201
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.169.196.212/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12097,13 +12097,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:10:26 	Metric: 1200 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:10:26 	Metric: 1200
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.169.196.216/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12116,13 +12116,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:10:26 	Metric: 1205 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:10:26 	Metric: 1205
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.169.196.241/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12135,13 +12135,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1201 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1201
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 0-KRT 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 0-KRT 7-Resolve tree 3
+                        AS path: I
 
         10.169.14.16/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12154,13 +12154,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w2d 4:43:35 	Metric: 105 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:43:35 	Metric: 105
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.169.14.32/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12173,13 +12173,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 5:30:23 	Metric: 225 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 5:30:23 	Metric: 225
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.169.14.128/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12192,13 +12192,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0x1, selected
                         Session Id: 0x140
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 18:21:56 	Metric: 125 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 18:21:56 	Metric: 125
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.169.14.156/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12211,13 +12211,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:10:28 	Metric: 200 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:10:28 	Metric: 200
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.169.14.240/32 (2 entries, 1 announced)
                 State: <FlashAll>
@@ -12232,12 +12232,12 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Session Id: 0x141
                         State: <Int>
                         Inactive reason: Route Preference
-                        Local AS: 65171 
-                        Age: 3w2d 4:43:35 	Metric: 100 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:43:35 	Metric: 100
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        AS path: I 
+                        AS path: I
 
         10.169.14.241/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12250,13 +12250,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w2d 4:43:35 	Metric: 105 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:43:35 	Metric: 105
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 0-KRT 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 0-KRT 7-Resolve tree 3
+                        AS path: I
 
         10.169.14.242/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12269,13 +12269,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w2d 4:43:35 	Metric: 100 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:43:35 	Metric: 100
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.169.14.243/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12288,13 +12288,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w2d 4:43:35 	Metric: 105 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:43:35 	Metric: 105
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.189.5.253/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12307,13 +12307,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0x1, selected
                         Session Id: 0x140
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 18:21:56 	Metric: 5 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 18:21:56 	Metric: 5
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 0-KRT 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 0-KRT 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.0/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12326,13 +12326,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:10:26 	Metric: 1200 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:10:26 	Metric: 1200
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.0/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12345,13 +12345,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.1/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12364,13 +12364,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.2/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12383,13 +12383,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.3/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12402,13 +12402,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.4/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12421,13 +12421,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.5/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12440,13 +12440,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.6/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12459,13 +12459,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.7/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12478,13 +12478,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.8/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12497,13 +12497,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.9/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12516,13 +12516,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.10/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12535,13 +12535,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.11/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12554,13 +12554,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.12/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12573,13 +12573,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.13/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12592,13 +12592,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.14/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12611,13 +12611,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.15/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12630,13 +12630,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.16/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12649,13 +12649,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.17/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12668,13 +12668,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.18/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12687,13 +12687,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.19/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12706,13 +12706,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.20/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12725,13 +12725,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.21/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12744,13 +12744,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.22/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12763,13 +12763,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.23/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12782,13 +12782,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.24/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12801,13 +12801,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.25/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12820,13 +12820,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.26/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12839,13 +12839,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.27/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12858,13 +12858,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.28/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12877,13 +12877,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.29/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12896,13 +12896,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.30/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12915,13 +12915,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.31/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12934,13 +12934,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.32/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12953,13 +12953,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.33/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12972,13 +12972,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.34/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -12991,13 +12991,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.35/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13010,13 +13010,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.36/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13029,13 +13029,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.37/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13048,13 +13048,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.38/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13067,13 +13067,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.39/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13086,13 +13086,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.40/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13105,13 +13105,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.41/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13124,13 +13124,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.42/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13143,13 +13143,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.43/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13162,13 +13162,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.44/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13181,13 +13181,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.45/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13200,13 +13200,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.46/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13219,13 +13219,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.47/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13238,13 +13238,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.48/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13257,13 +13257,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.49/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13276,13 +13276,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.50/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13295,13 +13295,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.51/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13314,13 +13314,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.52/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13333,13 +13333,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.53/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13352,13 +13352,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.54/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13371,13 +13371,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.55/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13390,13 +13390,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.56/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13409,13 +13409,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.57/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13428,13 +13428,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.58/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13447,13 +13447,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.59/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13466,13 +13466,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.60/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13485,13 +13485,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.61/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13504,13 +13504,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.62/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13523,13 +13523,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.63/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13542,13 +13542,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.64/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13561,13 +13561,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.65/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13580,13 +13580,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.66/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13599,13 +13599,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.67/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13618,13 +13618,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.68/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13637,13 +13637,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.69/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13656,13 +13656,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.70/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13675,13 +13675,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.71/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13694,13 +13694,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.72/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13713,13 +13713,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.73/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13732,13 +13732,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.74/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13751,13 +13751,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.75/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13770,13 +13770,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.76/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13789,13 +13789,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.77/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13808,13 +13808,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.78/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13827,13 +13827,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.79/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13846,13 +13846,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.80/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13865,13 +13865,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.81/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13884,13 +13884,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.82/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13903,13 +13903,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.83/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13922,13 +13922,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.84/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13941,13 +13941,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.85/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13960,13 +13960,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.86/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13979,13 +13979,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.87/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -13998,13 +13998,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.88/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14017,13 +14017,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.89/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14036,13 +14036,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.90/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14055,13 +14055,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.91/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14074,13 +14074,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.92/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14093,13 +14093,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.93/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14112,13 +14112,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.94/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14131,13 +14131,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.95/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14150,13 +14150,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.96/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14169,13 +14169,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.97/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14188,13 +14188,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.98/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14207,13 +14207,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.99/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14226,13 +14226,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.100/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14245,13 +14245,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.101/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14264,13 +14264,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.102/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14283,13 +14283,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.103/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14302,13 +14302,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.104/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14321,13 +14321,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.105/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14340,13 +14340,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.106/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14359,13 +14359,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.107/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14378,13 +14378,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.108/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14397,13 +14397,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.109/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14416,13 +14416,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.110/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14435,13 +14435,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.111/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14454,13 +14454,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.112/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14473,13 +14473,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.113/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14492,13 +14492,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.114/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14511,13 +14511,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.115/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14530,13 +14530,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.116/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14549,13 +14549,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.117/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14568,13 +14568,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.118/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14587,13 +14587,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.119/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14606,13 +14606,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.120/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14625,13 +14625,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.121/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14644,13 +14644,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.122/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14663,13 +14663,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.123/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14682,13 +14682,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.124/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14701,13 +14701,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.125/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14720,13 +14720,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.126/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14739,13 +14739,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.127/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14758,13 +14758,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.128/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14777,13 +14777,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.129/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14796,13 +14796,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.130/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14815,13 +14815,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.131/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14834,13 +14834,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.132/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14853,13 +14853,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.133/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14872,13 +14872,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.134/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14891,13 +14891,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.135/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14910,13 +14910,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.136/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14929,13 +14929,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.137/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14948,13 +14948,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.138/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14967,13 +14967,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.139/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -14986,13 +14986,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.140/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15005,13 +15005,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.141/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15024,13 +15024,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.142/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15043,13 +15043,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.143/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15062,13 +15062,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.144/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15081,13 +15081,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.145/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15100,13 +15100,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.146/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15119,13 +15119,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.147/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15138,13 +15138,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.148/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15157,13 +15157,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.149/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15176,13 +15176,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.150/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15195,13 +15195,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.151/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15214,13 +15214,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.152/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15233,13 +15233,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.153/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15252,13 +15252,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.154/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15271,13 +15271,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.155/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15290,13 +15290,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.156/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15309,13 +15309,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.157/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15328,13 +15328,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.158/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15347,13 +15347,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.159/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15366,13 +15366,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.160/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15385,13 +15385,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.161/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15404,13 +15404,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.162/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15423,13 +15423,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.163/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15442,13 +15442,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.164/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15461,13 +15461,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.165/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15480,13 +15480,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.166/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15499,13 +15499,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.167/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15518,13 +15518,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.168/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15537,13 +15537,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.169/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15556,13 +15556,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.170/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15575,13 +15575,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.171/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15594,13 +15594,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.172/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15613,13 +15613,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.173/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15632,13 +15632,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.174/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15651,13 +15651,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.175/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15670,13 +15670,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.176/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15689,13 +15689,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.177/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15708,13 +15708,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.178/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15727,13 +15727,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.179/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15746,13 +15746,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.180/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15765,13 +15765,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.181/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15784,13 +15784,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.182/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15803,13 +15803,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.183/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15822,13 +15822,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.184/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15841,13 +15841,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.185/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15860,13 +15860,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.186/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15879,13 +15879,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.187/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15898,13 +15898,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.188/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15917,13 +15917,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.189/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15936,13 +15936,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.190/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15955,13 +15955,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.191/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15974,13 +15974,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.192/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -15993,13 +15993,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.193/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -16012,13 +16012,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.194/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -16031,13 +16031,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.195/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -16050,13 +16050,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.196/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -16069,13 +16069,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.197/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -16088,13 +16088,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.198/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -16107,13 +16107,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.199/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -16126,13 +16126,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.200/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -16145,13 +16145,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.111.0/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -16164,13 +16164,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:31 	Metric: 1201 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:31 	Metric: 1201
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.4.0/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -16183,13 +16183,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:06 	Metric: 1201 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:06 	Metric: 1201
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.100.0/25 (2 entries, 1 announced)
         TSI:
@@ -16201,13 +16201,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int Ext>
-                        Local AS: 65171 
-                        Age: 2w5d 16:18:45 	Metric: 32000 
-                        Validation State: unverified 
-                            Tag: 65000500 
+                        Local AS: 65171
+                        Age: 2w5d 16:18:45 	Metric: 32000
+                        Validation State: unverified
+                            Tag: 65000500
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.100.252/32 (2 entries, 1 announced)
         TSI:
@@ -16219,13 +16219,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int Ext>
-                        Local AS: 65171 
-                        Age: 2w5d 16:18:45 	Metric: 32000 
-                        Validation State: unverified 
-                            Tag: 65000500 
+                        Local AS: 65171
+                        Age: 2w5d 16:18:45 	Metric: 32000
+                        Validation State: unverified
+                            Tag: 65000500
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.36.48/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -16238,13 +16238,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w2d 4:43:35 	Metric: 10100 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:43:35 	Metric: 10100
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.36.56/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -16257,13 +16257,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w2d 4:43:35 	Metric: 10100 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:43:35 	Metric: 10100
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.36.119/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -16276,13 +16276,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w2d 4:43:35 	Metric: 10101 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:43:35 	Metric: 10101
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.36.120/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -16295,13 +16295,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w2d 4:43:35 	Metric: 10101 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:43:35 	Metric: 10101
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         224.0.0.5/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -16312,12 +16312,12 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Address: 0xbb66cd4
                         Next-hop reference count: 9
                         State: <Active NoReadvrt Int>
-                        Local AS: 65171 
-                        Age: 29w5d 23:06:46 	Metric: 1 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 29w5d 23:06:46 	Metric: 1
+                        Validation State: unverified
                         Task: OSPF I/O./var/run/ppmd_control
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         inet.3: 11 destinations, 11 routes (11 active, 0 holddown, 0 hidden)
 
@@ -16329,7 +16329,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Label operation: Push 17000
                         Label TTL action: no-prop-ttl
-                        Load balance label: Label 17000: None; 
+                        Load balance label: Label 17000: None;
                         Label element ptr: 0xc5f6ec0
                         Label parent element ptr: 0x0
                         Label element references: 2
@@ -16339,7 +16339,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0xf000
                         Label operation: Push 17000, Push 1650, Push 1913(top)
                         Label TTL action: no-prop-ttl, no-prop-ttl, no-prop-ttl(top)
-                        Load balance label: Label 17000: None; Label 1650: None; Label 1913: None; 
+                        Load balance label: Label 17000: None; Label 1650: None; Label 1913: None;
                         Label element ptr: 0xc5c9a00
                         Label parent element ptr: 0x0
                         Label element references: 2
@@ -16347,13 +16347,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x0
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 5:30:11 	Metric: 1201 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 5:30:11 	Metric: 1201
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 3-Resolve tree 1 4-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 3-Resolve tree 1 4-Resolve tree 3
+                        AS path: I
 
         10.19.198.239/32 (1 entry, 1 announced)
                 *L-OSPF Preference: 10/5
@@ -16370,7 +16370,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0xf000
                         Label operation: Push 16073
                         Label TTL action: no-prop-ttl
-                        Load balance label: Label 16073: None; 
+                        Load balance label: Label 16073: None;
                         Label element ptr: 0xc5ee888
                         Label parent element ptr: 0x0
                         Label element references: 2
@@ -16378,13 +16378,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x0
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 1w5d 22:11:26 	Metric: 1001 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 1w5d 22:11:26 	Metric: 1001
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 3-Resolve tree 1 4-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 3-Resolve tree 1 4-Resolve tree 3
+                        AS path: I
 
         10.34.2.250/32 (1 entry, 1 announced)
                 *L-OSPF Preference: 10/5
@@ -16394,7 +16394,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Label operation: Push 16061
                         Label TTL action: no-prop-ttl
-                        Load balance label: Label 16061: None; 
+                        Load balance label: Label 16061: None;
                         Label element ptr: 0xc5f6e20
                         Label parent element ptr: 0x0
                         Label element references: 2
@@ -16402,13 +16402,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x0
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:10:26 	Metric: 200 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:10:26 	Metric: 200
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 3-Resolve tree 1 4-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 3-Resolve tree 1 4-Resolve tree 3
+                        AS path: I
 
         10.34.2.251/32 (1 entry, 1 announced)
                 *L-OSPF Preference: 10/5
@@ -16418,7 +16418,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Label operation: Push 16062
                         Label TTL action: no-prop-ttl
-                        Load balance label: Label 16062: None; 
+                        Load balance label: Label 16062: None;
                         Label element ptr: 0xc5f6df8
                         Label parent element ptr: 0x0
                         Label element references: 2
@@ -16426,13 +16426,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x0
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:10:26 	Metric: 205 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:10:26 	Metric: 205
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 3-Resolve tree 1 4-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 3-Resolve tree 1 4-Resolve tree 3
+                        AS path: I
 
         10.169.196.241/32 (1 entry, 1 announced)
                 *L-OSPF Preference: 10/5
@@ -16442,7 +16442,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Label operation: Push 16063
                         Label TTL action: no-prop-ttl
-                        Load balance label: Label 16063: None; 
+                        Load balance label: Label 16063: None;
                         Label element ptr: 0xc5c8128
                         Label parent element ptr: 0x0
                         Label element references: 2
@@ -16452,7 +16452,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0xf000
                         Label operation: Push 16063, Push 1650, Push 1913(top)
                         Label TTL action: no-prop-ttl, no-prop-ttl, no-prop-ttl(top)
-                        Load balance label: Label 16063: None; Label 1650: None; Label 1913: None; 
+                        Load balance label: Label 16063: None; Label 1650: None; Label 1913: None;
                         Label element ptr: 0xc5f70f0
                         Label parent element ptr: 0x0
                         Label element references: 2
@@ -16460,13 +16460,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x0
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:26 	Metric: 1201 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:26 	Metric: 1201
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 3-Resolve tree 1 4-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 3-Resolve tree 1 4-Resolve tree 3
+                        AS path: I
 
         10.169.14.240/32 (1 entry, 1 announced)
                 *L-OSPF Preference: 10/5
@@ -16483,7 +16483,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0xf000
                         Label operation: Push 16051, Push 1913(top)
                         Label TTL action: no-prop-ttl, no-prop-ttl(top)
-                        Load balance label: Label 16051: None; Label 1913: None; 
+                        Load balance label: Label 16051: None; Label 1913: None;
                         Label element ptr: 0xc5ee6f8
                         Label parent element ptr: 0x0
                         Label element references: 6
@@ -16491,13 +16491,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x0
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 18:21:51 	Metric: 100 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 18:21:51 	Metric: 100
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 3-Resolve tree 1 4-Resolve tree 3 6-Resolve_IGP_FRR task 
-                        AS path: I 
+                        Announcement bits (3): 3-Resolve tree 1 4-Resolve tree 3 6-Resolve_IGP_FRR task
+                        AS path: I
 
         10.169.14.241/32 (1 entry, 1 announced)
                 *L-OSPF Preference: 10/5
@@ -16507,7 +16507,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Label operation: Push 16052
                         Label TTL action: no-prop-ttl
-                        Load balance label: Label 16052: None; 
+                        Load balance label: Label 16052: None;
                         Label element ptr: 0xc5f6d80
                         Label parent element ptr: 0x0
                         Label element references: 2
@@ -16515,13 +16515,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x0
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w2d 4:43:35 	Metric: 105 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:43:35 	Metric: 105
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 3-Resolve tree 1 4-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 3-Resolve tree 1 4-Resolve tree 3
+                        AS path: I
 
         10.189.5.253/32 (1 entry, 1 announced)
                 *L-OSPF Preference: 10/5
@@ -16536,13 +16536,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x0
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 18:21:56 	Metric: 5 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 18:21:56 	Metric: 5
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 3-Resolve tree 1 4-Resolve tree 3 6-Resolve_IGP_FRR task 
-                        AS path: I 
+                        Announcement bits (3): 3-Resolve tree 1 4-Resolve tree 3 6-Resolve_IGP_FRR task
+                        AS path: I
 
         mpls.0: 44 destinations, 44 routes (44 active, 0 holddown, 0 hidden)
 
@@ -16554,8 +16554,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Address: 0xbc32314
                         Next-hop reference count: 2
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
-                        Label operation: Pop      
-                        Load balance label: None; 
+                        Label operation: Pop
+                        Load balance label: None;
                         Label element ptr: 0xc5cd8a8
                         Label parent element ptr: 0x0
                         Label element references: 7
@@ -16565,7 +16565,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0xf000
                         Label operation: Swap 16051, Push 1913(top)
                         Label TTL action: no-prop-ttl, no-prop-ttl(top)
-                        Load balance label: Label 16051: None; Label 1913: None; 
+                        Load balance label: Label 16051: None; Label 1913: None;
                         Label element ptr: 0xc5f4b98
                         Label parent element ptr: 0x0
                         Label element references: 3
@@ -16573,13 +16573,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x0
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 1w6d 20:26:02 	Metric: 0 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 1w6d 20:26:02 	Metric: 0
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         2567(S=0) (1 entry, 1 announced)
         TSI:
@@ -16589,8 +16589,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Address: 0xbc1d894
                         Next-hop reference count: 2
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
-                        Label operation: Pop      
-                        Load balance label: None; 
+                        Label operation: Pop
+                        Load balance label: None;
                         Label element ptr: 0xc5cd8d0
                         Label parent element ptr: 0x0
                         Label element references: 7
@@ -16600,7 +16600,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0xf000
                         Label operation: Swap 16051, Push 1913(top)
                         Label TTL action: no-prop-ttl, no-prop-ttl(top)
-                        Load balance label: Label 16051: None; Label 1913: None; 
+                        Load balance label: Label 16051: None; Label 1913: None;
                         Label element ptr: 0xc5f4b98
                         Label parent element ptr: 0x0
                         Label element references: 3
@@ -16608,13 +16608,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x0
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 1w6d 20:26:02 	Metric: 0 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 1w6d 20:26:02 	Metric: 0
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         2568 (1 entry, 1 announced)
         TSI:
@@ -16624,8 +16624,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Address: 0xdfaa1b4
                         Next-hop reference count: 2
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
-                        Label operation: Pop      
-                        Load balance label: None; 
+                        Label operation: Pop
+                        Load balance label: None;
                         Label element ptr: 0xc5cd8a8
                         Label parent element ptr: 0x0
                         Label element references: 7
@@ -16633,13 +16633,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w2d 4:43:35 	Metric: 0 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:43:35 	Metric: 0
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         2568(S=0) (1 entry, 1 announced)
         TSI:
@@ -16649,8 +16649,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Address: 0xdfadc34
                         Next-hop reference count: 2
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
-                        Label operation: Pop      
-                        Load balance label: None; 
+                        Label operation: Pop
+                        Load balance label: None;
                         Label element ptr: 0xc5cd8d0
                         Label parent element ptr: 0x0
                         Label element references: 7
@@ -16658,13 +16658,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w2d 4:43:35 	Metric: 0 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:43:35 	Metric: 0
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         16051 (1 entry, 1 announced)
         TSI:
@@ -16674,8 +16674,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Address: 0xbc32314
                         Next-hop reference count: 2
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
-                        Label operation: Pop      
-                        Load balance label: None; 
+                        Label operation: Pop
+                        Load balance label: None;
                         Label element ptr: 0xc5cd8a8
                         Label parent element ptr: 0x0
                         Label element references: 7
@@ -16685,7 +16685,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0xf000
                         Label operation: Swap 16051, Push 1913(top)
                         Label TTL action: no-prop-ttl, no-prop-ttl(top)
-                        Load balance label: Label 16051: None; Label 1913: None; 
+                        Load balance label: Label 16051: None; Label 1913: None;
                         Label element ptr: 0xc5f4b98
                         Label parent element ptr: 0x0
                         Label element references: 3
@@ -16693,13 +16693,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x0
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 18:21:51 	Metric: 100 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 18:21:51 	Metric: 100
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         16051(S=0) (1 entry, 1 announced)
         TSI:
@@ -16709,8 +16709,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Address: 0xbc1d894
                         Next-hop reference count: 2
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
-                        Label operation: Pop      
-                        Load balance label: None; 
+                        Label operation: Pop
+                        Load balance label: None;
                         Label element ptr: 0xc5cd8d0
                         Label parent element ptr: 0x0
                         Label element references: 7
@@ -16720,7 +16720,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0xf000
                         Label operation: Swap 16051, Push 1913(top)
                         Label TTL action: no-prop-ttl, no-prop-ttl(top)
-                        Load balance label: Label 16051: None; Label 1913: None; 
+                        Load balance label: Label 16051: None; Label 1913: None;
                         Label element ptr: 0xc5f4b98
                         Label parent element ptr: 0x0
                         Label element references: 3
@@ -16728,13 +16728,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x0
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 18:21:51 	Metric: 100 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 18:21:51 	Metric: 100
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         16052 (1 entry, 1 announced)
         TSI:
@@ -16745,7 +16745,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next-hop reference count: 2
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Label operation: Swap 16052
-                        Load balance label: Label 16052: None; 
+                        Load balance label: Label 16052: None;
                         Label element ptr: 0xc5f6d08
                         Label parent element ptr: 0x0
                         Label element references: 1
@@ -16753,13 +16753,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w2d 4:43:35 	Metric: 105 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:43:35 	Metric: 105
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         16061 (1 entry, 1 announced)
         TSI:
@@ -16770,7 +16770,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next-hop reference count: 2
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Label operation: Swap 16061
-                        Load balance label: Label 16061: None; 
+                        Load balance label: Label 16061: None;
                         Label element ptr: 0xc5f6cb8
                         Label parent element ptr: 0x0
                         Label element references: 1
@@ -16778,13 +16778,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:10:26 	Metric: 200 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:10:26 	Metric: 200
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         16062 (1 entry, 1 announced)
         TSI:
@@ -16795,7 +16795,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next-hop reference count: 2
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Label operation: Swap 16062
-                        Load balance label: Label 16062: None; 
+                        Load balance label: Label 16062: None;
                         Label element ptr: 0xc5f6c90
                         Label parent element ptr: 0x0
                         Label element references: 1
@@ -16803,13 +16803,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:10:26 	Metric: 205 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:10:26 	Metric: 205
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         16063 (1 entry, 1 announced)
         TSI:
@@ -16820,7 +16820,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next-hop reference count: 1
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Label operation: Swap 16063
-                        Load balance label: Label 16063: None; 
+                        Load balance label: Label 16063: None;
                         Label element ptr: 0xc5c8150
                         Label parent element ptr: 0x0
                         Label element references: 2
@@ -16830,7 +16830,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0xf000
                         Label operation: Swap 16063, Push 1650, Push 1913(top)
                         Label TTL action: no-prop-ttl, no-prop-ttl, no-prop-ttl(top)
-                        Load balance label: Label 16063: None; Label 1650: None; Label 1913: None; 
+                        Load balance label: Label 16063: None; Label 1650: None; Label 1913: None;
                         Label element ptr: 0xc5f72d0
                         Label parent element ptr: 0x0
                         Label element references: 2
@@ -16838,13 +16838,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x0
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:15:26 	Metric: 1201 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:15:26 	Metric: 1201
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         16072 (1 entry, 1 announced)
         TSI:
@@ -16854,8 +16854,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Address: 0xe336114
                         Next-hop reference count: 6
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0x1, selected
-                        Label operation: Pop      
-                        Load balance label: None; 
+                        Label operation: Pop
+                        Load balance label: None;
                         Label element ptr: 0xc5cd8a8
                         Label parent element ptr: 0x0
                         Label element references: 7
@@ -16863,13 +16863,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x140
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 18:21:56 	Metric: 5 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 18:21:56 	Metric: 5
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         16072(S=0) (1 entry, 1 announced)
         TSI:
@@ -16879,8 +16879,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Address: 0xe34b8f4
                         Next-hop reference count: 6
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0x1, selected
-                        Label operation: Pop      
-                        Load balance label: None; 
+                        Label operation: Pop
+                        Load balance label: None;
                         Label element ptr: 0xc5cd8d0
                         Label parent element ptr: 0x0
                         Label element references: 7
@@ -16888,13 +16888,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x140
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 18:21:56 	Metric: 5 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 18:21:56 	Metric: 5
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         16073 (1 entry, 1 announced)
         TSI:
@@ -16904,8 +16904,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Address: 0xbc16b94
                         Next-hop reference count: 2
                         Next hop: 10.19.198.26 via ge-0/0/2.0 weight 0x1, selected
-                        Label operation: Pop      
-                        Load balance label: None; 
+                        Label operation: Pop
+                        Load balance label: None;
                         Label element ptr: 0xc5cd8a8
                         Label parent element ptr: 0x0
                         Label element references: 7
@@ -16914,7 +16914,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Session Id: 0x0
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0xf000
                         Label operation: Swap 16073
-                        Load balance label: Label 16073: None; 
+                        Load balance label: Label 16073: None;
                         Label element ptr: 0xc5ee928
                         Label parent element ptr: 0x0
                         Label element references: 3
@@ -16922,13 +16922,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x0
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 1w5d 22:11:26 	Metric: 1001 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 1w5d 22:11:26 	Metric: 1001
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         16073(S=0) (1 entry, 1 announced)
         TSI:
@@ -16938,8 +16938,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Address: 0xbc16c14
                         Next-hop reference count: 2
                         Next hop: 10.19.198.26 via ge-0/0/2.0 weight 0x1, selected
-                        Label operation: Pop      
-                        Load balance label: None; 
+                        Label operation: Pop
+                        Load balance label: None;
                         Label element ptr: 0xc5cd8d0
                         Label parent element ptr: 0x0
                         Label element references: 7
@@ -16948,7 +16948,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Session Id: 0x0
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0xf000
                         Label operation: Swap 16073
-                        Load balance label: Label 16073: None; 
+                        Load balance label: Label 16073: None;
                         Label element ptr: 0xc5ee928
                         Label parent element ptr: 0x0
                         Label element references: 3
@@ -16956,13 +16956,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x0
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 1w5d 22:11:26 	Metric: 1001 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 1w5d 22:11:26 	Metric: 1001
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         17000 (1 entry, 1 announced)
         TSI:
@@ -16973,7 +16973,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next-hop reference count: 1
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Label operation: Swap 17000
-                        Load balance label: Label 17000: None; 
+                        Load balance label: Label 17000: None;
                         Label element ptr: 0xc5f6d30
                         Label parent element ptr: 0x0
                         Label element references: 2
@@ -16983,7 +16983,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0xf000
                         Label operation: Swap 17000, Push 1650, Push 1913(top)
                         Label TTL action: no-prop-ttl, no-prop-ttl, no-prop-ttl(top)
-                        Load balance label: Label 17000: None; Label 1650: None; Label 1913: None; 
+                        Load balance label: Label 17000: None; Label 1650: None; Label 1913: None;
                         Label element ptr: 0xc5f34a0
                         Label parent element ptr: 0x0
                         Label element references: 2
@@ -16991,13 +16991,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x0
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 5:30:11 	Metric: 1201 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 5:30:11 	Metric: 1201
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         28985 (1 entry, 1 announced)
         TSI:
@@ -17007,8 +17007,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Address: 0xe336114
                         Next-hop reference count: 6
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0x1, selected
-                        Label operation: Pop      
-                        Load balance label: None; 
+                        Label operation: Pop
+                        Load balance label: None;
                         Label element ptr: 0xc5cd8a8
                         Label parent element ptr: 0x0
                         Label element references: 7
@@ -17016,13 +17016,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x140
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 18:21:56 	Metric: 0 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 18:21:56 	Metric: 0
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         28985(S=0) (1 entry, 1 announced)
         TSI:
@@ -17032,8 +17032,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Address: 0xe34b8f4
                         Next-hop reference count: 6
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0x1, selected
-                        Label operation: Pop      
-                        Load balance label: None; 
+                        Label operation: Pop
+                        Load balance label: None;
                         Label element ptr: 0xc5cd8d0
                         Label parent element ptr: 0x0
                         Label element references: 7
@@ -17041,13 +17041,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x140
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 18:21:56 	Metric: 0 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 18:21:56 	Metric: 0
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         28986 (1 entry, 1 announced)
         TSI:
@@ -17057,8 +17057,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Address: 0xe336114
                         Next-hop reference count: 6
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0x1, selected
-                        Label operation: Pop      
-                        Load balance label: None; 
+                        Label operation: Pop
+                        Load balance label: None;
                         Label element ptr: 0xc5cd8a8
                         Label parent element ptr: 0x0
                         Label element references: 7
@@ -17066,13 +17066,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x140
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 18:21:56 	Metric: 0 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 18:21:56 	Metric: 0
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         28986(S=0) (1 entry, 1 announced)
         TSI:
@@ -17082,8 +17082,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Address: 0xe34b8f4
                         Next-hop reference count: 6
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0x1, selected
-                        Label operation: Pop      
-                        Load balance label: None; 
+                        Label operation: Pop
+                        Load balance label: None;
                         Label element ptr: 0xc5cd8d0
                         Label parent element ptr: 0x0
                         Label element references: 7
@@ -17091,13 +17091,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x140
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 18:21:56 	Metric: 0 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 18:21:56 	Metric: 0
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         167966 (1 entry, 1 announced)
         TSI:
@@ -17107,8 +17107,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Address: 0xbc16b94
                         Next-hop reference count: 2
                         Next hop: 10.19.198.26 via ge-0/0/2.0 weight 0x1, selected
-                        Label operation: Pop      
-                        Load balance label: None; 
+                        Label operation: Pop
+                        Load balance label: None;
                         Label element ptr: 0xc5cd8a8
                         Label parent element ptr: 0x0
                         Label element references: 7
@@ -17117,7 +17117,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Session Id: 0x0
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0xf000
                         Label operation: Swap 16073
-                        Load balance label: Label 16073: None; 
+                        Load balance label: Label 16073: None;
                         Label element ptr: 0xc5ee928
                         Label parent element ptr: 0x0
                         Label element references: 3
@@ -17125,13 +17125,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x0
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 1w5d 22:11:26 	Metric: 0 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 1w5d 22:11:26 	Metric: 0
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         167966(S=0) (1 entry, 1 announced)
         TSI:
@@ -17141,8 +17141,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Address: 0xbc16c14
                         Next-hop reference count: 2
                         Next hop: 10.19.198.26 via ge-0/0/2.0 weight 0x1, selected
-                        Label operation: Pop      
-                        Load balance label: None; 
+                        Label operation: Pop
+                        Load balance label: None;
                         Label element ptr: 0xc5cd8d0
                         Label parent element ptr: 0x0
                         Label element references: 7
@@ -17151,7 +17151,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Session Id: 0x0
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0xf000
                         Label operation: Swap 16073
-                        Load balance label: Label 16073: None; 
+                        Load balance label: Label 16073: None;
                         Label element ptr: 0xc5ee928
                         Label parent element ptr: 0x0
                         Label element references: 3
@@ -17159,13 +17159,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x0
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 1w5d 22:11:26 	Metric: 0 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 1w5d 22:11:26 	Metric: 0
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         167967 (1 entry, 1 announced)
         TSI:
@@ -17175,8 +17175,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Address: 0xdbd53f4
                         Next-hop reference count: 2
                         Next hop: 10.19.198.26 via ge-0/0/2.0 weight 0x1, selected
-                        Label operation: Pop      
-                        Load balance label: None; 
+                        Label operation: Pop
+                        Load balance label: None;
                         Label element ptr: 0xc5cd8a8
                         Label parent element ptr: 0x0
                         Label element references: 7
@@ -17184,13 +17184,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x1ae
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 1w5d 22:11:35 	Metric: 0 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 1w5d 22:11:35 	Metric: 0
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         167967(S=0) (1 entry, 1 announced)
         TSI:
@@ -17200,8 +17200,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Address: 0xdbd5334
                         Next-hop reference count: 2
                         Next hop: 10.19.198.26 via ge-0/0/2.0 weight 0x1, selected
-                        Label operation: Pop      
-                        Load balance label: None; 
+                        Label operation: Pop
+                        Load balance label: None;
                         Label element ptr: 0xc5cd8d0
                         Label parent element ptr: 0x0
                         Label element references: 7
@@ -17209,13 +17209,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Label element lsp id: 0
                         Session Id: 0x1ae
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 1w5d 22:11:35 	Metric: 0 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 1w5d 22:11:35 	Metric: 0
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (1): 1-KRT 
-                        AS path: I 
+                        Announcement bits (1): 1-KRT
+                        AS path: I
 
         inet6.0: 22 destinations, 23 routes (22 active, 0 holddown, 0 hidden)
 
@@ -17230,13 +17230,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: fe80::250:56ff:fe8d:72bd via ge-0/0/1.0, selected
                         Session Id: 0x144
                         State: <Active Int Ext>
-                        Local AS: 65171 
-                        Age: 3w0d 18:21:55 	Metric: 101 
-                        Validation State: unverified 
-                            Tag: 0 
+                        Local AS: 65171
+                        Age: 3w0d 18:21:55 	Metric: 101
+                        Validation State: unverified
+                            Tag: 0
                         Task: OSPF3
-                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5
+                        AS path: I
 
         2001:db8:6aa8:6a53::1001/128 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -17249,13 +17249,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: fe80::250:56ff:fe8d:72bd via ge-0/0/1.0, selected
                         Session Id: 0x144
                         State: <Active Int Ext>
-                        Local AS: 65171 
-                        Age: 3w0d 18:21:55 	Metric: 150 
-                        Validation State: unverified 
-                            Tag: 0 
+                        Local AS: 65171
+                        Age: 3w0d 18:21:55 	Metric: 150
+                        Validation State: unverified
+                            Tag: 0
                         Task: OSPF3
-                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5
+                        AS path: I
 
         2001:db8:b0f8:ca45::13/128 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -17268,13 +17268,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: fe80::250:56ff:fe8d:72bd via ge-0/0/1.0, selected
                         Session Id: 0x144
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:10:17 	Metric: 200 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:10:17 	Metric: 200
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF3
-                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5
+                        AS path: I
 
         2001:db8:b0f8:ca45::14/128 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -17287,13 +17287,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: fe80::250:56ff:fe8d:72bd via ge-0/0/1.0, selected
                         Session Id: 0x144
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:10:17 	Metric: 205 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:10:17 	Metric: 205
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF3
-                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5
+                        AS path: I
 
         2001:db8:b0f8:3ab::/64 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -17306,13 +17306,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: fe80::250:56ff:fe8d:72bd via ge-0/0/1.0, selected
                         Session Id: 0x144
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:10:17 	Metric: 205 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:10:17 	Metric: 205
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF3
-                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5
+                        AS path: I
 
         2001:db8:eb18:ca45::1/128 (2 entries, 1 announced)
                 State: <FlashAll>
@@ -17327,12 +17327,12 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Session Id: 0x144
                         State: <Int>
                         Inactive reason: Route Preference
-                        Local AS: 65171 
-                        Age: 3w0d 18:21:55 	Metric: 100 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 18:21:55 	Metric: 100
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF3
-                        AS path: I 
+                        AS path: I
 
         2001:db8:eb18:ca45::2/128 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -17345,13 +17345,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: fe80::250:56ff:fe8d:72bd via ge-0/0/1.0, selected
                         Session Id: 0x144
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 18:21:55 	Metric: 105 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 18:21:55 	Metric: 105
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF3
-                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5
+                        AS path: I
 
         2001:db8:eb18:e26e::/64 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -17364,13 +17364,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: fe80::250:56ff:fe8d:72bd via ge-0/0/1.0, selected
                         Session Id: 0x144
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 18:21:55 	Metric: 105 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 18:21:55 	Metric: 105
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF3
-                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5
+                        AS path: I
 
         2001:db8:eb18:f5e6::/64 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -17383,13 +17383,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: fe80::250:56ff:fe8d:72bd via ge-0/0/1.0, selected
                         Session Id: 0x144
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 5:30:12 	Metric: 225 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 5:30:12 	Metric: 225
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF3
-                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5
+                        AS path: I
 
         2001:db8:eb18:6d57::/64 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -17402,13 +17402,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: fe80::250:56ff:fe8d:53c0 via ge-0/0/0.0, selected
                         Session Id: 0x142
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 18:22:00 	Metric: 125 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 18:22:00 	Metric: 125
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF3
-                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5
+                        AS path: I
 
         2001:db8:eb18:9627::/64 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -17421,13 +17421,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: fe80::250:56ff:fe8d:72bd via ge-0/0/1.0, selected
                         Session Id: 0x144
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:10:17 	Metric: 200 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:10:17 	Metric: 200
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF3
-                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5
+                        AS path: I
 
         2001:db8:223c:ca45::c/128 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -17440,13 +17440,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: fe80::250:56ff:fe8d:53c0 via ge-0/0/0.0, selected
                         Session Id: 0x142
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 18:22:00 	Metric: 5 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 18:22:00 	Metric: 5
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF3
-                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5
+                        AS path: I
 
         ff02::5/128 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -17457,12 +17457,12 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Address: 0xbb66cd4
                         Next-hop reference count: 9
                         State: <Active NoReadvrt Int>
-                        Local AS: 65171 
-                        Age: 29w5d 23:06:46 	Metric: 1 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 29w5d 23:06:46 	Metric: 1
+                        Validation State: unverified
                         Task: OSPF3 I/O./var/run/ppmd_control
-                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 3-LDP 5-Resolve tree 5
+                        AS path: I
     '''}
 
     golden_parsed_output = {
@@ -31557,13 +31557,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int Ext>
-                        Local AS: 65171 
-                        Age: 3w2d 4:46:58  Metric: 101 
-                        Validation State: unverified 
-                            Tag: 0 
+                        Local AS: 65171
+                        Age: 3w2d 4:46:58  Metric: 101
+                        Validation State: unverified
+                            Tag: 0
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.1.0.0/24 (2 entries, 1 announced)
                 State: <FlashAll>
@@ -31575,12 +31575,12 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Session Id: 0x141
                         State: <Int Ext>
                         Inactive reason: Route Preference
-                        Local AS: 65171 
-                        Age: 3w2d 4:46:58  Metric: 20 
-                        Validation State: unverified 
-                            Tag: 0 
+                        Local AS: 65171
+                        Age: 3w2d 4:46:58  Metric: 20
+                        Validation State: unverified
+                            Tag: 0
                         Task: OSPF
-                        AS path: I 
+                        AS path: I
 
         10.36.3.3/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -31593,13 +31593,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.16.0.0/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -31612,13 +31612,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:13:49  Metric: 1200 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:13:49  Metric: 1200
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.100.5.5/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -31631,13 +31631,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:13:49  Metric: 1201 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:13:49  Metric: 1201
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 0-KRT 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 0-KRT 7-Resolve tree 3
+                        AS path: I
 
         10.19.198.28/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -31650,13 +31650,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0x1, selected
                         Session Id: 0x140
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 18:25:19      Metric: 1005 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 18:25:19      Metric: 1005
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.19.198.239/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -31669,13 +31669,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.19.198.26 via ge-0/0/2.0 weight 0x1, selected
                         Session Id: 0x1ae
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 1w5d 22:14:58      Metric: 1001 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 1w5d 22:14:58      Metric: 1001
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 0-KRT 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 0-KRT 7-Resolve tree 3
+                        AS path: I
 
         10.174.132.237/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -31688,13 +31688,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int Ext>
-                        Local AS: 65171 
-                        Age: 3w2d 4:46:58  Metric: 150 
-                        Validation State: unverified 
-                            Tag: 0 
+                        Local AS: 65171
+                        Age: 3w2d 4:46:58  Metric: 150
+                        Validation State: unverified
+                            Tag: 0
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.34.2.200/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -31707,13 +31707,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:13:49  Metric: 205 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:13:49  Metric: 205
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.34.2.250/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -31726,13 +31726,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:13:49  Metric: 200 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:13:49  Metric: 200
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 0-KRT 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 0-KRT 7-Resolve tree 3
+                        AS path: I
 
         10.34.2.251/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -31745,13 +31745,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:13:49  Metric: 205 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:13:49  Metric: 205
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 0-KRT 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 0-KRT 7-Resolve tree 3
+                        AS path: I
 
         10.15.0.0/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -31764,13 +31764,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.19.198.26 via ge-0/0/2.0 weight 0x1, selected
                         Session Id: 0x1ae
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 1w5d 22:14:58      Metric: 1001 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 1w5d 22:14:58      Metric: 1001
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.64.0.0/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -31783,13 +31783,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1201 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1201
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.169.196.212/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -31802,13 +31802,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:13:49  Metric: 1200 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:13:49  Metric: 1200
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.169.196.216/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -31821,13 +31821,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:13:49  Metric: 1205 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:13:49  Metric: 1205
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.169.196.241/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -31840,13 +31840,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1201 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1201
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 0-KRT 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 0-KRT 7-Resolve tree 3
+                        AS path: I
 
         10.169.14.16/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -31859,13 +31859,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w2d 4:46:58  Metric: 105 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:46:58  Metric: 105
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.169.14.32/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -31878,13 +31878,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 5:33:46  Metric: 225 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 5:33:46  Metric: 225
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.169.14.128/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -31897,13 +31897,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0x1, selected
                         Session Id: 0x140
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 18:25:19      Metric: 125 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 18:25:19      Metric: 125
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.169.14.156/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -31916,13 +31916,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:13:51  Metric: 200 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:13:51  Metric: 200
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.169.14.240/32 (2 entries, 1 announced)
                 State: <FlashAll>
@@ -31937,12 +31937,12 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Session Id: 0x141
                         State: <Int>
                         Inactive reason: Route Preference
-                        Local AS: 65171 
-                        Age: 3w2d 4:46:58  Metric: 100 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:46:58  Metric: 100
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        AS path: I 
+                        AS path: I
 
         10.169.14.241/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -31955,13 +31955,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w2d 4:46:58  Metric: 105 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:46:58  Metric: 105
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 0-KRT 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 0-KRT 7-Resolve tree 3
+                        AS path: I
 
         10.169.14.242/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -31974,13 +31974,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w2d 4:46:58  Metric: 100 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:46:58  Metric: 100
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.169.14.243/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -31993,13 +31993,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w2d 4:46:58  Metric: 105 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:46:58  Metric: 105
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.189.5.253/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32012,13 +32012,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0x1, selected
                         Session Id: 0x140
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 18:25:19      Metric: 5 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 18:25:19      Metric: 5
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 0-KRT 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 0-KRT 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.0/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32031,13 +32031,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 2w6d 6:13:49  Metric: 1200 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 2w6d 6:13:49  Metric: 1200
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.0/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32050,13 +32050,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.1/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32069,13 +32069,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.2/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32088,13 +32088,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.3/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32107,13 +32107,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.4/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32126,13 +32126,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.5/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32145,13 +32145,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.6/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32164,13 +32164,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.7/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32183,13 +32183,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.8/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32202,13 +32202,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.9/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32221,13 +32221,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.10/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32240,13 +32240,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.11/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32259,13 +32259,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.12/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32278,13 +32278,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.13/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32297,13 +32297,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.14/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32316,13 +32316,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.15/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32335,13 +32335,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.16/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32354,13 +32354,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.17/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32373,13 +32373,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.18/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32392,13 +32392,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.19/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32411,13 +32411,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.20/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32430,13 +32430,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.21/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32449,13 +32449,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.22/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32468,13 +32468,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.23/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32487,13 +32487,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.24/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32506,13 +32506,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.25/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32525,13 +32525,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.26/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32544,13 +32544,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.27/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32563,13 +32563,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.28/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32582,13 +32582,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.29/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32601,13 +32601,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.30/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32620,13 +32620,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.31/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32639,13 +32639,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.32/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32658,13 +32658,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.33/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32677,13 +32677,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.34/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32696,13 +32696,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.35/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32715,13 +32715,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.36/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32734,13 +32734,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.37/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32753,13 +32753,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.38/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32772,13 +32772,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.39/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32791,13 +32791,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.40/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32810,13 +32810,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.41/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32829,13 +32829,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.42/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32848,13 +32848,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.43/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32867,13 +32867,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.44/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32886,13 +32886,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.45/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32905,13 +32905,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.46/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32924,13 +32924,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.47/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32943,13 +32943,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.48/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32962,13 +32962,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.49/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -32981,13 +32981,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.50/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33000,13 +33000,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.51/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33019,13 +33019,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.52/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33038,13 +33038,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.53/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33057,13 +33057,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.54/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33076,13 +33076,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.55/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33095,13 +33095,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.56/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33114,13 +33114,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.57/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33133,13 +33133,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.58/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33152,13 +33152,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.59/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33171,13 +33171,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.60/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33190,13 +33190,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.61/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33209,13 +33209,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.62/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33228,13 +33228,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.63/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33247,13 +33247,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.64/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33266,13 +33266,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.65/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33285,13 +33285,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.66/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33304,13 +33304,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.67/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33323,13 +33323,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.68/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33342,13 +33342,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.69/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33361,13 +33361,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.70/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33380,13 +33380,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.71/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33399,13 +33399,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.72/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33418,13 +33418,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.73/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33437,13 +33437,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.74/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33456,13 +33456,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.75/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33475,13 +33475,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.76/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33494,13 +33494,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.77/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33513,13 +33513,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.78/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33532,13 +33532,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.79/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33551,13 +33551,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.80/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33570,13 +33570,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.81/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33589,13 +33589,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.82/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33608,13 +33608,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.83/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33627,13 +33627,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.84/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33646,13 +33646,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.85/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33665,13 +33665,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.86/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33684,13 +33684,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.87/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33703,13 +33703,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.88/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33722,13 +33722,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.89/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33741,13 +33741,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.90/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33760,13 +33760,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.91/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33779,13 +33779,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.92/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33798,13 +33798,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.93/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33817,13 +33817,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.94/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33836,13 +33836,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.95/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33855,13 +33855,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.96/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33874,13 +33874,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.97/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33893,13 +33893,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.98/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33912,13 +33912,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.99/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33931,13 +33931,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.100/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33950,13 +33950,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.101/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33969,13 +33969,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.102/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -33988,13 +33988,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.103/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34007,13 +34007,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.104/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34026,13 +34026,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.105/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34045,13 +34045,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.106/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34064,13 +34064,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.107/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34083,13 +34083,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.108/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34102,13 +34102,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.109/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34121,13 +34121,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.110/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34140,13 +34140,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.111/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34159,13 +34159,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.112/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34178,13 +34178,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.113/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34197,13 +34197,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.114/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34216,13 +34216,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.115/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34235,13 +34235,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.116/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34254,13 +34254,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.117/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34273,13 +34273,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.118/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34292,13 +34292,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.119/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34311,13 +34311,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.120/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34330,13 +34330,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.121/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34349,13 +34349,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.122/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34368,13 +34368,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.123/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34387,13 +34387,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.124/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34406,13 +34406,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.125/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34425,13 +34425,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.126/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34444,13 +34444,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.127/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34463,13 +34463,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.128/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34482,13 +34482,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.129/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34501,13 +34501,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.130/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34520,13 +34520,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.131/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34539,13 +34539,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.132/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34558,13 +34558,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.133/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34577,13 +34577,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.134/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34596,13 +34596,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.135/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34615,13 +34615,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.136/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34634,13 +34634,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.137/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34653,13 +34653,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.138/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34672,13 +34672,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.139/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34691,13 +34691,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.140/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34710,13 +34710,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.141/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34729,13 +34729,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.142/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34748,13 +34748,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.143/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34767,13 +34767,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.144/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34786,13 +34786,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.145/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34805,13 +34805,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.146/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34824,13 +34824,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.147/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34843,13 +34843,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.148/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34862,13 +34862,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.149/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34881,13 +34881,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.150/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34900,13 +34900,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.151/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34919,13 +34919,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.152/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34938,13 +34938,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.153/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34957,13 +34957,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.154/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34976,13 +34976,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.155/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -34995,13 +34995,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.156/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35014,13 +35014,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.157/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35033,13 +35033,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.158/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35052,13 +35052,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.159/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35071,13 +35071,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.160/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35090,13 +35090,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.161/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35109,13 +35109,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.162/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35128,13 +35128,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.163/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35147,13 +35147,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.164/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35166,13 +35166,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.165/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35185,13 +35185,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.166/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35204,13 +35204,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.167/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35223,13 +35223,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.168/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35242,13 +35242,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.169/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35261,13 +35261,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.170/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35280,13 +35280,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.171/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35299,13 +35299,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.172/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35318,13 +35318,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.173/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35337,13 +35337,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.174/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35356,13 +35356,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.175/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35375,13 +35375,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.176/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35394,13 +35394,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.177/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35413,13 +35413,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.178/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35432,13 +35432,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.179/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35451,13 +35451,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.180/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35470,13 +35470,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.181/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35489,13 +35489,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.182/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35508,13 +35508,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.183/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35527,13 +35527,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.184/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35546,13 +35546,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.185/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35565,13 +35565,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.186/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35584,13 +35584,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.187/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35603,13 +35603,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.188/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35622,13 +35622,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.189/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35641,13 +35641,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.190/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35660,13 +35660,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.191/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35679,13 +35679,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.192/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35698,13 +35698,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.193/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35717,13 +35717,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.194/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35736,13 +35736,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.195/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35755,13 +35755,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.196/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35774,13 +35774,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.197/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35793,13 +35793,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.198/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35812,13 +35812,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.199/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35831,13 +35831,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.220.200/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35850,13 +35850,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.111.0/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35869,13 +35869,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:54   Metric: 1201 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:54   Metric: 1201
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.4.0/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35888,13 +35888,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:18:29   Metric: 1201 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:18:29   Metric: 1201
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.100.0/25 (2 entries, 1 announced)
         TSI:
@@ -35906,13 +35906,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int Ext>
-                        Local AS: 65171 
-                        Age: 2w5d 16:22:08      Metric: 32000 
-                        Validation State: unverified 
-                            Tag: 65000500 
+                        Local AS: 65171
+                        Age: 2w5d 16:22:08      Metric: 32000
+                        Validation State: unverified
+                            Tag: 65000500
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.100.252/32 (2 entries, 1 announced)
         TSI:
@@ -35924,13 +35924,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int Ext>
-                        Local AS: 65171 
-                        Age: 2w5d 16:22:08      Metric: 32000 
-                        Validation State: unverified 
-                            Tag: 65000500 
+                        Local AS: 65171
+                        Age: 2w5d 16:22:08      Metric: 32000
+                        Validation State: unverified
+                            Tag: 65000500
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.36.48/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35943,13 +35943,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w2d 4:46:58  Metric: 10100 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:46:58  Metric: 10100
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.36.56/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35962,13 +35962,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w2d 4:46:58  Metric: 10100 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:46:58  Metric: 10100
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.36.119/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -35981,13 +35981,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w2d 4:46:58  Metric: 10101 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:46:58  Metric: 10101
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         192.168.36.120/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -36000,13 +36000,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w2d 4:46:58  Metric: 10101 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w2d 4:46:58  Metric: 10101
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         224.0.0.5/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -36017,12 +36017,12 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Address: 0xbb66cd4
                         Next-hop reference count: 9
                         State: <Active NoReadvrt Int>
-                        Local AS: 65171 
-                        Age: 29w5d 23:10:09     Metric: 1 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 29w5d 23:10:09     Metric: 1
+                        Validation State: unverified
                         Task: OSPF I/O./var/run/ppmd_control
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
     '''}
 
     golden_parsed_output_2 = {
@@ -47601,13 +47601,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 6d 17:23:01 	Metric: 1201 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 6d 17:23:01 	Metric: 1201
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 0-KRT 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 0-KRT 7-Resolve tree 3
+                        AS path: I
     '''}
 
     golden_parsed_output_3 = {
@@ -47677,7 +47677,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
     }
 
     golden_output_4 = {'execute.return_value': '''
-        show route protocol static extensive 
+        show route protocol static extensive
 
         inet.0: 16 destinations, 16 routes (16 active, 0 holddown, 0 hidden)
 
@@ -47699,11 +47699,11 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
 
                     State: <Active Int Ext>
 
-                    Age: 1:06       Tag: 100 
+                    Age: 1:06       Tag: 100
 
                     Task: RT
 
-                    Announcement bits (2): 0-KRT 1-Resolve tree 1 
+                    Announcement bits (2): 0-KRT 1-Resolve tree 1
 
                     AS path: I
     '''}
@@ -47778,13 +47778,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int Ext>
-                        Local AS: 65171 
-                        Age: 3w3d 3:19:36   Metric: 101 
-                        Validation State: unverified 
-                            Tag: 0 
+                        Local AS: 65171
+                        Age: 3w3d 3:19:36   Metric: 101
+                        Validation State: unverified
+                            Tag: 0
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.1.0.0/24 (2 entries, 1 announced)
                 State: <FlashAll>
@@ -47794,12 +47794,12 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next-hop reference count: 1
                         Next hop: via fxp0.0, selected
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 29w6d 21:42:46 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 29w6d 21:42:46
+                        Validation State: unverified
                         Task: IF
-                        Announcement bits (2): 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 5-LDP 7-Resolve tree 3
+                        AS path: I
                 OSPF   Preference: 150/10
                         Next hop type: Router, Next hop index: 613
                         Address: 0xdfa7934
@@ -47808,12 +47808,12 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Session Id: 0x141
                         State: <Int Ext>
                         Inactive reason: Route Preference
-                        Local AS: 65171 
-                        Age: 3w3d 3:19:36   Metric: 20 
-                        Validation State: unverified 
-                            Tag: 0 
+                        Local AS: 65171
+                        Age: 3w3d 3:19:36   Metric: 20
+                        Validation State: unverified
+                            Tag: 0
                         Task: OSPF
-                        AS path: I 
+                        AS path: I
 
         10.1.0.101/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -47821,15 +47821,15 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop type: Local, Next hop index: 0
                         Address: 0xbb66c14
                         Next-hop reference count: 14
-                        Next hop: 
+                        Next hop:
                         Interface: fxp0.0
                         State: <Active NoReadvrt Int>
-                        Local AS: 65171 
-                        Age: 29w6d 21:42:46 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 29w6d 21:42:46
+                        Validation State: unverified
                         Task: IF
-                        Announcement bits (2): 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.36.3.3/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -47842,13 +47842,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 1w0d 15:51:32  Metric: 1202 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 1w0d 15:51:32  Metric: 1202
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.16.0.0/30 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -47861,13 +47861,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 4:46:27   Metric: 1200 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 4:46:27   Metric: 1200
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
 
         10.100.5.5/32 (1 entry, 1 announced)
                 State: <FlashAll>
@@ -47880,13 +47880,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
                         Session Id: 0x141
                         State: <Active Int>
-                        Local AS: 65171 
-                        Age: 3w0d 4:46:27   Metric: 1201 
-                        Validation State: unverified 
+                        Local AS: 65171
+                        Age: 3w0d 4:46:27   Metric: 1201
+                        Validation State: unverified
                         Area: 0.0.0.8
                         Task: OSPF
-                        Announcement bits (2): 0-KRT 7-Resolve tree 3 
-                        AS path: I 
+                        Announcement bits (2): 0-KRT 7-Resolve tree 3
+                        AS path: I
 
         10.220.0.0/16 (2 entries, 1 announced)
         TSI:
@@ -47914,11 +47914,11 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Indirect next hop: 0xc285884 1048574 INH Session ID: 0x1ac
                         State: <Active Int Ext>
                         Local AS: 65171 Peer AS: 65151
-                        Age: 3w3d 3:19:15   Metric: 12003   Metric2: 0 
-                        Validation State: unverified 
+                        Age: 3w3d 3:19:15   Metric: 12003   Metric2: 0
+                        Validation State: unverified
                         Task: BGP_65172.16.15.14.240
-                        Announcement bits (3): 0-KRT 6-BGP_RT_Background 7-Resolve tree 3 
-                        AS path: (65151 65000) I 
+                        Announcement bits (3): 0-KRT 6-BGP_RT_Background 7-Resolve tree 3
+                        AS path: (65151 65000) I
                         Communities: 65001:10 65151:244
                         Accepted
                         Localpref: 120
@@ -47953,10 +47953,10 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         State: <Int Ext Changed>
                         Inactive reason: IGP metric
                         Local AS: 65171 Peer AS: 65171
-                        Age: 3w1d 16:57:57  Metric: 12003   Metric2: 5 
-                        Validation State: unverified 
+                        Age: 3w1d 16:57:57  Metric: 12003   Metric2: 5
+                        Validation State: unverified
                         Task: BGP_65172.16.220.5.253
-                        AS path: (65151 65000) I 
+                        AS path: (65151 65000) I
                         Communities: 65001:10 65151:244
                         Accepted
                         Localpref: 120
@@ -48426,7 +48426,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
             protocol='ospf',
             table='inet.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
-    
+
     def test_golden_3(self):
         self.device = Mock(**self.golden_output_3)
         obj = ShowRouteProtocolExtensive(device=self.device)
@@ -48435,14 +48435,14 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
             table='inet.0',
             destination='10.169.196.241')
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
-    
+
     def test_golden_4(self):
         self.device = Mock(**self.golden_output_4)
         obj = ShowRouteProtocolExtensive(device=self.device)
         parsed_output = obj.parse(
             protocol='static')
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
-    
+
     def test_golden_5(self):
         self.device = Mock(**self.golden_output_5)
         obj = ShowRouteProtocolExtensive(device=self.device)
@@ -48463,7 +48463,7 @@ class TestShowRouteForwardingTableSummary(unittest.TestCase):
         show route forwarding-table summary
         Routing table: default.inet
         Internet:
-        Enabled protocols: Bridging, 
+        Enabled protocols: Bridging,
                 user:         918 routes
                 perm:          5 routes
                 intf:         11 routes
@@ -48471,34 +48471,34 @@ class TestShowRouteForwardingTableSummary(unittest.TestCase):
 
         Routing table: __pfe_private__.inet
         Internet:
-        Enabled protocols: Bridging, 
+        Enabled protocols: Bridging,
                 perm:          5 routes
 
         Routing table: __juniper_services__.inet
         Internet:
-        Enabled protocols: Bridging, 
+        Enabled protocols: Bridging,
                 perm:          5 routes
                 intf:          2 routes
                 dest:          3 routes
 
         Routing table: __master.anon__.inet
         Internet:
-        Enabled protocols: Bridging, Dual VLAN, 
+        Enabled protocols: Bridging, Dual VLAN,
                 perm:          5 routes
 
         Routing table: default.iso
         ISO:
-        Enabled protocols: Bridging, 
+        Enabled protocols: Bridging,
                 perm:          1 routes
 
         Routing table: __master.anon__.iso
         ISO:
-        Enabled protocols: Bridging, Dual VLAN, 
+        Enabled protocols: Bridging, Dual VLAN,
                 perm:          1 routes
 
         Routing table: default.inet6
         Internet6:
-        Enabled protocols: Bridging, 
+        Enabled protocols: Bridging,
                 user:         14 routes
                 perm:          6 routes
                 intf:         18 routes
@@ -48506,7 +48506,7 @@ class TestShowRouteForwardingTableSummary(unittest.TestCase):
 
         Routing table: __master.anon__.inet6
         Internet6:
-        Enabled protocols: Bridging, Dual VLAN, 
+        Enabled protocols: Bridging, Dual VLAN,
                 perm:          6 routes
 
         Routing table: default.mpls
@@ -48516,7 +48516,7 @@ class TestShowRouteForwardingTableSummary(unittest.TestCase):
 
         Routing table: __mpls-oam__.mpls
         MPLS:
-        Enabled protocols: Bridging, Single VLAN, Dual VLAN, 
+        Enabled protocols: Bridging, Single VLAN, Dual VLAN,
                 perm:          1 routes
 
         Routing table: default-switch.bridge
@@ -49220,7 +49220,7 @@ class TestShowRouteInstanceDetail(unittest.TestCase):
         show route instance detail
         master:
         Router ID: 10.189.5.252
-        Type: forwarding        State: Active        
+        Type: forwarding        State: Active
         Tables:
             inet.0                 : 1615 routes (929 active, 0 holddown, 0 hidden)
             inet.3                 : 11 routes (11 active, 0 holddown, 0 hidden)
@@ -49229,7 +49229,7 @@ class TestShowRouteInstanceDetail(unittest.TestCase):
 
         __juniper_private1__:
         Router ID: 0.0.0.0
-        Type: forwarding        State: Active        
+        Type: forwarding        State: Active
         Interfaces:
             pfh-0/0/0.16383
             pfe-0/0/0.16383
@@ -49241,7 +49241,7 @@ class TestShowRouteInstanceDetail(unittest.TestCase):
 
         __juniper_private2__:
         Router ID: 0.0.0.0
-        Type: forwarding        State: Active        
+        Type: forwarding        State: Active
         Interfaces:
             pfh-0/0/0.16384
             lo0.16384
@@ -49250,15 +49250,15 @@ class TestShowRouteInstanceDetail(unittest.TestCase):
 
         __juniper_private4__:
         Router ID: 0.0.0.0
-        Type: forwarding        State: Active        
+        Type: forwarding        State: Active
 
         __master.anon__:
         Router ID: 0.0.0.0
-        Type: forwarding        State: Active        
+        Type: forwarding        State: Active
 
         mgmt_junos:
         Router ID: 0.0.0.0
-        Type: forwarding        State: Active      
+        Type: forwarding        State: Active
     '''}
 
     golden_parsed_output = {
@@ -49404,7 +49404,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
 
         inet.0: 62 destinations, 67 routes (62 active, 0 holddown, 0 hidden)
         * 10.36.255.252/32 (1 entry, 1 announced)
-        BGP group sjkGCS001-EC11 type External
+        BGP group sjkGDS221-EC11 type External
             Nexthop: Self
             Flags: Nexthop Change
             MED: 16011
@@ -49415,7 +49415,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
         inet.3: 27 destinations, 27 routes (27 active, 0 holddown, 0 hidden)
 
         * 10.36.255.252/32 (1 entry, 1 announced)
-        BGP group sjkGCS001-EC11 type External
+        BGP group sjkGDS221-EC11 type External
             Route Label: 118420
             Nexthop: Self
             Flags: Nexthop Change
@@ -49444,7 +49444,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                         "rt-entry-count": '1',
                         "rt-announced-count": '1',
                         "bgp-group": {
-                            "bgp-group-name": 'sjkGCS001-EC11',
+                            "bgp-group-name": 'sjkGDS221-EC11',
                             "bgp-group-type": 'External',
                         },
                         "nh": {
@@ -49473,7 +49473,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                         "rt-announced-count": '1',
                         'route-label': '118420',
                         "bgp-group": {
-                            "bgp-group-name": 'sjkGCS001-EC11',
+                            "bgp-group-name": 'sjkGDS221-EC11',
                             "bgp-group-type": 'External',
                         },
                         "nh": {
@@ -49512,7 +49512,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
             Localpref: 100
             AS path: [65151] (65171) I
             Communities: 65151:65109
-            Entropy label capable 
+            Entropy label capable
     '''}
 
     golden_parsed_output_2 = {
@@ -49595,7 +49595,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
             route="10.36.255.252",
         )
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
-    
+
     def test_golden_2(self):
         self.device = Mock(**self.golden_output_2)
         obj = ShowRouteAdvertisingProtocolDetail(device=self.device)

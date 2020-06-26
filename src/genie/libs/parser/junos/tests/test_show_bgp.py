@@ -54,7 +54,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
         Name: v4_RRC_72_TRIANGLE Index: 2                Flags: <Export Eval>
-        Export: [ (ALL_out && v4_NEXT-HOP-SELF_hktGCS001) ]
+        Export: [ (ALL_out && v4_NEXT-HOP-SELF_hktGDS201) ]
         Options: <Cluster Confed>
         Options: <GracefulShutdownRcv>
         Holdtime: 0
@@ -66,7 +66,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
         Name: v6_RRC_72_TRIANGLE Index: 3                Flags: <Export Eval>
-        Export: [ (ALL_out && v6_NEXT-HOP-SELF_hktGCS001) ]
+        Export: [ (ALL_out && v6_NEXT-HOP-SELF_hktGDS201) ]
         Options: <Cluster Confed>
         Options: <GracefulShutdownRcv>
         Holdtime: 0
@@ -98,8 +98,8 @@ class TestShowBgpGroupBrief(unittest.TestCase):
         10.189.5.240
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
-        Name: v4_Kentik       Index: 6                   Flags: <Export Eval>
-        Export: [ v4_Kentik_NO-DEFAULT ]
+        Name: v4_Carl       Index: 6                   Flags: <Export Eval>
+        Export: [ v4_Carl_NO-DEFAULT ]
         Options: <Cluster Confed>
         Options: <GracefulShutdownRcv>
         Holdtime: 0
@@ -138,7 +138,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
         2001:db8:5961:ca45::1
 
         Group Type: External                               Local AS: 65171
-        Name: sjkGCS001-EC11  Index: 10                  Flags: <Export Eval>
+        Name: sjkGDS221-EC11  Index: 10                  Flags: <Export Eval>
         Export: [ ((LABELSTACK_O2B || HKG-EC_out) && (NEXT-HOP-SELF && HKG-EC_AddMED)) ]
         Options: <Multihop Confed>
         Options: <GracefulShutdownRcv>
@@ -150,7 +150,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
         inet.3: 2/2/2/0
 
         Group Type: External                               Local AS: 65171
-        Name: v6_sjkGCS001-EC11 Index: 11                Flags: <Export Eval>
+        Name: v6_sjkGDS221-EC11 Index: 11                Flags: <Export Eval>
         Export: [ (v6_HKG-EC_out && (NEXT-HOP-SELF && v6_HKG-EC_AddMED)) ]
         Options: <Multihop Confed>
         Options: <GracefulShutdownRcv>
@@ -252,7 +252,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "bgp-option-information": {
                         "bgp-options": "Cluster Confed",
                         "bgp-options-extended": "GracefulShutdownRcv",
-                        "export-policy": "(ALL_out && v4_NEXT-HOP-SELF_hktGCS001)",
+                        "export-policy": "(ALL_out && v4_NEXT-HOP-SELF_hktGDS201)",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "0",
                     },
@@ -274,7 +274,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "bgp-option-information": {
                         "bgp-options": "Cluster Confed",
                         "bgp-options-extended": "GracefulShutdownRcv",
-                        "export-policy": "(ALL_out && v6_NEXT-HOP-SELF_hktGCS001)",
+                        "export-policy": "(ALL_out && v6_NEXT-HOP-SELF_hktGDS201)",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "0",
                     },
@@ -331,7 +331,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "bgp-option-information": {
                         "bgp-options": "Cluster Confed",
                         "bgp-options-extended": "GracefulShutdownRcv",
-                        "export-policy": "v4_Kentik_NO-DEFAULT",
+                        "export-policy": "v4_Carl_NO-DEFAULT",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "0",
                     },
@@ -339,7 +339,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "group-flags": "Export Eval",
                     "group-index": "6",
                     "local-as": "65171",
-                    "name": "v4_Kentik",
+                    "name": "v4_Carl",
                     "peer-address": ["10.49.216.179"],
                     "peer-as": "65171",
                     "peer-count": "1",
@@ -425,7 +425,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "group-flags": "Export Eval",
                     "group-index": "10",
                     "local-as": "65171",
-                    "name": "sjkGCS001-EC11",
+                    "name": "sjkGDS221-EC11",
                     "peer-address": ["10.169.14.240+60606"],
                     "peer-count": "1",
                     "type": "External",
@@ -451,7 +451,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "group-flags": "Export Eval",
                     "group-index": "11",
                     "local-as": "65171",
-                    "name": "v6_sjkGCS001-EC11",
+                    "name": "v6_sjkGDS221-EC11",
                     "peer-address": ["2001:db8:eb18:ca45::1+179"],
                     "peer-count": "1",
                     "type": "External",
@@ -592,7 +592,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
         Name: v4_RRC_72_TRIANGLE Index: 2                Flags: <Export Eval>
-        Export: [ (ALL_out && v4_NEXT-HOP-SELF_hktGCS001) ]
+        Export: [ (ALL_out && v4_NEXT-HOP-SELF_hktGDS201) ]
         Options: <Cluster Confed>
         Options: <GracefulShutdownRcv>
         Holdtime: 0
@@ -604,7 +604,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
         Name: v6_RRC_72_TRIANGLE Index: 3                Flags: <Export Eval>
-        Export: [ (ALL_out && v6_NEXT-HOP-SELF_hktGCS001) ]
+        Export: [ (ALL_out && v6_NEXT-HOP-SELF_hktGDS201) ]
         Options: <Cluster Confed>
         Options: <GracefulShutdownRcv>
         Holdtime: 0
@@ -636,8 +636,8 @@ class TestShowBgpGroupDetail(unittest.TestCase):
         10.189.5.240
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
-        Name: v4_Kentik       Index: 6                   Flags: <Export Eval>
-        Export: [ v4_Kentik_NO-DEFAULT ]
+        Name: v4_Carl       Index: 6                   Flags: <Export Eval>
+        Export: [ v4_Carl_NO-DEFAULT ]
         Options: <Cluster Confed>
         Options: <GracefulShutdownRcv>
         Holdtime: 0
@@ -676,7 +676,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
         2001:db8:5961:ca45::1
 
         Group Type: External                               Local AS: 65171
-        Name: sjkGCS001-EC11  Index: 10                  Flags: <Export Eval>
+        Name: sjkGDS221-EC11  Index: 10                  Flags: <Export Eval>
         Export: [ ((LABELSTACK_O2B || HKG-EC_out) && (NEXT-HOP-SELF && HKG-EC_AddMED)) ]
         Options: <Multihop Confed>
         Options: <GracefulShutdownRcv>
@@ -699,7 +699,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
             Advertised prefixes:          0
 
         Group Type: External                               Local AS: 65171
-        Name: v6_sjkGCS001-EC11 Index: 11                Flags: <Export Eval>
+        Name: v6_sjkGDS221-EC11 Index: 11                Flags: <Export Eval>
         Export: [ (v6_HKG-EC_out && (NEXT-HOP-SELF && v6_HKG-EC_AddMED)) ]
         Options: <Multihop Confed>
         Options: <GracefulShutdownRcv>
@@ -840,7 +840,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "bgp-option-information": {
                         "bgp-options": "Cluster Confed",
                         "bgp-options-extended": "GracefulShutdownRcv",
-                        "export-policy": "(ALL_out && v4_NEXT-HOP-SELF_hktGCS001)",
+                        "export-policy": "(ALL_out && v4_NEXT-HOP-SELF_hktGDS201)",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "0",
                     },
@@ -862,7 +862,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "bgp-option-information": {
                         "bgp-options": "Cluster Confed",
                         "bgp-options-extended": "GracefulShutdownRcv",
-                        "export-policy": "(ALL_out && v6_NEXT-HOP-SELF_hktGCS001)",
+                        "export-policy": "(ALL_out && v6_NEXT-HOP-SELF_hktGDS201)",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "0",
                     },
@@ -922,7 +922,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "bgp-option-information": {
                         "bgp-options": "Cluster Confed",
                         "bgp-options-extended": "GracefulShutdownRcv",
-                        "export-policy": "v4_Kentik_NO-DEFAULT",
+                        "export-policy": "v4_Carl_NO-DEFAULT",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "0",
                     },
@@ -930,7 +930,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "group-flags": "Export Eval",
                     "group-index": "6",
                     "local-as": "65171",
-                    "name": "v4_Kentik",
+                    "name": "v4_Carl",
                     "peer-address": ["10.49.216.179"],
                     "peer-as": "65171",
                     "peer-count": "1",
@@ -1018,7 +1018,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "group-flags": "Export Eval",
                     "group-index": "10",
                     "local-as": "65171",
-                    "name": "sjkGCS001-EC11",
+                    "name": "sjkGDS221-EC11",
                     "peer-address": ["10.169.14.240+60606"],
                     "peer-count": "1",
                     "route-queue": {"state": "empty", "timer": "unset"},
@@ -1046,7 +1046,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "group-flags": "Export Eval",
                     "group-index": "11",
                     "local-as": "65171",
-                    "name": "v6_sjkGCS001-EC11",
+                    "name": "v6_sjkGDS221-EC11",
                     "peer-address": ["2001:db8:eb18:ca45::1+179"],
                     "peer-count": "1",
                     "route-queue": {"state": "empty", "timer": "unset"},
@@ -1177,14 +1177,14 @@ class TestShowBgpGroupSummary(unittest.TestCase):
     v6_RRC_72_TRIANGLE Internal 2     0
     v6_RRC_72_SQUARE Internal 2       0
     v4_RRC_72_SQUARE Internal 2       0
-    v4_Kentik    Internal   1         0
+    v4_Carl    Internal   1         0
     v6_Kentik    Internal   1         0
     sggjbb001    External   1         0
     v6_sggjbb001 External   1         0
-    sjkGCS001-EC11 External 1         1
+    sjkGDS221-EC11 External 1         1
       inet.0           : 682/684/684/0
       inet.3           : 2/2/2/0
-    v6_sjkGCS001-EC11 External 1      1
+    v6_sjkGDS221-EC11 External 1      1
       inet6.0          : 0/0/0/0
     obpGCS001-WC11 External 1         0
     v6_obpGCS001-WC11 External 1      0
@@ -1255,7 +1255,7 @@ class TestShowBgpGroupSummary(unittest.TestCase):
                 },
                 {
                     "established-count": "0",
-                    "name": "v4_Kentik",
+                    "name": "v4_Carl",
                     "peer-count": "1",
                     "type": "Internal",
                 },
@@ -1295,7 +1295,7 @@ class TestShowBgpGroupSummary(unittest.TestCase):
                         },
                     ],
                     "established-count": "1",
-                    "name": "sjkGCS001-EC11",
+                    "name": "sjkGDS221-EC11",
                     "peer-count": "1",
                     "type": "External",
                 },
@@ -1310,7 +1310,7 @@ class TestShowBgpGroupSummary(unittest.TestCase):
                         }
                     ],
                     "established-count": "1",
-                    "name": "v6_sjkGCS001-EC11",
+                    "name": "v6_sjkGDS221-EC11",
                     "peer-count": "1",
                     "type": "External",
                 },
@@ -1750,13 +1750,13 @@ class TestShowBgpNeighbor(unittest.TestCase):
         "execute.return_value": """
         show bgp neighbor
         Peer: 10.49.216.179 AS 65171   Local: 10.189.5.252 AS 65171
-        Description: v4_Kentik
-        Group: v4_Kentik             Routing-Instance: master
+        Description: v4_Carl
+        Group: v4_Carl             Routing-Instance: master
         Forwarding routing-instance: master
         Type: Internal    State: Active       (route reflector client)Flags: <>
         Last State: Idle          Last Event: Start
         Last Error: None
-        Export: [ v4_Kentik_NO-DEFAULT ] Import: [ 11 ]
+        Export: [ v4_Carl_NO-DEFAULT ] Import: [ 11 ]
         Options: <Preference LocalAddress HoldTime LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Local Address: 10.189.5.252 Holdtime: 720 Preference: 170
@@ -1764,8 +1764,8 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Number of flaps: 0
 
         Peer: 10.169.14.240+60606 AS 65151 Local: 10.189.5.252+179 AS 65171
-        Description: sjkGCS001-EC11
-        Group: sjkGCS001-EC11        Routing-Instance: master
+        Description: sjkGDS221-EC11
+        Group: sjkGDS221-EC11        Routing-Instance: master
         Forwarding routing-instance: master
         Type: External    State: Established    Flags: <Sync>
         Last State: OpenConfirm   Last Event: RecvKeepAlive
@@ -1876,7 +1876,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Type: Internal    State: Active       (route reflector client)Flags: <>
         Last State: Idle          Last Event: Start
         Last Error: None
-        Export: [ (ALL_out && v4_NEXT-HOP-SELF_hktGCS001) ] Import: [ REJ_LONG_ASPATH ]
+        Export: [ (ALL_out && v4_NEXT-HOP-SELF_hktGDS201) ] Import: [ REJ_LONG_ASPATH ]
         Options: <Preference LocalAddress HoldTime AuthKey LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
@@ -1891,7 +1891,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Type: Internal    State: Active       (route reflector client)Flags: <>
         Last State: Idle          Last Event: Start
         Last Error: None
-        Export: [ (ALL_out && v4_NEXT-HOP-SELF_hktGCS001) ] Import: [ REJ_LONG_ASPATH ]
+        Export: [ (ALL_out && v4_NEXT-HOP-SELF_hktGDS201) ] Import: [ REJ_LONG_ASPATH ]
         Options: <Preference LocalAddress HoldTime AuthKey LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
@@ -1906,7 +1906,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Type: Internal    State: Active       (route reflector client)Flags: <>
         Last State: Idle          Last Event: Start
         Last Error: None
-        Export: [ (ALL_out && v4_NEXT-HOP-SELF_hktGCS001) ] Import: [ REJ_LONG_ASPATH ]
+        Export: [ (ALL_out && v4_NEXT-HOP-SELF_hktGDS201) ] Import: [ REJ_LONG_ASPATH ]
         Options: <Preference LocalAddress HoldTime AuthKey LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
@@ -1992,8 +1992,8 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Number of flaps: 0
 
         Peer: 2001:db8:eb18:ca45::1+179 AS 65151 Local: 2001:db8:223c:ca45::b+63754 AS 65171
-        Description: sjkGCS001-EC11
-        Group: v6_sjkGCS001-EC11     Routing-Instance: master
+        Description: sjkGDS221-EC11
+        Group: v6_sjkGDS221-EC11     Routing-Instance: master
         Forwarding routing-instance: master
         Type: External    State: Established    Flags: <Sync>
         Last State: OpenConfirm   Last Event: RecvKeepAlive
@@ -2061,7 +2061,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Type: Internal    State: Active       (route reflector client)Flags: <>
         Last State: Idle          Last Event: Start
         Last Error: None
-        Export: [ (ALL_out && v6_NEXT-HOP-SELF_hktGCS001) ]
+        Export: [ (ALL_out && v6_NEXT-HOP-SELF_hktGDS201) ]
         Options: <Preference LocalAddress HoldTime AuthKey LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
@@ -2076,7 +2076,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Type: Internal    State: Connect      (route reflector client)Flags: <>
         Last State: Active        Last Event: ConnectRetry
         Last Error: None
-        Export: [ (ALL_out && v6_NEXT-HOP-SELF_hktGCS001) ]
+        Export: [ (ALL_out && v6_NEXT-HOP-SELF_hktGDS201) ]
         Options: <Preference LocalAddress HoldTime AuthKey LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
@@ -2194,14 +2194,14 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "Confed",
                         "bgp-options-extended": "GracefulShutdownRcv",
                         "bgp-options2": True,
-                        "export-policy": "v4_Kentik_NO-DEFAULT",
+                        "export-policy": "v4_Carl_NO-DEFAULT",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "720",
                         "import-policy": "11",
                         "local-address": "10.189.5.252",
                         "preference": "170",
                     },
-                    "description": "v4_Kentik",
+                    "description": "v4_Carl",
                     "flap-count": "0",
                     "last-error": "None",
                     "last-event": "Start",
@@ -2213,7 +2213,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "peer-cfg-rti": "master",
                     "peer-flags": "",
                     "peer-fwd-rti": "master",
-                    "peer-group": "v4_Kentik",
+                    "peer-group": "v4_Carl",
                     "peer-state": "Active",
                     "peer-type": "Internal",
                     "route-reflector-client": True,
@@ -2301,7 +2301,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                             "suppressed-prefix-count": "0",
                         },
                     ],
-                    "description": "sjkGCS001-EC11",
+                    "description": "sjkGDS221-EC11",
                     "entropy-label": "No",
                     "entropy-label-capability": "Yes",
                     "entropy-label-no-next-hop-validation": "Yes",
@@ -2339,7 +2339,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "peer-end-of-rib-sent": "inet-unicast " "inet-labeled-unicast",
                     "peer-flags": "Sync",
                     "peer-fwd-rti": "master",
-                    "peer-group": "sjkGCS001-EC11",
+                    "peer-group": "sjkGDS221-EC11",
                     "peer-index": "0",
                     "peer-no-llgr-restarter": True,
                     "peer-no-restart": True,
@@ -2487,7 +2487,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "bgp-options2": True,
                         "export-policy": "(ALL_out "
                         "&& "
-                        "v4_NEXT-HOP-SELF_hktGCS001) "
+                        "v4_NEXT-HOP-SELF_hktGDS201) "
                         "] "
                         "Import: "
                         "[ "
@@ -2530,7 +2530,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "bgp-options2": True,
                         "export-policy": "(ALL_out "
                         "&& "
-                        "v4_NEXT-HOP-SELF_hktGCS001) "
+                        "v4_NEXT-HOP-SELF_hktGDS201) "
                         "] "
                         "Import: "
                         "[ "
@@ -2573,7 +2573,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "bgp-options2": True,
                         "export-policy": "(ALL_out "
                         "&& "
-                        "v4_NEXT-HOP-SELF_hktGCS001) "
+                        "v4_NEXT-HOP-SELF_hktGDS201) "
                         "] "
                         "Import: "
                         "[ "
@@ -2841,7 +2841,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                             "suppressed-prefix-count": "0",
                         }
                     ],
-                    "description": "sjkGCS001-EC11",
+                    "description": "sjkGDS221-EC11",
                     "flap-count": "133",
                     "group-index": "11",
                     "input-messages": "218603",
@@ -2874,7 +2874,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "peer-end-of-rib-sent": "inet6-unicast",
                     "peer-flags": "Sync",
                     "peer-fwd-rti": "master",
-                    "peer-group": "v6_sjkGCS001-EC11",
+                    "peer-group": "v6_sjkGDS221-EC11",
                     "peer-index": "0",
                     "peer-no-llgr-restarter": True,
                     "peer-no-restart": True,
@@ -2944,7 +2944,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "bgp-options2": True,
                         "export-policy": "(ALL_out "
                         "&& "
-                        "v6_NEXT-HOP-SELF_hktGCS001)",
+                        "v6_NEXT-HOP-SELF_hktGDS201)",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "60",
                         "local-address": "2001:db8:223c:ca45::b",
@@ -2983,7 +2983,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "bgp-options2": True,
                         "export-policy": "(ALL_out "
                         "&& "
-                        "v6_NEXT-HOP-SELF_hktGCS001)",
+                        "v6_NEXT-HOP-SELF_hktGDS201)",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "60",
                         "local-address": "2001:db8:223c:ca45::b",
