@@ -2996,6 +2996,7 @@ class TestShowOspfOverview(unittest.TestCase):
         Instance: master
             Router ID: 10.189.5.252
             Route table index: 0
+            Configured overload, expires in 14 seconds
             AS boundary router
             LSA refresh time: 50 minutes
             Traffic engineering
@@ -3038,6 +3039,7 @@ class TestShowOspfOverview(unittest.TestCase):
                 },
                 "ospf-lsa-refresh-time": "50",
                 "ospf-route-table-index": "0",
+                'ospf-configured-overload-remaining-time': '14',
                 "ospf-router-id": "10.189.5.252",
                 "ospf-spring-overview": {
                     "ospf-node-segment": {
