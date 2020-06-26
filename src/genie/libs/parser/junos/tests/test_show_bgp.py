@@ -54,7 +54,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
         Name: v4_RRC_72_TRIANGLE Index: 2                Flags: <Export Eval>
-        Export: [ (ALL_out && v4_NEXT-HOP-SELF_hktGDS201) ]
+        Export: [ (ALL_out && v4_NEXT-HOP-SELF_pyats201) ]
         Options: <Cluster Confed>
         Options: <GracefulShutdownRcv>
         Holdtime: 0
@@ -66,7 +66,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
         Name: v6_RRC_72_TRIANGLE Index: 3                Flags: <Export Eval>
-        Export: [ (ALL_out && v6_NEXT-HOP-SELF_hktGDS201) ]
+        Export: [ (ALL_out && v6_NEXT-HOP-SELF_pyats201) ]
         Options: <Cluster Confed>
         Options: <GracefulShutdownRcv>
         Holdtime: 0
@@ -98,8 +98,8 @@ class TestShowBgpGroupBrief(unittest.TestCase):
         10.189.5.240
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
-        Name: v4_Carl       Index: 6                   Flags: <Export Eval>
-        Export: [ v4_Carl_NO-DEFAULT ]
+        Name: v4_pyats       Index: 6                   Flags: <Export Eval>
+        Export: [ v4_pyats_NO-DEFAULT ]
         Options: <Cluster Confed>
         Options: <GracefulShutdownRcv>
         Holdtime: 0
@@ -252,7 +252,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "bgp-option-information": {
                         "bgp-options": "Cluster Confed",
                         "bgp-options-extended": "GracefulShutdownRcv",
-                        "export-policy": "(ALL_out && v4_NEXT-HOP-SELF_hktGDS201)",
+                        "export-policy": "(ALL_out && v4_NEXT-HOP-SELF_pyats201)",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "0",
                     },
@@ -274,7 +274,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "bgp-option-information": {
                         "bgp-options": "Cluster Confed",
                         "bgp-options-extended": "GracefulShutdownRcv",
-                        "export-policy": "(ALL_out && v6_NEXT-HOP-SELF_hktGDS201)",
+                        "export-policy": "(ALL_out && v6_NEXT-HOP-SELF_pyats201)",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "0",
                     },
@@ -331,7 +331,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "bgp-option-information": {
                         "bgp-options": "Cluster Confed",
                         "bgp-options-extended": "GracefulShutdownRcv",
-                        "export-policy": "v4_Carl_NO-DEFAULT",
+                        "export-policy": "v4_pyats_NO-DEFAULT",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "0",
                     },
@@ -339,7 +339,7 @@ class TestShowBgpGroupBrief(unittest.TestCase):
                     "group-flags": "Export Eval",
                     "group-index": "6",
                     "local-as": "65171",
-                    "name": "v4_Carl",
+                    "name": "v4_pyats",
                     "peer-address": ["10.49.216.179"],
                     "peer-as": "65171",
                     "peer-count": "1",
@@ -592,7 +592,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
         Name: v4_RRC_72_TRIANGLE Index: 2                Flags: <Export Eval>
-        Export: [ (ALL_out && v4_NEXT-HOP-SELF_hktGDS201) ]
+        Export: [ (ALL_out && v4_NEXT-HOP-SELF_pyats201) ]
         Options: <Cluster Confed>
         Options: <GracefulShutdownRcv>
         Holdtime: 0
@@ -604,7 +604,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
         Name: v6_RRC_72_TRIANGLE Index: 3                Flags: <Export Eval>
-        Export: [ (ALL_out && v6_NEXT-HOP-SELF_hktGDS201) ]
+        Export: [ (ALL_out && v6_NEXT-HOP-SELF_pyats201) ]
         Options: <Cluster Confed>
         Options: <GracefulShutdownRcv>
         Holdtime: 0
@@ -636,8 +636,8 @@ class TestShowBgpGroupDetail(unittest.TestCase):
         10.189.5.240
 
         Group Type: Internal    AS: 65171                  Local AS: 65171
-        Name: v4_Carl       Index: 6                   Flags: <Export Eval>
-        Export: [ v4_Carl_NO-DEFAULT ]
+        Name: v4_pyats       Index: 6                   Flags: <Export Eval>
+        Export: [ v4_pyats_NO-DEFAULT ]
         Options: <Cluster Confed>
         Options: <GracefulShutdownRcv>
         Holdtime: 0
@@ -840,7 +840,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "bgp-option-information": {
                         "bgp-options": "Cluster Confed",
                         "bgp-options-extended": "GracefulShutdownRcv",
-                        "export-policy": "(ALL_out && v4_NEXT-HOP-SELF_hktGDS201)",
+                        "export-policy": "(ALL_out && v4_NEXT-HOP-SELF_pyats201)",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "0",
                     },
@@ -862,7 +862,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "bgp-option-information": {
                         "bgp-options": "Cluster Confed",
                         "bgp-options-extended": "GracefulShutdownRcv",
-                        "export-policy": "(ALL_out && v6_NEXT-HOP-SELF_hktGDS201)",
+                        "export-policy": "(ALL_out && v6_NEXT-HOP-SELF_pyats201)",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "0",
                     },
@@ -922,7 +922,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "bgp-option-information": {
                         "bgp-options": "Cluster Confed",
                         "bgp-options-extended": "GracefulShutdownRcv",
-                        "export-policy": "v4_Carl_NO-DEFAULT",
+                        "export-policy": "v4_pyats_NO-DEFAULT",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "0",
                     },
@@ -930,7 +930,7 @@ class TestShowBgpGroupDetail(unittest.TestCase):
                     "group-flags": "Export Eval",
                     "group-index": "6",
                     "local-as": "65171",
-                    "name": "v4_Carl",
+                    "name": "v4_pyats",
                     "peer-address": ["10.49.216.179"],
                     "peer-as": "65171",
                     "peer-count": "1",
@@ -1177,7 +1177,7 @@ class TestShowBgpGroupSummary(unittest.TestCase):
     v6_RRC_72_TRIANGLE Internal 2     0
     v6_RRC_72_SQUARE Internal 2       0
     v4_RRC_72_SQUARE Internal 2       0
-    v4_Carl    Internal   1         0
+    v4_pyats    Internal   1         0
     v6_Kentik    Internal   1         0
     sggjbb001    External   1         0
     v6_sggjbb001 External   1         0
@@ -1255,7 +1255,7 @@ class TestShowBgpGroupSummary(unittest.TestCase):
                 },
                 {
                     "established-count": "0",
-                    "name": "v4_Carl",
+                    "name": "v4_pyats",
                     "peer-count": "1",
                     "type": "Internal",
                 },
@@ -1750,13 +1750,13 @@ class TestShowBgpNeighbor(unittest.TestCase):
         "execute.return_value": """
         show bgp neighbor
         Peer: 10.49.216.179 AS 65171   Local: 10.189.5.252 AS 65171
-        Description: v4_Carl
-        Group: v4_Carl             Routing-Instance: master
+        Description: v4_pyats
+        Group: v4_pyats             Routing-Instance: master
         Forwarding routing-instance: master
         Type: Internal    State: Active       (route reflector client)Flags: <>
         Last State: Idle          Last Event: Start
         Last Error: None
-        Export: [ v4_Carl_NO-DEFAULT ] Import: [ 11 ]
+        Export: [ v4_pyats_NO-DEFAULT ] Import: [ 11 ]
         Options: <Preference LocalAddress HoldTime LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Local Address: 10.189.5.252 Holdtime: 720 Preference: 170
@@ -1876,7 +1876,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Type: Internal    State: Active       (route reflector client)Flags: <>
         Last State: Idle          Last Event: Start
         Last Error: None
-        Export: [ (ALL_out && v4_NEXT-HOP-SELF_hktGDS201) ] Import: [ REJ_LONG_ASPATH ]
+        Export: [ (ALL_out && v4_NEXT-HOP-SELF_pyats201) ] Import: [ REJ_LONG_ASPATH ]
         Options: <Preference LocalAddress HoldTime AuthKey LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
@@ -1891,7 +1891,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Type: Internal    State: Active       (route reflector client)Flags: <>
         Last State: Idle          Last Event: Start
         Last Error: None
-        Export: [ (ALL_out && v4_NEXT-HOP-SELF_hktGDS201) ] Import: [ REJ_LONG_ASPATH ]
+        Export: [ (ALL_out && v4_NEXT-HOP-SELF_pyats201) ] Import: [ REJ_LONG_ASPATH ]
         Options: <Preference LocalAddress HoldTime AuthKey LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
@@ -1906,7 +1906,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Type: Internal    State: Active       (route reflector client)Flags: <>
         Last State: Idle          Last Event: Start
         Last Error: None
-        Export: [ (ALL_out && v4_NEXT-HOP-SELF_hktGDS201) ] Import: [ REJ_LONG_ASPATH ]
+        Export: [ (ALL_out && v4_NEXT-HOP-SELF_pyats201) ] Import: [ REJ_LONG_ASPATH ]
         Options: <Preference LocalAddress HoldTime AuthKey LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
@@ -2061,7 +2061,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Type: Internal    State: Active       (route reflector client)Flags: <>
         Last State: Idle          Last Event: Start
         Last Error: None
-        Export: [ (ALL_out && v6_NEXT-HOP-SELF_hktGDS201) ]
+        Export: [ (ALL_out && v6_NEXT-HOP-SELF_pyats201) ]
         Options: <Preference LocalAddress HoldTime AuthKey LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
@@ -2076,7 +2076,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Type: Internal    State: Connect      (route reflector client)Flags: <>
         Last State: Active        Last Event: ConnectRetry
         Last Error: None
-        Export: [ (ALL_out && v6_NEXT-HOP-SELF_hktGDS201) ]
+        Export: [ (ALL_out && v6_NEXT-HOP-SELF_pyats201) ]
         Options: <Preference LocalAddress HoldTime AuthKey LogUpDown Cluster PeerAS Refresh Confed>
         Options: <GracefulShutdownRcv>
         Authentication key is configured
@@ -2194,14 +2194,14 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "Confed",
                         "bgp-options-extended": "GracefulShutdownRcv",
                         "bgp-options2": True,
-                        "export-policy": "v4_Carl_NO-DEFAULT",
+                        "export-policy": "v4_pyats_NO-DEFAULT",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "720",
                         "import-policy": "11",
                         "local-address": "10.189.5.252",
                         "preference": "170",
                     },
-                    "description": "v4_Carl",
+                    "description": "v4_pyats",
                     "flap-count": "0",
                     "last-error": "None",
                     "last-event": "Start",
@@ -2213,7 +2213,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "peer-cfg-rti": "master",
                     "peer-flags": "",
                     "peer-fwd-rti": "master",
-                    "peer-group": "v4_Carl",
+                    "peer-group": "v4_pyats",
                     "peer-state": "Active",
                     "peer-type": "Internal",
                     "route-reflector-client": True,
@@ -2487,7 +2487,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "bgp-options2": True,
                         "export-policy": "(ALL_out "
                         "&& "
-                        "v4_NEXT-HOP-SELF_hktGDS201) "
+                        "v4_NEXT-HOP-SELF_pyats201) "
                         "] "
                         "Import: "
                         "[ "
@@ -2530,7 +2530,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "bgp-options2": True,
                         "export-policy": "(ALL_out "
                         "&& "
-                        "v4_NEXT-HOP-SELF_hktGDS201) "
+                        "v4_NEXT-HOP-SELF_pyats201) "
                         "] "
                         "Import: "
                         "[ "
@@ -2573,7 +2573,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "bgp-options2": True,
                         "export-policy": "(ALL_out "
                         "&& "
-                        "v4_NEXT-HOP-SELF_hktGDS201) "
+                        "v4_NEXT-HOP-SELF_pyats201) "
                         "] "
                         "Import: "
                         "[ "
@@ -2944,7 +2944,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "bgp-options2": True,
                         "export-policy": "(ALL_out "
                         "&& "
-                        "v6_NEXT-HOP-SELF_hktGDS201)",
+                        "v6_NEXT-HOP-SELF_pyats201)",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "60",
                         "local-address": "2001:db8:223c:ca45::b",
@@ -2983,7 +2983,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         "bgp-options2": True,
                         "export-policy": "(ALL_out "
                         "&& "
-                        "v6_NEXT-HOP-SELF_hktGDS201)",
+                        "v6_NEXT-HOP-SELF_pyats201)",
                         "gshut-recv-local-preference": "0",
                         "holdtime": "60",
                         "local-address": "2001:db8:223c:ca45::b",

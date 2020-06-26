@@ -1356,9 +1356,9 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
         p1 = re.compile(
             r'^Peer: +(?P<peer_address>\S+) +AS +(?P<peer_as>\d+) +Local: +(?P<local_address>\S+) +AS +(?P<local_as>\d+)$'
         )
-        # Description: v4_Carl
+        # Description: v4_pyats
         p2 = re.compile(r'^Description: +(?P<description>\S+)$')
-        # Group: v4_Carl             Routing-Instance: master
+        # Group: v4_pyats             Routing-Instance: master
         p3 = re.compile(
             r'^Group: +(?P<peer_group>\S+) +Routing-Instance: +(?P<peer_cfg_rti>\S+)$'
         )
@@ -1375,7 +1375,7 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
         )
         # Last Error: None
         p7 = re.compile(r'^Last +Error: +(?P<last_error>[\S\s]+)$')
-        # Export: [ v4_Carl_NO-DEFAULT ] Import: [ 11 ]
+        # Export: [ v4_pyats_NO-DEFAULT ] Import: [ 11 ]
         p8 = re.compile(
             r'^Export: +\[ +(?P<export_policy>\S+) +\] +Import: +\[ +(?P<import_policy>\S+) +\]$'
         )
@@ -1542,7 +1542,7 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
                 entry_list.append(entry)
                 continue
 
-            # Description: v4_Carl
+            # Description: v4_pyats
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -1552,7 +1552,7 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
                     entry[key] = value
                 continue
 
-            # Group: v4_Carl             Routing-Instance: master
+            # Group: v4_pyats             Routing-Instance: master
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -1603,7 +1603,7 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
                     entry[key] = value
                 continue
 
-            # Export: [ v4_Carl_NO-DEFAULT ] Import: [ 11 ]
+            # Export: [ v4_pyats_NO-DEFAULT ] Import: [ 11 ]
             m = p8.match(line)
             if m:
                 group = m.groupdict()
