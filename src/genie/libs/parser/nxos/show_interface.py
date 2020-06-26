@@ -211,6 +211,9 @@ class ShowInterface(ShowInterfaceSchema):
                         r'(,\s*line\s+protocol\s+is\s+(?P<line_protocol>\w+))?'
                         r'(,\s+autostate\s+(?P<autostate>\S+))?'
                         r'(\(Link\s+not\s+connected\))?'
+                        r'(\(SFP\s+not\s+inserted\))?'
+                        r'(\(suspended\(.*\)\))?'
+                        r'(\(\S+ErrDisabled\))?'
                         r'(\(.*ACK.*\))?$')
 
         # admin state is up
@@ -2884,6 +2887,12 @@ class ShowRunningConfigInterfaceSchema(MetaParser):
                      Optional('switchport'): bool,
                      Optional('switchport_mode'): str,
                      Optional('trunk_vlans'): str,
+                     Optional('trunk_native_vlan'): str,
+                     Optional('description'): str,
+                     Optional('access_vlan'): str,
+                     Optional('speed'): int,
+                     Optional('duplex'): str,
+                     Optional('vpc'): str,
                      Optional('port_channel'):{
                         Optional('port_channel_mode'): str,
                         Optional('port_channel_int'): str,
@@ -3037,6 +3046,23 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
                 interface_dict.update({'trunk_vlans': group['trunk_vlans']})
                 continue
             
+            # switchport trunk native vlan x
+            p10_1 = re.compile(r'^switchport +trunk +native +vlan +(?P<trunk_native_vlan>\S+)$')
+            m = p10_1.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'trunk_native_vlan': group['trunk_native_vlan']})
+                continue
+
+            # switchport access vlan x
+            p10_2 = re.compile(r'^switchport +access +vlan +(?P<access_vlan>\S+)$')
+            m = p10_2.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'switchport_mode': 'access'})
+                interface_dict.update({'access_vlan': group['access_vlan']})
+                continue
+
             # channel-group 1 mode active
             p11 = re.compile(r'^channel-group +(?P<port_channel_int>\d+) +mode +(?P<mode>\S+)$')
             m = p11.match(line)
@@ -3045,6 +3071,35 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
                 port_channel_dict = interface_dict.setdefault('port_channel', {})
                 port_channel_dict.update({'port_channel_int': group['port_channel_int']})
                 port_channel_dict.update({'port_channel_mode': group['mode']})
+                continue
+
+            # speed 1000
+            p12 = re.compile(r'^speed +(?P<speed>\d+)$')
+            m = p12.match(line)
+            if m:
+                interface_dict.update({'speed': int(m.groupdict()['speed'])})
+                continue
+
+            # duplex full
+            p13 = re.compile(r'^duplex +(?P<duplex>\S+)$')
+            m = p13.match(line)
+            if m:
+                interface_dict.update({'duplex': m.groupdict()['duplex']})
+                continue
+
+            # description DeviceA-description
+            p14 = re.compile(r'^description +(?P<description>.+)$')
+            m = p14.match(line)
+            if m:
+                interface_dict.update({'description': m.groupdict()['description']})
+                continue
+
+            # vpc
+            p15 = re.compile(r'^vpc +(?P<vpc>\S+)$')
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'vpc': group['vpc']})
                 continue
 
         return ret_dict
@@ -3353,14 +3408,27 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         # mgmt0         --                 connected routed    full    1000    --
         # Po1           VPC_PeerLink       connected trunk     full    40G     --
         # Vlan366       BigData            connected routed    auto    auto    --
+        # Eth101/1/10   DO-HYPER-03        connected 101       full    a-1000
+        p1 = re.compile(r'(?P<interface>(\S+)) +(?P<name>(\S+))? '
+                        r'+(?P<status>(\S+))? +(?P<vlan>(\S+))'
+                        r' +(?P<duplex_code>(\S+)) '
+                        r'+(?P<port_speed>(\S+))( +(?P<type>(\S+)))?$')
 
-        p1 = re.compile(r'(?P<interface>(\S+)) +(?P<name>(\S+))? +(?P<status>(\S+))? +(?P<vlan>(\S+))'
-                        r' +(?P<duplex_code>(\S+)) +(?P<port_speed>(\S+)) +(?P<type>(\S+))$')
+        # Eth1/5 *** L2 L3-CIS-N connected trunk full a-1000 1000base-T
+        # Eth1/4 *** FEX 2248TP  connected 1     full a-10G  Fabric Exte
+        p1_1 = re.compile(r'(?P<interface>(\S+)) +'
+                        r'(?P<name>([\S\s]+))(?<! ) +'
+                        r'(?P<status>(\S+)) +'
+                        r'(?P<vlan>(\S+)) +'
+                        r'(?P<duplex_code>([a-z]+)) +'
+                        r'(?P<port_speed>(\S+)) +'
+                        r'(?P<type>([\S\s]+))$')
+
 
         for line in out.splitlines():
             line = line.strip()
 
-            m = p1.match(line)
+            m = p1.match(line) or p1_1.match(line)
             if m and m.groupdict()['name'] != 'Name':
                 group = m.groupdict()
                 interface = Common.convert_intf_name(group['interface'])
@@ -3369,7 +3437,7 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
                 keys = ['name','status', 'vlan', 'duplex_code', 'port_speed', 'type']
 
                 for k in keys:
-                    if group[k] != '--':
+                    if group[k] and group[k] != '--':
                         intf_dict[k] = group[k]
                 continue
 

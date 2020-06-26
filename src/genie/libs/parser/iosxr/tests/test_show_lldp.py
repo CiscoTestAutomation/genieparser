@@ -839,6 +839,292 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
         'total_entries': 3,
     }
 
+    golden_output_4 = {'execute.return_value': '''
+    show lldp neighbors detail
+
+     
+    
+    Thu Apr 30 16:14:06.186 UTC
+    
+    Capability codes:
+    
+         (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+    
+         (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+    
+     
+    
+    ------------------------------------------------
+    
+    Local Interface: TenGigE0/0/0/1
+    
+    Chassis id: 0026.88ff.c416
+    
+    Port id: 655
+    
+    Port Description: PHY|BW|L3|CORE|type:CRAN-P2P|rhost:ASR-01|rport:TenGigE0/0/0/1
+    
+    System Name: MX480-01.comcast.net
+    
+     
+    
+    System Description:
+    
+    Juniper Networks, Inc. mx480 internet router, kernel JUNOS 18.4R2.7, Build date: 2019-06-27 10:00:44 UTC Copyright (c) 1996-2019 Juniper Networks, Inc.
+    
+     
+    
+    Time remaining: 98 seconds
+    
+    Hold Time: 120 seconds
+    
+    System Capabilities: B,R
+    
+    Enabled Capabilities: B,R
+    
+    Management Addresses:
+    
+      IPv4 address: 10.253.47.140
+    
+     
+    
+     
+    
+     
+    
+    ------------------------------------------------
+    
+    Local Interface: TenGigE0/2/0/1
+    
+    Parent Interface: Bundle-Ether10
+    
+    Chassis id: 444c.a8ff.39f5
+    
+    Port id: Ethernet1/4
+    
+    Port Description: PHY|BW|AGG-MEMBER|CORE|type:CRAN-P2P|rhost:ASR-01|rport:TenGigE0/2/0/1|lagg:Port-Channel10|ragg:Bundle-Ether10
+    
+    System Name: 7280CR2A-01.comcast.net
+    
+     
+    
+    System Description:
+    
+    Arista Networks EOS version 4.21.6F running on an Arista Networks DCS-7280CR-48
+    
+     
+    
+    Time remaining: 97 seconds
+    
+    Hold Time: 120 seconds
+    
+    System Capabilities: B,R
+    
+    Enabled Capabilities: B,R
+    
+    Management Addresses:
+    
+      IPv4 address: 10.252.26.104
+    
+     
+    
+     
+    
+     
+    
+    ------------------------------------------------
+    
+    Local Interface: TenGigE0/2/0/11
+    
+    Chassis id: 6c41.0eff.3712
+    
+    Port id: Te0/0/0/0
+    
+    Port Description: PHY|BW|L3|CORE|type:CRAN-P2P|rhost:ASR-01|rport:te0/2/0/11
+    
+    System Name: ASR9904.netlabs.nj.ula.comcast.net
+    
+     
+    
+    System Description:
+    
+    Cisco IOS XR Software, Version 6.1.4[Default]
+    
+    Copyright (c) 2017 by Cisco Systems, Inc., ASR9K Series
+    
+     
+    
+    Time remaining: 116 seconds
+    
+    Hold Time: 120 seconds
+    
+    System Capabilities: R
+    
+    Enabled Capabilities: R
+    
+    Management Addresses:
+    
+      IPv4 address: 10.253.47.122
+    
+      IPv6 address: 2001:db8:fbd1:8e5c::4
+    
+     
+    
+     
+    
+     
+    
+    ------------------------------------------------
+    
+    Local Interface: TenGigE0/2/0/23
+    
+    Chassis id: 7c31.0eff.203f
+    
+    Port id: TenGigE0/0/0/4
+    
+    Port Description: ASR-01 T0/2/0/23
+    
+    System Name: NCS5501
+    
+     
+    
+    System Description:
+    
+     6.5.2, NCS-5500
+    
+     
+    
+    Time remaining: 114 seconds
+    
+    Hold Time: 120 seconds
+    
+    System Capabilities: R
+    
+    Enabled Capabilities: R
+    
+    Management Addresses:
+    
+      IPv4 address: 10.253.47.30
+    
+     
+    
+     
+    
+     
+    
+    Total entries displayed: 4
+    '''}
+
+    golden_parsed_output_4 = {
+        'interfaces': {
+            'TenGigE0/0/0/1': {
+                'port_id': {
+                    '655': {
+                        'neighbors': {
+                            'MX480-01.comcast.net': {
+                                'capabilities': {
+                                    'bridge': {
+                                        'enabled': True,
+                                        'system': True,
+                                    },
+                                    'router': {
+                                        'enabled': True,
+                                        'system': True,
+                                    },
+                                },
+                                'chassis_id': '0026.88ff.c416',
+                                'hold_time': 120,
+                                'management_address': '10.253.47.140',
+                                'neighbor_id': 'MX480-01.comcast.net',
+                                'port_description': 'PHY|BW|L3|CORE|type:CRAN-P2P|rhost:ASR-01|rport:TenGigE0/0/0/1',
+                                'system_description': '',
+                                'system_name': 'MX480-01.comcast.net',
+                                'time_remaining': 98,
+                            },
+                        },
+                    },
+                },
+            },
+            'TenGigE0/2/0/1': {
+                'port_id': {
+                    'Ethernet1/4': {
+                        'neighbors': {
+                            '7280CR2A-01.comcast.net': {
+                                'capabilities': {
+                                    'bridge': {
+                                        'enabled': True,
+                                        'system': True,
+                                    },
+                                    'router': {
+                                        'enabled': True,
+                                        'system': True,
+                                    },
+                                },
+                                'chassis_id': '444c.a8ff.39f5',
+                                'hold_time': 120,
+                                'management_address': '10.252.26.104',
+                                'neighbor_id': '7280CR2A-01.comcast.net',
+                                'port_description': 'PHY|BW|AGG-MEMBER|CORE|type:CRAN-P2P|rhost:ASR-01|rport:TenGigE0/2/0/1|lagg:Port-Channel10|ragg:Bundle-Ether10',
+                                'system_description': '',
+                                'system_name': '7280CR2A-01.comcast.net',
+                                'time_remaining': 97,
+                            },
+                        },
+                    },
+                },
+            },
+            'TenGigE0/2/0/11': {
+                'port_id': {
+                    'TenGigabitEthernet0/0/0/0': {
+                        'neighbors': {
+                            'ASR9904.netlabs.nj.ula.comcast.net': {
+                                'capabilities': {
+                                    'router': {
+                                        'enabled': True,
+                                        'system': True,
+                                    },
+                                },
+                                'chassis_id': '6c41.0eff.3712',
+                                'hold_time': 120,
+                                'management_address': '10.253.47.122',
+                                'neighbor_id': 'ASR9904.netlabs.nj.ula.comcast.net',
+                                'port_description': 'PHY|BW|L3|CORE|type:CRAN-P2P|rhost:ASR-01|rport:te0/2/0/11',
+                                'system_description': 'Cisco IOS XR Software, Version 6.1.4[Default]\nCopyright (c) 2017 by Cisco Systems, Inc., ASR9K Series\n',
+                                'system_name': 'ASR9904.netlabs.nj.ula.comcast.net',
+                                'time_remaining': 116,
+                            },
+                        },
+                    },
+                },
+            },
+            'TenGigE0/2/0/23': {
+                'port_id': {
+                    'TenGigE0/0/0/4': {
+                        'neighbors': {
+                            'NCS5501': {
+                                'capabilities': {
+                                    'router': {
+                                        'enabled': True,
+                                        'system': True,
+                                    },
+                                },
+                                'chassis_id': '7c31.0eff.203f',
+                                'hold_time': 120,
+                                'management_address': '10.253.47.30',
+                                'neighbor_id': 'NCS5501',
+                                'port_description': 'ASR-01 T0/2/0/23',
+                                'system_description': '',
+                                'system_name': 'NCS5501',
+                                'time_remaining': 114,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        'total_entries': 4,
+    }
+
     def test_empty(self):
         self.dev = Mock(**self.empty_output)
         obj = ShowLldpNeighborsDetail(device=self.dev)
@@ -859,12 +1145,19 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
-    def test(self):
+    def test_golden_3(self):
         self.maxDiff = None
         self.dev1 = Mock(**self.device_output)
         obj = ShowLldpNeighborsDetail(device=self.dev1)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_output)
+
+    def test_golden_4(self):
+        self.maxDiff = None
+        self.dev1 = Mock(**self.golden_output_4)
+        obj = ShowLldpNeighborsDetail(device=self.dev1)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 
 class test_show_lldp_traffic(unittest.TestCase):

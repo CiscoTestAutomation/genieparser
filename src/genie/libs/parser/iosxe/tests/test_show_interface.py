@@ -327,7 +327,6 @@ class TestShowInterfacesSwitchport(unittest.TestCase):
          }
     }
 
-
     golden_output = {'execute.return_value': '''
         Name: Gi1/0/2
         Switchport: Enabled
@@ -450,6 +449,112 @@ class TestShowInterfacesSwitchport(unittest.TestCase):
         Appliance trust: none
     '''}
 
+    golden_output_2 = {'execute.return_value': '''
+    Name: Te1/1/2
+    Switchport: Enabled
+    Administrative Mode: trunk
+    Operational Mode: trunk (member of bundle Po12)
+    Administrative Trunking Encapsulation: dot1q
+    Operational Trunking Encapsulation: dot1q
+    Operational Dot1q Ethertype:  0x8100
+    Negotiation of Trunking: Off
+    Access Mode VLAN: 1 (default)
+    Trunking Native Mode VLAN: 1 (default)
+    Administrative Native VLAN tagging: enabled
+    Operational Native VLAN tagging: disabled
+    Voice VLAN: none
+    Administrative private-vlan host-association: none 
+    Administrative private-vlan mapping: none 
+    Operational private-vlan: none
+    Trunking VLANs Enabled: 1,111,130,131,400,405,410,420,430,439-442,450,451,460,
+         470,480,490,500,616,619,700,709-712,720,723-725,760
+    Pruning VLANs Enabled: 2-1001
+    Capture Mode Disabled
+    Capture VLANs Allowed: ALL
+    
+    Unknown unicast blocked: disabled
+    Unknown multicast blocked: disabled
+    
+    Name: Po12
+    Switchport: Enabled
+    Administrative Mode: trunk
+    Operational Mode: trunk
+    Administrative Trunking Encapsulation: dot1q
+    Operational Trunking Encapsulation: dot1q
+    Operational Dot1q Ethertype:  0x8100
+    Negotiation of Trunking: Off
+    Access Mode VLAN: 1 (default)
+    Trunking Native Mode VLAN: 1 (default)
+    Administrative Native VLAN tagging: enabled
+    Operational Native VLAN tagging: disabled
+    Voice VLAN: none
+    Administrative private-vlan host-association: none 
+    Administrative private-vlan mapping: none 
+    Operational private-vlan: none
+    Trunking VLANs Enabled: 1,111,130,131,400,405,410,420,430,439-442,450,451,460,
+         470,480,490,500,616,619,700,709-712,720,723-725,760
+    Pruning VLANs Enabled: 2-1001
+    
+    Unknown unicast blocked: disabled
+    Unknown multicast blocked: disabled
+
+    '''}
+
+    golden_parsed_output_2 = {
+        'Port-channel12': {
+            'operational_mode': 'trunk',
+            'switchport_mode': 'trunk',
+            'access_vlan_name': 'default',
+            'private_vlan': {
+            },
+            'switchport_enable': True,
+            'native_vlan_tagging': True,
+            'negotiation_of_trunk': False,
+            'encapsulation': {
+                'native_vlan': '1',
+                'native_vlan_name': 'default',
+                'operational_encapsulation': 'dot1q',
+                'administrative_encapsulation': 'dot1q',
+            },
+            'port_channel': {
+                'port_channel_member_intfs': ['TenGigabitEthernet1/1/2'],
+                'port_channel_member': True,
+            },
+            'pruning_vlans': '2-1001',
+            'access_vlan': '1',
+            'unknown_multicast_blocked': False,
+            'trunk_vlans': '1,111,130,131,400,405,410,420,430,439-442,450,451,460,',
+            'unknown_unicast_blocked': False,
+        },
+        'TenGigabitEthernet1/1/2': {
+            'access_vlan': '1',
+            'operational_mode': 'trunk',
+            'switchport_mode': 'trunk',
+            'access_vlan_name': 'default',
+            'switchport_enable': True,
+            'private_vlan': {
+            },
+            'capture_mode': False,
+            'trunk_vlans': '1,111,130,131,400,405,410,420,430,439-442,450,451,460,',
+            'capture_vlans': 'all',
+            'negotiation_of_trunk': False,
+            'unknown_multicast_blocked': False,
+            'port_channel': {
+                'port_channel_int': 'Port-channel12',
+                'port_channel_member': True,
+            },
+            'native_vlan_tagging': True,
+            'encapsulation': {
+                'native_vlan': '1',
+                'native_vlan_name': 'default',
+                'operational_encapsulation': 'dot1q',
+                'administrative_encapsulation': 'dot1q',
+            },
+            'unknown_unicast_blocked': False,
+            'pruning_vlans': '2-1001',
+        },
+    }
+
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         intf_obj = ShowInterfacesSwitchport(device=self.device)
@@ -462,6 +567,13 @@ class TestShowInterfacesSwitchport(unittest.TestCase):
         intf_obj = ShowInterfacesSwitchport(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        intf_obj = ShowInterfacesSwitchport(device=self.device)
+        parsed_output = intf_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 
 #############################################################################
@@ -17092,50 +17204,50 @@ class TestShowIpInterface(unittest.TestCase):
     '''}
 
     golden_interface_output = {'execute.return_value':'''
-CE1#show ip interface GigabitEthernet1
-GigabitEthernet1 is up, line protocol is up
-  Internet address is 172.16.1.243/24
-  Broadcast address is 255.255.255.255
-  Address determined by DHCP
-  MTU is 1500 bytes
-  Helper address is not set
-  Directed broadcast forwarding is disabled
-  Outgoing Common access list is not set
-  Outgoing access list is not set
-  Inbound Common access list is not set
-  Inbound  access list is not set
-  Proxy ARP is enabled
-  Local Proxy ARP is disabled
-  Security level is default
-  Split horizon is enabled
-  ICMP redirects are always sent
-  ICMP unreachables are always sent
-  ICMP mask replies are never sent
-  IP fast switching is enabled
-  IP Flow switching is disabled
-  IP CEF switching is enabled
-  IP CEF switching turbo vector
-  IP Null turbo vector
-  Associated unicast routing topologies:
-        Topology "base", operation state is UP
-  IP multicast fast switching is enabled
-  IP multicast distributed fast switching is disabled
-  IP route-cache flags are Fast, CEF
-  Router Discovery is disabled
-  IP output packet accounting is disabled
-  IP access violation accounting is disabled
-  TCP/IP header compression is disabled
-  RTP/IP header compression is disabled
-  Probe proxy name replies are disabled
-  Policy routing is disabled
-  Network address translation is disabled
-  BGP Policy Mapping is disabled
-  Input features: MCI Check
-  IPv4 WCCP Redirect outbound is disabled
-  IPv4 WCCP Redirect inbound is disabled
-  IPv4 WCCP Redirect exclude is disabled
-'''
-}
+        CE1#show ip interface GigabitEthernet1
+        GigabitEthernet1 is up, line protocol is up
+        Internet address is 172.16.1.243/24
+        Broadcast address is 255.255.255.255
+        Address determined by DHCP
+        MTU is 1500 bytes
+        Helper address is not set
+        Directed broadcast forwarding is disabled
+        Outgoing Common access list is not set
+        Outgoing access list is not set
+        Inbound Common access list is not set
+        Inbound  access list is not set
+        Proxy ARP is enabled
+        Local Proxy ARP is disabled
+        Security level is default
+        Split horizon is enabled
+        ICMP redirects are always sent
+        ICMP unreachables are always sent
+        ICMP mask replies are never sent
+        IP fast switching is enabled
+        IP Flow switching is disabled
+        IP CEF switching is enabled
+        IP CEF switching turbo vector
+        IP Null turbo vector
+        Associated unicast routing topologies:
+                Topology "base", operation state is UP
+        IP multicast fast switching is enabled
+        IP multicast distributed fast switching is disabled
+        IP route-cache flags are Fast, CEF
+        Router Discovery is disabled
+        IP output packet accounting is disabled
+        IP access violation accounting is disabled
+        TCP/IP header compression is disabled
+        RTP/IP header compression is disabled
+        Probe proxy name replies are disabled
+        Policy routing is disabled
+        Network address translation is disabled
+        BGP Policy Mapping is disabled
+        Input features: MCI Check
+        IPv4 WCCP Redirect outbound is disabled
+        IPv4 WCCP Redirect inbound is disabled
+        IPv4 WCCP Redirect exclude is disabled
+        '''
+    }
     golden_parsed_interface_output = {
         "GigabitEthernet1": {
             "ip_multicast_fast_switching": True,
@@ -17243,48 +17355,133 @@ GigabitEthernet1 is up, line protocol is up
                 'redirect_outbound': False}}}
 
     golden_output2 = {'execute.return_value': '''
-GigabitEthernet1 is administratively down, line protocol is down
-  Internet address will be negotiated using DHCP
-  Broadcast address is 255.255.255.255
-  MTU is 1500 bytes
-  Helper address is not set
-  Directed broadcast forwarding is disabled
-  Outgoing Common access list is not set 
-  Outgoing access list is not set
-  Inbound Common access list is not set 
-  Inbound  access list is not set
-  Proxy ARP is enabled
-  Local Proxy ARP is disabled
-  Security level is default
-  Split horizon is enabled
-  ICMP redirects are always sent
-  ICMP unreachables are always sent
-  ICMP mask replies are never sent
-  IP fast switching is enabled
-  IP Flow switching is disabled
-  IP CEF switching is enabled
-  IP CEF switching turbo vector
-  IP Null turbo vector
-  Associated unicast routing topologies:
-        Topology "base", operation state is DOWN
-  IP multicast fast switching is enabled
-  IP multicast distributed fast switching is disabled
-  IP route-cache flags are Fast, CEF
-  Router Discovery is disabled
-  IP output packet accounting is disabled
-  IP access violation accounting is disabled
-  TCP/IP header compression is disabled
-  RTP/IP header compression is disabled
-  Probe proxy name replies are disabled
-  Policy routing is disabled
-  Network address translation is disabled
-  BGP Policy Mapping is disabled
-  Input features: MCI Check
-  IPv4 WCCP Redirect outbound is disabled
-  IPv4 WCCP Redirect inbound is disabled
-  IPv4 WCCP Redirect exclude is disabled
-  '''}
+        GigabitEthernet1 is administratively down, line protocol is down
+        Internet address will be negotiated using DHCP
+        Broadcast address is 255.255.255.255
+        MTU is 1500 bytes
+        Helper address is not set
+        Directed broadcast forwarding is disabled
+        Outgoing Common access list is not set 
+        Outgoing access list is not set
+        Inbound Common access list is not set 
+        Inbound  access list is not set
+        Proxy ARP is enabled
+        Local Proxy ARP is disabled
+        Security level is default
+        Split horizon is enabled
+        ICMP redirects are always sent
+        ICMP unreachables are always sent
+        ICMP mask replies are never sent
+        IP fast switching is enabled
+        IP Flow switching is disabled
+        IP CEF switching is enabled
+        IP CEF switching turbo vector
+        IP Null turbo vector
+        Associated unicast routing topologies:
+                Topology "base", operation state is DOWN
+        IP multicast fast switching is enabled
+        IP multicast distributed fast switching is disabled
+        IP route-cache flags are Fast, CEF
+        Router Discovery is disabled
+        IP output packet accounting is disabled
+        IP access violation accounting is disabled
+        TCP/IP header compression is disabled
+        RTP/IP header compression is disabled
+        Probe proxy name replies are disabled
+        Policy routing is disabled
+        Network address translation is disabled
+        BGP Policy Mapping is disabled
+        Input features: MCI Check
+        IPv4 WCCP Redirect outbound is disabled
+        IPv4 WCCP Redirect inbound is disabled
+        IPv4 WCCP Redirect exclude is disabled
+    '''}
 
+    golden_output3 = {'execute.return_value':
+    '''
+        NVI0 is up, line protocol is up
+        Internet address will be negotiated using IPCP
+        Broadcast address is 255.255.255.255
+        MTU is 1500 bytes
+        Helper address is not set
+        Directed broadcast forwarding is disabled
+        Outgoing Common access list is not set 
+        Outgoing access list is not set
+        Inbound Common access list is not set 
+        Inbound  access list is not set
+        Proxy ARP is enabled
+        Local Proxy ARP is disabled
+        Security level is default
+        Split horizon is enabled
+        ICMP redirects are always sent
+        ICMP unreachables are always sent
+        ICMP mask replies are never sent
+        IP fast switching is enabled
+        IP Flow switching is disabled
+        IP CEF switching is enabled
+        IP CEF switching turbo vector
+        IP Null turbo vector
+        Associated unicast routing topologies:
+                Topology "base", operation state is DOWN
+        IP multicast fast switching is enabled
+        IP multicast distributed fast switching is disabled
+        IP route-cache flags are Fast, CEF
+        Router Discovery is disabled
+        IP output packet accounting is disabled
+        IP access violation accounting is disabled
+        TCP/IP header compression is disabled
+        RTP/IP header compression is disabled
+        Probe proxy name replies are disabled
+        Policy routing is disabled
+        Network address translation is disabled
+        BGP Policy Mapping is disabled
+        Input features: MCI Check
+        IPv4 WCCP Redirect outbound is disabled
+        IPv4 WCCP Redirect inbound is disabled
+        IPv4 WCCP Redirect exclude is disabled
+    '''
+    }
+    golden_parsed_output3 = {
+        'NVI0': {
+            'bgp_policy_mapping': False,
+            'directed_broadcast_forwarding': False,
+            'enabled': True,
+            'icmp': {
+                'mask_replies': 'never sent',
+                'redirects': 'always sent',
+                'unreachables': 'always sent'
+            },
+            'input_features': ['MCI Check'],
+            'ip_access_violation_accounting': False,
+            'ip_cef_switching': True,
+            'ip_cef_switching_turbo_vector': True,
+            'ip_fast_switching': True,
+            'ip_flow_switching': False,
+            'ip_multicast_distributed_fast_switching': False,
+            'ip_multicast_fast_switching': True,
+            'ip_null_turbo_vector': True,
+            'ip_output_packet_accounting': False,
+            'ip_route_cache_flags': ['CEF', 'Fast'],
+            'ipv4': {'ipcp_negotiated': {'broadcast_address': '255.255.255.255',
+                                        'ip': 'ipcp_negotiated'}},
+            'local_proxy_arp': False,
+            'mtu': 1500,
+            'network_address_translation': False,
+            'oper_status': 'up',
+            'policy_routing': False,
+            'probe_proxy_name_replies': False,
+            'proxy_arp': True,
+            'router_discovery': False,
+            'rtp_ip_header_compression': False,
+            'security_level': 'default',
+            'split_horizon': True,
+            'tcp_ip_header_compression': False,
+            'unicast_routing_topologies': {'topology': {'base': {'status': 'down'}}},
+            'wccp': {'redirect_exclude': False,
+                    'redirect_inbound': False,
+                    'redirect_outbound': False}}
+
+    }
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         interface_obj = ShowIpInterface(device=self.device)
@@ -17312,6 +17509,12 @@ GigabitEthernet1 is administratively down, line protocol is down
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_interface_output)
 
+    def test_golden3(self):
+        self.device = Mock(**self.golden_output3)
+        interface_obj = ShowIpInterface(device=self.device)
+        parsed_output = interface_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 #############################################################################
 # unitest For show ipv6 interface

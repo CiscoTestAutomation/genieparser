@@ -1597,11 +1597,22 @@ class TestDir(unittest.TestCase):
         1012660 kbytes total (939092 kbytes free)
         '''}
 
-    golden_parsed_output2 = {
+    golden_parsed_output2 =  {
         'dir': {
             'dir_name': 'disk0a:/usr',
-            'total_bytes': '2562719744 bytes',
-            'total_free_bytes': '1918621184 bytes'}}
+            'files': {
+                'start': {
+                    'date': 'Thu Jan 15 15:29:26 2015',
+                    'index': '9867',
+                    'permission': '-rwx',
+                    'size': '8909'
+                }
+            },
+           'total_bytes': '2562719744 bytes',
+           'total_free_bytes': '1918621184 bytes'
+        }
+    }
+
 
     golden_output2 = {'execute.return_value': '''
         Directory of disk0a:/usr
@@ -1672,6 +1683,34 @@ class TestDir(unittest.TestCase):
         1012660 kbytes total (938440 kbytes free)
         '''}
 
+    golden_output4 = {'execute.return_value': '''
+        dir disk0:/prod2_vxlan_config
+        Mon May 18 21:31:29.857 PDT
+
+        Directory of disk0:
+
+        10541310    -rwx  6142        Mon May 18 19:16:01 2020  prod2_vxlan_config
+
+        12810436608 bytes total (12134223872 bytes free)
+    '''
+    }
+
+    golden_parsed_output4 = {
+        'dir': {
+            'dir_name': 'disk0:',
+            'files': {
+                'prod2_vxlan_config': {
+                    'date': 'Mon May 18 19:16:01 2020',
+                    'index': '10541310',
+                    'permission': '-rwx',
+                    'size': '6142'
+                }
+            },
+            'total_bytes': '12810436608 bytes',
+            'total_free_bytes': '12134223872 bytes'
+        }
+    }
+
     def test_dir_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
@@ -1699,6 +1738,13 @@ class TestDir(unittest.TestCase):
         dir_obj3 = Dir(device=self.device)
         parsed_output3 = dir_obj3.parse()
         self.assertEqual(parsed_output3,self.golden_parsed_output3)
+
+    def test_dir_golden4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output4)
+        dir_obj4 = Dir(device=self.device)
+        parsed_output4 = dir_obj4.parse()
+        self.assertEqual(parsed_output4,self.golden_parsed_output4)
 
     def test_dir_empty(self):
         self.device = Mock(**self.empty_output)

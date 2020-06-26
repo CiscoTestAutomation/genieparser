@@ -526,7 +526,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                 l4_dict = seq_dict.setdefault('matches', {}).setdefault('l4', {})\
                     .setdefault(protocol, {})
                 if 'options' in left:
-                    options_name = re.sealrch('options +(\w+)', left).groups()[0]
+                    options_name = re.search('options +(\w+)', left).groups()[0]
                     if not options_name.isdigit():
                         try:
                             l4_dict['options'] = self.OPT_MAP[options_name]

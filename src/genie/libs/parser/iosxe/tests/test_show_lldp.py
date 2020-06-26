@@ -1474,6 +1474,227 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
     'total_entries': 1,
 }
 
+    golden_output_3 = {'execute.return_value': '''     
+        ------------------------------------------------
+        Local Intf: Gi1/0/32
+        Chassis id: FE80::EC22:9A75:BBC7:71AF
+        Port id: 222
+        Port Description: Description
+        System Name - not advertised
+        
+        System Description: 
+        {"SN":"SN-NR","Owner":"OWNER"}
+        
+        Time remaining: 92 seconds
+        System Capabilities - not advertised
+        Enabled Capabilities - not advertised
+        Management Addresses:
+            IPV6: 0000:0000:0000:0000:0000:ffff:7f00:0001
+        Auto Negotiation - not supported
+        Physical media capabilities - not advertised
+        Media Attachment Unit type - not advertised
+        Vlan ID: - not advertised
+        
+        
+        Total entries displayed: 1
+    '''}
+
+    golden_parsed_output_3 = {
+        'interfaces': {
+            'GigabitEthernet1/0/32': {
+                'if_name': 'GigabitEthernet1/0/32',
+                'port_id': {
+                    '222': {
+                        'neighbors': {
+                            'not advertised': {
+                                'neighbor_id': 'not advertised',
+                                'chassis_id': 'FE80::EC22:9A75:BBC7:71AF',
+                                'port_id': '222',
+                                'port_description': 'Description',
+                                'system_name': 'not advertised',
+                                'system_description': '{"SN":"SN-NR","Owner":"OWNER"}',
+                                'time_remaining': 92,
+                                'management_address': '0000:0000:0000:0000:0000:ffff:7f00:0001',
+                                'auto_negotiation': 'not supported'
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        'total_entries': 1,
+    }
+
+    golden_output_4 = {'execute.return_value': '''     
+        ------------------------------------------------
+        Local Intf: Gi1/0/17
+        Chassis id: 127.0.0.2
+        Port id: c81f.77ff.dddd
+        Port Description - not advertised
+        System Name: TestName
+        System Description - not advertised
+        
+        Time remaining: 104 seconds
+        System Capabilities: B,T
+        Enabled Capabilities: B,T
+        Management Addresses:
+            IP: 127.0.0.2
+            OID:
+                10.16.6.1.4.1.6810.195.69.2.0.
+        Auto Negotiation - not supported
+        Physical media capabilities - not advertised
+        Media Attachment Unit type: 30
+        Vlan ID: - not advertised
+        
+        MED Information:
+        
+            MED Codes:
+                  (NP) Network Policy, (LI) Location Identification
+                  (PS) Power Source Entity, (PD) Power Device
+                  (IN) Inventory
+        
+            H/W revision: 9611GD02C
+            S/W revision: 6.6604
+            Serial number: 12389WET87
+            Manufacturer: Avaya
+            Model: 9611
+            Capabilities: NP, PD, IN
+            Device type: Endpoint Class III
+            Network Policy(Voice): VLAN 66, tagged, Layer-2 priority: 5, DSCP: 46
+            Power requirements - not advertised
+            Location - not advertised
+        
+        
+        Total entries displayed: 1
+        '''}
+
+    golden_parsed_output_4 = {
+      'interfaces': {
+        'GigabitEthernet1/0/17': {
+          'if_name': 'GigabitEthernet1/0/17',
+          'port_id': {
+            'C81f.77ff.dddd': {
+              'neighbors': {
+                'TestName': {
+                  'neighbor_id': 'TestName',
+                  'chassis_id': '127.0.0.2',
+                  'port_id': 'C81f.77ff.dddd',
+                  'system_name': 'TestName',
+                  'time_remaining': 104,
+                  'capabilities': {
+                    'mac_bridge': {
+                      'name': 'mac_bridge',
+                      'system': True,
+                      'enabled': True
+                    },
+                    'telephone': {
+                      'name': 'telephone',
+                      'system': True,
+                      'enabled': True
+                    }
+                  },
+                  'management_address': '127.0.0.2',
+                  'auto_negotiation': 'not supported',
+                  'unit_type': 30
+                }
+              }
+            }
+          }
+        }
+      },
+      'med_information': {
+        'h/w_revision': '9611GD02C',
+        's/w_revision': '6.6604',
+        'serial_number': '12389WET87',
+        'manufacturer': 'Avaya',
+        'model': '9611',
+        'capabilities': [
+          'NP',
+          'PD',
+          'IN'
+        ],
+        'device_type': 'Endpoint Class III',
+        'network_policy': {
+          'voice': {
+            'tagged': True,
+            'layer_2_priority': 5,
+            'dscp': 46,
+            'vlan': 66
+          }
+        },
+        'location': 'not advertised'
+      },
+      'total_entries': 1
+    }
+
+    golden_output_5 = {'execute.return_value': '''     
+        ------------------------------------------------
+        Local Intf: Gi1/0/19
+        Chassis id: 6400.33ff.4444
+        Port id: 6400.33ff.4444
+        Port Description - not advertised
+        System Name - not advertised
+        System Description - not advertised
+        
+        Time remaining: 3284 seconds
+        System Capabilities - not advertised
+        Enabled Capabilities - not advertised
+        Management Addresses - not advertised
+        Auto Negotiation - supported, enabled
+        Physical media capabilities:
+            1000baseT(FD)
+        Media Attachment Unit type - not advertised
+        Vlan ID: - not advertised
+        
+        MED Information:
+        
+            MED Codes:
+                  (NP) Network Policy, (LI) Location Identification
+                  (PS) Power Source Entity, (PD) Power Device
+                  (IN) Inventory
+        
+            Inventory information - not advertised
+            Capabilities: 
+            Device type: Endpoint Class I
+            Network Policies - not advertised
+            Power requirements - not advertised
+            Location - not advertised
+        
+        
+        Total entries displayed: 1
+        '''}
+
+    golden_parsed_output_5 = {
+        'interfaces': {
+            'GigabitEthernet1/0/19': {
+                'if_name': 'GigabitEthernet1/0/19',
+                'port_id': {
+                    '6400.33ff.4444': {
+                        'neighbors': {
+                            'not advertised': {
+                                'neighbor_id': 'not advertised',
+                                'chassis_id': '6400.33ff.4444',
+                                'port_id': '6400.33ff.4444',
+                                'system_name': 'not advertised',
+                                'time_remaining': 3284,
+                                'management_address': 'not advertised',
+                                'auto_negotiation': 'supported, enabled',
+                                'physical_media_capabilities': [
+                                    '1000baseT(FD)'
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        'med_information': {
+            'device_type': 'Endpoint Class I',
+            'location': 'not advertised'
+        },
+        'total_entries': 1
+    }
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowLldpNeighborsDetail(device=self.dev1)
@@ -1493,6 +1714,27 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
         obj = ShowLldpNeighborsDetail(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_3)
+        obj = ShowLldpNeighborsDetail(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+    def test_golden_4(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_4)
+        obj = ShowLldpNeighborsDetail(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
+
+    def test_golden_5(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_5)
+        obj = ShowLldpNeighborsDetail(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
 
 class test_show_lldp_traffic(unittest.TestCase):

@@ -1509,7 +1509,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
             line = line.strip()
 
             # Name: Gi1/0/2
-            p1 =  re.compile(r'^Name: +(?P<intf>[\w\/\.\-]+)$')
+            p1 = re.compile(r'^Name: +(?P<intf>[\w\/\.\-]+)$')
             m = p1.match(line)
             if m:
                 intf = Common.convert_intf_name(m.groupdict()['intf'])
@@ -1518,17 +1518,18 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Switchport: Enabled
-            p2 =  re.compile(r'^Switchport: +(?P<switchport_enable>\w+)$')
+            p2 = re.compile(r'^Switchport: +(?P<switchport_enable>\w+)$')
             m = p2.match(line)
             if m:
                 if m.groupdict()['switchport_enable'].lower() == 'enabled':
                     ret_dict[intf]['switchport_enable'] = True
                 else:
                     ret_dict[intf]['switchport_enable'] = False
+
                 continue
 
             # Administrative Mode: trunk
-            p3 =  re.compile(r'^Administrative +Mode: +(?P<switchport_mode>[\w\s]+)$')
+            p3 = re.compile(r'^Administrative +Mode: +(?P<switchport_mode>[\w\s]+)$')
             m = p3.match(line)
             if m:
                 ret_dict[intf]['switchport_mode'] = m.groupdict()['switchport_mode']
@@ -1536,8 +1537,9 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
 
             # Operational Mode: trunk (member of bundle Po12)
             # Operational Mode: down (suspended member of bundle Po12)
-            p4 =  re.compile(r'^Operational +Mode: +(?P<operational_mode>[\w\s]+)'
-                              '( +\((?P<dummy>[\w\s]+)? *member +of +bundle +(?P<port_channel_int>[\w\/\.\-]+)\))?$')
+            p4 = re.compile(r'^Operational +Mode: +(?P<operational_mode>[\w\s]+)'
+                            r'( +\((?P<dummy>[\w\s]+)? *member +of +bundle '
+                            r'+(?P<port_channel_int>[\w\/\.\-]+)\))?$')
             m = p4.match(line)
             if m:
                 ret_dict[intf]['operational_mode'] = m.groupdict()['operational_mode']
@@ -1580,7 +1582,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Operational Trunking Encapsulation: dot1q
-            p6 =  re.compile(r'^Operational +Trunking +Encapsulation: +'
+            p6 = re.compile(r'^Operational +Trunking +Encapsulation: +'
                               '(?P<encapsulation>\w+)$')
             m = p6.match(line)
             if m:
@@ -1591,7 +1593,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Negotiation of Trunking: On
-            p7 =  re.compile(r'^Negotiation +of +Trunking: +(?P<negotiation_of_trunk>\w+)$')
+            p7 = re.compile(r'^Negotiation +of +Trunking: +(?P<negotiation_of_trunk>\w+)$')
             m = p7.match(line)
             if m:
                 negotiation_of_trunk = m.groupdict()['negotiation_of_trunk'].lower()
@@ -1613,7 +1615,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Trunking Native Mode VLAN: 1 (default)
-            p9 =  re.compile(r'^Trunking +Native +Mode +VLAN: +(?P<native_vlan>[\d\-]+)'
+            p9 = re.compile(r'^Trunking +Native +Mode +VLAN: +(?P<native_vlan>[\d\-]+)'
                               '( *\((?P<native_vlan_name>.+)\))?$')
             m = p9.match(line)
             if m:
@@ -1625,7 +1627,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Administrative Native VLAN tagging: enabled
-            p10 =  re.compile(r'^Administrative +Native +VLAN +tagging: +'
+            p10 = re.compile(r'^Administrative +Native +VLAN +tagging: +'
                                '(?P<tagging>\w+)$')
             m = p10.match(line)
             if m:
@@ -1697,7 +1699,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Administrative private-vlan trunk encapsulation: dot1q
-            p16 =  re.compile(r'^Administrative +private-vlan +'
+            p16 = re.compile(r'^Administrative +private-vlan +'
                                'trunk +encapsulation: +(?P<ret>[\w\-]+)$')
             m = p16.match(line)
             if m:
@@ -1709,7 +1711,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Administrative private-vlan trunk normal VLANs: none
-            p17 =  re.compile(r'^Administrative +private-vlan +'
+            p17 = re.compile(r'^Administrative +private-vlan +'
                                'trunk +normal +VLANs: +(?P<ret>[\w\-]+)$')
             m = p17.match(line)
             if m:
@@ -1721,7 +1723,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Administrative private-vlan trunk associations: none
-            p18 =  re.compile(r'^Administrative +private-vlan +'
+            p18 = re.compile(r'^Administrative +private-vlan +'
                                'trunk +associations: +(?P<ret>[\w\-]+)$')
             m = p18.match(line)
             if m:
@@ -1734,7 +1736,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
 
             # Administrative private-vlan trunk mappings: none
             # Administrative private-vlan trunk mappings:
-            p19 =  re.compile(r'^Administrative +private-vlan +'
+            p19 = re.compile(r'^Administrative +private-vlan +'
                                'trunk +mappings:( *(?P<ret>[\w\-]+))?$')
             m = p19.match(line)
             if m:
@@ -1748,7 +1750,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
 
             # 10 (VLAN0010) 100 (VLAN0100)
             if isinstance(private_trunk_mappings, str):
-                p19_1 =  re.compile(r'^(?P<mappings>[\w\(\)\s]+)$')
+                p19_1 = re.compile(r'^(?P<mappings>[\w\(\)\s]+)$')
                 m = p19_1.match(line)
                 if m:
                     ret = m.groupdict()['mappings']
@@ -1760,7 +1762,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
 
             # Operational private-vlan: none
             # Operational private-vlan:
-            p20 =  re.compile(r'^Operational +private-vlan:'
+            p20 = re.compile(r'^Operational +private-vlan:'
                                '( *(?P<private_operational>[\w\-]+))?$')
             m = p20.match(line)
             if m:
@@ -1772,9 +1774,17 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 private_operational = ''
                 continue
 
+            # Trunking VLANs Enabled: 200-211
+            # Trunking VLANs Enabled: 100,101,110-120,121,130,170,180,
+            p21 = re.compile(r'^Trunking +VLANs +Enabled: +(?P<trunk_vlans>[\w\-\,\s]+)$')
+            m = p21.match(line)
+            if m:
+                ret_dict[intf]['trunk_vlans'] = m.groupdict()['trunk_vlans'].lower()
+                continue
+
             # 10 (VLAN0010) 100 (VLAN0100)
             if isinstance(private_operational, str):
-                p20_1 =  re.compile(r'^(?P<private_operational>[\w\(\)\s]+)$')
+                p20_1 = re.compile(r'^(?P<private_operational>[\w\(\)\s]+)$')
                 m = p20_1.match(line)
                 if m:
                     ret = m.groupdict()['private_operational']
@@ -1784,19 +1794,10 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 private_operational = None
                 continue
 
-            # Trunking VLANs Enabled: 200-211
-            # Trunking VLANs Enabled: 100,101,110-120,121,130,170,180,
-            p21 =  re.compile(r'^Trunking +VLANs +Enabled: +(?P<trunk_vlans>[\w\-\,\s]+)$')
-            m = p21.match(line)
-            if m:
-                ret_dict[intf]['trunk_vlans'] = m.groupdict()['trunk_vlans'].lower()
-                continue
-
-            # 100,111,222,300-30,500-55,
-            # 1111,2222,3333
+            # 1111,2222,3333, 500-55,
             p21_1 = re.compile(r'^(?P<trunk_vlans>[\d\,\-]+)$')
             m = p21_1.match(line)
-            if m:              
+            if m:
                 ret_dict[intf]['trunk_vlans'] += m.groupdict()['trunk_vlans'].lower()
                 continue
 
@@ -1836,7 +1837,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Unknown unicast blocked: disabled
-            p26 =  re.compile(r'^Unknown +unicast +blocked: +(?P<block>\w+)$')
+            p26 = re.compile(r'^Unknown +unicast +blocked: +(?P<block>\w+)$')
             m = p26.match(line)
             if m:
                 if 'disabled' in m.groupdict()['block'].lower():
@@ -1846,8 +1847,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Unknown multicast blocked: disabled
-            p21 =  re.compile(r'^Unknown +multicast +blocked: +(?P<block>\w+)$')
-            m = p21.match(line)
+            p27 = re.compile(r'^Unknown +multicast +blocked: +(?P<block>\w+)$')
+            m = p27.match(line)
             if m:
                 if 'disabled' in m.groupdict()['block'].lower():
                     ret_dict[intf]['unknown_multicast_blocked'] = False
@@ -1856,12 +1857,13 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Appliance trust: none
-            p21 =  re.compile(r'^Appliance +trust: +(?P<trust>[\w\-]+)$')
-            m = p21.match(line)
+            p28 = re.compile(r'^Appliance +trust: +(?P<trust>[\w\-]+)$')
+            m = p28.match(line)
             if m:
                 if  m.groupdict()['trust'] != 'none':
                     ret_dict[intf]['appliance_trust'] = m.groupdict()['trust']
                 continue
+
         return ret_dict
 
 
@@ -1958,8 +1960,8 @@ class ShowIpInterface(ShowIpInterfaceSchema):
             # Vlan211 is up, line protocol is up
             # GigabitEthernet2 is administratively down, line protocol is down
             p1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
-                              ' +(?P<enabled>[\w\s]+),'
-                              ' +line +protocol +is +(?P<oper_status>\w+)$')
+                            r' +(?P<enabled>[\w\s]+),'
+                            r' +line +protocol +is +(?P<oper_status>\w+)$')
             m = p1.match(line)
             if m:
                 interface = m.groupdict()['interface']
@@ -1979,7 +1981,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # Internet address is 192.168.76.1/24
             p2 = re.compile(r'^Internet +[A|a]ddress +is +(?P<ipv4>(?P<ip>[0-9\.]+)'
-                             '\/(?P<prefix_length>[0-9]+))$')
+                            r'\/(?P<prefix_length>[0-9]+))$')
             m = p2.match(line)
             if m:
                 ip = m.groupdict()['ip']
@@ -2001,7 +2003,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # Secondary address 10.2.2.2/24
             p2_1 = re.compile(r'^Secondary +address +(?P<ipv4>(?P<ip>[0-9\.]+)'
-                             '\/(?P<prefix_length>[0-9]+))$')
+                             r'\/(?P<prefix_length>[0-9]+))$')
             m = p2_1.match(line)
             if m:
                 ip = m.groupdict()['ip']
@@ -2021,13 +2023,19 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                     ['secondary'] = True
                 continue
             # Internet address will be negotiated using DHCP
-            p2_2 = re.compile(r'^Internet +[A|a]ddress +will +be +negotiated +using +DHCP$')
+            # Internet address will be negotiated using IPCP
+            p2_2 = re.compile(r'^Internet +[A|a]ddress +will +be +negotiated '
+                              r'+using +(?P<negotiated>DHCP|IPCP)$')
             m = p2_2.match(line)
             if m:
-                address='dhcp_negotiated'
+                negotiated_holder = m.groupdict()
+                if 'DHCP' in negotiated_holder.get('negotiated'):
+                    address='dhcp_negotiated'
+                if 'IPCP' in negotiated_holder.get('negotiated'):
+                    address='ipcp_negotiated'
                 ipv4_dict = interface_dict[interface].setdefault('ipv4',{})
                 ipv4_dict.setdefault(address, {})
-                ipv4_dict[address]['ip'] = 'dhcp_negotiated'
+                ipv4_dict[address]['ip'] = address
                 continue
 
             # Broadcast address is 255.255.255.255
@@ -2098,7 +2106,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # Outgoing Common access list is not set 
             p7 = re.compile(r'^Outgoing +Common +access +list +is +'
-                             '(?P<access_list>[\w\s]+)$')
+                            r'(?P<access_list>[\w\s]+)$')
             m = p7.match(line)
             if m:
                 if 'not set' not in m.groupdict()['access_list']:
@@ -2108,7 +2116,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # Outgoing access list is not set
             p8 = re.compile(r'^Outgoing +access +list +is +'
-                             '(?P<access_list>[\w\s]+)$')
+                            r'(?P<access_list>[\w\s]+)$')
             m = p8.match(line)
             if m:
                 if 'not set' not in m.groupdict()['access_list']:
@@ -2118,7 +2126,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # Inbound Common access list is not set
             p9 = re.compile(r'^Inbound +Common +access +list +is +'
-                             '(?P<access_list>[\w\s]+)$')
+                            r'(?P<access_list>[\w\s]+)$')
             m = p9.match(line)
             if m:
                 if 'not set' not in m.groupdict()['access_list']:
@@ -2128,7 +2136,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # Inbound  access list is not set
             p10 = re.compile(r'^Outgoing +access +list +is +'
-                             '(?P<access_list>[\w\s]+)$')
+                            r'(?P<access_list>[\w\s]+)$')
             m = p10.match(line)
             if m:
                 if 'not set' not in m.groupdict()['access_list']:
@@ -2138,7 +2146,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # Proxy ARP is enabled
             p11 = re.compile(r'^Proxy +ARP +is +'
-                             '(?P<status>\w+)$')
+                            r'(?P<status>\w+)$')
             m = p11.match(line)
             if m:
                 if 'disabled' in m.groupdict()['status']:
@@ -2149,7 +2157,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # Local Proxy ARP is disabled
             p12 = re.compile(r'^Local +Proxy +ARP +is +'
-                             '(?P<status>\w+)$')
+                            r'(?P<status>\w+)$')
             m = p12.match(line)
             if m:
                 if 'disabled' in m.groupdict()['status']:
@@ -2160,7 +2168,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # Security level is default
             p13 = re.compile(r'^Security +level +is +'
-                             '(?P<level>\w+)$')
+                            r'(?P<level>\w+)$')
             m = p13.match(line)
             if m:
                 interface_dict[interface]['security_level'] = m.groupdict()['level']
@@ -2168,7 +2176,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # Split horizon is enabled
             p14 = re.compile(r'^Split +horizon +is +'
-                             '(?P<status>\w+)$')
+                            r'(?P<status>\w+)$')
             m = p14.match(line)
             if m:
                 if 'disabled' in m.groupdict()['status']:
@@ -2179,7 +2187,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # ICMP redirects are always sent
             p15 = re.compile(r'^ICMP +redirects +are +'
-                             '(?P<sent>[\w\s]+)$')
+                            r'(?P<sent>[\w\s]+)$')
             m = p15.match(line)
             if m:
                 if 'icmp' not in interface_dict[interface]:
@@ -2191,7 +2199,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # ICMP unreachables are always sent
             p16 = re.compile(r'^ICMP +unreachables +are +'
-                             '(?P<sent>[\w\s]+)$')
+                             r'(?P<sent>[\w\s]+)$')
             m = p16.match(line)
             if m:
                 if 'icmp' not in interface_dict[interface]:
@@ -2203,7 +2211,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # ICMP mask replies are never sent
             p17 = re.compile(r'^ICMP +mask +replies +are +'
-                             '(?P<sent>[\w\s]+)$')
+                             r'(?P<sent>[\w\s]+)$')
             m = p17.match(line)
             if m:
                 if 'icmp' not in interface_dict[interface]:
@@ -2215,7 +2223,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # IP fast switching is enabled
             p18 = re.compile(r'^IP +fast +switching +is +'
-                             '(?P<status>\w+)$')
+                             r'(?P<status>\w+)$')
             m = p18.match(line)
             if m:
                 if 'disabled' in m.groupdict()['status']:
@@ -2226,7 +2234,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # IP Flow switching is disabled
             p19 = re.compile(r'^IP +Flow +switching +is +'
-                             '(?P<status>\w+)$')
+                             r'(?P<status>\w+)$')
             m = p19.match(line)
             if m:
                 if 'disabled' in m.groupdict()['status']:
@@ -2237,7 +2245,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # IP CEF switching is enabled
             p20 = re.compile(r'^IP +CEF +switching +is +'
-                             '(?P<status>\w+)$')
+                             r'(?P<status>\w+)$')
             m = p20.match(line)
             if m:
                 if 'disabled' in m.groupdict()['status']:
@@ -2277,7 +2285,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                 continue
 
             p24_1 = re.compile(r'^Topology +\"(?P<topo>\w+)\", +'
-                                'operation +state +is +(?P<topo_status>\w+)$')
+                            r'operation +state +is +(?P<topo_status>\w+)$')
             m = p24_1.match(line)
             if m:
                 if 'unicast_routing_topologies' in interface_dict[interface]:
@@ -2295,7 +2303,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # IP multicast fast switching is disabled
             p25 = re.compile(r'^IP +multicast +fast +switching +is +'
-                             '(?P<status>\w+)$')
+                             r'(?P<status>\w+)$')
             m = p25.match(line)
             if m:
                 if 'disabled' in m.groupdict()['status']:
@@ -2306,7 +2314,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # IP multicast distributed fast switching is disabled
             p25 = re.compile(r'^IP +multicast +distributed +fast +switching +is +'
-                             '(?P<status>\w+)$')
+                             r'(?P<status>\w+)$')
             m = p25.match(line)
             if m:
                 if 'disabled' in m.groupdict()['status']:
@@ -2326,7 +2334,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # Router Discovery is disabled
             p27 = re.compile(r'^Router +Discovery +is +'
-                             '(?P<status>\w+)$')
+                             r'(?P<status>\w+)$')
             m = p27.match(line)
             if m:
                 if 'disabled' in m.groupdict()['status']:
@@ -2337,7 +2345,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # IP output packet accounting is disabled
             p28 = re.compile(r'^IP +output +packet +accounting +is +'
-                             '(?P<status>\w+)$')
+                             r'(?P<status>\w+)$')
             m = p28.match(line)
             if m:
                 if 'disabled' in m.groupdict()['status']:
@@ -2348,7 +2356,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # IP access violation accounting is disabled
             p29 = re.compile(r'^IP +access +violation +accounting +is +'
-                             '(?P<status>\w+)$')
+                             r'(?P<status>\w+)$')
             m = p29.match(line)
             if m:
                 if 'disabled' in m.groupdict()['status']:
@@ -2359,7 +2367,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # TCP/IP header compression is disabled
             p30 = re.compile(r'^TCP\/IP +header +compression +is +'
-                             '(?P<status>\w+)$')
+                             r'(?P<status>\w+)$')
             m = p30.match(line)
             if m:
                 if 'disabled' in m.groupdict()['status']:
@@ -2370,7 +2378,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # RTP/IP header compression is disabled
             p31 = re.compile(r'^RTP\/IP +header +compression +is +'
-                             '(?P<status>\w+)$')
+                             r'(?P<status>\w+)$')
             m = p31.match(line)
             if m:
                 if 'disabled' in m.groupdict()['status']:
@@ -2381,7 +2389,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # Probe proxy name replies are disabled
             p32 = re.compile(r'^Probe +proxy +name +replies +are +'
-                             '(?P<status>\w+)$')
+                             r'(?P<status>\w+)$')
             m = p32.match(line)
             if m:
                 if 'disabled' in m.groupdict()['status']:
@@ -2392,7 +2400,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # Policy routing is disabled
             p33 = re.compile(r'^Policy +routing +is +'
-                             '(?P<status>\w+)$')
+                             r'(?P<status>\w+)$')
             m = p33.match(line)
             if m:
                 if 'disabled' in m.groupdict()['status']:
@@ -2403,7 +2411,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # Network address translation is disabled
             p34 = re.compile(r'^Network +address +translation +is +'
-                             '(?P<status>\w+)$')
+                             r'(?P<status>\w+)$')
             m = p34.match(line)
             if m:
                 if 'disabled' in m.groupdict()['status']:
@@ -2414,7 +2422,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # BGP Policy Mapping is disabled
             p35 = re.compile(r'^BGP +Policy +Mapping +is +'
-                             '(?P<status>\w+)$')
+                             r'(?P<status>\w+)$')
             m = p35.match(line)
             if m:
                 if 'disabled' in m.groupdict()['status']:
@@ -2475,8 +2483,8 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # Interface is unnumbered. Using address of Loopback11 (192.168.151.1)
             p40 = re.compile(r'^Interface +is +unnumbered. +Using +address +of +'
-                              '(?P<unnumbered_intf>[\w\/\-\.]+) +'
-                              '\((?P<unnumbered_ip>[\w\.\:]+)\)$')
+                             r'(?P<unnumbered_intf>[\w\/\-\.]+) +'
+                             r'\((?P<unnumbered_ip>[\w\.\:]+)\)$')
             m = p40.match(line)
             if m:
                 unnumbered_dict[interface] = {}

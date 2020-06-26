@@ -35,7 +35,7 @@ DIST_DIR      = $(BUILD_DIR)/dist
 PROD_USER     = pyadm@pyats-ci
 PROD_PKGS     = /auto/pyats/packages/cisco-shared/genie/libs
 PYTHON        = python
-TESTCMD       = runAll
+TESTCMD       = runAll --path=$(shell pwd)/tests
 BUILD_CMD     = $(PYTHON) setup.py bdist_wheel --dist-dir=$(DIST_DIR)
 PYPIREPO      = pypitest
 PYLINT_CMD	  = pylintAll
@@ -43,9 +43,7 @@ CYTHON_CMD	  = compileAll
 
 # Development pkg requirements
 RELATED_PKGS = genie.libs.parser
-DEPENDENCIES  = restview psutil Sphinx wheel asynctest
-DEPENDENCIES += setproctitle  sphinx-rtd-theme 
-DEPENDENCIES += pip-tools Cython requests xmltodict
+DEPENDENCIES = xmltodict requests
 
 ifeq ($(MAKECMDGOALS), devnet)
 	BUILD_CMD += --devnet

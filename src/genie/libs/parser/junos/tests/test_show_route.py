@@ -12,9 +12,9 @@ from genie.libs.parser.junos.show_route import (ShowRouteTable,
                                                 ShowRouteProtocolExtensive,
                                                 ShowRouteInstanceDetail,
                                                 ShowRoute,
-                                                ShowRouteProtocolExtensive,
                                                 ShowRouteSummary,
                                                 ShowRouteAdvertisingProtocol,
+                                                ShowRouteAdvertisingProtocolDetail,
                                                 ShowRouteForwardingTableSummary,
                                                 ShowRouteReceiveProtocol)
 
@@ -195,6 +195,45 @@ class test_show_route_table(unittest.TestCase):
                         'protocol_name': 'LDP'}},
                 'total_route_count': 5}}}
 
+    golden_output_5 = {'execute.return_value': '''
+        show route table mpls.0 label 118420
+
+        mpls.0: 54 destinations, 54 routes (54 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
+
+        118420             *[VPN/170] 31w3d 20:13:54
+                            >  to 10.19.198.66 via ge-0/0/3.0, Swap 78
+    '''}
+
+    parsed_output_5 = {
+        "table_name": {
+            "mpls.0": {
+                "destination_count": 54,
+                "total_route_count": 54,
+                "active_route_count": 54,
+                "holddown_route_count": 0,
+                "hidden_route_count": 0,
+                "routes": {
+                    "118420": {
+                        "active_tag": "*",
+                        "protocol_name": "VPN",
+                        "preference": "170",
+                        "age": "31w3d 20:13:54",
+                        "next_hop": {
+                            "next_hop_list": {
+                                1: {
+                                    "to": "10.19.198.66",
+                                    "via": "ge-0/0/3.0",
+                                    "best_route": ">",
+                                    "mpls_label": "Swap 78",
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     def test_show_route_table_empty(self):
         self.maxDiff = None
@@ -230,6 +269,16 @@ class test_show_route_table(unittest.TestCase):
         obj = ShowRouteTable(device=self.device)
         parsed_output = obj.parse(table='inet.3')
         self.assertEqual(parsed_output, self.parsed_output_4)
+
+    def test_show_route_table_5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_5)
+        obj = ShowRouteTable(device=self.device)
+        parsed_output = obj.parse(
+            table='mpls.0',
+            prefix='label',
+            destination='118420')
+        self.assertEqual(parsed_output, self.parsed_output_5)
 
 '''
 Unit test for:
@@ -11578,6 +11627,153 @@ class TestShowRoute(unittest.TestCase):
         }
     }
 
+    golden_output_6 = {'execute.return_value': '''
+    show route 10.36.255.252/32
+
+    inet.0: 60 destinations, 66 routes (60 active, 1 holddown, 0 hidden)
+    + = Active Route, - = Last Active, * = Both
+
+    10.36.255.252/32  *[OSPF/10/10] 4w5d 22:51:00, metric 1111
+                        >  to 10.169.14.158 via ge-0/0/2.0
+                        [BGP/170] 27w6d 12:53:14, MED 16011, localpref 4294967285, from 10.34.2.250
+                        AS path: (65161) I, validation-state: unverified
+                        >  to 10.169.14.158 via ge-0/0/2.0
+
+    inet.3: 27 destinations, 27 routes (27 active, 0 holddown, 0 hidden)
+    + = Active Route, - = Last Active, * = Both
+
+    10.36.255.252/32  *[BGP/170] 4w5d 22:51:00, MED 16011, localpref 100, from 10.34.2.250
+                        AS path: (65161) I, validation-state: unverified
+                        >  to 10.169.14.158 via ge-0/0/2.0, Push 118420
+
+    GIPV.inet.0: 34 destinations, 34 routes (34 active, 0 holddown, 0 hidden)
+    + = Active Route, - = Last Active, * = Both
+
+    10.36.255.252/32  *[OSPF/10/10] 4w5d 22:51:00, metric 0, tag 65151500
+                        >  to 10.169.14.158 via ge-0/0/2.0
+    '''}
+
+    golden_parsed_output_6 = {
+     "route-information": {
+            "route-table": [
+                {
+                    "active-route-count": "60",
+                    "destination-count": "60",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "1",
+                    "rt": [
+                        {
+                            "rt-destination": "10.36.255.252/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "4w5d 22:51:00"
+                                },
+                                "metric": "1111",
+                                "nh": [
+                                    {
+                                        "to": "10.169.14.158",
+                                        "via": "ge-0/0/2.0"
+                                    }
+                                ],
+                                "preference": "10",
+                                "preference2": "10",
+                                "protocol-name": "OSPF",
+                            }
+                        },
+                        {
+                            "rt-entry": {
+                                "age": {
+                                    "#text": "27w6d 12:53:14"
+                                },
+                                "med": "16011",
+                                "as-path": " (65161) I",
+                                "learned-from": "10.34.2.250",
+                                "local-preference": "4294967285",
+                                "nh": [
+                                    {
+                                        "to": "10.169.14.158",
+                                        "via": "ge-0/0/2.0"
+                                    }
+                                ],
+                                "preference": "170",
+                                "protocol-name": "BGP",
+                                "validation-state": "unverified"
+                            }
+                        },
+                    ],
+                    "table-name": "inet.0",
+                    "total-route-count": "66"
+                },
+                {
+                    "active-route-count": "27",
+                    "destination-count": "27",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": [
+                        {
+                            "rt-destination": "10.36.255.252/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "4w5d 22:51:00"
+                                },
+                                "med": "16011",
+                                "as-path": " (65161) I",
+                                "learned-from": "10.34.2.250",
+                                "local-preference": "100",
+                                "nh": [
+                                    {
+                                        "to": "10.169.14.158",
+                                        "via": "ge-0/0/2.0",
+                                        "mpls-label": "Push 118420",
+                                    }
+                                ],
+                                "preference": "170",
+                                "protocol-name": "BGP",
+                                "validation-state": "unverified"
+                            }
+                        },
+                    ],
+                    "table-name": "inet.3",
+                    "total-route-count": "27"
+                },
+                {
+                    "active-route-count": "34",
+                    "destination-count": "34",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": [
+                        {
+                            "rt-destination": "10.36.255.252/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "4w5d 22:51:00"
+                                },
+                                "metric": "0",
+                                "nh": [
+                                    {
+                                        "to": "10.169.14.158",
+                                        "via": "ge-0/0/2.0",
+                                    }
+                                ],
+                                "preference": "10",
+                                "preference2": "10",
+                                "protocol-name": "OSPF",
+                                "rt-tag": "65151500"
+                            }
+                        }
+                    ],
+                    "table-name": "GIPV.inet.0",
+                    "total-route-count": "34"
+                },
+            ]
+        }
+    }
+
+
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRoute(device=self.device)
@@ -11622,6 +11818,12 @@ class TestShowRoute(unittest.TestCase):
         obj = ShowRoute(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
+
+    def test_golden_6(self):
+        self.device = Mock(**self.golden_output_6)
+        obj = ShowRoute(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_6)
 
 '''
 Unit test for:
@@ -47474,6 +47676,735 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
         }
     }
 
+    golden_output_4 = {'execute.return_value': '''
+        show route protocol static extensive 
+
+        inet.0: 16 destinations, 16 routes (16 active, 0 holddown, 0 hidden)
+
+        10.16.2.2/32 (1 entry, 1 announced)
+
+        TSI:
+
+        KRT in-kernel 10.16.2.2/32 -> {10.145.0.2}
+
+            *Static Preference: 5
+
+                    Next hop type: Router, Next hop index: 590
+
+                    Address: 0x9348b50
+
+                    Next-hop reference count: 19
+
+                    Next hop: 10.145.0.2 via ge-0/0/1.0, selected
+
+                    State: <Active Int Ext>
+
+                    Age: 1:06       Tag: 100 
+
+                    Task: RT
+
+                    Announcement bits (2): 0-KRT 1-Resolve tree 1 
+
+                    AS path: I
+    '''}
+
+    golden_parsed_output_4 = {
+        "route-information": {
+            "route-table": [
+                {
+                    "active-route-count": "16",
+                    "destination-count": "16",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": [
+                        {
+                            "rt-announced-count": "1",
+                            "rt-destination": "10.16.2.2/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "announce-bits": "2",
+                                "announce-tasks": "0-KRT 1-Resolve tree 1",
+                                "as-path": "AS path: I",
+                                "bgp-path-attributes": {
+                                    "attr-as-path-effective": {
+                                        "aspath-effective-string": "AS path:",
+                                        "attr-value": "I"
+                                    }
+                                },
+                                "nh": [
+                                    {
+                                        "nh-string": "Next hop",
+                                        "to": "10.145.0.2",
+                                        "via": "ge-0/0/1.0"
+                                    }
+                                ],
+                                "nh-address": "0x9348b50",
+                                "nh-index": "590",
+                                "nh-reference-count": "19",
+                                "nh-type": "Router",
+                                "preference": "5",
+                                "protocol-name": "Static",
+                                "rt-entry-state": "Active Int Ext",
+                                "task-name": "RT"
+                            },
+                            "rt-entry-count": {
+                                "#text": "1",
+                                "@junos:format": "1 entry"
+                            },
+                            "tsi": {
+                                "#text": "KRT in-kernel 10.16.2.2/32 -> {10.145.0.2}"
+                            }
+                        }
+                    ],
+                    "table-name": "inet.0",
+                    "total-route-count": "16"
+                }
+            ]
+        }
+    }
+
+    golden_output_5 = {'execute.return_value': '''
+            show route extensive
+
+        inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+        0.0.0.0/0 (1 entry, 1 announced)
+                State: <FlashAll>
+        TSI:
+        KRT in-kernel 0.0.0.0/0 -> {10.169.14.121}
+                *OSPF   Preference: 150/10
+                        Next hop type: Router, Next hop index: 613
+                        Address: 0xdfa7934
+                        Next-hop reference count: 458
+                        Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
+                        Session Id: 0x141
+                        State: <Active Int Ext>
+                        Local AS: 65171 
+                        Age: 3w3d 3:19:36   Metric: 101 
+                        Validation State: unverified 
+                            Tag: 0 
+                        Task: OSPF
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
+                        AS path: I 
+
+        10.1.0.0/24 (2 entries, 1 announced)
+                State: <FlashAll>
+                *Direct Preference: 0
+                        Next hop type: Interface, Next hop index: 0
+                        Address: 0xbb69254
+                        Next-hop reference count: 1
+                        Next hop: via fxp0.0, selected
+                        State: <Active Int>
+                        Local AS: 65171 
+                        Age: 29w6d 21:42:46 
+                        Validation State: unverified 
+                        Task: IF
+                        Announcement bits (2): 5-LDP 7-Resolve tree 3 
+                        AS path: I 
+                OSPF   Preference: 150/10
+                        Next hop type: Router, Next hop index: 613
+                        Address: 0xdfa7934
+                        Next-hop reference count: 458
+                        Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
+                        Session Id: 0x141
+                        State: <Int Ext>
+                        Inactive reason: Route Preference
+                        Local AS: 65171 
+                        Age: 3w3d 3:19:36   Metric: 20 
+                        Validation State: unverified 
+                            Tag: 0 
+                        Task: OSPF
+                        AS path: I 
+
+        10.1.0.101/32 (1 entry, 1 announced)
+                State: <FlashAll>
+                *Local  Preference: 0
+                        Next hop type: Local, Next hop index: 0
+                        Address: 0xbb66c14
+                        Next-hop reference count: 14
+                        Next hop: 
+                        Interface: fxp0.0
+                        State: <Active NoReadvrt Int>
+                        Local AS: 65171 
+                        Age: 29w6d 21:42:46 
+                        Validation State: unverified 
+                        Task: IF
+                        Announcement bits (2): 5-LDP 7-Resolve tree 3 
+                        AS path: I 
+
+        10.36.3.3/32 (1 entry, 1 announced)
+                State: <FlashAll>
+        TSI:
+        KRT in-kernel 10.36.3.3/32 -> {10.169.14.121}
+                *OSPF   Preference: 10/10
+                        Next hop type: Router, Next hop index: 613
+                        Address: 0xdfa7934
+                        Next-hop reference count: 458
+                        Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
+                        Session Id: 0x141
+                        State: <Active Int>
+                        Local AS: 65171 
+                        Age: 1w0d 15:51:32  Metric: 1202 
+                        Validation State: unverified 
+                        Area: 0.0.0.8
+                        Task: OSPF
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
+                        AS path: I 
+
+        10.16.0.0/30 (1 entry, 1 announced)
+                State: <FlashAll>
+        TSI:
+        KRT in-kernel 10.16.0.0/30 -> {10.169.14.121}
+                *OSPF   Preference: 10/10
+                        Next hop type: Router, Next hop index: 613
+                        Address: 0xdfa7934
+                        Next-hop reference count: 458
+                        Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
+                        Session Id: 0x141
+                        State: <Active Int>
+                        Local AS: 65171 
+                        Age: 3w0d 4:46:27   Metric: 1200 
+                        Validation State: unverified 
+                        Area: 0.0.0.8
+                        Task: OSPF
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3 
+                        AS path: I 
+
+        10.100.5.5/32 (1 entry, 1 announced)
+                State: <FlashAll>
+        TSI:
+        KRT in-kernel 10.100.5.5/32 -> {10.169.14.121}
+                *OSPF   Preference: 10/10
+                        Next hop type: Router, Next hop index: 613
+                        Address: 0xdfa7934
+                        Next-hop reference count: 458
+                        Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
+                        Session Id: 0x141
+                        State: <Active Int>
+                        Local AS: 65171 
+                        Age: 3w0d 4:46:27   Metric: 1201 
+                        Validation State: unverified 
+                        Area: 0.0.0.8
+                        Task: OSPF
+                        Announcement bits (2): 0-KRT 7-Resolve tree 3 
+                        AS path: I 
+
+        10.220.0.0/16 (2 entries, 1 announced)
+        TSI:
+        KRT in-kernel 10.220.0.0/16 -> {indirect(1048574)}
+        Page 0 idx 1, (group hktGCS002 type Internal) Type 1 val 0x10c0b9b0 (adv_entry)
+        Advertised metrics:
+            Flags: Nexthop Change
+            Nexthop: Self
+            MED: 12003
+            Localpref: 120
+            AS path: [65171] (65151 65000) I
+            Communities: 65001:10 65151:244
+        Path 10.220.0.0
+        from 10.169.14.240
+        Vector len 4.  Val: 1
+                *BGP    Preference: 170/-121
+                        Next hop type: Indirect, Next hop index: 0
+                        Address: 0xdbc5974
+                        Next-hop reference count: 1366
+                        Source: 10.169.14.240
+                        Next hop type: Router, Next hop index: 613
+                        Next hop: 10.169.14.121 via ge-0/0/1.0, selected
+                        Session Id: 0x141
+                        Protocol next hop: 10.169.14.240
+                        Indirect next hop: 0xc285884 1048574 INH Session ID: 0x1ac
+                        State: <Active Int Ext>
+                        Local AS: 65171 Peer AS: 65151
+                        Age: 3w3d 3:19:15   Metric: 12003   Metric2: 0 
+                        Validation State: unverified 
+                        Task: BGP_65172.16.15.14.240
+                        Announcement bits (3): 0-KRT 6-BGP_RT_Background 7-Resolve tree 3 
+                        AS path: (65151 65000) I 
+                        Communities: 65001:10 65151:244
+                        Accepted
+                        Localpref: 120
+                        Router ID: 10.169.14.240
+                        Indirect next hops: 1
+                                Protocol next hop: 10.169.14.240
+                                Indirect next hop: 0xc285884 1048574 INH Session ID: 0x1ac
+                                Indirect path forwarding next hops: 1
+                                        Next hop type: Router
+                                        Next hop: 10.169.14.121 via ge-0/0/1.0
+                                        Session Id: 0x141
+                        10.169.14.240/32 Originating RIB: inet.0
+                        Node path count: 1
+                        Forwarding nexthops: 1
+                            Nexthop: 10.169.14.121 via ge-0/0/1.0
+                            Session Id: 141
+                BGP    Preference: 170/-121
+                        Next hop type: Indirect, Next hop index: 0
+                        Address: 0xdfae654
+                        Next-hop reference count: 682
+                        Source: 10.189.5.253
+                        Next hop type: Router, Next hop index: 0
+                        Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0x1, selected
+                        Label element ptr: 0xc5cda38
+                        Label parent element ptr: 0x0
+                        Label element references: 14
+                        Label element child references: 10
+                        Label element lsp id: 0
+                        Session Id: 0x0
+                        Protocol next hop: 10.189.5.253
+                        Indirect next hop: 0xc285e84 - INH Session ID: 0x0
+                        State: <Int Ext Changed>
+                        Inactive reason: IGP metric
+                        Local AS: 65171 Peer AS: 65171
+                        Age: 3w1d 16:57:57  Metric: 12003   Metric2: 5 
+                        Validation State: unverified 
+                        Task: BGP_65172.16.220.5.253
+                        AS path: (65151 65000) I 
+                        Communities: 65001:10 65151:244
+                        Accepted
+                        Localpref: 120
+                        Router ID: 10.189.5.253
+                        Indirect next hops: 1
+                                Protocol next hop: 10.189.5.253 Metric: 5
+                                Indirect next hop: 0xc285e84 - INH Session ID: 0x0
+                                Indirect path forwarding next hops: 1
+                                        Next hop type: Router
+                                        Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0x1
+                                        Session Id: 0x0
+                        10.189.5.253/32 Originating RIB: inet.3
+                        Metric: 5 Node path count: 1
+                        Forwarding nexthops: 1
+                            Nexthop: 10.189.5.94 via ge-0/0/0.0
+                            Session Id: 0
+
+    '''}
+
+    golden_parsed_output_5 = {
+        "route-information": {
+            "route-table": [
+                {
+                    "active-route-count": "929",
+                    "destination-count": "929",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": [
+                        {
+                            "rt-announced-count": "1",
+                            "rt-destination": "0.0.0.0/0",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "3w3d 3:19:36"
+                                },
+                                "announce-bits": "3",
+                                "announce-tasks": "0-KRT 5-LDP 7-Resolve tree 3",
+                                "as-path": "AS path: I",
+                                "bgp-path-attributes": {
+                                    "attr-as-path-effective": {
+                                        "aspath-effective-string": "AS path:",
+                                        "attr-value": "I"
+                                    }
+                                },
+                                "local-as": "65171",
+                                "metric": "101",
+                                "nh": [
+                                    {
+                                        "nh-string": "Next hop",
+                                        "session": "141",
+                                        "to": "10.169.14.121",
+                                        "via": "ge-0/0/1.0",
+                                        "weight": "0x1"
+                                    }
+                                ],
+                                "nh-address": "0xdfa7934",
+                                "nh-index": "613",
+                                "nh-reference-count": "458",
+                                "nh-type": "Router",
+                                "preference": "150",
+                                "preference2": "10",
+                                "protocol-name": "OSPF",
+                                "rt-entry-state": "Active Int Ext",
+                                "rt-tag": "0",
+                                "task-name": "OSPF",
+                                "validation-state": "unverified"
+                            },
+                            "rt-entry-count": {
+                                "#text": "1",
+                                "@junos:format": "1 entry"
+                            },
+                            "rt-state": "FlashAll",
+                            "tsi": {
+                                "#text": "KRT in-kernel 0.0.0.0/0 -> {10.169.14.121}"
+                            }
+                        },
+                        {
+                            "rt-announced-count": "1",
+                            "rt-destination": "10.1.0.0/24",
+                            "rt-entry": [
+                                {
+                                    "active-tag": "*",
+                                    "age": {
+                                        "#text": "29w6d 21:42:46"
+                                    },
+                                    "announce-bits": "2",
+                                    "announce-tasks": "5-LDP 7-Resolve tree 3",
+                                    "as-path": "AS path: I",
+                                    "bgp-path-attributes": {
+                                        "attr-as-path-effective": {
+                                            "aspath-effective-string": "AS path:",
+                                            "attr-value": "I"
+                                        }
+                                    },
+                                    "local-as": "65171",
+                                    "nh": [
+                                        {
+                                            "nh-string": "Next hop",
+                                            "via": "fxp0.0"
+                                        }
+                                    ],
+                                    "nh-address": "0xbb69254",
+                                    "nh-index": "0",
+                                    "nh-reference-count": "1",
+                                    "nh-type": "Interface",
+                                    "preference": "0",
+                                    "protocol-name": "Direct",
+                                    "rt-entry-state": "Active Int",
+                                    "task-name": "IF",
+                                    "validation-state": "unverified"
+                                },
+                                {
+                                    "age": {
+                                        "#text": "3w3d 3:19:36"
+                                    },
+                                    "as-path": "AS path: I",
+                                    "bgp-path-attributes": {
+                                        "attr-as-path-effective": {
+                                            "aspath-effective-string": "AS path:",
+                                            "attr-value": "I"
+                                        }
+                                    },
+                                    "inactive-reason": "Route Preference",
+                                    "local-as": "65171",
+                                    "metric": "20",
+                                    "nh": [
+                                        {
+                                            "nh-string": "Next hop",
+                                            "session": "141",
+                                            "to": "10.169.14.121",
+                                            "via": "ge-0/0/1.0",
+                                            "weight": "0x1"
+                                        }
+                                    ],
+                                    "nh-address": "0xdfa7934",
+                                    "nh-index": "613",
+                                    "nh-reference-count": "458",
+                                    "nh-type": "Router",
+                                    "preference": "150",
+                                    "preference2": "10",
+                                    "protocol-name": "OSPF",
+                                    "rt-entry-state": "Int Ext",
+                                    "rt-tag": "0",
+                                    "task-name": "OSPF",
+                                    "validation-state": "unverified"
+                                }
+                            ],
+                            "rt-entry-count": {
+                                "#text": "2",
+                                "@junos:format": "2 entries"
+                            },
+                            "rt-state": "FlashAll"
+                        },
+                        {
+                            "rt-announced-count": "1",
+                            "rt-destination": "10.1.0.101/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "29w6d 21:42:46"
+                                },
+                                "announce-bits": "2",
+                                "announce-tasks": "5-LDP 7-Resolve tree 3",
+                                "as-path": "AS path: I",
+                                "bgp-path-attributes": {
+                                    "attr-as-path-effective": {
+                                        "aspath-effective-string": "AS path:",
+                                        "attr-value": "I"
+                                    }
+                                },
+                                "local-as": "65171",
+                                "nh-address": "0xbb66c14",
+                                "nh-index": "0",
+                                "nh-reference-count": "14",
+                                "nh-type": "Local",
+                                "preference": "0",
+                                "protocol-name": "Local",
+                                "rt-entry-state": "Active NoReadvrt Int",
+                                "task-name": "IF",
+                                "validation-state": "unverified"
+                            },
+                            "rt-entry-count": {
+                                "#text": "1",
+                                "@junos:format": "1 entry"
+                            },
+                            "rt-state": "FlashAll"
+                        },
+                        {
+                            "rt-announced-count": "1",
+                            "rt-destination": "10.36.3.3/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "1w0d 15:51:32"
+                                },
+                                "announce-bits": "3",
+                                "announce-tasks": "0-KRT 5-LDP 7-Resolve tree 3",
+                                "as-path": "AS path: I",
+                                "bgp-path-attributes": {
+                                    "attr-as-path-effective": {
+                                        "aspath-effective-string": "AS path:",
+                                        "attr-value": "I"
+                                    }
+                                },
+                                "local-as": "65171",
+                                "metric": "1202",
+                                "nh": [
+                                    {
+                                        "nh-string": "Next hop",
+                                        "session": "141",
+                                        "to": "10.169.14.121",
+                                        "via": "ge-0/0/1.0",
+                                        "weight": "0x1"
+                                    }
+                                ],
+                                "nh-address": "0xdfa7934",
+                                "nh-index": "613",
+                                "nh-reference-count": "458",
+                                "nh-type": "Router",
+                                "preference": "10",
+                                "preference2": "10",
+                                "protocol-name": "OSPF",
+                                "rt-entry-state": "Active Int",
+                                "rt-ospf-area": "0.0.0.8",
+                                "task-name": "OSPF",
+                                "validation-state": "unverified"
+                            },
+                            "rt-entry-count": {
+                                "#text": "1",
+                                "@junos:format": "1 entry"
+                            },
+                            "rt-state": "FlashAll",
+                            "tsi": {
+                                "#text": "KRT in-kernel 10.36.3.3/32 -> {10.169.14.121}"
+                            }
+                        },
+                        {
+                            "rt-announced-count": "1",
+                            "rt-destination": "10.16.0.0/30",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "3w0d 4:46:27"
+                                },
+                                "announce-bits": "3",
+                                "announce-tasks": "0-KRT 5-LDP 7-Resolve tree 3",
+                                "as-path": "AS path: I",
+                                "bgp-path-attributes": {
+                                    "attr-as-path-effective": {
+                                        "aspath-effective-string": "AS path:",
+                                        "attr-value": "I"
+                                    }
+                                },
+                                "local-as": "65171",
+                                "metric": "1200",
+                                "nh": [
+                                    {
+                                        "nh-string": "Next hop",
+                                        "session": "141",
+                                        "to": "10.169.14.121",
+                                        "via": "ge-0/0/1.0",
+                                        "weight": "0x1"
+                                    }
+                                ],
+                                "nh-address": "0xdfa7934",
+                                "nh-index": "613",
+                                "nh-reference-count": "458",
+                                "nh-type": "Router",
+                                "preference": "10",
+                                "preference2": "10",
+                                "protocol-name": "OSPF",
+                                "rt-entry-state": "Active Int",
+                                "rt-ospf-area": "0.0.0.8",
+                                "task-name": "OSPF",
+                                "validation-state": "unverified"
+                            },
+                            "rt-entry-count": {
+                                "#text": "1",
+                                "@junos:format": "1 entry"
+                            },
+                            "rt-state": "FlashAll",
+                            "tsi": {
+                                "#text": "KRT in-kernel 10.16.0.0/30 -> {10.169.14.121}"
+                            }
+                        },
+                        {
+                            "rt-announced-count": "1",
+                            "rt-destination": "10.100.5.5/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "3w0d 4:46:27"
+                                },
+                                "announce-bits": "2",
+                                "announce-tasks": "0-KRT 7-Resolve tree 3",
+                                "as-path": "AS path: I",
+                                "bgp-path-attributes": {
+                                    "attr-as-path-effective": {
+                                        "aspath-effective-string": "AS path:",
+                                        "attr-value": "I"
+                                    }
+                                },
+                                "local-as": "65171",
+                                "metric": "1201",
+                                "nh": [
+                                    {
+                                        "nh-string": "Next hop",
+                                        "session": "141",
+                                        "to": "10.169.14.121",
+                                        "via": "ge-0/0/1.0",
+                                        "weight": "0x1"
+                                    }
+                                ],
+                                "nh-address": "0xdfa7934",
+                                "nh-index": "613",
+                                "nh-reference-count": "458",
+                                "nh-type": "Router",
+                                "preference": "10",
+                                "preference2": "10",
+                                "protocol-name": "OSPF",
+                                "rt-entry-state": "Active Int",
+                                "rt-ospf-area": "0.0.0.8",
+                                "task-name": "OSPF",
+                                "validation-state": "unverified"
+                            },
+                            "rt-entry-count": {
+                                "#text": "1",
+                                "@junos:format": "1 entry"
+                            },
+                            "rt-state": "FlashAll",
+                            "tsi": {
+                                "#text": "KRT in-kernel 10.100.5.5/32 -> {10.169.14.121}"
+                            }
+                        },
+                        {
+                            "rt-announced-count": "1",
+                            "rt-destination": "10.220.0.0/16",
+                            "rt-entry": [
+                                {
+                                    "active-tag": "*",
+                                    "announce-bits": "3",
+                                    "announce-tasks": "0-KRT 6-BGP_RT_Background 7-Resolve tree 3",
+                                    "nh": [
+                                        {
+                                            "nh-string": "Next hop",
+                                            "session": "141",
+                                            "to": "10.169.14.121",
+                                            "via": "ge-0/0/1.0"
+                                        }
+                                    ],
+                                    "nh-address": "0xdbc5974",
+                                    "nh-index": "613",
+                                    "nh-reference-count": "1366",
+                                    "nh-type": "Router",
+                                    "preference": "170",
+                                    "preference2": "121",
+                                    "protocol-name": "BGP",
+                                    "protocol-nh": [
+                                        {
+                                            "indirect-nh": "0xc285884 1048574 INH Session ID: 0x1ac",
+                                            "to": "10.169.14.240"
+                                        },
+                                        {
+                                            "forwarding-nh-count": "1",
+                                            "indirect-nh": "0xc285884 1048574 INH Session ID: 0x1ac",
+                                            "nh": [
+                                                {
+                                                    "nh-string": "Next hop",
+                                                    "session": "141",
+                                                    "to": "10.169.14.121",
+                                                    "via": "ge-0/0/1.0"
+                                                }
+                                            ],
+                                            "output": "10.169.14.240/32 Originating RIB: inet.0\nNode path count: 1\nForwarding nexthops: 1\nNexthop: 10.169.14.121 via ge-0/0/1.0\n",
+                                            "to": "10.169.14.240"
+                                        }
+                                    ],
+                                    "rt-entry-state": "Active Int Ext",
+                                    "task-name": "BGP_65172.16.15.14.240",
+                                    "validation-state": "unverified"
+                                },
+                                {
+                                    "inactive-reason": "IGP metric",
+                                    "nh": [
+                                        {
+                                            "label-element": "0xc5cda38",
+                                            "label-element-childcount": "10",
+                                            "label-element-lspid": "0",
+                                            "label-element-parent": "0x0",
+                                            "label-element-refcount": "14",
+                                            "nh-string": "Next hop",
+                                            "session": "0",
+                                            "to": "10.189.5.94",
+                                            "via": "ge-0/0/0.0",
+                                            "weight": "0x1"
+                                        }
+                                    ],
+                                    "nh-address": "0xdfae654",
+                                    "nh-index": "0",
+                                    "nh-reference-count": "682",
+                                    "nh-type": "Router",
+                                    "preference": "170",
+                                    "preference2": "121",
+                                    "protocol-name": "BGP",
+                                    "protocol-nh": [
+                                        {
+                                            "indirect-nh": "0xc285e84 - INH Session ID: 0x0",
+                                            "to": "10.189.5.253"
+                                        },
+                                        {
+                                            "forwarding-nh-count": "1",
+                                            "indirect-nh": "0xc285e84 - INH Session ID: 0x0",
+                                            "metric": "5",
+                                            "nh": [
+                                                {
+                                                    "nh-string": "Next hop",
+                                                    "session": "0",
+                                                    "to": "10.189.5.94",
+                                                    "via": "ge-0/0/0.0",
+                                                    "weight": "0x1"
+                                                }
+                                            ],
+                                            "output": "10.189.5.253/32 Originating RIB: inet.3\nForwarding nexthops: 1\nNexthop: 10.189.5.94 via ge-0/0/0.0\n",
+                                            "to": "10.189.5.253"
+                                        }
+                                    ],
+                                    "rt-entry-state": "Int Ext Changed",
+                                    "task-name": "BGP_65172.16.220.5.253",
+                                    "validation-state": "unverified"
+                                }
+                            ],
+                            "rt-entry-count": {
+                                "#text": "2",
+                                "@junos:format": "2 entries"
+                            },
+                            "tsi": {
+                                "#text": "KRT in-kernel 10.220.0.0/16 -> {indirect(1048574)}\nPage 0 idx 1, (group hktGCS002 type Internal) Type 1 val 0x10c0b9b0 (adv_entry)\nAdvertised metrics:\nFlags: Nexthop Change\nNexthop: Self\nMED: 12003\nLocalpref: 120\nAS path: [65171] (65151 65000) I\nCommunities: 65001:10 65151:244\nPath 10.220.0.0\nfrom 10.169.14.240\nVector len 4.  Val: 1\nAS path: (65151 65000) I\nCommunities: 65001:10 65151:244\nLocalpref: 120\nAS path: (65151 65000) I\nCommunities: 65001:10 65151:244\nLocalpref: 120"
+                            }
+                        }
+                    ],
+                    "table-name": "inet.0",
+                    "total-route-count": "1615"
+                }
+            ]
+        }
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteProtocolExtensive(device=self.device)
@@ -47504,6 +48435,19 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
             table='inet.0',
             destination='10.169.196.241')
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
+    
+    def test_golden_4(self):
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowRouteProtocolExtensive(device=self.device)
+        parsed_output = obj.parse(
+            protocol='static')
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
+    
+    def test_golden_5(self):
+        self.device = Mock(**self.golden_output_5)
+        obj = ShowRouteProtocolExtensive(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
 '''
 Unit test for:
@@ -48448,6 +49392,219 @@ class TestShowRouteInstanceDetail(unittest.TestCase):
         obj = ShowRouteInstanceDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output_1 = {'execute.return_value': '''
+        show route advertising-protocol bgp 10.169.14.240 10.36.255.252/32 detail
+
+        inet.0: 62 destinations, 67 routes (62 active, 0 holddown, 0 hidden)
+        * 10.36.255.252/32 (1 entry, 1 announced)
+        BGP group sjkGCS001-EC11 type External
+            Nexthop: Self
+            Flags: Nexthop Change
+            MED: 16011
+            Localpref: 4294967285
+            AS path: [65161] I
+            Communities: 65151:65109
+
+        inet.3: 27 destinations, 27 routes (27 active, 0 holddown, 0 hidden)
+
+        * 10.36.255.252/32 (1 entry, 1 announced)
+        BGP group sjkGCS001-EC11 type External
+            Route Label: 118420
+            Nexthop: Self
+            Flags: Nexthop Change
+            MED: 16011
+            Localpref: 100
+            AS path: [65161] I
+            Communities: 65151:65109
+            Entropy label capable
+    '''}
+
+    golden_parsed_output_1 = {
+        "route-information":{
+            "route-table":
+            [
+                {
+                    "table-name": 'inet.0',
+                    "destination-count": '62',
+                    "total-route-count": '67',
+                    "active-route-count": '62',
+                    "holddown-route-count": '0',
+                    "hidden-route-count": '0',
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "rt-destination": '10.36.255.252',
+                        "rt-prefix-length": '32',
+                        "rt-entry-count": '1',
+                        "rt-announced-count": '1',
+                        "bgp-group": {
+                            "bgp-group-name": 'sjkGCS001-EC11',
+                            "bgp-group-type": 'External',
+                        },
+                        "nh": {
+                            "to": 'Self'
+                            },
+                        "med": '16011',
+                        "local-preference": '4294967285',
+                        "as-path": "[65161] I",
+                        "communities": '65151:65109',
+                        "flags": 'Nexthop Change',
+                    }
+                },
+
+                {
+                    "table-name": 'inet.3',
+                    "destination-count": '27',
+                    "total-route-count": '27',
+                    "active-route-count": '27',
+                    "holddown-route-count": '0',
+                    "hidden-route-count": '0',
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "rt-destination": '10.36.255.252',
+                        "rt-prefix-length": '32',
+                        "rt-entry-count": '1',
+                        "rt-announced-count": '1',
+                        'route-label': '118420',
+                        "bgp-group": {
+                            "bgp-group-name": 'sjkGCS001-EC11',
+                            "bgp-group-type": 'External',
+                        },
+                        "nh": {
+                            "to": 'Self'
+                            },
+                        "med": '16011',
+                        "local-preference": '100',
+                        "as-path": "[65161] I",
+                        "communities": '65151:65109',
+                        "flags": 'Nexthop Change',
+                    }
+                }
+            ]
+        },
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+        show route advertising-protocol bgp 10.34.2.250 10.169.196.254 detail
+
+        inet.0: 60 destinations, 66 routes (60 active, 1 holddown, 0 hidden)
+        10.169.196.254/32 (2 entries, 2 announced)
+        BGP group lacGCS001 type External
+            Nexthop: 10.189.5.252
+            MED: 29012
+            Localpref: 4294967285
+            AS path: [65151] (65171) I
+            Communities: 65151:65109
+
+        inet.3: 27 destinations, 27 routes (27 active, 0 holddown, 0 hidden)
+
+        * 10.169.196.254/32 (1 entry, 1 announced)
+        BGP group lacGCS001 type External
+            Route Label: 118071
+            Nexthop: 10.189.5.252
+            MED: 29012
+            Localpref: 100
+            AS path: [65151] (65171) I
+            Communities: 65151:65109
+            Entropy label capable 
+    '''}
+
+    golden_parsed_output_2 = {
+        "route-information":{
+            "route-table":
+            [
+                {
+                    "table-name": 'inet.0',
+                    "destination-count": '60',
+                    "total-route-count": '66',
+                    "active-route-count": '60',
+                    "holddown-route-count": '1',
+                    "hidden-route-count": '0',
+                    "rt-entry": {
+                        "rt-destination": '10.169.196.254',
+                        "rt-prefix-length": '32',
+                        "rt-entry-count": '2',
+                        "rt-announced-count": '2',
+                        "bgp-group": {
+                            "bgp-group-name": 'lacGCS001',
+                            "bgp-group-type": 'External',
+                        },
+                        "nh": {
+                            "to": '10.189.5.252'
+                            },
+                        "med": '29012',
+                        "local-preference": '4294967285',
+                        "as-path": "[65151] (65171) I",
+                        "communities": '65151:65109',
+                    }
+                },
+
+                {
+                    "table-name": 'inet.3',
+                    "destination-count": '27',
+                    "total-route-count": '27',
+                    "active-route-count": '27',
+                    "holddown-route-count": '0',
+                    "hidden-route-count": '0',
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "rt-destination": '10.169.196.254',
+                        "rt-prefix-length": '32',
+                        "rt-entry-count": '1',
+                        "rt-announced-count": '1',
+                        'route-label': '118071',
+                        "bgp-group": {
+                            "bgp-group-name": 'lacGCS001',
+                            "bgp-group-type": 'External',
+                        },
+                        "nh": {
+                            "to": '10.189.5.252'
+                            },
+                        "med": '29012',
+                        "local-preference": '100',
+                        "as-path": "[65151] (65171) I",
+                        "communities": '65151:65109',
+                    }
+                }
+            ]
+        },
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRouteAdvertisingProtocolDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(
+                protocol='bgp',
+                ip_address='10.34.2.250',
+                route="10.169.196.254",
+            )
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowRouteAdvertisingProtocolDetail(device=self.device)
+        parsed_output = obj.parse(
+            protocol='bgp',
+            ip_address='10.169.14.240',
+            route="10.36.255.252",
+        )
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+    
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowRouteAdvertisingProtocolDetail(device=self.device)
+        parsed_output = obj.parse(
+            protocol='bgp',
+            ip_address='10.34.2.250',
+            route="10.169.196.254",
+        )
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 if __name__ == '__main__':
     unittest.main()
