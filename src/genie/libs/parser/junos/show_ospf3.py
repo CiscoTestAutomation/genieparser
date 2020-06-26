@@ -1058,7 +1058,7 @@ class ShowOspf3OverviewSchema(MetaParser):
                 "ospf-route-table-index": str,
                 Optional("ospf-configured-overload-remaining-time"): str,
                 "ospf-router-id": str,
-                "ospf-tilfa-overview": {
+                Optional("ospf-tilfa-overview"): {
                     "ospf-tilfa-enabled": str
                 },
                 "ospf-topology-overview": {
