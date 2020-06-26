@@ -12,7 +12,8 @@ from genie.metaparser.util.exceptions import (
 from genie.libs.parser.junos.show_interface import (ShowInterfacesTerse,
                                                     ShowInterfacesTerseMatch,
                                                     ShowInterfacesDescriptions,
-                                                    ShowInterfaces)
+                                                    ShowInterfaces,
+                                                    ShowInterfacesQueue)
 
 #############################################################################
 # unitest For show interfaces terse [| match <interface>]
@@ -9002,6 +9003,134 @@ class TestShowInterfaces(unittest.TestCase):
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+
+# =======================================================
+# Schema for 'show interfaces queue {interface}'
+# =======================================================
+class TestShowInterfaces(unittest.TestCase):
+    device = Device(name='aDevice')
+    maxDiff = None
+    empty_output = {'execute.return_value': ''}
+
+    # show interfaces queue ge-0/0/2
+    golden_output = {'execute.return_value': '''
+        Physical interface: ge-0/0/2, Enabled, Physical link is Up
+          Interface index: 143, SNMP ifIndex: 601
+          Description: to_ixia_2/4
+        Forwarding classes: 16 supported, 5 in use
+        Egress queues: 8 supported, 5 in use
+        Queue: 0, Forwarding classes: Bronze-FC
+          Queued:
+            Packets              :            1470816406                     0 pps
+            Bytes                :          564883280956                     0 bps
+          Transmitted:
+            Packets              :            1470816406                      0 pps
+            Bytes                :          564883280956                     0 bps
+            Tail-dropped packets :                     0                     0 pps
+            RED-dropped packets  :                     0                     0 pps
+             Low                 :                     0                     0 pps
+             Medium-low          :                     0                     0 pps
+             Medium-high         :                     0                     0 pps
+             High                :                     0                     0 pps
+            RED-dropped bytes    :                     0                     0 bps
+             Low                 :                     0                     0 bps
+             Medium-low          :                     0                     0 bps
+             Medium-high         :                     0                     0 bps
+             High                :                     0                     0 bps
+        Queue: 1, Forwarding classes: Platinum-FC
+          Queued:
+            Packets              :                     0                     0 pps
+            Bytes                :                     0                     0 bps
+          Transmitted:
+            Packets              :                     0                      0 pps
+            Bytes                :                     0                     0 bps
+            Tail-dropped packets :                     0                     0 pps
+            RED-dropped packets  :                     0                     0 pps
+             Low                 :                     0                     0 pps
+             Medium-low          :                     0                     0 pps
+             Medium-high         :                     0                     0 pps
+             High                :                     0                     0 pps
+            RED-dropped bytes    :                     0                     0 bps
+             Low                 :                     0                     0 bps
+             Medium-low          :                     0                     0 bps
+             Medium-high         :                     0                     0 bps
+             High                :                     0                     0 bps
+        Queue: 2, Forwarding classes: Gold-FC
+          Queued:
+            Packets              :                     0                     0 pps
+            Bytes                :                     0                     0 bps
+          Transmitted:
+            Packets              :                     0                      0 pps
+            Bytes                :                     0                     0 bps
+            Tail-dropped packets :                     0                     0 pps
+            RED-dropped packets  :                     0                     0 pps
+             Low                 :                     0                     0 pps
+             Medium-low          :                     0                     0 pps
+             Medium-high         :                     0                     0 pps
+             High                :                     0                     0 pps
+            RED-dropped bytes    :                     0                     0 bps
+             Low                 :                     0                     0 bps
+             Medium-low          :                     0                     0 bps
+             Medium-high         :                     0                     0 bps
+             High                :                     0                     0 bps
+        Queue: 3, Forwarding classes: Network-Control-FC
+          Queued:
+            Packets              :                     0                     0 pps
+            Bytes                :                     0                     0 bps
+          Transmitted:
+            Packets              :                     0                      0 pps
+            Bytes                :                     0                     0 bps
+            Tail-dropped packets :                     0                     0 pps
+            RED-dropped packets  :                     0                     0 pps
+             Low                 :                     0                     0 pps
+             Medium-low          :                     0                     0 pps
+             Medium-high         :                     0                     0 pps
+             High                :                     0                     0 pps
+            RED-dropped bytes    :                     0                     0 bps
+             Low                 :                     0                     0 bps
+             Medium-low          :                     0                     0 bps
+             Medium-high         :                     0                     0 bps
+             High                :                     0                     0 bps
+        Queue: 4, Forwarding classes: Silver-FC
+          Queued:
+            Packets              :                     0                     0 pps
+            Bytes                :                     0                     0 bps
+          Transmitted:
+            Packets              :                     0                      0 pps
+            Bytes                :                     0                     0 bps
+            Tail-dropped packets :                     0                     0 pps
+            RED-dropped packets  :                     0                     0 pps
+             Low                 :                     0                     0 pps
+             Medium-low          :                     0                     0 pps
+             Medium-high         :                     0                     0 pps
+             High                :                     0                     0 pps
+            RED-dropped bytes    :                     0                     0 bps
+             Low                 :                     0                     0 bps
+             Medium-low          :                     0                     0 bps
+             Medium-high         :                     0                     0 bps
+             High                :                     0                     0 bps
+    
+    '''}
+
+    # golden_parsed_output =
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        interface_obj = ShowInterfacesQueue(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            interface_obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        interface_obj = ShowInterfacesQueue(device=self.device)
+        parsed_output = interface_obj.parse()
+        import pprint
+        pprint.pprint(parsed_output)
+        import pdb
+        pdb.set_trace()
+
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == "__main__":
     unittest.main()
