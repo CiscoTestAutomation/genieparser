@@ -80,12 +80,12 @@ class TestShowClassOfService(unittest.TestCase):
         self.device = Mock(**self.empty_output)
         obj = ShowClassOfService(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            obj.parse()
+            obj.parse(interface='ge-0/0/2')
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowClassOfService(device=self.device)
-        parsed_output = obj.parse()
+        parsed_output = obj.parse(interface='ge-0/0/2')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':

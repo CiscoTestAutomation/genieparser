@@ -1,3 +1,8 @@
+"""show_class_of_service.py
+
+JunOS parsers for the following show commands:
+    * show class-of-service interface {interface}
+"""
 # Python
 import re
 
@@ -49,9 +54,10 @@ class ShowClassOfService(ShowClassOfServiceSchema):
     """
     cli_command = 'show class-of-service interface {interface}'
 
-    def cli(self, output=None):
+    def cli(self, interface, output=None):
         if not output:
-            out = self.device.execute(self.cli_command)
+            cmd = self.cli_command.format(interface=interface)
+            out = self.device.execute(cmd)
         else:
             out = output
 
