@@ -96,3 +96,5 @@
 * IOSXE
     * Updated ShowClnsNeighborsDetail
         * Modified regex to accommodate diffrent outputs
+    * Updated ShowInventory
+        * Modified regex to accommodate different outputs

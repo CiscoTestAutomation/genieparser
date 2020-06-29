@@ -134,6 +134,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
         # 3
         r1_1 = re.compile(r'(?P<slot>\d+)')
 
+        # NAME: "Linecard(slot 1)"
         r1_1_1 = re.compile(r'\S+\(slot +(?P<slot>\d+)\).*$')
 
         # Cisco Services Performance Engine 123 for Cisco 1234 ISR on Slot 0
