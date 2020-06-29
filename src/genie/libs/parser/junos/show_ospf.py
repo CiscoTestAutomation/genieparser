@@ -1974,13 +1974,13 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
                 Optional("ospf-network-lsa"): {
                     "address-mask": str,
                     "attached-router": list,
-                    "ospf-lsa-topology": {
+                    Optional("ospf-lsa-topology"): {
                         "ospf-lsa-topology-link": Use(validate_ospf_lsa_topology_link),
                         "ospf-topology-id": str,
                         "ospf-topology-name": str
                     }
                 },
-                "ospf-database-extensive": {
+                Optional("ospf-database-extensive"): {
                     "aging-timer": {
                         "#text": str
                     },
@@ -2006,7 +2006,7 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
                     "bits": str,
                     "link-count": str,
                     "ospf-link": Use(validate_ospf_link),
-                    "ospf-lsa-topology": {
+                    Optional("ospf-lsa-topology"): {
                         "ospf-lsa-topology-link": Use(validate_ospf_lsa_topology_link),
                         "ospf-topology-id": str,
                         "ospf-topology-name": str
