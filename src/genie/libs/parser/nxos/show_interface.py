@@ -2887,10 +2887,12 @@ class ShowRunningConfigInterfaceSchema(MetaParser):
                      Optional('switchport'): bool,
                      Optional('switchport_mode'): str,
                      Optional('trunk_vlans'): str,
+                     Optional('trunk_native_vlan'): str,
                      Optional('description'): str,
                      Optional('access_vlan'): str,
                      Optional('speed'): int,
                      Optional('duplex'): str,
+                     Optional('vpc'): str,
                      Optional('port_channel'):{
                         Optional('port_channel_mode'): str,
                         Optional('port_channel_int'): str,
@@ -3043,12 +3045,21 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
                 group = m.groupdict()
                 interface_dict.update({'trunk_vlans': group['trunk_vlans']})
                 continue
-
-            # switchport access vlan x
-            p10_1 = re.compile(r'^switchport +access +vlan +(?P<access_vlan>\S+)$')
+            
+            # switchport trunk native vlan x
+            p10_1 = re.compile(r'^switchport +trunk +native +vlan +(?P<trunk_native_vlan>\S+)$')
             m = p10_1.match(line)
             if m:
                 group = m.groupdict()
+                interface_dict.update({'trunk_native_vlan': group['trunk_native_vlan']})
+                continue
+
+            # switchport access vlan x
+            p10_2 = re.compile(r'^switchport +access +vlan +(?P<access_vlan>\S+)$')
+            m = p10_2.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'switchport_mode': 'access'})
                 interface_dict.update({'access_vlan': group['access_vlan']})
                 continue
 
@@ -3077,10 +3088,18 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
                 continue
 
             # description DeviceA-description
-            p14 = re.compile(r'^description +(?P<description>\S+)$')
+            p14 = re.compile(r'^description +(?P<description>.+)$')
             m = p14.match(line)
             if m:
                 interface_dict.update({'description': m.groupdict()['description']})
+                continue
+
+            # vpc
+            p15 = re.compile(r'^vpc +(?P<vpc>\S+)$')
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'vpc': group['vpc']})
                 continue
 
         return ret_dict

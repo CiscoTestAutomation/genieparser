@@ -450,12 +450,17 @@ class ShowInterfacesSchema(MetaParser):
                     Optional("ifff-sendbcast-pkt-to-re"): bool,
                     Optional("internal-flags"): bool,
                     Optional("ifff-primary"): bool,
+                    Optional("ifff-receive-ttl-exceeded"): bool,
+                    Optional("ifff-receive-options"): bool,
+                    Optional("ifff-encapsulation"): str,
                 },
                 "address-family-name": str,
                 Optional("interface-address"): Use(verify_interface_address_list),
                 Optional("intf-curr-cnt"): str,
                 Optional("intf-dropcnt"): str,
                 Optional("intf-unresolved-cnt"): str,
+                Optional("generation"): str,
+                Optional("route-table"): str,
                 Optional("max-local-cache"): str,
                 Optional("maximum-labels"): str,
                 "mtu": str,
@@ -536,6 +541,7 @@ class ShowInterfacesSchema(MetaParser):
             Optional("ld-pdu-error"): str,
             Optional("link-level-type"): str,
             Optional("link-type"): str,
+            Optional("link-mode"): str,
             Optional("local-index"): str,
             Optional("logical-interface"): {
                 Optional("address-family"): Use(verify_address_family_list),
@@ -728,9 +734,11 @@ class ShowInterfaces(ShowInterfacesSchema):
         p3 = re.compile(r'^Description: +(?P<description>\S+)$')
 
         # Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
+        # Link-level type: Ethernet, MTU: 1514, Link-mode: Full-duplex, Speed: 1000mbps,
         p4 = re.compile(r'^(Type: +\S+, )?Link-level +type: +'
             r'(?P<link_level_type>\S+), +MTU: +(?P<mtu>\S+)'
             r'(, +MRU: +(?P<mru>\d+))?(, +(?P<sonet_mode>\S+) +mode)?'
+            r'(, +Link-mode: +(?P<link_mode>\S+))?'
             r'(, +Speed: +(?P<speed>\S+))?(, +BPDU +Error: +'
             r'(?P<bpdu_error>\S+),)?$')
         
@@ -847,9 +855,13 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Output packets: 129243982
         p27 = re.compile(r'^Output +packets *: +(?P<output_packets>\S+)$')
 
-        # Protocol inet, MTU: 1500
+        # Protocol inet, MTU: 1500, Maximum labels: 2
+        # Protocol inet, MTU: 1500, Generation: 150, Route table: 0
         p28 = re.compile(r'^Protocol +(?P<address_family_name>\S+), +'
-            r'MTU: +(?P<mtu>\S+)(, +Maximum labels: +(?P<maximum_labels>\S+))?$')
+            r'MTU: +(?P<mtu>\S+)(, +Maximum labels: +'
+            r'(?P<maximum_labels>\S+))?(, +Generation: +'
+            r'(?P<generation>\S+))?(, +Route table: +'
+            r'(?P<route_table>\S+))?$')
 
         # Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
         p30 = re.compile(r'^Max +nh +cache: +(?P<max_local_cache>\d+), +'
@@ -1395,8 +1407,12 @@ class ShowInterfaces(ShowInterfacesSchema):
                 group = m.groupdict()
                 address_family_flags_dict = address_family_dict.setdefault('address-family-flags', {})
                 for flag in group['flags'].split(','):
-                    key = 'ifff-{}'.format(flag.strip().lower())
-                    address_family_flags_dict.update({key: True})
+                    if "encapsulation" in flag.lower():
+                        value = flag.split(":")[-1].strip().lower()
+                        address_family_flags_dict.update({"ifff-encapsulation": value})
+                    else:
+                        key = 'ifff-{}'.format(flag.strip().lower())
+                        address_family_flags_dict.update({key: True})
                 continue
 
             # Addresses, Flags: Is-Preferred Is-Primary
