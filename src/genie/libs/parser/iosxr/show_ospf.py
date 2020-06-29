@@ -1571,7 +1571,7 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                         },
                                     },
                                 },
-                                Optional("IPFRR_per_prefix_tiebreakers"): {
+                                Optional("ipfrr_per_prefix_tiebreakers"): {
                                     Optional("name"): str,
                                     Optional("no_tunnel"): str,
                                     Optional("node_protection"): str,
@@ -1580,8 +1580,8 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                     Optional("primary_path"): str,
                                     Optional("downstream"): str,
                                     Optional("secondary_path"): str,
-                                    Optional("SRLG_Disjoint"): str,
-                                    Optional("Post_Convergence_Path"): str,
+                                    Optional("srlg_disjoint"): str,
+                                    Optional("post_convergence_path"): str,
                                 },
                             },
                         },
@@ -1816,9 +1816,9 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
         # Secondary Path          0
         p51 = re.compile(r"^Secondary +Path +(?P<secondary_path>\S+)$")
         # SRLG Disjoint           0
-        p52 = re.compile(r"^SRLG +Disjoint +(?P<SRLG_Disjoint>\S+)$")
+        p52 = re.compile(r"^SRLG +Disjoint +(?P<srlg_disjoint>\S+)$")
         # Post Convergence Path   0
-        p53 = re.compile(r"^Post +Convergence +Path +(?P<Post_Convergence_Path>\S+)$")
+        p53 = re.compile(r"^Post +Convergence +Path +(?P<post_convergence_path>\S+)$")
 
         for line in out.splitlines():
             line = line.strip()
@@ -2546,14 +2546,14 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             m = p43_2.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers", {})
+                sub_dict.setdefault("ipfrr_per_prefix_tiebreakers", {})
                 continue
 
             # Name                    Index
             m = p44.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers", {})["name"] = group[
+                sub_dict.setdefault("ipfrr_per_prefix_tiebreakers", {})["name"] = group[
                     "name"
                 ]
                 continue
@@ -2562,7 +2562,7 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             m = p45.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers", {})[
+                sub_dict.setdefault("ipfrr_per_prefix_tiebreakers", {})[
                     "no_tunnel"
                 ] = group["no_tunnel"]
                 continue
@@ -2571,7 +2571,7 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             m = p46.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers", {})[
+                sub_dict.setdefault("ipfrr_per_prefix_tiebreakers", {})[
                     "node_protection"
                 ] = group["node_protection"]
                 continue
@@ -2580,7 +2580,7 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             m = p47.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers", {})[
+                sub_dict.setdefault("ipfrr_per_prefix_tiebreakers", {})[
                     "line_card_disjoint"
                 ] = group["line_card_disjoint"]
                 continue
@@ -2589,7 +2589,7 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             m = p48.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers", {})[
+                sub_dict.setdefault("ipfrr_per_prefix_tiebreakers", {})[
                     "lowest_metric"
                 ] = group["lowest_metric"]
                 continue
@@ -2598,7 +2598,7 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             m = p49.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers", {})[
+                sub_dict.setdefault("ipfrr_per_prefix_tiebreakers", {})[
                     "primary_path"
                 ] = group["primary_path"]
                 continue
@@ -2607,7 +2607,7 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             m = p50.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers", {})[
+                sub_dict.setdefault("ipfrr_per_prefix_tiebreakers", {})[
                     "downstream"
                 ] = group["downstream"]
                 continue
@@ -2616,7 +2616,7 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             m = p51.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers", {})[
+                sub_dict.setdefault("ipfrr_per_prefix_tiebreakers", {})[
                     "secondary_path"
                 ] = group["secondary_path"]
                 continue
@@ -2625,18 +2625,18 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             m = p52.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers", {})[
-                    "SRLG_Disjoint"
-                ] = group["SRLG_Disjoint"]
+                sub_dict.setdefault("ipfrr_per_prefix_tiebreakers", {})[
+                    "srlg_disjoint"
+                ] = group["srlg_disjoint"]
                 continue
 
             # Post Convergence Path   0
             m = p53.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict.setdefault("IPFRR_per_prefix_tiebreakers", {})[
-                    "Post_Convergence_Path"
-                ] = group["Post_Convergence_Path"]
+                sub_dict.setdefault("ipfrr_per_prefix_tiebreakers", {})[
+                    "post_convergence_path"
+                ] = group["post_convergence_path"]
                 continue
 
         return ret_dict

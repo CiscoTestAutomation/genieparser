@@ -2295,9 +2295,9 @@ Wed Jun 17 11:14:00.030 UTC
                     "ipv4": {
                         "instance": {
                             "10": {
-                                "IPFRR_per_prefix_tiebreakers": {
-                                    "Post_Convergence_Path": "0",
-                                    "SRLG_Disjoint": "0",
+                                "ipfrr_per_prefix_tiebreakers": {
+                                    "post_convergence_path": "0",
+                                    "srlg_disjoint": "0",
                                     "downstream": "0",
                                     "line_card_disjoint": "30",
                                     "lowest_metric": "20",
