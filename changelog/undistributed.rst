@@ -67,6 +67,8 @@
         * Optional key issue resolved
     * Updated ShowOspf3DatabaseExtensiveSchema
         * Optional key issue resolved
+    * Updated ShowInterfaces
+        * Fixes case where speed wasn't found
 * IOSXE
     * Updated ShowIpInterface
         * Modified regex to accommodate different outputs
