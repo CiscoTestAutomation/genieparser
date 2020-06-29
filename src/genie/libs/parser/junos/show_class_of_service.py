@@ -40,7 +40,7 @@ class ShowClassOfServiceSchema(MetaParser):
                 "interface-name": str,
                 "interface-queues-in-use": str,
                 "interface-queues-supported": str,
-                "interface-shaping-rate": str,
+                Optional("interface-shaping-rate"): str,
                 "scheduler-map-index": str,
                 "scheduler-map-name": str
             }
