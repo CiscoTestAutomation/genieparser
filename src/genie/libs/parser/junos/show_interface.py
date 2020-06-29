@@ -743,7 +743,7 @@ class ShowInterfaces(ShowInterfacesSchema):
             r'(?P<bpdu_error>\S+),)?$')
         
         # Speed: 800mbps
-        p4_1 = re.compile(r'^Speed: +(?P<speed>\S+)$')
+        p4_1 = re.compile(r'Speed: +(?P<speed>[^\s,]+)')
 
         p4_2 = re.compile(r'^')
 
