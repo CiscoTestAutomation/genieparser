@@ -126,12 +126,15 @@ class ShowInventory(ShowInventorySchema_iosxe):
         # CISCO3945-CHASSIS
         # Cisco Systems Cisco 6500 4-slot Chassis
         # IOSv chassis, Hw Serial#: 9K66Z7TOKAACDEQA24N7S, Hw Revision: 1.0
-        r1_0 = re.compile(r'.*(?:CHASSIS|Chassis|chassis)')
+        # NAME: "Switch System", DESCR: "Cisco Systems, Inc. WS-C4948 1 slot switch "
+        r1_0 = re.compile(r'.*(?:CHASSIS|Chassis|chassis|WS-C\S+ +\d+ +slot +switch)')
 
         # 1
         # 2
         # 3
         r1_1 = re.compile(r'(?P<slot>\d+)')
+
+        r1_1_1 = re.compile(r'\S+\(slot +(?P<slot>\d+)\).*$')
 
         # Cisco Services Performance Engine 123 for Cisco 1234 ISR on Slot 0
         r1_1_2 = re.compile(r'.* +on Slot +(?P<slot>\d+)$')
@@ -226,7 +229,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
                 # NAME: "3"
                 # NAME: "Cisco Services Performance Engine 123 for Cisco 1234 ISR on Slot 0"
                 # ============================================
-                result = r1_1.match(name) or r1_1_2.match(name)
+                result = r1_1.match(name) or r1_1_2.match(name) or r1_1_1.match(name)
                 if result:
 
                     group = result.groupdict()
@@ -274,7 +277,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     slot_dict['name'] = name
                     slot_dict['descr'] = descr
                     slot_dict['pid'] = pid
-                    slot_dict['vid'] = vid
+                    slot_dict['vid'] = vid.strip()
                     slot_dict['sn'] = sn
 
                     continue
