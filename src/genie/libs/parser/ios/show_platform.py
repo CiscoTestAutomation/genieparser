@@ -277,7 +277,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     slot_dict['name'] = name
                     slot_dict['descr'] = descr
                     slot_dict['pid'] = pid
-                    slot_dict['vid'] = vid.strip()
+                    slot_dict['vid'] = vid
                     slot_dict['sn'] = sn
 
                     continue
