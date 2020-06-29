@@ -976,6 +976,116 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
           Interface name: GigabitEthernet3.415
     '''}
 
+    golden_output_4 = {'execute.return_value': '''
+        show clns neighbors detail
+        Tag core:
+        System Id       Interface     SNPA                State  Holdtime  Type Protocol
+        Genie3         Te0/2/0       23f1.234f.2324      Up     28        L1   IS-IS
+        Area Address(es): 01
+        IP Address(es):  98.1.1.0*
+        Uptime: 1w6d
+        NSF capable
+        BFD enabled: (MTID:0, ipv4)
+        Interface name: TenGigabitEthernet0/2/0
+        Genie2         Te0/2/1       34e4.fc32.234b      Up     26        L1   IS-IS
+        Area Address(es): 01
+        IP Address(es):  18.18.1.12*
+        Uptime: 2w0d
+        NSF capable
+        BFD enabled: (MTID:0, ipv4)
+        Interface name: TenGigabitEthernet0/2/1
+        Genie1A     Te0/3/0       234f.23bc.4230      Up     25        L1   IS-IS //missing neighbor, instead RT2 shows in JSON.
+        Area Address(es): 01
+        IP Address(es):  19.18.51.9*
+        Uptime: 2w0d
+        NSF capable
+        BFD enabled: (MTID:0, ipv4)
+        Interface name: TenGigabitEthernet0/3/0
+        Genie1          Gi0/0/7       0230c.2230.5923      Up     28        L1   IS-IS
+        Area Address(es): 01
+        IP Address(es):  8.18.1.113*
+        Uptime: 2w0d
+        NSF capable
+        BFD enabled: (MTID:0, ipv4)
+        Interface name: GigabitEthernet0/0/7
+        DS_A903#
+    '''
+    }
+
+    golden_parsed_output_4 = {
+        'tag': {
+            'core': {
+                'system_id': {
+                    'Genie1A': {
+                        'type': {
+                            'L1': {
+                                'area_address': ['01'],
+                                'holdtime': 25,
+                                'interface': 'TenGigabitEthernet0/3/0',
+                                'ip_address': ['19.18.51.9*'],
+                                'nsf': 'capable',
+                                'protocol': 'IS-IS '
+                                '//missing '
+                                'neighbor, '
+                                'instead '
+                                'RT2 '
+                                'shows in '
+                                'JSON.',
+                                'snpa': '234f.23bc.4230',
+                                'state': 'up',
+                                'uptime': '2w0d'
+                            }
+                        }
+                    },
+                    'Genie1': {
+                        'type': {
+                            'L1': {
+                                'area_address': ['01'],
+                                'holdtime': 28,
+                                'interface': 'GigabitEthernet0/0/7',
+                                'ip_address': ['8.18.1.113*'],
+                                'nsf': 'capable',
+                                'protocol': 'IS-IS',
+                                'snpa': '0230c.2230.5923',
+                                'state': 'up',
+                                'uptime': '2w0d'
+                            }
+                        }
+                    },
+                    'Genie2': {
+                        'type': {
+                            'L1': {
+                                'area_address': ['01'],
+                                'holdtime': 26,
+                                'interface': 'TenGigabitEthernet0/2/1',
+                                'ip_address': ['18.18.1.12*'],
+                                'nsf': 'capable',
+                                'protocol': 'IS-IS',
+                                'snpa': '34e4.fc32.234b',
+                                'state': 'up',
+                                'uptime': '2w0d'
+                            }
+                        }
+                    },
+                    'Genie3': {
+                        'type': {
+                            'L1': {
+                                'area_address': ['01'],
+                                'holdtime': 28,
+                                'interface': 'TenGigabitEthernet0/2/0',
+                                'ip_address': ['98.1.1.0*'],
+                                'nsf': 'capable',
+                                'protocol': 'IS-IS',
+                                'snpa': '23f1.234f.2324',
+                                'state': 'up',
+                                'uptime': '1w6d'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         obj = ShowClnsNeighborsDetail(device=self.device1)
@@ -999,6 +1109,12 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
         obj = ShowClnsNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+    def test_golden_clns_neighbor_detail_4(self):
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowClnsNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 
 

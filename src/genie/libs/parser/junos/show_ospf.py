@@ -3991,4 +3991,4 @@ class ShowOspfDatabaseLsaidDetail(ShowOspfDatabaseAdvertisingRouterSelfDetail):
         else:
             out = output
 
-        return super().cli(output=out)
+        return super().cli(output = ' ' if not out else out)
