@@ -742,15 +742,21 @@ class ShowInterfaces(ShowInterfacesSchema):
             r'(, +Speed: +(?P<speed>\S+))?(, +BPDU +Error: +'
             r'(?P<bpdu_error>\S+),)?$')
         
-        # Speed: 800mbps
-        p4_1 = re.compile(r'Speed: +(?P<speed>[^\s,]+)')
+        # Speed: 1000mbps, BPDU Error: None, Loop Detect PDU Error: None,
+        p4_1 = re.compile(r'^(Speed: +(?P<speed>[^\s,]+))(, +)?'
+                          r'(BPDU +Error: +(?P<bpdu_error>[^\s,]+))?(, +)?'
+                          r'(Loop +Detect +PDU +Error: +(?P<ld_pdu_error>[^\s,]+))?(, +)?')
 
-        p4_2 = re.compile(r'^')
 
         # Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
         p5 = re.compile(r'^Loop +Detect +PDU +Error: +(?P<ld_pdu_error>\S+), +'
             r'Ethernet-Switching +Error: +(?P<eth_switch_error>\S+), +MAC-REWRITE +'
             r'Error: +\S+, +Loopback: +(?P<loopback>\S+),$')
+
+        # Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        p5_1 = re.compile(r'^(Ethernet-Switching +Error: +(?P<eth_switch_error>[^\s,]+))'
+                          r'(, +)?(MAC-REWRITE +Error: +[^\s,]+)?(, +)?'
+                          r'(Loopback: +(?P<loopback>[^\s,]+))(, +)?')
 
         # Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
         p6 = re.compile(r'^Source +filtering: +(?P<source_filtering>\S+), +'
@@ -1039,7 +1045,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                     v for k, v in group.items() if v is not None})
                 continue
 
-            # Speed: 800mbps
+            # Speed: 1000mbps, BPDU Error: None, Loop Detect PDU Error: None,
             m = p4_1.match(line)
             if m:
                 group = m.groupdict()
