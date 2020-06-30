@@ -13,6 +13,7 @@ from genie.libs.parser.junos.show_interface import (ShowInterfacesTerse,
                                                     ShowInterfacesTerseMatch,
                                                     ShowInterfacesDescriptions,
                                                     ShowInterfaces,
+                                                    ShowInterfacesPolicersInterface,
                                                     ShowInterfacesStatistics)
 
 #############################################################################
@@ -9004,6 +9005,81 @@ class TestShowInterfaces(unittest.TestCase):
         parsed_output = interface_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
+
+#############################################################################
+# unitest For show interfaces policers interface
+#############################################################################
+
+
+class test_show_interfaces_policers_interface(unittest.TestCase):
+    device = Device(name="aDevice")
+
+    empty_output = {"execute.return_value": ""}
+
+    maxDiff = None
+
+    golden_parsed_output = {
+        "interface-policer-information": {
+        "physical-interface": [
+            {
+                "admin-status": "up",
+                "logical-interface": [
+                    {
+                        "admin-status": "up",
+                        "name": "ge-0/0/2.0",
+                        "oper-status": "up",
+                        "policer-information": [
+                            {
+                                "policer-family": "inet",
+                                "policer-input": "GE_1M-ge-0/0/2.0-log_int-i",
+                                "policer-output": "GE_1M-ge-0/0/2.0-log_int-o"
+                            },
+                            {
+                                "policer-family": "inet6",
+                                "policer-input": "GE_1M-ge-0/0/2.0-log_int-i",
+                                "policer-output": "GE_1M-ge-0/0/2.0-log_int-o"
+                            },
+                            {
+                                "policer-family": "multiservice",
+                                "policer-input": "__default_arp_policer__"
+                            }
+                        ]
+                    }
+                ],
+                "name": "ge-0/0/2",
+                "oper-status": "up"
+            }
+        ]
+    }
+
+    }
+
+    golden_output = {
+        "execute.return_value": """
+        Interface       Admin Link Proto Input Policer         Output Policer
+        ge-0/0/2        up    up
+        ge-0/0/2.0      up    up
+                                inet  GE_1M-ge-0/0/2.0-log_int-i GE_1M-ge-0/0/2.0-log_int-o
+                                inet6 GE_1M-ge-0/0/2.0-log_int-i GE_1M-ge-0/0/2.0-log_int-o
+                                multiservice __default_arp_policer__
+    """
+    }
+
+
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        interface_obj = ShowInterfacesPolicersInterface(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            interface_obj.parse(interface='ge-0/0/2')
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        interface_obj = ShowInterfacesPolicersInterface(device=self.device)
+        parsed_output = interface_obj.parse(interface='ge-0/0/2')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+        
 class TestShowInterfacesStatistics(unittest.TestCase):
     device = Device(name='aDevice')
     maxDiff = None

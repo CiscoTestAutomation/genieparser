@@ -23,6 +23,8 @@
     * Updated ShowOspfDatabaseLsaidDetail:
         * added testcase
         *extended from ShowOspfDatabaseAdvertisingRouterSelfDetail
+    * Added ShowInterfacesPolicersInterface for:
+        * show interfaces policers {interface}
     * Added ShowInterfacesStatistics
         * show interfaces statistics
 

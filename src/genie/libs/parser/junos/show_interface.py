@@ -6,6 +6,7 @@ JunOS parsers for the following show commands:
     * show interfaces terse {interface}
     * show interfaces {interface} terse
     * show interfaces descriptions
+    * show interfaces policers {interface}
 """
 
 # python
@@ -14,7 +15,7 @@ import re
 # metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.exceptions import SchemaTypeError
-from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use, SchemaTypeError
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use, SchemaTypeError, Or
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -2214,5 +2215,181 @@ class ShowInterfacesStatistics(ShowInterfacesStatisticsSchema):
                 if group['ifa_broadcast']:
                     interface_address_dict.update({'ifa-broadcast': group['ifa_broadcast']})
                 continue
+
+        return ret_dict
+
+# =======================================================
+# Schema for 'show interfaces policers {interface}'
+# =======================================================
+class ShowInterfacesPolicersInterfaceSchema(MetaParser):
+    """Schema for show interfaces policers {interface}"""
+
+    '''schema = {
+    Optional("@xmlns:junos"): str,
+    "interface-policer-information": {
+        Optional("@junos:style"): str,
+        Optional("@xmlns"): str,
+        "physical-interface": [
+            "admin-status": str,
+            "logical-interface": [
+                "admin-status": str,
+                "name": str,
+                "oper-status": str,
+                "policer-information": [
+                    {
+                        "policer-family": str,
+                        "policer-input": str,
+                        "policer-output": str
+                    }
+                ]
+            ],
+            "name": str,
+            "oper-status": str
+        ]
+    }
+}'''
+
+    def validate_policer_information_list(value):
+        # Pass ospf3-interface list as value
+        if not isinstance(value, list):
+            raise SchemaTypeError('policer-information is not a list')
+        policer_information_schema = Schema({
+            "policer-family": str,
+            "policer-input": str,
+            Optional("policer-output"): Or(str,None)
+        })
+        # Validate each dictionary in list
+        for item in value:
+            policer_information_schema.validate(item)
+        return value
+
+
+    def validate_logical_interface_list(value):
+        # Pass ospf3-interface list as value
+        if not isinstance(value, list):
+            raise SchemaTypeError('logical-interface is not a list')
+        logical_interface_schema = Schema({
+            "admin-status": str,
+            "name": str,
+            "oper-status": str,
+            "policer-information": Use(ShowInterfacesPolicersInterface.validate_policer_information_list)
+        })
+        # Validate each dictionary in list
+        for item in value:
+            logical_interface_schema.validate(item)
+        return value
+
+
+    def validate_physical_interface_list(value):
+        # Pass ospf3-interface list as value
+        if not isinstance(value, list):
+            raise SchemaTypeError('physical-interface is not a list')
+        physical_interface_schema = Schema({
+            "admin-status": str,
+            "logical-interface": Use(ShowInterfacesPolicersInterface.validate_logical_interface_list),
+            "name": str,
+            "oper-status": str
+        })
+        # Validate each dictionary in list
+
+        for item in value:
+            physical_interface_schema.validate(item)
+        return value
+
+    schema = {
+    Optional("@xmlns:junos"): str,
+    "interface-policer-information": {
+        Optional("@junos:style"): str,
+        Optional("@xmlns"): str,
+        "physical-interface": Use(validate_physical_interface_list)
+    }
+}
+
+# =======================================================
+# Parser for 'show interfaces policers {interface}'
+# =======================================================
+class ShowInterfacesPolicersInterface(ShowInterfacesPolicersInterfaceSchema):
+    """ Parser for:
+            - show interfaces policers {interface}
+    """
+
+    cli_command = 'show interfaces policers {interface}'
+
+    def cli(self, interface=None, output=None):
+        # execute the command
+        if output is None:
+            out = self.device.execute(self.cli_command.format(interface=interface))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # ge-0/0/2        up    up
+        p1 =  re.compile(r'^(?P<interface>[a-zA-Z\-\d\/]+)((?P<physical_interface_value>[\.\d]+))? +(?P<admin>\w+) +(?:(?P<link>\w+))?$')
+
+
+        # inet  GE_1M-ge-0/0/2.0-log_int-i GE_1M-ge-0/0/2.0-log_int-o
+        # multiservice __default_arp_policer__
+        p2 =  re.compile(r'^(?P<policer_family>\w+) +(?P<policer_input>\S+)( +((?P<policer_output>\S+)))?$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            # ge-0/0/2        up    up
+            # ge-0/0/2.0      up    up
+            m = p1.match(line)
+            if m:
+                interface_policer_info = ret_dict.setdefault(
+                    "interface-policer-information", {}).setdefault("physical-interface",[])
+                #logical_interface_list = interface_policer_info.setdefault("logical-interface",[])
+                #policer_information_list = logical_interface_list.setdefault("policer-information", [])
+
+                exists = False
+                policer_information_list = None
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    if group_key == "physical_interface_value":
+                        if group_value != None:
+                            exists = True
+                if exists:
+                    
+                    logical_interface_dict['name'] = group['interface'] + group['physical_interface_value']
+                    logical_interface_dict['admin-status'] = group['admin']
+                    logical_interface_dict['oper-status'] = group['link']
+
+                    policer_information_list = []
+                    logical_interface_dict["policer-information"] = policer_information_list
+                    logical_interface_list.append(logical_interface_dict)
+
+                    interface_policer_info_dict['logical-interface'] = logical_interface_list
+
+                    interface_policer_info.append(interface_policer_info_dict)
+
+                else:
+                    logical_interface_list = []
+                    logical_interface_dict = {}
+                    interface_policer_info_dict= {}
+                    interface_policer_info_dict['name'] = group['interface']
+                    interface_policer_info_dict['admin-status'] = group['admin']
+                    interface_policer_info_dict['oper-status'] = group['link']
+
+                    
+
+            # inet  GE_1M-ge-0/0/2.0-log_int-i GE_1M-ge-0/0/2.0-log_int-o
+            # multiservice __default_arp_policer__
+            m = p2.match(line)
+            if m:    
+                group = m.groupdict()
+                policer_information_dict = {}
+                policer_information_dict['policer-family'] = group['policer_family']
+                policer_information_dict['policer-input'] = group['policer_input']
+
+                for group_key, group_value in group.items():
+                    if group_key == "policer_output":
+                        if group_value != None:
+                            policer_information_dict['policer-output'] = group['policer_output']
+
+                policer_information_list.append(policer_information_dict)
+
+                exists = False
 
         return ret_dict
