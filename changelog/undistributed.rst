@@ -25,6 +25,8 @@
         *extended from ShowOspfDatabaseAdvertisingRouterSelfDetail
     * Added ShowInterfacesPolicersInterface for:
         * show interfaces policers {interface}
+    * Added ShowInterfacesStatistics
+        * show interfaces statistics
 
 
 --------------------------------------------------------------------------------
@@ -98,3 +100,5 @@
 * IOSXE
     * Updated ShowClnsNeighborsDetail
         * Modified regex to accommodate diffrent outputs
+    * Updated ShowInventory
+        * Modified regex to accommodate different outputs
