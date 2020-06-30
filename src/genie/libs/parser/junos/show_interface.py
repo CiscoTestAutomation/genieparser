@@ -1690,37 +1690,38 @@ class ShowInterfacesStatisticsSchema(MetaParser):
                 if not isinstance(value, list):
                     raise SchemaTypeError('address-family is not a list')
 
-                    def validate_address_family_list(value):
-                        if not isinstance(value, list):
-                            raise SchemaTypeError('interface-address is not a list')
+                def validate_interface_address_list(value):
+                    if not isinstance(value, list):
+                        raise SchemaTypeError('interface-address is not a list')
 
-                        interface_address_schema = Schema ({
-                                "ifa-flags": {
-                                    Optional("ifaf-current-preferred"): bool,
-                                    Optional("ifaf-current-primary"): bool,
-                                },
-                                Optional("ifa-destination"): str,
-                                Optional("ifa-local"): str,
-                                Optional("ifa-broadcast"): str,
-                            })
-
-                        for item in value:
-                            interface_address_schema.validate(item)
-                        return value
-
-                    address_family_list = Schema({
-                            "address-family-name": str,
-                            "mtu": str,
-                            Optional("address-family-flags"): {
-                                Optional("ifff-is-primary"): bool,
-                                Optional("ifff-sendbcast-pkt-to-re"): bool,
+                    interface_address_schema = Schema ({
+                            "ifa-flags": {
+                                Optional("ifaf-current-preferred"): bool,
+                                Optional("ifaf-current-primary"): bool,
+                                Optional("ifaf-current-default"): bool,
                             },
-                            Optional("interface-address"): Use(validate_interface_address_list),
+                            Optional("ifa-destination"): str,
+                            Optional("ifa-local"): str,
+                            Optional("ifa-broadcast"): str,
                         })
 
                     for item in value:
-                        address_family_schema.validate(item)
+                        interface_address_schema.validate(item)
                     return value
+
+                address_family_schema = Schema({
+                        "address-family-name": str,
+                        "mtu": str,
+                        Optional("address-family-flags"): {
+                            Optional("ifff-is-primary"): bool,
+                            Optional("ifff-sendbcast-pkt-to-re"): bool,
+                        },
+                        Optional("interface-address"): Use(validate_interface_address_list),
+                    })
+
+                for item in value:
+                    address_family_schema.validate(item)
+                return value
                     
 
             logical_interface_schema = Schema (
