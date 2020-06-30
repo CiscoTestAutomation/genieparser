@@ -87,6 +87,8 @@
         * Optional key issue resolved
     * Updated ShowOspf3DatabaseExtensiveSchema
         * Optional key issue resolved
+    * Updated ShowInterfaces
+        * Fixes case where speed wasn't found
     * Updated ShowOspfVrfAllInclusive
         * key error resolved
     * Updated ShowOspfDatabaseLsaidDetail
