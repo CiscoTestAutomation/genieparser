@@ -431,6 +431,7 @@ class ShowInterfacesSchema(MetaParser):
                         Optional("ifaf-primary"): bool,
                         Optional("ifaf-is-default"): bool,
                         Optional("ifaf-none"): bool,
+                        Optional("ifaf-dest-route-down"): bool,
                     },
                     Optional("ifa-local"): str
                 })
