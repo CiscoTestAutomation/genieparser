@@ -23,6 +23,8 @@
     * Updated ShowOspfDatabaseLsaidDetail:
         * added testcase
         *extended from ShowOspfDatabaseAdvertisingRouterSelfDetail
+    * Added ShowInterfacesStatistics
+        * show interfaces statistics
 
 
 --------------------------------------------------------------------------------
