@@ -1854,34 +1854,34 @@ class test_show_policy_map_type(unittest.TestCase):
 
     # show policy-map target service-group 1
     golden_output17 = {'execute.return_value': '''
- GigabitEthernet9/5: Service Group 1
+      GigabitEthernet9/5: Service Group 1
 
-  Service-policy input: policy1
+        Service-policy input: policy1
 
-    Class-map: class-default (match-any)
-      0 packets, 0 bytes
-      5 minute offered rate 0000 bps, drop rate 0000 bps
-      Match: any
-      police:
-          cir 200000 bps, bc 6250 bytes
-        conformed 0 packets, 0 bytes; actions:
-          transmit
-        exceeded 0 packets, 0 bytes; actions:
-          drop
-        conformed 0000 bps, exceed 0000 bps
+          Class-map: class-default (match-any)
+            0 packets, 0 bytes
+            5 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: any
+            police:
+                cir 200000 bps, bc 6250 bytes
+              conformed 0 packets, 0 bytes; actions:
+                transmit
+              exceeded 0 packets, 0 bytes; actions:
+                drop
+              conformed 0000 bps, exceed 0000 bps
 
-  Service-policy output: policy2
+        Service-policy output: policy2
 
-  Counters last updated 00:00:34 ago
-    Class-map: class-default (match-any)
-      0 packets, 0 bytes
-      5 minute offered rate 0000 bps, drop rate 0000 bps
-      Match: any
-      Queueing
-      queue limit 131072 packets
-      (queue depth/total drops/no-buffer drops) 0/0/0
-      (pkts output/bytes output) 0/0
-      bandwidth remaining ratio 2
+        Counters last updated 00:00:34 ago
+          Class-map: class-default (match-any)
+            0 packets, 0 bytes
+            5 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: any
+            Queueing
+            queue limit 131072 packets
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts output/bytes output) 0/0
+            bandwidth remaining ratio 2
     '''}
 
     golden_parsed_output18 = {"TenGigabitEthernet0/0/0.101": {
@@ -2038,65 +2038,65 @@ class test_show_policy_map_type(unittest.TestCase):
 
     # show policy-map interface te0/0/0.101
     golden_output18 = {'execute.return_value':'''
- TenGigabitEthernet0/0/0.101
+      TenGigabitEthernet0/0/0.101
 
-  Service-policy input: L3VPN_in
+        Service-policy input: L3VPN_in
 
-    Class-map: class-default (match-any)
-      0 packets, 0 bytes
-      5 minute offered rate 0000 bps, drop rate 0000 bps
-      Match: any
-      police:
-          cir 400000 bps, bc 400000 bytes
-        conformed 0 packets, 0 bytes; actions:
-          transmit
-        exceeded 0 packets, 0 bytes; actions:
-          drop
-        conformed 0000 bps, exceeded 0000 bps
+          Class-map: class-default (match-any)
+            0 packets, 0 bytes
+            5 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: any
+            police:
+                cir 400000 bps, bc 400000 bytes
+              conformed 0 packets, 0 bytes; actions:
+                transmit
+              exceeded 0 packets, 0 bytes; actions:
+                drop
+              conformed 0000 bps, exceeded 0000 bps
 
-      Service-policy : STD_in_child
+            Service-policy : STD_in_child
 
-        Class-map: IPP567 (match-all)
-          0 packets, 0 bytes
-          5 minute offered rate 0000 bps, drop rate 0000 bps
-          Match: ip precedence 3  4  5
-          QoS Set
-            ip precedence 1
-              Marker statistics: Disabled
-            qos-group 1
-              Marker statistics: Disabled
+              Class-map: IPP567 (match-all)
+                0 packets, 0 bytes
+                5 minute offered rate 0000 bps, drop rate 0000 bps
+                Match: ip precedence 3  4  5
+                QoS Set
+                  ip precedence 1
+                    Marker statistics: Disabled
+                  qos-group 1
+                    Marker statistics: Disabled
 
-  Service-policy output: L3VPN_out
+        Service-policy output: L3VPN_out
 
-    Class-map: class-default (match-any)
-      2121212 packets, 121212 bytes
-      5 minute offered rate 11111171 bps, drop rate 1118111 bps
-      Match: any
-      Queueing
-      queue limit 64 packets
-      (queue depth/total drops/no-buffer drops) 0/11111/0
-      (pkts output/bytes output) 11511/111611
-      shape (average) cir 111222, bc 2323, be 3434
-      target shape rate 454545
+          Class-map: class-default (match-any)
+            2121212 packets, 121212 bytes
+            5 minute offered rate 11111171 bps, drop rate 1118111 bps
+            Match: any
+            Queueing
+            queue limit 64 packets
+            (queue depth/total drops/no-buffer drops) 0/11111/0
+            (pkts output/bytes output) 11511/111611
+            shape (average) cir 111222, bc 2323, be 3434
+            target shape rate 454545
 
-      Service-policy : leeaf
+            Service-policy : leeaf
 
-        queue stats for all priority classes:
-          Queueing
-          priority level 1
-          queue limit 512 packets
-          (queue depth/total drops/no-buffer drops) 0/0/0
-          (pkts output/bytes output) 123456/7890123
+              queue stats for all priority classes:
+                Queueing
+                priority level 1
+                queue limit 512 packets
+                (queue depth/total drops/no-buffer drops) 0/0/0
+                (pkts output/bytes output) 123456/7890123
 
-        Class-map: IPP67 (match-all)
-          123 packets, 4567 bytes
-          5 minute offered rate 123123123 bps, drop rate 456456456 bps
-          Match: ip precedence 6  7
-          Queueing
-          queue limit 64 packets
-          (queue depth/total drops/no-buffer drops) 63/2655550/0
-          (pkts output/bytes output) 6612304/819909328
-          bandwidth 50% (234 kbps)
+              Class-map: IPP67 (match-all)
+                123 packets, 4567 bytes
+                5 minute offered rate 123123123 bps, drop rate 456456456 bps
+                Match: ip precedence 6  7
+                Queueing
+                queue limit 64 packets
+                (queue depth/total drops/no-buffer drops) 63/2655550/0
+                (pkts output/bytes output) 6612304/819909328
+                bandwidth 50% (234 kbps)
           '''}
 
     golden_parsed_output19 = {'TenGigabitEthernet0/0/0.101': 
@@ -2132,54 +2132,55 @@ class test_show_policy_map_type(unittest.TestCase):
 
     # show policy-map interface te0/0/0.101
     golden_output19 = {'execute.return_value':'''
- TenGigabitEthernet0/0/0.101
+      TenGigabitEthernet0/0/0.101
 
-  Service-policy input: L3VPNin
+        Service-policy input: L3VPNin
 
-    Class-map: ARP_in (match-all)
-      0 packets, 0 bytes
-      5 minute offered rate 0000 bps, drop rate 0000 bps
-      Match: protocol arp
-      police:
-          cir 100 bps, bc 125 bytes
-          pir 20000 bps, be 658 bytes
-        conformed 0 packets, 0 bytes; actions:
-          transmit
-        exceeded 0 packets, 0 bytes; actions:
-          drop
-        violated 0 packets, 0 bytes; actions:
-          drop
-        conformed 0000 bps, exceeded 0000 bps, violated 0000 bps
+          Class-map: ARP_in (match-all)
+            0 packets, 0 bytes
+            5 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: protocol arp
+            police:
+                cir 100 bps, bc 125 bytes
+                pir 20000 bps, be 658 bytes
+              conformed 0 packets, 0 bytes; actions:
+                transmit
+              exceeded 0 packets, 0 bytes; actions:
+                drop
+              violated 0 packets, 0 bytes; actions:
+                drop
+              conformed 0000 bps, exceeded 0000 bps, violated 0000 bps
           '''}
 
     golden_parsed_output20 = {
-    "TenGigabitEthernet0/0/0.101": {
-        "service_policy": {
-            "input": {
-                "policy_name": {
-                    "L3VPNin": {
-                        "class_map": {
-                            "IPP11111": {
-                                "match_evaluation": "match-all",
-                                "bandwidth_percent": 4,
-                                "bandwidth_kbps": 536,
-                                "packets": 253,
-                                "bytes": 5656,
-                                "rate": {
-                                    "interval": 300,
-                                    "offered_rate_bps": 0,
-                                    "drop_rate_bps": 0
-                                },
-                                "match": [
-                                    "ip precedence 6  7"
-                                ],
-                                "queueing": True,
-                                "queue_limit_packets": "32",
-                                "queue_depth": 98,
-                                "total_drops": 666,
-                                "no_buffer_drops": 0,
-                                "pkts_output": 125,
-                                "bytes_output": 253654
+        "TenGigabitEthernet0/0/0.101": {
+            "service_policy": {
+                "input": {
+                    "policy_name": {
+                        "L3VPNin": {
+                            "class_map": {
+                                "IPP11111": {
+                                    "match_evaluation": "match-all",
+                                    "bandwidth_percent": 4,
+                                    "bandwidth_kbps": 536,
+                                    "packets": 253,
+                                    "bytes": 5656,
+                                    "rate": {
+                                        "interval": 300,
+                                        "offered_rate_bps": 0,
+                                        "drop_rate_bps": 0
+                                    },
+                                    "match": [
+                                        "ip precedence 6  7"
+                                    ],
+                                    "queueing": True,
+                                    "queue_limit_packets": "32",
+                                    "queue_depth": 98,
+                                    "total_drops": 666,
+                                    "no_buffer_drops": 0,
+                                    "pkts_output": 125,
+                                    "bytes_output": 253654
+                                }
                             }
                         }
                     }
@@ -2187,23 +2188,22 @@ class test_show_policy_map_type(unittest.TestCase):
             }
         }
     }
-}
 
     # show policy-map interface te0/0/0.101
     golden_output20 = {'execute.return_value':'''
- TenGigabitEthernet0/0/0.101
+      TenGigabitEthernet0/0/0.101
 
-  Service-policy input: L3VPNin
+        Service-policy input: L3VPNin
 
-    Class-map: IPP11111 (match-all)
-      253 packets, 5656 bytes
-      5 minute offered rate 0000 bps, drop rate 0000 bps
-      Match: ip precedence 6  7
-      Queueing
-      queue limit 32 packets
-      (queue depth/total drops/no-buffer drops) 98/666/0
-      (pkts output/bytes output) 125/253654
-      bandwidth 4% (536 kbps)
+          Class-map: IPP11111 (match-all)
+            253 packets, 5656 bytes
+            5 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: ip precedence 6  7
+            Queueing
+            queue limit 32 packets
+            (queue depth/total drops/no-buffer drops) 98/666/0
+            (pkts output/bytes output) 125/253654
+            bandwidth 4% (536 kbps)
           '''}
 
     golden_parsed_output21 = {
@@ -2317,156 +2317,155 @@ class test_show_policy_map_type(unittest.TestCase):
 
     # ShowPolicyMapInterface
     golden_output21 = {'execute.return_value':'''
-    GigabitEthernet4.1
-    
-      Service-policy output: parent-policy
-    
-        Class-map: class-default (match-any)
-          0 packets, 0 bytes
-          5 minute offered rate 0000 bps, drop rate 0000 bps
-          Match: any
-          Queueing
-          queue limit 34 packets
-          (queue depth/total drops/no-buffer drops) 0/0/0
-          (pkts output/bytes output) 0/0
-          shape (average) cir 1000000000, bc 21000000, be 21000000
-          target shape rate 3000000000
-    
-          Service-policy : child-policy
-    
-            queue stats for all priority classes:
-              Queueing
-              queue limit 512 packets
-              (queue depth/total drops/no-buffer drops) 0/0/0
-              (pkts output/bytes output) 0/0
-    
-            Class-map: high-priority (match-all)
-              0 packets, 0 bytes
-              5 minute offered rate 0000 bps, drop rate 0000 bps
-              Match: none
-              Priority: 1000000 kbps, burst bytes 25000000, b/w exceed drops: 0
-    
-    
-            Class-map: low-priority (match-all)
-              0 packets, 0 bytes
-              5 minute offered rate 0000 bps, drop rate 0000 bps
-              Match: none
-              Priority: 1000000 kbps, burst bytes 25000000, b/w exceed drops: 0
-    
-    
-            Class-map: band-policy (match-all)
-              0 packets, 0 bytes
-              5 minute offered rate 0000 bps, drop rate 0000 bps
-              Match: none
-              Queueing
-              queue limit 64 packets
-              (queue depth/total drops/no-buffer drops) 0/0/0
-              (pkts output/bytes output) 0/0
-              bandwidth 110000 kbps
-    
-            Class-map: test-cir (match-all)
-              0 packets, 0 bytes
-              5 minute offered rate 0000 bps, drop rate 0000 bps
-              Match: none
-              Queueing
-              queue limit 64 packets
-              (queue depth/total drops/no-buffer drops) 0/0/0
-              (pkts output/bytes output) 0/0
-              bandwidth 600000 kbps
-    
-            Class-map: class-default (match-any)
-              0 packets, 0 bytes
-              5 minute offered rate 0000 bps, drop rate 0000 bps
-              Match: any
-    
-              queue limit 100 packets
-              (queue depth/total drops/no-buffer drops) 0/0/0
-              (pkts output/bytes output) 0/0
-                Exp-weight-constant: 4 (1/16)
-                Mean queue depth: 0 packets
-                class       Transmitted         Random drop      Tail drop          
-                Minimum        Maximum     Mark
-                        pkts/bytes            pkts/bytes       pkts/bytes          
-                        thresh         thresh     prob
-    
-                0               0/0               0/0              0/0                 
-                25            50  1/10
-                1               0/0               0/0              0/0                 
-                50            70  1/10
-                2               0/0               0/0              0/0                 
-                80           100  1/10
-                3               0/0               0/0              0/0                 
-                80           100  1/10
-                4               0/0               0/0              0/0                 
-                80           100  1/10
-                5               0/0               0/0              0/0                 
-                80           100  1/10
-                6               0/0               0/0              0/0                 
-                80           100  1/10
-                7               0/0               0/0              0/0                 
-                25            50  1/10
-
+      GigabitEthernet4.1
+      
+        Service-policy output: parent-policy
+      
+          Class-map: class-default (match-any)
+            0 packets, 0 bytes
+            5 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: any
+            Queueing
+            queue limit 34 packets
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts output/bytes output) 0/0
+            shape (average) cir 1000000000, bc 21000000, be 21000000
+            target shape rate 3000000000
+      
+            Service-policy : child-policy
+      
+              queue stats for all priority classes:
+                Queueing
+                queue limit 512 packets
+                (queue depth/total drops/no-buffer drops) 0/0/0
+                (pkts output/bytes output) 0/0
+      
+              Class-map: high-priority (match-all)
+                0 packets, 0 bytes
+                5 minute offered rate 0000 bps, drop rate 0000 bps
+                Match: none
+                Priority: 1000000 kbps, burst bytes 25000000, b/w exceed drops: 0
+      
+      
+              Class-map: low-priority (match-all)
+                0 packets, 0 bytes
+                5 minute offered rate 0000 bps, drop rate 0000 bps
+                Match: none
+                Priority: 1000000 kbps, burst bytes 25000000, b/w exceed drops: 0
+      
+      
+              Class-map: band-policy (match-all)
+                0 packets, 0 bytes
+                5 minute offered rate 0000 bps, drop rate 0000 bps
+                Match: none
+                Queueing
+                queue limit 64 packets
+                (queue depth/total drops/no-buffer drops) 0/0/0
+                (pkts output/bytes output) 0/0
+                bandwidth 110000 kbps
+      
+              Class-map: test-cir (match-all)
+                0 packets, 0 bytes
+                5 minute offered rate 0000 bps, drop rate 0000 bps
+                Match: none
+                Queueing
+                queue limit 64 packets
+                (queue depth/total drops/no-buffer drops) 0/0/0
+                (pkts output/bytes output) 0/0
+                bandwidth 600000 kbps
+      
+              Class-map: class-default (match-any)
+                0 packets, 0 bytes
+                5 minute offered rate 0000 bps, drop rate 0000 bps
+                Match: any
+      
+                queue limit 100 packets
+                (queue depth/total drops/no-buffer drops) 0/0/0
+                (pkts output/bytes output) 0/0
+                  Exp-weight-constant: 4 (1/16)
+                  Mean queue depth: 0 packets
+                  class       Transmitted         Random drop      Tail drop          
+                  Minimum        Maximum     Mark
+                          pkts/bytes            pkts/bytes       pkts/bytes          
+                          thresh         thresh     prob
+      
+                  0               0/0               0/0              0/0                 
+                  25            50  1/10
+                  1               0/0               0/0              0/0                 
+                  50            70  1/10
+                  2               0/0               0/0              0/0                 
+                  80           100  1/10
+                  3               0/0               0/0              0/0                 
+                  80           100  1/10
+                  4               0/0               0/0              0/0                 
+                  80           100  1/10
+                  5               0/0               0/0              0/0                 
+                  80           100  1/10
+                  6               0/0               0/0              0/0                 
+                  80           100  1/10
+                  7               0/0               0/0              0/0                 
+                  25            50  1/10
     '''}
 
     # ShowPolicyMapInterfaceOutput
     golden_output22 = {'execute.return_value': '''
-TenGigabitEthernet0/0/0
+      TenGigabitEthernet0/0/0
 
-  Service-policy output: pm_queuing
+        Service-policy output: pm_queuing
 
-    queue stats for all priority classes:
-      Queueing
-      queue limit 512 packets
-      (queue depth/total drops/no-buffer drops) 0/0/0
-      (pkts output/bytes output) 0/0
+          queue stats for all priority classes:
+            Queueing
+            queue limit 512 packets
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts output/bytes output) 0/0
 
-    Class-map: cm_dscp_class1 (match-any)
-      0 packets, 0 bytes
-      1 minute offered rate 0000 bps, drop rate 0000 bps
-      Match: ip dscp ef (46)
-      Priority: Strict, b/w exceed drops: 0
+          Class-map: cm_dscp_class1 (match-any)
+            0 packets, 0 bytes
+            1 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: ip dscp ef (46)
+            Priority: Strict, b/w exceed drops: 0
 
 
-    Class-map: cm_dscp_att_ncp (match-any)
-      50402030 packets, 4960596805 bytes
-      1 minute offered rate 1000 bps, drop rate 0000 bps
-      Match: ip dscp cs6 (48) cs7 (56)
-      Queueing
-      queue limit 41666 packets
-      (queue depth/total drops/no-buffer drops) 0/0/0
-      (pkts output/bytes output) 21791793/1927911831
-      bandwidth remaining 5%
+          Class-map: cm_dscp_att_ncp (match-any)
+            50402030 packets, 4960596805 bytes
+            1 minute offered rate 1000 bps, drop rate 0000 bps
+            Match: ip dscp cs6 (48) cs7 (56)
+            Queueing
+            queue limit 41666 packets
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts output/bytes output) 21791793/1927911831
+            bandwidth remaining 5%
 
-    Class-map: cm_dscp_class2 (match-any)
-      0 packets, 0 bytes
-      1 minute offered rate 0000 bps, drop rate 0000 bps
-      Match: ip dscp af31 (26) af32 (28)
-      Queueing
-      queue limit 41666 packets
-      (queue depth/total drops/no-buffer drops) 0/0/0
-      (pkts output/bytes output) 0/0
-      bandwidth remaining 25%
+          Class-map: cm_dscp_class2 (match-any)
+            0 packets, 0 bytes
+            1 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: ip dscp af31 (26) af32 (28)
+            Queueing
+            queue limit 41666 packets
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts output/bytes output) 0/0
+            bandwidth remaining 25%
 
-    Class-map: cm_dscp_class3 (match-any)
-      25610 packets, 5013442 bytes
-      1 minute offered rate 0000 bps, drop rate 0000 bps
-      Match: ip dscp af21 (18) af22 (20)
-      Queueing
-      queue limit 41666 packets
-      (queue depth/total drops/no-buffer drops) 0/0/0
-      (pkts output/bytes output) 25610/5013442
-      bandwidth remaining 25%
+          Class-map: cm_dscp_class3 (match-any)
+            25610 packets, 5013442 bytes
+            1 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: ip dscp af21 (18) af22 (20)
+            Queueing
+            queue limit 41666 packets
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts output/bytes output) 25610/5013442
+            bandwidth remaining 25%
 
-    Class-map: class-default (match-any)
-      195800135 packets, 14147555758 bytes
-      1 minute offered rate 4000 bps, drop rate 0000 bps
-      Match: any
-      Queueing
-      queue limit 41666 packets
-      (queue depth/total drops/no-buffer drops) 0/0/0
-      (pkts output/bytes output) 183412932/9203926787
-      bandwidth remaining 25%
-'''}
+          Class-map: class-default (match-any)
+            195800135 packets, 14147555758 bytes
+            1 minute offered rate 4000 bps, drop rate 0000 bps
+            Match: any
+            Queueing
+            queue limit 41666 packets
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts output/bytes output) 183412932/9203926787
+            bandwidth remaining 25%
+    '''}
 
     golden_parsed_output22 = {
         'TenGigabitEthernet0/0/0': {
@@ -2584,121 +2583,120 @@ TenGigabitEthernet0/0/0
 
     # ShowPolicyMapInterfaceOutput
     golden_output23 = {'execute.return_value': '''
-TenGigabitEthernet0/0/0
+      TenGigabitEthernet0/0/0
 
-  Service-policy output: pm_queuing
+        Service-policy output: pm_queuing
 
-    queue stats for all priority classes:
-      Queueing
-      queue limit 512 packets
-      (queue depth/total drops/no-buffer drops) 0/0/0
-      (pkts output/bytes output) 0/0
+          queue stats for all priority classes:
+            Queueing
+            queue limit 512 packets
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts output/bytes output) 0/0
 
-    Class-map: cm_dscp_class1 (match-any)
-      0 packets, 0 bytes
-      1 minute offered rate 0000 bps, drop rate 0000 bps
-      Match: ip dscp ef (46)
-      Priority: Strict, b/w exceed drops: 0
-
-
-    Class-map: cm_dscp_att_ncp (match-any)
-      50402030 packets, 4960596805 bytes
-      1 minute offered rate 1000 bps, drop rate 0000 bps
-      Match: ip dscp cs6 (48) cs7 (56)
-      Queueing
-      queue limit 41666 packets
-      (queue depth/total drops/no-buffer drops) 0/0/0
-      (pkts output/bytes output) 21791793/1927911831
-      bandwidth remaining 5%
-
-    Class-map: cm_dscp_class2 (match-any)
-      0 packets, 0 bytes
-      1 minute offered rate 0000 bps, drop rate 0000 bps
-      Match: ip dscp af31 (26) af32 (28)
-      Queueing
-      queue limit 41666 packets
-      (queue depth/total drops/no-buffer drops) 0/0/0
-      (pkts output/bytes output) 0/0
-      bandwidth remaining 25%
-
-    Class-map: cm_dscp_class3 (match-any)
-      25610 packets, 5013442 bytes
-      1 minute offered rate 0000 bps, drop rate 0000 bps
-      Match: ip dscp af21 (18) af22 (20)
-      Queueing
-      queue limit 41666 packets
-      (queue depth/total drops/no-buffer drops) 0/0/0
-      (pkts output/bytes output) 25610/5013442
-      bandwidth remaining 25%
-
-    Class-map: class-default (match-any)
-      195800135 packets, 14147555758 bytes
-      1 minute offered rate 4000 bps, drop rate 0000 bps
-      Match: any
-      Queueing
-      queue limit 41666 packets
-      (queue depth/total drops/no-buffer drops) 0/0/0
-      (pkts output/bytes output) 183412932/9203926787
-      bandwidth remaining 25%
-TenGigabitEthernet0/0/1
-
-  Service-policy output: pm_queuing
-
-    queue stats for all priority classes:
-      Queueing
-      queue limit 512 packets
-      (queue depth/total drops/no-buffer drops) 0/0/0
-      (pkts output/bytes output) 0/0
-
-    Class-map: cm_dscp_class1 (match-any)
-      0 packets, 0 bytes
-      1 minute offered rate 0000 bps, drop rate 0000 bps
-      Match: ip dscp ef (46)
-      Priority: Strict, b/w exceed drops: 0
+          Class-map: cm_dscp_class1 (match-any)
+            0 packets, 0 bytes
+            1 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: ip dscp ef (46)
+            Priority: Strict, b/w exceed drops: 0
 
 
-    Class-map: cm_dscp_ncp (match-any)
-      23626008 packets, 1937686834 bytes
-      1 minute offered rate 0000 bps, drop rate 0000 bps
-      Match: ip dscp cs6 (48) cs7 (56)
-      Queueing
-      queue limit 13932 packets
-      (queue depth/total drops/no-buffer drops) 0/0/0
-      (pkts output/bytes output) 11439795/960005330
-      bandwidth remaining 5%
+          Class-map: cm_dscp_att_ncp (match-any)
+            50402030 packets, 4960596805 bytes
+            1 minute offered rate 1000 bps, drop rate 0000 bps
+            Match: ip dscp cs6 (48) cs7 (56)
+            Queueing
+            queue limit 41666 packets
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts output/bytes output) 21791793/1927911831
+            bandwidth remaining 5%
 
-    Class-map: cm_dscp_class2 (match-any)
-      0 packets, 0 bytes
-      1 minute offered rate 0000 bps, drop rate 0000 bps
-      Match: ip dscp af31 (26) af32 (28)
-      Queueing
-      queue limit 13932 packets
-      (queue depth/total drops/no-buffer drops) 0/0/0
-      (pkts output/bytes output) 0/0
-      bandwidth remaining 25%
+          Class-map: cm_dscp_class2 (match-any)
+            0 packets, 0 bytes
+            1 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: ip dscp af31 (26) af32 (28)
+            Queueing
+            queue limit 41666 packets
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts output/bytes output) 0/0
+            bandwidth remaining 25%
 
-    Class-map: cm_dscp_class3 (match-any)
-      0 packets, 0 bytes
-      1 minute offered rate 0000 bps, drop rate 0000 bps
-      Match: ip dscp af21 (18) af22 (20)
-      Queueing
-      queue limit 13932 packets
-      (queue depth/total drops/no-buffer drops) 0/0/0
-      (pkts output/bytes output) 0/0
-      bandwidth remaining 25%
+          Class-map: cm_dscp_class3 (match-any)
+            25610 packets, 5013442 bytes
+            1 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: ip dscp af21 (18) af22 (20)
+            Queueing
+            queue limit 41666 packets
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts output/bytes output) 25610/5013442
+            bandwidth remaining 25%
 
-    Class-map: class-default (match-any)
-      3979929 packets, 1589680038 bytes
-      1 minute offered rate 0000 bps, drop rate 0000 bps
-      Match: any
-      Queueing
-      queue limit 13932 packets
-      (queue depth/total drops/no-buffer drops) 0/0/0
-      (pkts output/bytes output) 47152/3617479
-      bandwidth remaining 25%
-GigabitEthernet0/0/3
+          Class-map: class-default (match-any)
+            195800135 packets, 14147555758 bytes
+            1 minute offered rate 4000 bps, drop rate 0000 bps
+            Match: any
+            Queueing
+            queue limit 41666 packets
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts output/bytes output) 183412932/9203926787
+            bandwidth remaining 25%
+      TenGigabitEthernet0/0/1
 
-'''}
+        Service-policy output: pm_queuing
+
+          queue stats for all priority classes:
+            Queueing
+            queue limit 512 packets
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts output/bytes output) 0/0
+
+          Class-map: cm_dscp_class1 (match-any)
+            0 packets, 0 bytes
+            1 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: ip dscp ef (46)
+            Priority: Strict, b/w exceed drops: 0
+
+
+          Class-map: cm_dscp_ncp (match-any)
+            23626008 packets, 1937686834 bytes
+            1 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: ip dscp cs6 (48) cs7 (56)
+            Queueing
+            queue limit 13932 packets
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts output/bytes output) 11439795/960005330
+            bandwidth remaining 5%
+
+          Class-map: cm_dscp_class2 (match-any)
+            0 packets, 0 bytes
+            1 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: ip dscp af31 (26) af32 (28)
+            Queueing
+            queue limit 13932 packets
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts output/bytes output) 0/0
+            bandwidth remaining 25%
+
+          Class-map: cm_dscp_class3 (match-any)
+            0 packets, 0 bytes
+            1 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: ip dscp af21 (18) af22 (20)
+            Queueing
+            queue limit 13932 packets
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts output/bytes output) 0/0
+            bandwidth remaining 25%
+
+          Class-map: class-default (match-any)
+            3979929 packets, 1589680038 bytes
+            1 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: any
+            Queueing
+            queue limit 13932 packets
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts output/bytes output) 47152/3617479
+            bandwidth remaining 25%
+      GigabitEthernet0/0/3
+    '''}
 
     golden_parsed_output23 = {
         'TenGigabitEthernet0/0/0': {
@@ -2934,397 +2932,1071 @@ GigabitEthernet0/0/3
 
     # show policy-map interface GigabitEthernet0/0/0.2
     golden_output24 = {'execute.return_value': '''
-    GigabitEthernet0/0/0.2 
-     
-       Service-policy output: ABC-DEF-GHI-JKL-MNO123123123
-     
-         Class-map: class-default (match-any)  
-           0 packets, 0 bytes
-           30 second offered rate 0000 bps, drop rate 0000 bps
-           Match: any 
-           Queueing
-           queue limit 68 packets
-           (queue depth/total drops/no-buffer drops) 0/0/0
-           (pkts output/bytes output) 0/0
-           shape (average) cir 99872000, bc 399488, be 399488
-           target shape rate 99872000
-     
-           Service-policy : ABC-DEF-OPQ-RST-DYNAMIC5-XYZ123123123
-     
-             queue stats for all priority classes:
-               Queueing
-               queue limit 512 packets
-               (queue depth/total drops/no-buffer drops) 0/0/0
-               (pkts output/bytes output) 0/0
-     
-             Class-map: network-control-XYZ123123123 (match-any)  
-               0 packets, 0 bytes
-               30 second offered rate 0000 bps, drop rate 0000 bps
-               Match: access-group name NETWORK-CONTROL-XYZ123123123
-               Queueing
-               queue limit 64 packets
-               (queue depth/total drops/no-buffer drops) 0/0/0
-               (pkts output/bytes output) 0/0
-               bandwidth 1% (998 kbps)
-                 Exp-weight-constant: 9 (1/512)
-                 Mean queue depth: 0 packets
-                 dscp       Transmitted         Random drop      Tail 
-     drop          Minimum        Maximum     Mark
-                         pkts/bytes            pkts/bytes       
-     pkts/bytes          thresh         thresh     prob
-                 
-               QoS Set
-                 cos 5
-                   Packets marked 0
-     
-             Class-map: realtime-XYZ123123123 (match-any)  
-               0 packets, 0 bytes
-               30 second offered rate 0000 bps, drop rate 0000 bps
-               Match: ip dscp cs4 (32) af41 (34) af42 (36) af43 (38) cs5 (40) ef 
-     (46)
-               Priority: 30% (29961 kbps), burst bytes 749000, b/w exceed drops: 
-     0
-               
-               QoS Set
-                 cos 5
-                   Packets marked 0
-     
-             Class-map: interactive3-XYZ123123123 (match-any)  
-               0 packets, 0 bytes
-               30 second offered rate 0000 bps, drop rate 0000 bps
-               Match: ip dscp cs3 (24) af31 (26) af32 (28) af33 (30)
-               Queueing
-               queue limit 64 packets
-               (queue depth/total drops/no-buffer drops) 0/0/0
-               (pkts output/bytes output) 0/0
-               bandwidth 5% (4993 kbps)
-                 Exp-weight-constant: 9 (1/512)
-                 Mean queue depth: 0 packets
-                 dscp       Transmitted         Random drop      Tail 
-     drop          Minimum        Maximum     Mark
-                         pkts/bytes            pkts/bytes       
-     pkts/bytes          thresh         thresh     prob
-                 
-                 cs3            0/0               0/0              
-     0/0                 24            40  1/10
-                 af31           0/0               0/0              
-     0/0                 24            40  1/10
-                 af32           0/0               0/0              
-     0/0                 24            40  1/10
-                 af33           0/0               0/0              
-     0/0                 24            40  1/10
-               QoS Set
-                 cos 5
-                   Packets marked 0
-     
-             Class-map: interactive21-XYZ123123123 (match-any)  
-               0 packets, 0 bytes
-               30 second offered rate 0000 bps, drop rate 0000 bps
-               Match: ip dscp cs2 (16) af21 (18) af22 (20) af23 (22)
-               Queueing
-               queue limit 64 packets
-               (queue depth/total drops/no-buffer drops) 0/0/0
-               (pkts output/bytes output) 0/0
-               bandwidth 5% (4993 kbps)
-                 Exp-weight-constant: 9 (1/512)
-                 Mean queue depth: 0 packets
-                 dscp       Transmitted         Random drop      Tail 
-     drop          Minimum        Maximum     Mark
-                         pkts/bytes            pkts/bytes       
-     pkts/bytes          thresh         thresh     prob
-                 
-                 cs2            0/0               0/0              
-     0/0                 24            40  1/10
-                 af21           0/0               0/0              
-     0/0                 24            40  1/10
-                 af22           0/0               0/0              
-     0/0                 24            40  1/10
-                 af23           0/0               0/0              
-     0/0                 24            40  1/10
-               QoS Set
-                 cos 5
-                   Packets marked 0
-     
-             Class-map: besteffort-XYZ123123123 (match-any)  
-               0 packets, 0 bytes
-               30 second offered rate 0000 bps, drop rate 0000 bps
-               Match: ip dscp cs1 (8)
-               Queueing
-               queue limit 64 packets
-               (queue depth/total drops/no-buffer drops) 0/0/0
-               (pkts output/bytes output) 0/0
-               bandwidth 1% (998 kbps)
-                 Exp-weight-constant: 9 (1/512)
-                 Mean queue depth: 0 packets
-                 dscp       Transmitted         Random drop      Tail 
-     drop          Minimum        Maximum     Mark
-                         pkts/bytes            pkts/bytes       
-     pkts/bytes          thresh         thresh     prob
-                 
-               QoS Set
-                 cos 5
-                   Packets marked 0
-     
-             Class-map: class-default (match-any)  
-               0 packets, 0 bytes
-               30 second offered rate 0000 bps, drop rate 0000 bps
-               Match: any 
-               Queueing
-               queue limit 64 packets
-               (queue depth/total drops/no-buffer drops/flowdrops) 0/0/0/0
-               (pkts output/bytes output) 0/0
-               bandwidth 58% (57925 kbps)
-                 Exp-weight-constant: 9 (1/512)
-                 Mean queue depth: 0 packets
-                 dscp       Transmitted      Random drop      Tail/Flow drop 
-     Minimum Maximum Mark
-                             pkts/bytes       pkts/bytes      pkts/bytes   
-     thresh  thresh  prob
-                 
-                 default        0/0               0/0              
-     0/0                 24            40  1/10
-                 af11           0/0               0/0              
-     0/0                 24            40  1/10
-                 af12           0/0               0/0              
-     0/0                 24            40  1/10
-                 af13           0/0               0/0              
-     0/0                 24            40  1/10
-                 cs6            0/0               0/0              
-     0/0                 24            40  1/10
-                 cs7            0/0               0/0              
-     0/0                 24            40  1/10
-               QoS Set
-                 cos 5
-                   Packets marked 0
-               Fair-queue: per-flow queue limit 16 packets
+      GigabitEthernet0/0/0.2 
+      
+        Service-policy output: ABC-DEF-GHI-JKL-MNO123123123
+      
+          Class-map: class-default (match-any)  
+            0 packets, 0 bytes
+            30 second offered rate 0000 bps, drop rate 0000 bps
+            Match: any 
+            Queueing
+            queue limit 68 packets
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts output/bytes output) 0/0
+            shape (average) cir 99872000, bc 399488, be 399488
+            target shape rate 99872000
+      
+            Service-policy : ABC-DEF-OPQ-RST-DYNAMIC5-XYZ123123123
+      
+              queue stats for all priority classes:
+                Queueing
+                queue limit 512 packets
+                (queue depth/total drops/no-buffer drops) 0/0/0
+                (pkts output/bytes output) 0/0
+      
+              Class-map: network-control-XYZ123123123 (match-any)  
+                0 packets, 0 bytes
+                30 second offered rate 0000 bps, drop rate 0000 bps
+                Match: access-group name NETWORK-CONTROL-XYZ123123123
+                Queueing
+                queue limit 64 packets
+                (queue depth/total drops/no-buffer drops) 0/0/0
+                (pkts output/bytes output) 0/0
+                bandwidth 1% (998 kbps)
+                  Exp-weight-constant: 9 (1/512)
+                  Mean queue depth: 0 packets
+                  dscp       Transmitted         Random drop      Tail 
+      drop          Minimum        Maximum     Mark
+                          pkts/bytes            pkts/bytes       
+      pkts/bytes          thresh         thresh     prob
+                  
+                QoS Set
+                  cos 5
+                    Packets marked 0
+      
+              Class-map: realtime-XYZ123123123 (match-any)  
+                0 packets, 0 bytes
+                30 second offered rate 0000 bps, drop rate 0000 bps
+                Match: ip dscp cs4 (32) af41 (34) af42 (36) af43 (38) cs5 (40) ef 
+      (46)
+                Priority: 30% (29961 kbps), burst bytes 749000, b/w exceed drops: 
+      0
+                
+                QoS Set
+                  cos 5
+                    Packets marked 0
+      
+              Class-map: interactive3-XYZ123123123 (match-any)  
+                0 packets, 0 bytes
+                30 second offered rate 0000 bps, drop rate 0000 bps
+                Match: ip dscp cs3 (24) af31 (26) af32 (28) af33 (30)
+                Queueing
+                queue limit 64 packets
+                (queue depth/total drops/no-buffer drops) 0/0/0
+                (pkts output/bytes output) 0/0
+                bandwidth 5% (4993 kbps)
+                  Exp-weight-constant: 9 (1/512)
+                  Mean queue depth: 0 packets
+                  dscp       Transmitted         Random drop      Tail 
+      drop          Minimum        Maximum     Mark
+                          pkts/bytes            pkts/bytes       
+      pkts/bytes          thresh         thresh     prob
+                  
+                  cs3            0/0               0/0              
+      0/0                 24            40  1/10
+                  af31           0/0               0/0              
+      0/0                 24            40  1/10
+                  af32           0/0               0/0              
+      0/0                 24            40  1/10
+                  af33           0/0               0/0              
+      0/0                 24            40  1/10
+                QoS Set
+                  cos 5
+                    Packets marked 0
+      
+              Class-map: interactive21-XYZ123123123 (match-any)  
+                0 packets, 0 bytes
+                30 second offered rate 0000 bps, drop rate 0000 bps
+                Match: ip dscp cs2 (16) af21 (18) af22 (20) af23 (22)
+                Queueing
+                queue limit 64 packets
+                (queue depth/total drops/no-buffer drops) 0/0/0
+                (pkts output/bytes output) 0/0
+                bandwidth 5% (4993 kbps)
+                  Exp-weight-constant: 9 (1/512)
+                  Mean queue depth: 0 packets
+                  dscp       Transmitted         Random drop      Tail 
+      drop          Minimum        Maximum     Mark
+                          pkts/bytes            pkts/bytes       
+      pkts/bytes          thresh         thresh     prob
+                  
+                  cs2            0/0               0/0              
+      0/0                 24            40  1/10
+                  af21           0/0               0/0              
+      0/0                 24            40  1/10
+                  af22           0/0               0/0              
+      0/0                 24            40  1/10
+                  af23           0/0               0/0              
+      0/0                 24            40  1/10
+                QoS Set
+                  cos 5
+                    Packets marked 0
+      
+              Class-map: besteffort-XYZ123123123 (match-any)  
+                0 packets, 0 bytes
+                30 second offered rate 0000 bps, drop rate 0000 bps
+                Match: ip dscp cs1 (8)
+                Queueing
+                queue limit 64 packets
+                (queue depth/total drops/no-buffer drops) 0/0/0
+                (pkts output/bytes output) 0/0
+                bandwidth 1% (998 kbps)
+                  Exp-weight-constant: 9 (1/512)
+                  Mean queue depth: 0 packets
+                  dscp       Transmitted         Random drop      Tail 
+      drop          Minimum        Maximum     Mark
+                          pkts/bytes            pkts/bytes       
+      pkts/bytes          thresh         thresh     prob
+                  
+                QoS Set
+                  cos 5
+                    Packets marked 0
+      
+              Class-map: class-default (match-any)  
+                0 packets, 0 bytes
+                30 second offered rate 0000 bps, drop rate 0000 bps
+                Match: any 
+                Queueing
+                queue limit 64 packets
+                (queue depth/total drops/no-buffer drops/flowdrops) 0/0/0/0
+                (pkts output/bytes output) 0/0
+                bandwidth 58% (57925 kbps)
+                  Exp-weight-constant: 9 (1/512)
+                  Mean queue depth: 0 packets
+                  dscp       Transmitted      Random drop      Tail/Flow drop 
+      Minimum Maximum Mark
+                              pkts/bytes       pkts/bytes      pkts/bytes   
+      thresh  thresh  prob
+                  
+                  default        0/0               0/0              
+      0/0                 24            40  1/10
+                  af11           0/0               0/0              
+      0/0                 24            40  1/10
+                  af12           0/0               0/0              
+      0/0                 24            40  1/10
+                  af13           0/0               0/0              
+      0/0                 24            40  1/10
+                  cs6            0/0               0/0              
+      0/0                 24            40  1/10
+                  cs7            0/0               0/0              
+      0/0                 24            40  1/10
+                QoS Set
+                  cos 5
+                    Packets marked 0
+                Fair-queue: per-flow queue limit 16 packets
     '''}
     
     golden_parsed_output24 = {
-    'GigabitEthernet0/0/0.2': {
-        'service_policy': {
-            'output': {
-                'policy_name': {
-                    'ABC-DEF-GHI-JKL-MNO123123123': {
-                        'child_policy_name': {
-                            'ABC-DEF-OPQ-RST-DYNAMIC5-XYZ123123123': {
-                                'class_map': {
-                                    'besteffort-XYZ123123123': {
-                                        'bandwidth_kbps': 998,
-                                        'bandwidth_percent': 1,
-                                        'bytes': 0,
-                                        'bytes_output': 0,
-                                        'match': ['ip dscp cs1 (8)'],
-                                        'match_evaluation': 'match-any',
-                                        'no_buffer_drops': 0,
-                                        'packets': 0,
-                                        'pkts_output': 0,
-                                        'qos_set': {
-                                            'cos': {
-                                                '5': {
-                                                    'packets_marked': 0,
-                                                },
-                                            },
-                                        },
-                                        'queue_depth': 0,
-                                        'queue_limit_packets': '64',
-                                        'queueing': True,
-                                        'random_detect': {
-                                            'exp_weight_constant': '9 (1/512)',
-                                            'mean_queue_depth': 0,
-                                        },
-                                        'rate': {
-                                            'drop_rate_bps': 0,
-                                            'interval': 30,
-                                            'offered_rate_bps': 0,
-                                        },
-                                        'total_drops': 0,
-                                    },
-                                    'class-default': {
-                                        'bandwidth_kbps': 57925,
-                                        'bandwidth_percent': 58,
-                                        'bytes': 0,
-                                        'bytes_output': 0,
-                                        'match': ['any'],
-                                        'match_evaluation': 'match-any',
-                                        'packets': 0,
-                                        'pkts_output': 0,
-                                        'qos_set': {
-                                            'cos': {
-                                                '5': {
-                                                    'packets_marked': 0,
-                                                },
-                                            },
-                                        },
-                                        'queue_limit_packets': '64',
-                                        'queueing': True,
-                                        'random_detect': {
-                                            'exp_weight_constant': '9 (1/512)',
-                                            'mean_queue_depth': 0,
-                                        },
-                                        'rate': {
-                                            'drop_rate_bps': 0,
-                                            'interval': 30,
-                                            'offered_rate_bps': 0,
-                                        },
-                                    },
-                                    'interactive21-XYZ123123123': {
-                                        'bandwidth_kbps': 4993,
-                                        'bandwidth_percent': 5,
-                                        'bytes': 0,
-                                        'bytes_output': 0,
-                                        'match': ['ip dscp cs2 (16) af21 (18) af22 (20) af23 (22)'],
-                                        'match_evaluation': 'match-any',
-                                        'no_buffer_drops': 0,
-                                        'packets': 0,
-                                        'pkts_output': 0,
-                                        'qos_set': {
-                                            'cos': {
-                                                '5': {
-                                                    'packets_marked': 0,
-                                                },
-                                            },
-                                        },
-                                        'queue_depth': 0,
-                                        'queue_limit_packets': '64',
-                                        'queueing': True,
-                                        'random_detect': {
-                                            'exp_weight_constant': '9 (1/512)',
-                                            'mean_queue_depth': 0,
-                                        },
-                                        'rate': {
-                                            'drop_rate_bps': 0,
-                                            'interval': 30,
-                                            'offered_rate_bps': 0,
-                                        },
-                                        'total_drops': 0,
-                                    },
-                                    'interactive3-XYZ123123123': {
-                                        'bandwidth_kbps': 4993,
-                                        'bandwidth_percent': 5,
-                                        'bytes': 0,
-                                        'bytes_output': 0,
-                                        'match': ['ip dscp cs3 (24) af31 (26) af32 (28) af33 (30)'],
-                                        'match_evaluation': 'match-any',
-                                        'no_buffer_drops': 0,
-                                        'packets': 0,
-                                        'pkts_output': 0,
-                                        'qos_set': {
-                                            'cos': {
-                                                '5': {
-                                                    'packets_marked': 0,
-                                                },
-                                            },
-                                        },
-                                        'queue_depth': 0,
-                                        'queue_limit_packets': '64',
-                                        'queueing': True,
-                                        'random_detect': {
-                                            'exp_weight_constant': '9 (1/512)',
-                                            'mean_queue_depth': 0,
-                                        },
-                                        'rate': {
-                                            'drop_rate_bps': 0,
-                                            'interval': 30,
-                                            'offered_rate_bps': 0,
-                                        },
-                                        'total_drops': 0,
-                                    },
-                                    'network-control-XYZ123123123': {
-                                        'bandwidth_kbps': 998,
-                                        'bandwidth_percent': 1,
-                                        'bytes': 0,
-                                        'bytes_output': 0,
-                                        'match': ['access-group name NETWORK-CONTROL-XYZ123123123'],
-                                        'match_evaluation': 'match-any',
-                                        'no_buffer_drops': 0,
-                                        'packets': 0,
-                                        'pkts_output': 0,
-                                        'qos_set': {
-                                            'cos': {
-                                                '5': {
-                                                    'packets_marked': 0,
-                                                },
-                                            },
-                                        },
-                                        'queue_depth': 0,
-                                        'queue_limit_packets': '64',
-                                        'queueing': True,
-                                        'random_detect': {
-                                            'exp_weight_constant': '9 (1/512)',
-                                            'mean_queue_depth': 0,
-                                        },
-                                        'rate': {
-                                            'drop_rate_bps': 0,
-                                            'interval': 30,
-                                            'offered_rate_bps': 0,
-                                        },
-                                        'total_drops': 0,
-                                    },
-                                    'realtime-XYZ123123123': {
-                                        'bytes': 0,
-                                        'match': ['ip dscp cs4 (32) af41 (34) af42 (36) af43 (38) cs5 (40) ef'],
-                                        'match_evaluation': 'match-any',
-                                        'packets': 0,
-                                        'qos_set': {
-                                            'cos': {
-                                                '5': {
-                                                    'packets_marked': 0,
-                                                },
-                                            },
-                                        },
-                                        'rate': {
-                                            'drop_rate_bps': 0,
-                                            'interval': 30,
-                                            'offered_rate_bps': 0,
-                                        },
-                                    },
-                                },
-                                'queue_stats_for_all_priority_classes': {
-                                    'priority_level': {
-                                        'default': {
+        'GigabitEthernet0/0/0.2': {
+            'service_policy': {
+                'output': {
+                    'policy_name': {
+                        'ABC-DEF-GHI-JKL-MNO123123123': {
+                            'child_policy_name': {
+                                'ABC-DEF-OPQ-RST-DYNAMIC5-XYZ123123123': {
+                                    'class_map': {
+                                        'besteffort-XYZ123123123': {
+                                            'bandwidth_kbps': 998,
+                                            'bandwidth_percent': 1,
+                                            'bytes': 0,
                                             'bytes_output': 0,
+                                            'match': ['ip dscp cs1 (8)'],
+                                            'match_evaluation': 'match-any',
                                             'no_buffer_drops': 0,
+                                            'packets': 0,
                                             'pkts_output': 0,
+                                            'qos_set': {
+                                                'cos': {
+                                                    '5': {
+                                                        'packets_marked': 0,
+                                                    },
+                                                },
+                                            },
                                             'queue_depth': 0,
-                                            'queue_limit_packets': '512',
+                                            'queue_limit_packets': '64',
                                             'queueing': True,
+                                            'random_detect': {
+                                                'exp_weight_constant': '9 (1/512)',
+                                                'mean_queue_depth': 0,
+                                            },
+                                            'rate': {
+                                                'drop_rate_bps': 0,
+                                                'interval': 30,
+                                                'offered_rate_bps': 0,
+                                            },
                                             'total_drops': 0,
+                                        },
+                                        'class-default': {
+                                            'bandwidth_kbps': 57925,
+                                            'bandwidth_percent': 58,
+                                            'bytes': 0,
+                                            'bytes_output': 0,
+                                            'match': ['any'],
+                                            'match_evaluation': 'match-any',
+                                            'packets': 0,
+                                            'pkts_output': 0,
+                                            'qos_set': {
+                                                'cos': {
+                                                    '5': {
+                                                        'packets_marked': 0,
+                                                    },
+                                                },
+                                            },
+                                            'queue_limit_packets': '64',
+                                            'queueing': True,
+                                            'random_detect': {
+                                                'exp_weight_constant': '9 (1/512)',
+                                                'mean_queue_depth': 0,
+                                            },
+                                            'rate': {
+                                                'drop_rate_bps': 0,
+                                                'interval': 30,
+                                                'offered_rate_bps': 0,
+                                            },
+                                        },
+                                        'interactive21-XYZ123123123': {
+                                            'bandwidth_kbps': 4993,
+                                            'bandwidth_percent': 5,
+                                            'bytes': 0,
+                                            'bytes_output': 0,
+                                            'match': ['ip dscp cs2 (16) af21 (18) af22 (20) af23 (22)'],
+                                            'match_evaluation': 'match-any',
+                                            'no_buffer_drops': 0,
+                                            'packets': 0,
+                                            'pkts_output': 0,
+                                            'qos_set': {
+                                                'cos': {
+                                                    '5': {
+                                                        'packets_marked': 0,
+                                                    },
+                                                },
+                                            },
+                                            'queue_depth': 0,
+                                            'queue_limit_packets': '64',
+                                            'queueing': True,
+                                            'random_detect': {
+                                                'exp_weight_constant': '9 (1/512)',
+                                                'mean_queue_depth': 0,
+                                            },
+                                            'rate': {
+                                                'drop_rate_bps': 0,
+                                                'interval': 30,
+                                                'offered_rate_bps': 0,
+                                            },
+                                            'total_drops': 0,
+                                        },
+                                        'interactive3-XYZ123123123': {
+                                            'bandwidth_kbps': 4993,
+                                            'bandwidth_percent': 5,
+                                            'bytes': 0,
+                                            'bytes_output': 0,
+                                            'match': ['ip dscp cs3 (24) af31 (26) af32 (28) af33 (30)'],
+                                            'match_evaluation': 'match-any',
+                                            'no_buffer_drops': 0,
+                                            'packets': 0,
+                                            'pkts_output': 0,
+                                            'qos_set': {
+                                                'cos': {
+                                                    '5': {
+                                                        'packets_marked': 0,
+                                                    },
+                                                },
+                                            },
+                                            'queue_depth': 0,
+                                            'queue_limit_packets': '64',
+                                            'queueing': True,
+                                            'random_detect': {
+                                                'exp_weight_constant': '9 (1/512)',
+                                                'mean_queue_depth': 0,
+                                            },
+                                            'rate': {
+                                                'drop_rate_bps': 0,
+                                                'interval': 30,
+                                                'offered_rate_bps': 0,
+                                            },
+                                            'total_drops': 0,
+                                        },
+                                        'network-control-XYZ123123123': {
+                                            'bandwidth_kbps': 998,
+                                            'bandwidth_percent': 1,
+                                            'bytes': 0,
+                                            'bytes_output': 0,
+                                            'match': ['access-group name NETWORK-CONTROL-XYZ123123123'],
+                                            'match_evaluation': 'match-any',
+                                            'no_buffer_drops': 0,
+                                            'packets': 0,
+                                            'pkts_output': 0,
+                                            'qos_set': {
+                                                'cos': {
+                                                    '5': {
+                                                        'packets_marked': 0,
+                                                    },
+                                                },
+                                            },
+                                            'queue_depth': 0,
+                                            'queue_limit_packets': '64',
+                                            'queueing': True,
+                                            'random_detect': {
+                                                'exp_weight_constant': '9 (1/512)',
+                                                'mean_queue_depth': 0,
+                                            },
+                                            'rate': {
+                                                'drop_rate_bps': 0,
+                                                'interval': 30,
+                                                'offered_rate_bps': 0,
+                                            },
+                                            'total_drops': 0,
+                                        },
+                                        'realtime-XYZ123123123': {
+                                            'bytes': 0,
+                                            'match': ['ip dscp cs4 (32) af41 (34) af42 (36) af43 (38) cs5 (40) ef'],
+                                            'match_evaluation': 'match-any',
+                                            'packets': 0,
+                                            'qos_set': {
+                                                'cos': {
+                                                    '5': {
+                                                        'packets_marked': 0,
+                                                    },
+                                                },
+                                            },
+                                            'rate': {
+                                                'drop_rate_bps': 0,
+                                                'interval': 30,
+                                                'offered_rate_bps': 0,
+                                            },
+                                        },
+                                    },
+                                    'queue_stats_for_all_priority_classes': {
+                                        'priority_level': {
+                                            'default': {
+                                                'bytes_output': 0,
+                                                'no_buffer_drops': 0,
+                                                'pkts_output': 0,
+                                                'queue_depth': 0,
+                                                'queue_limit_packets': '512',
+                                                'queueing': True,
+                                                'total_drops': 0,
+                                            },
                                         },
                                     },
                                 },
                             },
-                        },
-                        'class_map': {
-                            'class-default': {
-                                'bytes': 0,
-                                'bytes_output': 0,
-                                'match': ['any'],
-                                'match_evaluation': 'match-any',
-                                'no_buffer_drops': 0,
-                                'packets': 0,
-                                'pkts_output': 0,
-                                'queue_depth': 0,
-                                'queue_limit_packets': '68',
-                                'queueing': True,
-                                'rate': {
-                                    'drop_rate_bps': 0,
-                                    'interval': 30,
-                                    'offered_rate_bps': 0,
+                            'class_map': {
+                                'class-default': {
+                                    'bytes': 0,
+                                    'bytes_output': 0,
+                                    'match': ['any'],
+                                    'match_evaluation': 'match-any',
+                                    'no_buffer_drops': 0,
+                                    'packets': 0,
+                                    'pkts_output': 0,
+                                    'queue_depth': 0,
+                                    'queue_limit_packets': '68',
+                                    'queueing': True,
+                                    'rate': {
+                                        'drop_rate_bps': 0,
+                                        'interval': 30,
+                                        'offered_rate_bps': 0,
+                                    },
+                                    'shape_bc_bps': 399488,
+                                    'shape_be_bps': 399488,
+                                    'shape_cir_bps': 99872000,
+                                    'shape_type': 'average',
+                                    'target_shape_rate': 99872000,
+                                    'total_drops': 0,
                                 },
-                                'shape_bc_bps': 399488,
-                                'shape_be_bps': 399488,
-                                'shape_cir_bps': 99872000,
-                                'shape_type': 'average',
-                                'target_shape_rate': 99872000,
-                                'total_drops': 0,
                             },
                         },
                     },
                 },
             },
         },
-    },
-}
+    }
+
+    # show policy-map interface CUST123-PIN-T5/0/0.20 input
+    golden_output25 = {'execute.return_value': '''
+      Service-policy input: CUST123-PIN-T5/0/0.20
+          
+      Class-map: class-default (match-any)
+        6337075 packets, 784609427 bytes
+        30 second offered rate 0000 bps, drop rate 0000 bps
+        Match: any
+        police:
+            cir 10000000000 bps, bc 30000000 bytes, be 60000000 bytes
+          conformed 6337075 packets, 784609427 bytes; actions:
+            transmit
+          exceeded 0 packets, 0 bytes; actions:
+            drop
+          violated 0 packets, 0 bytes; actions:
+            drop
+          conformed 0000 bps, exceeded 0000 bps, violated 0000 bps
+
+        Service-policy : CUST123-IN-T5/0/0.20
+
+          Class-map: pe_mgmt_bun_input (match-any)
+            0 packets, 0 bytes
+            30 second offered rate 0000 bps, drop rate 0000 bps
+            Match: access-group 122
+            police:
+                cir 904000 bps, bc 30000 bytes, be 60000 bytes
+              conformed 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 6
+              exceeded 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              violated 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              conformed 0000 bps, exceeded 0000 bps, violated 0000 bps
+
+          Class-map: pe_mgmt_unb_input (match-any)
+            0 packets, 0 bytes
+            30 second offered rate 0000 bps, drop rate 0000 bps
+            Match: ip dscp 63
+            police:
+                cir 8000 bps, bc 30000 bytes, be 60000 bytes
+              conformed 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 6
+              exceeded 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              violated 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              conformed 0000 bps, exceeded 0000 bps, violated 0000 bps
+
+          Class-map: pe_ef_input (match-any)
+            0 packets, 0 bytes
+            30 second offered rate 0000 bps, drop rate 0000 bps
+            Match:  dscp cs5 (40) ef (46)
+            police:
+                cir 13000000 bps, bc 20000 bytes, be 20000 bytes
+              conformed 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 4
+              exceeded 0 packets, 0 bytes; actions:
+                drop
+              violated 0 packets, 0 bytes; actions:
+                drop
+              conformed 0000 bps, exceeded 0000 bps, violated 0000 bps
+
+          Class-map: pe_af4_in_input (match-any)
+            0 packets, 0 bytes
+            30 second offered rate 0000 bps, drop rate 0000 bps
+            Match:  dscp cs4 (32) af41 (34)
+            police:
+                cir 16072000 bps, bc 33500 bytes, be 67000 bytes
+              conformed 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 6
+              exceeded 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              violated 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              conformed 0000 bps, exceeded 0000 bps, violated 0000 bps
+
+          Class-map: pe_af4_out_input (match-any)
+            0 packets, 0 bytes
+            30 second offered rate 0000 bps, drop rate 0000 bps
+            Match:  dscp af42 (36) af43 (38)
+            police:
+                cir 8000 bps, bc 8000 bytes, be 8000 bytes
+              conformed 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              exceeded 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              violated 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              conformed 0000 bps, exceeded 0000 bps, violated 0000 bps
+
+          Class-map: pe_af3_in_input (match-any)
+            0 packets, 0 bytes
+            30 second offered rate 0000 bps, drop rate 0000 bps
+            Match:  dscp cs3 (24) af31 (26)
+            police:
+                cir 16072000 bps, bc 47000 bytes, be 94000 bytes
+              conformed 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 6
+              exceeded 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              violated 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              conformed 0000 bps, exceeded 0000 bps, violated 0000 bps
+
+          Class-map: pe_af3_out_input (match-any)
+            0 packets, 0 bytes
+            30 second offered rate 0000 bps, drop rate 0000 bps
+            Match:  dscp af32 (28) af33 (30)
+            police:
+                cir 8000 bps, bc 8000 bytes, be 8000 bytes
+              conformed 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              exceeded 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              violated 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              conformed 0000 bps, exceeded 0000 bps, violated 0000 bps
+
+          Class-map: pe_af2_in_input (match-any)
+            3157930 packets, 391583320 bytes
+            30 second offered rate 0000 bps, drop rate 0000 bps
+            Match:  dscp cs2 (16) af21 (18)
+            police:
+                cir 16072000 bps, bc 58000 bytes, be 116000 bytes
+              conformed 171102 packets, 21216648 bytes; actions:
+                set-mpls-exp-imposition-transmit 6
+              exceeded 941 packets, 116684 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              violated 2985887 packets, 370249988 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              conformed 0000 bps, exceeded 0000 bps, violated 0000 bps
+
+          Class-map: pe_af2_out_input (match-any)
+            0 packets, 0 bytes
+            30 second offered rate 0000 bps, drop rate 0000 bps
+            Match:  dscp af22 (20) af23 (22)
+            police:
+                cir 8000 bps, bc 8000 bytes, be 8000 bytes
+              conformed 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              exceeded 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              violated 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              conformed 0000 bps, exceeded 0000 bps, violated 0000 bps
+
+          Class-map: pe_af1_in_input (match-any)
+            3157934 packets, 391583816 bytes
+            30 second offered rate 0000 bps, drop rate 0000 bps
+            Match:  dscp cs1 (8) af11 (10)
+            police:
+                cir 16072000 bps, bc 67000 bytes, be 134000 bytes
+              conformed 171176 packets, 21225824 bytes; actions:
+                set-mpls-exp-imposition-transmit 6
+              exceeded 1090 packets, 135160 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              violated 2985668 packets, 370222832 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              conformed 0000 bps, exceeded 0000 bps, violated 0000 bps
+
+          Class-map: pe_af1_out_input (match-any)
+            0 packets, 0 bytes
+            30 second offered rate 0000 bps, drop rate 0000 bps
+            Match:  dscp af12 (12) af13 (14)
+            police:
+                cir 8000 bps, bc 8000 bytes, be 8000 bytes
+              conformed 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              exceeded 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              violated 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 2
+              conformed 0000 bps, exceeded 0000 bps, violated 0000 bps
+
+          Class-map: class-default (match-any)
+            21211 packets, 1442291 bytes
+            30 second offered rate 0000 bps, drop rate 0000 bps
+            Match: any
+            police:
+                cir 8000 bps, bc 8000 bytes, be 8000 bytes
+              conformed 21211 packets, 1442291 bytes; actions:
+                set-mpls-exp-imposition-transmit 5
+              exceeded 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 5
+              violated 0 packets, 0 bytes; actions:
+                set-mpls-exp-imposition-transmit 5
+              conformed 0000 bps, exceeded 0000 bps, violated 0000 bps
+    '''}
+    golden_parsed_output25 = {
+        "CUST123-PIN-T5/0/0.20": {
+            "service_policy": {
+                "input": {
+                    "policy_name": {
+                        "CUST123-PIN-T5/0/0.20": {
+                            "class_map": {
+                                "class-default": {
+                                    "match_evaluation": "match-any",
+                                    "packets": 21211,
+                                    "bytes": 1442291,
+                                    "rate": {
+                                        "interval": 30,
+                                        "offered_rate_bps": 0,
+                                        "drop_rate_bps": 0
+                                    },
+                                    "match": [
+                                        "any"
+                                    ],
+                                    "police": {
+                                        "conformed": {
+                                            "packets": 21211,
+                                            "bytes": 1442291,
+                                            "actions": {
+                                                "transmit": True,
+                                                "set_mpls_exp_imposition_transmit": "5"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "exceeded": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "drop": True,
+                                                "set_mpls_exp_imposition_transmit": "5"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "violated": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "drop": True,
+                                                "set_mpls_exp_imposition_transmit": "5"
+                                            },
+                                            "bps": 0
+                                        }
+                                    }
+                                },
+                                "pe_mgmt_bun_input": {
+                                    "match_evaluation": "match-any",
+                                    "packets": 0,
+                                    "bytes": 0,
+                                    "rate": {
+                                        "interval": 30,
+                                        "offered_rate_bps": 0,
+                                        "drop_rate_bps": 0
+                                    },
+                                    "match": [
+                                        "access-group 122"
+                                    ],
+                                    "police": {
+                                        "conformed": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "6"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "exceeded": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "violated": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        }
+                                    }
+                                },
+                                "pe_mgmt_unb_input": {
+                                    "match_evaluation": "match-any",
+                                    "packets": 0,
+                                    "bytes": 0,
+                                    "rate": {
+                                        "interval": 30,
+                                        "offered_rate_bps": 0,
+                                        "drop_rate_bps": 0
+                                    },
+                                    "match": [
+                                        "ip dscp 63"
+                                    ],
+                                    "police": {
+                                        "conformed": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "6"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "exceeded": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "violated": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        }
+                                    }
+                                },
+                                "pe_ef_input": {
+                                    "match_evaluation": "match-any",
+                                    "packets": 0,
+                                    "bytes": 0,
+                                    "rate": {
+                                        "interval": 30,
+                                        "offered_rate_bps": 0,
+                                        "drop_rate_bps": 0
+                                    },
+                                    "match": [
+                                        "dscp cs5 (40) ef (46)"
+                                    ],
+                                    "police": {
+                                        "conformed": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "4"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "exceeded": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "drop": True
+                                            },
+                                            "bps": 0
+                                        },
+                                        "violated": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "drop": True
+                                            },
+                                            "bps": 0
+                                        }
+                                    }
+                                },
+                                "pe_af4_in_input": {
+                                    "match_evaluation": "match-any",
+                                    "packets": 0,
+                                    "bytes": 0,
+                                    "rate": {
+                                        "interval": 30,
+                                        "offered_rate_bps": 0,
+                                        "drop_rate_bps": 0
+                                    },
+                                    "match": [
+                                        "dscp cs4 (32) af41 (34)"
+                                    ],
+                                    "police": {
+                                        "conformed": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "6"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "exceeded": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "violated": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        }
+                                    }
+                                },
+                                "pe_af4_out_input": {
+                                    "match_evaluation": "match-any",
+                                    "packets": 0,
+                                    "bytes": 0,
+                                    "rate": {
+                                        "interval": 30,
+                                        "offered_rate_bps": 0,
+                                        "drop_rate_bps": 0
+                                    },
+                                    "match": [
+                                        "dscp af42 (36) af43 (38)"
+                                    ],
+                                    "police": {
+                                        "conformed": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "exceeded": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "violated": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        }
+                                    }
+                                },
+                                "pe_af3_in_input": {
+                                    "match_evaluation": "match-any",
+                                    "packets": 0,
+                                    "bytes": 0,
+                                    "rate": {
+                                        "interval": 30,
+                                        "offered_rate_bps": 0,
+                                        "drop_rate_bps": 0
+                                    },
+                                    "match": [
+                                        "dscp cs3 (24) af31 (26)"
+                                    ],
+                                    "police": {
+                                        "conformed": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "6"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "exceeded": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "violated": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        }
+                                    }
+                                },
+                                "pe_af3_out_input": {
+                                    "match_evaluation": "match-any",
+                                    "packets": 0,
+                                    "bytes": 0,
+                                    "rate": {
+                                        "interval": 30,
+                                        "offered_rate_bps": 0,
+                                        "drop_rate_bps": 0
+                                    },
+                                    "match": [
+                                        "dscp af32 (28) af33 (30)"
+                                    ],
+                                    "police": {
+                                        "conformed": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "exceeded": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "violated": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        }
+                                    }
+                                },
+                                "pe_af2_in_input": {
+                                    "match_evaluation": "match-any",
+                                    "packets": 3157930,
+                                    "bytes": 391583320,
+                                    "rate": {
+                                        "interval": 30,
+                                        "offered_rate_bps": 0,
+                                        "drop_rate_bps": 0
+                                    },
+                                    "match": [
+                                        "dscp cs2 (16) af21 (18)"
+                                    ],
+                                    "police": {
+                                        "conformed": {
+                                            "packets": 171102,
+                                            "bytes": 21216648,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "6"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "exceeded": {
+                                            "packets": 941,
+                                            "bytes": 116684,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "violated": {
+                                            "packets": 2985887,
+                                            "bytes": 370249988,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        }
+                                    }
+                                },
+                                "pe_af2_out_input": {
+                                    "match_evaluation": "match-any",
+                                    "packets": 0,
+                                    "bytes": 0,
+                                    "rate": {
+                                        "interval": 30,
+                                        "offered_rate_bps": 0,
+                                        "drop_rate_bps": 0
+                                    },
+                                    "match": [
+                                        "dscp af22 (20) af23 (22)"
+                                    ],
+                                    "police": {
+                                        "conformed": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "exceeded": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "violated": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        }
+                                    }
+                                },
+                                "pe_af1_in_input": {
+                                    "match_evaluation": "match-any",
+                                    "packets": 3157934,
+                                    "bytes": 391583816,
+                                    "rate": {
+                                        "interval": 30,
+                                        "offered_rate_bps": 0,
+                                        "drop_rate_bps": 0
+                                    },
+                                    "match": [
+                                        "dscp cs1 (8) af11 (10)"
+                                    ],
+                                    "police": {
+                                        "conformed": {
+                                            "packets": 171176,
+                                            "bytes": 21225824,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "6"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "exceeded": {
+                                            "packets": 1090,
+                                            "bytes": 135160,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "violated": {
+                                            "packets": 2985668,
+                                            "bytes": 370222832,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        }
+                                    }
+                                },
+                                "pe_af1_out_input": {
+                                    "match_evaluation": "match-any",
+                                    "packets": 0,
+                                    "bytes": 0,
+                                    "rate": {
+                                        "interval": 30,
+                                        "offered_rate_bps": 0,
+                                        "drop_rate_bps": 0
+                                    },
+                                    "match": [
+                                        "dscp af12 (12) af13 (14)"
+                                    ],
+                                    "police": {
+                                        "conformed": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "exceeded": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        },
+                                        "violated": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "set_mpls_exp_imposition_transmit": "2"
+                                            },
+                                            "bps": 0
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     # ---------------------------------------------------------------------
     # 'show policy-map control-plane'
@@ -3489,6 +4161,13 @@ GigabitEthernet0/0/3
         obj = ShowPolicyMapInterfaceInput(device=self.device)
         parsed_output = obj.parse(interface='GigabitEthernet 0/0/1')
         self.assertEqual(parsed_output, self.golden_parsed_output13)
+
+    def test_show_policy_map_interface_input_full3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output25)
+        obj = ShowPolicyMapInterfaceInput(device=self.device)
+        parsed_output = obj.parse(interface='CUST123-PIN-T5/0/0.20')
+        self.assertEqual(parsed_output, self.golden_parsed_output25)
 
     # ---------------------------------------------------------------------
     # 'show policy-map interface class {class_name}'

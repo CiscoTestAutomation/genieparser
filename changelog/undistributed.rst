@@ -41,6 +41,8 @@
         * 'show ip bgp {address_family} rd {rd} detail'
     * Updated ShowBootvar:
         * Modified the regex patterns to support various outputs.
+    * Update ShowPolicyMapInterfaceInput:
+        * Fixed issue if no top level dict
 * NXOS
     * Updated ShowMacAddressTableBase:
         * Modified the regex patterns to support various outputs.
@@ -83,6 +85,12 @@
         * Optional key issue resolved
     * Updated ShowOspfVrfAllInclusive
         * key error resolved
+    * Updated ShowOspfDatabaseLsaidDetail
+        * Resolved issue where empty output would cause error
+    * Updated ShowOspf3DatabaseExtensive
+        * Missing key issue resolved
+    * Updated ShowOspf3Database
+        * List ospf-area
 * IOSXE
     * Updated ShowIpInterface
         * Modified regex to accommodate different outputs
@@ -90,3 +98,5 @@
 * IOSXE
     * Updated ShowClnsNeighborsDetail
         * Modified regex to accommodate diffrent outputs
+    * Updated ShowInventory
+        * Modified regex to accommodate different outputs
