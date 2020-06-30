@@ -20,6 +20,13 @@
         * show system statistics
     * Added ShowSystemStatisticsNoForwarding or:
         * show system statistics no-forwarding
+    * Updated ShowOspfDatabaseLsaidDetail:
+        * added testcase
+        *extended from ShowOspfDatabaseAdvertisingRouterSelfDetail
+    * Added ShowInterfacesPolicersInterface for:
+        * show interfaces policers {interface}
+    * Added ShowInterfacesStatistics
+        * show interfaces statistics
 
 
 --------------------------------------------------------------------------------
@@ -38,6 +45,8 @@
         * 'show ip bgp {address_family} rd {rd} detail'
     * Updated ShowBootvar:
         * Modified the regex patterns to support various outputs.
+    * Update ShowPolicyMapInterfaceInput:
+        * Fixed issue if no top level dict
 * NXOS
     * Updated ShowMacAddressTableBase:
         * Modified the regex patterns to support various outputs.
@@ -45,11 +54,22 @@
         * Modified the regex patterns to support various outputs.
     * Update ShowIpRoute:
         * Modified the regex patterns to support various outputs.
+    * Update ShowIpMrouteVrfAll:
+        * Modified the regex patterns to support various outputs.
+    * Update ShowIpv6MrouteVrfAll:
+        * Modified the regex patterns to support various outputs.
+    * Updated ShowRunningConfigInterface:
+        * Added regex to support vpc
+        * Added regex to support native vlan
+        * Added regex to support switchport_mode access
+        * Fixed regex to allow white spaces in description
 * IOSXR
     * Updated ShowVrfAllDetail:
         * Modified the regex patterns to support various outputs.
     * Updated ShowControllersOptics:
         * Added more regex patterns to support various outputs.
+    * Updated ShowIsisSchema:
+        * Made the key 'protocols_redistributed' optional.
 * JUNOS
     * Updated ShowRoute
         * Modified cli method to accept only ip_address as input
@@ -69,7 +89,20 @@
         * Optional key issue resolved
     * Updated ShowInterfaces
         * Fixes case where speed wasn't found
+    * Updated ShowOspfVrfAllInclusive
+        * key error resolved
+    * Updated ShowOspfDatabaseLsaidDetail
+        * Resolved issue where empty output would cause error
+    * Updated ShowOspf3DatabaseExtensive
+        * Missing key issue resolved
+    * Updated ShowOspf3Database
+        * List ospf-area
 * IOSXE
     * Updated ShowIpInterface
         * Modified regex to accommodate different outputs
 
+* IOSXE
+    * Updated ShowClnsNeighborsDetail
+        * Modified regex to accommodate diffrent outputs
+    * Updated ShowInventory
+        * Modified regex to accommodate different outputs

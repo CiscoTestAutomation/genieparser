@@ -8,13 +8,13 @@ IOSXR parsers for the following show commands:
     * show isis protocol
     * show isis hostname
     * show isis adjacency
-    * show isis neighbors    
+    * show isis neighbors
     * show isis interface
     * show isis statistics
     * show isis private all
     * show isis spf-log detail
     * show isis database detail
-    * show isis fast-reroute summary 
+    * show isis fast-reroute summary
     * show isis instance {instance} hostname
 """
 
@@ -39,7 +39,7 @@ class ShowIsisFastRerouteSummarySchema(MetaParser):
             Any():{
                 'topology':{
                     Any():{
-                        'level':{    
+                        'level':{
                             Any():{
                                 Any():{
                                     'critical_priority': int,
@@ -56,11 +56,11 @@ class ShowIsisFastRerouteSummarySchema(MetaParser):
                                     'total': str,
                                 },
                             },
-                        },    
+                        },
                     },
                 },
             },
-        }, 
+        },
     }
 
 #============================================
@@ -76,7 +76,7 @@ class ShowIsisFastRerouteSummary(ShowIsisFastRerouteSummarySchema):
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command[0])
-        else: 
+        else:
             out = output
 
         #Init vars
@@ -90,20 +90,20 @@ class ShowIsisFastRerouteSummary(ShowIsisFastRerouteSummarySchema):
         # Prefixes reachable in L1
         p2 = re.compile(r'Prefixes +reachable +in +L(?P<level>\d+)')
 
-        #                       Critical   High       Medium     Low        Total     
-        #                       Priority   Priority   Priority   Priority             
+        #                       Critical   High       Medium     Low        Total
+        #                       Priority   Priority   Priority   Priority
         #--------------------------------------------------------------------------------
-        # All paths protected     0          0          0          0          0         
-        # Some paths protected    0          0          0          0          0         
-        # Unprotected             0          0          4          6          10       
+        # All paths protected     0          0          0          0          0
+        # Some paths protected    0          0          0          0          0
+        # Unprotected             0          0          4          6          10
         p3 = re.compile(r'(?P<name>[\S\s]+) +(?P<critical_priority>\d+) +(?P<high_priority>\d+) +(?P<medium_priority>\d+) +(?P<low_priority>\d+) +(?P<total>\d+)')
 
-        # Protection coverage     0.00%      0.00%      0.00%      0.00%      0.00%     
+        # Protection coverage     0.00%      0.00%      0.00%      0.00%      0.00%
         p4 = re.compile(r'Protection +coverage +(?P<critical_priority>[\d\.\%]+) +(?P<high_priority>[\d\.\%]+) +(?P<medium_priority>[\d\.\%]+) +(?P<low_priority>[\d\.\%]+) +(?P<total>[\d\.\%]+)')
 
         for line in out.splitlines():
             line = line.strip()
-            
+
             # IS-IS SR IPv4 Unicast FRR summary
             m = p1.match(line)
             if m:
@@ -120,12 +120,12 @@ class ShowIsisFastRerouteSummary(ShowIsisFastRerouteSummarySchema):
                frr_sum_dict = instance_dict.setdefault('level', {}).setdefault(int(group['level']), {})
                continue
 
-            #                       Critical   High       Medium     Low        Total     
-            #                       Priority   Priority   Priority   Priority             
+            #                       Critical   High       Medium     Low        Total
+            #                       Priority   Priority   Priority   Priority
             #--------------------------------------------------------------------------------
-            # All paths protected     0          0          0          0          0         
-            # Some paths protected    0          0          0          0          0         
-            # Unprotected             0          0          4          6          10       
+            # All paths protected     0          0          0          0          0
+            # Some paths protected    0          0          0          0          0
+            # Unprotected             0          0          4          6          10
             m = p3.match(line)
             if m:
                group = m.groupdict()
@@ -133,9 +133,9 @@ class ShowIsisFastRerouteSummary(ShowIsisFastRerouteSummarySchema):
                label_dict = frr_sum_dict.setdefault(label_name, {})
                for key in label_list:
                    label_dict.update({key: int(group[key])})
-               continue 
-            
-            # Protection coverage     0.00%      0.00%      0.00%      0.00%      0.00%     
+               continue
+
+            # Protection coverage     0.00%      0.00%      0.00%      0.00%      0.00%
             m = p4.match(line)
             if m:
                group = m.groupdict()
@@ -188,15 +188,15 @@ class ShowIsisAdjacencySchema(MetaParser):
 
 class ShowIsisAdjacency(ShowIsisAdjacencySchema):
     """Parser for show isis adjacency"""
-    
+
     cli_command = 'show isis adjacency'
-    
+
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        
+
         ret_dict = {}
         vrf = 'default'
 
@@ -321,15 +321,15 @@ class ShowIsisNeighborsSchema(MetaParser):
 
 class ShowIsisNeighbors(ShowIsisNeighborsSchema):
     """Parser for show isis neighbors"""
-    
+
     cli_command = 'show isis neighbors'
-    
+
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        
+
         isis_neighbors_dict = {}
         vrf = 'default'
 
@@ -376,7 +376,7 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
                 system_dict['ietf_nsf'] = ietf_nsf
 
                 continue
-            
+
             # Total neighbor count: 1
             m = p3.match(line)
             if m:
@@ -407,15 +407,15 @@ class ShowIsisSegmentRoutingLabelTableSchema(MetaParser):
 
 class ShowIsisSegmentRoutingLabelTable(ShowIsisSegmentRoutingLabelTableSchema):
     """Parser for show isis segment-routing label table"""
-    
+
     cli_command = ['show isis segment-routing label table']
-    
+
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command[0])
         else:
             out = output
-        
+
         isis_dict = {}
 
         # IS-IS SR IS Label Table
@@ -493,7 +493,7 @@ class ShowIsisSchema(MetaParser):
                                     Any(): {
                                         'distance': int,
                                         'adv_passive_only': bool,
-                                        'protocols_redistributed': bool,
+                                        Optional('protocols_redistributed'): bool,
                                         'level': {
                                             Any(): {
                                                 Optional('generate_style'): str,
@@ -610,7 +610,7 @@ class ShowIsis(ShowIsisSchema):
         # GigabitEthernet0/0/0/0 is running actively (active in configuration)
         r23 = re.compile(r'(?P<interface>\S+)\s+is\s+(?P<running_state>[\s\w]+)'
                           '\s+\((?P<configuration_state>[\w\s]+)\)')
-        
+
         # OSPF process 75688
         r24 = re.compile(r'^(?P<protocol>\S+) process +(?P<process>\d+)$')
 
@@ -637,10 +637,10 @@ class ShowIsis(ShowIsisSchema):
                     .setdefault('instance', {})\
                     .setdefault(isis_router, {})
                 instance_dict['process_id'] = isis_router
- 
+
                 continue
 
-            # VRF context: VRF1     
+            # VRF context: VRF1
             result = r2.match(line)
             if result:
                 group = result.groupdict()
@@ -841,7 +841,7 @@ class ShowIsis(ShowIsisSchema):
                     srlb_dict['end'] = int(end)
 
                 continue
-            
+
             # SRGB allocated: 16000 - 81534
             # SRGB not allocated
             result = r22.match(line)
@@ -852,7 +852,7 @@ class ShowIsis(ShowIsisSchema):
                 if start and end:
                     srlb_dict = vrf_dict.setdefault('srgb', {})
                     srlb_dict['start'] = int(start)
-                    srlb_dict['end'] = int(end) 
+                    srlb_dict['end'] = int(end)
 
                 continue
 
@@ -871,7 +871,7 @@ class ShowIsis(ShowIsisSchema):
                 interfaces_dict['configuration_state'] = configuration_state
 
                 continue
-            
+
             # OSPF process 75688
             result = r24.match(line)
             if result:
@@ -943,7 +943,7 @@ class ShowIsisHostnameSchema(MetaParser):
                 }
             }
         }
-    }    
+    }
 
 
 class ShowIsisHostname(ShowIsisHostnameSchema):
@@ -978,10 +978,10 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
 
         for line in output.splitlines():
             line = line.strip()
-            
-            # IS-IS TEST1 hostnames            
+
+            # IS-IS TEST1 hostnames
             result = r1.match(line)
-            if result:                
+            if result:
                 group = result.groupdict()
                 isis = group['isis']
 
@@ -989,13 +989,13 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
                     .setdefault('isis', {})\
                     .setdefault(isis, {})\
                     .setdefault('vrf', {})\
-                    .setdefault(vrf, {})                    
+                    .setdefault(vrf, {})
 
                 continue
 
             # 2     1720.18ff.0254 tor-28.tenlab-cloud
             # 2     1720.18ff.0213 leaf-2.qa-site1
-            # 2     1720.18ff.0250 tor-23.tenlab-cloud            
+            # 2     1720.18ff.0250 tor-23.tenlab-cloud
             result = r2.match(line)
             if result:
                 group = result.groupdict()
@@ -1190,7 +1190,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
 
         # Average transmit times and rate:
         r10 = re.compile(r'Average\s+transmit\s+times\s+and\s+rate\s*:')
-        
+
         # Average process times and rate:
         r11 = re.compile(r'Average\s+process\s+times\s+and\s+rate\s*:')
 
@@ -1245,7 +1245,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
         # Periodic SPF calculations  : 3
         r24 = re.compile(r'Periodic\s+SPF\s+calculations\s*:\s*'
                           '(?P<periodic_spf_calculation>\d+)')
-        
+
         # Interface Loopback0:
         # Interface GigabitEthernet0/0/0/1:
         r25 = re.compile(r'Interface\s+(?P<interface>\S+):')
@@ -1288,7 +1288,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
         for line in output.splitlines():
             line = line.strip()
 
-            # IS-IS test statistics:            
+            # IS-IS test statistics:
             result = r1.match(line)
             if result:
                 group = result.groupdict()
@@ -1389,7 +1389,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
                 average_time_key_name_nsec = 'average_transmit_time_nsec'
 
                 continue
-            
+
             # Average process times and rate:
             result = r11.match(line)
             if result:
@@ -1543,7 +1543,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
                 address_family_dict['periodic_spf_calculation'] = periodic_spf_calculation
 
                 continue
-            
+
             # Interface Loopback0:
             # Interface GigabitEthernet0/0/0/1:
             result = r25.match(line)
@@ -1556,7 +1556,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
                 continue
 
             # Level-1 LSPs (sent/rcvd)  : 0/0
-            # Level-2 LSPs (sent/rcvd)  : 0/0            
+            # Level-2 LSPs (sent/rcvd)  : 0/0
             result = r26.match(line)
             if result:
                 group = result.groupdict()
@@ -1770,7 +1770,7 @@ class ShowIsisSpfLog(ShowIsisSpfLogSchema):
                 triggers = group['triggers']
                 index_dict = instance_dict\
                     .setdefault('spf_log', {})\
-                    .setdefault(log_index, {})  
+                    .setdefault(log_index, {})
                 index_dict['start_timestamp'] = "{} {}".format(log_date, timestamp)
                 index_dict['level'] = level
                 index_dict['type'] = log_type
@@ -1840,7 +1840,7 @@ class ShowIsisSpfLogDetailSchema(MetaParser):
                                         'total': int,
                                     },
                                     'prefixes': {
-                                        'items': {                                            
+                                        'items': {
                                             'critical_priority': {
                                                 'reach': int,
                                                 Optional('unreach'): int,
@@ -1902,7 +1902,7 @@ class ShowIsisSpfLogDetailSchema(MetaParser):
                 }
             }
         }
-    }    
+    }
 
 
 class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
@@ -1936,7 +1936,7 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
 
         # SPT Calculation:         5     5
         r4_1 = re.compile(r'^SPT +Calculation: +(?P<cpu_time>\d+) +(?P<real_time>\d+)$')
-        
+
         # Prefix Updates
         r5 = re.compile(r'Prefix\s+Updates')
 
@@ -1968,21 +1968,21 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
 
         # Critical Priority:     0       0     0
         # Critical Priority:     0       -     0
-        # High Priority:         0       0     0 
+        # High Priority:         0       0     0
         # High Priority:         0       -     0
-        # Medium Priority        0       0     0 
+        # Medium Priority        0       0     0
         # Medium Priority        0        -    0
-        # Low Priority           0       0     0 
+        # Low Priority           0       0     0
         # Low Priority:          0        -    0
         # All Priorities         0        -    0
         # All Priorities         0       0     0
         r12 = re.compile(r'(?P<priority_level>\w+)\s+Priorit(y|ies)\s*:*\s+'
                           '(?P<reach>\d+)\s+(?P<unreach>\d+|\-)\s+'
                           '(?P<total>\d+)')
-        
+
         # SR uloop:              No
         r13 = re.compile(r'^SR +uloop: +(?P<sr_uloop>\w+)$')
-        
+
         # Interrupted:           No
         r14 = re.compile(r'^Interrupted: +(?P<interrupted>\w+)$')
 
@@ -2015,7 +2015,7 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                     .setdefault('instance', {})\
                     .setdefault(instance, {})\
                     .setdefault('address_family', {})\
-                    .setdefault(address_family, {})                    
+                    .setdefault(address_family, {})
 
                 continue
 
@@ -2173,17 +2173,17 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                 prefixes = group['prefixes'].lower()
                 prefixes_priority_dict = results_dict\
                     .setdefault('prefixes', {})\
-                    .setdefault(prefixes, {})                    
+                    .setdefault(prefixes, {})
 
                 continue
 
             # Critical Priority:     0       0     0
             # Critical Priority:     0       -     0
-            # High Priority:         0       0     0 
+            # High Priority:         0       0     0
             # High Priority:         0       -     0
-            # Medium Priority        0       0     0 
+            # Medium Priority        0       0     0
             # Medium Priority        0       -     0
-            # Low Priority           0       0     0 
+            # Low Priority           0       0     0
             # Low Priority:          0       -     0
             # All Priorities         0       -     0
             # All Priorities         0       0     0
@@ -2206,8 +2206,8 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                 if total.isdigit():
                     priority_dict['total'] = int(total)
 
-                continue            
-            
+                continue
+
             # SR uloop:              No
             result = r13.match(line)
             if result:
@@ -2215,7 +2215,7 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                 sr_uloop = group['sr_uloop']
                 spf_log_dict['sr_uloop'] = sr_uloop
                 continue
-            
+
             # Interrupted:           No
             result = r14.match(line)
             if result:
@@ -2246,14 +2246,14 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
             if result:
                 group = result.groupdict()
                 timestamp_date = group['timestamp_date']
-                
+
                 continue
         return parsed_dict
 
 
 class ShowIsisLspLogSchema(MetaParser):
     ''' Schema for commands:
-        * show isis lsp-log     
+        * show isis lsp-log
     '''
 
     schema = {
@@ -2266,7 +2266,7 @@ class ShowIsisLspLogSchema(MetaParser):
                         'count': int,
                         Optional('interface'): str,
                         Optional('triggers'): str,
-                    }   
+                    }
                 }
             }
         }
@@ -2290,7 +2290,7 @@ class ShowIsisLspLog(ShowIsisLspLogSchema):
         # Level 1 LSP log
         r1 = re.compile(r'(IS\-*IS\s+(?P<instance>.+)\s+)?Level\s+'
                          '(?P<level>\d+)\s+LSP\s+log')
-        
+
         # --- Thu Sep 26 2019 ---
         # --- Mon Sep 30 2019 ---
         r2 = re.compile(r'\-\-\-\s+(?P<log_date>[\w\s]+)\s+\-\-\-')
@@ -2298,7 +2298,7 @@ class ShowIsisLspLog(ShowIsisLspLogSchema):
         # 09:39:16.648     1                   IPEXT
         # 07:05:24         2                   CONFIG NEWADJ
         # 16:15:03.822     2  BE2              DELADJ
-        # 00:02:36         1    
+        # 00:02:36         1
         r3 = re.compile(r'(?P<timestamp>[0-9\:\.]+)\s+(?P<count>\d+)\s*'
                          '(?P<interface>[A-Z]+[a-z]*[\/*\d\.]+)?\s*'
                          '(?P<triggers>[\w*\s]*)')
@@ -2325,7 +2325,7 @@ class ShowIsisLspLog(ShowIsisLspLogSchema):
                     .setdefault(instance, {})
 
                 continue
-            
+
             # --- Thu Sep 26 2019 ---
             # --- Mon Sep 30 2019 ---
             result = r2.match(line)
@@ -2338,7 +2338,7 @@ class ShowIsisLspLog(ShowIsisLspLogSchema):
             # 09:39:16.648    1                   IPEXT
             # 07:05:24        2                   CONFIG NEWADJ
             # 16:15:03.822    2  BE2              DELADJ
-            # 00:02:36        1    
+            # 00:02:36        1
             result = r3.match(line)
             if result:
                 group = result.groupdict()
@@ -2630,7 +2630,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         # Can send up to 10 back-to-back LSPs in the next 0 ms
         r33 = re.compile(r'Can\s+send\s+up\s+to\s+(?P<number_lsp_send>\d+)'
                          r'\s+back\-to\-back\s+LSPs\s+in\s+the\s+next\s+'
-                         r'(?P<time_to_sent>\d+)\s+ms')       
+                         r'(?P<time_to_sent>\d+)\s+ms')
 
         # LAN ID:                 R3.07
         r34 = re.compile(r'LAN\s+ID\s*:\s*(?P<lan_id>\S+)')
@@ -2641,7 +2641,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                          r'(?P<priority_local>\S+)/(?P<priority_dis>.+)')
 
         # Next LAN IIH in:        5 s
-        # Next LAN IIH in:        3 s 
+        # Next LAN IIH in:        3 s
         r36 = re.compile(r'Next\s+LAN\s+IIH\s+in\s*:\s*'
                          r'(?P<next_lan_iih>\d+)\s*s')
 
@@ -2661,7 +2661,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
 
         # Extended Circuit Number:  20
         r41 = re.compile(r'^Extended +Circuit +Number: +(?P<extended_circuit_number>\d+)$')
-        
+
         # Next P2P IIH in:          3 s
         r42 = re.compile(r'^Next +P2P +IIH +in: +(?P<next_p2p_iih_in>\d+) +m?s$')
 
@@ -2671,10 +2671,10 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         # RSI SRLG:                 Registered
         r44 = re.compile(r'^RSI +SRLG: +(?P<rsi_srlg>\S+)$')
 
-        # Direct LFA:           Enabled            Enabled 
+        # Direct LFA:           Enabled            Enabled
         r45 = re.compile(r'^Direct +LFA: +(?P<level_1>\w+) +(?P<level_2>\w+)$')
 
-        # Remote LFA:           Not Enabled        Not Enabled 
+        # Remote LFA:           Not Enabled        Not Enabled
         r46 = re.compile(r'^Remote +LFA: +(?P<level_1>(Not +)?Enabled) +(?P<level_2>(Not +)?Enabled)$')
 
         # Tie Breaker          Default            Default
@@ -2701,7 +2701,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         # SRLG disjoint        0                  0
         r54 = re.compile(r'^SRLG +disjoint +(?P<level_1>\w+) +(?P<level_2>\w+)$')
 
-        # IfName: Hu0/0/0/1 IfIndex: 0x55 
+        # IfName: Hu0/0/0/1 IfIndex: 0x55
         r55 = re.compile(r'^IfName: +(?P<if_name>\S+) +IfIndex: +(?P<if_index>\S+)$')
 
         parsed_output = {}
@@ -2724,7 +2724,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 continue
 
             # Loopback0                   Enabled
-            # GigabitEthernet0/0/0/0      Enabled            
+            # GigabitEthernet0/0/0/0      Enabled
             result = r2.match(line)
             if result:
                 group = result.groupdict()
@@ -2736,7 +2736,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 interface_dict['state'] = interface_state
 
                 interface_flag = True
-                    
+
                 continue
 
             # Adjacency Formation:    Running
@@ -2789,7 +2789,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
 
                 continue
 
-            # BFD Multiplier:           3            
+            # BFD Multiplier:           3
             result = r7.match(line)
             if result:
                 group = result.groupdict()
@@ -2856,7 +2856,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
 
             # LSP Pacing Interval:    33 ms
             result = r14.match(line)
-            if result:                
+            if result:
                 group = result.groupdict()
                 lsp_pacing_interval = int(group['lsp_pacing_interval'])
                 level_dict['lsp_pacing_interval_ms'] = lsp_pacing_interval
@@ -2865,7 +2865,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
 
             # PSNP Entry Queue Size:  0
             result = r15.match(line)
-            if result:                
+            if result:
                 group = result.groupdict()
                 psnp_entry_queue_size = int(group['psnp_entry_queue_size'])
                 level_dict['psnp_entry_queue_size'] = psnp_entry_queue_size
@@ -2899,7 +2899,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
 
             # Protocol State:         Up
             result = r19.match(line)
-            if result:                
+            if result:
                 group = result.groupdict()
                 protocol_state = group['protocol_state']
                 if clns_flag:
@@ -2969,11 +2969,11 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
 
             # MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
             # MPLS Max Label Stack(PRI/BKP/SRTE):2/2/10
-            result = r24.match(line)            
+            result = r24.match(line)
             if result:
                 group = result.groupdict()
                 mpls_stack = group['mpls_max_label_stack'].replace(':', ' ').strip()
-                mpls_dict = topology_dict.setdefault('mpls', {})                
+                mpls_dict = topology_dict.setdefault('mpls', {})
                 mpls_dict['mpls_max_label_stack'] = mpls_stack
 
                 continue
@@ -3023,7 +3023,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 frr_dict.setdefault(level_1, {})\
                     .setdefault('type', frr_type_level_1)
                 frr_dict.setdefault(level_2, {})\
-                    .setdefault('type', frr_type_level_2)                
+                    .setdefault('type', frr_type_level_2)
 
                 continue
 
@@ -3044,7 +3044,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             # Forwarding Address(es): ::
             result = r29.match(line)
             if result:
-                group = result.groupdict()                
+                group = result.groupdict()
                 forwarding_address = group['forwarding_address']
                 forwarding_address_list = address_family_dict\
                     .get('forwarding_address', [])
@@ -3141,7 +3141,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 group = result.groupdict()
                 layer = int(group['layer'])
                 layer_dict = clns_dict\
-                    .setdefault('layer2_mcast_groups_membership', {})         
+                    .setdefault('layer2_mcast_groups_membership', {})
 
                 continue
 
@@ -3154,7 +3154,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 iss_state = group['iss_state']
                 layer_dict['all_level_{level}_iss'\
                     .format(level=level)] = iss_state
-                    
+
                 continue
 
             # All ISs:              Yes
@@ -3209,8 +3209,8 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 else:
                     topology_dict['rsi_srlg'] = rsi_srlg
                 continue
-            
-            # Direct LFA:           Enabled            Enabled 
+
+            # Direct LFA:           Enabled            Enabled
             result = r45.match(line)
             if result:
                 lfa_type = 'direct_lfa'
@@ -3224,7 +3224,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                     setdefault('direct_lfa', {})
                 direct_lfa_dict_2.update({'state': direct_lfa_level_2})
                 continue
-            # Remote LFA:           Not Enabled        Not Enabled 
+            # Remote LFA:           Not Enabled        Not Enabled
             result = r46.match(line)
             if result:
                 lfa_type = 'remote_lfa'
@@ -3254,7 +3254,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 else:
                     current_lfa_dict_1 = ti_lfa_dict_1
                     current_lfa_dict_2 = ti_lfa_dict_2
-                
+
                 current_lfa_dict_1.update({'tie_breaker': tie_breaker_level_1})
                 current_lfa_dict_2.update({'tie_breaker': tie_breaker_level_2})
                 continue
@@ -3274,7 +3274,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 else:
                     current_lfa_dict_1 = ti_lfa_dict_1
                     current_lfa_dict_2 = ti_lfa_dict_2
-                
+
                 current_lfa_dict_1.update({'line_card_disjoint': line_card_disjoint_level_1})
                 current_lfa_dict_2.update({'line_card_disjoint': line_card_disjoint_level_2})
                 continue
@@ -3294,7 +3294,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 else:
                     current_lfa_dict_1 = ti_lfa_dict_1
                     current_lfa_dict_2 = ti_lfa_dict_2
-                
+
                 current_lfa_dict_1.update({'lowest_backup_metric': lowest_backup_metric_level_1})
                 current_lfa_dict_2.update({'lowest_backup_metric': lowest_backup_metric_level_2})
                 continue
@@ -3314,7 +3314,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 else:
                     current_lfa_dict_1 = ti_lfa_dict_1
                     current_lfa_dict_2 = ti_lfa_dict_2
-                
+
                 current_lfa_dict_1.update({'node_protecting': node_protecting_level_1})
                 current_lfa_dict_2.update({'node_protecting': node_protecting_level_2})
                 continue
@@ -3334,7 +3334,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 else:
                     current_lfa_dict_1 = ti_lfa_dict_1
                     current_lfa_dict_2 = ti_lfa_dict_2
-                
+
                 current_lfa_dict_1.update({'primary_path': primary_path_level_1})
                 current_lfa_dict_2.update({'primary_path': primary_path_level_2})
                 continue
@@ -3369,7 +3369,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 else:
                     current_lfa_dict_1 = ti_lfa_dict_1
                     current_lfa_dict_2 = ti_lfa_dict_2
-                
+
                 current_lfa_dict_1.update({'link_protecting': link_protecting_level_1})
                 current_lfa_dict_2.update({'link_protecting': link_protecting_level_1})
                 continue
@@ -3389,12 +3389,12 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 else:
                     current_lfa_dict_1 = ti_lfa_dict_1
                     current_lfa_dict_2 = ti_lfa_dict_2
-                
+
                 current_lfa_dict_1.update({'srlg_disjoint': srlg_disjoint_level_1})
                 current_lfa_dict_2.update({'srlg_disjoint': srlg_disjoint_level_2})
                 continue
 
-            # IfName: Hu0/0/0/1 IfIndex: 0x55 
+            # IfName: Hu0/0/0/1 IfIndex: 0x55
             result = r55.match(line)
             if result:
                 group = result.groupdict()
@@ -3533,7 +3533,7 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
 
 class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
     ''' Parser for commands:
-       * show isis database detail 
+       * show isis database detail
     '''
 
     cli_command = 'show isis database detail'
@@ -3554,7 +3554,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         # R3.03-00              0x00000007    0x8145        988  /*            0/0/0
         # router-5.00-00        0x00000005 0x807997c        457                0/0/0
         # 0000.0CFF.0C35.00-00  0x0000000C    0x5696        325                0/0/0
-        # 0000.0CFF.40AF.00-00* 0x00000009    0x8452        608                1/0/0 
+        # 0000.0CFF.40AF.00-00* 0x00000009    0x8452        608                1/0/0
         r2 = re.compile(r'^(?P<lspid>[\w\-\.]+)( *(?P<local_router>\*))? +'
                 r'(?P<lsp_seq_num>\w+) +(?P<lsp_checksum>\w+) +(?P<lsp_holdtime>\d+|\*)'
                 r'( *\/(?P<lsp_rcvd>\d+|\*))? +(?P<attach_bit>\d+)\/(?P<p_bit>\d+)\/'
@@ -3585,7 +3585,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         # Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:10:2::/64
         r9 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+MT\s*\(IPv(4|6)\s+'
                         r'\w+\)\s*(?P<ip_version>IPv(4|6))\s+(?P<ip_address>\S+)')
-        
+
         # Metric: 10   IPv6 (MT-IPv6) 2001:0DB8::/64
         # Metric: 10         IPv6 2001:2:2:2::2/128
         r9_2 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+(?P<ip_version>'
@@ -3642,7 +3642,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                            r'(?P<local_l1>\d+),\s*local\s*L2\s*'
                            r'(?P<local_l2>\d+)\)')
 
-        # Metric: 10   IS 0000.0CFF.62E6.03 
+        # Metric: 10   IS 0000.0CFF.62E6.03
         r18 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+IS\s+'
                          r'(?P<is_neighbor>[\w\.\-]+)')
 
@@ -3663,7 +3663,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         # Metric: 0          IP 172.16.115.0/24
         r22 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+IP\s+'
                          r'(?P<ip_address>[\d\.\/]+)')
-        
+
         # Router Cap:     172.19.1.2 D:0 S:0
         r23 = re.compile(r'^Router +Cap: +(?P<router_cap>[\S ]+)$')
 
@@ -3861,7 +3861,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 overload_bit = group['overload_bit']
                 topology_dict = lspid_dict\
                     .setdefault('mt_entries', {})\
-                    .setdefault(mt_entry, {})                
+                    .setdefault(mt_entry, {})
                 if attach_bit:
                     topology_dict['attach_bit'] = int(attach_bit)
                 if p_bit:
@@ -3950,7 +3950,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 local_lsp_count = int(group['local_lsp_count'])
                 level_dict['total_lsp_count'] = total_lsp_count
                 level_dict['local_lsp_count'] = local_lsp_count
-                
+
                 continue
 
             # Total LSP count: 3 (L1: 0, L2 3, local L1: 0, local L2 2)
@@ -3967,7 +3967,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
 
                 continue
 
-            # Metric: 10   IS 0000.0CFF.62E6.03 
+            # Metric: 10   IS 0000.0CFF.62E6.03
             result = r18.match(line)
             if result:
                 group = result.groupdict()
@@ -3979,10 +3979,10 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 is_neighbor_dict['metric'] = metric
 
                 continue
-            
+
             # Metric: 0    ES 0000.0CFF.0C35
             result = r19.match(line)
-            if result:        
+            if result:
                 group = result.groupdict()
                 metric = int(group['metric'])
                 es_neighbor = group['es_neighbor']
@@ -4062,7 +4062,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
 
 class ShowIsisPrivateAllSchema(MetaParser):
     ''' Schema for commands:
-       * show isis private all 
+       * show isis private all
     '''
     schema = {
         'instance': {
@@ -4102,7 +4102,7 @@ class ShowIsisPrivateAllSchema(MetaParser):
                             'is_igp_intact_set': bool,
                             'igp_intact': bool,
                             'is_first_hop_source_set': bool,
-                            'first_hop_source': bool,                            
+                            'first_hop_source': bool,
                         },
                         'index': int,
                         'ref_count': int,
@@ -4126,7 +4126,7 @@ class ShowIsisPrivateAllSchema(MetaParser):
                             'backoff_cfg': {
                                 'initial_wait_msecs': int,
                                 'secondary_wait_msecs': int,
-                                'maximum_wait_msecs': int, 
+                                'maximum_wait_msecs': int,
                             },
                             'max_count': int,
                             'max_window_size_msec': int,
@@ -4176,7 +4176,7 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                     },
                                 },
                             },
-                        },                    
+                        },
                     },
                 },
                 'area_tables': {
@@ -4221,7 +4221,7 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                         'count': int,
                                         'owner': int,
                                     },
-                                },                            
+                                },
                             },
                             'tree': {
                                 'root': str,
@@ -4341,13 +4341,13 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                     'num_elements': int,
                                 },
                                 'roca_event': {
-                                    'log': str, 
-                                    'class': str, 
+                                    'log': str,
+                                    'class': str,
                                     'mutex': {
                                         'mutex': {
                                             'count': int,
                                             'owner': int,
-                                        },                                        
+                                        },
                                         'description': str,
                                     },
                                     'timer': {
@@ -4358,13 +4358,13 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                         'postponed_schedule_time': {
                                             'tv_sec': int,
                                             'tv_nsec': int,
-                                        },                                        
+                                        },
                                         'last_execution_time': {
                                             'tv_sec': int,
                                             'tv_nsec': int,
-                                        },                                        
+                                        },
                                     },
-                                }                            
+                                }
                             },
                         },
                         'per_topo': {
@@ -4564,7 +4564,7 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                 'psnp_count': {
                                     'in': int,
                                     'out': int,
-                                },                                
+                                },
                                 'lsp_flooding_dup_count': int,
                                 'lsp_drop_count': int,
                             },
@@ -4574,7 +4574,7 @@ class ShowIsisPrivateAllSchema(MetaParser):
                                 Optional('caps_id'): int,
                                 Optional('media_class'):  str,
                                 Optional('encaps_overhead'): int,
-                            },                            
+                            },
                         },
                         Optional('media_specific'): {
                             Any(): {
@@ -4670,7 +4670,7 @@ class ShowIsisPrivateAllSchema(MetaParser):
                         'per_topo': {
                             Any(): {
                                 'refcount': int,
-                            },                            
+                            },
                         },
                         'mpls_ldp_sync': {
                             'im_attr_ldp_sync_info_notify_handle': Or(int, str),
@@ -4695,7 +4695,7 @@ class ShowIsisPrivateAllSchema(MetaParser):
     }
 
 
-class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):    
+class ShowIsisPrivateAll(ShowIsisPrivateAllSchema):
     ''' Parser for commands:
        * show isis private all
     '''
