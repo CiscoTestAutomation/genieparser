@@ -97,6 +97,8 @@
         * Missing key issue resolved
     * Updated ShowOspf3Database
         * List ospf-area
+    * Updated ShowOspfDatabaseLsaidDetail
+        * Made ospf-lsa-topology optional
 * IOSXE
     * Updated ShowIpInterface
         * Modified regex to accommodate different outputs
