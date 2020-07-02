@@ -23,6 +23,10 @@
     * Updated ShowOspfDatabaseLsaidDetail:
         * added testcase
         *extended from ShowOspfDatabaseAdvertisingRouterSelfDetail
+    * Added ShowInterfacesPolicersInterface for:
+        * show interfaces policers {interface}
+    * Added ShowInterfacesStatistics
+        * show interfaces statistics
 
 
 --------------------------------------------------------------------------------
@@ -83,6 +87,10 @@
         * Optional key issue resolved
     * Updated ShowOspf3DatabaseExtensiveSchema
         * Optional key issue resolved
+    * Updated ShowInterfaces
+        * Fixes case where speed wasn't found
+    * Updated ShowOspfVrfAllInclusive
+        * key error resolved
     * Updated ShowOspfDatabaseLsaidDetail
         * Resolved issue where empty output would cause error
     * Updated ShowOspf3DatabaseExtensive
@@ -98,3 +106,5 @@
 * IOSXE
     * Updated ShowClnsNeighborsDetail
         * Modified regex to accommodate diffrent outputs
+    * Updated ShowInventory
+        * Modified regex to accommodate different outputs
