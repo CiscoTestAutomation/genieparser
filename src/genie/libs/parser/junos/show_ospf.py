@@ -1565,7 +1565,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetailSchema(MetaParser):
                 "bits": str,
                 "link-count": str,
                 "ospf-link": Use(validate_ospf_link),
-                "ospf-lsa-topology": {
+                Optional("ospf-lsa-topology"): {
                     "ospf-lsa-topology-link":
                     Use(validate_ospf_lsa_topology_link),
                     "ospf-topology-id": str,
