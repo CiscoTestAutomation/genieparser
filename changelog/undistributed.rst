@@ -99,6 +99,8 @@
         * List ospf-area
     * Updated ShowOspfDatabaseLsaidDetail
         * Made ospf-lsa-topology optional
+    * Updated ShowOspfDatabaseAdvertisingRouterSelfDetail
+        * Made ospf-lsa-topology optional
 * IOSXE
     * Updated ShowIpInterface
         * Modified regex to accommodate different outputs
