@@ -6,6 +6,7 @@ JunOS parsers for the following show commands:
     * show interfaces terse {interface}
     * show interfaces {interface} terse
     * show interfaces descriptions
+    * show interfaces queue {interface}
     * show interfaces policers {interface}
 """
 
@@ -1678,6 +1679,7 @@ class ShowInterfacesExtensiveNoForwarding(ShowInterfacesExtensive):
         
         return super().cli(output=out)
 
+
 class ShowInterfacesStatisticsSchema(MetaParser):
     """ Schema for:
             * show interfaces statistics
@@ -1830,6 +1832,7 @@ class ShowInterfacesStatisticsSchema(MetaParser):
 
     schema = {
         "interface-information": {
+
             "physical-interface": Use(validate_physical_interface_list)
         }
     }
@@ -2399,4 +2402,305 @@ class ShowInterfacesPolicersInterface(ShowInterfacesPolicersInterfaceSchema):
 
                 exists = False
 
+        return ret_dict
+
+
+# =======================================================
+# Schema for 'show interfaces queue {interface}'
+# =======================================================
+class ShowInterfacesQueueSchema(MetaParser):
+    """
+    Schema for:
+        * show interfaces queue {interface}
+    """
+    def validate_queue(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('queue is not a list')
+        queue_schema = Schema(
+            {
+                "forwarding-class-name": str,
+                "queue-counters-queued-bytes": str,
+                "queue-counters-queued-bytes-rate": str,
+                "queue-counters-queued-packets": str,
+                "queue-counters-queued-packets-rate": str,
+                "queue-counters-red-bytes": str,
+                "queue-counters-red-bytes-high": str,
+                "queue-counters-red-bytes-low": str,
+                "queue-counters-red-bytes-medium-high": str,
+                "queue-counters-red-bytes-medium-low": str,
+                "queue-counters-red-bytes-rate": str,
+                "queue-counters-red-bytes-rate-high": str,
+                "queue-counters-red-bytes-rate-low": str,
+                "queue-counters-red-bytes-rate-medium-high": str,
+                "queue-counters-red-bytes-rate-medium-low": str,
+                "queue-counters-red-packets": str,
+                "queue-counters-red-packets-high": str,
+                "queue-counters-red-packets-low": str,
+                "queue-counters-red-packets-medium-high": str,
+                "queue-counters-red-packets-medium-low": str,
+                "queue-counters-red-packets-rate": str,
+                "queue-counters-red-packets-rate-high": str,
+                "queue-counters-red-packets-rate-low": str,
+                "queue-counters-red-packets-rate-medium-high": str,
+                "queue-counters-red-packets-rate-medium-low": str,
+                "queue-counters-tail-drop-packets": str,
+                "queue-counters-tail-drop-packets-rate": str,
+                "queue-counters-trans-bytes": str,
+                "queue-counters-trans-bytes-rate": str,
+                "queue-counters-trans-packets": str,
+                "queue-counters-trans-packets-rate": str,
+                "queue-number": str
+            }
+        )
+        for item in value:
+            queue_schema.validate(item)
+        return value
+
+    schema = {
+        "interface-information": {
+            "physical-interface": {
+                "description": str,
+                "local-index": str,
+                "snmp-index": str,
+                "name": str,
+                "oper-status": str,
+                "queue-counters": {
+                    "interface-cos-summary": {
+                        "intf-cos-forwarding-classes-in-use": str,
+                        "intf-cos-forwarding-classes-supported": str,
+                        "intf-cos-num-queues-in-use": str,
+                        "intf-cos-num-queues-supported": str,
+                        "intf-cos-queue-type": str
+                    },
+                    "queue": Use(validate_queue)
+                }
+            }
+            }
+        }
+
+
+# =======================================================
+# Parser for 'show interfaces queue {interface}'
+# =======================================================
+class ShowInterfacesQueue(ShowInterfacesQueueSchema):
+    """
+    Parser for:
+        * show interfaces queue {interface}
+    """
+    cli_command = 'show interfaces queue {interface}'
+
+    def cli(self, interface=None, output=None):
+        if not output:
+            cmd = self.cli_command.format(interface=interface)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # -------------------------------------------------
+        # Initialize variables
+        # -------------------------------------------------
+        ret_dict = {}
+        red_dropped_bytes = red_dropped_packets = transmitted = None
+
+        # -------------------------------------------------
+        # Regex patterns
+        # -------------------------------------------------
+        # Physical interface: ge-0/0/2, Enabled, Physical link is Up
+        p1 = re.compile(r"^Physical interface: (?P<name>\S+), Enabled, "
+                        r"Physical link is (?P<oper_status>\S+)$")
+        #           Interface index: 143, SNMP ifIndex: 601
+        p2 = re.compile(r"^Interface index: (?P<local_index>\S+), "
+                       r"SNMP ifIndex: (?P<snmp_index>\S+)$")
+        #           Description: to_ixia_2/4
+        p3 = re.compile(r"^Description: (?P<description>\S+)$")
+        #         Forwarding classes: 16 supported, 5 in use
+        p4 = re.compile(r"^Forwarding classes: "
+                        r"(?P<intf_cos_forwarding_classes_supported>\S+) supported, "
+                        r"(?P<intf_cos_forwarding_classes_in_use>\S+) in use$")
+        #         Egress queues: 8 supported, 5 in use
+        p5 = re.compile(r"^(?P<intf_cos_queue_type>Egress queues): (?P<intf_cos_num_queues_supported>\S+) supported, "
+                        r"(?P<intf_cos_num_queues_in_use>\S+) in use$")
+        #         Queue: 0, Forwarding classes: Bronze-FC
+        p6 = re.compile(r"^Queue: (?P<queue_number>\S+), "
+                        r"Forwarding classes: (?P<forwarding_class_name>\S+)$")
+        #           Queued:
+        #             Packets              :            1470816406                     0 pps <-- rate
+        #             Bytes                :          564883280956                     0 bps
+        #           Transmitted:
+        p8 = re.compile(r"^(?P<name>Transmitted):$")
+        #             Packets              :            1470816406                      0 pps
+        #             Bytes                :          564883280956                     0 bps
+        #             Tail-dropped packets :                     0                     0 pps
+        #             RED-dropped packets  :                     0                     0 pps
+        p9 = re.compile(r"^(?P<name>RED-dropped packets) +: +(?P<counts>\S+) +(?P<rates>\S+) +pps$")
+        #              Low                 :                     0                     0 pps
+        #              Medium-low          :                     0                     0 pps
+        #              Medium-high         :                     0                     0 pps
+        #              High                :                     0                     0 pps
+        #             RED-dropped bytes    :                     0                     0 bps
+        p10 = re.compile(r"^(?P<name>RED-dropped bytes) +: +(?P<counts>\S+) +(?P<rates>\S+) +bps$")
+        #              Low                 :                     0                     0 bps
+        #              Medium-low          :                     0                     0 bps
+        #              Medium-high         :                     0                     0 bps
+        #              High                :                     0                     0 bps
+        p7 = re.compile(r"^(?P<name>Packets|Bytes|Tail-dropped packets|"
+                        r"Low|Medium-low|Medium-high|High) +: "
+                        r"+(?P<counts>\S+) +(?P<rates>\S+) +[p|b]ps$")
+
+        # -------------------------------------------------
+        # Build parsed output
+        # -------------------------------------------------
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Physical interface: ge-0/0/2, Enabled, Physical link is Up
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict = ret_dict.setdefault('interface-information', {}).\
+                                                    setdefault('physical-interface', {})
+                physical_interface_dict['name'] = group['name']
+                physical_interface_dict['oper-status'] = group['oper_status']
+                continue
+
+            #           Interface index: 143, SNMP ifIndex: 601
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    physical_interface_dict[entry_key] = group_value
+                continue
+
+            #           Description: to_ixia_2/4
+            m = p3.match(line)
+            if m:
+                physical_interface_dict['description'] = m.groupdict()['description']
+                continue
+
+            #         Forwarding classes: 16 supported, 5 in use
+            #         Egress queues: 8 supported, 5 in use
+            m = p4.match(line) or p5.match(line)
+            if m:
+                if 'queue-counters' not in physical_interface_dict:
+                    interface_cos_summary_dict = physical_interface_dict.\
+                                                 setdefault('queue-counters', {}).\
+                                                 setdefault('interface-cos-summary', {})
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    interface_cos_summary_dict[entry_key] = group_value
+                continue
+
+            #         Queue: 0, Forwarding classes: Bronze-FC
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                if "queue" not in physical_interface_dict['queue-counters']:
+                    physical_interface_dict['queue-counters']['queue'] = []
+                current_queue_dict = {}
+
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    current_queue_dict[entry_key] = group_value
+
+                physical_interface_dict['queue-counters']['queue'].append(current_queue_dict)
+                continue
+
+            #             Packets              :            1470816406                      0 pps
+            #             Bytes                :          564883280956                     0 bps
+            #             Tail-dropped packets :                     0                     0 pps
+            #             ...
+            #              Low                 :                     0                     0 pps
+            #              Medium-low          :                     0                     0 pps
+            #              Medium-high         :                     0                     0 pps
+            #              High                :                     0                     0 pps
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                name = group['name']
+                counts = group['counts']
+                rates = group['rates']
+
+                # RED-dropped bytes
+                if red_dropped_bytes:
+                    if name == 'Low':
+                        current_queue_dict['queue-counters-red-bytes-low'] = counts
+                        current_queue_dict['queue-counters-red-bytes-rate-low'] = rates
+                    elif name == 'Medium-low':
+                        current_queue_dict['queue-counters-red-bytes-medium-low'] = counts
+                        current_queue_dict['queue-counters-red-bytes-rate-medium-low'] = rates
+                    elif name == 'Medium-high':
+                        current_queue_dict['queue-counters-red-bytes-medium-high'] = counts
+                        current_queue_dict['queue-counters-red-bytes-rate-medium-high'] = rates
+                    elif name == 'High':
+                        current_queue_dict['queue-counters-red-bytes-high'] = counts
+                        current_queue_dict['queue-counters-red-bytes-rate-high'] = rates
+                        red_dropped_bytes = None
+
+                # RED-dropped packets
+                elif red_dropped_packets:
+                    if name == 'Low':
+                        current_queue_dict['queue-counters-red-packets-low'] = counts
+                        current_queue_dict['queue-counters-red-packets-rate-low'] = rates
+                    elif name == 'Medium-low':
+                        current_queue_dict['queue-counters-red-packets-medium-low'] = counts
+                        current_queue_dict['queue-counters-red-packets-rate-medium-low'] = rates
+                    elif name == 'Medium-high':
+                        current_queue_dict['queue-counters-red-packets-medium-high'] = counts
+                        current_queue_dict['queue-counters-red-packets-rate-medium-high'] = rates
+                    elif name == 'High':
+                        current_queue_dict['queue-counters-red-packets-high'] = counts
+                        current_queue_dict['queue-counters-red-packets-rate-high'] = rates
+                        red_dropped_packets = None
+
+                # Transmitted
+                elif transmitted:
+                    if name == 'Packets':
+                        current_queue_dict['queue-counters-trans-packets'] = counts
+                        current_queue_dict['queue-counters-trans-packets-rate'] = rates
+                    elif name == 'Bytes':
+                        current_queue_dict['queue-counters-trans-bytes'] = counts
+                        current_queue_dict['queue-counters-trans-bytes-rate'] = rates
+                    elif name == 'Tail-dropped packets':
+                        current_queue_dict['queue-counters-tail-drop-packets'] = counts
+                        current_queue_dict['queue-counters-tail-drop-packets-rate'] = rates
+                        transmitted = None
+
+                # Queued
+                else:
+                    if name == 'Packets':
+                        current_queue_dict['queue-counters-queued-packets'] = counts
+                        current_queue_dict['queue-counters-queued-packets-rate'] = rates
+                    elif name == 'Bytes':
+                        current_queue_dict['queue-counters-queued-bytes'] = counts
+                        current_queue_dict['queue-counters-queued-bytes-rate'] = rates
+
+                continue
+
+            #           Transmitted:
+            m = p8.match(line)
+            if m:
+                transmitted = True
+                continue
+
+            #             RED-dropped packets  :                     0                     0 pps
+            m = p9.match(line)
+            if m:
+                red_dropped_packets = True
+                group = m.groupdict()
+                if group['name'] == 'RED-dropped packets':
+                    current_queue_dict['queue-counters-red-packets'] = group['counts']
+                    current_queue_dict['queue-counters-red-packets-rate'] = group['rates']
+                continue
+
+            #             RED-dropped bytes    :                     0                     0 bps
+            m = p10.match(line)
+            if m:
+                red_dropped_bytes = True
+                group = m.groupdict()
+                if group['name'] == 'RED-dropped bytes':
+                    current_queue_dict['queue-counters-red-bytes'] = group['counts']
+                    current_queue_dict['queue-counters-red-bytes-rate'] = group['rates']
+                continue
         return ret_dict
