@@ -1756,9 +1756,10 @@ class ShowInterfacesQueue(ShowInterfacesQueueSchema):
     """
     cli_command = 'show interfaces queue {interface}'
 
-    def cli(self, output=None):
+    def cli(self, interface=None, output=None):
         if not output:
-            out = self.device.execute(self.cli_command)
+            cmd = self.cli_command.format(interface=interface)
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -1884,60 +1885,61 @@ class ShowInterfacesQueue(ShowInterfacesQueueSchema):
             m = p7.match(line)
             if m:
                 group = m.groupdict()
+                name = group['name']
                 counts = group['counts']
                 rates = group['rates']
 
                 # RED-dropped bytes
                 if red_dropped_bytes:
-                    red_dropped_bytes = None
-                    if group['name'] == 'Low':
+                    if name == 'Low':
                         current_queue_dict['queue-counters-red-bytes-low'] = counts
                         current_queue_dict['queue-counters-red-bytes-rate-low'] = rates
-                    elif group['name'] == 'Medium-low':
+                    elif name == 'Medium-low':
                         current_queue_dict['queue-counters-red-bytes-medium-low'] = counts
                         current_queue_dict['queue-counters-red-bytes-rate-medium-low'] = rates
-                    elif group['name'] == 'Medium-high':
+                    elif name == 'Medium-high':
                         current_queue_dict['queue-counters-red-bytes-medium-high'] = counts
                         current_queue_dict['queue-counters-red-bytes-rate-medium-high'] = rates
-                    elif group['name'] == 'High':
+                    elif name == 'High':
                         current_queue_dict['queue-counters-red-bytes-high'] = counts
                         current_queue_dict['queue-counters-red-bytes-rate-high'] = rates
+                        red_dropped_bytes = None
 
                 # RED-dropped packets
                 elif red_dropped_packets:
-                    red_dropped_packets = None
-                    if group['name'] == 'Low':
+                    if name == 'Low':
                         current_queue_dict['queue-counters-red-packets-low'] = counts
                         current_queue_dict['queue-counters-red-packets-rate-low'] = rates
-                    elif group['name'] == 'Medium-low':
+                    elif name == 'Medium-low':
                         current_queue_dict['queue-counters-red-packets-medium-low'] = counts
                         current_queue_dict['queue-counters-red-packets-rate-medium-low'] = rates
-                    elif group['name'] == 'Medium-high':
+                    elif name == 'Medium-high':
                         current_queue_dict['queue-counters-red-packets-medium-high'] = counts
                         current_queue_dict['queue-counters-red-packets-rate-medium-high'] = rates
-                    elif group['name'] == 'High':
+                    elif name == 'High':
                         current_queue_dict['queue-counters-red-packets-high'] = counts
                         current_queue_dict['queue-counters-red-packets-rate-high'] = rates
+                        red_dropped_packets = None
 
                 # Transmitted
                 elif transmitted:
-                    transmitted = None
-                    if group['name'] == 'Packets':
+                    if name == 'Packets':
                         current_queue_dict['queue-counters-trans-packets'] = counts
                         current_queue_dict['queue-counters-trans-packets-rate'] = rates
-                    elif group['name'] == 'Bytes':
+                    elif name == 'Bytes':
                         current_queue_dict['queue-counters-trans-bytes'] = counts
                         current_queue_dict['queue-counters-trans-bytes-rate'] = rates
-                    elif group['name'] == 'Tail-dropped packets':
+                    elif name == 'Tail-dropped packets':
                         current_queue_dict['queue-counters-tail-drop-packets'] = counts
                         current_queue_dict['queue-counters-tail-drop-packets-rate'] = rates
+                        transmitted = None
 
                 # Queued
                 else:
-                    if group['name'] == 'Packets':
+                    if name == 'Packets':
                         current_queue_dict['queue-counters-queued-packets'] = counts
                         current_queue_dict['queue-counters-queued-packets-rate'] = rates
-                    elif group['name'] == 'Bytes':
+                    elif name == 'Bytes':
                         current_queue_dict['queue-counters-queued-bytes'] = counts
                         current_queue_dict['queue-counters-queued-bytes-rate'] = rates
 
