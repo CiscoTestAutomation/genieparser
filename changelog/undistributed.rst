@@ -81,6 +81,7 @@
         * Optional key issue resolved
     * Updated ShowOspf3DatabaseExtensiveSchema
         * Optional key issue resolved
+        * Added missing ospf3-inter-area-prefix-lsa key
     * Updated ShowOspf3DatabaseExtensive
         * Missing key issue resolved
     * Updated ShowOspf3Database
