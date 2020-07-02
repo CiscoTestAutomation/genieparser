@@ -7942,7 +7942,6 @@ class TestShowInterfaces(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
-<<<<<<< HEAD
 # =======================================================
 # Unit test for 'show interfaces queue {interface}'
 # =======================================================
