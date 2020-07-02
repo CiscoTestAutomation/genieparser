@@ -25,6 +25,10 @@
         *extended from ShowOspfDatabaseAdvertisingRouterSelfDetail
     * Added ShowInterfacesQueue for:
         * show interfaces queue {interface}
+    * Added ShowInterfacesPolicersInterface for:
+        * show interfaces policers {interface}
+    * Added ShowInterfacesStatistics
+        * show interfaces statistics
 
 
 --------------------------------------------------------------------------------
@@ -43,6 +47,8 @@
         * 'show ip bgp {address_family} rd {rd} detail'
     * Updated ShowBootvar:
         * Modified the regex patterns to support various outputs.
+    * Update ShowPolicyMapInterfaceInput:
+        * Fixed issue if no top level dict
 * NXOS
     * Updated ShowMacAddressTableBase:
         * Modified the regex patterns to support various outputs.
@@ -83,6 +89,10 @@
         * Optional key issue resolved
     * Updated ShowOspf3DatabaseExtensiveSchema
         * Optional key issue resolved
+    * Updated ShowInterfaces
+        * Fixes case where speed wasn't found
+    * Updated ShowOspfVrfAllInclusive
+        * key error resolved
     * Updated ShowOspfDatabaseLsaidDetail
         * Resolved issue where empty output would cause error
     * Updated ShowOspf3DatabaseExtensive
@@ -96,3 +106,5 @@
 * IOSXE
     * Updated ShowClnsNeighborsDetail
         * Modified regex to accommodate diffrent outputs
+    * Updated ShowInventory
+        * Modified regex to accommodate different outputs

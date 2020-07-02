@@ -13,7 +13,7 @@ from genie.libs.parser.iosxr.show_isis import (
     ShowIsisProtocol,
     ShowIsisHostname,
     ShowIsisInterface,
-    ShowIsisAdjacency, 
+    ShowIsisAdjacency,
     ShowIsisNeighbors,
     ShowIsisStatistics,
     ShowIsisPrivateAll,
@@ -29,7 +29,7 @@ from genie.libs.parser.iosxr.show_isis import (
 class TestShowIsisFastRerouteSummary(unittest.TestCase):
 
     ''' Unit test for 'show isis fast-reroute summary' '''
-    
+
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
@@ -106,22 +106,22 @@ class TestShowIsisFastRerouteSummary(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': '''
-    RP/0/RP0/CPU0:R3#show isis fast-reroute summary 
+    RP/0/RP0/CPU0:R3#show isis fast-reroute summary
     Thu Aug 29 15:31:09.046 UTC
 
     IS-IS SR IPv4 Unicast FRR summary
- 
-                          Critical   High       Medium     Low        Total     
-                          Priority   Priority   Priority   Priority             
+
+                          Critical   High       Medium     Low        Total
+                          Priority   Priority   Priority   Priority
     Prefixes reachable in L1
-        All paths protected     0          0          0          0          0         
-        Some paths protected    0          0          0          0          0         
-        Unprotected             0          0          4          6          10        
-        Protection coverage     0.00%      0.00%      0.00%      0.00%      0.00%     
+        All paths protected     0          0          0          0          0
+        Some paths protected    0          0          0          0          0
+        Unprotected             0          0          4          6          10
+        Protection coverage     0.00%      0.00%      0.00%      0.00%      0.00%
     Prefixes reachable in L2
-        All paths protected     0          0          0          0          0         
-        Some paths protected    0          0          0          0          0         
-        Unprotected             0          0          1          0          1         
+        All paths protected     0          0          0          0          0
+        Some paths protected    0          0          0          0          0
+        Unprotected             0          0          1          0          1
         Protection coverage     0.00%      0.00%      0.00%      0.00%      0.00%
     '''}
 
@@ -143,7 +143,7 @@ class TestShowIsisFastRerouteSummary(unittest.TestCase):
 
 class TestShowIsisAdjacency(unittest.TestCase):
     '''Unit test for 'show isis adjacency'''
-    
+
     empty_output = {'execute.return_value': ''}
 
     maxDiff = None
@@ -206,14 +206,14 @@ class TestShowIsisAdjacency(unittest.TestCase):
           System Id      Interface        SNPA           State Hold     Changed  NSF      BFD
           12a4           PO0/1/0/1        *PtoP*         Up    23       00:00:06 Capable  Init
           12a4           Gi0/6/0/2        0004.28ff.868a Up    56       00:04:01 Capable  Up
-          
+
           Total adjacency count: 2
-          
+
           IS-IS p Level-2 adjacencies:
           System Id      Interface        SNPA           State Hold     Changed  NSF      BFD
           12a4           PO0/1/0/1        *PtoP*         Up    23       00:00:06 Capable  None
           12a4           Gi0/6/0/2        0004.28ff.868a Up    26       00:00:13 Capable  Init
-          
+
           Total adjacency count: 2
     '''}
 
@@ -286,23 +286,23 @@ class TestShowIsisAdjacency(unittest.TestCase):
         +++ R2_xr: executing command 'show isis adjacency' +++
         show isis adjacency
         Wed Apr 17 16:25:06.870 UTC
-        
+
         IS-IS test Level-1 adjacencies:
         System Id      Interface        SNPA           State Hold Changed  NSF IPv4 IPv6
                                                                                BFD  BFD
         R1_xe          Gi0/0/0/0.115    fa16.3eff.4f49 Up    23   22:30:27 Yes None None
         R3_nx          Gi0/0/0/1.115    5e00.40ff.0209 Up    20   22:30:27 Yes None None
-        
+
         Total adjacency count: 2
-        
+
         IS-IS test Level-2 adjacencies:
         System Id      Interface        SNPA           State Hold Changed  NSF IPv4 IPv6
                                                                                BFD  BFD
         R1_xe          Gi0/0/0/0.115    fa16.3eff.4f49 Up    26   22:30:26 Yes None None
         R3_nx          Gi0/0/0/1.115    5e00.40ff.0209 Up    23   22:30:27 Yes None None
-        
+
         Total adjacency count: 2
-        
+
         IS-IS test1 Level-1 adjacencies:
         System Id      Interface        SNPA           State Hold Changed  NSF IPv4 IPv6
                                                                        BFD  BFD
@@ -339,7 +339,7 @@ class TestShowIsisNeighbors(unittest.TestCase):
     '''Unit test for "show isis neighbors"'''
 
     maxDiff = None
-    
+
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
@@ -375,7 +375,7 @@ class TestShowIsisNeighbors(unittest.TestCase):
         System Id      Interface        SNPA           State Holdtime Type IETF-NSF
         R1_xe          Gi0/0/0/0.115    fa16.3eff.4f49 Up    24       L1L2 Capable
         R3_nx          Gi0/0/0/1.115    5e00.40ff.0209 Up    25       L1L2 Capable
-        
+
         Total neighbor count: 2
     '''}
 
@@ -409,14 +409,14 @@ class TestShowIsisNeighbors(unittest.TestCase):
     golden_output2 = {'execute.return_value': '''
         show isis neighbors
         Thu Apr 18 11:00:22.192 UTC
-        
+
         IS-IS test neighbors:
         System Id      Interface        SNPA           State Holdtime Type IETF-NSF
         R1_xe          Gi0/0/0/0.115    fa16.3eff.4f49 Up    22       L1L2 Capable
         R3_nx          Gi0/0/0/1.115    5e00.40ff.0209 Up    22       L1L2 Capable
-        
+
         Total neighbor count: 2
-        
+
         IS-IS test1 neighbors:
         System Id      Interface        SNPA           State Holdtime Type IETF-NSF
     '''}
@@ -448,7 +448,7 @@ class TestShowIsisSegmentRoutingLabelTable(unittest.TestCase):
     '''Unit test for "show isis segment-routing label table"'''
 
     maxDiff = None
-    
+
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
@@ -467,9 +467,9 @@ class TestShowIsisSegmentRoutingLabelTable(unittest.TestCase):
     }
 
     golden_output1 = {'execute.return_value': '''
-        RP/0/RP0/CPU0:iosxrv9000-1#show isis segment-routing label table 
+        RP/0/RP0/CPU0:iosxrv9000-1#show isis segment-routing label table
         Mon Sep 30 13:22:32.921 EDT
-            
+
         IS-IS SR IS Label Table
         Label         Prefix/Interface
         ----------    ----------------
@@ -542,10 +542,10 @@ class TestShowIsis(unittest.TestCase):
                                     'default': {
                                         "level": {
                                             1: {
-                                                "metric": 10, 
+                                                "metric": 10,
                                                 "ispf_status": "Disabled"},
                                             2: {
-                                                "metric": 10, 
+                                                "metric": 10,
                                                 "ispf_status": "Disabled"},
                                         },
                                         "protocols_redistributed": False,
@@ -710,7 +710,7 @@ class TestShowIsis(unittest.TestCase):
         Mon Oct  7 16:22:11.993 EDT
 
         IS-IS Router: Cisco
-        System Id: 1781.81ff.43c7 
+        System Id: 1781.81ff.43c7
         Instance Id: 0
         IS Levels: level-2-only
         Manual area address(es):
@@ -853,7 +853,7 @@ class TestShowIsis(unittest.TestCase):
             GigabitEthernet0/0/0/1 is running actively (active in configuration)
 
     '''}
-    
+
 
     def test_show_isis_empty(self):
         self.device = Mock(**self.empty_output)
@@ -866,7 +866,7 @@ class TestShowIsis(unittest.TestCase):
         obj = ShowIsis(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
-    
+
     def test_show_isis_2(self):
         self.device = Mock(**self.golden_output_2)
         obj = ShowIsis(device=self.device)
@@ -991,7 +991,7 @@ class TestShowIsisSpfLog(unittest.TestCase):
         23:12:51.401 PPFRR     0    64     1                      PERPREFIXFRR
         23:27:50.960  FSPF     0    64     1                      PERIODIC
         --- Tue Oct  8 2019 ---
-        00:00:17.514   PRC     0    64     6      bla-host1.12-34 PREFIXBAD        
+        00:00:17.514   PRC     0    64     6      bla-host1.12-34 PREFIXBAD
         00:02:24.523   PRC     0    64     6      bla-host2.13-34 PREFIXGOOD
         00:02:25.025 PPFRR     0    64     1                      PERPREFIXFRR
         08:15:04.265   PRC     0    64     1 bla-9.blahlab-cld.12-34 PREFIXBAD
@@ -1084,18 +1084,18 @@ class TestShowIsisSpfLog(unittest.TestCase):
 
     # From ncs5k/ncs6k/asr9k documentation
     golden_output_2 = {'execute.return_value': '''
-        # show isis spf-log 
-          
+        # show isis spf-log
+
                IS-IS 1 Level 1 IPv4 Unicast Route Calculation Log
                            Time  Total Trig
           Timestamp   Type (ms)  Nodes Count First Trigger LSP Triggers
           ----------- ---- ----  ----- ----- ----- ------- --- --------
           --- Thurs Aug 19 2004 ---
           12:00:50.787  FSPF  1    1     3   ensoft-grs7.00-00 LSPHEADER TLVCODE
-          12:00:52.846  FSPF  1    1     1   ensoft-grs7.00-00 LSPHEADER 
+          12:00:52.846  FSPF  1    1     1   ensoft-grs7.00-00 LSPHEADER
           12:00:56.049  FSPF  1    1     1   ensoft-grs7.00-00 TLVCODE
           12:01:02.620  FSPF  1    1     2   ensoft-grs7.00-00 NEWADJ LINKTLV
-              
+
                IS-IS 1 Level 1 IPv4 Unicast Route Calculation Log
                            Time  Total Trig
           Timestamp   Type (ms)  Nodes Count First Trigger LSP Triggers
@@ -1108,7 +1108,7 @@ class TestShowIsisSpfLog(unittest.TestCase):
 
     def test_empty_output(self):
         device = Mock(**self.empty_output)
-        obj = ShowIsisSpfLog(device=device)        
+        obj = ShowIsisSpfLog(device=device)
         with self.assertRaises(SchemaEmptyParserError):
             obj.parse()
 
@@ -1225,10 +1225,10 @@ class TestShowIsisSpfLogDetail(unittest.TestCase):
             },
         },
     }
-    
+
     golden_output_1 = {'execute.return_value': '''
         # show isis spf-log detail
-          
+
               ISIS isp Level 1 IPv4 Unicast Route Calculation Log
                            Time  Total Trig
           Timestamp   Type (ms)  Nodes Count First Trigger LSP   Triggers
@@ -1248,17 +1248,17 @@ class TestShowIsisSpfLogDetail(unittest.TestCase):
              Nodes:                   1       0     1
              Prefixes (Items)
                Critical Priority:     0       0     0
-               High Priority:         0       0     0 
-               Medium Priority        0       0     0 
-               Low Priority           0       0     0 
-          
+               High Priority:         0       0     0
+               Medium Priority        0       0     0
+               Low Priority           0       0     0
+
                All Priorities         0       0     0
              Prefixes (Routes)
                Critical Priority:     0       -     0
                High Priority:         0       -     0
                Medium Priority        0        -    0
                Low Priority:          0        -    0
-          
+
                All Priorities         0        -    0
     '''}
 
@@ -1424,19 +1424,19 @@ class TestShowIsisSpfLogDetail(unittest.TestCase):
             },
         },
     }
-    
+
     def test_empty_output(self):
         device = Mock(**self.empty_output)
         obj = ShowIsisSpfLogDetail(device=device)
         with self.assertRaises(SchemaEmptyParserError):
-            obj.parse()        
+            obj.parse()
 
     def test_golden_output_1(self):
         device = Mock(**self.golden_output_1)
         obj = ShowIsisSpfLogDetail(device=device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.parsed_output_1)
-    
+
     def test_golden_output_2(self):
         device = Mock(**self.golden_output_2)
         obj = ShowIsisSpfLogDetail(device=device)
@@ -1447,7 +1447,7 @@ class TestIsisHostname(unittest.TestCase):
     ''' Unit tests for commands:
         * show isis hostname / ShowIsisHostname
         * show isis instance {instance} hostname / ShowIsisHostname
-    '''         
+    '''
     maxDiff = None
 
     empty_output = {'execute.return_value': ''}
@@ -1461,15 +1461,15 @@ class TestIsisHostname(unittest.TestCase):
                             2: {
                                 'system_id': {
                                     '5286.44ff.91b9': {
-                                        'dynamic_hostname': 'host-1.bla-site3'}, 
+                                        'dynamic_hostname': 'host-1.bla-site3'},
                                     '9839.23ff.9c50': {
-                                        'dynamic_hostname': 'host3-bla'}, 
+                                        'dynamic_hostname': 'host3-bla'},
                                     '3549.63ff.9ab5': {
-                                        'dynamic_hostname': 'abc-3.bla-site4'}, 
+                                        'dynamic_hostname': 'abc-3.bla-site4'},
                                     '0670.70ff.b1b1': {
                                             'dynamic_hostname': 'host2-abc'},
                                     '9853.99ff.fb21': {
-                                        'dynamic_hostname': 'abc2-xyz', 
+                                        'dynamic_hostname': 'abc2-xyz',
                                         'local_router': True}}}}}}}}}
 
     golden_output_1 = {'execute.return_value': '''
@@ -1579,19 +1579,19 @@ class TestShowIsisStatistics(unittest.TestCase):
         "isis": {
             "test": {
                 "psnp_cache": {
-                    "hits": 21, 
+                    "hits": 21,
                     "tries": 118},
                 "csnp_cache": {
-                    "hits": 1398, 
-                    "tries": 1501, 
+                    "hits": 1398,
+                    "tries": 1501,
                     "updates": 204},
                 "lsp": {
-                    "checksum_errors_received": 0, 
+                    "checksum_errors_received": 0,
                     "dropped": 0},
                 "snp": {
                     "dropped": 0},
                 "upd": {
-                    "max_queue_size": 3, 
+                    "max_queue_size": 3,
                     "queue_size": 0},
                 "transmit_time": {
                     "hello": {
@@ -1640,7 +1640,7 @@ class TestShowIsisStatistics(unittest.TestCase):
                 "level": {
                     1: {
                         "lsp": {
-                            "new": 11, 
+                            "new": 11,
                             "refresh": 15},
                         "address_family": {
                             "IPv4 Unicast": {
@@ -1663,7 +1663,7 @@ class TestShowIsisStatistics(unittest.TestCase):
                     },
                     2: {
                         "lsp": {
-                            "new": 13, 
+                            "new": 13,
                             "refresh": 11},
                         "address_family": {
                             "IPv4 Unicast": {
@@ -1696,10 +1696,10 @@ class TestShowIsisStatistics(unittest.TestCase):
                                     "arrival_time_throttled": 0,
                                 },
                                 "csnp": {
-                                    "sent": 0, 
+                                    "sent": 0,
                                     "received": 0},
                                 "psnp": {
-                                    "sent": 0, 
+                                    "sent": 0,
                                     "received": 0},
                             },
                             2: {
@@ -1710,10 +1710,10 @@ class TestShowIsisStatistics(unittest.TestCase):
                                     "arrival_time_throttled": 0,
                                 },
                                 "csnp": {
-                                    "sent": 0, 
+                                    "sent": 0,
                                     "received": 0},
                                 "psnp": {
-                                    "sent": 0, 
+                                    "sent": 0,
                                     "received": 0},
                             },
                         }
@@ -1722,7 +1722,7 @@ class TestShowIsisStatistics(unittest.TestCase):
                         "level": {
                             1: {
                                 "hello": {
-                                    "received": 594, 
+                                    "received": 594,
                                     "sent": 593},
                                 "dr": {
                                     "elections": 1},
@@ -1733,15 +1733,15 @@ class TestShowIsisStatistics(unittest.TestCase):
                                     "arrival_time_throttled": 0,
                                 },
                                 "csnp": {
-                                    "sent": 0, 
+                                    "sent": 0,
                                     "received": 0},
                                 "psnp": {
-                                    "sent": 0, 
+                                    "sent": 0,
                                     "received": 0},
                             },
                             2: {
                                 "hello": {
-                                    "received": 1779, 
+                                    "received": 1779,
                                     "sent": 594},
                                 "dr": {
                                     "elections": 1},
@@ -1752,10 +1752,10 @@ class TestShowIsisStatistics(unittest.TestCase):
                                     "arrival_time_throttled": 0,
                                 },
                                 "csnp": {
-                                    "sent": 595, 
+                                    "sent": 595,
                                     "received": 0},
                                 "psnp": {
-                                    "sent": 0, 
+                                    "sent": 0,
                                     "received": 0},
                             },
                         }
@@ -1764,7 +1764,7 @@ class TestShowIsisStatistics(unittest.TestCase):
                         "level": {
                             1: {
                                 "hello": {
-                                    "received": 1294, 
+                                    "received": 1294,
                                     "sent": 604},
                                 "dr": {
                                     "elections": 5},
@@ -1775,15 +1775,15 @@ class TestShowIsisStatistics(unittest.TestCase):
                                     "arrival_time_throttled": 0,
                                 },
                                 "csnp": {
-                                    "sent": 339, 
+                                    "sent": 339,
                                     "received": 0},
                                 "psnp": {
-                                    "sent": 0, 
+                                    "sent": 0,
                                     "received": 1},
                             },
                             2: {
                                 "hello": {
-                                    "received": 724, 
+                                    "received": 724,
                                     "sent": 281},
                                 "dr": {
                                     "elections": 5},
@@ -1794,10 +1794,10 @@ class TestShowIsisStatistics(unittest.TestCase):
                                     "arrival_time_throttled": 0,
                                 },
                                 "csnp": {
-                                    "sent": 0, 
+                                    "sent": 0,
                                     "received": 0},
                                 "psnp": {
-                                    "sent": 0, 
+                                    "sent": 0,
                                     "received": 0},
                             },
                         }
@@ -1806,7 +1806,7 @@ class TestShowIsisStatistics(unittest.TestCase):
                         "level": {
                             1: {
                                 "hello": {
-                                    "received": 1739, 
+                                    "received": 1739,
                                     "sent": 572},
                                 "dr": {
                                     "elections": 3},
@@ -1817,15 +1817,15 @@ class TestShowIsisStatistics(unittest.TestCase):
                                     "arrival_time_throttled": 0,
                                 },
                                 "csnp": {
-                                    "sent": 567, 
+                                    "sent": 567,
                                     "received": 0},
                                 "psnp": {
-                                    "sent": 0, 
+                                    "sent": 0,
                                     "received": 0},
                             },
                             2: {
                                 "hello": {
-                                    "received": 597, 
+                                    "received": 597,
                                     "sent": 0},
                                 "dr": {
                                     "elections": 1},
@@ -1836,10 +1836,10 @@ class TestShowIsisStatistics(unittest.TestCase):
                                     "arrival_time_throttled": 0,
                                 },
                                 "csnp": {
-                                    "sent": 0, 
+                                    "sent": 0,
                                     "received": 0},
                                 "psnp": {
-                                    "sent": 0, 
+                                    "sent": 0,
                                     "received": 0},
                             },
                         }
@@ -1848,7 +1848,7 @@ class TestShowIsisStatistics(unittest.TestCase):
                         "level": {
                             1: {
                                 "hello": {
-                                    "received": 598, 
+                                    "received": 598,
                                     "sent": 1115},
                                 "dr": {
                                     "elections": 3},
@@ -1859,15 +1859,15 @@ class TestShowIsisStatistics(unittest.TestCase):
                                     "arrival_time_throttled": 0,
                                 },
                                 "csnp": {
-                                    "sent": 0, 
+                                    "sent": 0,
                                     "received": 370},
                                 "psnp": {
-                                    "sent": 0, 
+                                    "sent": 0,
                                     "received": 0},
                             },
                             2: {
                                 "hello": {
-                                    "received": 596, 
+                                    "received": 596,
                                     "sent": 1113},
                                 "dr": {
                                     "elections": 3},
@@ -1878,10 +1878,10 @@ class TestShowIsisStatistics(unittest.TestCase):
                                     "arrival_time_throttled": 0,
                                 },
                                 "csnp": {
-                                    "sent": 0, 
+                                    "sent": 0,
                                     "received": 370},
                                 "psnp": {
-                                    "sent": 0, 
+                                    "sent": 0,
                                     "received": 0},
                             },
                         }
@@ -2023,7 +2023,7 @@ class TestShowIsisStatistics(unittest.TestCase):
         obj = ShowIsisStatistics(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             obj.parse()
-    
+
     def test_golden_output_1(self):
         self.device = Mock(**self.golden_output_1)
         obj = ShowIsisStatistics(device=self.device)
@@ -2072,11 +2072,11 @@ class TestShowIsisProtocol(unittest.TestCase):
                                 }
                             }
                         },
-                        "srlb": {                            
-                            "start": 15000, 
+                        "srlb": {
+                            "start": 15000,
                             "end": 15999},
-                        "srgb": {                            
-                            "start": 16000, 
+                        "srgb": {
+                            "start": 16000,
                             "end": 81534},
                         "interfaces": {
                             "GigabitEthernet0/0/0/1": {
@@ -2198,10 +2198,10 @@ class TestShowIsisProtocol(unittest.TestCase):
                                     "default": {
                                         "level": {
                                             1: {
-                                                "metric": 10, 
+                                                "metric": 10,
                                                 "ispf_status": "Disabled"},
                                             2: {
-                                                "metric": 10, 
+                                                "metric": 10,
                                                 "ispf_status": "Disabled"},
                                         },
                                         "protocols_redistributed": False,
@@ -2269,10 +2269,10 @@ class TestShowIsisProtocol(unittest.TestCase):
                                     "VRF1": {
                                         "level": {
                                             1: {
-                                                "metric": 10, 
+                                                "metric": 10,
                                                 "ispf_status": "Disabled"},
                                             2: {
-                                                "metric": 10, 
+                                                "metric": 10,
                                                 "ispf_status": "Disabled"},
                                         },
                                         "protocols_redistributed": False,
@@ -2425,13 +2425,13 @@ class TestShowIsisProtocol(unittest.TestCase):
 
     def test_golden_parsed_output_1(self):
         device = Mock(**self.golden_output_1)
-        obj = ShowIsisProtocol(device=device)        
+        obj = ShowIsisProtocol(device=device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
     def test_golden_parsed_output_2(self):
         device = Mock(**self.golden_output_2)
-        obj = ShowIsisProtocol(device=device)        
+        obj = ShowIsisProtocol(device=device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
@@ -2503,7 +2503,7 @@ class TestShowIsisLspLog(unittest.TestCase):
         00:00:17.274      1                     IPEXT
         00:02:25.263      1                     IPEXT
         --- Fri Oct  4 2019 ---
-        16:10:11.734      2  BE2                DELADJ        
+        16:10:11.734      2  BE2                DELADJ
         16:17:45.821      2  BE2                ADJSIDADD
     '''}
 
@@ -2512,8 +2512,8 @@ class TestShowIsisLspLog(unittest.TestCase):
             "isp": {
                 "lsp_log": {
                     1: {
-                        "count": 1, 
-                        "level": 1, 
+                        "count": 1,
+                        "level": 1,
                         "received_timestamp": "00:02:36"},
                     2: {
                         "count": 1,
@@ -2543,8 +2543,8 @@ class TestShowIsisLspLog(unittest.TestCase):
                         "received_timestamp": "00:01:12",
                     },
                     6: {
-                        "count": 1, 
-                        "level": 2, 
+                        "count": 1,
+                        "level": 2,
                         "received_timestamp": "00:02:36"},
                     7: {
                         "count": 1,
@@ -2577,7 +2577,7 @@ class TestShowIsisLspLog(unittest.TestCase):
         # show isis lsp-log
         ISIS isp Level 1 LSP log
           When       Count      Interface       Triggers
-        00:02:36         1                      
+        00:02:36         1
         00:02:31         1                      LSPREGEN
         00:02:24         1      PO4/1           NEWADJ
         00:02:23         1      Gi5/0           DIS
@@ -2585,8 +2585,8 @@ class TestShowIsisLspLog(unittest.TestCase):
 
         ISIS isp Level 2 LSP log
           When       Count      Interface       Triggers
-        00:02:36         1 
-        00:02:30         1                      LSPREGEN        
+        00:02:36         1
+        00:02:30         1                      LSPREGEN
         00:02:23         1      Gi5/0           DIS
         00:01:12         1      Lo0             IPUP
     '''}
@@ -2652,8 +2652,8 @@ class TestShowIsisLspLog(unittest.TestCase):
             "isp": {
                 "lsp_log": {
                     1: {
-                        "count": 1, 
-                        "level": 1, 
+                        "count": 1,
+                        "level": 1,
                         "received_timestamp": "00:02:36"},
                     2: {
                         "count": 1,
@@ -2676,8 +2676,8 @@ class TestShowIsisLspLog(unittest.TestCase):
                         "received_timestamp": "00:02:24",
                     },
                     5: {
-                        "count": 1, 
-                        "level": 2, 
+                        "count": 1,
+                        "level": 2,
                         "received_timestamp": "00:02:36"},
                     6: {
                         "count": 1,
@@ -2709,14 +2709,14 @@ class TestShowIsisLspLog(unittest.TestCase):
         #show isis lsp-log
         ISIS isp Level 1 LSP log
           When       Count      Interface       Triggers
-        00:02:36         1                      
+        00:02:36         1
         00:02:31         1                      LSPREGEN
         00:02:26         1      PO4/1           DELADJ
         00:02:24         1      PO4/1           NEWADJ
 
         ISIS isp Level 2 LSP log
           When       Count      Interface       Triggers
-        00:02:36         1 
+        00:02:36         1
         00:02:30         1                      LSPREGEN
         00:02:26         1      PO4/1           DELADJ
         00:01:12         1      Lo0             IPUP
@@ -2756,9 +2756,9 @@ class TestShowIsisLspLog(unittest.TestCase):
 class TestShowIsisInterface(unittest.TestCase):
     ''' Unit test for commands:
         * show isis interface -> ShowIsisInterface
-    ''' 
+    '''
 
-    maxDiff = None 
+    maxDiff = None
 
     empty_output = {'execute.return_value': ''}
 
@@ -2795,7 +2795,7 @@ class TestShowIsisInterface(unittest.TestCase):
                             },
                         },
                         "clns_io": {
-                            "protocol_state": "Up", 
+                            "protocol_state": "Up",
                             "mtu": 1500},
                         "topology": {
                             "ipv4 unicast": {
@@ -2804,26 +2804,26 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "prefix_advertisement": "Running",
                                 "metric": {
                                     "level": {
-                                        1: 10, 
+                                        1: 10,
                                         2: 10}},
                                 "weight": {
                                     "level": {
-                                        1: 0, 
+                                        1: 0,
                                         2: 0}},
                                 "mpls": {
                                     "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
                                     "ldp_sync": {
                                         "level": {
-                                            1: "Disabled", 
+                                            1: "Disabled",
                                             2: "Disabled"}},
                                 },
                                 "frr": {
                                     "level": {
                                         1: {
-                                            "state": "Not Enabled", 
+                                            "state": "Not Enabled",
                                             "type": "None"},
                                         2: {
-                                            "state": "Not Enabled", 
+                                            "state": "Not Enabled",
                                             "type": "None"},
                                     }
                                 },
@@ -2834,26 +2834,26 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "prefix_advertisement": "Running",
                                 "metric": {
                                     "level": {
-                                        1: 10, 
+                                        1: 10,
                                         2: 10}},
                                 "weight": {
                                     "level": {
-                                        1: 0, 
+                                        1: 0,
                                         2: 0}},
                                 "mpls": {
                                     "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
                                     "ldp_sync": {
                                         "level": {
-                                            1: "Disabled", 
+                                            1: "Disabled",
                                             2: "Disabled"}},
                                 },
                                 "frr": {
                                     "level": {
                                         1: {
-                                            "state": "Not Enabled", 
+                                            "state": "Not Enabled",
                                             "type": "None"},
                                         2: {
-                                            "state": "Not Enabled", 
+                                            "state": "Not Enabled",
                                             "type": "None"},
                                     }
                                 },
@@ -2895,7 +2895,7 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "adjacency_count": 0,
                                 "lan_id": "R3.07",
                                 "priority": {
-                                    "local": "64", 
+                                    "local": "64",
                                     "dis": "none (no DIS elected)"},
                                 "next_lan_iih_sec": 5,
                                 "lsp_pacing_interval_ms": 33,
@@ -2907,7 +2907,7 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "adjacency_count": 1,
                                 "lan_id": "R3.07",
                                 "priority": {
-                                    "local": "64", 
+                                    "local": "64",
                                     "dis": "64"},
                                 "next_lan_iih_sec": 3,
                                 "lsp_pacing_interval_ms": 33,
@@ -2932,26 +2932,26 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "prefix_advertisement": "Running",
                                 "metric": {
                                     "level": {
-                                        1: 10, 
+                                        1: 10,
                                         2: 10}},
                                 "weight": {
                                     "level": {
-                                        1: 0, 
+                                        1: 0,
                                         2: 0}},
                                 "mpls": {
                                     "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
                                     "ldp_sync": {
                                         "level": {
-                                            1: "Disabled", 
+                                            1: "Disabled",
                                             2: "Disabled"}},
                                 },
                                 "frr": {
                                     "level": {
                                         1: {
-                                            "state": "Not Enabled", 
+                                            "state": "Not Enabled",
                                             "type": "None"},
                                         2: {
-                                            "state": "Not Enabled", 
+                                            "state": "Not Enabled",
                                             "type": "None"},
                                     }
                                 },
@@ -2962,26 +2962,26 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "prefix_advertisement": "Running",
                                 "metric": {
                                     "level": {
-                                        1: 10, 
+                                        1: 10,
                                         2: 10}},
                                 "weight": {
                                     "level": {
-                                        1: 0, 
+                                        1: 0,
                                         2: 0}},
                                 "mpls": {
                                     "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
                                     "ldp_sync": {
                                         "level": {
-                                            1: "Disabled", 
+                                            1: "Disabled",
                                             2: "Disabled"}},
                                 },
                                 "frr": {
                                     "level": {
                                         1: {
-                                            "state": "Not Enabled", 
+                                            "state": "Not Enabled",
                                             "type": "None"},
                                         2: {
-                                            "state": "Not Enabled", 
+                                            "state": "Not Enabled",
                                             "type": "None"},
                                     }
                                 },
@@ -3023,7 +3023,7 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "adjacency_count": 1,
                                 "lan_id": "R3.05",
                                 "priority": {
-                                    "local": "64", 
+                                    "local": "64",
                                     "dis": "64"},
                                 "next_lan_iih_sec": 2,
                                 "lsp_pacing_interval_ms": 33,
@@ -3035,7 +3035,7 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "adjacency_count": 0,
                                 "lan_id": "R3.05",
                                 "priority": {
-                                    "local": "64", 
+                                    "local": "64",
                                     "dis": "none (no DIS elected)"},
                                 "next_lan_iih_sec": 6,
                                 "lsp_pacing_interval_ms": 33,
@@ -3060,26 +3060,26 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "prefix_advertisement": "Running",
                                 "metric": {
                                     "level": {
-                                        1: 10, 
+                                        1: 10,
                                         2: 10}},
                                 "weight": {
                                     "level": {
-                                        1: 0, 
+                                        1: 0,
                                         2: 0}},
                                 "mpls": {
                                     "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
                                     "ldp_sync": {
                                         "level": {
-                                            1: "Disabled", 
+                                            1: "Disabled",
                                             2: "Disabled"}},
                                 },
                                 "frr": {
                                     "level": {
                                         1: {
-                                            "state": "Not Enabled", 
+                                            "state": "Not Enabled",
                                             "type": "None"},
                                         2: {
-                                            "state": "Not Enabled", 
+                                            "state": "Not Enabled",
                                             "type": "None"},
                                     }
                                 },
@@ -3090,26 +3090,26 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "prefix_advertisement": "Running",
                                 "metric": {
                                     "level": {
-                                        1: 10, 
+                                        1: 10,
                                         2: 10}},
                                 "weight": {
                                     "level": {
-                                        1: 0, 
+                                        1: 0,
                                         2: 0}},
                                 "mpls": {
                                     "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
                                     "ldp_sync": {
                                         "level": {
-                                            1: "Disabled", 
+                                            1: "Disabled",
                                             2: "Disabled"}},
                                 },
                                 "frr": {
                                     "level": {
                                         1: {
-                                            "state": "Not Enabled", 
+                                            "state": "Not Enabled",
                                             "type": "None"},
                                         2: {
-                                            "state": "Not Enabled", 
+                                            "state": "Not Enabled",
                                             "type": "None"},
                                     }
                                 },
@@ -3151,7 +3151,7 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "adjacency_count": 1,
                                 "lan_id": "R3.03",
                                 "priority": {
-                                    "local": "64", 
+                                    "local": "64",
                                     "dis": "64"},
                                 "next_lan_iih_sec": 1,
                                 "lsp_pacing_interval_ms": 33,
@@ -3163,7 +3163,7 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "adjacency_count": 0,
                                 "lan_id": "R3.03",
                                 "priority": {
-                                    "local": "64", 
+                                    "local": "64",
                                     "dis": "none (no DIS elected)"},
                                 "next_lan_iih_sec": 6,
                                 "lsp_pacing_interval_ms": 33,
@@ -3188,41 +3188,11 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "prefix_advertisement": "Running",
                                 "metric": {
                                     "level": {
-                                        1: 10, 
+                                        1: 10,
                                         2: 10}},
                                 "weight": {
                                     "level": {
-                                        1: 0, 
-                                        2: 0}},
-                                "mpls": {
-                                    "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
-                                    "ldp_sync": {
-                                        "level": {
-                                            1: "Disabled", 
-                                            2: "Disabled"}},
-                                },
-                                "frr": {
-                                    "level": {
-                                        1: {
-                                            "state": "Not Enabled", 
-                                            "type": "None"},
-                                        2: {
-                                            "state": "Not Enabled", 
-                                            "type": "None"},
-                                    }
-                                },
-                            },
-                            "ipv6 unicast": {
-                                "state": "Enabled",
-                                "adjacency_formation": "Running",
-                                "prefix_advertisement": "Running",
-                                "metric": {
-                                    "level": {
-                                        1: 10, 
-                                        2: 10}},
-                                "weight": {
-                                    "level": {
-                                        1: 0, 
+                                        1: 0,
                                         2: 0}},
                                 "mpls": {
                                     "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
@@ -3234,10 +3204,40 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "frr": {
                                     "level": {
                                         1: {
-                                            "state": "Not Enabled", 
+                                            "state": "Not Enabled",
                                             "type": "None"},
                                         2: {
-                                            "state": "Not Enabled", 
+                                            "state": "Not Enabled",
+                                            "type": "None"},
+                                    }
+                                },
+                            },
+                            "ipv6 unicast": {
+                                "state": "Enabled",
+                                "adjacency_formation": "Running",
+                                "prefix_advertisement": "Running",
+                                "metric": {
+                                    "level": {
+                                        1: 10,
+                                        2: 10}},
+                                "weight": {
+                                    "level": {
+                                        1: 0,
+                                        2: 0}},
+                                "mpls": {
+                                    "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
+                                    "ldp_sync": {
+                                        "level": {
+                                            1: "Disabled",
+                                            2: "Disabled"}},
+                                },
+                                "frr": {
+                                    "level": {
+                                        1: {
+                                            "state": "Not Enabled",
+                                            "type": "None"},
+                                        2: {
+                                            "state": "Not Enabled",
                                             "type": "None"},
                                     }
                                 },
@@ -3279,7 +3279,7 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "adjacency_count": 1,
                                 "lan_id": "R5.01",
                                 "priority": {
-                                    "local": "64", 
+                                    "local": "64",
                                     "dis": "64"},
                                 "next_lan_iih_sec": 3,
                                 "lsp_pacing_interval_ms": 33,
@@ -3291,7 +3291,7 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "adjacency_count": 1,
                                 "lan_id": "R5.01",
                                 "priority": {
-                                    "local": "64", 
+                                    "local": "64",
                                     "dis": "64"},
                                 "next_lan_iih_sec": 2,
                                 "lsp_pacing_interval_ms": 33,
@@ -3316,26 +3316,26 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "prefix_advertisement": "Running",
                                 "metric": {
                                     "level": {
-                                        1: 10, 
+                                        1: 10,
                                         2: 10}},
                                 "weight": {
                                     "level": {
-                                        1: 0, 
+                                        1: 0,
                                         2: 0}},
                                 "mpls": {
                                     "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
                                     "ldp_sync": {
                                         "level": {
-                                            1: "Disabled", 
+                                            1: "Disabled",
                                             2: "Disabled"}},
                                 },
                                 "frr": {
                                     "level": {
                                         1: {
-                                            "state": "Not Enabled", 
+                                            "state": "Not Enabled",
                                             "type": "None"},
                                         2: {
-                                            "state": "Not Enabled", 
+                                            "state": "Not Enabled",
                                             "type": "None"},
                                     }
                                 },
@@ -3346,26 +3346,26 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "prefix_advertisement": "Running",
                                 "metric": {
                                     "level": {
-                                        1: 10, 
+                                        1: 10,
                                         2: 10}},
                                 "weight": {
                                     "level": {
-                                        1: 0, 
+                                        1: 0,
                                         2: 0}},
                                 "mpls": {
                                     "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
                                     "ldp_sync": {
                                         "level": {
-                                            1: "Disabled", 
+                                            1: "Disabled",
                                             2: "Disabled"}},
                                 },
                                 "frr": {
                                     "level": {
                                         1: {
-                                            "state": "Not Enabled", 
+                                            "state": "Not Enabled",
                                             "type": "None"},
                                         2: {
-                                            "state": "Not Enabled", 
+                                            "state": "Not Enabled",
                                             "type": "None"},
                                     }
                                 },
@@ -3996,28 +3996,28 @@ class TestShowIsisInterface(unittest.TestCase):
         BFD Multiplier:           3
         RSI SRLG:                 Registered
         Bandwidth:                100000000
-        
+
         Circuit Type:             level-2-only (Interface circuit type is level-1-2)
         Media Type:               P2P
         Circuit Number:           0
         Extended Circuit Number:  113
         Next P2P IIH in:          4 s
         LSP Rexmit Queue Size:    1
-        
-        Level-2                   
+
+        Level-2
             Adjacency Count:        1
             LSP Pacing Interval:    33 ms
             PSNP Entry Queue Size:  0
             Hello Interval:         10 s
             Hello Multiplier:       3
-        
+
         CLNS I/O
             Protocol State:         Up
             MTU:                    9199
             SNPA:                   008a.96ff.1790
             Layer-2 MCast Groups Membership:
             All ISs:              Yes
-        
+
         IPv4 Unicast Topology:    Enabled
             Adjacency Formation:    Running
             Prefix Advertisement:   Disabled (Intf suppressed in IS-IS cfg)
@@ -4025,35 +4025,35 @@ class TestShowIsisInterface(unittest.TestCase):
             Weight (L1/L2):         0/0
             MPLS Max Label Stack:   3/3/12/0 (PRI/BKP/SRTE/SRAT)
             MPLS LDP Sync (L1/L2):  Disabled/Disabled
-            FRR (L1/L2):            L1 Enabled         L2 Enabled     
-            FRR Type:             per-prefix         per-prefix     
-            Direct LFA:           Enabled            Enabled        
-            Remote LFA:           Not Enabled        Not Enabled    
-            Tie Breaker          Default            Default        
-            Line-card disjoint   30                 30             
-            Lowest backup metric 20                 20             
-            Node protecting      40                 40             
-            Primary path         10                 10             
-            TI LFA:               Enabled            Enabled        
-            Tie Breaker          Default            Default        
-            Link Protecting      Enabled            Enabled        
-            Line-card disjoint   0                  0              
-            Node protecting      100                100            
-            SRLG disjoint        0                  0              
-        
+            FRR (L1/L2):            L1 Enabled         L2 Enabled
+            FRR Type:             per-prefix         per-prefix
+            Direct LFA:           Enabled            Enabled
+            Remote LFA:           Not Enabled        Not Enabled
+            Tie Breaker          Default            Default
+            Line-card disjoint   30                 30
+            Lowest backup metric 20                 20
+            Node protecting      40                 40
+            Primary path         10                 10
+            TI LFA:               Enabled            Enabled
+            Tie Breaker          Default            Default
+            Link Protecting      Enabled            Enabled
+            Line-card disjoint   0                  0
+            Node protecting      100                100
+            SRLG disjoint        0                  0
+
         IPv4 Address Family:      Enabled
             Protocol State:         Up
             Forwarding Address(es): 172.18.0.1
             Global Prefix(es):      Unknown (Intf suppressed in IS-IS cfg)
-        
+
         LSP transmit timer expires in 0 ms
         LSP transmission is idle
         Can send up to 9 back-to-back LSPs in the next 0 ms
-        
+
         Underlying Interface List
-            IfName: Hu0/0/0/1 IfIndex: 0x55 
-            
-        
+            IfName: Hu0/0/0/1 IfIndex: 0x55
+
+
         TenGigE0/0/0/0/0            Disabled (No topologies cfg on the intf)
         TenGigE0/0/0/4/0            Enabled
         Adjacency Formation:      Enabled
@@ -4064,28 +4064,28 @@ class TestShowIsisInterface(unittest.TestCase):
         BFD Multiplier:           3
         RSI SRLG:                 Registered
         Bandwidth:                10000000
-        
+
         Circuit Type:             level-2-only (Interface circuit type is level-1-2)
         Media Type:               P2P
         Circuit Number:           0
         Extended Circuit Number:  27
         Next P2P IIH in:          5 s
         LSP Rexmit Queue Size:    0
-        
-        Level-2                   
+
+        Level-2
             Adjacency Count:        1
             LSP Pacing Interval:    33 ms
             PSNP Entry Queue Size:  0
             Hello Interval:         10 s
             Hello Multiplier:       3
-        
+
         CLNS I/O
             Protocol State:         Up
             MTU:                    9199
             SNPA:                   008a.96ff.131b
             Layer-2 MCast Groups Membership:
             All ISs:              Yes
-        
+
         IPv4 Unicast Topology:    Enabled
             Adjacency Formation:    Running
             Prefix Advertisement:   Disabled (Intf suppressed in IS-IS cfg)
@@ -4093,18 +4093,18 @@ class TestShowIsisInterface(unittest.TestCase):
             Weight (L1/L2):         0/0
             MPLS Max Label Stack:   3/3/12/0 (PRI/BKP/SRTE/SRAT)
             MPLS LDP Sync (L1/L2):  Disabled/Disabled
-            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled 
-            FRR Type:             None               None           
-        
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+            FRR Type:             None               None
+
         IPv4 Address Family:      Enabled
             Protocol State:         Up
             Forwarding Address(es): 172.16.2.133
             Global Prefix(es):      Unknown (Intf suppressed in IS-IS cfg)
-        
+
         LSP transmit timer expires in 0 ms
         LSP transmission is idle
         Can send up to 9 back-to-back LSPs in the next 0 ms
-        
+
         RP/0/RP0/CPU0:genie-Router#
 
     '''}
@@ -4120,7 +4120,7 @@ class TestShowIsisInterface(unittest.TestCase):
         obj = ShowIsisInterface(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.parsed_output_1)
-    
+
     def test_golden_output_2(self):
         self.device = Mock(**self.golden_parsed_output_2)
         obj = ShowIsisInterface(device=self.device)
@@ -4130,7 +4130,7 @@ class TestShowIsisInterface(unittest.TestCase):
 class TestShowIsisDatabaseDetail(unittest.TestCase):
     ''' Unit tests for commands/parser:
         * show isis database detail / ShowIsisDatabaseDetail
-    ''' 
+    '''
     maxDiff = None
 
     empty_output = {'execute.return_value': ''}
@@ -4194,10 +4194,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 },
                                 "mt_is_neighbor": {
                                     "R3.03": {
-                                        "metric": 10, 
+                                        "metric": 10,
                                         "mt_id": "MT (IPv6 Unicast)"},
                                     "R5.01": {
-                                        "metric": 10, 
+                                        "metric": 10,
                                         "mt_id": "MT (IPv6 Unicast)"},
                                 },
                             },
@@ -4270,10 +4270,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 "hostname": "R4",
                                 "mt_is_neighbor": {
                                     "R3.03": {
-                                        "metric": 10, 
+                                        "metric": 10,
                                         "mt_id": "MT (IPv6 Unicast)"},
                                     "R4.01": {
-                                        "metric": 10, 
+                                        "metric": 10,
                                         "mt_id": "MT (IPv6 Unicast)"},
                                 },
                                 "ipv6_address": "2001:db8:4:4:4::4",
@@ -4346,10 +4346,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 },
                                 "mt_is_neighbor": {
                                     "R5.01": {
-                                        "metric": 10, 
+                                        "metric": 10,
                                         "mt_id": "MT (IPv6 Unicast)"},
                                     "R4.01": {
-                                        "metric": 10, 
+                                        "metric": 10,
                                         "mt_id": "MT (IPv6 Unicast)"},
                                 },
                                 "ip_address": "10.100.5.5",
@@ -4441,10 +4441,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 "hostname": "R6",
                                 "mt_is_neighbor": {
                                     "R7.02": {
-                                        "metric": 40, 
+                                        "metric": 40,
                                         "mt_id": "MT (IPv6 Unicast)"},
                                     "R3.05": {
-                                        "metric": 40, 
+                                        "metric": 40,
                                         "mt_id": "MT (IPv6 Unicast)"},
                                 },
                                 "extended_is_neighbor": {
@@ -4509,10 +4509,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 "hostname": "R7",
                                 "mt_is_neighbor": {
                                     "R7.02": {
-                                        "metric": 40, 
+                                        "metric": 40,
                                         "mt_id": "MT (IPv6 Unicast)"},
                                     "R5.03": {
-                                        "metric": 40, 
+                                        "metric": 40,
                                         "mt_id": "MT (IPv6 Unicast)"},
                                 },
                                 "extended_is_neighbor": {
@@ -4606,7 +4606,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                         "metric": 10}},
                                 "mt_is_neighbor": {
                                     "R3.07": {
-                                        "metric": 10, 
+                                        "metric": 10,
                                         "mt_id": "MT (IPv6 Unicast)"}
                                 },
                                 "ip_address": "10.16.2.2",
@@ -4670,10 +4670,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 "hostname": "R3",
                                 "mt_is_neighbor": {
                                     "R3.07": {
-                                        "metric": 10, 
+                                        "metric": 10,
                                         "mt_id": "MT (IPv6 Unicast)"},
                                     "R5.01": {
-                                        "metric": 10, 
+                                        "metric": 10,
                                         "mt_id": "MT (IPv6 Unicast)"},
                                 },
                                 "ipv6_address": "2001:db8:3:3:3::3",
@@ -4745,10 +4745,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 },
                                 "mt_is_neighbor": {
                                     "R5.01": {
-                                        "metric": 10, 
+                                        "metric": 10,
                                         "mt_id": "MT (IPv6 Unicast)"},
                                     "R5.03": {
-                                        "metric": 10, 
+                                        "metric": 10,
                                         "mt_id": "MT (IPv6 Unicast)"},
                                 },
                                 "ip_address": "10.100.5.5",
@@ -4840,10 +4840,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 "hostname": "R7",
                                 "mt_is_neighbor": {
                                     "R9.01": {
-                                        "metric": 40, 
+                                        "metric": 40,
                                         "mt_id": "MT (IPv6 Unicast)"},
                                     "R8.01": {
-                                        "metric": 40, 
+                                        "metric": 40,
                                         "mt_id": "MT (IPv6 Unicast)"},
                                 },
                                 "extended_is_neighbor": {
@@ -4904,7 +4904,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                         "metric": 10}},
                                 "mt_is_neighbor": {
                                     "R8.01": {
-                                        "metric": 10, 
+                                        "metric": 10,
                                         "mt_id": "MT (IPv6 Unicast)"}
                                 },
                                 "ip_address": "10.1.8.8",
@@ -4979,7 +4979,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                         "metric": 10}},
                                 "mt_is_neighbor": {
                                     "R9.01": {
-                                        "metric": 10, 
+                                        "metric": 10,
                                         "mt_id": "MT (IPv6 Unicast)"}
                                 },
                                 "ip_address": "10.69.9.9",
@@ -5073,7 +5073,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           MT:             Standard (IPv4 Unicast)
           MT:             IPv6 Unicast                                 1/0/0
           Metric: 10         IS-Extended R3.03
-          Metric: 10         IS-Extended R5.01          
+          Metric: 10         IS-Extended R5.01
           Metric: 10         MT (IPv6 Unicast) IS-Extended R3.03
           Metric: 10         MT (IPv6 Unicast) IS-Extended R5.01
         R3.03-00              0x00000007   0x8145        988  /*            0/0/0
@@ -5090,7 +5090,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           NLPID:          0x8e
           IP Address:     10.64.4.4
           Metric: 10         IP-Extended 10.64.4.4/32
-          Metric: 10         IP-Extended 10.3.4.0/24          
+          Metric: 10         IP-Extended 10.3.4.0/24
           Hostname:       R4
           Metric: 10         MT (IPv6 Unicast) IS-Extended R3.03
           Metric: 10         MT (IPv6 Unicast) IS-Extended R4.01
@@ -5110,12 +5110,12 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           MT:             IPv6 Unicast                                 1/0/0
           Hostname:       R5
           Metric: 10         IS-Extended R5.01
-          Metric: 10         IS-Extended R4.01          
+          Metric: 10         IS-Extended R4.01
           Metric: 10         MT (IPv6 Unicast) IS-Extended R5.01
-          Metric: 10         MT (IPv6 Unicast) IS-Extended R4.01          
+          Metric: 10         MT (IPv6 Unicast) IS-Extended R4.01
           IP Address:     10.100.5.5
           Metric: 10         IP-Extended 10.100.5.5/32
-          Metric: 10         IP-Extended 10.3.5.0/24          
+          Metric: 10         IP-Extended 10.3.5.0/24
           IPv6 Address:   2001:db8:5:5:5::5
           Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:5:5:5::5/128
           Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:10:3::/64
@@ -5158,9 +5158,9 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Metric: 40         IS-Extended R5.03
           Metric: 40         IP-Extended-Interarea 10.7.8.0/24
           Metric: 1          IP-Extended 10.196.7.7/32
-          Metric: 40         IP-Extended 10.7.9.0/24          
+          Metric: 40         IP-Extended 10.7.9.0/24
           Metric: 40         MT (IPv6 Unicast) IPv6-Interarea 2001:db8:10:7::/64
-          Metric: 1          MT (IPv6 Unicast) IPv6 2001:db8:7:7:7::7/128          
+          Metric: 1          MT (IPv6 Unicast) IPv6 2001:db8:7:7:7::7/128
         R7.02-00              0x00000005   0x8c3d        884  /1198         0/0/0
           Metric: 0          IS-Extended R6.00
           Metric: 0          IS-Extended R7.00
@@ -5217,10 +5217,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Metric: 10         MT (IPv6 Unicast) IS-Extended R5.03
           IP Address:     10.100.5.5
           Metric: 10         IP-Extended 10.100.5.5/32
-          Metric: 10         IP-Extended 10.3.5.0/24          
+          Metric: 10         IP-Extended 10.3.5.0/24
           IPv6 Address:   2001:db8:5:5:5::5
           Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:5:5:5::5/128
-          Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:10:3::/64          
+          Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:10:3::/64
         R5.01-00              0x00000004   0x6236        426  /1199         0/0/0
           Metric: 0          IS-Extended R5.00
           Metric: 0          IS-Extended R3.00
@@ -5237,13 +5237,13 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           MT:             Standard (IPv4 Unicast)
           Hostname:       R7
           Metric: 40         MT (IPv6 Unicast) IS-Extended R9.01
-          Metric: 40         MT (IPv6 Unicast) IS-Extended R8.01          
+          Metric: 40         MT (IPv6 Unicast) IS-Extended R8.01
           Metric: 40         IS-Extended R9.01
-          Metric: 40         IS-Extended R8.01          
+          Metric: 40         IS-Extended R8.01
           Metric: 40         IP-Extended 10.6.7.0/24
-          Metric: 1          IP-Extended 10.196.7.7/32          
+          Metric: 1          IP-Extended 10.196.7.7/32
           Metric: 40         MT (IPv6 Unicast) IPv6 2001:db8:10:6::/64
-          Metric: 1          MT (IPv6 Unicast) IPv6 2001:db8:7:7:7::7/128          
+          Metric: 1          MT (IPv6 Unicast) IPv6 2001:db8:7:7:7::7/128
         R8.00-00              0x00000005   0x1309        453  /1198         0/0/0
           Area Address:   49.0003
           NLPID:          0xcc
@@ -5848,7 +5848,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
         obj = ShowIsisDatabaseDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
-    
+
     def test_output_4(self):
         self.device = Mock(**self.golden_output_4)
         obj = ShowIsisDatabaseDetail(device=self.device)
@@ -7268,7 +7268,7 @@ class TestShowIsisPrivateAll(unittest.TestCase):
               router_id                                     : 0x15192388
             per_af[IPv6]                                    :
               router_id                                     : 0x0
-    
+
         ++++++++++++++++++++++ IS-IS TEST Interface Private Data ++++++++++++++++++++++
 
         Interface TenGigE0/0/1/3
