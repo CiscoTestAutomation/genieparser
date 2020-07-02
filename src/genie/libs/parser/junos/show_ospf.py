@@ -2126,57 +2126,55 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
             return value
 
         ospf_database_schema = Schema({
-            "advertising-router": str,
-            "age": str,
-            "checksum": str,
-            "lsa-id": str,
-            Optional("our-entry"): bool,
-            "lsa-length": str,
-            "lsa-type": str,
-            "options": str,
-            Optional("ospf-network-lsa"): {
-                "address-mask": str,
-                "attached-router": list,
-                "ospf-lsa-topology": {
-                    "ospf-lsa-topology-link":
-                    Use(validate_ospf_lsa_topology_link),
-                    "ospf-topology-id": str,
-                    "ospf-topology-name": str
-                }
-            },
-            "ospf-database-extensive": {
-                "aging-timer": {
-                    "#text": str
+                "advertising-router": str,
+                "age": str,
+                "checksum": str,
+                "lsa-id": str,
+                Optional("our-entry"): bool,
+                "lsa-length": str,
+                "lsa-type": str,
+                "options": str,
+                Optional("ospf-network-lsa"): {
+                    "address-mask": str,
+                    "attached-router": list,
+                    Optional("ospf-lsa-topology"): {
+                        "ospf-lsa-topology-link": Use(validate_ospf_lsa_topology_link),
+                        "ospf-topology-id": str,
+                        "ospf-topology-name": str
+                    }
                 },
-                "expiration-time": {
-                    "#text": str
+                Optional("ospf-database-extensive"): {
+                    "aging-timer": {
+                        "#text": str
+                    },
+                    Optional("expiration-time"): {
+                        "#text": str
+                    },
+                    Optional("installation-time"): {
+                        "#text": str
+                    },
+                    Optional("generation-timer"): {
+                        "#text": str
+                    },
+                    Optional("lsa-change-count"): str,
+                    Optional("lsa-changed-time"): {
+                        "#text": str
+                    },
+                    Optional("send-time"): {
+                        "#text": str
+                    },
+                    Optional("database-entry-state"): str
                 },
-                "installation-time": {
-                    "#text": str
+                Optional("ospf-router-lsa"): {
+                    "bits": str,
+                    "link-count": str,
+                    "ospf-link": Use(validate_ospf_link),
+                    Optional("ospf-lsa-topology"): {
+                        "ospf-lsa-topology-link": Use(validate_ospf_lsa_topology_link),
+                        "ospf-topology-id": str,
+                        "ospf-topology-name": str
+                    }
                 },
-                Optional("generation-timer"): {
-                    "#text": str
-                },
-                Optional("lsa-change-count"): str,
-                Optional("lsa-changed-time"): {
-                    "#text": str
-                },
-                Optional("send-time"): {
-                    "#text": str
-                },
-                Optional("database-entry-state"): str
-            },
-            Optional("ospf-router-lsa"): {
-                "bits": str,
-                "link-count": str,
-                "ospf-link": Use(validate_ospf_link),
-                "ospf-lsa-topology": {
-                    "ospf-lsa-topology-link":
-                    Use(validate_ospf_lsa_topology_link),
-                    "ospf-topology-id": str,
-                    "ospf-topology-name": str
-                }
-            },
             Optional("ospf-opaque-area-lsa"): {
                 "tlv-block": {
                     "formatted-tlv-data": str,

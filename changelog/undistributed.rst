@@ -89,16 +89,22 @@
         * Optional key issue resolved
     * Updated ShowOspf3DatabaseExtensiveSchema
         * Optional key issue resolved
+<<<<<<< HEAD
+        * Added missing ospf3-inter-area-prefix-lsa key
+=======
     * Updated ShowInterfaces
         * Fixes case where speed wasn't found
     * Updated ShowOspfVrfAllInclusive
         * key error resolved
     * Updated ShowOspfDatabaseLsaidDetail
         * Resolved issue where empty output would cause error
+>>>>>>> dev
     * Updated ShowOspf3DatabaseExtensive
         * Missing key issue resolved
     * Updated ShowOspf3Database
         * List ospf-area
+    * Updated ShowOspfDatabaseExtensiveSchema
+        * Added optional values
 * IOSXE
     * Updated ShowIpInterface
         * Modified regex to accommodate different outputs
