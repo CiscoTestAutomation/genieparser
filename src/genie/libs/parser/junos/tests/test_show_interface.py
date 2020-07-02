@@ -9,11 +9,13 @@ from genie.metaparser.util.exceptions import (
     SchemaMissingKeyError,
 )
 
-from genie.libs.parser.junos.show_interface import (ShowInterfacesTerse,
-                                                    ShowInterfacesTerseMatch,
-                                                    ShowInterfacesDescriptions,
-                                                    ShowInterfaces,
-                                                    ShowInterfacesQueue)
+from genie.libs.parser.junos.show_interface import (
+    ShowInterfacesTerse,
+    ShowInterfacesTerseMatch,
+    ShowInterfacesDescriptions,
+    ShowInterfaces,
+    ShowInterfacesQueue,
+)
 
 #############################################################################
 # unitest For show interfaces terse [| match <interface>]
@@ -309,6 +311,7 @@ class test_show_interfaces_terse_match(unittest.TestCase):
         parsed_output = interface_obj.parse(interface="fxp0")
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
 class TestShowInterfacesDescriptions(unittest.TestCase):
     device = Device(name="aDevice")
 
@@ -363,28 +366,19 @@ class TestShowInterfacesDescriptions(unittest.TestCase):
         parsed_output = interface_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
 class TestShowInterfaces(unittest.TestCase):
-    device = Device(name='aDevice')
+    device = Device(name="aDevice")
     maxDiff = None
-    empty_output = {'execute.return_value': ''}
+    empty_output = {"execute.return_value": ""}
 
     golden_parsed_output = {
         "interface-information": {
             "physical-interface": [
                 {
-                    "active-alarms": {
-                        "interface-alarms": {
-                            "alarm-not-present": True
-                        }
-                    },
-                    "active-defects": {
-                        "interface-alarms": {
-                            "alarm-not-present": True
-                        }
-                    },
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "active-alarms": {"interface-alarms": {"alarm-not-present": True}},
+                    "active-defects": {"interface-alarms": {"alarm-not-present": True}},
+                    "admin-status": {"@junos:format": "Enabled"},
                     "bpdu-error": "None",
                     "current-physical-address": "00:50:56:ff:56:b6",
                     "description": "none/100G/in/hktGCS002_ge-0/0/0",
@@ -393,26 +387,21 @@ class TestShowInterfaces(unittest.TestCase):
                         "fec_ccw_count": "0",
                         "fec_ccw_error_rate": "0",
                         "fec_nccw_count": "0",
-                        "fec_nccw_error_rate": "0"
+                        "fec_nccw_error_rate": "0",
                     },
                     "ethernet-pcs-statistics": {
                         "bit-error-seconds": "0",
-                        "errored-blocks-seconds": "0"
+                        "errored-blocks-seconds": "0",
                     },
                     "hardware-physical-address": "00:50:56:ff:56:b6",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-snmp-traps": True,
-                        "internal-flags": "0x4000"
+                        "internal-flags": "0x4000",
                     },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "if-flow-control": "Enabled",
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "if-remote-fault": "Online",
                     "interface-flapped": {
                         "#text": "2019-08-29 09:09:19 UTC (29w6d 18:56 ago)"
@@ -425,7 +414,7 @@ class TestShowInterfaces(unittest.TestCase):
                             {
                                 "address-family-flags": {
                                     "ifff-no-redirects": True,
-                                    "ifff-sendbcast-pkt-to-re": True
+                                    "ifff-sendbcast-pkt-to-re": True,
                                 },
                                 "address-family-name": "inet",
                                 "interface-address": {
@@ -433,75 +422,67 @@ class TestShowInterfaces(unittest.TestCase):
                                     "ifa-destination": "10.189.5.92/30",
                                     "ifa-flags": {
                                         "ifaf-is-preferred": True,
-                                        "ifaf-is-primary": True
+                                        "ifaf-is-primary": True,
                                     },
-                                    "ifa-local": "10.189.5.93"
+                                    "ifa-local": "10.189.5.93",
                                 },
                                 "intf-curr-cnt": "1",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
-                                "new-hold-limit": "75000"
+                                "new-hold-limit": "75000",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
+                                "address-family-flags": {"ifff-is-primary": True},
                                 "address-family-name": "inet6",
                                 "interface-address": [
                                     {
                                         "ifa-destination": "2001:db8:223c:2c16::/64",
                                         "ifa-flags": {
                                             "ifaf-is-preferred": True,
-                                            "ifaf-is-primary": True
+                                            "ifaf-is-primary": True,
                                         },
-                                        "ifa-local": "2001:db8:223c:2c16::1"
+                                        "ifa-local": "2001:db8:223c:2c16::1",
                                     },
                                     {
                                         "ifa-destination": "fe80::/64",
-                                        "ifa-flags": {
-                                            "ifaf-is-preferred": True
-                                        },
-                                        "ifa-local": "fe80::250:56ff:feff:56b6"
-                                    }
+                                        "ifa-flags": {"ifaf-is-preferred": True},
+                                        "ifa-local": "fe80::250:56ff:feff:56b6",
+                                    },
                                 ],
                                 "intf-curr-cnt": "1",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
-                                "new-hold-limit": "75000"
+                                "new-hold-limit": "75000",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
+                                "address-family-flags": {"ifff-is-primary": True},
                                 "address-family-name": "mpls",
                                 "maximum-labels": "3",
-                                "mtu": "1488"
+                                "mtu": "1488",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
+                                "address-family-flags": {"ifff-is-primary": True},
                                 "address-family-name": "multiservice",
-                                "mtu": "Unlimited"
-                            }
+                                "mtu": "Unlimited",
+                            },
                         ],
                         "encapsulation": "ENET2",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
                             "iff-up": True,
-                            "internal-flags": "0x4004000"
+                            "internal-flags": "0x4004000",
                         },
                         "local-index": "333",
                         "name": "ge-0/0/0.0",
                         "snmp-index": "606",
                         "traffic-statistics": {
                             "input-packets": "133657033",
-                            "output-packets": "129243982"
-                        }
+                            "output-packets": "129243982",
+                        },
                     },
                     "loopback": "Disabled",
                     "mru": "1522",
@@ -510,7 +491,7 @@ class TestShowInterfaces(unittest.TestCase):
                     "pad-to-minimum-frame-size": "Disabled",
                     "physical-interface-cos-information": {
                         "physical-interface-cos-hw-max-queues": "8",
-                        "physical-interface-cos-use-max-queues": "8"
+                        "physical-interface-cos-use-max-queues": "8",
                     },
                     "sonet-mode": "LAN-PHY",
                     "source-filtering": "Disabled",
@@ -519,189 +500,124 @@ class TestShowInterfaces(unittest.TestCase):
                         "input-bps": "2952",
                         "input-pps": "5",
                         "output-bps": "3080",
-                        "output-pps": "3"
-                    }
+                        "output-pps": "3",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "logical-interface": {
                         "address-family": [
                             {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
+                                "address-family-flags": {"ifff-is-primary": True},
                                 "address-family-name": "vpls",
-                                "mtu": "Unlimited"
+                                "mtu": "Unlimited",
                             }
                         ],
-                        "if-config-flags": {
-                            "iff-snmp-traps": True,
-                            "iff-up": True
-                        },
+                        "if-config-flags": {"iff-snmp-traps": True, "iff-up": True},
                         "local-index": "329",
                         "logical-interface-bandwidth": "0",
                         "name": "lc-0/0/0.32769",
                         "snmp-index": "520",
                         "traffic-statistics": {
                             "input-packets": "0",
-                            "output-packets": "0"
-                        }
+                            "output-packets": "0",
+                        },
                     },
                     "name": "lc-0/0/0",
                     "speed": "800mbps",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "logical-interface": {
                         "address-family": [
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "inet",
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
+                                "new-hold-limit": "0",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "inet6",
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
-                            }
+                                "new-hold-limit": "0",
+                            },
                         ],
-                        "if-config-flags": {
-                            "iff-snmp-traps": True,
-                            "iff-up": True
-                        },
+                        "if-config-flags": {"iff-snmp-traps": True, "iff-up": True},
                         "local-index": "330",
                         "logical-interface-bandwidth": "0",
                         "name": "pfe-0/0/0.16383",
                         "snmp-index": "523",
                         "traffic-statistics": {
                             "input-packets": "0",
-                            "output-packets": "0"
-                        }
+                            "output-packets": "0",
+                        },
                     },
                     "name": "pfe-0/0/0",
                     "speed": "800mbps",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "logical-interface": {
                         "address-family": [
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "inet",
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
+                                "new-hold-limit": "0",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
+                                "address-family-flags": {"ifff-is-primary": True},
                                 "address-family-name": "inet",
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
-                            }
+                                "new-hold-limit": "0",
+                            },
                         ],
-                        "if-config-flags": {
-                            "iff-snmp-traps": True,
-                            "iff-up": True
-                        },
+                        "if-config-flags": {"iff-snmp-traps": True, "iff-up": True},
                         "local-index": "332",
                         "logical-interface-bandwidth": "0",
                         "name": "pfh-0/0/0.16384",
                         "snmp-index": "525",
                         "traffic-statistics": {
                             "input-packets": "0",
-                            "output-packets": "0"
-                        }
+                            "output-packets": "0",
+                        },
                     },
                     "name": "pfh-0/0/0",
                     "speed": "800mbps",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "active-alarms": {
-                        "interface-alarms": {
-                            "alarm-not-present": True
-                        }
-                    },
-                    "active-defects": {
-                        "interface-alarms": {
-                            "alarm-not-present": True
-                        }
-                    },
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "active-alarms": {"interface-alarms": {"alarm-not-present": True}},
+                    "active-defects": {"interface-alarms": {"alarm-not-present": True}},
+                    "admin-status": {"@junos:format": "Enabled"},
                     "bpdu-error": "None",
                     "current-physical-address": "00:50:56:ff:37:f9",
                     "description": "YW7079/9.6G/BB/sjkGCS001-EC11_xe-0/1/5[SJC]_Area8_Cost100",
@@ -710,26 +626,21 @@ class TestShowInterfaces(unittest.TestCase):
                         "fec_ccw_count": "0",
                         "fec_ccw_error_rate": "0",
                         "fec_nccw_count": "0",
-                        "fec_nccw_error_rate": "0"
+                        "fec_nccw_error_rate": "0",
                     },
                     "ethernet-pcs-statistics": {
                         "bit-error-seconds": "0",
-                        "errored-blocks-seconds": "0"
+                        "errored-blocks-seconds": "0",
                     },
                     "hardware-physical-address": "00:50:56:ff:37:f9",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-snmp-traps": True,
-                        "internal-flags": "0x4000"
+                        "internal-flags": "0x4000",
                     },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "if-flow-control": "Enabled",
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "if-remote-fault": "Online",
                     "interface-flapped": {
                         "#text": "2019-08-29 09:09:19 UTC (29w6d 18:56 ago)"
@@ -742,7 +653,7 @@ class TestShowInterfaces(unittest.TestCase):
                             {
                                 "address-family-flags": {
                                     "ifff-no-redirects": True,
-                                    "ifff-sendbcast-pkt-to-re": True
+                                    "ifff-sendbcast-pkt-to-re": True,
                                 },
                                 "address-family-name": "inet",
                                 "interface-address": {
@@ -750,16 +661,16 @@ class TestShowInterfaces(unittest.TestCase):
                                     "ifa-destination": "10.169.14.120/30",
                                     "ifa-flags": {
                                         "ifaf-is-preferred": True,
-                                        "ifaf-is-primary": True
+                                        "ifaf-is-primary": True,
                                     },
-                                    "ifa-local": "10.169.14.122"
+                                    "ifa-local": "10.169.14.122",
                                 },
                                 "intf-curr-cnt": "1",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
-                                "new-hold-limit": "75000"
+                                "new-hold-limit": "75000",
                             },
                             {
                                 "address-family-name": "inet6",
@@ -768,48 +679,43 @@ class TestShowInterfaces(unittest.TestCase):
                                         "ifa-destination": "2001:db8:eb18:6337::/64",
                                         "ifa-flags": {
                                             "ifaf-is-preferred": True,
-                                            "ifaf-is-primary": True
+                                            "ifaf-is-primary": True,
                                         },
-                                        "ifa-local": "2001:db8:eb18:6337::2"
+                                        "ifa-local": "2001:db8:eb18:6337::2",
                                     },
                                     {
                                         "ifa-destination": "fe80::/64",
-                                        "ifa-flags": {
-                                            "ifaf-is-preferred": True
-                                        },
-                                        "ifa-local": "fe80::250:56ff:feff:37f9"
-                                    }
+                                        "ifa-flags": {"ifaf-is-preferred": True},
+                                        "ifa-local": "fe80::250:56ff:feff:37f9",
+                                    },
                                 ],
                                 "intf-curr-cnt": "2",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
-                                "new-hold-limit": "75000"
+                                "new-hold-limit": "75000",
                             },
                             {
                                 "address-family-name": "mpls",
                                 "maximum-labels": "3",
-                                "mtu": "1488"
+                                "mtu": "1488",
                             },
-                            {
-                                "address-family-name": "multiservice",
-                                "mtu": "Unlimited"
-                            }
+                            {"address-family-name": "multiservice", "mtu": "Unlimited"},
                         ],
                         "encapsulation": "ENET2",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
                             "iff-up": True,
-                            "internal-flags": "0x4004000"
+                            "internal-flags": "0x4004000",
                         },
                         "local-index": "334",
                         "name": "ge-0/0/1.0",
                         "snmp-index": "605",
                         "traffic-statistics": {
                             "input-packets": "376821627",
-                            "output-packets": "370477594"
-                        }
+                            "output-packets": "370477594",
+                        },
                     },
                     "loopback": "Disabled",
                     "mru": "1522",
@@ -818,7 +724,7 @@ class TestShowInterfaces(unittest.TestCase):
                     "pad-to-minimum-frame-size": "Disabled",
                     "physical-interface-cos-information": {
                         "physical-interface-cos-hw-max-queues": "8",
-                        "physical-interface-cos-use-max-queues": "8"
+                        "physical-interface-cos-use-max-queues": "8",
                     },
                     "sonet-mode": "LAN-PHY",
                     "source-filtering": "Disabled",
@@ -827,23 +733,13 @@ class TestShowInterfaces(unittest.TestCase):
                         "input-bps": "3696",
                         "input-pps": "6",
                         "output-bps": "7736",
-                        "output-pps": "9"
-                    }
+                        "output-pps": "9",
+                    },
                 },
                 {
-                    "active-alarms": {
-                        "interface-alarms": {
-                            "alarm-not-present": True
-                        }
-                    },
-                    "active-defects": {
-                        "interface-alarms": {
-                            "alarm-not-present": True
-                        }
-                    },
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "active-alarms": {"interface-alarms": {"alarm-not-present": True}},
+                    "active-defects": {"interface-alarms": {"alarm-not-present": True}},
+                    "admin-status": {"@junos:format": "Enabled"},
                     "bpdu-error": "None",
                     "current-physical-address": "00:50:56:ff:1e:ba",
                     "description": "ve-hkgasr01_Gi2[DefaultCost1000]",
@@ -852,26 +748,21 @@ class TestShowInterfaces(unittest.TestCase):
                         "fec_ccw_count": "0",
                         "fec_ccw_error_rate": "0",
                         "fec_nccw_count": "0",
-                        "fec_nccw_error_rate": "0"
+                        "fec_nccw_error_rate": "0",
                     },
                     "ethernet-pcs-statistics": {
                         "bit-error-seconds": "0",
-                        "errored-blocks-seconds": "0"
+                        "errored-blocks-seconds": "0",
                     },
                     "hardware-physical-address": "00:50:56:ff:1e:ba",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-snmp-traps": True,
-                        "internal-flags": "0x4000"
+                        "internal-flags": "0x4000",
                     },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "if-flow-control": "Enabled",
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "if-remote-fault": "Online",
                     "interface-flapped": {
                         "#text": "2020-03-05 16:04:34 UTC (2w6d 12:00 ago)"
@@ -891,40 +782,37 @@ class TestShowInterfaces(unittest.TestCase):
                                     "ifa-destination": "10.19.198.24/30",
                                     "ifa-flags": {
                                         "ifaf-is-preferred": True,
-                                        "ifaf-is-primary": True
+                                        "ifaf-is-primary": True,
                                     },
-                                    "ifa-local": "10.19.198.25"
+                                    "ifa-local": "10.19.198.25",
                                 },
                                 "intf-curr-cnt": "1",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
-                                "new-hold-limit": "75000"
+                                "new-hold-limit": "75000",
                             },
                             {
                                 "address-family-name": "mpls",
                                 "maximum-labels": "3",
-                                "mtu": "1488"
+                                "mtu": "1488",
                             },
-                            {
-                                "address-family-name": "multiservice",
-                                "mtu": "Unlimited"
-                            }
+                            {"address-family-name": "multiservice", "mtu": "Unlimited"},
                         ],
                         "encapsulation": "ENET2",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
                             "iff-up": True,
-                            "internal-flags": "0x4004000"
+                            "internal-flags": "0x4004000",
                         },
                         "local-index": "336",
                         "name": "ge-0/0/2.0",
                         "snmp-index": "536",
                         "traffic-statistics": {
                             "input-packets": "210359939",
-                            "output-packets": "222589463"
-                        }
+                            "output-packets": "222589463",
+                        },
                     },
                     "loopback": "Disabled",
                     "mru": "1522",
@@ -933,7 +821,7 @@ class TestShowInterfaces(unittest.TestCase):
                     "pad-to-minimum-frame-size": "Disabled",
                     "physical-interface-cos-information": {
                         "physical-interface-cos-hw-max-queues": "8",
-                        "physical-interface-cos-use-max-queues": "8"
+                        "physical-interface-cos-use-max-queues": "8",
                     },
                     "sonet-mode": "LAN-PHY",
                     "source-filtering": "Disabled",
@@ -942,23 +830,13 @@ class TestShowInterfaces(unittest.TestCase):
                         "input-bps": "928",
                         "input-pps": "1",
                         "output-bps": "800",
-                        "output-pps": "0"
-                    }
+                        "output-pps": "0",
+                    },
                 },
                 {
-                    "active-alarms": {
-                        "interface-alarms": {
-                            "alarm-not-present": True
-                        }
-                    },
-                    "active-defects": {
-                        "interface-alarms": {
-                            "alarm-not-present": True
-                        }
-                    },
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "active-alarms": {"interface-alarms": {"alarm-not-present": True}},
+                    "active-defects": {"interface-alarms": {"alarm-not-present": True}},
+                    "admin-status": {"@junos:format": "Enabled"},
                     "bpdu-error": "None",
                     "current-physical-address": "00:50:56:ff:93:cb",
                     "eth-switch-error": "None",
@@ -966,26 +844,21 @@ class TestShowInterfaces(unittest.TestCase):
                         "fec_ccw_count": "0",
                         "fec_ccw_error_rate": "0",
                         "fec_nccw_count": "0",
-                        "fec_nccw_error_rate": "0"
+                        "fec_nccw_error_rate": "0",
                     },
                     "ethernet-pcs-statistics": {
                         "bit-error-seconds": "0",
-                        "errored-blocks-seconds": "0"
+                        "errored-blocks-seconds": "0",
                     },
                     "hardware-physical-address": "00:50:56:ff:93:cb",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-snmp-traps": True,
-                        "internal-flags": "0x4000"
+                        "internal-flags": "0x4000",
                     },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "if-flow-control": "Enabled",
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "if-remote-fault": "Online",
                     "interface-flapped": {
                         "#text": "2019-10-25 08:50:18 UTC (21w5d 19:15 ago)"
@@ -1005,35 +878,32 @@ class TestShowInterfaces(unittest.TestCase):
                                     "ifa-destination": "100.0.0/24",
                                     "ifa-flags": {
                                         "ifaf-is-preferred": True,
-                                        "ifaf-is-primary": True
+                                        "ifaf-is-primary": True,
                                     },
-                                    "ifa-local": "10.55.0.254"
+                                    "ifa-local": "10.55.0.254",
                                 },
                                 "intf-curr-cnt": "1",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
-                                "new-hold-limit": "75000"
+                                "new-hold-limit": "75000",
                             },
-                            {
-                                "address-family-name": "multiservice",
-                                "mtu": "Unlimited"
-                            }
+                            {"address-family-name": "multiservice", "mtu": "Unlimited"},
                         ],
                         "encapsulation": "ENET2",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
                             "iff-up": True,
-                            "internal-flags": "0x4004000"
+                            "internal-flags": "0x4004000",
                         },
                         "local-index": "335",
                         "name": "ge-0/0/3.0",
                         "snmp-index": "537",
                         "traffic-statistics": {
                             "input-packets": "14609",
-                            "output-packets": "17416"
-                        }
+                            "output-packets": "17416",
+                        },
                     },
                     "loopback": "Disabled",
                     "mru": "1522",
@@ -1042,7 +912,7 @@ class TestShowInterfaces(unittest.TestCase):
                     "pad-to-minimum-frame-size": "Disabled",
                     "physical-interface-cos-information": {
                         "physical-interface-cos-hw-max-queues": "8",
-                        "physical-interface-cos-use-max-queues": "8"
+                        "physical-interface-cos-use-max-queues": "8",
                     },
                     "sonet-mode": "LAN-PHY",
                     "source-filtering": "Disabled",
@@ -1051,23 +921,17 @@ class TestShowInterfaces(unittest.TestCase):
                         "input-bps": "0",
                         "input-pps": "0",
                         "output-bps": "0",
-                        "output-pps": "0"
-                    }
+                        "output-pps": "0",
+                    },
                 },
                 {
                     "active-alarms": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
                     "active-defects": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "bpdu-error": "None",
                     "current-physical-address": "00:50:56:ff:3e:28",
                     "eth-switch-error": "None",
@@ -1075,28 +939,26 @@ class TestShowInterfaces(unittest.TestCase):
                         "fec_ccw_count": "0",
                         "fec_ccw_error_rate": "0",
                         "fec_nccw_count": "0",
-                        "fec_nccw_error_rate": "0"
+                        "fec_nccw_error_rate": "0",
                     },
                     "ethernet-pcs-statistics": {
                         "bit-error-seconds": "0",
-                        "errored-blocks-seconds": "0"
+                        "errored-blocks-seconds": "0",
                     },
                     "hardware-physical-address": "00:50:56:ff:3e:28",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
                         "iff-snmp-traps": True,
-                        "internal-flags": "0x4000"
+                        "internal-flags": "0x4000",
                     },
                     "if-device-flags": {
                         "ifdf-down": True,
                         "ifdf-present": True,
-                        "ifdf-running": True
+                        "ifdf-running": True,
                     },
                     "if-flow-control": "Enabled",
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "if-remote-fault": "Online",
                     "interface-flapped": {
                         "#text": "2019-08-29 09:09:20 UTC (29w6d 18:55 ago)"
@@ -1111,7 +973,7 @@ class TestShowInterfaces(unittest.TestCase):
                     "pad-to-minimum-frame-size": "Disabled",
                     "physical-interface-cos-information": {
                         "physical-interface-cos-hw-max-queues": "8",
-                        "physical-interface-cos-use-max-queues": "8"
+                        "physical-interface-cos-use-max-queues": "8",
                     },
                     "sonet-mode": "LAN-PHY",
                     "source-filtering": "Disabled",
@@ -1120,23 +982,17 @@ class TestShowInterfaces(unittest.TestCase):
                         "input-bps": "0",
                         "input-pps": "0",
                         "output-bps": "0",
-                        "output-pps": "0"
-                    }
+                        "output-pps": "0",
+                    },
                 },
                 {
                     "active-alarms": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
                     "active-defects": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "bpdu-error": "None",
                     "current-physical-address": "2c:6b:f5:ff:01:1d",
                     "eth-switch-error": "None",
@@ -1144,28 +1000,26 @@ class TestShowInterfaces(unittest.TestCase):
                         "fec_ccw_count": "0",
                         "fec_ccw_error_rate": "0",
                         "fec_nccw_count": "0",
-                        "fec_nccw_error_rate": "0"
+                        "fec_nccw_error_rate": "0",
                     },
                     "ethernet-pcs-statistics": {
                         "bit-error-seconds": "0",
-                        "errored-blocks-seconds": "0"
+                        "errored-blocks-seconds": "0",
                     },
                     "hardware-physical-address": "2c:6b:f5:ff:01:1d",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
                         "iff-snmp-traps": True,
-                        "internal-flags": "0x4000"
+                        "internal-flags": "0x4000",
                     },
                     "if-device-flags": {
                         "ifdf-down": True,
                         "ifdf-present": True,
-                        "ifdf-running": True
+                        "ifdf-running": True,
                     },
                     "if-flow-control": "Enabled",
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "if-remote-fault": "Online",
                     "interface-flapped": {
                         "#text": "2019-08-29 09:09:20 UTC (29w6d 18:55 ago)"
@@ -1180,7 +1034,7 @@ class TestShowInterfaces(unittest.TestCase):
                     "pad-to-minimum-frame-size": "Disabled",
                     "physical-interface-cos-information": {
                         "physical-interface-cos-hw-max-queues": "8",
-                        "physical-interface-cos-use-max-queues": "8"
+                        "physical-interface-cos-use-max-queues": "8",
                     },
                     "sonet-mode": "LAN-PHY",
                     "source-filtering": "Disabled",
@@ -1189,23 +1043,17 @@ class TestShowInterfaces(unittest.TestCase):
                         "input-bps": "0",
                         "input-pps": "0",
                         "output-bps": "0",
-                        "output-pps": "0"
-                    }
+                        "output-pps": "0",
+                    },
                 },
                 {
                     "active-alarms": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
                     "active-defects": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "bpdu-error": "None",
                     "current-physical-address": "2c:6b:f5:ff:01:1e",
                     "eth-switch-error": "None",
@@ -1213,28 +1061,26 @@ class TestShowInterfaces(unittest.TestCase):
                         "fec_ccw_count": "0",
                         "fec_ccw_error_rate": "0",
                         "fec_nccw_count": "0",
-                        "fec_nccw_error_rate": "0"
+                        "fec_nccw_error_rate": "0",
                     },
                     "ethernet-pcs-statistics": {
                         "bit-error-seconds": "0",
-                        "errored-blocks-seconds": "0"
+                        "errored-blocks-seconds": "0",
                     },
                     "hardware-physical-address": "2c:6b:f5:ff:01:1e",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
                         "iff-snmp-traps": True,
-                        "internal-flags": "0x4000"
+                        "internal-flags": "0x4000",
                     },
                     "if-device-flags": {
                         "ifdf-down": True,
                         "ifdf-present": True,
-                        "ifdf-running": True
+                        "ifdf-running": True,
                     },
                     "if-flow-control": "Enabled",
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "if-remote-fault": "Online",
                     "interface-flapped": {
                         "#text": "2019-08-29 09:09:20 UTC (29w6d 18:55 ago)"
@@ -1249,7 +1095,7 @@ class TestShowInterfaces(unittest.TestCase):
                     "pad-to-minimum-frame-size": "Disabled",
                     "physical-interface-cos-information": {
                         "physical-interface-cos-hw-max-queues": "8",
-                        "physical-interface-cos-use-max-queues": "8"
+                        "physical-interface-cos-use-max-queues": "8",
                     },
                     "sonet-mode": "LAN-PHY",
                     "source-filtering": "Disabled",
@@ -1258,23 +1104,17 @@ class TestShowInterfaces(unittest.TestCase):
                         "input-bps": "0",
                         "input-pps": "0",
                         "output-bps": "0",
-                        "output-pps": "0"
-                    }
+                        "output-pps": "0",
+                    },
                 },
                 {
                     "active-alarms": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
                     "active-defects": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "bpdu-error": "None",
                     "current-physical-address": "2c:6b:f5:ff:01:1f",
                     "eth-switch-error": "None",
@@ -1282,28 +1122,26 @@ class TestShowInterfaces(unittest.TestCase):
                         "fec_ccw_count": "0",
                         "fec_ccw_error_rate": "0",
                         "fec_nccw_count": "0",
-                        "fec_nccw_error_rate": "0"
+                        "fec_nccw_error_rate": "0",
                     },
                     "ethernet-pcs-statistics": {
                         "bit-error-seconds": "0",
-                        "errored-blocks-seconds": "0"
+                        "errored-blocks-seconds": "0",
                     },
                     "hardware-physical-address": "2c:6b:f5:ff:01:1f",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
                         "iff-snmp-traps": True,
-                        "internal-flags": "0x4000"
+                        "internal-flags": "0x4000",
                     },
                     "if-device-flags": {
                         "ifdf-down": True,
                         "ifdf-present": True,
-                        "ifdf-running": True
+                        "ifdf-running": True,
                     },
                     "if-flow-control": "Enabled",
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "if-remote-fault": "Online",
                     "interface-flapped": {
                         "#text": "2019-08-29 09:09:20 UTC (29w6d 18:55 ago)"
@@ -1318,7 +1156,7 @@ class TestShowInterfaces(unittest.TestCase):
                     "pad-to-minimum-frame-size": "Disabled",
                     "physical-interface-cos-information": {
                         "physical-interface-cos-hw-max-queues": "8",
-                        "physical-interface-cos-use-max-queues": "8"
+                        "physical-interface-cos-use-max-queues": "8",
                     },
                     "sonet-mode": "LAN-PHY",
                     "source-filtering": "Disabled",
@@ -1327,23 +1165,17 @@ class TestShowInterfaces(unittest.TestCase):
                         "input-bps": "0",
                         "input-pps": "0",
                         "output-bps": "0",
-                        "output-pps": "0"
-                    }
+                        "output-pps": "0",
+                    },
                 },
                 {
                     "active-alarms": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
                     "active-defects": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "bpdu-error": "None",
                     "current-physical-address": "2c:6b:f5:ff:01:20",
                     "eth-switch-error": "None",
@@ -1351,28 +1183,26 @@ class TestShowInterfaces(unittest.TestCase):
                         "fec_ccw_count": "0",
                         "fec_ccw_error_rate": "0",
                         "fec_nccw_count": "0",
-                        "fec_nccw_error_rate": "0"
+                        "fec_nccw_error_rate": "0",
                     },
                     "ethernet-pcs-statistics": {
                         "bit-error-seconds": "0",
-                        "errored-blocks-seconds": "0"
+                        "errored-blocks-seconds": "0",
                     },
                     "hardware-physical-address": "2c:6b:f5:ff:01:20",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
                         "iff-snmp-traps": True,
-                        "internal-flags": "0x4000"
+                        "internal-flags": "0x4000",
                     },
                     "if-device-flags": {
                         "ifdf-down": True,
                         "ifdf-present": True,
-                        "ifdf-running": True
+                        "ifdf-running": True,
                     },
                     "if-flow-control": "Enabled",
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "if-remote-fault": "Online",
                     "interface-flapped": {
                         "#text": "2019-08-29 09:09:20 UTC (29w6d 18:55 ago)"
@@ -1387,7 +1217,7 @@ class TestShowInterfaces(unittest.TestCase):
                     "pad-to-minimum-frame-size": "Disabled",
                     "physical-interface-cos-information": {
                         "physical-interface-cos-hw-max-queues": "8",
-                        "physical-interface-cos-use-max-queues": "8"
+                        "physical-interface-cos-use-max-queues": "8",
                     },
                     "sonet-mode": "LAN-PHY",
                     "source-filtering": "Disabled",
@@ -1396,23 +1226,17 @@ class TestShowInterfaces(unittest.TestCase):
                         "input-bps": "0",
                         "input-pps": "0",
                         "output-bps": "0",
-                        "output-pps": "0"
-                    }
+                        "output-pps": "0",
+                    },
                 },
                 {
                     "active-alarms": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
                     "active-defects": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "bpdu-error": "None",
                     "current-physical-address": "2c:6b:f5:ff:01:21",
                     "eth-switch-error": "None",
@@ -1420,28 +1244,26 @@ class TestShowInterfaces(unittest.TestCase):
                         "fec_ccw_count": "0",
                         "fec_ccw_error_rate": "0",
                         "fec_nccw_count": "0",
-                        "fec_nccw_error_rate": "0"
+                        "fec_nccw_error_rate": "0",
                     },
                     "ethernet-pcs-statistics": {
                         "bit-error-seconds": "0",
-                        "errored-blocks-seconds": "0"
+                        "errored-blocks-seconds": "0",
                     },
                     "hardware-physical-address": "2c:6b:f5:ff:01:21",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
                         "iff-snmp-traps": True,
-                        "internal-flags": "0x4000"
+                        "internal-flags": "0x4000",
                     },
                     "if-device-flags": {
                         "ifdf-down": True,
                         "ifdf-present": True,
-                        "ifdf-running": True
+                        "ifdf-running": True,
                     },
                     "if-flow-control": "Enabled",
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "if-remote-fault": "Online",
                     "interface-flapped": {
                         "#text": "2019-08-29 09:09:20 UTC (29w6d 18:55 ago)"
@@ -1456,7 +1278,7 @@ class TestShowInterfaces(unittest.TestCase):
                     "pad-to-minimum-frame-size": "Disabled",
                     "physical-interface-cos-information": {
                         "physical-interface-cos-hw-max-queues": "8",
-                        "physical-interface-cos-use-max-queues": "8"
+                        "physical-interface-cos-use-max-queues": "8",
                     },
                     "sonet-mode": "LAN-PHY",
                     "source-filtering": "Disabled",
@@ -1465,91 +1287,46 @@ class TestShowInterfaces(unittest.TestCase):
                         "input-bps": "0",
                         "input-pps": "0",
                         "output-bps": "0",
-                        "output-pps": "0"
-                    }
+                        "output-pps": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "2c:6b:f5:ff:01:29",
                     "hardware-physical-address": "2c:6b:f5:ff:01:29",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "link-level-type": "Ethernet",
                     "link-type": "Full-Duplex",
                     "mtu": "9192",
                     "name": "cbp0",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Full-Duplex",
                     "name": "demux0",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "name": "dsc",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "00:50:56:ff:e2:c1",
                     "hardware-physical-address": "00:50:56:ff:e2:c1",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "interface-flapped": {
                         "#text": "2019-08-29 09:03:11 UTC (29w6d 19:02 ago)"
                     },
@@ -1557,18 +1334,14 @@ class TestShowInterfaces(unittest.TestCase):
                     "logical-interface": {
                         "address-family": [
                             {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
+                                "address-family-flags": {"ifff-is-primary": True},
                                 "address-family-name": "inet",
                                 "interface-address": [
                                     {
                                         "ifa-broadcast": "10.255.255.255",
                                         "ifa-destination": "10/8",
-                                        "ifa-flags": {
-                                            "ifaf-is-preferred": True
-                                        },
-                                        "ifa-local": "10.0.0.4"
+                                        "ifa-flags": {"ifaf-is-preferred": True},
+                                        "ifa-local": "10.0.0.4",
                                     },
                                     {
                                         "ifa-broadcast": "172.16.16.255",
@@ -1576,9 +1349,9 @@ class TestShowInterfaces(unittest.TestCase):
                                         "ifa-flags": {
                                             "ifaf-is-preferred": True,
                                             "ifaf-kernel": True,
-                                            "ifaf-preferred": True
+                                            "ifaf-preferred": True,
                                         },
-                                        "ifa-local": "172.16.64.1"
+                                        "ifa-local": "172.16.64.1",
                                     },
                                     {
                                         "ifa-broadcast": "172.16.16.255",
@@ -1586,334 +1359,194 @@ class TestShowInterfaces(unittest.TestCase):
                                         "ifa-flags": {
                                             "ifaf-is-default": True,
                                             "ifaf-is-primary": True,
-                                            "ifaf-primary": True
+                                            "ifaf-primary": True,
                                         },
-                                        "ifa-local": "172.16.64.4"
-                                    }
+                                        "ifa-local": "172.16.64.4",
+                                    },
                                 ],
                                 "intf-curr-cnt": "1",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
-                                "new-hold-limit": "75000"
+                                "new-hold-limit": "75000",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
+                                "address-family-flags": {"ifff-is-primary": True},
                                 "address-family-name": "inet6",
                                 "interface-address": [
                                     {
                                         "ifa-destination": "fe80::/64",
-                                        "ifa-flags": {
-                                            "ifaf-is-preferred": True
-                                        },
-                                        "ifa-local": "fe80::250:56ff:feff:e2c1"
+                                        "ifa-flags": {"ifaf-is-preferred": True},
+                                        "ifa-local": "fe80::250:56ff:feff:e2c1",
                                     },
                                     {
                                         "ifa-destination": "2001:db8:8d82::/64",
                                         "ifa-flags": {
                                             "ifaf-is-default": True,
                                             "ifaf-is-preferred": True,
-                                            "ifaf-is-primary": True
+                                            "ifaf-is-primary": True,
                                         },
-                                        "ifa-local": "0x4"
-                                    }
+                                        "ifa-local": "0x4",
+                                    },
                                 ],
                                 "intf-curr-cnt": "1",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
-                                "new-hold-limit": "75000"
+                                "new-hold-limit": "75000",
                             },
                             {
                                 "address-family-flags": {
                                     "ifff-is-primary": True,
-                                    "ifff-primary": True
+                                    "ifff-primary": True,
                                 },
                                 "address-family-name": "tnp",
-                                "mtu": "1500"
-                            }
+                                "mtu": "1500",
+                            },
                         ],
                         "encapsulation": "ENET2",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
                             "iff-up": True,
-                            "internal-flags": "0x4000000"
+                            "internal-flags": "0x4000000",
                         },
                         "local-index": "3",
                         "name": "em1.0",
                         "snmp-index": "24",
                         "traffic-statistics": {
                             "input-packets": "724625563",
-                            "output-packets": "793953088"
-                        }
+                            "output-packets": "793953088",
+                        },
                     },
                     "mtu": "1514",
                     "name": "em1",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "link-level-type": "VxLAN-Tunnel-Endpoint",
                     "link-type": "Full-Duplex",
                     "mtu": "Unlimited",
                     "name": "esi",
                     "speed": "Unlimited",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "link-level-type": "Flexible-tunnel-Interface",
                     "link-type": "Full-Duplex",
                     "mtu": "Unlimited",
                     "name": "fti0",
                     "speed": "Unlimited",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "link-level-type": "Flexible-tunnel-Interface",
                     "link-type": "Full-Duplex",
                     "mtu": "Unlimited",
                     "name": "fti1",
                     "speed": "Unlimited",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "link-level-type": "Flexible-tunnel-Interface",
                     "link-type": "Full-Duplex",
                     "mtu": "Unlimited",
                     "name": "fti2",
                     "speed": "Unlimited",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "link-level-type": "Flexible-tunnel-Interface",
                     "link-type": "Full-Duplex",
                     "mtu": "Unlimited",
                     "name": "fti3",
                     "speed": "Unlimited",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "link-level-type": "Flexible-tunnel-Interface",
                     "link-type": "Full-Duplex",
                     "mtu": "Unlimited",
                     "name": "fti4",
                     "speed": "Unlimited",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "link-level-type": "Flexible-tunnel-Interface",
                     "link-type": "Full-Duplex",
                     "mtu": "Unlimited",
                     "name": "fti5",
                     "speed": "Unlimited",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "link-level-type": "Flexible-tunnel-Interface",
                     "link-type": "Full-Duplex",
                     "mtu": "Unlimited",
                     "name": "fti6",
                     "speed": "Unlimited",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "link-level-type": "Flexible-tunnel-Interface",
                     "link-type": "Full-Duplex",
                     "mtu": "Unlimited",
                     "name": "fti7",
                     "speed": "Unlimited",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "00:50:56:ff:0a:95",
                     "hardware-physical-address": "00:50:56:ff:0a:95",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "interface-flapped": {
                         "#text": "2019-08-29 09:03:11 UTC (29w6d 19:02 ago)"
                     },
@@ -1923,7 +1556,7 @@ class TestShowInterfaces(unittest.TestCase):
                             {
                                 "address-family-flags": {
                                     "ifff-is-primary": True,
-                                    "ifff-sendbcast-pkt-to-re": True
+                                    "ifff-sendbcast-pkt-to-re": True,
                                 },
                                 "address-family-name": "inet",
                                 "interface-address": {
@@ -1931,128 +1564,82 @@ class TestShowInterfaces(unittest.TestCase):
                                     "ifa-destination": "1.0.0/24",
                                     "ifa-flags": {
                                         "ifaf-is-preferred": True,
-                                        "ifaf-is-primary": True
+                                        "ifaf-is-primary": True,
                                     },
-                                    "ifa-local": "10.1.0.101"
+                                    "ifa-local": "10.1.0.101",
                                 },
                                 "intf-curr-cnt": "2",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
-                                "new-hold-limit": "75000"
+                                "new-hold-limit": "75000",
                             }
                         ],
                         "encapsulation": "ENET2",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
                             "iff-up": True,
-                            "internal-flags": "0x4000000"
+                            "internal-flags": "0x4000000",
                         },
                         "local-index": "4",
                         "name": "fxp0.0",
                         "snmp-index": "13",
                         "traffic-statistics": {
                             "input-packets": "563129",
-                            "output-packets": "805208"
-                        }
+                            "output-packets": "805208",
+                        },
                     },
                     "mtu": "1514",
                     "name": "fxp0",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "link-level-type": "GRE",
                     "mtu": "Unlimited",
                     "name": "gre",
                     "speed": "Unlimited",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "link-level-type": "IP-over-IP",
                     "mtu": "Unlimited",
                     "name": "ipip",
                     "speed": "Unlimited",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "2c:6b:f5:ff:08:09",
                     "hardware-physical-address": "2c:6b:f5:ff:08:09",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "link-level-type": "Ethernet",
                     "link-type": "Full-Duplex",
                     "mtu": "1514",
                     "name": "irb",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "2c:6b:f5:ff:08:d8",
                     "hardware-physical-address": "2c:6b:f5:ff:08:d8",
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "link-level-type": "Ethernet",
                     "link-type": "Full-Duplex",
                     "logical-interface": {
                         "address-family": [
                             {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
+                                "address-family-flags": {"ifff-is-primary": True},
                                 "address-family-name": "inet",
                                 "interface-address": {
                                     "ifa-broadcast": "172.16.16.255",
@@ -2061,23 +1648,23 @@ class TestShowInterfaces(unittest.TestCase):
                                         "ifaf-is-default": True,
                                         "ifaf-is-preferred": True,
                                         "ifaf-is-primary": True,
-                                        "ifaf-primary": True
+                                        "ifaf-primary": True,
                                     },
-                                    "ifa-local": "172.16.64.127"
+                                    "ifa-local": "172.16.64.127",
                                 },
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "75000",
                                 "mtu": "1514",
-                                "new-hold-limit": "75000"
+                                "new-hold-limit": "75000",
                             }
                         ],
                         "encapsulation": "unknown",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
                             "iff-up": True,
-                            "internal-flags": "0x24004000"
+                            "internal-flags": "0x24004000",
                         },
                         "local-index": "325",
                         "logical-interface-bandwidth": "1Gbps",
@@ -2085,71 +1672,60 @@ class TestShowInterfaces(unittest.TestCase):
                         "snmp-index": "514",
                         "traffic-statistics": {
                             "input-packets": "0",
-                            "output-packets": "0"
-                        }
+                            "output-packets": "0",
+                        },
                     },
                     "mtu": "1514",
                     "name": "jsrv",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-config-flags": {"iff-snmp-traps": True},
                     "if-device-flags": {
                         "ifdf-loopback": True,
                         "ifdf-present": True,
-                        "ifdf-running": True
+                        "ifdf-running": True,
                     },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "logical-interface": {
                         "address-family": [
                             {
                                 "address-family-flags": {
                                     "ifff-no-redirects": True,
-                                    "ifff-sendbcast-pkt-to-re": True
+                                    "ifff-sendbcast-pkt-to-re": True,
                                 },
                                 "address-family-name": "inet",
                                 "interface-address": {
                                     "ifa-flags": {
                                         "ifaf-is-default": True,
-                                        "ifaf-is-primary": True
+                                        "ifaf-is-primary": True,
                                     },
-                                    "ifa-local": "10.189.5.252"
+                                    "ifa-local": "10.189.5.252",
                                 },
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
+                                "new-hold-limit": "0",
                             },
                             {
                                 "address-family-name": "inet6",
                                 "interface-address": {
                                     "ifa-flags": {
                                         "ifaf-is-default": True,
-                                        "ifaf-is-primary": True
+                                        "ifaf-is-primary": True,
                                     },
-                                    "ifa-local": "127.0.0.1"
+                                    "ifa-local": "127.0.0.1",
                                 },
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
+                                "new-hold-limit": "0",
                             },
                             {
                                 "address-family-name": "inet",
@@ -2158,7 +1734,7 @@ class TestShowInterfaces(unittest.TestCase):
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
+                                "new-hold-limit": "0",
                             },
                             {
                                 "address-family-name": "inet",
@@ -2167,227 +1743,128 @@ class TestShowInterfaces(unittest.TestCase):
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
-                            }
+                                "new-hold-limit": "0",
+                            },
                         ],
-                        "if-config-flags": {
-                            "iff-snmp-traps": True,
-                            "iff-up": True
-                        },
+                        "if-config-flags": {"iff-snmp-traps": True, "iff-up": True},
                         "local-index": "321",
                         "name": "lo0.16385",
                         "snmp-index": "22",
                         "traffic-statistics": {
                             "input-packets": "33920495",
-                            "output-packets": "33920495"
-                        }
+                            "output-packets": "33920495",
+                        },
                     },
                     "name": "lo0",
                     "traffic-statistics": {
                         "input-packets": "33920578",
-                        "output-packets": "33920578"
-                    }
+                        "output-packets": "33920578",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "link-level-type": "LSI",
                     "mtu": "Unlimited",
                     "name": "lsi",
                     "speed": "Unlimited",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "link-level-type": "GRE",
                     "mtu": "Unlimited",
                     "name": "mtun",
                     "speed": "Unlimited",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "link-level-type": "PIM-Decapsulator",
                     "mtu": "Unlimited",
                     "name": "pimd",
                     "speed": "Unlimited",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "link-level-type": "PIM-Encapsulator",
                     "mtu": "Unlimited",
                     "name": "pime",
                     "speed": "Unlimited",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "2c:6b:f5:ff:08:c8",
                     "hardware-physical-address": "2c:6b:f5:ff:08:c8",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "link-level-type": "Ethernet",
                     "link-type": "Full-Duplex",
                     "mtu": "9192",
                     "name": "pip0",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "link-level-type": "PPPoE",
                     "link-type": "Full-Duplex",
                     "mtu": "1532",
-                    "name": "pp0"
+                    "name": "pp0",
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "link-level-type": "Remote-BEB",
                     "link-type": "Full-Duplex",
                     "mtu": "Unlimited",
                     "name": "rbeb",
                     "speed": "Unlimited",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "link-level-type": "Interface-Specific",
                     "mtu": "Unlimited",
                     "name": "tap",
                     "speed": "Unlimited",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
+                    "interface-flapped": {"#text": "Never"},
                     "link-level-type": "VxLAN-Tunnel-Endpoint",
                     "link-type": "Full-Duplex",
                     "mtu": "Unlimited",
                     "name": "vtep",
                     "speed": "Unlimited",
-                    "traffic-statistics": {
-                        "input-packets": "0",
-                        "output-packets": "0"
-                    }
-                }
+                    "traffic-statistics": {"input-packets": "0", "output-packets": "0"},
+                },
             ]
         }
     }
 
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        "execute.return_value": """
         show interfaces
         Physical interface: ge-0/0/0, Enabled, Physical link is Up
         Interface index: 148, SNMP ifIndex: 526
@@ -3138,9 +2615,11 @@ class TestShowInterfaces(unittest.TestCase):
         Last flapped   : Never
             Input packets : 0
             Output packets: 0
-    '''}
+    """
+    }
 
-    golden_output_2 = {'execute.return_value': '''
+    golden_output_2 = {
+        "execute.return_value": """
         show interfaces extensive
             Physical interface: ge-0/0/0, Enabled, Physical link is Up
             Interface index: 148, SNMP ifIndex: 526, Generation: 151
@@ -5407,25 +4886,16 @@ class TestShowInterfaces(unittest.TestCase):
                 Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Giants: 0, Policed discards: 0, Resource errors: 0
             Output errors:
                 Carrier transitions: 0, Errors: 0, Drops: 0, MTU errors: 0, Resource errors: 0
-    '''}
+    """
+    }
 
     golden_parsed_output_2 = {
         "interface-information": {
             "physical-interface": [
                 {
-                    "active-alarms": {
-                        "interface-alarms": {
-                            "alarm-not-present": True
-                        }
-                    },
-                    "active-defects": {
-                        "interface-alarms": {
-                            "alarm-not-present": True
-                        }
-                    },
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "active-alarms": {"interface-alarms": {"alarm-not-present": True}},
+                    "active-defects": {"interface-alarms": {"alarm-not-present": True}},
+                    "admin-status": {"@junos:format": "Enabled"},
                     "bpdu-error": "None",
                     "current-physical-address": "00:50:56:ff:56:b6",
                     "description": "none/100G/in/hktGCS002_ge-0/0/0",
@@ -5434,7 +4904,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "fec_ccw_count": "0",
                         "fec_ccw_error_rate": "0",
                         "fec_nccw_count": "0",
-                        "fec_nccw_error_rate": "0"
+                        "fec_nccw_error_rate": "0",
                     },
                     "ethernet-mac-statistics": {
                         "input-broadcasts": "0",
@@ -5459,26 +4929,21 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-mac-pause-frames": "0",
                         "output-multicasts": "0",
                         "output-packets": "129183374",
-                        "output-unicasts": "129183361"
+                        "output-unicasts": "129183361",
                     },
                     "ethernet-pcs-statistics": {
                         "bit-error-seconds": "0",
-                        "errored-blocks-seconds": "0"
+                        "errored-blocks-seconds": "0",
                     },
                     "hardware-physical-address": "00:50:56:ff:56:b6",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-snmp-traps": True,
-                        "internal-flags": "0x4000"
+                        "internal-flags": "0x4000",
                     },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "if-flow-control": "Enabled",
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "if-remote-fault": "Online",
                     "input-error-list": {
                         "framing-errors": "0",
@@ -5490,7 +4955,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "input-l2-mismatch-timeouts": "0",
                         "input-l3-incompletes": "0",
                         "input-resource-errors": "0",
-                        "input-runts": "0"
+                        "input-runts": "0",
                     },
                     "interface-flapped": {
                         "#text": "2019-08-29 09:09:19 UTC (29w6d 22:19 ago)"
@@ -5504,13 +4969,13 @@ class TestShowInterfaces(unittest.TestCase):
                             {
                                 "address-family-flags": {
                                     "ifff-no-redirects": True,
-                                    "ifff-sendbcast-pkt-to-re": True
+                                    "ifff-sendbcast-pkt-to-re": True,
                                 },
                                 "address-family-name": "inet",
                                 "interface-address": {
                                     "ifa-flags": {
                                         "ifaf-is-preferred": True,
-                                        "ifaf-is-primary": True
+                                        "ifaf-is-primary": True,
                                     }
                                 },
                                 "intf-curr-cnt": "1",
@@ -5518,61 +4983,53 @@ class TestShowInterfaces(unittest.TestCase):
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
-                                "new-hold-limit": "75000"
+                                "new-hold-limit": "75000",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
+                                "address-family-flags": {"ifff-is-primary": True},
                                 "address-family-name": "inet6",
                                 "interface-address": [
                                     {
                                         "ifa-destination": "2001:db8:223c:2c16::/64",
                                         "ifa-flags": {
                                             "ifaf-is-preferred": True,
-                                            "ifaf-is-primary": True
+                                            "ifaf-is-primary": True,
                                         },
-                                        "ifa-local": "2001:db8:223c:2c16::1"
+                                        "ifa-local": "2001:db8:223c:2c16::1",
                                     },
                                     {
                                         "ifa-destination": "fe80::/64",
-                                        "ifa-flags": {
-                                            "ifaf-is-preferred": True
-                                        },
-                                        "ifa-local": "fe80::250:56ff:feff:56b6"
-                                    }
+                                        "ifa-flags": {"ifaf-is-preferred": True},
+                                        "ifa-local": "fe80::250:56ff:feff:56b6",
+                                    },
                                 ],
                                 "intf-curr-cnt": "1",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
-                                "new-hold-limit": "75000"
+                                "new-hold-limit": "75000",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
+                                "address-family-flags": {"ifff-is-primary": True},
                                 "address-family-name": "mpls",
                                 "generation": "150",
                                 "maximum-labels": "3",
-                                "mtu": "1488"
+                                "mtu": "1488",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
+                                "address-family-flags": {"ifff-is-primary": True},
                                 "address-family-name": "multiservice",
                                 "generation": "163",
                                 "mtu": "Unlimited",
                                 "route-table": "0",
-                            }
+                            },
                         ],
                         "encapsulation": "ENET2",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
                             "iff-up": True,
-                            "internal-flags": "0x4004000"
+                            "internal-flags": "0x4004000",
                         },
                         "local-index": "333",
                         "name": "ge-0/0/0.0",
@@ -5584,18 +5041,18 @@ class TestShowInterfaces(unittest.TestCase):
                                 "input-bytes": "12676733166",
                                 "input-packets": "63558712",
                                 "output-bytes": "11303933633",
-                                "output-packets": "61684919"
+                                "output-packets": "61684919",
                             },
                             "output-bytes": "15997705213",
-                            "output-packets": "129306864"
-                        }
+                            "output-packets": "129306864",
+                        },
                     },
                     "loopback": "Disabled",
                     "lsi-traffic-statistics": {
                         "input-bps": "0",
                         "input-bytes": "0",
                         "input-packets": "0",
-                        "input-pps": "0"
+                        "input-pps": "0",
                     },
                     "mru": "1522",
                     "mtu": "1514",
@@ -5609,12 +5066,12 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-drops": "0",
                         "output-errors": "0",
                         "output-fifo-errors": "0",
-                        "output-resource-errors": "0"
+                        "output-resource-errors": "0",
                     },
                     "pad-to-minimum-frame-size": "Disabled",
                     "physical-interface-cos-information": {
                         "physical-interface-cos-hw-max-queues": "8",
-                        "physical-interface-cos-use-max-queues": "8"
+                        "physical-interface-cos-use-max-queues": "8",
                     },
                     "snmp-index": "526",
                     "sonet-mode": "LAN-PHY",
@@ -5624,7 +5081,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "stp-input-bytes-dropped": "0",
                         "stp-input-packets-dropped": "0",
                         "stp-output-bytes-dropped": "0",
-                        "stp-output-packets-dropped": "0"
+                        "stp-output-packets-dropped": "0",
                     },
                     "traffic-statistics": {
                         "input-bps": "3152",
@@ -5635,12 +5092,12 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "737203554",
                             "input-packets": "7541948",
                             "output-bytes": "1018758352",
-                            "output-packets": "6986863"
+                            "output-packets": "6986863",
                         },
                         "output-bps": "3160",
                         "output-bytes": "16367814635",
                         "output-packets": "129306863",
-                        "output-pps": "4"
+                        "output-pps": "4",
                     },
                     "transit-traffic-statistics": {
                         "input-bps": "3152",
@@ -5655,38 +5112,26 @@ class TestShowInterfaces(unittest.TestCase):
                             "output-bps": "0",
                             "output-bytes": "1018758352",
                             "output-packets": "6986863",
-                            "output-pps": "0"
+                            "output-pps": "0",
                         },
                         "output-bps": "816",
                         "output-bytes": "4693771580",
                         "output-packets": "67621945",
-                        "output-pps": "1"
-                    }
+                        "output-pps": "1",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "Unspecified",
                     "hardware-physical-address": "Unspecified",
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Unspecified",
                     "local-index": "145",
                     "logical-interface": {
-                        "if-config-flags": {
-                            "iff-snmp-traps": True,
-                            "iff-up": True
-                        },
+                        "if-config-flags": {"iff-snmp-traps": True, "iff-up": True},
                         "local-index": "329",
                         "logical-interface-bandwidth": "0",
                         "name": "lc-0/0/0.32769",
@@ -5695,17 +5140,17 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
-                        "address-family": [{
-                            "address-family-flags": {
-                                "ifff-is-primary": True
-                            },
-                            "address-family-name": "vpls",
-                            "generation": "155",
-                            "mtu": "Unlimited",
-                            "route-table": "1",
-                        }]
+                        "address-family": [
+                            {
+                                "address-family-flags": {"ifff-is-primary": True},
+                                "address-family-name": "vpls",
+                                "generation": "155",
+                                "mtu": "Unlimited",
+                                "route-table": "1",
+                            }
+                        ],
                     },
                     "name": "lc-0/0/0",
                     "output-error-list": {},
@@ -5717,10 +5162,10 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
+                        "output-packets": "0",
                     },
                     "transit-traffic-statistics": {
                         "input-bps": "0",
@@ -5730,59 +5175,43 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-bps": "0",
                         "output-bytes": "0",
                         "output-packets": "0",
-                        "output-pps": "0"
-                    }
+                        "output-pps": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "Unspecified",
                     "hardware-physical-address": "Unspecified",
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Unspecified",
                     "local-index": "147",
                     "logical-interface": {
                         "address-family": [
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "inet",
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
+                                "new-hold-limit": "0",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "inet6",
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
-                            }
+                                "new-hold-limit": "0",
+                            },
                         ],
-                        "if-config-flags": {
-                            "iff-snmp-traps": True,
-                            "iff-up": True
-                        },
+                        "if-config-flags": {"iff-snmp-traps": True, "iff-up": True},
                         "local-index": "330",
                         "logical-interface-bandwidth": "0",
                         "name": "pfe-0/0/0.16383",
@@ -5794,11 +5223,11 @@ class TestShowInterfaces(unittest.TestCase):
                                 "input-bytes": "0",
                                 "input-packets": "0",
                                 "output-bytes": "0",
-                                "output-packets": "0"
+                                "output-packets": "0",
                             },
                             "output-bytes": "0",
-                            "output-packets": "0"
-                        }
+                            "output-packets": "0",
+                        },
                     },
                     "name": "pfe-0/0/0",
                     "output-error-list": {},
@@ -5810,10 +5239,10 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
+                        "output-packets": "0",
                     },
                     "transit-traffic-statistics": {
                         "input-bps": "0",
@@ -5828,64 +5257,48 @@ class TestShowInterfaces(unittest.TestCase):
                             "output-bps": "0",
                             "output-bytes": "0",
                             "output-packets": "0",
-                            "output-pps": "0"
+                            "output-pps": "0",
                         },
                         "output-bps": "0",
                         "output-bytes": "0",
                         "output-packets": "0",
-                        "output-pps": "0"
-                    }
+                        "output-pps": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "Unspecified",
                     "hardware-physical-address": "Unspecified",
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Unspecified",
                     "local-index": "146",
                     "logical-interface": {
                         "address-family": [
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "inet",
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
+                                "new-hold-limit": "0",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
+                                "address-family-flags": {"ifff-is-primary": True},
                                 "address-family-name": "inet",
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
-                            }
+                                "new-hold-limit": "0",
+                            },
                         ],
-                        "if-config-flags": {
-                            "iff-snmp-traps": True,
-                            "iff-up": True
-                        },
+                        "if-config-flags": {"iff-snmp-traps": True, "iff-up": True},
                         "local-index": "332",
                         "logical-interface-bandwidth": "0",
                         "name": "pfh-0/0/0.16384",
@@ -5894,8 +5307,8 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
-                        }
+                            "output-packets": "0",
+                        },
                     },
                     "name": "pfh-0/0/0",
                     "output-error-list": {},
@@ -5907,10 +5320,10 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
+                        "output-packets": "0",
                     },
                     "transit-traffic-statistics": {
                         "input-bps": "0",
@@ -5920,23 +5333,13 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-bps": "0",
                         "output-bytes": "0",
                         "output-packets": "0",
-                        "output-pps": "0"
-                    }
+                        "output-pps": "0",
+                    },
                 },
                 {
-                    "active-alarms": {
-                        "interface-alarms": {
-                            "alarm-not-present": True
-                        }
-                    },
-                    "active-defects": {
-                        "interface-alarms": {
-                            "alarm-not-present": True
-                        }
-                    },
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "active-alarms": {"interface-alarms": {"alarm-not-present": True}},
+                    "active-defects": {"interface-alarms": {"alarm-not-present": True}},
+                    "admin-status": {"@junos:format": "Enabled"},
                     "bpdu-error": "None",
                     "current-physical-address": "00:50:56:ff:37:f9",
                     "description": "YW7079/9.6G/BB/sjkGCS001-EC11_xe-0/1/5[SJC]_Area8_Cost100",
@@ -5945,7 +5348,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "fec_ccw_count": "0",
                         "fec_ccw_error_rate": "0",
                         "fec_nccw_count": "0",
-                        "fec_nccw_error_rate": "0"
+                        "fec_nccw_error_rate": "0",
                     },
                     "ethernet-mac-statistics": {
                         "input-broadcasts": "0",
@@ -5970,26 +5373,21 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-mac-pause-frames": "0",
                         "output-multicasts": "0",
                         "output-packets": "370414748",
-                        "output-unicasts": "370414722"
+                        "output-unicasts": "370414722",
                     },
                     "ethernet-pcs-statistics": {
                         "bit-error-seconds": "0",
-                        "errored-blocks-seconds": "0"
+                        "errored-blocks-seconds": "0",
                     },
                     "hardware-physical-address": "00:50:56:ff:37:f9",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-snmp-traps": True,
-                        "internal-flags": "0x4000"
+                        "internal-flags": "0x4000",
                     },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "if-flow-control": "Enabled",
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "if-remote-fault": "Online",
                     "input-error-list": {
                         "framing-errors": "0",
@@ -6001,7 +5399,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "input-l2-mismatch-timeouts": "0",
                         "input-l3-incompletes": "0",
                         "input-resource-errors": "0",
-                        "input-runts": "0"
+                        "input-runts": "0",
                     },
                     "interface-flapped": {
                         "#text": "2019-08-29 09:09:19 UTC (29w6d 22:19 ago)"
@@ -6015,13 +5413,13 @@ class TestShowInterfaces(unittest.TestCase):
                             {
                                 "address-family-flags": {
                                     "ifff-no-redirects": True,
-                                    "ifff-sendbcast-pkt-to-re": True
+                                    "ifff-sendbcast-pkt-to-re": True,
                                 },
                                 "address-family-name": "inet",
                                 "interface-address": {
                                     "ifa-flags": {
                                         "ifaf-is-preferred": True,
-                                        "ifaf-is-primary": True
+                                        "ifaf-is-primary": True,
                                     }
                                 },
                                 "intf-curr-cnt": "1",
@@ -6029,7 +5427,7 @@ class TestShowInterfaces(unittest.TestCase):
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
-                                "new-hold-limit": "75000"
+                                "new-hold-limit": "75000",
                             },
                             {
                                 "address-family-name": "inet6",
@@ -6038,24 +5436,22 @@ class TestShowInterfaces(unittest.TestCase):
                                         "ifa-destination": "2001:db8:eb18:6337::/64",
                                         "ifa-flags": {
                                             "ifaf-is-preferred": True,
-                                            "ifaf-is-primary": True
+                                            "ifaf-is-primary": True,
                                         },
-                                        "ifa-local": "2001:db8:eb18:6337::2"
+                                        "ifa-local": "2001:db8:eb18:6337::2",
                                     },
                                     {
                                         "ifa-destination": "fe80::/64",
-                                        "ifa-flags": {
-                                            "ifaf-is-preferred": True
-                                        },
-                                        "ifa-local": "fe80::250:56ff:feff:37f9"
-                                    }
+                                        "ifa-flags": {"ifaf-is-preferred": True},
+                                        "ifa-local": "fe80::250:56ff:feff:37f9",
+                                    },
                                 ],
                                 "intf-curr-cnt": "2",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
-                                "new-hold-limit": "75000"
+                                "new-hold-limit": "75000",
                             },
                             {
                                 "address-family-name": "mpls",
@@ -6069,13 +5465,12 @@ class TestShowInterfaces(unittest.TestCase):
                                 "mtu": "Unlimited",
                                 "route-table": "0",
                             },
-                            
                         ],
                         "encapsulation": "ENET2",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
                             "iff-up": True,
-                            "internal-flags": "0x4004000"
+                            "internal-flags": "0x4004000",
                         },
                         "local-index": "334",
                         "name": "ge-0/0/1.0",
@@ -6087,18 +5482,18 @@ class TestShowInterfaces(unittest.TestCase):
                                 "input-bytes": "13617655381",
                                 "input-packets": "85070342",
                                 "output-bytes": "18694395654",
-                                "output-packets": "90794602"
+                                "output-packets": "90794602",
                             },
                             "output-bytes": "42238503795",
-                            "output-packets": "370594612"
-                        }
+                            "output-packets": "370594612",
+                        },
                     },
                     "loopback": "Disabled",
                     "lsi-traffic-statistics": {
                         "input-bps": "0",
                         "input-bytes": "0",
                         "input-packets": "0",
-                        "input-pps": "0"
+                        "input-pps": "0",
                     },
                     "mru": "1522",
                     "mtu": "1514",
@@ -6112,12 +5507,12 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-drops": "0",
                         "output-errors": "0",
                         "output-fifo-errors": "0",
-                        "output-resource-errors": "0"
+                        "output-resource-errors": "0",
                     },
                     "pad-to-minimum-frame-size": "Disabled",
                     "physical-interface-cos-information": {
                         "physical-interface-cos-hw-max-queues": "8",
-                        "physical-interface-cos-use-max-queues": "8"
+                        "physical-interface-cos-use-max-queues": "8",
                     },
                     "snmp-index": "527",
                     "sonet-mode": "LAN-PHY",
@@ -6127,7 +5522,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "stp-input-bytes-dropped": "0",
                         "stp-input-packets-dropped": "0",
                         "stp-output-bytes-dropped": "0",
-                        "stp-output-packets-dropped": "0"
+                        "stp-output-packets-dropped": "0",
                     },
                     "traffic-statistics": {
                         "input-bps": "5304",
@@ -6138,12 +5533,12 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "3303092203",
                             "input-packets": "41039648",
                             "output-bytes": "3127179954",
-                            "output-packets": "41594426"
+                            "output-packets": "41594426",
                         },
                         "output-bps": "8016",
                         "output-bytes": "42783271407",
                         "output-packets": "370594612",
-                        "output-pps": "9"
+                        "output-pps": "9",
                     },
                     "transit-traffic-statistics": {
                         "input-bps": "3368",
@@ -6158,28 +5553,18 @@ class TestShowInterfaces(unittest.TestCase):
                             "output-bps": "1136",
                             "output-bytes": "3127179954",
                             "output-packets": "41594426",
-                            "output-pps": "1"
+                            "output-pps": "1",
                         },
                         "output-bps": "2144",
                         "output-bytes": "23544108141",
                         "output-packets": "279800010",
-                        "output-pps": "4"
-                    }
+                        "output-pps": "4",
+                    },
                 },
                 {
-                    "active-alarms": {
-                        "interface-alarms": {
-                            "alarm-not-present": True
-                        }
-                    },
-                    "active-defects": {
-                        "interface-alarms": {
-                            "alarm-not-present": True
-                        }
-                    },
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "active-alarms": {"interface-alarms": {"alarm-not-present": True}},
+                    "active-defects": {"interface-alarms": {"alarm-not-present": True}},
+                    "admin-status": {"@junos:format": "Enabled"},
                     "bpdu-error": "None",
                     "current-physical-address": "00:50:56:ff:1e:ba",
                     "description": "ve-hkgasr01_Gi2[DefaultCost1000]",
@@ -6188,7 +5573,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "fec_ccw_count": "0",
                         "fec_ccw_error_rate": "0",
                         "fec_nccw_count": "0",
-                        "fec_nccw_error_rate": "0"
+                        "fec_nccw_error_rate": "0",
                     },
                     "ethernet-mac-statistics": {
                         "input-broadcasts": "0",
@@ -6213,26 +5598,21 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-mac-pause-frames": "0",
                         "output-multicasts": "0",
                         "output-packets": "229070544",
-                        "output-unicasts": "229070540"
+                        "output-unicasts": "229070540",
                     },
                     "ethernet-pcs-statistics": {
                         "bit-error-seconds": "0",
-                        "errored-blocks-seconds": "0"
+                        "errored-blocks-seconds": "0",
                     },
                     "hardware-physical-address": "00:50:56:ff:1e:ba",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-snmp-traps": True,
-                        "internal-flags": "0x4000"
+                        "internal-flags": "0x4000",
                     },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "if-flow-control": "Enabled",
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "if-remote-fault": "Online",
                     "input-error-list": {
                         "framing-errors": "0",
@@ -6244,7 +5624,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "input-l2-mismatch-timeouts": "0",
                         "input-l3-incompletes": "0",
                         "input-resource-errors": "0",
-                        "input-runts": "0"
+                        "input-runts": "0",
                     },
                     "interface-flapped": {
                         "#text": "2020-03-05 16:04:34 UTC (2w6d 15:23 ago)"
@@ -6263,7 +5643,7 @@ class TestShowInterfaces(unittest.TestCase):
                                 "interface-address": {
                                     "ifa-flags": {
                                         "ifaf-is-preferred": True,
-                                        "ifaf-is-primary": True
+                                        "ifaf-is-primary": True,
                                     }
                                 },
                                 "intf-curr-cnt": "1",
@@ -6271,7 +5651,7 @@ class TestShowInterfaces(unittest.TestCase):
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
-                                "new-hold-limit": "75000"
+                                "new-hold-limit": "75000",
                             },
                             {
                                 "address-family-name": "mpls",
@@ -6285,13 +5665,13 @@ class TestShowInterfaces(unittest.TestCase):
                                 "generation": "181",
                                 "mtu": "Unlimited",
                                 "route-table": "0",
-                            }
+                            },
                         ],
                         "encapsulation": "ENET2",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
                             "iff-up": True,
-                            "internal-flags": "0x4004000"
+                            "internal-flags": "0x4004000",
                         },
                         "local-index": "336",
                         "name": "ge-0/0/2.0",
@@ -6300,15 +5680,15 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "11458939228",
                             "input-packets": "31742480",
                             "output-bytes": "13615419042",
-                            "output-packets": "28915016"
-                        }
+                            "output-packets": "28915016",
+                        },
                     },
                     "loopback": "Disabled",
                     "lsi-traffic-statistics": {
                         "input-bps": "0",
                         "input-bytes": "0",
                         "input-packets": "0",
-                        "input-pps": "0"
+                        "input-pps": "0",
                     },
                     "mru": "1522",
                     "mtu": "1514",
@@ -6322,12 +5702,12 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-drops": "0",
                         "output-errors": "0",
                         "output-fifo-errors": "0",
-                        "output-resource-errors": "0"
+                        "output-resource-errors": "0",
                     },
                     "pad-to-minimum-frame-size": "Disabled",
                     "physical-interface-cos-information": {
                         "physical-interface-cos-hw-max-queues": "8",
-                        "physical-interface-cos-use-max-queues": "8"
+                        "physical-interface-cos-use-max-queues": "8",
                     },
                     "snmp-index": "528",
                     "sonet-mode": "LAN-PHY",
@@ -6337,7 +5717,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "stp-input-bytes-dropped": "0",
                         "stp-input-packets-dropped": "0",
                         "stp-output-bytes-dropped": "0",
-                        "stp-output-packets-dropped": "0"
+                        "stp-output-packets-dropped": "0",
                     },
                     "traffic-statistics": {
                         "input-bps": "880",
@@ -6348,12 +5728,12 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bps": "880",
                         "output-bytes": "27932035013",
                         "output-packets": "229304654",
-                        "output-pps": "0"
+                        "output-pps": "0",
                     },
                     "transit-traffic-statistics": {
                         "input-bps": "880",
@@ -6363,23 +5743,13 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-bps": "360",
                         "output-bytes": "13648516462",
                         "output-packets": "193694615",
-                        "output-pps": "0"
-                    }
+                        "output-pps": "0",
+                    },
                 },
                 {
-                    "active-alarms": {
-                        "interface-alarms": {
-                            "alarm-not-present": True
-                        }
-                    },
-                    "active-defects": {
-                        "interface-alarms": {
-                            "alarm-not-present": True
-                        }
-                    },
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "active-alarms": {"interface-alarms": {"alarm-not-present": True}},
+                    "active-defects": {"interface-alarms": {"alarm-not-present": True}},
+                    "admin-status": {"@junos:format": "Enabled"},
                     "bpdu-error": "None",
                     "current-physical-address": "00:50:56:ff:93:cb",
                     "eth-switch-error": "None",
@@ -6387,7 +5757,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "fec_ccw_count": "0",
                         "fec_ccw_error_rate": "0",
                         "fec_nccw_count": "0",
-                        "fec_nccw_error_rate": "0"
+                        "fec_nccw_error_rate": "0",
                     },
                     "ethernet-mac-statistics": {
                         "input-broadcasts": "0",
@@ -6412,26 +5782,21 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-mac-pause-frames": "0",
                         "output-multicasts": "0",
                         "output-packets": "17425",
-                        "output-unicasts": "17425"
+                        "output-unicasts": "17425",
                     },
                     "ethernet-pcs-statistics": {
                         "bit-error-seconds": "0",
-                        "errored-blocks-seconds": "0"
+                        "errored-blocks-seconds": "0",
                     },
                     "hardware-physical-address": "00:50:56:ff:93:cb",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-snmp-traps": True,
-                        "internal-flags": "0x4000"
+                        "internal-flags": "0x4000",
                     },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "if-flow-control": "Enabled",
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "if-remote-fault": "Online",
                     "input-error-list": {
                         "framing-errors": "0",
@@ -6443,7 +5808,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "input-l2-mismatch-timeouts": "0",
                         "input-l3-incompletes": "0",
                         "input-resource-errors": "0",
-                        "input-runts": "0"
+                        "input-runts": "0",
                     },
                     "interface-flapped": {
                         "#text": "2019-10-25 08:50:18 UTC (21w5d 22:38 ago)"
@@ -6462,7 +5827,7 @@ class TestShowInterfaces(unittest.TestCase):
                                 "interface-address": {
                                     "ifa-flags": {
                                         "ifaf-is-preferred": True,
-                                        "ifaf-is-primary": True
+                                        "ifaf-is-primary": True,
                                     }
                                 },
                                 "intf-curr-cnt": "1",
@@ -6470,20 +5835,20 @@ class TestShowInterfaces(unittest.TestCase):
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
-                                "new-hold-limit": "75000"
+                                "new-hold-limit": "75000",
                             },
                             {
                                 "address-family-name": "multiservice",
                                 "generation": "175",
                                 "mtu": "Unlimited",
                                 "route-table": "0",
-                            }
+                            },
                         ],
                         "encapsulation": "ENET2",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
                             "iff-up": True,
-                            "internal-flags": "0x4004000"
+                            "internal-flags": "0x4004000",
                         },
                         "local-index": "335",
                         "name": "ge-0/0/3.0",
@@ -6492,8 +5857,8 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "667980",
                             "input-packets": "11133",
                             "output-bytes": "467670",
-                            "output-packets": "11135"
-                        }
+                            "output-packets": "11135",
+                        },
                     },
                     "loopback": "Disabled",
                     "mru": "1522",
@@ -6508,12 +5873,12 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-drops": "0",
                         "output-errors": "0",
                         "output-fifo-errors": "0",
-                        "output-resource-errors": "0"
+                        "output-resource-errors": "0",
                     },
                     "pad-to-minimum-frame-size": "Disabled",
                     "physical-interface-cos-information": {
                         "physical-interface-cos-hw-max-queues": "8",
-                        "physical-interface-cos-use-max-queues": "8"
+                        "physical-interface-cos-use-max-queues": "8",
                     },
                     "snmp-index": "529",
                     "sonet-mode": "LAN-PHY",
@@ -6523,7 +5888,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "stp-input-bytes-dropped": "0",
                         "stp-input-packets-dropped": "0",
                         "stp-output-bytes-dropped": "0",
-                        "stp-output-packets-dropped": "0"
+                        "stp-output-packets-dropped": "0",
                     },
                     "traffic-statistics": {
                         "input-bps": "0",
@@ -6534,12 +5899,12 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bps": "0",
                         "output-bytes": "3419965",
                         "output-packets": "17426",
-                        "output-pps": "0"
+                        "output-pps": "0",
                     },
                     "transit-traffic-statistics": {
                         "input-bps": "0",
@@ -6549,23 +5914,17 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-bps": "0",
                         "output-bytes": "2885485",
                         "output-packets": "6291",
-                        "output-pps": "0"
-                    }
+                        "output-pps": "0",
+                    },
                 },
                 {
                     "active-alarms": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
                     "active-defects": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "bpdu-error": "None",
                     "current-physical-address": "00:50:56:ff:3e:28",
                     "eth-switch-error": "None",
@@ -6573,7 +5932,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "fec_ccw_count": "0",
                         "fec_ccw_error_rate": "0",
                         "fec_nccw_count": "0",
-                        "fec_nccw_error_rate": "0"
+                        "fec_nccw_error_rate": "0",
                     },
                     "ethernet-mac-statistics": {
                         "input-broadcasts": "0",
@@ -6598,28 +5957,26 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-mac-pause-frames": "0",
                         "output-multicasts": "0",
                         "output-packets": "0",
-                        "output-unicasts": "0"
+                        "output-unicasts": "0",
                     },
                     "ethernet-pcs-statistics": {
                         "bit-error-seconds": "0",
-                        "errored-blocks-seconds": "0"
+                        "errored-blocks-seconds": "0",
                     },
                     "hardware-physical-address": "00:50:56:ff:3e:28",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
                         "iff-snmp-traps": True,
-                        "internal-flags": "0x4000"
+                        "internal-flags": "0x4000",
                     },
                     "if-device-flags": {
                         "ifdf-down": True,
                         "ifdf-present": True,
-                        "ifdf-running": True
+                        "ifdf-running": True,
                     },
                     "if-flow-control": "Enabled",
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "if-remote-fault": "Online",
                     "input-error-list": {
                         "framing-errors": "0",
@@ -6631,7 +5988,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "input-l2-mismatch-timeouts": "0",
                         "input-l3-incompletes": "0",
                         "input-resource-errors": "0",
-                        "input-runts": "0"
+                        "input-runts": "0",
                     },
                     "interface-flapped": {
                         "#text": "2019-08-29 09:09:20 UTC (29w6d 22:19 ago)"
@@ -6653,12 +6010,12 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-drops": "0",
                         "output-errors": "0",
                         "output-fifo-errors": "0",
-                        "output-resource-errors": "0"
+                        "output-resource-errors": "0",
                     },
                     "pad-to-minimum-frame-size": "Disabled",
                     "physical-interface-cos-information": {
                         "physical-interface-cos-hw-max-queues": "8",
-                        "physical-interface-cos-use-max-queues": "8"
+                        "physical-interface-cos-use-max-queues": "8",
                     },
                     "snmp-index": "530",
                     "sonet-mode": "LAN-PHY",
@@ -6668,7 +6025,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "stp-input-bytes-dropped": "0",
                         "stp-input-packets-dropped": "0",
                         "stp-output-bytes-dropped": "0",
-                        "stp-output-packets-dropped": "0"
+                        "stp-output-packets-dropped": "0",
                     },
                     "traffic-statistics": {
                         "input-bps": "0",
@@ -6679,28 +6036,22 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bps": "0",
                         "output-bytes": "0",
                         "output-packets": "0",
-                        "output-pps": "0"
-                    }
+                        "output-pps": "0",
+                    },
                 },
                 {
                     "active-alarms": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
                     "active-defects": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "bpdu-error": "None",
                     "current-physical-address": "2c:6b:f5:ff:01:1d",
                     "eth-switch-error": "None",
@@ -6708,7 +6059,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "fec_ccw_count": "0",
                         "fec_ccw_error_rate": "0",
                         "fec_nccw_count": "0",
-                        "fec_nccw_error_rate": "0"
+                        "fec_nccw_error_rate": "0",
                     },
                     "ethernet-mac-statistics": {
                         "input-broadcasts": "0",
@@ -6733,28 +6084,26 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-mac-pause-frames": "0",
                         "output-multicasts": "0",
                         "output-packets": "0",
-                        "output-unicasts": "0"
+                        "output-unicasts": "0",
                     },
                     "ethernet-pcs-statistics": {
                         "bit-error-seconds": "0",
-                        "errored-blocks-seconds": "0"
+                        "errored-blocks-seconds": "0",
                     },
                     "hardware-physical-address": "2c:6b:f5:ff:01:1d",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
                         "iff-snmp-traps": True,
-                        "internal-flags": "0x4000"
+                        "internal-flags": "0x4000",
                     },
                     "if-device-flags": {
                         "ifdf-down": True,
                         "ifdf-present": True,
-                        "ifdf-running": True
+                        "ifdf-running": True,
                     },
                     "if-flow-control": "Enabled",
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "if-remote-fault": "Online",
                     "input-error-list": {
                         "framing-errors": "0",
@@ -6766,7 +6115,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "input-l2-mismatch-timeouts": "0",
                         "input-l3-incompletes": "0",
                         "input-resource-errors": "0",
-                        "input-runts": "0"
+                        "input-runts": "0",
                     },
                     "interface-flapped": {
                         "#text": "2019-08-29 09:09:20 UTC (29w6d 22:19 ago)"
@@ -6788,12 +6137,12 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-drops": "0",
                         "output-errors": "0",
                         "output-fifo-errors": "0",
-                        "output-resource-errors": "0"
+                        "output-resource-errors": "0",
                     },
                     "pad-to-minimum-frame-size": "Disabled",
                     "physical-interface-cos-information": {
                         "physical-interface-cos-hw-max-queues": "8",
-                        "physical-interface-cos-use-max-queues": "8"
+                        "physical-interface-cos-use-max-queues": "8",
                     },
                     "snmp-index": "531",
                     "sonet-mode": "LAN-PHY",
@@ -6803,7 +6152,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "stp-input-bytes-dropped": "0",
                         "stp-input-packets-dropped": "0",
                         "stp-output-bytes-dropped": "0",
-                        "stp-output-packets-dropped": "0"
+                        "stp-output-packets-dropped": "0",
                     },
                     "traffic-statistics": {
                         "input-bps": "0",
@@ -6814,28 +6163,22 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bps": "0",
                         "output-bytes": "0",
                         "output-packets": "0",
-                        "output-pps": "0"
-                    }
+                        "output-pps": "0",
+                    },
                 },
                 {
                     "active-alarms": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
                     "active-defects": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "bpdu-error": "None",
                     "current-physical-address": "2c:6b:f5:ff:01:1e",
                     "eth-switch-error": "None",
@@ -6843,7 +6186,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "fec_ccw_count": "0",
                         "fec_ccw_error_rate": "0",
                         "fec_nccw_count": "0",
-                        "fec_nccw_error_rate": "0"
+                        "fec_nccw_error_rate": "0",
                     },
                     "ethernet-mac-statistics": {
                         "input-broadcasts": "0",
@@ -6868,28 +6211,26 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-mac-pause-frames": "0",
                         "output-multicasts": "0",
                         "output-packets": "0",
-                        "output-unicasts": "0"
+                        "output-unicasts": "0",
                     },
                     "ethernet-pcs-statistics": {
                         "bit-error-seconds": "0",
-                        "errored-blocks-seconds": "0"
+                        "errored-blocks-seconds": "0",
                     },
                     "hardware-physical-address": "2c:6b:f5:ff:01:1e",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
                         "iff-snmp-traps": True,
-                        "internal-flags": "0x4000"
+                        "internal-flags": "0x4000",
                     },
                     "if-device-flags": {
                         "ifdf-down": True,
                         "ifdf-present": True,
-                        "ifdf-running": True
+                        "ifdf-running": True,
                     },
                     "if-flow-control": "Enabled",
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "if-remote-fault": "Online",
                     "input-error-list": {
                         "framing-errors": "0",
@@ -6901,7 +6242,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "input-l2-mismatch-timeouts": "0",
                         "input-l3-incompletes": "0",
                         "input-resource-errors": "0",
-                        "input-runts": "0"
+                        "input-runts": "0",
                     },
                     "interface-flapped": {
                         "#text": "2019-08-29 09:09:20 UTC (29w6d 22:19 ago)"
@@ -6923,12 +6264,12 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-drops": "0",
                         "output-errors": "0",
                         "output-fifo-errors": "0",
-                        "output-resource-errors": "0"
+                        "output-resource-errors": "0",
                     },
                     "pad-to-minimum-frame-size": "Disabled",
                     "physical-interface-cos-information": {
                         "physical-interface-cos-hw-max-queues": "8",
-                        "physical-interface-cos-use-max-queues": "8"
+                        "physical-interface-cos-use-max-queues": "8",
                     },
                     "snmp-index": "532",
                     "sonet-mode": "LAN-PHY",
@@ -6938,7 +6279,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "stp-input-bytes-dropped": "0",
                         "stp-input-packets-dropped": "0",
                         "stp-output-bytes-dropped": "0",
-                        "stp-output-packets-dropped": "0"
+                        "stp-output-packets-dropped": "0",
                     },
                     "traffic-statistics": {
                         "input-bps": "0",
@@ -6949,28 +6290,22 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bps": "0",
                         "output-bytes": "0",
                         "output-packets": "0",
-                        "output-pps": "0"
-                    }
+                        "output-pps": "0",
+                    },
                 },
                 {
                     "active-alarms": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
                     "active-defects": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "bpdu-error": "None",
                     "current-physical-address": "2c:6b:f5:ff:01:1f",
                     "eth-switch-error": "None",
@@ -6978,7 +6313,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "fec_ccw_count": "0",
                         "fec_ccw_error_rate": "0",
                         "fec_nccw_count": "0",
-                        "fec_nccw_error_rate": "0"
+                        "fec_nccw_error_rate": "0",
                     },
                     "ethernet-mac-statistics": {
                         "input-broadcasts": "0",
@@ -7003,28 +6338,26 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-mac-pause-frames": "0",
                         "output-multicasts": "0",
                         "output-packets": "0",
-                        "output-unicasts": "0"
+                        "output-unicasts": "0",
                     },
                     "ethernet-pcs-statistics": {
                         "bit-error-seconds": "0",
-                        "errored-blocks-seconds": "0"
+                        "errored-blocks-seconds": "0",
                     },
                     "hardware-physical-address": "2c:6b:f5:ff:01:1f",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
                         "iff-snmp-traps": True,
-                        "internal-flags": "0x4000"
+                        "internal-flags": "0x4000",
                     },
                     "if-device-flags": {
                         "ifdf-down": True,
                         "ifdf-present": True,
-                        "ifdf-running": True
+                        "ifdf-running": True,
                     },
                     "if-flow-control": "Enabled",
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "if-remote-fault": "Online",
                     "input-error-list": {
                         "framing-errors": "0",
@@ -7036,7 +6369,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "input-l2-mismatch-timeouts": "0",
                         "input-l3-incompletes": "0",
                         "input-resource-errors": "0",
-                        "input-runts": "0"
+                        "input-runts": "0",
                     },
                     "interface-flapped": {
                         "#text": "2019-08-29 09:09:20 UTC (29w6d 22:19 ago)"
@@ -7058,12 +6391,12 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-drops": "0",
                         "output-errors": "0",
                         "output-fifo-errors": "0",
-                        "output-resource-errors": "0"
+                        "output-resource-errors": "0",
                     },
                     "pad-to-minimum-frame-size": "Disabled",
                     "physical-interface-cos-information": {
                         "physical-interface-cos-hw-max-queues": "8",
-                        "physical-interface-cos-use-max-queues": "8"
+                        "physical-interface-cos-use-max-queues": "8",
                     },
                     "snmp-index": "533",
                     "sonet-mode": "LAN-PHY",
@@ -7073,7 +6406,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "stp-input-bytes-dropped": "0",
                         "stp-input-packets-dropped": "0",
                         "stp-output-bytes-dropped": "0",
-                        "stp-output-packets-dropped": "0"
+                        "stp-output-packets-dropped": "0",
                     },
                     "traffic-statistics": {
                         "input-bps": "0",
@@ -7084,28 +6417,22 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bps": "0",
                         "output-bytes": "0",
                         "output-packets": "0",
-                        "output-pps": "0"
-                    }
+                        "output-pps": "0",
+                    },
                 },
                 {
                     "active-alarms": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
                     "active-defects": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "bpdu-error": "None",
                     "current-physical-address": "2c:6b:f5:ff:01:20",
                     "eth-switch-error": "None",
@@ -7113,7 +6440,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "fec_ccw_count": "0",
                         "fec_ccw_error_rate": "0",
                         "fec_nccw_count": "0",
-                        "fec_nccw_error_rate": "0"
+                        "fec_nccw_error_rate": "0",
                     },
                     "ethernet-mac-statistics": {
                         "input-broadcasts": "0",
@@ -7138,28 +6465,26 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-mac-pause-frames": "0",
                         "output-multicasts": "0",
                         "output-packets": "0",
-                        "output-unicasts": "0"
+                        "output-unicasts": "0",
                     },
                     "ethernet-pcs-statistics": {
                         "bit-error-seconds": "0",
-                        "errored-blocks-seconds": "0"
+                        "errored-blocks-seconds": "0",
                     },
                     "hardware-physical-address": "2c:6b:f5:ff:01:20",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
                         "iff-snmp-traps": True,
-                        "internal-flags": "0x4000"
+                        "internal-flags": "0x4000",
                     },
                     "if-device-flags": {
                         "ifdf-down": True,
                         "ifdf-present": True,
-                        "ifdf-running": True
+                        "ifdf-running": True,
                     },
                     "if-flow-control": "Enabled",
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "if-remote-fault": "Online",
                     "input-error-list": {
                         "framing-errors": "0",
@@ -7171,7 +6496,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "input-l2-mismatch-timeouts": "0",
                         "input-l3-incompletes": "0",
                         "input-resource-errors": "0",
-                        "input-runts": "0"
+                        "input-runts": "0",
                     },
                     "interface-flapped": {
                         "#text": "2019-08-29 09:09:20 UTC (29w6d 22:19 ago)"
@@ -7193,12 +6518,12 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-drops": "0",
                         "output-errors": "0",
                         "output-fifo-errors": "0",
-                        "output-resource-errors": "0"
+                        "output-resource-errors": "0",
                     },
                     "pad-to-minimum-frame-size": "Disabled",
                     "physical-interface-cos-information": {
                         "physical-interface-cos-hw-max-queues": "8",
-                        "physical-interface-cos-use-max-queues": "8"
+                        "physical-interface-cos-use-max-queues": "8",
                     },
                     "snmp-index": "534",
                     "sonet-mode": "LAN-PHY",
@@ -7208,7 +6533,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "stp-input-bytes-dropped": "0",
                         "stp-input-packets-dropped": "0",
                         "stp-output-bytes-dropped": "0",
-                        "stp-output-packets-dropped": "0"
+                        "stp-output-packets-dropped": "0",
                     },
                     "traffic-statistics": {
                         "input-bps": "0",
@@ -7219,28 +6544,22 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bps": "0",
                         "output-bytes": "0",
                         "output-packets": "0",
-                        "output-pps": "0"
-                    }
+                        "output-pps": "0",
+                    },
                 },
                 {
                     "active-alarms": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
                     "active-defects": {
-                        "interface-alarms": {
-                            "ethernet-alarm-link-down": True
-                        }
+                        "interface-alarms": {"ethernet-alarm-link-down": True}
                     },
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "bpdu-error": "None",
                     "current-physical-address": "2c:6b:f5:ff:01:21",
                     "eth-switch-error": "None",
@@ -7248,7 +6567,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "fec_ccw_count": "0",
                         "fec_ccw_error_rate": "0",
                         "fec_nccw_count": "0",
-                        "fec_nccw_error_rate": "0"
+                        "fec_nccw_error_rate": "0",
                     },
                     "ethernet-mac-statistics": {
                         "input-broadcasts": "0",
@@ -7273,28 +6592,26 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-mac-pause-frames": "0",
                         "output-multicasts": "0",
                         "output-packets": "0",
-                        "output-unicasts": "0"
+                        "output-unicasts": "0",
                     },
                     "ethernet-pcs-statistics": {
                         "bit-error-seconds": "0",
-                        "errored-blocks-seconds": "0"
+                        "errored-blocks-seconds": "0",
                     },
                     "hardware-physical-address": "2c:6b:f5:ff:01:21",
                     "if-auto-negotiation": "Enabled",
                     "if-config-flags": {
                         "iff-hardware-down": True,
                         "iff-snmp-traps": True,
-                        "internal-flags": "0x4000"
+                        "internal-flags": "0x4000",
                     },
                     "if-device-flags": {
                         "ifdf-down": True,
                         "ifdf-present": True,
-                        "ifdf-running": True
+                        "ifdf-running": True,
                     },
                     "if-flow-control": "Enabled",
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "if-remote-fault": "Online",
                     "input-error-list": {
                         "framing-errors": "0",
@@ -7306,7 +6623,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "input-l2-mismatch-timeouts": "0",
                         "input-l3-incompletes": "0",
                         "input-resource-errors": "0",
-                        "input-runts": "0"
+                        "input-runts": "0",
                     },
                     "interface-flapped": {
                         "#text": "2019-08-29 09:09:20 UTC (29w6d 22:19 ago)"
@@ -7328,12 +6645,12 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-drops": "0",
                         "output-errors": "0",
                         "output-fifo-errors": "0",
-                        "output-resource-errors": "0"
+                        "output-resource-errors": "0",
                     },
                     "pad-to-minimum-frame-size": "Disabled",
                     "physical-interface-cos-information": {
                         "physical-interface-cos-hw-max-queues": "8",
-                        "physical-interface-cos-use-max-queues": "8"
+                        "physical-interface-cos-use-max-queues": "8",
                     },
                     "snmp-index": "535",
                     "sonet-mode": "LAN-PHY",
@@ -7343,7 +6660,7 @@ class TestShowInterfaces(unittest.TestCase):
                         "stp-input-bytes-dropped": "0",
                         "stp-input-packets-dropped": "0",
                         "stp-output-bytes-dropped": "0",
-                        "stp-output-packets-dropped": "0"
+                        "stp-output-packets-dropped": "0",
                     },
                     "traffic-statistics": {
                         "input-bps": "0",
@@ -7354,314 +6671,220 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bps": "0",
                         "output-bytes": "0",
                         "output-packets": "0",
-                        "output-pps": "0"
-                    }
+                        "output-pps": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "Unspecified",
                     "hardware-physical-address": "Unspecified",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
                     "if-device-flags": {
                         "ifdf-loopback": True,
                         "ifdf-present": True,
-                        "ifdf-running": True
+                        "ifdf-running": True,
                     },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Unspecified",
                     "local-index": "0",
                     "logical-interface": {
                         "address-family": [
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "inet",
                                 "interface-address": [
-                                    {
-                                        "ifa-flags": {
-                                            "ifaf-is-primary": True
-                                        }
-                                    },
-                                    {
-                                        "ifa-flags": {
-                                            "ifaf-none": True
-                                        }
-                                    },
-                                    {
-                                        "ifa-flags": {
-                                            "ifaf-none": True
-                                        }
-                                    },
-                                    {
-                                        "ifa-flags": {
-                                            "ifaf-none": True
-                                        }
-                                    },
-                                    {
-                                        "ifa-flags": {
-                                            "ifaf-none": True
-                                        }
-                                    },
-                                    {
-                                        "ifa-flags": {
-                                            "ifaf-none": True
-                                        }
-                                    }
+                                    {"ifa-flags": {"ifaf-is-primary": True}},
+                                    {"ifa-flags": {"ifaf-none": True}},
+                                    {"ifa-flags": {"ifaf-none": True}},
+                                    {"ifa-flags": {"ifaf-none": True}},
+                                    {"ifa-flags": {"ifaf-none": True}},
+                                    {"ifa-flags": {"ifaf-none": True}},
                                 ],
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
+                                "new-hold-limit": "0",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "iso",
                                 "generation": "132",
                                 "mtu": "Unlimited",
                                 "route-table": "0",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "inet6",
                                 "interface-address": [
                                     {
                                         "ifa-destination": "Unspecified",
-                                        "ifa-flags": {
-                                            "ifaf-none": True
-                                        },
-                                        "ifa-local": "2001:db8:eb18:6337::2"
+                                        "ifa-flags": {"ifaf-none": True},
+                                        "ifa-local": "2001:db8:eb18:6337::2",
                                     },
                                     {
                                         "ifa-destination": "Unspecified",
-                                        "ifa-flags": {
-                                            "ifaf-none": True
-                                        },
-                                        "ifa-local": "2001:db8:223c:ca45::b"
+                                        "ifa-flags": {"ifaf-none": True},
+                                        "ifa-local": "2001:db8:223c:ca45::b",
                                     },
                                     {
                                         "ifa-destination": "Unspecified",
-                                        "ifa-flags": {
-                                            "ifaf-none": True
-                                        },
-                                        "ifa-local": "2001:db8:223c:2c16::1"
+                                        "ifa-flags": {"ifaf-none": True},
+                                        "ifa-local": "2001:db8:223c:2c16::1",
                                     },
                                     {
                                         "ifa-destination": "Unspecified",
-                                        "ifa-flags": {
-                                            "ifaf-none": True
-                                        },
-                                        "ifa-local": "fe80::250:560f:fc8d:7c08"
+                                        "ifa-flags": {"ifaf-none": True},
+                                        "ifa-local": "fe80::250:560f:fc8d:7c08",
                                     },
                                     {
                                         "ifa-destination": "Unspecified",
-                                        "ifa-flags": {
-                                            "ifaf-none": True
-                                        },
-                                        "ifa-local": "fe80::250:56ff:feff:37f9"
+                                        "ifa-flags": {"ifaf-none": True},
+                                        "ifa-local": "fe80::250:56ff:feff:37f9",
                                     },
                                     {
                                         "ifa-destination": "Unspecified",
-                                        "ifa-flags": {
-                                            "ifaf-none": True
-                                        },
-                                        "ifa-local": "fe80::250:56ff:feff:56b6"
-                                    }
+                                        "ifa-flags": {"ifaf-none": True},
+                                        "ifa-local": "fe80::250:56ff:feff:56b6",
+                                    },
                                 ],
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
+                                "new-hold-limit": "0",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "mpls",
                                 "generation": "149",
                                 "mtu": "Unlimited",
                                 "maximum-labels": "3",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "85",
                                 "generation": "129",
                                 "mtu": "Unlimited",
                                 "route-table": "0",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "inet",
                                 "interface-address": [
-                                    {
-                                        "ifa-flags": {
-                                            "ifaf-is-primary": True
-                                        }
-                                    },
-                                    {
-                                        "ifa-flags": {
-                                            "ifaf-none": True
-                                        }
-                                    },
-                                    {
-                                        "ifa-flags": {
-                                            "ifaf-none": True
-                                        }
-                                    }
+                                    {"ifa-flags": {"ifaf-is-primary": True}},
+                                    {"ifa-flags": {"ifaf-none": True}},
+                                    {"ifa-flags": {"ifaf-none": True}},
                                 ],
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
+                                "new-hold-limit": "0",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "inet6",
                                 "interface-address": [
                                     {
                                         "ifa-destination": "Unspecified",
-                                        "ifa-flags": {
-                                            "ifaf-none": True
-                                        },
-                                        "ifa-local": "fe80::250:56ff:feff:e2c1"
+                                        "ifa-flags": {"ifaf-none": True},
+                                        "ifa-local": "fe80::250:56ff:feff:e2c1",
                                     },
                                     {
                                         "ifa-destination": "Unspecified",
-                                        "ifa-flags": {
-                                            "ifaf-none": True
-                                        },
-                                        "ifa-local": "2001:db8:8d82::a:0:0:4"
-                                    }
+                                        "ifa-flags": {"ifaf-none": True},
+                                        "ifa-local": "2001:db8:8d82::a:0:0:4",
+                                    },
                                 ],
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
+                                "new-hold-limit": "0",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "vpls",
                                 "generation": "132",
                                 "mtu": "Unlimited",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "inet",
                                 "interface-address": {
-                                    "ifa-flags": {
-                                        "ifaf-is-primary": True
-                                    }
+                                    "ifa-flags": {"ifaf-is-primary": True}
                                 },
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
+                                "new-hold-limit": "0",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "inet",
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
+                                "new-hold-limit": "0",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "inet",
                                 "interface-address": {
-                                    "ifa-flags": {
-                                        "ifaf-is-primary": True
-                                    }
+                                    "ifa-flags": {"ifaf-is-primary": True}
                                 },
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
+                                "new-hold-limit": "0",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "inet",
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
+                                "new-hold-limit": "0",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "iso",
                                 "generation": "151",
                                 "mtu": "Unlimited",
                                 "route-table": "5",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "inet6",
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
+                                "new-hold-limit": "0",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "mpls",
                                 "generation": "152",
                                 "maximum-labels": "3",
@@ -7669,35 +6892,28 @@ class TestShowInterfaces(unittest.TestCase):
                                 "route-table": "6",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "vpls",
                                 "generation": "154",
                                 "mtu": "Unlimited",
                                 "route-table": "7",
                             },
                             {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
+                                "address-family-flags": {"ifff-none": True},
                                 "address-family-name": "inet",
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
-                            }
+                                "new-hold-limit": "0",
+                            },
                         ],
-                        "if-config-flags": {
-                            "iff-snmp-traps": True,
-                            "iff-up": True
-                        },
+                        "if-config-flags": {"iff-snmp-traps": True, "iff-up": True},
                         "local-index": "262019",
                         "logical-interface-bandwidth": "0",
                         "name": ".local..36738",
-                        "snmp-index": "0"
+                        "snmp-index": "0",
                     },
                     "name": ".local.",
                     "output-error-list": {},
@@ -7709,32 +6925,21 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "2c:6b:f5:ff:01:29",
                     "hardware-physical-address": "2c:6b:f5:ff:01:29",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Full-Duplex",
                     "local-index": "129",
                     "name": "cbp0",
@@ -7747,29 +6952,20 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "Unspecified",
                     "hardware-physical-address": "Unspecified",
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Full-Duplex",
                     "local-index": "128",
                     "name": "demux0",
@@ -7782,29 +6978,20 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "Unspecified",
                     "hardware-physical-address": "Unspecified",
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Unspecified",
                     "local-index": "5",
                     "name": "dsc",
@@ -7817,25 +7004,18 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "00:50:56:ff:e2:c1",
                     "hardware-physical-address": "00:50:56:ff:e2:c1",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "input-error-list": {},
                     "interface-flapped": {
                         "#text": "2019-08-29 09:03:11 UTC (29w6d 22:25 ago)"
@@ -7845,67 +7025,57 @@ class TestShowInterfaces(unittest.TestCase):
                     "logical-interface": {
                         "address-family": [
                             {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
+                                "address-family-flags": {"ifff-is-primary": True},
                                 "address-family-name": "inet",
                                 "interface-address": [
-                                    {
-                                        "ifa-flags": {
-                                            "ifaf-is-preferred": True
-                                        }
-                                    },
+                                    {"ifa-flags": {"ifaf-is-preferred": True}},
                                     {
                                         "ifa-flags": {
                                             "ifaf-is-preferred": True,
                                             "ifaf-kernel": True,
-                                            "ifaf-preferred": True
+                                            "ifaf-preferred": True,
                                         }
                                     },
                                     {
                                         "ifa-flags": {
                                             "ifaf-is-default": True,
                                             "ifaf-is-primary": True,
-                                            "ifaf-primary": True
+                                            "ifaf-primary": True,
                                         }
-                                    }
+                                    },
                                 ],
                                 "intf-curr-cnt": "1",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
-                                "new-hold-limit": "75000"
+                                "new-hold-limit": "75000",
                             },
-                            {  
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
+                            {
+                                "address-family-flags": {"ifff-is-primary": True},
                                 "address-family-name": "inet6",
                                 "interface-address": [
                                     {
                                         "ifa-destination": "fe80::/64",
-                                        "ifa-flags": {
-                                            "ifaf-is-preferred": True
-                                        },
-                                        "ifa-local": "fe80::250:56ff:feff:e2c1"
+                                        "ifa-flags": {"ifaf-is-preferred": True},
+                                        "ifa-local": "fe80::250:56ff:feff:e2c1",
                                     },
                                     {
                                         "ifa-destination": "2001:db8:8d82::/64",
                                         "ifa-flags": {
                                             "ifaf-is-default": True,
                                             "ifaf-is-preferred": True,
-                                            "ifaf-is-primary": True
+                                            "ifaf-is-primary": True,
                                         },
-                                        "ifa-local": "2001:db8:8d82::a:0:0:4"
-                                    }
+                                        "ifa-local": "2001:db8:8d82::a:0:0:4",
+                                    },
                                 ],
                                 "intf-curr-cnt": "1",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
-                                "new-hold-limit": "75000"
+                                "new-hold-limit": "75000",
                             },
                             {
                                 "address-family-flags": {
@@ -7915,18 +7085,14 @@ class TestShowInterfaces(unittest.TestCase):
                                 "address-family-name": "tnp",
                                 "generation": "4",
                                 "mtu": "1500",
-                                "interface-address": {
-                                    "ifa-flags": {
-                                        "ifaf-none": True
-                                    }
-                                }
-                            }
+                                "interface-address": {"ifa-flags": {"ifaf-none": True}},
+                            },
                         ],
                         "encapsulation": "ENET2",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
                             "iff-up": True,
-                            "internal-flags": "0x4000000"
+                            "internal-flags": "0x4000000",
                         },
                         "local-index": "3",
                         "name": "em1.0",
@@ -7938,11 +7104,11 @@ class TestShowInterfaces(unittest.TestCase):
                                 "input-bytes": "102691292552",
                                 "input-packets": "725074463",
                                 "output-bytes": "106913726719",
-                                "output-packets": "794456958"
+                                "output-packets": "794456958",
                             },
                             "output-bytes": "106913726719",
-                            "output-packets": "794456958"
-                        }
+                            "output-packets": "794456958",
+                        },
                     },
                     "name": "em1",
                     "output-error-list": {},
@@ -7954,32 +7120,21 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "Unspecified",
                     "hardware-physical-address": "Unspecified",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Full-Duplex",
                     "local-index": "134",
                     "name": "esi",
@@ -7992,32 +7147,21 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "Unspecified",
                     "hardware-physical-address": "Unspecified",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Full-Duplex",
                     "local-index": "136",
                     "name": "fti0",
@@ -8030,32 +7174,21 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "Unspecified",
                     "hardware-physical-address": "Unspecified",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Full-Duplex",
                     "local-index": "137",
                     "name": "fti1",
@@ -8068,32 +7201,21 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "Unspecified",
                     "hardware-physical-address": "Unspecified",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Full-Duplex",
                     "local-index": "138",
                     "name": "fti2",
@@ -8106,32 +7228,21 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "Unspecified",
                     "hardware-physical-address": "Unspecified",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Full-Duplex",
                     "local-index": "139",
                     "name": "fti3",
@@ -8144,32 +7255,21 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "Unspecified",
                     "hardware-physical-address": "Unspecified",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Full-Duplex",
                     "local-index": "140",
                     "name": "fti4",
@@ -8182,32 +7282,21 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "Unspecified",
                     "hardware-physical-address": "Unspecified",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Full-Duplex",
                     "local-index": "141",
                     "name": "fti5",
@@ -8220,32 +7309,21 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "Unspecified",
                     "hardware-physical-address": "Unspecified",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Full-Duplex",
                     "local-index": "142",
                     "name": "fti6",
@@ -8258,32 +7336,21 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "Unspecified",
                     "hardware-physical-address": "Unspecified",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Full-Duplex",
                     "local-index": "143",
                     "name": "fti7",
@@ -8296,25 +7363,18 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "00:50:56:ff:0a:95",
                     "hardware-physical-address": "00:50:56:ff:0a:95",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "input-error-list": {},
                     "interface-flapped": {
                         "#text": "2019-08-29 09:03:11 UTC (29w6d 22:25 ago)"
@@ -8326,13 +7386,13 @@ class TestShowInterfaces(unittest.TestCase):
                             {
                                 "address-family-flags": {
                                     "ifff-is-primary": True,
-                                    "ifff-sendbcast-pkt-to-re": True
+                                    "ifff-sendbcast-pkt-to-re": True,
                                 },
                                 "address-family-name": "inet",
                                 "interface-address": {
                                     "ifa-flags": {
                                         "ifaf-is-preferred": True,
-                                        "ifaf-is-primary": True
+                                        "ifaf-is-primary": True,
                                     }
                                 },
                                 "intf-curr-cnt": "2",
@@ -8340,14 +7400,14 @@ class TestShowInterfaces(unittest.TestCase):
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "75000",
                                 "mtu": "1500",
-                                "new-hold-limit": "75000"
+                                "new-hold-limit": "75000",
                             }
                         ],
                         "encapsulation": "ENET2",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
                             "iff-up": True,
-                            "internal-flags": "0x4000000"
+                            "internal-flags": "0x4000000",
                         },
                         "local-index": "4",
                         "name": "fxp0.0",
@@ -8356,8 +7416,8 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "46289683",
                             "input-packets": "620829",
                             "output-bytes": "207724636",
-                            "output-packets": "896062"
-                        }
+                            "output-packets": "896062",
+                        },
                     },
                     "name": "fxp0",
                     "output-error-list": {},
@@ -8369,20 +7429,15 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "link-level-type": "GRE",
                     "local-index": "10",
                     "mtu": "Unlimited",
@@ -8396,23 +7451,16 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "link-level-type": "IP-over-IP",
                     "local-index": "11",
                     "mtu": "Unlimited",
@@ -8426,32 +7474,21 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "2c:6b:f5:ff:08:09",
                     "hardware-physical-address": "2c:6b:f5:ff:08:09",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Full-Duplex",
                     "local-index": "132",
                     "name": "irb",
@@ -8464,44 +7501,33 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "2c:6b:f5:ff:08:d8",
                     "hardware-physical-address": "2c:6b:f5:ff:08:d8",
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Full-Duplex",
                     "local-index": "144",
                     "logical-interface": {
                         "address-family": [
                             {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
+                                "address-family-flags": {"ifff-is-primary": True},
                                 "address-family-name": "inet",
                                 "interface-address": {
                                     "ifa-flags": {
                                         "ifaf-is-default": True,
                                         "ifaf-is-preferred": True,
                                         "ifaf-is-primary": True,
-                                        "ifaf-primary": True
+                                        "ifaf-primary": True,
                                     }
                                 },
                                 "intf-curr-cnt": "0",
@@ -8509,14 +7535,14 @@ class TestShowInterfaces(unittest.TestCase):
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "75000",
                                 "mtu": "1514",
-                                "new-hold-limit": "75000"
+                                "new-hold-limit": "75000",
                             }
                         ],
                         "encapsulation": "unknown",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
                             "iff-up": True,
-                            "internal-flags": "0x24004000"
+                            "internal-flags": "0x24004000",
                         },
                         "local-index": "325",
                         "logical-interface-bandwidth": "1Gbps",
@@ -8526,8 +7552,8 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
-                        }
+                            "output-packets": "0",
+                        },
                     },
                     "name": "jsrv",
                     "output-error-list": {},
@@ -8539,10 +7565,10 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
+                        "output-packets": "0",
                     },
                     "transit-traffic-statistics": {
                         "input-bps": "0",
@@ -8552,30 +7578,22 @@ class TestShowInterfaces(unittest.TestCase):
                         "output-bps": "0",
                         "output-bytes": "0",
                         "output-packets": "0",
-                        "output-pps": "0"
-                    }
+                        "output-pps": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "Unspecified",
                     "hardware-physical-address": "Unspecified",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
                     "if-device-flags": {
                         "ifdf-loopback": True,
                         "ifdf-present": True,
-                        "ifdf-running": True
+                        "ifdf-running": True,
                     },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Unspecified",
                     "local-index": "6",
                     "logical-interface": {
@@ -8583,13 +7601,13 @@ class TestShowInterfaces(unittest.TestCase):
                             {
                                 "address-family-flags": {
                                     "ifff-no-redirects": True,
-                                    "ifff-sendbcast-pkt-to-re": True
+                                    "ifff-sendbcast-pkt-to-re": True,
                                 },
                                 "address-family-name": "inet",
                                 "interface-address": {
                                     "ifa-flags": {
                                         "ifaf-is-default": True,
-                                        "ifaf-is-primary": True
+                                        "ifaf-is-primary": True,
                                     }
                                 },
                                 "intf-curr-cnt": "0",
@@ -8597,7 +7615,7 @@ class TestShowInterfaces(unittest.TestCase):
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
+                                "new-hold-limit": "0",
                             },
                             {
                                 "address-family-name": "inet6",
@@ -8605,30 +7623,26 @@ class TestShowInterfaces(unittest.TestCase):
                                     "ifa-destination": "Unspecified",
                                     "ifa-flags": {
                                         "ifaf-is-default": True,
-                                        "ifaf-is-primary": True
+                                        "ifaf-is-primary": True,
                                     },
-                                    "ifa-local": "fe80::250:560f:fc8d:7c08"
+                                    "ifa-local": "fe80::250:560f:fc8d:7c08",
                                 },
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
+                                "new-hold-limit": "0",
                             },
                             {
                                 "address-family-name": "inet",
-                                "interface-address": {
-                                    "ifa-flags": {
-                                        "ifaf-none": True
-                                    }
-                                },
+                                "interface-address": {"ifa-flags": {"ifaf-none": True}},
                                 "intf-curr-cnt": "0",
                                 "intf-dropcnt": "0",
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
+                                "new-hold-limit": "0",
                             },
                             {
                                 "address-family-name": "inet",
@@ -8637,13 +7651,10 @@ class TestShowInterfaces(unittest.TestCase):
                                 "intf-unresolved-cnt": "0",
                                 "max-local-cache": "0",
                                 "mtu": "Unlimited",
-                                "new-hold-limit": "0"
-                            }
+                                "new-hold-limit": "0",
+                            },
                         ],
-                        "if-config-flags": {
-                            "iff-snmp-traps": True,
-                            "iff-up": True
-                        },
+                        "if-config-flags": {"iff-snmp-traps": True, "iff-up": True},
                         "local-index": "321",
                         "name": "lo0.16385",
                         "snmp-index": "22",
@@ -8654,11 +7665,11 @@ class TestShowInterfaces(unittest.TestCase):
                                 "input-bytes": "12188",
                                 "input-packets": "83",
                                 "output-bytes": "12188",
-                                "output-packets": "83"
+                                "output-packets": "83",
                             },
                             "output-bytes": "38208797939",
-                            "output-packets": "33943317"
-                        }
+                            "output-packets": "33943317",
+                        },
                     },
                     "name": "lo0",
                     "output-error-list": {},
@@ -8670,10 +7681,10 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "38208810127",
-                        "output-packets": "33943400"
+                        "output-packets": "33943400",
                     },
                     "transit-traffic-statistics": {
                         "input-bps": "0",
@@ -8688,31 +7699,22 @@ class TestShowInterfaces(unittest.TestCase):
                             "output-bps": "0",
                             "output-bytes": "0",
                             "output-packets": "0",
-                            "output-pps": "0"
+                            "output-pps": "0",
                         },
                         "output-bps": "0",
                         "output-bytes": "0",
                         "output-packets": "0",
-                        "output-pps": "0"
-                    }
+                        "output-pps": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "Unspecified",
                     "hardware-physical-address": "Unspecified",
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Unspecified",
                     "local-index": "4",
                     "name": "lsi",
@@ -8725,23 +7727,16 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "link-level-type": "GRE",
                     "local-index": "66",
                     "mtu": "Unlimited",
@@ -8755,20 +7750,15 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "link-level-type": "PIM-Decapsulator",
                     "local-index": "26",
                     "mtu": "Unlimited",
@@ -8782,20 +7772,15 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                     "link-level-type": "PIM-Encapsulator",
                     "local-index": "25",
                     "mtu": "Unlimited",
@@ -8809,32 +7794,21 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "2c:6b:f5:ff:08:c8",
                     "hardware-physical-address": "2c:6b:f5:ff:08:c8",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Full-Duplex",
                     "local-index": "130",
                     "name": "pip0",
@@ -8847,50 +7821,34 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "Unspecified",
                     "hardware-physical-address": "Unspecified",
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "link-level-type": "PPPoE",
                     "link-type": "Full-Duplex",
                     "local-index": "131",
                     "mtu": "1532",
                     "name": "pp0",
                     "snmp-index": "516",
-                    "speed": "Unspecified"
+                    "speed": "Unspecified",
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "Unspecified",
                     "hardware-physical-address": "Unspecified",
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Full-Duplex",
                     "local-index": "135",
                     "name": "rbeb",
@@ -8903,32 +7861,21 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "Unspecified",
                     "hardware-physical-address": "Unspecified",
-                    "if-config-flags": {
-                        "iff-snmp-traps": True
-                    },
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-config-flags": {"iff-snmp-traps": True},
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Unspecified",
                     "local-index": "12",
                     "name": "tap",
@@ -8941,29 +7888,20 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
+                        "output-packets": "0",
+                    },
                 },
                 {
-                    "admin-status": {
-                        "@junos:format": "Enabled"
-                    },
+                    "admin-status": {"@junos:format": "Enabled"},
                     "current-physical-address": "Unspecified",
                     "hardware-physical-address": "Unspecified",
-                    "if-device-flags": {
-                        "ifdf-present": True,
-                        "ifdf-running": True
-                    },
-                    "if-media-flags": {
-                        "ifmf-none": True
-                    },
+                    "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
+                    "if-media-flags": {"ifmf-none": True},
                     "input-error-list": {},
-                    "interface-flapped": {
-                        "#text": "Never"
-                    },
+                    "interface-flapped": {"#text": "Never"},
                     "link-type": "Full-Duplex",
                     "local-index": "133",
                     "name": "vtep",
@@ -8976,12 +7914,12 @@ class TestShowInterfaces(unittest.TestCase):
                             "input-bytes": "0",
                             "input-packets": "0",
                             "output-bytes": "0",
-                            "output-packets": "0"
+                            "output-packets": "0",
                         },
                         "output-bytes": "0",
-                        "output-packets": "0"
-                    }
-                }
+                        "output-packets": "0",
+                    },
+                },
             ]
         }
     }
@@ -8997,7 +7935,7 @@ class TestShowInterfaces(unittest.TestCase):
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
-    
+
     def test_golden_2(self):
         self.device = Mock(**self.golden_output_2)
         interface_obj = ShowInterfaces(device=self.device)
@@ -9009,12 +7947,13 @@ class TestShowInterfaces(unittest.TestCase):
 # Unit test for 'show interfaces queue {interface}'
 # =======================================================
 class TestShowInterfaces(unittest.TestCase):
-    device = Device(name='aDevice')
+    device = Device(name="aDevice")
     maxDiff = None
-    empty_output = {'execute.return_value': ''}
+    empty_output = {"execute.return_value": ""}
 
     # show interfaces queue ge-0/0/2
-    golden_output = {'execute.return_value': '''
+    golden_output = {
+        "execute.return_value": """
         Physical interface: ge-0/0/2, Enabled, Physical link is Up
           Interface index: 143, SNMP ifIndex: 601
           Description: to_ixia_2/4
@@ -9111,179 +8050,201 @@ class TestShowInterfaces(unittest.TestCase):
              Medium-high         :                     0                     0 bps
              High                :                     0                     0 bps
     
-    '''}
+    """
+    }
 
-    golden_parsed_output = {'interface-information': {'physical-interface': {'description': 'to_ixia_2/4',
-                                                  'local-index': '143',
-                                                  'name': 'ge-0/0/2',
-                                                  'oper-status': 'Up',
-                                                  'queue-counters': {'interface-cos-summary': {'intf-cos-forwarding-classes-in-use': '5',
-                                                                                               'intf-cos-forwarding-classes-supported': '16',
-                                                                                               'intf-cos-num-queues-in-use': '5',
-                                                                                               'intf-cos-num-queues-supported': '8',
-                                                                                               'intf-cos-queue-type': 'Egress '
-                                                                                                                      'queues'},
-                                                                     'queue': [{'forwarding-class-name': 'Bronze-FC',
-                                                                                'queue-counters-queued-bytes': '564883280956',
-                                                                                'queue-counters-queued-bytes-rate': '0',
-                                                                                'queue-counters-queued-packets': '1470816406',
-                                                                                'queue-counters-queued-packets-rate': '0',
-                                                                                'queue-counters-red-bytes': '0',
-                                                                                'queue-counters-red-bytes-high': '0',
-                                                                                'queue-counters-red-bytes-low': '0',
-                                                                                'queue-counters-red-bytes-medium-high': '0',
-                                                                                'queue-counters-red-bytes-medium-low': '0',
-                                                                                'queue-counters-red-bytes-rate': '0',
-                                                                                'queue-counters-red-bytes-rate-high': '0',
-                                                                                'queue-counters-red-bytes-rate-low': '0',
-                                                                                'queue-counters-red-bytes-rate-medium-high': '0',
-                                                                                'queue-counters-red-bytes-rate-medium-low': '0',
-                                                                                'queue-counters-red-packets': '0',
-                                                                                'queue-counters-red-packets-high': '0',
-                                                                                'queue-counters-red-packets-low': '0',
-                                                                                'queue-counters-red-packets-medium-high': '0',
-                                                                                'queue-counters-red-packets-medium-low': '0',
-                                                                                'queue-counters-red-packets-rate': '0',
-                                                                                'queue-counters-red-packets-rate-high': '0',
-                                                                                'queue-counters-red-packets-rate-low': '0',
-                                                                                'queue-counters-red-packets-rate-medium-high': '0',
-                                                                                'queue-counters-red-packets-rate-medium-low': '0',
-                                                                                'queue-counters-tail-drop-packets': '0',
-                                                                                'queue-counters-tail-drop-packets-rate': '0',
-                                                                                'queue-counters-trans-bytes': '564883280956',
-                                                                                'queue-counters-trans-bytes-rate': '0',
-                                                                                'queue-counters-trans-packets': '1470816406',
-                                                                                'queue-counters-trans-packets-rate': '0',
-                                                                                'queue-number': '0'},
-                                                                               {'forwarding-class-name': 'Platinum-FC',
-                                                                                'queue-counters-queued-bytes': '0',
-                                                                                'queue-counters-queued-bytes-rate': '0',
-                                                                                'queue-counters-queued-packets': '0',
-                                                                                'queue-counters-queued-packets-rate': '0',
-                                                                                'queue-counters-red-bytes': '0',
-                                                                                'queue-counters-red-bytes-high': '0',
-                                                                                'queue-counters-red-bytes-low': '0',
-                                                                                'queue-counters-red-bytes-medium-high': '0',
-                                                                                'queue-counters-red-bytes-medium-low': '0',
-                                                                                'queue-counters-red-bytes-rate': '0',
-                                                                                'queue-counters-red-bytes-rate-high': '0',
-                                                                                'queue-counters-red-bytes-rate-low': '0',
-                                                                                'queue-counters-red-bytes-rate-medium-high': '0',
-                                                                                'queue-counters-red-bytes-rate-medium-low': '0',
-                                                                                'queue-counters-red-packets': '0',
-                                                                                'queue-counters-red-packets-high': '0',
-                                                                                'queue-counters-red-packets-low': '0',
-                                                                                'queue-counters-red-packets-medium-high': '0',
-                                                                                'queue-counters-red-packets-medium-low': '0',
-                                                                                'queue-counters-red-packets-rate': '0',
-                                                                                'queue-counters-red-packets-rate-high': '0',
-                                                                                'queue-counters-red-packets-rate-low': '0',
-                                                                                'queue-counters-red-packets-rate-medium-high': '0',
-                                                                                'queue-counters-red-packets-rate-medium-low': '0',
-                                                                                'queue-counters-tail-drop-packets': '0',
-                                                                                'queue-counters-tail-drop-packets-rate': '0',
-                                                                                'queue-counters-trans-bytes': '0',
-                                                                                'queue-counters-trans-bytes-rate': '0',
-                                                                                'queue-counters-trans-packets': '0',
-                                                                                'queue-counters-trans-packets-rate': '0',
-                                                                                'queue-number': '1'},
-                                                                               {'forwarding-class-name': 'Gold-FC',
-                                                                                'queue-counters-queued-bytes': '0',
-                                                                                'queue-counters-queued-bytes-rate': '0',
-                                                                                'queue-counters-queued-packets': '0',
-                                                                                'queue-counters-queued-packets-rate': '0',
-                                                                                'queue-counters-red-bytes': '0',
-                                                                                'queue-counters-red-bytes-high': '0',
-                                                                                'queue-counters-red-bytes-low': '0',
-                                                                                'queue-counters-red-bytes-medium-high': '0',
-                                                                                'queue-counters-red-bytes-medium-low': '0',
-                                                                                'queue-counters-red-bytes-rate': '0',
-                                                                                'queue-counters-red-bytes-rate-high': '0',
-                                                                                'queue-counters-red-bytes-rate-low': '0',
-                                                                                'queue-counters-red-bytes-rate-medium-high': '0',
-                                                                                'queue-counters-red-bytes-rate-medium-low': '0',
-                                                                                'queue-counters-red-packets': '0',
-                                                                                'queue-counters-red-packets-high': '0',
-                                                                                'queue-counters-red-packets-low': '0',
-                                                                                'queue-counters-red-packets-medium-high': '0',
-                                                                                'queue-counters-red-packets-medium-low': '0',
-                                                                                'queue-counters-red-packets-rate': '0',
-                                                                                'queue-counters-red-packets-rate-high': '0',
-                                                                                'queue-counters-red-packets-rate-low': '0',
-                                                                                'queue-counters-red-packets-rate-medium-high': '0',
-                                                                                'queue-counters-red-packets-rate-medium-low': '0',
-                                                                                'queue-counters-tail-drop-packets': '0',
-                                                                                'queue-counters-tail-drop-packets-rate': '0',
-                                                                                'queue-counters-trans-bytes': '0',
-                                                                                'queue-counters-trans-bytes-rate': '0',
-                                                                                'queue-counters-trans-packets': '0',
-                                                                                'queue-counters-trans-packets-rate': '0',
-                                                                                'queue-number': '2'},
-                                                                               {'forwarding-class-name': 'Network-Control-FC',
-                                                                                'queue-counters-queued-bytes': '0',
-                                                                                'queue-counters-queued-bytes-rate': '0',
-                                                                                'queue-counters-queued-packets': '0',
-                                                                                'queue-counters-queued-packets-rate': '0',
-                                                                                'queue-counters-red-bytes': '0',
-                                                                                'queue-counters-red-bytes-high': '0',
-                                                                                'queue-counters-red-bytes-low': '0',
-                                                                                'queue-counters-red-bytes-medium-high': '0',
-                                                                                'queue-counters-red-bytes-medium-low': '0',
-                                                                                'queue-counters-red-bytes-rate': '0',
-                                                                                'queue-counters-red-bytes-rate-high': '0',
-                                                                                'queue-counters-red-bytes-rate-low': '0',
-                                                                                'queue-counters-red-bytes-rate-medium-high': '0',
-                                                                                'queue-counters-red-bytes-rate-medium-low': '0',
-                                                                                'queue-counters-red-packets': '0',
-                                                                                'queue-counters-red-packets-high': '0',
-                                                                                'queue-counters-red-packets-low': '0',
-                                                                                'queue-counters-red-packets-medium-high': '0',
-                                                                                'queue-counters-red-packets-medium-low': '0',
-                                                                                'queue-counters-red-packets-rate': '0',
-                                                                                'queue-counters-red-packets-rate-high': '0',
-                                                                                'queue-counters-red-packets-rate-low': '0',
-                                                                                'queue-counters-red-packets-rate-medium-high': '0',
-                                                                                'queue-counters-red-packets-rate-medium-low': '0',
-                                                                                'queue-counters-tail-drop-packets': '0',
-                                                                                'queue-counters-tail-drop-packets-rate': '0',
-                                                                                'queue-counters-trans-bytes': '0',
-                                                                                'queue-counters-trans-bytes-rate': '0',
-                                                                                'queue-counters-trans-packets': '0',
-                                                                                'queue-counters-trans-packets-rate': '0',
-                                                                                'queue-number': '3'},
-                                                                               {'forwarding-class-name': 'Silver-FC',
-                                                                                'queue-counters-queued-bytes': '0',
-                                                                                'queue-counters-queued-bytes-rate': '0',
-                                                                                'queue-counters-queued-packets': '0',
-                                                                                'queue-counters-queued-packets-rate': '0',
-                                                                                'queue-counters-red-bytes': '0',
-                                                                                'queue-counters-red-bytes-high': '0',
-                                                                                'queue-counters-red-bytes-low': '0',
-                                                                                'queue-counters-red-bytes-medium-high': '0',
-                                                                                'queue-counters-red-bytes-medium-low': '0',
-                                                                                'queue-counters-red-bytes-rate': '0',
-                                                                                'queue-counters-red-bytes-rate-high': '0',
-                                                                                'queue-counters-red-bytes-rate-low': '0',
-                                                                                'queue-counters-red-bytes-rate-medium-high': '0',
-                                                                                'queue-counters-red-bytes-rate-medium-low': '0',
-                                                                                'queue-counters-red-packets': '0',
-                                                                                'queue-counters-red-packets-high': '0',
-                                                                                'queue-counters-red-packets-low': '0',
-                                                                                'queue-counters-red-packets-medium-high': '0',
-                                                                                'queue-counters-red-packets-medium-low': '0',
-                                                                                'queue-counters-red-packets-rate': '0',
-                                                                                'queue-counters-red-packets-rate-high': '0',
-                                                                                'queue-counters-red-packets-rate-low': '0',
-                                                                                'queue-counters-red-packets-rate-medium-high': '0',
-                                                                                'queue-counters-red-packets-rate-medium-low': '0',
-                                                                                'queue-counters-tail-drop-packets': '0',
-                                                                                'queue-counters-tail-drop-packets-rate': '0',
-                                                                                'queue-counters-trans-bytes': '0',
-                                                                                'queue-counters-trans-bytes-rate': '0',
-                                                                                'queue-counters-trans-packets': '0',
-                                                                                'queue-counters-trans-packets-rate': '0',
-                                                                                'queue-number': '4'}]},
-                                                  'snmp-index': '601'}}}
+    golden_parsed_output = {
+        "interface-information": {
+            "physical-interface": {
+                "description": "to_ixia_2/4",
+                "local-index": "143",
+                "name": "ge-0/0/2",
+                "oper-status": "Up",
+                "queue-counters": {
+                    "interface-cos-summary": {
+                        "intf-cos-forwarding-classes-in-use": "5",
+                        "intf-cos-forwarding-classes-supported": "16",
+                        "intf-cos-num-queues-in-use": "5",
+                        "intf-cos-num-queues-supported": "8",
+                        "intf-cos-queue-type": "Egress " "queues",
+                    },
+                    "queue": [
+                        {
+                            "forwarding-class-name": "Bronze-FC",
+                            "queue-counters-queued-bytes": "564883280956",
+                            "queue-counters-queued-bytes-rate": "0",
+                            "queue-counters-queued-packets": "1470816406",
+                            "queue-counters-queued-packets-rate": "0",
+                            "queue-counters-red-bytes": "0",
+                            "queue-counters-red-bytes-high": "0",
+                            "queue-counters-red-bytes-low": "0",
+                            "queue-counters-red-bytes-medium-high": "0",
+                            "queue-counters-red-bytes-medium-low": "0",
+                            "queue-counters-red-bytes-rate": "0",
+                            "queue-counters-red-bytes-rate-high": "0",
+                            "queue-counters-red-bytes-rate-low": "0",
+                            "queue-counters-red-bytes-rate-medium-high": "0",
+                            "queue-counters-red-bytes-rate-medium-low": "0",
+                            "queue-counters-red-packets": "0",
+                            "queue-counters-red-packets-high": "0",
+                            "queue-counters-red-packets-low": "0",
+                            "queue-counters-red-packets-medium-high": "0",
+                            "queue-counters-red-packets-medium-low": "0",
+                            "queue-counters-red-packets-rate": "0",
+                            "queue-counters-red-packets-rate-high": "0",
+                            "queue-counters-red-packets-rate-low": "0",
+                            "queue-counters-red-packets-rate-medium-high": "0",
+                            "queue-counters-red-packets-rate-medium-low": "0",
+                            "queue-counters-tail-drop-packets": "0",
+                            "queue-counters-tail-drop-packets-rate": "0",
+                            "queue-counters-trans-bytes": "564883280956",
+                            "queue-counters-trans-bytes-rate": "0",
+                            "queue-counters-trans-packets": "1470816406",
+                            "queue-counters-trans-packets-rate": "0",
+                            "queue-number": "0",
+                        },
+                        {
+                            "forwarding-class-name": "Platinum-FC",
+                            "queue-counters-queued-bytes": "0",
+                            "queue-counters-queued-bytes-rate": "0",
+                            "queue-counters-queued-packets": "0",
+                            "queue-counters-queued-packets-rate": "0",
+                            "queue-counters-red-bytes": "0",
+                            "queue-counters-red-bytes-high": "0",
+                            "queue-counters-red-bytes-low": "0",
+                            "queue-counters-red-bytes-medium-high": "0",
+                            "queue-counters-red-bytes-medium-low": "0",
+                            "queue-counters-red-bytes-rate": "0",
+                            "queue-counters-red-bytes-rate-high": "0",
+                            "queue-counters-red-bytes-rate-low": "0",
+                            "queue-counters-red-bytes-rate-medium-high": "0",
+                            "queue-counters-red-bytes-rate-medium-low": "0",
+                            "queue-counters-red-packets": "0",
+                            "queue-counters-red-packets-high": "0",
+                            "queue-counters-red-packets-low": "0",
+                            "queue-counters-red-packets-medium-high": "0",
+                            "queue-counters-red-packets-medium-low": "0",
+                            "queue-counters-red-packets-rate": "0",
+                            "queue-counters-red-packets-rate-high": "0",
+                            "queue-counters-red-packets-rate-low": "0",
+                            "queue-counters-red-packets-rate-medium-high": "0",
+                            "queue-counters-red-packets-rate-medium-low": "0",
+                            "queue-counters-tail-drop-packets": "0",
+                            "queue-counters-tail-drop-packets-rate": "0",
+                            "queue-counters-trans-bytes": "0",
+                            "queue-counters-trans-bytes-rate": "0",
+                            "queue-counters-trans-packets": "0",
+                            "queue-counters-trans-packets-rate": "0",
+                            "queue-number": "1",
+                        },
+                        {
+                            "forwarding-class-name": "Gold-FC",
+                            "queue-counters-queued-bytes": "0",
+                            "queue-counters-queued-bytes-rate": "0",
+                            "queue-counters-queued-packets": "0",
+                            "queue-counters-queued-packets-rate": "0",
+                            "queue-counters-red-bytes": "0",
+                            "queue-counters-red-bytes-high": "0",
+                            "queue-counters-red-bytes-low": "0",
+                            "queue-counters-red-bytes-medium-high": "0",
+                            "queue-counters-red-bytes-medium-low": "0",
+                            "queue-counters-red-bytes-rate": "0",
+                            "queue-counters-red-bytes-rate-high": "0",
+                            "queue-counters-red-bytes-rate-low": "0",
+                            "queue-counters-red-bytes-rate-medium-high": "0",
+                            "queue-counters-red-bytes-rate-medium-low": "0",
+                            "queue-counters-red-packets": "0",
+                            "queue-counters-red-packets-high": "0",
+                            "queue-counters-red-packets-low": "0",
+                            "queue-counters-red-packets-medium-high": "0",
+                            "queue-counters-red-packets-medium-low": "0",
+                            "queue-counters-red-packets-rate": "0",
+                            "queue-counters-red-packets-rate-high": "0",
+                            "queue-counters-red-packets-rate-low": "0",
+                            "queue-counters-red-packets-rate-medium-high": "0",
+                            "queue-counters-red-packets-rate-medium-low": "0",
+                            "queue-counters-tail-drop-packets": "0",
+                            "queue-counters-tail-drop-packets-rate": "0",
+                            "queue-counters-trans-bytes": "0",
+                            "queue-counters-trans-bytes-rate": "0",
+                            "queue-counters-trans-packets": "0",
+                            "queue-counters-trans-packets-rate": "0",
+                            "queue-number": "2",
+                        },
+                        {
+                            "forwarding-class-name": "Network-Control-FC",
+                            "queue-counters-queued-bytes": "0",
+                            "queue-counters-queued-bytes-rate": "0",
+                            "queue-counters-queued-packets": "0",
+                            "queue-counters-queued-packets-rate": "0",
+                            "queue-counters-red-bytes": "0",
+                            "queue-counters-red-bytes-high": "0",
+                            "queue-counters-red-bytes-low": "0",
+                            "queue-counters-red-bytes-medium-high": "0",
+                            "queue-counters-red-bytes-medium-low": "0",
+                            "queue-counters-red-bytes-rate": "0",
+                            "queue-counters-red-bytes-rate-high": "0",
+                            "queue-counters-red-bytes-rate-low": "0",
+                            "queue-counters-red-bytes-rate-medium-high": "0",
+                            "queue-counters-red-bytes-rate-medium-low": "0",
+                            "queue-counters-red-packets": "0",
+                            "queue-counters-red-packets-high": "0",
+                            "queue-counters-red-packets-low": "0",
+                            "queue-counters-red-packets-medium-high": "0",
+                            "queue-counters-red-packets-medium-low": "0",
+                            "queue-counters-red-packets-rate": "0",
+                            "queue-counters-red-packets-rate-high": "0",
+                            "queue-counters-red-packets-rate-low": "0",
+                            "queue-counters-red-packets-rate-medium-high": "0",
+                            "queue-counters-red-packets-rate-medium-low": "0",
+                            "queue-counters-tail-drop-packets": "0",
+                            "queue-counters-tail-drop-packets-rate": "0",
+                            "queue-counters-trans-bytes": "0",
+                            "queue-counters-trans-bytes-rate": "0",
+                            "queue-counters-trans-packets": "0",
+                            "queue-counters-trans-packets-rate": "0",
+                            "queue-number": "3",
+                        },
+                        {
+                            "forwarding-class-name": "Silver-FC",
+                            "queue-counters-queued-bytes": "0",
+                            "queue-counters-queued-bytes-rate": "0",
+                            "queue-counters-queued-packets": "0",
+                            "queue-counters-queued-packets-rate": "0",
+                            "queue-counters-red-bytes": "0",
+                            "queue-counters-red-bytes-high": "0",
+                            "queue-counters-red-bytes-low": "0",
+                            "queue-counters-red-bytes-medium-high": "0",
+                            "queue-counters-red-bytes-medium-low": "0",
+                            "queue-counters-red-bytes-rate": "0",
+                            "queue-counters-red-bytes-rate-high": "0",
+                            "queue-counters-red-bytes-rate-low": "0",
+                            "queue-counters-red-bytes-rate-medium-high": "0",
+                            "queue-counters-red-bytes-rate-medium-low": "0",
+                            "queue-counters-red-packets": "0",
+                            "queue-counters-red-packets-high": "0",
+                            "queue-counters-red-packets-low": "0",
+                            "queue-counters-red-packets-medium-high": "0",
+                            "queue-counters-red-packets-medium-low": "0",
+                            "queue-counters-red-packets-rate": "0",
+                            "queue-counters-red-packets-rate-high": "0",
+                            "queue-counters-red-packets-rate-low": "0",
+                            "queue-counters-red-packets-rate-medium-high": "0",
+                            "queue-counters-red-packets-rate-medium-low": "0",
+                            "queue-counters-tail-drop-packets": "0",
+                            "queue-counters-tail-drop-packets-rate": "0",
+                            "queue-counters-trans-bytes": "0",
+                            "queue-counters-trans-bytes-rate": "0",
+                            "queue-counters-trans-packets": "0",
+                            "queue-counters-trans-packets-rate": "0",
+                            "queue-number": "4",
+                        },
+                    ],
+                },
+                "snmp-index": "601",
+            }
+        }
+    }
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -9296,6 +8257,7 @@ class TestShowInterfaces(unittest.TestCase):
         interface_obj = ShowInterfacesQueue(device=self.device)
         parsed_output = interface_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 if __name__ == "__main__":
     unittest.main()
