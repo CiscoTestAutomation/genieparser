@@ -3948,7 +3948,7 @@ class ShowOspfDatabaseLsaidDetailSchema(MetaParser):
                 str,
                 "ospf-link":
                 Use(ShowOspfDatabaseLsaidDetail.validate_ospf_topology_list),
-                "ospf-lsa-topology": {
+                Optional("ospf-lsa-topology"): {
                     "ospf-lsa-topology-link":
                     Use(ShowOspfDatabaseLsaidDetail.validate_ospf_link_list),
                     "ospf-topology-id":
