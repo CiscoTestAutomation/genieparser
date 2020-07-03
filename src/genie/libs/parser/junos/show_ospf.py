@@ -4067,12 +4067,12 @@ class ShowOspfRouteNetworkExtensiveSchema(MetaParser):
 
 '''
 Parser for:
-    * show ospf database
+    * show ospf route network extensive
 '''
 
 
 class ShowOspfRouteNetworkExtensive(ShowOspfRouteNetworkExtensiveSchema):
-    cli_command = 'show ospf database'
+    cli_command = 'show ospf route network extensive'
 
     def cli(self, output=None):
         if not output:
