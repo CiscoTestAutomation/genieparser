@@ -1693,6 +1693,12 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
         Aging timer 00:30:46
         Installed 00:29:08 ago, expires in 00:30:46, sent 00:29:06 ago
         Last changed 29w5d 21:33:07 ago, Change count: 1
+        InterArPfx  0.0.0.2          1.1.1.1          0x80000002    52  0x4035  44
+        Prefix 2001::11/128
+        Prefix-options 0x0, Metric 0
+        Aging timer 00:59:08
+        Installed 00:00:07 ago, expires in 00:59:08
+        Last changed 00:00:07 ago, Change count: 1
         IntraArPfx  0.0.0.1          10.34.2.251     0x8000178b  1004  0x9e2d  76
         Ref-lsa-type Router, Ref-lsa-id 0.0.0.0, Ref-router-id 10.34.2.251
         Prefix-count 3
@@ -2483,6 +2489,21 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     },
                     "sequence-number": "0x8000178c",
                 },
+                {'advertising-router': '1.1.1.1',
+                    'age': '52',
+                    'checksum': '0x4035',
+                    'lsa-id': '0.0.0.2',
+                    'lsa-length': '44',
+                    'lsa-type': 'InterArPfx',
+                    'ospf-database-extensive': {'aging-timer': {'#text': '00:59:08'},
+                                                'expiration-time': {'#text': '00:59:08'},
+                                                'installation-time': {'#text': '00:00:07'},
+                                                'lsa-change-count': '1',
+                                                'lsa-changed-time': {'#text': '00:00:07'}},
+                    'ospf3-inter-area-prefix-lsa': {'ospf3-prefix': ['2001::11/128'],
+                                                    'ospf3-prefix-metric': ['0'],
+                                                    'ospf3-prefix-options': ['0x0']},
+                    'sequence-number': '0x80000002'},
                 {
                     "advertising-router": "10.34.2.251",
                     "age": "1004",
