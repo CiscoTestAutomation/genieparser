@@ -23,7 +23,7 @@ class ShowClassOfServiceSchema(MetaParser):
             "interface-map": {
                 Optional("cos-objects"): str,
                 Optional("forwarding-class-set-attachment"): str,
-                "i-logical-map": {
+                Optional("i-logical-map"): {
                     "cos-objects": {
                         "cos-object-index": list,
                         "cos-object-name": list,
