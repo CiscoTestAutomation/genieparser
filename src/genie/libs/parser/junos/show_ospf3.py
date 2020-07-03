@@ -382,7 +382,9 @@ class ShowOspf3NeighborInstance(ShowOspf3Neighbor):
         else:
             out = output
 
-        return super().cli(output=out)
+        return super().cli(
+            output=' ' if not out else out
+            )
 
 
 class ShowOspf3NeighborDetail(ShowOspf3NeighborExtensive):

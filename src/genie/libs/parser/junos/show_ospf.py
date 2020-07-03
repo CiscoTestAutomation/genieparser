@@ -492,7 +492,9 @@ class ShowOspfNeighborInstance(ShowOspfNeighbor):
         else:
             out = output
 
-        return super().cli(output=out)
+        return super().cli(
+            output=' ' if not out else out
+            )
 
 
 class ShowOspfDatabaseSchema(MetaParser):

@@ -27,6 +27,10 @@
         * show interfaces policers {interface}
     * Added ShowInterfacesStatistics
         * show interfaces statistics
+    * Added ShowOspfNeighborInstance
+        * show ospf neighbor instance {instance_name}
+    * Added ShowOspf3NeighborInstance
+        * show ospf3 neighbor instance {instance_name}
 
 
 --------------------------------------------------------------------------------
@@ -87,16 +91,13 @@
         * Optional key issue resolved
     * Updated ShowOspf3DatabaseExtensiveSchema
         * Optional key issue resolved
-<<<<<<< HEAD
         * Added missing ospf3-inter-area-prefix-lsa key
-=======
     * Updated ShowInterfaces
         * Fixes case where speed wasn't found
     * Updated ShowOspfVrfAllInclusive
         * key error resolved
     * Updated ShowOspfDatabaseLsaidDetail
         * Resolved issue where empty output would cause error
->>>>>>> dev
     * Updated ShowOspf3DatabaseExtensive
         * Missing key issue resolved
     * Updated ShowOspf3Database
