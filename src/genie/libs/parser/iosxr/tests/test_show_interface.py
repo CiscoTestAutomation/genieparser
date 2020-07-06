@@ -1,4 +1,4 @@
-﻿import re
+import re
 import unittest
 from unittest.mock import Mock
 
