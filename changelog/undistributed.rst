@@ -31,6 +31,12 @@
         * show interfaces statistics
     * Added ShowOspfRouteNetworkExtensive
         * show ospf route network extensive
+    * Added ShowOspfNeighborInstance
+        * show ospf neighbor instance {instance_name}
+    * Added ShowOspf3NeighborInstance
+        * show ospf3 neighbor instance {instance_name}
+    * Added ShowRouteForwardingTableLabel
+        * show route forwarding-table label {label}
     * Added ShowRSVPNeighbor
         * show rsvp neighbor
     * Added ShowRSVPSession
