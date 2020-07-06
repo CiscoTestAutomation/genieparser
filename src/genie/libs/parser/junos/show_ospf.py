@@ -4085,13 +4085,13 @@ class ShowOspfRouteNetworkExtensive(ShowOspfRouteNetworkExtensiveSchema):
         #Topology default Route Table:
         p1 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +Route +Table:$')
 
-        #1.0.0.0/24         Ext2  Network    IP            0 ge-0/0/0.0    40.0.0.4
+        #10.1.0.0/24         Ext2  Network    IP            0 ge-0/0/0.0    10.70.0.4
         p2 = re.compile(r'^(?P<address_prefix>\S+) +(?P<route_path_type>\S+) '
                         r'+(?P<route_type>\S+) +(?P<next_hop_type>\S+) +'
                         r'(?P<interface_cost>\d+) +(?P<interface_name>\S+)'
                         r'( +(?P<interface_address>\S+))?$')
 
-        #area 0.0.0.0, origin 4.4.4.4, priority medium
+        #area 0.0.0.0, origin 10.64.4.4, priority medium
         p3 = re.compile(r'^area +(?P<ospf_area>[\d\.]+)+, +origin '
                         r'+(?P<route_origin>[\d\.]+), +priority +'
                         r'(?P<route_priority>\w+)$')
@@ -4110,7 +4110,7 @@ class ShowOspfRouteNetworkExtensive(ShowOspfRouteNetworkExtensiveSchema):
 
                 ospf_topology_route_table['ospf-topology-name'] = group['ospf_topology_name']
 
-            #1.0.0.0/24         Ext2  Network    IP            0 ge-0/0/0.0    40.0.0.4
+            #10.1.0.0/24         Ext2  Network    IP            0 ge-0/0/0.0    10.70.0.4
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -4138,7 +4138,7 @@ class ShowOspfRouteNetworkExtensive(ShowOspfRouteNetworkExtensiveSchema):
                 ospf_route_entry_dict.update({'ospf-next-hop': ospf_next_hop_dict})
                 continue
 
-            #area 0.0.0.0, origin 4.4.4.4, priority medium
+            #area 0.0.0.0, origin 10.64.4.4, priority medium
             m = p3.match(line)
             if m:
                 group = m.groupdict()

@@ -31,6 +31,8 @@
         * show interfaces statistics
     * Added ShowOspfRouteNetworkExtensive
         * show ospf route network extensive
+    * Added ShowRSVPNeighbor
+        * show rsvp neighbor
 
 
 --------------------------------------------------------------------------------
