@@ -392,7 +392,7 @@ class ShowPortChannelDatabaseSchema(MetaParser):
 # parser for show port-channel database
 # =====================================
 class ShowPortChannelDatabase(ShowPortChannelDatabaseSchema):
-    """parser show post-channel database"""
+    """parser show port-channel database"""
     cli_command = 'show port-channel database'
 
     def cli(self, output=None):
