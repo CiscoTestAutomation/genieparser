@@ -68,6 +68,8 @@
         * Added regex to support switchport_mode access
         * Fixed regex to allow white spaces in description
 * IOSXR
+    * Update ShowIpv4VrfAllInterface
+        * Update regex to support ':' character in VRF Name.
     * Updated ShowVrfAllDetail:
         * Modified the regex patterns to support various outputs.
     * Updated ShowControllersOptics:
@@ -112,4 +114,6 @@
     * Updated ShowClnsNeighborsDetail
         * Modified regex to accommodate diffrent outputs
     * Updated ShowInventory
+* IOSXE
+    * Updated ShowIpInterface
         * Modified regex to accommodate different outputs

@@ -6763,21 +6763,27 @@ class TestShowInterfaces(unittest.TestCase):
                                 "new-hold-limit": "0",
                             },
                             {
-                                "address-family-flags": {"ifff-none": True},
+                                "address-family-flags": {
+                                    "ifff-none": True
+                                },
                                 "address-family-name": "mpls",
                                 "generation": "149",
                                 "mtu": "Unlimited",
                                 "maximum-labels": "3",
                             },
                             {
-                                "address-family-flags": {"ifff-none": True},
+                                "address-family-flags": {
+                                    "ifff-none": True
+                                },
                                 "address-family-name": "85",
                                 "generation": "129",
                                 "mtu": "Unlimited",
                                 "route-table": "0",
                             },
                             {
-                                "address-family-flags": {"ifff-none": True},
+                                "address-family-flags": {
+                                    "ifff-none": True
+                                },
                                 "address-family-name": "inet",
                                 "interface-address": [
                                     {"ifa-flags": {"ifaf-is-primary": True}},
@@ -6814,13 +6820,17 @@ class TestShowInterfaces(unittest.TestCase):
                                 "new-hold-limit": "0",
                             },
                             {
-                                "address-family-flags": {"ifff-none": True},
+                                "address-family-flags": {
+                                    "ifff-none": True
+                                },
                                 "address-family-name": "vpls",
                                 "generation": "132",
                                 "mtu": "Unlimited",
                             },
                             {
-                                "address-family-flags": {"ifff-none": True},
+                                "address-family-flags": {
+                                    "ifff-none": True
+                                },
                                 "address-family-name": "inet",
                                 "interface-address": {
                                     "ifa-flags": {"ifaf-is-primary": True}
@@ -7084,8 +7094,12 @@ class TestShowInterfaces(unittest.TestCase):
                                 "address-family-name": "tnp",
                                 "generation": "4",
                                 "mtu": "1500",
-                                "interface-address": {"ifa-flags": {"ifaf-none": True}},
-                            },
+                                "interface-address": {
+                                    "ifa-flags": {
+                                        "ifaf-none": True
+                                    }
+                                }
+                            }
                         ],
                         "encapsulation": "ENET2",
                         "if-config-flags": {
@@ -7945,7 +7959,7 @@ class TestShowInterfaces(unittest.TestCase):
 # =======================================================
 # Unit test for 'show interfaces queue {interface}'
 # =======================================================
-class TestShowInterfaces(unittest.TestCase):
+class TestShowInterfacesQueue(unittest.TestCase):
     device = Device(name="aDevice")
     maxDiff = None
     empty_output = {"execute.return_value": ""}
