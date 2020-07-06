@@ -1,5 +1,4 @@
-﻿#!/usr/bin/python3
-import re
+﻿import re
 import unittest
 from unittest.mock import Mock
 
