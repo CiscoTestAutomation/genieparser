@@ -29,6 +29,10 @@
         * show interfaces policers {interface}
     * Added ShowInterfacesStatistics
         * show interfaces statistics
+    * Added ShowOspfNeighborInstance
+        * show ospf neighbor instance {instance_name}
+    * Added ShowOspf3NeighborInstance
+        * show ospf3 neighbor instance {instance_name}
     * Added ShowOspfRouteNetworkExtensive
         * show ospf route network extensive
 
