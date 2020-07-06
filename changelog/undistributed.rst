@@ -23,14 +23,16 @@
     * Updated ShowOspfDatabaseLsaidDetail:
         * added testcase
         *extended from ShowOspfDatabaseAdvertisingRouterSelfDetail
-    * Added ShowInterfacesQueue for:
-        * show interfaces queue {interface}
     * Added ShowInterfacesPolicersInterface for:
         * show interfaces policers {interface}
     * Added ShowInterfacesStatistics
         * show interfaces statistics
-    * Added ShowOspfRouteNetworkExtensive
-        * show ospf route network extensive
+    * Added ShowOspfNeighborInstance
+        * show ospf neighbor instance {instance_name}
+    * Added ShowOspf3NeighborInstance
+        * show ospf3 neighbor instance {instance_name}
+    * Added ShowRouteForwardingTableLabel
+        * show route forwarding-table label {label}
 
 
 --------------------------------------------------------------------------------
@@ -68,8 +70,6 @@
         * Added regex to support switchport_mode access
         * Fixed regex to allow white spaces in description
 * IOSXR
-    * Update ShowIpv4VrfAllInterface
-        * Update regex to support ':' character in VRF Name.
     * Updated ShowVrfAllDetail:
         * Modified the regex patterns to support various outputs.
     * Updated ShowControllersOptics:
