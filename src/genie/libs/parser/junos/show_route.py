@@ -2466,7 +2466,7 @@ class ShowRouteForwardingTableLabel(ShowRouteForwardingTableLabelSchema):
         # 16(S=0) user 0 2001:AE Pop 579 2 ge-0/0/0.0
         # default            perm     0                    dscd      535     1
         p5 = re.compile(r'^(?P<rt_destination>\S+) +(?P<destination_type>\S+) +'
-                        r'(?P<route_reference_count>\d+) +(?P<to>[\d\.|\d\:a-eA-E]+)? +'
+                        r'(?P<route_reference_count>\d+) +(?P<to>[\d\.|\d\:a-fA-F]+)? +'
                         r'(?P<nh_type>\S+) +(?P<nh_index>\d+) +'
                         r'(?P<nh_reference_count>\d+)( +)?(?P<via>\S+)?$')
 
