@@ -2,6 +2,7 @@
 
 JUNOS parsers for the following commands:
     * show rsvp neighbor
+    * show rsvp session
 '''
 
 import re
@@ -94,6 +95,130 @@ class ShowRSVPNeighbor(ShowRSVPNeighborSchema):
                 rsvp_neighbor_list.append(
                     {k.replace('_', '-'):v for k, v in group.items() if v is not None}
                 )
+                continue
+
+        return ret_dict
+
+
+class ShowRSVPSessionSchema(MetaParser):
+    """ Schema for:
+        * show rsvp neighbor
+    """
+
+    def validate_session_data_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('RSVP session data not a list')
+
+        def validate_session_list(value):
+            if not isinstance(value, list):
+                raise SchemaTypeError('RSVP session not a list')
+
+            rsvp_session_list = Schema({
+                    "destination-address": str,
+                    "source-address": str,
+                    "lsp-state": str,
+                    "route-count": str,
+                    "rsb-count": str,
+                    "resv-style": str,
+                    "label-in": str,
+                    "label-out": str,
+                    "name": str,
+                })
+
+            for item in value:
+                rsvp_session_list.validate(item)
+            return value
+
+        rsvp_session_data_list = Schema({
+                "session-type": str,
+                "count": str,
+                Optional("rsvp-session"): Use(validate_session_list),
+                "display-count": str,
+                "up-count": str,
+                "down-count": str,
+            })
+
+        for item in value:
+            rsvp_session_data_list.validate(item)
+        return value
+
+    schema = {
+            "rsvp-session-information": {
+                "rsvp-session-data": Use(validate_session_data_list)
+            }
+        }
+
+class ShowRSVPSession(ShowRSVPSessionSchema):
+    """ Parser for:
+        * show rsvp session
+    """
+
+    cli_command = 'show rsvp session'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Ingress RSVP: 0 sessions
+        # Egress RSVP: 0 sessions
+        # Transit RSVP: 30 sessions
+        p1 = re.compile(r'^(?P<session_type>\S+) RSVP: +(?P<count>\d+) +sessions$')
+
+        # Total 0 displayed, Up 0, Down 0
+        # Total 30 displayed, Up 30, Down 0
+        p2 = re.compile(r'^Total +(?P<display_count>\d+) +displayed, +'
+                        r'Up +(?P<up_count>\d+), +Down +(?P<down_count>\d+)$')
+
+        # 27.85.194.125 27.85.194.127 Up 0 1 FF 46 44 test_lsp_01
+        # 27.85.194.125 27.85.194.127 Up 0 1 FF 37 35 test_lsp_02
+        # 27.85.194.125 27.85.194.127 Up 0 1 FF 28 26 test_lsp_03
+        p3 = re.compile(r'^(?P<destination_address>[\d\.]+) +'
+                        r'(?P<source_address>[\d\.]+) +(?P<lsp_state>\S+) +'
+                        r'(?P<route_count>\d+) +(?P<rsb_count>\d+) +'
+                        r'(?P<resv_style>\S+) +(?P<label_in>\S+) +'
+                        r'(?P<label_out>\S+) +(?P<name>\S+)$')
+
+        
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Ingress RSVP: 0 sessions
+        # Egress RSVP: 0 sessions
+        # Transit RSVP: 30 sessions
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                session_data_list = ret_dict.setdefault('rsvp-session-information', {}) \
+                                        .setdefault('rsvp-session-data', [])
+                session_data_dict = {}
+                session_data_dict.update(
+                    {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                )
+                session_data_list.append(session_data_dict)
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                session_data_dict.update(
+                    {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                )
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                rsvp_session_list = session_data_dict.setdefault('rsvp-session', [])
+                rsvp_session_dict = {}
+                rsvp_session_dict.update(
+                    {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                )
+                rsvp_session_list.append(rsvp_session_dict)
                 continue
 
         return ret_dict
