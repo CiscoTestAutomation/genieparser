@@ -16,6 +16,7 @@ from genie.libs.parser.junos.show_route import (ShowRouteTable,
                                                 ShowRouteAdvertisingProtocol,
                                                 ShowRouteAdvertisingProtocolDetail,
                                                 ShowRouteForwardingTableSummary,
+                                                ShowRouteForwardingTableLabel,
                                                 ShowRouteReceiveProtocol)
 
 '''
@@ -49605,6 +49606,93 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
             route="10.169.196.254",
         )
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+class TestShowRouteForwardingTableLabel(unittest.TestCase):
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output_1 = {'execute.return_value': '''
+        kddi@sr_hktGCS002> show route forwarding-table label 16
+        Routing table: default.mpls
+        MPLS:
+        Destination        Type RtRef Next hop           Type Index    NhRef Netif
+        16                 user     0 106.187.14.158    Pop        578     2 ge-0/0/0.0
+        16(S=0)            user     0 106.187.14.158    Pop        579     2 ge-0/0/0.0
+
+        Routing table: __mpls-oam__.mpls
+        MPLS:
+        Enabled protocols: Bridging, Single VLAN, Dual VLAN,
+        Destination        Type RtRef Next hop           Type Index    NhRef Netif
+        default            perm     0                    dscd      535     1
+    '''}
+
+    golden_parsed_output_1 = {
+        'forwarding-table-information': {
+            'route-table': [{
+                'address-family': 'MPLS',
+                'rt-entry': [{
+                    'destination-type': 'user',
+                    'nh': {
+                    'nh-index': '578',
+                    'nh-reference-count': '2',
+                    'nh-type': 'Pop',
+                    'to': '106.187.14.158',
+                    'via': 'ge-0/0/0.0'
+                    },
+                    'route-reference-count': '0',
+                    'rt-destination': '16'
+                },
+                {
+                    'destination-type': 'user',
+                    'nh': {
+                    'nh-index': '579',
+                    'nh-reference-count': '2',
+                    'nh-type': 'Pop',
+                    'to': '106.187.14.158',
+                    'via': 'ge-0/0/0.0'
+                    },
+                    'route-reference-count': '0',
+                    'rt-destination': '16(S=0)'
+                }
+                ],
+                'table-name': 'default.mpls'
+            },
+            {
+                'address-family': 'MPLS',
+                'enabled-protocols': 'Bridging, '
+                'Single '
+                'VLAN, '
+                'Dual '
+                'VLAN,',
+                'rt-entry': [{
+                'destination-type': 'perm',
+                'nh': {
+                    'nh-index': '535',
+                    'nh-reference-count': '1',
+                    'nh-type': 'dscd'
+                },
+                'route-reference-count': '0',
+                'rt-destination': 'default'
+                }],
+                'table-name': '__mpls-oam__.mpls'
+            }
+            ]
+        }
+        }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRouteForwardingTableLabel(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(label="16")
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowRouteForwardingTableLabel(device=self.device)
+        parsed_output = obj.parse(label="16")
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 if __name__ == '__main__':
     unittest.main()
