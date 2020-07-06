@@ -78,7 +78,7 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
         # Loopback500                    192.168.220.1       Up              Up       default
         p = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) '
             '+(?P<ip_address>[a-z0-9\.]+) +(?P<interface_status>[a-zA-Z]+) '
-            '+(?P<protocol_status>[a-zA-Z]+) +(?P<vrf_name>[A-Za-z0-9]+)$')
+            '+(?P<protocol_status>[a-zA-Z]+) +(?P<vrf_name>[A-Za-z0-9:]+)$')
 
         interface_dict = {}
         for line in out.splitlines():
