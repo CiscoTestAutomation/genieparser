@@ -10,6 +10,8 @@ Parser for the following show commands:
     * show ospf3 overview extensive
     * show ospf3 database network detail
     * show ospf3 database link advertising-router {ipaddress} detail
+    * show ospf3 neighbor
+    * show ospf3 neighbor instance {instance_name}
 '''
 import re
 
@@ -364,6 +366,25 @@ class ShowOspf3Neighbor(ShowOspf3NeighborSchema):
                 continue
 
         return ret_dict
+
+
+class ShowOspf3NeighborInstance(ShowOspf3Neighbor):
+    """ Parser for:
+            * show ospf3 neighbor instance {instance_name}
+    """
+
+    cli_command = 'show ospf3 neighbor instance {instance_name}'
+
+    def cli(self, instance_name, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                                        instance_name=instance_name))
+        else:
+            out = output
+
+        return super().cli(
+            output=' ' if not out else out
+            )
 
 
 class ShowOspf3NeighborDetail(ShowOspf3NeighborExtensive):
@@ -1481,10 +1502,19 @@ class ShowOspf3DatabaseExtensiveSchema(MetaParser):
                 Optional("database-entry-state"): str,
             },
             Optional("ospf3-intra-area-prefix-lsa"): {
-                "prefix-count": str,
-                "reference-lsa-id": str,
-                "reference-lsa-router-id": str,
-                "reference-lsa-type": str,
+                Optional("prefix-count"): str,
+                Optional("reference-lsa-id"): str,
+                Optional("reference-lsa-router-id"): str,
+                Optional("reference-lsa-type"): str,
+                "ospf3-prefix": list,
+                "ospf3-prefix-metric": list,
+                "ospf3-prefix-options": list,
+            },
+            Optional("ospf3-inter-area-prefix-lsa"): {
+                Optional("prefix-count"): str,
+                Optional("reference-lsa-id"): str,
+                Optional("reference-lsa-router-id"): str,
+                Optional("reference-lsa-type"): str,
                 "ospf3-prefix": list,
                 "ospf3-prefix-metric": list,
                 "ospf3-prefix-options": list,
