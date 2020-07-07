@@ -33,6 +33,8 @@
         * show ospf route network extensive
     * Added ShowRSVPNeighbor
         * show rsvp neighbor
+    * Added ShowRSVPNeighborDetail
+        * show rsvp neighbor detail
 
 
 --------------------------------------------------------------------------------
