@@ -53,8 +53,10 @@
         * 'show ip bgp {address_family} rd {rd} detail'
     * Updated ShowBootvar:
         * Modified the regex patterns to support various outputs.
-    * Update ShowPolicyMapInterfaceInput:
+    * Updated ShowPolicyMapInterfaceInput:
         * Fixed issue if no top level dict
+    * Updated 'show mac address-table'
+        * To support protocols column
 * NXOS
     * Updated ShowMacAddressTableBase:
         * Modified the regex patterns to support various outputs.
