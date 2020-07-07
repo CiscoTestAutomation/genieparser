@@ -4539,13 +4539,13 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                            ' +(?P<msg_rcvd>[0-9]+) +(?P<msg_sent>[0-9]+)'
                            ' +(?P<tbl_ver>[0-9]+) +(?P<input_queue>[0-9]+)'
                            ' +(?P<output_queue>[0-9]+) +(?P<up_down>[a-z0-9\:]+)'
-                           ' +(?P<state_pfxrcd>\S+)$')
+                           ' +(?P<state_pfxrcd>.+)$')
         p17_3 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<spk>[0-9]+)'
                            ' +(?P<remote_as>[0-9]+) +(?P<msg_rcvd>[0-9]+)'
                            ' +(?P<msg_sent>[0-9]+)'
                            ' +(?P<tbl_ver>[0-9]+) +(?P<input_queue>[0-9]+)'
                            ' +(?P<output_queue>[0-9]+) +(?P<up_down>[a-z0-9\:]+)'
-                           ' +(?P<state_pfxrcd>\S+)$')
+                           ' +(?P<state_pfxrcd>.+)$')
 
         # Init vars
         bgp_instance_summary_dict = {}
@@ -4774,6 +4774,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
             
             # Neighbor        Spk    AS msg_rcvd msg_sent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
             #                   3   200       0       0        0    0    0 00:00:00 Idle
+            #                   0   200       0       0        0    0    0 00:00:00 Idle (Admin)!
 
             m = p17_2.match(line)
             if m and data_on_nextline:
@@ -4799,6 +4800,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
             # Neighbor        Spk    AS msg_rcvd msg_sent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
             # 10.1.5.5          0   200      60      62       63    0    0 00:57:32          0
             # 10.16.2.2           0   100       0       0        0    0    0 00:00:00 Idle
+            # 10.0.0.35         0   200       0       0        0    0    0 00:00:00 Idle (Admin)!
 
             m = p17_3.match(line)
             if m:
