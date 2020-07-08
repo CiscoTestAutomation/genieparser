@@ -111,12 +111,5 @@ class test_show_module_c4507(unittest.TestCase):
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_c4507)
 
-    # def test_golden22(self):
-    #     self.maxDiff = None
-    #     self.dev_cat4k = Mock(**self.golden_output_22)
-    #     platform_obj = ShowModulecat4k(device=self.dev_cat4k)
-    #     parsed_output = platform_obj.parse()
-    #     self.assertEqual(parsed_output,self.golden_parsed_output_22)
-
 if __name__ == '__main__':
     unittest.main()

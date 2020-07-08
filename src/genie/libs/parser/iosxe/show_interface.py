@@ -1957,16 +1957,6 @@ class ShowIpInterface(ShowIpInterfaceSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 10.2.2.2
-            p5_2 = re.compile(r'^(?P<address>[\d\.]+)$')
-            m = p5_2.match(line)
-            if m:
-                if helper_flag:
-                    helper_list.append(m.groupdict()['address'])
-                    continue
-            else:
-                helper_flag = False
-
             # Vlan211 is up, line protocol is up
             # GigabitEthernet2 is administratively down, line protocol is down
             p1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
@@ -2092,6 +2082,16 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                     interface_dict[interface]['helper_address'] = \
                         helper_list
                 continue
+            
+            # 10.2.2.2
+            p5_2 = re.compile(r'^(?P<address>[\d\.]+)$')
+            m = p5_2.match(line)
+            if m:
+                if helper_flag:
+                    helper_list.append(m.groupdict()['address'])
+                    continue
+            else:
+                helper_flag = False
 
             # Directed broadcast forwarding is disabled
             p6 = re.compile(r'^Directed +broadcast +forwarding +is +(?P<status>\w+)$')
