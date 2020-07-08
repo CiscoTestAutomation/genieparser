@@ -3051,6 +3051,7 @@ class test_show_ip_route(unittest.TestCase):
 
 
     golden_output_00 = {'execute.return_value': '''
+         show ip route ospf-100 vrf default
          IP Route Table for VRF "default"
 
         '*' denotes best ucast next-hop

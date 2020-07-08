@@ -1884,7 +1884,7 @@ class ShowIpInterfaceSchema(MetaParser):
                     },
                     Optional('mtu'): int,
                     Optional('address_determined_by'): str,
-                    Optional('helper_address'): Or(str,list),
+                    Optional('helper_address'): list,
                     Optional('directed_broadcast_forwarding'): bool,
                     Optional('out_common_access_list'): str,
                     Optional('out_access_list'): str,
