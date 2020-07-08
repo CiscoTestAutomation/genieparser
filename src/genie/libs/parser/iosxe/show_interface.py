@@ -1884,7 +1884,7 @@ class ShowIpInterfaceSchema(MetaParser):
                     },
                     Optional('mtu'): int,
                     Optional('address_determined_by'): str,
-                    Optional('helper_address'): str,
+                    Optional('helper_address'): list,
                     Optional('directed_broadcast_forwarding'): bool,
                     Optional('out_common_access_list'): str,
                     Optional('out_access_list'): str,
@@ -1977,6 +1977,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
                 # initial variables
                 multicast_groups = []
+                helper_address = []
                 continue
 
             # Internet address is 192.168.76.1/24
@@ -2064,12 +2065,16 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                 continue
 
             # Helper address is not set
-            p5 = re.compile(r'^Helper +address +is +(?P<address>[\w\.\:\s]+)$')
+            # Helper address is nnn.nnn.nnn.nnn
+            # Helper addresses are nnn.nnn.nnn.nnn
+            # nnn.nnn.nnn.nnn
+            # nnn.nnn.nnn.nnn
+            p5 = re.compile(r'^(Helper +add.+ |^)((?P<address>(\d{1,3}.){3}\d{1,3}|not set))$')
             m = p5.match(line)
             if m:
                 if 'not set' not in m.groupdict()['address']:
-                    interface_dict[interface]['helper_address'] = \
-                        m.groupdict()['address']
+                    helper_address.append(m.groupdict()['address'])
+                    interface_dict[interface]['helper_address'] = sorted(helper_address)
                 continue
 
             # Directed broadcast forwarding is disabled
