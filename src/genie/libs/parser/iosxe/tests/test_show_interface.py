@@ -17397,7 +17397,7 @@ class TestShowIpInterface(unittest.TestCase):
         IPv4 WCCP Redirect exclude is disabled
     '''}
 
-    golden_output33 = {'execute.return_value':
+    golden_output_helper = {'execute.return_value':
     '''
         Vlan1 is administratively down, line protocol is down
         Internet protocol processing disabled
@@ -17493,7 +17493,7 @@ class TestShowIpInterface(unittest.TestCase):
         IPv4 WCCP Redirect exclude is disabled
     '''
     }
-    golden_parsed_output33 = {
+    golden_parsed_output_helper = {
             'Vlan1': {'enabled': False, 'oper_status': 'down'},
     'Vlan10': {'address_determined_by': 'non-volatile memory',
                 'bgp_policy_mapping': False,
@@ -17607,11 +17607,11 @@ class TestShowIpInterface(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_interface_output)
 
     def test_golden3(self):
-        self.device = Mock(**self.golden_output33)
+        self.device = Mock(**self.golden_output_helper)
         interface_obj = ShowIpInterface(device=self.device)
         parsed_output = interface_obj.parse()
         self.maxDiff = None
-        self.assertEqual(parsed_output, self.golden_parsed_output33)
+        self.assertEqual(parsed_output, self.golden_parsed_output_helper)
 
 #############################################################################
 # unitest For show ipv6 interface
