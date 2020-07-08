@@ -65,7 +65,7 @@ class ShowRSVPNeighbor(ShowRSVPNeighborSchema):
         # 10.169.14.240    34:15  0/0       34:13        9   229/0    0
         # 10.169.14.157        0  1/0       34:13        9   230/229  333
         # 2001::AF       0  1/0       15:55        9   105/105  197
-        p2 = re.compile(r'^(?P<rsvp_neighbor_address>[\d\.|a-fA-F\:\d]+) +'
+        p2 = re.compile(r'^(?P<rsvp_neighbor_address>\S+) +'
                         r'(?P<neighbor_idle>\S+) +'
                         r'((?P<neighbor_up_count>\d+)/(?P<neighbor_down_count>\d+)) +'
                         r'(?P<last_changed_time>\S+) +(?P<hello_interval>\d+) +'
