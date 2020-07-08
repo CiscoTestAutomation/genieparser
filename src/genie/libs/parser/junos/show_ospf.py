@@ -12,6 +12,7 @@ JunOs parsers for the following show commands:
     * show ospf interface detail instance {instance}
     * show ospf interface {interface} detail instance {instance}
     * show ospf neighbor
+    * show ospf neighbor instance {instance_name}
     * show ospf database
     * show ospf database summary
     * show ospf database external extensive
@@ -476,6 +477,25 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
                 neighbor_list.append(new_neighbor)
                 continue
         return ret_dict
+
+
+class ShowOspfNeighborInstance(ShowOspfNeighbor):
+    """ Parser for:
+            * show ospf neighbor instance {instance_name}
+    """
+
+    cli_command = 'show ospf neighbor instance {instance_name}'
+
+    def cli(self, instance_name, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                                        instance_name=instance_name))
+        else:
+            out = output
+
+        return super().cli(
+            output=' ' if not out else out
+            )
 
 
 class ShowOspfDatabaseSchema(MetaParser):

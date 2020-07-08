@@ -272,6 +272,48 @@ class TestShowMacAddressTable(unittest.TestCase):
         Total Mac Addresses for this criterion: 8
     '''}
 
+    golden_parsed_output2 = {
+        'mac_table': {
+            'vlans': {
+                '2': {
+                    'mac_addresses': {
+                        '701f.53ff.4de2': {
+                            'interfaces': {
+                                'Port-channel1': {
+                                    'entry_type': 'dynamic',
+                                    'interface': 'Port-channel1',
+                                    'protocols': ['ip']
+                                }
+                            },
+                            'mac_address': '701f.53ff.4de2'
+                        },
+                        'cc98.91ff.cbc2': {
+                            'interfaces': {
+                                'Port-channel1': {
+                                    'entry_type': 'dynamic',
+                                    'interface': 'Port-channel1',
+                                    'protocols': ['ip',
+                                        'ipx']
+                                }
+                            },
+                            'mac_address': 'cc98.91ff.cbc2'
+                        }
+                    },
+                    'vlan': 2
+                }
+            }
+        }
+    }
+
+    golden_output2 = {'execute.return_value': '''
+        show mac address-table
+        Unicast Entries
+         vlan   mac address     type        protocols               port
+        -------+---------------+--------+---------------------+--------------------
+           2    701f.53ff.4de2   dynamic ip                    Port-channel1         
+           2    cc98.91ff.cbc2   dynamic ip,ipx                Port-channel1   
+    '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowMacAddressTable(device=self.dev1)
@@ -289,6 +331,12 @@ class TestShowMacAddressTable(unittest.TestCase):
         obj = ShowMacAddressTable(device=self.dev_c3850)
         parsed_output = obj.parse(vlan='101')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_golden2(self):
+        self.dev_c3850 = Mock(**self.golden_output2)
+        obj = ShowMacAddressTable(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
 class TestShowMacAddressTable2(unittest.TestCase):
