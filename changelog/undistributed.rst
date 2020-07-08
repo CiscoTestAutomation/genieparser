@@ -104,6 +104,10 @@
         * List ospf-area
     * Updated ShowOspfDatabaseExtensiveSchema
         * Added optional values
+    * Updated ShowIpRoute
+        * Enhanced parser
+    * Updated ShowIpInterface
+        * Enhanced parser and added optional values
 * IOSXE
     * Updated ShowIpInterface
         * Modified regex to accommodate different outputs
