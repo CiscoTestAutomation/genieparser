@@ -1955,7 +1955,6 @@ class ShowIpInterface(ShowIpInterfaceSchema):
         interface_dict = {}
         unnumbered_dict = {}
         for line in out.splitlines():
-            #import pdb;pdb.set_trace()
             line = line.strip()
 
             # 10.2.2.2
@@ -2086,7 +2085,6 @@ class ShowIpInterface(ShowIpInterfaceSchema):
             p5_1 = re.compile(r'^Helper +addresses +are +(?P<address>[\w\.\:\s]+)$')
             m = p5_1.match(line)
             if m:
-                #import pdb;pdb.set_trace()
                 helper_flag = True
                 if 'not set' not in m.groupdict()['address']:
                     helper_list = []
