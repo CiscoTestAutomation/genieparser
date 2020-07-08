@@ -17397,18 +17397,24 @@ class TestShowIpInterface(unittest.TestCase):
         IPv4 WCCP Redirect exclude is disabled
     '''}
 
-    golden_output3 = {'execute.return_value':
+    golden_output_helper = {'execute.return_value':
     '''
-        NVI0 is up, line protocol is up
-        Internet address will be negotiated using IPCP
+        Vlan1 is administratively down, line protocol is down
+        Internet protocol processing disabled
+        Vlan10 is up, line protocol is up
+        Internet address is 1.1.1.1/24
         Broadcast address is 255.255.255.255
-        MTU is 1500 bytes
-        Helper address is not set
+        Address determined by non-volatile memory
+        MTU is 9154 bytes
+        Helper addresses are 10.1.1.1
+        10.2.2.2
+        10.3.3.3
+        10.4.4.4
         Directed broadcast forwarding is disabled
-        Outgoing Common access list is not set 
+        Outgoing Common access list is not set
         Outgoing access list is not set
-        Inbound Common access list is not set 
-        Inbound  access list is not set
+        Inbound Common access list is not set
+        Inbound access list is not set
         Proxy ARP is enabled
         Local Proxy ARP is disabled
         Security level is default
@@ -17421,8 +17427,54 @@ class TestShowIpInterface(unittest.TestCase):
         IP CEF switching is enabled
         IP CEF switching turbo vector
         IP Null turbo vector
+        VPN Routing/Forwarding "user"
         Associated unicast routing topologies:
-                Topology "base", operation state is DOWN
+        Topology "base", operation state is UP
+        IP multicast fast switching is enabled
+        IP multicast distributed fast switching is disabled
+        IP route-cache flags are Fast, CEF
+        Router Discovery is disabled
+        IP output packet accounting is disabled
+        IP access violation accounting is disabled
+        TCP/IP header compression is disabled
+        RTP/IP header compression is disabled
+        Probe proxy name replies are disabled
+        Policy routing is disabled
+        Network address translation is disabled
+        BGP Policy Mapping is disabled
+        Input features: MCI Check
+        IPv4 WCCP Redirect outbound is disabled
+        IPv4 WCCP Redirect inbound is disabled
+        IPv4 WCCP Redirect exclude is disabled
+        Vlan11 is up, line protocol is up
+        Internet address is 2.2.2.1/24
+        Broadcast address is 255.255.255.255
+        Address determined by non-volatile memory
+        MTU is 9154 bytes
+        Helper addresses are 10.1.1.1
+        10.2.2.2
+        10.3.3.3
+        10.4.4.4
+        Directed broadcast forwarding is disabled
+        Outgoing Common access list is not set
+        Outgoing access list is not set
+        Inbound Common access list is not set
+        Inbound access list is not set
+        Proxy ARP is enabled
+        Local Proxy ARP is disabled
+        Security level is default
+        Split horizon is enabled
+        ICMP redirects are always sent
+        ICMP unreachables are always sent
+        ICMP mask replies are never sent
+        IP fast switching is enabled
+        IP Flow switching is disabled
+        IP CEF switching is enabled
+        IP CEF switching turbo vector
+        IP Null turbo vector
+        VPN Routing/Forwarding "user"
+        Associated unicast routing topologies:
+        Topology "base", operation state is UP
         IP multicast fast switching is enabled
         IP multicast distributed fast switching is disabled
         IP route-cache flags are Fast, CEF
@@ -17441,47 +17493,92 @@ class TestShowIpInterface(unittest.TestCase):
         IPv4 WCCP Redirect exclude is disabled
     '''
     }
-    golden_parsed_output3 = {
-        'NVI0': {
-            'bgp_policy_mapping': False,
-            'directed_broadcast_forwarding': False,
-            'enabled': True,
-            'icmp': {
-                'mask_replies': 'never sent',
-                'redirects': 'always sent',
-                'unreachables': 'always sent'
-            },
-            'input_features': ['MCI Check'],
-            'ip_access_violation_accounting': False,
-            'ip_cef_switching': True,
-            'ip_cef_switching_turbo_vector': True,
-            'ip_fast_switching': True,
-            'ip_flow_switching': False,
-            'ip_multicast_distributed_fast_switching': False,
-            'ip_multicast_fast_switching': True,
-            'ip_null_turbo_vector': True,
-            'ip_output_packet_accounting': False,
-            'ip_route_cache_flags': ['CEF', 'Fast'],
-            'ipv4': {'ipcp_negotiated': {'broadcast_address': '255.255.255.255',
-                                        'ip': 'ipcp_negotiated'}},
-            'local_proxy_arp': False,
-            'mtu': 1500,
-            'network_address_translation': False,
-            'oper_status': 'up',
-            'policy_routing': False,
-            'probe_proxy_name_replies': False,
-            'proxy_arp': True,
-            'router_discovery': False,
-            'rtp_ip_header_compression': False,
-            'security_level': 'default',
-            'split_horizon': True,
-            'tcp_ip_header_compression': False,
-            'unicast_routing_topologies': {'topology': {'base': {'status': 'down'}}},
-            'wccp': {'redirect_exclude': False,
-                    'redirect_inbound': False,
-                    'redirect_outbound': False}}
-
+    golden_parsed_output_helper = {
+            'Vlan1': {'enabled': False, 'oper_status': 'down'},
+    'Vlan10': {'address_determined_by': 'non-volatile memory',
+                'bgp_policy_mapping': False,
+                'directed_broadcast_forwarding': False,
+                'enabled': True,
+                'helper_address': ['10.1.1.1', '10.2.2.2', '10.3.3.3', '10.4.4.4'],
+                'icmp': {'mask_replies': 'never sent',
+                        'redirects': 'always sent',
+                        'unreachables': 'always sent'},
+                'input_features': ['MCI Check'],
+                'ip_access_violation_accounting': False,
+                'ip_cef_switching': True,
+                'ip_cef_switching_turbo_vector': True,
+                'ip_fast_switching': True,
+                'ip_flow_switching': False,
+                'ip_multicast_distributed_fast_switching': False,
+                'ip_multicast_fast_switching': True,
+                'ip_null_turbo_vector': True,
+                'ip_output_packet_accounting': False,
+                'ip_route_cache_flags': ['CEF', 'Fast'],
+                'ipv4': {'1.1.1.1/24': {'broadcast_address': '255.255.255.255',
+                                        'ip': '1.1.1.1',
+                                        'prefix_length': '24',
+                                        'secondary': False}},
+                'local_proxy_arp': False,
+                'mtu': 9154,
+                'network_address_translation': False,
+                'oper_status': 'up',
+                'policy_routing': False,
+                'probe_proxy_name_replies': False,
+                'proxy_arp': True,
+                'router_discovery': False,
+                'rtp_ip_header_compression': False,
+                'security_level': 'default',
+                'split_horizon': True,
+                'tcp_ip_header_compression': False,
+                'unicast_routing_topologies': {'topology': {'base': {'status': 'up'}}},
+                'vrf': 'user',
+                'wccp': {'redirect_exclude': False,
+                        'redirect_inbound': False,
+                        'redirect_outbound': False}},
+    'Vlan11': {'address_determined_by': 'non-volatile memory',
+                'bgp_policy_mapping': False,
+                'directed_broadcast_forwarding': False,
+                'enabled': True,
+                'helper_address': ['10.1.1.1', '10.2.2.2', '10.3.3.3', '10.4.4.4'],
+                'icmp': {'mask_replies': 'never sent',
+                        'redirects': 'always sent',
+                        'unreachables': 'always sent'},
+                'input_features': ['MCI Check'],
+                'ip_access_violation_accounting': False,
+                'ip_cef_switching': True,
+                'ip_cef_switching_turbo_vector': True,
+                'ip_fast_switching': True,
+                'ip_flow_switching': False,
+                'ip_multicast_distributed_fast_switching': False,
+                'ip_multicast_fast_switching': True,
+                'ip_null_turbo_vector': True,
+                'ip_output_packet_accounting': False,
+                'ip_route_cache_flags': ['CEF', 'Fast'],
+                'ipv4': {'2.2.2.1/24': {'broadcast_address': '255.255.255.255',
+                                        'ip': '2.2.2.1',
+                                        'prefix_length': '24',
+                                        'secondary': False}},
+                'local_proxy_arp': False,
+                'mtu': 9154,
+                'network_address_translation': False,
+                'oper_status': 'up',
+                'policy_routing': False,
+                'probe_proxy_name_replies': False,
+                'proxy_arp': True,
+                'router_discovery': False,
+                'rtp_ip_header_compression': False,
+                'security_level': 'default',
+                'split_horizon': True,
+                'tcp_ip_header_compression': False,
+                'unicast_routing_topologies': {'topology': {'base': {'status': 'up'}}},
+                'vrf': 'user',
+                'wccp': {'redirect_exclude': False,
+                        'redirect_inbound': False,
+                        'redirect_outbound': False}}
     }
+
+
+    
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         interface_obj = ShowIpInterface(device=self.device)
@@ -17510,11 +17607,11 @@ class TestShowIpInterface(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_interface_output)
 
     def test_golden3(self):
-        self.device = Mock(**self.golden_output3)
+        self.device = Mock(**self.golden_output_helper)
         interface_obj = ShowIpInterface(device=self.device)
         parsed_output = interface_obj.parse()
         self.maxDiff = None
-        self.assertEqual(parsed_output, self.golden_parsed_output3)
+        self.assertEqual(parsed_output, self.golden_parsed_output_helper)
 
 #############################################################################
 # unitest For show ipv6 interface

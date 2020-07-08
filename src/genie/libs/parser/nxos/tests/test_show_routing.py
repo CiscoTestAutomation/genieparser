@@ -3049,6 +3049,100 @@ class test_show_ip_route(unittest.TestCase):
     },
 }
 
+
+    golden_output_00 = {'execute.return_value': '''
+         show ip route ospf-100 vrf default
+         IP Route Table for VRF "default"
+
+        '*' denotes best ucast next-hop
+
+        '**' denotes best mcast next-hop
+
+        '[x/y]' denotes [preference/metric]
+
+        '%<string>' in via output denotes VRF <string>
+
+
+
+        6.6.6.0/24, ubest/mbest: 1/0, pending ufdm
+
+            *via 3.3.3.2, Eth1/4, [110/80], 00:01:54, ospf-100, intra
+
+        192.168.1.1/32, ubest/mbest: 1/0, pending ufdm
+
+            *via 4.4.4.2, Eth1/3, [110/41], 00:01:54, ospf-100, intra
+
+        192.168.3.3/32, ubest/mbest: 1/0, pending ufdm
+
+            *via 3.3.3.2, Eth1/4, [110/41], 00:01:54, ospf-100, intra
+    '''}
+
+    golden_parsed_output_00 = {
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'routes': 
+                            {'192.168.1.1/32': 
+                                {'active': True,
+                                                'attached': False,
+                                                'mbest': 0,
+                                                'metric': 41,
+                                                'next_hop': {'next_hop_list': {1: {'best_ucast_nexthop': True,
+                                                                                    'index': 1,
+                                                                                    'metric': 41,
+                                                                                    'next_hop': '4.4.4.2',
+                                                                                    'outgoing_interface': 'Ethernet1/3',
+                                                                                    'route_preference': 110,
+                                                                                    'source_protocol': 'ospf',
+                                                                                    'source_protocol_status': 'intra',
+                                                                                    'updated': '00:01:54'}}},
+                                                'process_id': '100',
+                                                'route': '192.168.1.1/32',
+                                                'route_preference': 110,
+                                                'source_protocol': 'ospf',
+                                                'source_protocol_status': 'intra',
+                                                'ubest': 1},
+                            '192.168.3.3/32': {'active': True,
+                                                'attached': False,
+                                                'mbest': 0,
+                                                'metric': 41,
+                                                'next_hop': {'next_hop_list': {1: {'best_ucast_nexthop': True,
+                                                                                    'index': 1,
+                                                                                    'metric': 41,
+                                                                                    'next_hop': '3.3.3.2',
+                                                                                    'outgoing_interface': 'Ethernet1/4',
+                                                                                    'route_preference': 110,
+                                                                                    'source_protocol': 'ospf',
+                                                                                    'source_protocol_status': 'intra',
+                                                                                    'updated': '00:01:54'}}},
+                                                'process_id': '100',
+                                                'route': '192.168.3.3/32',
+                                                'route_preference': 110,
+                                                'source_protocol': 'ospf',
+                                                'source_protocol_status': 'intra',
+                                                'ubest': 1},
+                            '6.6.6.0/24': {'active': True,
+                                            'attached': False,
+                                            'mbest': 0,
+                                            'metric': 80,
+                                            'next_hop': {'next_hop_list': {1: {'best_ucast_nexthop': True,
+                                                                                'index': 1,
+                                                                                'metric': 80,
+                                                                                'next_hop': '3.3.3.2',
+                                                                                'outgoing_interface': 'Ethernet1/4',
+                                                                                'route_preference': 110,
+                                                                                'source_protocol': 'ospf',
+                                                                                'source_protocol_status': 'intra',
+                                                                                'updated': '00:01:54'}}},
+                                            'process_id': '100',
+                                            'route': '6.6.6.0/24',
+                                            'route_preference': 110,
+                                            'source_protocol': 'ospf',
+                                            'source_protocol_status': 'intra',
+                                            'ubest': 1}}}}}}
+                }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpRoute(device=self.device)
@@ -3150,6 +3244,13 @@ class test_show_ip_route(unittest.TestCase):
         obj = ShowIpRoute(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_12)
+
+    def test_show_ip_route_00(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_00)
+        obj = ShowIpRoute(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_00)
 
 
 # ============================================
