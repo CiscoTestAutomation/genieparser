@@ -3918,7 +3918,7 @@ class TestShowOspf3DatabaseLinkAdvertisingRouter(unittest.TestCase):
 
 class TestShowOspf3RouteNetworkExtensive(unittest.TestCase):
     """ Unit tests for:
-            * show ospf3 database link advertising-router {ipaddress} detail
+            * show ospf3 route network extensive
     """
 
     device = Device(name='aDevice')
