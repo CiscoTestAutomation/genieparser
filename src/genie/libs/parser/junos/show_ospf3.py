@@ -2494,25 +2494,6 @@ class ShowOspf3DatabaseLinkAdvertisingRouter(
         return ret_dict
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class ShowOspf3RouteNetworkExtensiveSchema(MetaParser):
     schema = {
     "ospf3-route-information": {
@@ -2604,4 +2585,5 @@ class ShowOspf3RouteNetworkExtensive(ShowOspf3RouteNetworkExtensiveSchema):
                     route_entry_dict[entry_key] = group_value
                 ospf3_topology_route_table.update(route_entry_dict)
                 continue
+                
         return ret_dict
