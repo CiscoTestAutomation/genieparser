@@ -5,6 +5,8 @@ Parser for the following show commands:
     * show ospf3 interface extensive
     * show ospf3 database
     * show ospf3 database extensive
+    * show ospf3 database advertising-router {address} extensive
+    * show ospf3 database {lsa_type} advertising-router {address} extensive
     * show ospf3 database external extensive
     * show ospf3 overview
     * show ospf3 overview extensive
@@ -1568,11 +1570,11 @@ class ShowOspf3DatabaseExtensiveSchema(MetaParser):
 
     schema = {
         "ospf3-database-information": {
-            "ospf3-area-header": {
+            Optional("ospf3-area-header"): {
                 "ospf-area": str
             },
             "ospf3-database": Use(validate_ospf3_database_list),
-            "ospf3-intf-header": Use(validate_ospf3_intf_header_list),
+            Optional("ospf3-intf-header"): Use(validate_ospf3_intf_header_list),
         }
     }
 
@@ -1580,13 +1582,25 @@ class ShowOspf3DatabaseExtensiveSchema(MetaParser):
 class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
     """ Parser for:
     * show ospf3 database extensive
+    * show ospf3 database advertising-router {address} extensive
+    * show ospf3 database {lsa_type} advertising-router {address} extensive
     """
 
-    cli_command = "show ospf3 database extensive"
+    cli_command = [
+        "show ospf3 database extensive",
+        "show ospf3 database advertising-router {address} extensive",
+        "show ospf3 database {lsa_type} advertising-router {address} extensive"]
 
-    def cli(self, output=None):
+    def cli(self, lsa_type=None, address=None, output=None):
         if not output:
-            out = self.device.execute(self.cli_command)
+            if lsa_type and address:
+                out = self.device.execute(self.cli_command[2].format(
+                    address=address,
+                    lsa_type=lsa_type))
+            elif address:
+                out = self.device.execute(self.cli_command[1].format(address=address))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
