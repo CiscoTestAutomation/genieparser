@@ -14,7 +14,8 @@ from genie.libs.parser.junos.show_ospf3 import ShowOspf3Interface, \
                                                ShowOspf3DatabaseExternalExtensive, \
                                                ShowOspf3DatabaseExtensive,\
                                                ShowOspf3DatabaseNetworkDetail,\
-                                               ShowOspf3DatabaseLinkAdvertisingRouter
+                                               ShowOspf3DatabaseLinkAdvertisingRouter,\
+                                               ShowOspf3RouteNetworkExtensive
 
 
 class TestShowOspf3Interface(unittest.TestCase):
@@ -3912,6 +3913,87 @@ class TestShowOspf3DatabaseLinkAdvertisingRouter(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowOspf3DatabaseLinkAdvertisingRouter(device=self.device)
         parsed_output = obj.parse(ipaddress='192.168.219.235')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class TestShowOspf3RouteNetworkExtensive(unittest.TestCase):
+    """ Unit tests for:
+            * show ospf3 database link advertising-router {ipaddress} detail
+    """
+
+    device = Device(name='aDevice')
+
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {
+        'execute.return_value':
+        '''
+        Prefix                                       Path  Route      NH   Metric
+                                             Type  Type       Type
+        2001::4/128                                  Intra Network    IP   0
+        NH-interface lo0.0
+        Area 0.0.0.0, Origin 4.4.4.4, Priority low
+    '''
+    }
+
+    golden_parsed_output = {
+        "ospf3-route-information": {
+        "ospf-topology-route-table": {
+            "ospf3-route": {
+                "ospf3-route-entry": {
+                    "address-prefix": "2001::4/128",
+                    "interface-cost": "0",
+                    "next-hop-type": "IP",
+                    "ospf-area": "0.0.0.0",
+                    "ospf-next-hop": {
+                        "next-hop-name": {
+                            "interface-name": "lo0.0"
+                        }
+                    },
+                    "route-origin": "4.4.4.4",
+                    "route-path-type": "Intra",
+                    "route-priority": "low",
+                    "route-type": "Network"
+                }
+            }
+        }
+    }
+        
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspf3RouteNetworkExtensive(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspf3RouteNetworkExtensive(device=self.device)
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
