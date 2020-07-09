@@ -25,7 +25,7 @@ class ShowLDPSessionSchema(MetaParser):
             "ldp-session-state": str,
             "ldp-connection-state": str,
             "ldp-remaining-time": str,
-            "ldp-session-adv-mode": str,
+            Optional("ldp-session-adv-mode"): str,
         })
     
         for item in value:
@@ -57,8 +57,8 @@ class ShowLDPSession(ShowLDPSessionSchema):
         p1 = re.compile(r'^(?P<ldp_neighbor_address>\S+) +'
                         r'(?P<ldp_session_state>\S+) +'
                         r'(?P<ldp_connection_state>\S+) +'
-                        r'(?P<ldp_remaining_time>\d+) +'
-                        r'(?P<ldp_session_adv_mode>\S+)$')
+                        r'(?P<ldp_remaining_time>\d+)( +)?'
+                        r'(?P<ldp_session_adv_mode>\S+)?$')
 
 
         for line in out.splitlines():
