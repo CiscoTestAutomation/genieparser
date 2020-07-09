@@ -93,3 +93,7 @@
         * Modified regex to accommodate diffrent outputs
     * Updated ShowInventory
         * Modified regex to accommodate different outputs
+    * Updated ShowCdpNeighbors
+        * Modified regex to support different output
+    * Updated ShowCdpNeighborsDetail
+        * Modified regex to support different output
