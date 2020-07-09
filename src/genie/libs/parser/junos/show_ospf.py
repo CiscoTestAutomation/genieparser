@@ -12,6 +12,7 @@ JunOs parsers for the following show commands:
     * show ospf interface detail instance {instance}
     * show ospf interface {interface} detail instance {instance}
     * show ospf neighbor
+    * show ospf neighbor instance {instance_name}
     * show ospf database
     * show ospf database summary
     * show ospf database external extensive
@@ -25,6 +26,7 @@ JunOs parsers for the following show commands:
     * show ospf database network lsa-id {ipaddress} detail
     * show ospf database lsa-id {ipaddress} detail
     * show ospf route brief
+    * show ospf route network extensive 
 """
 
 # Python
@@ -475,6 +477,25 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
                 neighbor_list.append(new_neighbor)
                 continue
         return ret_dict
+
+
+class ShowOspfNeighborInstance(ShowOspfNeighbor):
+    """ Parser for:
+            * show ospf neighbor instance {instance_name}
+    """
+
+    cli_command = 'show ospf neighbor instance {instance_name}'
+
+    def cli(self, instance_name, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                                        instance_name=instance_name))
+        else:
+            out = output
+
+        return super().cli(
+            output=' ' if not out else out
+            )
 
 
 class ShowOspfDatabaseSchema(MetaParser):
@@ -2126,57 +2147,55 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
             return value
 
         ospf_database_schema = Schema({
-            "advertising-router": str,
-            "age": str,
-            "checksum": str,
-            "lsa-id": str,
-            Optional("our-entry"): bool,
-            "lsa-length": str,
-            "lsa-type": str,
-            "options": str,
-            Optional("ospf-network-lsa"): {
-                "address-mask": str,
-                "attached-router": list,
-                "ospf-lsa-topology": {
-                    "ospf-lsa-topology-link":
-                    Use(validate_ospf_lsa_topology_link),
-                    "ospf-topology-id": str,
-                    "ospf-topology-name": str
-                }
-            },
-            "ospf-database-extensive": {
-                "aging-timer": {
-                    "#text": str
+                "advertising-router": str,
+                "age": str,
+                "checksum": str,
+                "lsa-id": str,
+                Optional("our-entry"): bool,
+                "lsa-length": str,
+                "lsa-type": str,
+                "options": str,
+                Optional("ospf-network-lsa"): {
+                    "address-mask": str,
+                    "attached-router": list,
+                    Optional("ospf-lsa-topology"): {
+                        "ospf-lsa-topology-link": Use(validate_ospf_lsa_topology_link),
+                        "ospf-topology-id": str,
+                        "ospf-topology-name": str
+                    }
                 },
-                "expiration-time": {
-                    "#text": str
+                Optional("ospf-database-extensive"): {
+                    "aging-timer": {
+                        "#text": str
+                    },
+                    Optional("expiration-time"): {
+                        "#text": str
+                    },
+                    Optional("installation-time"): {
+                        "#text": str
+                    },
+                    Optional("generation-timer"): {
+                        "#text": str
+                    },
+                    Optional("lsa-change-count"): str,
+                    Optional("lsa-changed-time"): {
+                        "#text": str
+                    },
+                    Optional("send-time"): {
+                        "#text": str
+                    },
+                    Optional("database-entry-state"): str
                 },
-                "installation-time": {
-                    "#text": str
+                Optional("ospf-router-lsa"): {
+                    "bits": str,
+                    "link-count": str,
+                    "ospf-link": Use(validate_ospf_link),
+                    Optional("ospf-lsa-topology"): {
+                        "ospf-lsa-topology-link": Use(validate_ospf_lsa_topology_link),
+                        "ospf-topology-id": str,
+                        "ospf-topology-name": str
+                    }
                 },
-                Optional("generation-timer"): {
-                    "#text": str
-                },
-                Optional("lsa-change-count"): str,
-                Optional("lsa-changed-time"): {
-                    "#text": str
-                },
-                Optional("send-time"): {
-                    "#text": str
-                },
-                Optional("database-entry-state"): str
-            },
-            Optional("ospf-router-lsa"): {
-                "bits": str,
-                "link-count": str,
-                "ospf-link": Use(validate_ospf_link),
-                "ospf-lsa-topology": {
-                    "ospf-lsa-topology-link":
-                    Use(validate_ospf_lsa_topology_link),
-                    "ospf-topology-id": str,
-                    "ospf-topology-name": str
-                }
-            },
             Optional("ospf-opaque-area-lsa"): {
                 "tlv-block": {
                     "formatted-tlv-data": str,
@@ -3992,3 +4011,165 @@ class ShowOspfDatabaseLsaidDetail(ShowOspfDatabaseAdvertisingRouterSelfDetail):
             out = output
 
         return super().cli(output = ' ' if not out else out)
+
+
+class ShowOspfRouteNetworkExtensiveSchema(MetaParser):
+    '''
+    schema = {
+    Optional("@xmlns:junos"): str,
+    "ospf-route-information": {
+        Optional("@xmlns"): str,
+        "ospf-topology-route-table": {
+            "ospf-route": [
+                {
+                    "ospf-route-entry": {
+                        "address-prefix": str,
+                        "interface-cost": str,
+                        "next-hop-type": str,
+                        "ospf-area": str,
+                        "ospf-next-hop": {
+                            "next-hop-address": {
+                                "interface-address": str
+                            },
+                            "next-hop-name": {
+                                "interface-name": str
+                            }
+                        },
+                        "route-origin": str,
+                        "route-path-type": str,
+                        "route-priority": str,
+                        "route-type": str
+                    }
+                }
+            ],
+            "ospf-topology-name": str
+        }
+    }
+}
+    '''
+    def validate_ospf_route_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-route is not a list')
+        ospf_route_schema = Schema({
+            "ospf-route-entry": {
+                "address-prefix": str,
+                "interface-cost": str,
+                "next-hop-type": str,
+                "ospf-area": str,
+                "ospf-next-hop": {
+                    Optional("next-hop-address"): {
+                        Optional("interface-address"): str
+                    },
+                    "next-hop-name": {
+                        "interface-name": str
+                    }
+                },
+                "route-origin": str,
+                "route-path-type": str,
+                "route-priority": str,
+                "route-type": str
+            }
+        })
+        for item in value:
+            ospf_route_schema.validate(item)
+        return value
+
+    schema = {
+        "ospf-route-information": {
+            Optional("@xmlns"): str,
+            "ospf-topology-route-table": {
+                "ospf-route": Use(validate_ospf_route_list),
+                "ospf-topology-name": str
+            }
+        }
+    }
+
+
+'''
+Parser for:
+    * show ospf route network extensive
+'''
+
+
+class ShowOspfRouteNetworkExtensive(ShowOspfRouteNetworkExtensiveSchema):
+    cli_command = 'show ospf route network extensive'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        #Topology default Route Table:
+        p1 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +Route +Table:$')
+
+        #1.0.0.0/24         Ext2  Network    IP            0 ge-0/0/0.0    40.0.0.4
+        p2 = re.compile(r'^(?P<address_prefix>\S+) +(?P<route_path_type>\S+) '
+                        r'+(?P<route_type>\S+) +(?P<next_hop_type>\S+) +'
+                        r'(?P<interface_cost>\d+) +(?P<interface_name>\S+)'
+                        r'( +(?P<interface_address>\S+))?$')
+
+        #area 0.0.0.0, origin 4.4.4.4, priority medium
+        p3 = re.compile(r'^area +(?P<ospf_area>[\d\.]+)+, +origin '
+                        r'+(?P<route_origin>[\d\.]+), +priority +'
+                        r'(?P<route_priority>\w+)$')
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #Topology default Route Table:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_topology_route_table = ret_dict.setdefault(
+                    'ospf-route-information', {}).setdefault('ospf-topology-route-table', {})
+                ospf_route = ospf_topology_route_table.setdefault('ospf-route', [])
+
+                ospf_topology_route_table['ospf-topology-name'] = group['ospf_topology_name']
+
+            #1.0.0.0/24         Ext2  Network    IP            0 ge-0/0/0.0    40.0.0.4
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+
+                ospf_route_entry_dict = {}
+                ospf_next_hop_dict = {}
+
+                #import pdb;pdb.set_trace()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    
+                    if(entry_key == 'interface-address' and group_value != None):
+                        next_hop_add = {}
+                        next_hop_add['interface-address'] = group_value
+                        ospf_next_hop_dict.update({'next-hop-address': next_hop_add})
+                    elif(entry_key == 'interface-name'):
+                        next_hop_name = {}
+                        next_hop_name['interface-name'] = group_value
+                        ospf_next_hop_dict.update({'next-hop-name': next_hop_name})
+                    else:
+                        if group_value != None:
+                            entry_key = group_key.replace('_', '-')
+                            ospf_route_entry_dict[entry_key] = group_value
+                
+                ospf_route_entry_dict.update({'ospf-next-hop': ospf_next_hop_dict})
+                continue
+
+            #area 0.0.0.0, origin 4.4.4.4, priority medium
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ospf_route_entry_dict[entry_key] = group_value
+                
+                ospf_parent_route_dict = {}
+                ospf_parent_route_dict['ospf-route-entry'] = ospf_route_entry_dict
+                
+                ospf_route.append(ospf_parent_route_dict)
+                continue
+
+        return ret_dict

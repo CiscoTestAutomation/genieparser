@@ -29,7 +29,7 @@ class ShowModuleSchema(MetaParser):
                 Optional('redundancy_status'): str
             }
         },
-        'system_failures': {
+        Optional('system_failures'): {
             'power_supply': str
         }
     }
@@ -46,7 +46,6 @@ class ShowModule(ShowModuleSchema):
             out = output
 
         ret_dict = {}
-
         # Chassis Type : WS-C4507R+E
         p1 = re.compile(r'^Chassis Type +: +(?P<chassis_type>.+)$')
 
