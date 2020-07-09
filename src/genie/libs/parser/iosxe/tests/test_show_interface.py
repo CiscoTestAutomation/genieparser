@@ -17402,7 +17402,7 @@ class TestShowIpInterface(unittest.TestCase):
         Vlan1 is administratively down, line protocol is down
         Internet protocol processing disabled
         Vlan10 is up, line protocol is up
-        Internet address is 1.1.1.1/24
+        Internet address is 10.4.1.1/24
         Broadcast address is 255.255.255.255
         Address determined by non-volatile memory
         MTU is 9154 bytes
@@ -17447,7 +17447,7 @@ class TestShowIpInterface(unittest.TestCase):
         IPv4 WCCP Redirect inbound is disabled
         IPv4 WCCP Redirect exclude is disabled
         Vlan11 is up, line protocol is up
-        Internet address is 2.2.2.1/24
+        Internet address is 10.16.2.1/24
         Broadcast address is 255.255.255.255
         Address determined by non-volatile memory
         MTU is 9154 bytes
@@ -17514,8 +17514,8 @@ class TestShowIpInterface(unittest.TestCase):
                 'ip_null_turbo_vector': True,
                 'ip_output_packet_accounting': False,
                 'ip_route_cache_flags': ['CEF', 'Fast'],
-                'ipv4': {'1.1.1.1/24': {'broadcast_address': '255.255.255.255',
-                                        'ip': '1.1.1.1',
+                'ipv4': {'10.4.1.1/24': {'broadcast_address': '255.255.255.255',
+                                        'ip': '10.4.1.1',
                                         'prefix_length': '24',
                                         'secondary': False}},
                 'local_proxy_arp': False,
@@ -17554,8 +17554,8 @@ class TestShowIpInterface(unittest.TestCase):
                 'ip_null_turbo_vector': True,
                 'ip_output_packet_accounting': False,
                 'ip_route_cache_flags': ['CEF', 'Fast'],
-                'ipv4': {'2.2.2.1/24': {'broadcast_address': '255.255.255.255',
-                                        'ip': '2.2.2.1',
+                'ipv4': {'10.16.2.1/24': {'broadcast_address': '255.255.255.255',
+                                        'ip': '10.16.2.1',
                                         'prefix_length': '24',
                                         'secondary': False}},
                 'local_proxy_arp': False,

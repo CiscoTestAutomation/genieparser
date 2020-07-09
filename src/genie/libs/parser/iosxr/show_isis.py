@@ -1996,7 +1996,7 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
         r16 = re.compile(r'^(?P<since_end_of_last_calculation_ms>\d+)ms +\(since '
                 r'+end +of +last +calculation\)$')
         
-        # Trigger Prefix:        77.136.81.14/32 (optional field)
+        # Trigger Prefix:        10.234.81.14/32 (optional field)
         r17 = re.compile(r'^Trigger +Prefix: +(?P<trigger_prefix>\S+) +\(optional +field\)$')
 
         # Mon Aug 16 2004
@@ -2245,7 +2245,7 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                 delay_dict['since_end_of_last_calculation'] = delay
                 continue
             
-            # Trigger Prefix:        77.136.81.14/32 (optional field)
+            # Trigger Prefix:        10.234.81.14/32 (optional field)
             result = r17.match(line)
             if result:
                 group = result.groupdict()
