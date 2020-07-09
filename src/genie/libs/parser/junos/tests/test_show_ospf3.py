@@ -3930,6 +3930,7 @@ class TestShowOspf3RouteNetworkExtensive(unittest.TestCase):
     golden_output = {
         'execute.return_value':
         '''
+        show ospf3 route network extensive
         Prefix                                       Path  Route      NH   Metric
                                              Type  Type       Type
         2001::4/128                                  Intra Network    IP   0

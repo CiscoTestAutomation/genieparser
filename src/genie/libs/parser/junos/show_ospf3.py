@@ -2541,7 +2541,7 @@ class ShowOspf3RouteNetworkExtensiveSchema(MetaParser):
 
 '''
 Parser for:
-    * show ospf route network extensive
+    * show ospf3 route network extensive
 '''
 
 
