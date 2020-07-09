@@ -50,6 +50,8 @@
         * Added more regex patterns to support various outputs.
     * Updated ShowIsisSchema:
         * Made the key 'protocols_redistributed' optional.
+    * Updated ShowIsisSpfLogDetail:
+        * Added more regex patterns to support various outputs.
 * JUNOS
     * Updated ShowRoute
         * Modified cli method to accept only ip_address as input
