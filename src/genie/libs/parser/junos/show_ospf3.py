@@ -2604,5 +2604,4 @@ class ShowOspf3RouteNetworkExtensive(ShowOspf3RouteNetworkExtensiveSchema):
                     route_entry_dict[entry_key] = group_value
                 ospf3_topology_route_table.update(route_entry_dict)
                 continue
-
         return ret_dict
