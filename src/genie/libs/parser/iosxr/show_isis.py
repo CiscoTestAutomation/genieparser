@@ -2708,6 +2708,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         interface_flag = False
         clns_flag = False
         topology_falg = False
+        instance = None
 
         for line in output.splitlines():
             line = line.strip()
@@ -2730,6 +2731,12 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 group = result.groupdict()
                 interface = group['interface']
                 interface_state = group['interface_state']
+
+                if not instance:
+                    instance_dict = parsed_output\
+                    .setdefault('instance', {})\
+                    .setdefault('default', {})
+
                 interface_dict = instance_dict\
                     .setdefault('interface', {})\
                     .setdefault(interface, {})
