@@ -3916,27 +3916,6 @@ class TestShowOspf3DatabaseLinkAdvertisingRouter(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class TestShowOspf3RouteNetworkExtensive(unittest.TestCase):
     """ Unit tests for:
             * show ospf3 database link advertising-router {ipaddress} detail
