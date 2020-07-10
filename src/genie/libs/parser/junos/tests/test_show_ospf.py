@@ -29,7 +29,6 @@ from genie.libs.parser.junos.show_ospf import (
     ShowOspfDatabaseLsaidDetail,
     ShowOspfRouteBrief,
     ShowOspfRouteDetail,
-    ShowOspfRouteNetworkExtensive,
 )
 
 
@@ -14276,39 +14275,39 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
         show ospf database lsa-id 10.34.2.250 detail
 
         OSPF database, Area 0.0.0.8
-    Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
-    Router   10.34.2.250     10.34.2.250     0x80000048  1598  0x22 0xed79 108
-    bits 0x2, link count 7
-    id 10.34.2.251, data 10.34.2.201, Type PointToPoint (1)
-        Topology count: 0, Default metric: 5
-    id 10.34.2.200, data 255.255.255.252, Type Stub (3)
-        Topology count: 0, Default metric: 5
-    id 10.169.14.240, data 10.169.14.158, Type PointToPoint (1)
-        Topology count: 0, Default metric: 100
-    id 10.169.14.156, data 255.255.255.252, Type Stub (3)
-        Topology count: 0, Default metric: 100
-    id 10.16.0.0, data 255.255.255.252, Type Stub (3)
-        Topology count: 0, Default metric: 1000
-    id 192.168.220.0, data 255.255.255.252, Type Stub (3)
-        Topology count: 0, Default metric: 1000
-    id 10.34.2.250, data 255.255.255.255, Type Stub (3)
-        Topology count: 0, Default metric: 0
-    Topology default (ID 0)
-        Type: PointToPoint, Node ID: 10.169.14.240
-        Metric: 100, Bidirectional
-        Type: PointToPoint, Node ID: 10.34.2.251
-        Metric: 5, Bidirectional
-        OSPF AS SCOPE link state database
-    Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
-    Extern   10.34.2.250     10.169.14.240   0x80000043  1075  0x22 0xd7f4  36
-    mask 255.255.255.255
-    Topology default (ID 0)
-        Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
-    Extern  *10.34.2.250     10.169.14.241   0x80000044   670  0x22 0xcffa  36
-    mask 255.255.255.255
-    Topology default (ID 0)
-        Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
-    '''
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+        Router   10.34.2.250     10.34.2.250     0x80000048  1598  0x22 0xed79 108
+        bits 0x2, link count 7
+        id 10.34.2.251, data 10.34.2.201, Type PointToPoint (1)
+            Topology count: 0, Default metric: 5
+        id 10.34.2.200, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 5
+        id 10.169.14.240, data 10.169.14.158, Type PointToPoint (1)
+            Topology count: 0, Default metric: 100
+        id 10.169.14.156, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 100
+        id 10.16.0.0, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 1000
+        id 192.168.220.0, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 1000
+        id 10.34.2.250, data 255.255.255.255, Type Stub (3)
+            Topology count: 0, Default metric: 0
+        Topology default (ID 0)
+            Type: PointToPoint, Node ID: 10.169.14.240
+            Metric: 100, Bidirectional
+            Type: PointToPoint, Node ID: 10.34.2.251
+            Metric: 5, Bidirectional
+            OSPF AS SCOPE link state database
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+        Extern   10.34.2.250     10.169.14.240   0x80000043  1075  0x22 0xd7f4  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
+        Extern  *10.34.2.250     10.169.14.241   0x80000044   670  0x22 0xcffa  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
+        '''
     }
 
     golden_parsed_output = {
@@ -14504,15 +14503,15 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
         'execute.return_value':
         '''
         OSPF AS SCOPE link state database
-    Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
-    Extern   10.34.2.250     10.169.14.240   0x80000043  1075  0x22 0xd7f4  36
-    mask 255.255.255.255
-    Topology default (ID 0)
-        Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
-    Extern  *10.34.2.250     10.169.14.241   0x80000044   670  0x22 0xcffa  36
-    mask 255.255.255.255
-    Topology default (ID 0)
-        Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+        Extern   10.34.2.250     10.169.14.240   0x80000043  1075  0x22 0xd7f4  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
+        Extern  *10.34.2.250     10.169.14.241   0x80000044   670  0x22 0xcffa  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
     '''
     }
 
@@ -14563,6 +14562,54 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
         }
     }
 
+    golden_output_3 = {'execute.return_value': '''
+    show ospf database lsa-id 20.0.0.3 detail 
+
+        OSPF database, Area 0.0.0.0
+     Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len 
+    Network *20.0.0.3         3.3.3.3          0x80000002    64  0x22 0x9958  36
+      mask 255.255.255.0
+      attached router 3.3.3.3
+      attached router 4.4.4.4
+      attached router 1.1.1.1
+      Topology default (ID 0)
+        Type: Transit, Node ID: 1.1.1.1
+          Metric: 0, Bidirectional
+        Type: Transit, Node ID: 4.4.4.4
+          Metric: 0, Bidirectional
+        Type: Transit, Node ID: 3.3.3.3
+          Metric: 0, Bidirectional
+    '''}
+
+    golden_parsed_output_3 = {'ospf-database-information': {'ospf-area-header': {'ospf-area': '0.0.0.0'},
+                               'ospf-database': [{'advertising-router': '3.3.3.3',
+                                                  'age': '64',
+                                                  'checksum': '0x9958',
+                                                  'lsa-id': '20.0.0.3',
+                                                  'lsa-length': '36',
+                                                  'lsa-type': 'Network',
+                                                  'options': '0x22',
+                                                  'ospf-network-lsa': {'address-mask': '255.255.255.0',
+                                                                       'attached-router': ['3.3.3.3',
+                                                                                           '4.4.4.4',
+                                                                                           '1.1.1.1'],
+                                                                       'ospf-lsa-topology': {'ospf-lsa-topology-link': [{'link-type-name': 'Transit',
+                                                                                                                         'ospf-lsa-topology-link-metric': '0',
+                                                                                                                         'ospf-lsa-topology-link-node-id': '1.1.1.1',
+                                                                                                                         'ospf-lsa-topology-link-state': 'Bidirectional'},
+                                                                                                                        {'link-type-name': 'Transit',
+                                                                                                                         'ospf-lsa-topology-link-metric': '0',
+                                                                                                                         'ospf-lsa-topology-link-node-id': '4.4.4.4',
+                                                                                                                         'ospf-lsa-topology-link-state': 'Bidirectional'},
+                                                                                                                        {'link-type-name': 'Transit',
+                                                                                                                         'ospf-lsa-topology-link-metric': '0',
+                                                                                                                         'ospf-lsa-topology-link-node-id': '3.3.3.3',
+                                                                                                                         'ospf-lsa-topology-link-state': 'Bidirectional'}],
+                                                                                             'ospf-topology-id': '0',
+                                                                                             'ospf-topology-name': 'default'}},
+                                                  'our-entry': True,
+                                                  'sequence-number': '0x80000002'}]}}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowOspfDatabaseLsaidDetail(device=self.device)
@@ -14583,239 +14630,11 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
 
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
-
-class test_show_ospf_route_network_extensive(unittest.TestCase):
-    """ Unit tests for:
-            * show ospf route network extensive
-    """
-
-    device = Device(name="aDevice")
-    maxDiff = None
-
-    empty_output = {"execute.return_value": ""}
-
-    golden_output = {
-        "execute.return_value":
-        """
-            show ospf route network extensive
-        Topology default Route Table:
-
-        Prefix             Path  Route      NH       Metric NextHop       Nexthop
-                        Type  Type       Type            Interface     Address/LSP
-        1.0.0.0/24         Ext2  Network    IP            0 ge-0/0/0.0    40.0.0.4
-        area 0.0.0.0, origin 3.3.3.3, priority medium
-        1.1.1.1/32         Intra Network    IP            0 lo0.0
-        area 0.0.0.0, origin 1.1.1.1, priority low
-        2.2.2.2/32         Intra Network    IP            1 ge-0/0/1.0    30.0.0.2
-        area 0.0.0.0, origin 2.2.2.2, priority medium
-        3.3.3.3/32         Intra Network    IP            2 ge-0/0/0.0    40.0.0.4
-        area 0.0.0.0, origin 3.3.3.3, priority medium
-        4.4.4.4/32         Intra Network    IP            1 ge-0/0/0.0    40.0.0.4
-        area 0.0.0.0, origin 4.4.4.4, priority medium
-        20.0.0.0/24        Ext2  Network    IP            0 ge-0/0/0.0    40.0.0.4
-        area 0.0.0.0, origin 3.3.3.3, priority medium
-        30.0.0.0/24        Intra Network    IP            1 ge-0/0/1.0
-        area 0.0.0.0, origin 1.1.1.1, priority low
-        40.0.0.0/24        Intra Network    IP            1 ge-0/0/0.0
-        area 0.0.0.0, origin 1.1.1.1, priority low
-        50.0.0.0/24        Intra Network    IP            2 ge-0/0/0.0    40.0.0.4
-        area 0.0.0.0, origin 4.4.4.4, priority medium
-    """
-    }
-
-    golden_parsed_output = {
-        "ospf-route-information": {
-            "ospf-topology-route-table": {
-                "ospf-route": [
-                    {
-                        "ospf-route-entry": {
-                            "address-prefix": "1.0.0.0/24",
-                            "interface-cost": "0",
-                            "next-hop-type": "IP",
-                            "ospf-area": "0.0.0.0",
-                            "ospf-next-hop": {
-                                "next-hop-address": {
-                                    "interface-address": "40.0.0.4"
-                                },
-                                "next-hop-name": {
-                                    "interface-name": "ge-0/0/0.0"
-                                }
-                            },
-                            "route-origin": "3.3.3.3",
-                            "route-path-type": "Ext2",
-                            "route-priority": "medium",
-                            "route-type": "Network"
-                        }
-                    },
-                    {
-                        "ospf-route-entry": {
-                            "address-prefix": "1.1.1.1/32",
-                            "interface-cost": "0",
-                            "next-hop-type": "IP",
-                            "ospf-area": "0.0.0.0",
-                            "ospf-next-hop": {
-                                "next-hop-name": {
-                                    "interface-name": "lo0.0"
-                                }
-                            },
-                            "route-origin": "1.1.1.1",
-                            "route-path-type": "Intra",
-                            "route-priority": "low",
-                            "route-type": "Network"
-                        }
-                    },
-                    {
-                        "ospf-route-entry": {
-                            "address-prefix": "2.2.2.2/32",
-                            "interface-cost": "1",
-                            "next-hop-type": "IP",
-                            "ospf-area": "0.0.0.0",
-                            "ospf-next-hop": {
-                                "next-hop-address": {
-                                    "interface-address": "30.0.0.2"
-                                },
-                                "next-hop-name": {
-                                    "interface-name": "ge-0/0/1.0"
-                                }
-                            },
-                            "route-origin": "2.2.2.2",
-                            "route-path-type": "Intra",
-                            "route-priority": "medium",
-                            "route-type": "Network"
-                        }
-                    },
-                    {
-                        "ospf-route-entry": {
-                            "address-prefix": "3.3.3.3/32",
-                            "interface-cost": "2",
-                            "next-hop-type": "IP",
-                            "ospf-area": "0.0.0.0",
-                            "ospf-next-hop": {
-                                "next-hop-address": {
-                                    "interface-address": "40.0.0.4"
-                                },
-                                "next-hop-name": {
-                                    "interface-name": "ge-0/0/0.0"
-                                }
-                            },
-                            "route-origin": "3.3.3.3",
-                            "route-path-type": "Intra",
-                            "route-priority": "medium",
-                            "route-type": "Network"
-                        }
-                    },
-                    {
-                        "ospf-route-entry": {
-                            "address-prefix": "4.4.4.4/32",
-                            "interface-cost": "1",
-                            "next-hop-type": "IP",
-                            "ospf-area": "0.0.0.0",
-                            "ospf-next-hop": {
-                                "next-hop-address": {
-                                    "interface-address": "40.0.0.4"
-                                },
-                                "next-hop-name": {
-                                    "interface-name": "ge-0/0/0.0"
-                                }
-                            },
-                            "route-origin": "4.4.4.4",
-                            "route-path-type": "Intra",
-                            "route-priority": "medium",
-                            "route-type": "Network"
-                        }
-                    },
-                    {
-                        "ospf-route-entry": {
-                            "address-prefix": "20.0.0.0/24",
-                            "interface-cost": "0",
-                            "next-hop-type": "IP",
-                            "ospf-area": "0.0.0.0",
-                            "ospf-next-hop": {
-                                "next-hop-address": {
-                                    "interface-address": "40.0.0.4"
-                                },
-                                "next-hop-name": {
-                                    "interface-name": "ge-0/0/0.0"
-                                }
-                            },
-                            "route-origin": "3.3.3.3",
-                            "route-path-type": "Ext2",
-                            "route-priority": "medium",
-                            "route-type": "Network"
-                        }
-                    },
-                    {
-                        "ospf-route-entry": {
-                            "address-prefix": "30.0.0.0/24",
-                            "interface-cost": "1",
-                            "next-hop-type": "IP",
-                            "ospf-area": "0.0.0.0",
-                            "ospf-next-hop": {
-                                "next-hop-name": {
-                                    "interface-name": "ge-0/0/1.0"
-                                }
-                            },
-                            "route-origin": "1.1.1.1",
-                            "route-path-type": "Intra",
-                            "route-priority": "low",
-                            "route-type": "Network"
-                        }
-                    },
-                    {
-                        "ospf-route-entry": {
-                            "address-prefix": "40.0.0.0/24",
-                            "interface-cost": "1",
-                            "next-hop-type": "IP",
-                            "ospf-area": "0.0.0.0",
-                            "ospf-next-hop": {
-                                "next-hop-name": {
-                                    "interface-name": "ge-0/0/0.0"
-                                }
-                            },
-                            "route-origin": "1.1.1.1",
-                            "route-path-type": "Intra",
-                            "route-priority": "low",
-                            "route-type": "Network"
-                        }
-                    },
-                    {
-                        "ospf-route-entry": {
-                            "address-prefix": "50.0.0.0/24",
-                            "interface-cost": "2",
-                            "next-hop-type": "IP",
-                            "ospf-area": "0.0.0.0",
-                            "ospf-next-hop": {
-                                "next-hop-address": {
-                                    "interface-address": "40.0.0.4"
-                                },
-                                "next-hop-name": {
-                                    "interface-name": "ge-0/0/0.0"
-                                }
-                            },
-                            "route-origin": "4.4.4.4",
-                            "route-path-type": "Intra",
-                            "route-priority": "medium",
-                            "route-type": "Network"
-                        }
-                    }
-                ],
-                "ospf-topology-name": "default"
-            }
-        }
-        
-    }
-
-    def test_show_ospf_route_network_extensive_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowOspfRouteNetworkExtensive(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            obj.parse()
-
-    def test_show_ospf_route_network_extensive(self):
-        self.device = Mock(**self.golden_output)
-        obj = ShowOspfRouteNetworkExtensive(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowOspfDatabaseLsaidDetail(device=self.device)
+        parsed_output = obj.parse(ipaddress='20.0.0.3')
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 
 if __name__ == "__main__":

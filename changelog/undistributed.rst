@@ -84,13 +84,15 @@
         * Enhanced parser
     * Updated ShowIpInterface
         * Enhanced parser and added optional values
+    * Updated ShowOspfDatabaseAdvertisingRouterSelfDetail
+        * Added more keys to the schema, in order to support output of ShowOspfDatabaseLsaidDetail
 * IOSXE
     * Updated ShowIpInterface
         * Modified regex to accommodate different outputs
 
 * IOSXE
     * Updated ShowClnsNeighborsDetail
-        * Modified regex to accommodate diffrent outputs
+        * Modified regex to accommodate different outputs
     * Updated ShowInventory
         * Modified regex to accommodate different outputs
     * Updated ShowCdpNeighbors
