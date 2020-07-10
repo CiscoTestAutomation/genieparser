@@ -25,3 +25,8 @@
     * Updated ShowIpRoute
         * Enhanced parser
 
+
+* IOSXR
+    * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea
+        * Enhanced parser
+

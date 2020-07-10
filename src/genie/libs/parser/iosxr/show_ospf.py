@@ -3723,7 +3723,8 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
         )
 
         # Extended Prefix Range TLV: Length: 24
-        p51 = re.compile(r"^Extended +Prefix +Range +TLV: +Length: +(?P<length>\d+)$")
+        # Extended Prefix TLV: Length: 24
+        p51 = re.compile(r"^Extended +Prefix +(Range +)?TLV: +Length: +(?P<length>\d+)$")
 
         #   AF        : 0
         p52 = re.compile(r"^AF *: +(?P<af>\d+)$")
@@ -4446,6 +4447,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 continue
 
             # Extended Prefix Range TLV: Length: 24
+            # Extended Prefix TLV: Length: 24
             m = p51.match(line)
             if m:
                 tlv_idx = len(db_dict.get("extended_prefix_tlvs", {})) + 1
