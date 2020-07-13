@@ -17,6 +17,8 @@
 * JUNOS
     * Updated ShowOspfDatabaseAdvertisingRouterSelfDetail
         * Added more keys to the schema, in order to support output of ShowOspfDatabaseLsaidDetail
+    * Updated ShowSystemUsers
+        * Regex issues resolved
 * IOSXE
     * Updated ShowCdpNeighbors
         * Modified regex to support different output
