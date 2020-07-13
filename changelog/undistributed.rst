@@ -11,6 +11,8 @@
 * JUNOS
     * Added ShowLDPSession
         * show ldp session
+    * Added ShowRouteForwardingTableLabel
+        * show route forwarding-table label {label}
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
