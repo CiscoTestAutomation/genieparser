@@ -9,16 +9,28 @@
                                 New
 --------------------------------------------------------------------------------
 * JUNOS
+    * Address ShowBFDSesssion
+        * show bfd session
     * Added ShowLDPSession
         * show ldp session
     * Added ShowClassOfServiceSchema
         * show class-of-service interface {interface}
+    * Added ShowRouteForwardingTableLabel
+        * show route forwarding-table label {label}
+    * Added ShowRSVPNeighbor
+        * show rsvp neighbor
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
 * JUNOS
     * Updated ShowOspfDatabaseAdvertisingRouterSelfDetail
         * Added more keys to the schema, in order to support output of ShowOspfDatabaseLsaidDetail
+    * Updated ShowSystemUsers
+        * Regex issues resolved
+    * Updated ShowOspfOverview
+        * Missing key added
+    * Updated ShowOspf3Overview
+        * Missing key added
 * IOSXE
     * Updated ShowCdpNeighbors
         * Modified regex to support different output
