@@ -54,7 +54,8 @@ class ShowBFDSession(ShowBFDSessionSchema):
 
         ret_dict = {}
 
-        # 59.128.2.250                        Operational Open          26         DU
+        # 10.0.0.1                        Operational Open          26         DU
+        # 10.0.0.2               Up        ge-0/0/0.0     1.500     0.500        3
         p1 = re.compile(r'^(?P<session_neighbor>\S+) +'
                         r'(?P<session_state>\S+)'
                         r'( +(?P<session_interface>\S+))? +'
