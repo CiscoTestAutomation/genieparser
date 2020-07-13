@@ -2386,7 +2386,8 @@ class TestShowSystemUptime(unittest.TestCase):
                 "load-average-15": "0.43",
                 "load-average-5": "0.42",
                 "up-time": {
-                    "#text": "209 days, 23:14 mins,"
+                    "#text": "209 days, 23:14 mins,",
+                    '@junos:seconds': '18141240'
                 },
             },
         }
@@ -2470,7 +2471,8 @@ class TestShowSystemUptimeNoForwarding(unittest.TestCase):
                 "load-average-15": "0.41",
                 "load-average-5": "0.38",
                 "up-time": {
-                    "#text": "209 days, 36 mins,"
+                    "#text": "209 days, 36 mins,",
+                    '@junos:seconds': '18187200'
                 },
             },
         }
