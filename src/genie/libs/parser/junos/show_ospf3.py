@@ -10,6 +10,8 @@ Parser for the following show commands:
     * show ospf3 overview extensive
     * show ospf3 database network detail
     * show ospf3 database link advertising-router {ipaddress} detail
+    * show ospf3 neighbor
+    * show ospf3 neighbor instance {instance_name}
 '''
 import re
 
@@ -364,6 +366,25 @@ class ShowOspf3Neighbor(ShowOspf3NeighborSchema):
                 continue
 
         return ret_dict
+
+
+class ShowOspf3NeighborInstance(ShowOspf3Neighbor):
+    """ Parser for:
+            * show ospf3 neighbor instance {instance_name}
+    """
+
+    cli_command = 'show ospf3 neighbor instance {instance_name}'
+
+    def cli(self, instance_name, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                                        instance_name=instance_name))
+        else:
+            out = output
+
+        return super().cli(
+            output=' ' if not out else out
+            )
 
 
 class ShowOspf3NeighborDetail(ShowOspf3NeighborExtensive):

@@ -40,6 +40,7 @@ class ShowMacAddressTableSchema(MetaParser):
                                 Any(): {
                                     'interface': str,
                                     'entry_type': str,
+                                    Optional('protocols'): list,
                                     Optional('entry'): str,
                                     Optional('learn'): str,
                                     Optional('age'): int
@@ -72,18 +73,33 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
         # initial return dictionary
         ret_dict = mac_dict = {}
         entry_type = entry = learn = age = ''
-        
-        # initial regexp pattern
+
+        # Total Mac Addresses for this criterion: 93
         p1 = re.compile(r'^Total +Mac +Addresses +for +this +criterion: +(?P<val>\d+)$')
+
+        # 10    aaaa.bbff.8888    STATIC      Gi1/0/8 Gi1/0/9
+        # 20    aaaa.bbff.8888    STATIC      Drop
+        # All    0100.0cff.999a    STATIC      CPU
         p2 = re.compile(r'^(?P<entry>[\w\*] )?\s*(?P<vlan>All|[\d\-]+) +(?P<mac>[\w.]+)'
-            ' +(?P<entry_type>\w+) +(?P<intfs>\S+|[^\s]+\s[^\s]+)$')
+                        r' +(?P<entry_type>\w+) +(?P<intfs>\S+|[^\s]+\s[^\s]+)$')
+
+        # Gi1/9,Gi1/10,Gi1/11,Gi1/12
+        #               Router,Switch
         p3 = re.compile(r'^(?P<intfs>(vPC Peer-Link)?[\w\/\,\(\)]+)$')
+
+        # *  101  44dd.eeff.55bb   dynamic  Yes         10   Gi1/40
+        # *  102  aa11.bbff.ee55    static  Yes          -   Gi1/2,Gi1/4,Gi1/5,Gi1/6
+        # *  400  0000.0000.0000    static  No           -   vPC Peer-Link
+        # *  ---  0000.0000.0000    static  No           -   Router
         p4 = re.compile(r'^(?P<entry>[\w\*] )?\s*(?P<vlan>All|[\d\-]+) +(?P<mac>[\w.]+)'
-            ' +(?P<entry_type>\w+) +(?P<learn>\w+) +(?P<age>[\d\-\~]+) '
-            '+(?P<intfs>(vPC )?[\w\/\,\-\(\)\s]+)$')
-        p5 = re.compile(r'^(?P<entry>[\w\*] )?\s*(?P<vlan>All|[\d\-]+) +(?P<mac>[\w.]+)'
-            ' +(?P<entry_type>\w+) +(?P<age>[\d\-\~]+) +(?P<secure>\w+) '
-            '+(?P<ntfy>\w+) +(?P<intfs>(vPC )?[\w\/\,\-\(\)]+)$')
+                        r' +(?P<entry_type>\w+) +(?P<learn>\w+) +(?P<age>[\d\-\~]+) '
+                        r'+(?P<intfs>(vPC )?[\w\/\,\-\(\)\s]+)$')
+
+        # 964    0000.0000.0000   dynamic ip,ipx                Router
+        p5 = re.compile(r'^(?P<entry>[\w\*] )?\s*(?P<vlan>All|[\d\-]+) '
+                        r'+(?P<mac>[\w.]+) +(?P<entry_type>\w+) '
+                        r'+(?P<protocols>[\w\,]+) '
+                        r'+(?P<intfs>\S+|[^\s]+\s[^\s]+)$')
         
         for line in out.splitlines():
             line = line.strip()
@@ -199,6 +215,42 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
                             intf_dict.update({'age': age})
                         else:
                             age = None
+                continue
+
+            # 964    0000.0000.0000   dynamic ip,ipx                Router
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                mac = group['mac']
+                vlan = int(group['vlan']) if re.search('\d+', group['vlan']) \
+                                          else group['vlan'].lower()
+                intfs = group['intfs'].strip()
+                vlan_dict = ret_dict.setdefault('mac_table', {}) \
+                .setdefault('vlans', {}).setdefault(str(vlan), {})
+                vlan_dict['vlan'] = vlan
+                mac_dict = vlan_dict.setdefault('mac_addresses', {}) \
+                                    .setdefault(mac, {})
+                mac_dict.update({'mac_address': mac})
+
+                if 'drop' in intfs.lower():
+                    drop_dict = mac_dict.setdefault('drop', {})
+                    drop_dict.update({'drop': True})
+                    drop_dict.update({'entry_type': group['entry_type'].lower()})
+                    continue
+
+                for intf in intfs.replace(' ',',').split(','):
+                    intf = Common.convert_intf_name(intf)
+                    intf_dict = mac_dict.setdefault('interfaces', {}) \
+                                        .setdefault(intf, {})
+                    intf_dict.update({'interface': intf})
+                    entry_type = group['entry_type'].lower()
+                    intf_dict.update({'entry_type': entry_type})
+                    if group['entry']:
+                        entry = group['entry'].strip()
+                        intf_dict.update({'entry': entry})
+
+                    if group['protocols']:
+                        intf_dict.update({'protocols': group['protocols'].split(',')})
                 continue
 
         return ret_dict

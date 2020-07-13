@@ -1953,14 +1953,14 @@ class ShowInterfacesStatistics(ShowInterfacesStatisticsSchema):
                          r'supported, +(?P<physical_interface_cos_use_max_queues>\d+) +'
                          r'maximum +usable +queues$')
 
-        # Current address: 5e:00:40:00:00:00, Hardware address: 5e:00:40:00:00:00
+        # Current address: 5e:00:40:ff:00:00, Hardware address: 5e:00:40:ff:00:00
         p11 = re.compile(r'^Current +address: +(?P<current_physical_address>[^\s,]+), +'
                          r'Hardware +address: +(?P<hardware_physical_address>[^\s,]+)$')
 
-        # Last flapped   : 2020-06-22 22:33:51 JST (4d 06:59 ago)
+        # Last flapped   : 2020-06-22 22:33:51 EST (4d 06:59 ago)
         p12 = re.compile(r'^Last +flapped *: +(?P<interface_flapped>.*)$')
 
-        # Statistics last cleared: 2020-06-27 05:22:04 JST (00:11:36 ago)
+        # Statistics last cleared: 2020-06-27 05:22:04 EST (00:11:36 ago)
         p13 = re.compile(r'^Statistics last cleared: +(?P<statistics_cleared>.*)$')
 
         # Input rate     : 2144 bps (4 pps)
