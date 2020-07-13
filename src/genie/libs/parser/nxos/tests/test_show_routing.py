@@ -3064,17 +3064,17 @@ class test_show_ip_route(unittest.TestCase):
 
 
 
-        6.6.6.0/24, ubest/mbest: 1/0, pending ufdm
+        10.144.6.0/24, ubest/mbest: 1/0, pending ufdm
 
-            *via 3.3.3.2, Eth1/4, [110/80], 00:01:54, ospf-100, intra
+            *via 10.36.3.2, Eth1/4, [110/80], 00:01:54, ospf-100, intra
 
         192.168.1.1/32, ubest/mbest: 1/0, pending ufdm
 
-            *via 4.4.4.2, Eth1/3, [110/41], 00:01:54, ospf-100, intra
+            *via 10.64.4.2, Eth1/3, [110/41], 00:01:54, ospf-100, intra
 
         192.168.3.3/32, ubest/mbest: 1/0, pending ufdm
 
-            *via 3.3.3.2, Eth1/4, [110/41], 00:01:54, ospf-100, intra
+            *via 10.36.3.2, Eth1/4, [110/41], 00:01:54, ospf-100, intra
     '''}
 
     golden_parsed_output_00 = {
@@ -3091,7 +3091,7 @@ class test_show_ip_route(unittest.TestCase):
                                                 'next_hop': {'next_hop_list': {1: {'best_ucast_nexthop': True,
                                                                                     'index': 1,
                                                                                     'metric': 41,
-                                                                                    'next_hop': '4.4.4.2',
+                                                                                    'next_hop': '10.64.4.2',
                                                                                     'outgoing_interface': 'Ethernet1/3',
                                                                                     'route_preference': 110,
                                                                                     'source_protocol': 'ospf',
@@ -3110,7 +3110,7 @@ class test_show_ip_route(unittest.TestCase):
                                                 'next_hop': {'next_hop_list': {1: {'best_ucast_nexthop': True,
                                                                                     'index': 1,
                                                                                     'metric': 41,
-                                                                                    'next_hop': '3.3.3.2',
+                                                                                    'next_hop': '10.36.3.2',
                                                                                     'outgoing_interface': 'Ethernet1/4',
                                                                                     'route_preference': 110,
                                                                                     'source_protocol': 'ospf',
@@ -3122,21 +3122,21 @@ class test_show_ip_route(unittest.TestCase):
                                                 'source_protocol': 'ospf',
                                                 'source_protocol_status': 'intra',
                                                 'ubest': 1},
-                            '6.6.6.0/24': {'active': True,
+                            '10.144.6.0/24': {'active': True,
                                             'attached': False,
                                             'mbest': 0,
                                             'metric': 80,
                                             'next_hop': {'next_hop_list': {1: {'best_ucast_nexthop': True,
                                                                                 'index': 1,
                                                                                 'metric': 80,
-                                                                                'next_hop': '3.3.3.2',
+                                                                                'next_hop': '10.36.3.2',
                                                                                 'outgoing_interface': 'Ethernet1/4',
                                                                                 'route_preference': 110,
                                                                                 'source_protocol': 'ospf',
                                                                                 'source_protocol_status': 'intra',
                                                                                 'updated': '00:01:54'}}},
                                             'process_id': '100',
-                                            'route': '6.6.6.0/24',
+                                            'route': '10.144.6.0/24',
                                             'route_preference': 110,
                                             'source_protocol': 'ospf',
                                             'source_protocol_status': 'intra',
