@@ -27,3 +27,6 @@
     * Updated ShowIpRoute
         * Enhanced parser
 
+* IOSXR
+    * Updated ShowIsisSpfLogDetail:
+        * Added more regex patterns to support various outputs.

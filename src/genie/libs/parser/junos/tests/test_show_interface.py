@@ -8362,9 +8362,9 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Interface flags: SNMP-Traps Internal: 0x4000
         Link flags     : None
         CoS queues     : 8 supported, 8 maximum usable queues
-        Current address: 5e:00:40:00:00:00, Hardware address: 5e:00:40:00:00:00
-        Last flapped   : 2020-06-22 22:33:51 JST (1w1d 00:22 ago)
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Current address: 5e:00:40:ff:00:00, Hardware address: 5e:00:40:ff:00:00
+        Last flapped   : 2020-06-22 22:33:51 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
         Input rate     : 712 bps (1 pps)
         Output rate    : 0 bps (0 pps)
         Input errors: 1568, Output errors: 0
@@ -8389,7 +8389,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Link flags     : Scheduler Keepalives DTE
         Device flags   : Present Running
         Interface flags: Point-To-Point
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
 
@@ -8398,7 +8398,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Type: IPIP, Link-level type: IP-over-IP, MTU: Unlimited, Speed: 800mbps
         Link flags     : Scheduler Keepalives DTE
         Device flags   : Present Running
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
 
@@ -8407,8 +8407,8 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Link-level type: LinkService, MTU: 1504
         Device flags   : Present Running
         Interface flags: Point-To-Point SNMP-Traps Internal: 0x4000
-        Last flapped   : 2020-06-22 22:33:52 JST (1w1d 00:22 ago)
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Last flapped   : 2020-06-22 22:33:52 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
 
@@ -8420,9 +8420,9 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Interface flags: Point-To-Point SNMP-Traps
         Link flags     : None
         Physical info  : 13
-        Current address: 02:96:14:10:01:33, Hardware address: 02:96:14:10:01:33
+        Current address: 02:96:14:ff:11:43, Hardware address: 02:96:14:ff:11:43
         Last flapped   : Never
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
         Input errors: 0, Output errors: 0
@@ -8433,7 +8433,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Link flags     : Keepalives DTE
         Device flags   : Present Running
         Interface flags: SNMP-Traps
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
 
@@ -8445,8 +8445,8 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Interface flags: Point-To-Point SNMP-Traps Internal: 0x4000
         Link type      : Full-Duplex
         Link flags     : None
-        Last flapped   : 2020-06-22 22:33:52 JST (1w1d 00:22 ago)
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Last flapped   : 2020-06-22 22:33:52 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
         Input errors: 0, Output errors: 0
@@ -8473,9 +8473,9 @@ class TestShowInterfacesStatistics(unittest.TestCase):
             Addresses
                 Local: 10.0.0.6
             Addresses, Flags: Is-Preferred
-                Destination: 128.0.1.16, Local: 128.0.0.1
+                Destination: 172.16.66.16, Local: 172.16.64.1
             Addresses
-                Local: 128.0.0.6
+                Local: 172.16.64.6
 
         Physical interface: ge-0/0/1, Enabled, Physical link is Up
         Interface index: 134, SNMP ifIndex: 508
@@ -8487,9 +8487,9 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Interface flags: SNMP-Traps Internal: 0x4000
         Link flags     : None
         CoS queues     : 8 supported, 8 maximum usable queues
-        Current address: fa:16:3e:23:5c:da, Hardware address: fa:16:3e:23:5c:da
-        Last flapped   : 2020-06-22 22:34:01 JST (1w1d 00:22 ago)
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Current address: fa:16:3e:ff:7f:fd, Hardware address: fa:16:3e:ff:7f:fd
+        Last flapped   : 2020-06-22 22:34:01 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
         Input rate     : 312 bps (0 pps)
         Output rate    : 0 bps (0 pps)
         Input errors: 8, Output errors: 0
@@ -8507,13 +8507,13 @@ class TestShowInterfacesStatistics(unittest.TestCase):
             Protocol inet, MTU: 1500
             Flags: Sendbcast-pkt-to-re
             Addresses, Flags: Is-Preferred Is-Primary
-                Destination: 40.0.0/24, Local: 40.0.0.4, Broadcast: 40.0.0.255
+                Destination: 40.0.0/24, Local: 10.70.0.4, Broadcast: 10.70.0.255
             Protocol inet6, MTU: 1500
             Flags: None
             Addresses, Flags: Is-Preferred Is-Primary
                 Destination: 2001:40::/64, Local: 2001:40::4
             Addresses, Flags: Is-Preferred
-                Destination: fe80::/64, Local: fe80::fa16:3eff:fe23:5cda
+                Destination: fe80::/64, Local: fe80::fa16:3eff:feff:7ffd
 
         Physical interface: ge-0/0/2, Enabled, Physical link is Up
         Interface index: 135, SNMP ifIndex: 509
@@ -8525,9 +8525,9 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Interface flags: SNMP-Traps Internal: 0x4000
         Link flags     : None
         CoS queues     : 8 supported, 8 maximum usable queues
-        Current address: fa:16:3e:37:d6:1b, Hardware address: fa:16:3e:37:d6:1b
-        Last flapped   : 2020-06-22 22:34:01 JST (1w1d 00:22 ago)
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Current address: fa:16:3e:ff:0e:52, Hardware address: fa:16:3e:ff:0e:52
+        Last flapped   : 2020-06-22 22:34:01 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 528 bps (0 pps)
         Input errors: 2, Output errors: 0
@@ -8545,13 +8545,13 @@ class TestShowInterfacesStatistics(unittest.TestCase):
             Protocol inet, MTU: 1500
             Flags: Sendbcast-pkt-to-re
             Addresses, Flags: Is-Preferred Is-Primary
-                Destination: 50.0.0/24, Local: 50.0.0.4, Broadcast: 50.0.0.255
+                Destination: 50.0.0/24, Local: 10.205.0.4, Broadcast: 10.205.0.255
             Protocol inet6, MTU: 1500
             Flags: None
             Addresses, Flags: Is-Preferred Is-Primary
                 Destination: 2001:50::/64, Local: 2001:50::4
             Addresses, Flags: Is-Preferred
-                Destination: fe80::/64, Local: fe80::fa16:3eff:fe37:d61b
+                Destination: fe80::/64, Local: fe80::fa16:3eff:feff:e52
 
         Physical interface: ge-0/0/3, Enabled, Physical link is Up
         Interface index: 136, SNMP ifIndex: 510
@@ -8563,9 +8563,9 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Interface flags: SNMP-Traps Internal: 0x4000
         Link flags     : None
         CoS queues     : 8 supported, 8 maximum usable queues
-        Current address: fa:16:3e:32:df:5c, Hardware address: fa:16:3e:32:df:5c
-        Last flapped   : 2020-06-22 22:34:01 JST (1w1d 00:22 ago)
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Current address: fa:16:3e:ff:12:8e, Hardware address: fa:16:3e:ff:12:8e
+        Last flapped   : 2020-06-22 22:34:01 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
         Input errors: 0, Output errors: 0
@@ -8585,7 +8585,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
             Protocol inet6, MTU: 1500
             Flags: None
             Addresses, Flags: Is-Preferred
-                Destination: fe80::/64, Local: fe80::fa16:3eff:fe32:df5c
+                Destination: fe80::/64, Local: fe80::fa16:3eff:feff:128e
 
         Physical interface: ge-0/0/4, Enabled, Physical link is Up
         Interface index: 137, SNMP ifIndex: 511
@@ -8597,9 +8597,9 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Interface flags: SNMP-Traps Internal: 0x4000
         Link flags     : None
         CoS queues     : 8 supported, 8 maximum usable queues
-        Current address: fa:16:3e:c4:72:f8, Hardware address: fa:16:3e:c4:72:f8
-        Last flapped   : 2020-06-22 22:34:02 JST (1w1d 00:22 ago)
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Current address: fa:16:3e:ff:37:bd, Hardware address: fa:16:3e:ff:37:bd
+        Last flapped   : 2020-06-22 22:34:02 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
         Input errors: 0, Output errors: 0
@@ -8619,7 +8619,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
             Protocol inet6, MTU: 1500
             Flags: None
             Addresses, Flags: Is-Preferred
-                Destination: fe80::/64, Local: fe80::fa16:3eff:fec4:72f8
+                Destination: fe80::/64, Local: fe80::fa16:3eff:feff:37bd
 
         Physical interface: ge-0/0/5, Enabled, Physical link is Up
         Interface index: 138, SNMP ifIndex: 512
@@ -8631,9 +8631,9 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Interface flags: SNMP-Traps Internal: 0x4000
         Link flags     : None
         CoS queues     : 8 supported, 8 maximum usable queues
-        Current address: fa:16:3e:a5:92:82, Hardware address: fa:16:3e:a5:92:82
-        Last flapped   : 2020-06-22 22:34:02 JST (1w1d 00:22 ago)
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Current address: fa:16:3e:ff:38:28, Hardware address: fa:16:3e:ff:38:28
+        Last flapped   : 2020-06-22 22:34:02 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
         Input errors: 0, Output errors: 0
@@ -8651,9 +8651,9 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Interface flags: SNMP-Traps Internal: 0x4000
         Link flags     : None
         CoS queues     : 8 supported, 8 maximum usable queues
-        Current address: fa:16:3e:78:db:72, Hardware address: fa:16:3e:78:db:72
-        Last flapped   : 2020-06-22 22:34:02 JST (1w1d 00:22 ago)
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Current address: fa:16:3e:ff:54:ea, Hardware address: fa:16:3e:ff:54:ea
+        Last flapped   : 2020-06-22 22:34:02 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
         Input errors: 0, Output errors: 0
@@ -8671,9 +8671,9 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Interface flags: SNMP-Traps Internal: 0x4000
         Link flags     : None
         CoS queues     : 8 supported, 8 maximum usable queues
-        Current address: fa:16:3e:0c:f8:95, Hardware address: fa:16:3e:0c:f8:95
-        Last flapped   : 2020-06-22 22:34:02 JST (1w1d 00:22 ago)
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Current address: fa:16:3e:ff:05:a1, Hardware address: fa:16:3e:ff:05:a1
+        Last flapped   : 2020-06-22 22:34:02 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
         Input errors: 0, Output errors: 0
@@ -8691,9 +8691,9 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Interface flags: SNMP-Traps Internal: 0x4000
         Link flags     : None
         CoS queues     : 8 supported, 8 maximum usable queues
-        Current address: fa:16:3e:e2:bf:d4, Hardware address: fa:16:3e:e2:bf:d4
-        Last flapped   : 2020-06-22 22:34:02 JST (1w1d 00:22 ago)
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Current address: fa:16:3e:ff:a2:b7, Hardware address: fa:16:3e:ff:a2:b7
+        Last flapped   : 2020-06-22 22:34:02 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
         Input errors: 0, Output errors: 0
@@ -8708,7 +8708,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Interface flags: Point-To-Point SNMP-Traps
         Link flags     : None
         Last flapped   : Never
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
             Input packets : 0
             Output packets: 0
         Input errors: 0, Output errors: 0
@@ -8719,7 +8719,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Link flags     : Keepalives DTE
         Device flags   : Present Running
         Interface flags: Point-To-Point SNMP-Traps
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
             Input packets : 0
             Output packets: 0
 
@@ -8729,7 +8729,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Link flags     : Keepalives DTE
         Device flags   : Present Running
         Interface flags: SNMP-Traps
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
             Input packets : 0
             Output packets: 0
 
@@ -8740,7 +8740,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Interface flags: SNMP-Traps
         Link flags     : None
         Last flapped   : Never
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
             Input packets : 787
             Output packets: 787
         Input errors: 0, Output errors: 0
@@ -8755,7 +8755,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
             Protocol inet, MTU: Unlimited
             Flags: Sendbcast-pkt-to-re
             Addresses, Flags: Is-Default Is-Primary
-                Local: 4.4.4.4
+                Local: 10.64.4.4
             Protocol inet6, MTU: Unlimited
             Flags: None
             Addresses, Flags: Is-Default Is-Primary
@@ -8784,11 +8784,11 @@ class TestShowInterfacesStatistics(unittest.TestCase):
             Addresses
                 Local: 10.0.0.16
             Addresses
-                Local: 128.0.0.1
+                Local: 172.16.64.1
             Addresses
-                Local: 128.0.0.4
+                Local: 172.16.64.4
             Addresses
-                Local: 128.0.1.16
+                Local: 172.16.66.16
 
         Logical interface lo0.32768 (Index 64) (SNMP ifIndex 248)
             Flags: Encapsulation: Unspecified
@@ -8802,7 +8802,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Device flags   : Present Running
         Link flags     : None
         Last flapped   : Never
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
             Input packets : 0
             Output packets: 0
         Input errors: 0, Output errors: 0
@@ -8813,7 +8813,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Link flags     : Keepalives DTE
         Device flags   : Present Running
         Interface flags: SNMP-Traps
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
             Input packets : 0
             Output packets: 0
 
@@ -8822,7 +8822,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Type: PIMD, Link-level type: PIM-Decapsulator, MTU: Unlimited,
         Speed: Unlimited
         Device flags   : Present Running
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
             Input packets : 0
             Output packets: 0
 
@@ -8831,7 +8831,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Type: PIME, Link-level type: PIM-Encapsulator, MTU: Unlimited,
         Speed: Unlimited
         Device flags   : Present Running
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
             Input packets : 0
             Output packets: 0
 
@@ -8842,7 +8842,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Interface flags: Point-To-Point SNMP-Traps
         Link type      : Full-Duplex
         Link flags     : None
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
         Input errors: 0, Output errors: 0
@@ -8852,7 +8852,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Type: PIMD, Link-level type: PIM-Decapsulator, MTU: Unlimited, Speed: 800mbps
         Device flags   : Present Running
         Interface flags: SNMP-Traps
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
 
@@ -8861,7 +8861,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Type: PIME, Link-level type: PIM-Encapsulator, MTU: Unlimited, Speed: 800mbps
         Device flags   : Present Running
         Interface flags: SNMP-Traps
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
 
@@ -8870,7 +8870,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Type: Secure-Tunnel, Link-level type: Secure-Tunnel, MTU: 9192
         Device flags   : Present Running
         Interface flags: Point-To-Point
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
 
@@ -8882,7 +8882,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Interface flags: SNMP-Traps
         Link flags     : None
         Last flapped   : Never
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
             Input packets : 0
             Output packets: 0
         Input errors: 0, Output errors: 0
@@ -8894,9 +8894,9 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         Interface flags: Hardware-Down
         Link type      : Full-Duplex
         CoS queues     : 8 supported, 8 maximum usable queues
-        Current address: fa:16:3e:e2:bf:d4, Hardware address: fa:16:3e:e2:bf:d4
-        Last flapped   : 2020-06-22 22:29:08 JST (1w1d 00:26 ago)
-        Statistics last cleared: 2020-06-30 22:23:44 JST (00:32:21 ago)
+        Current address: fa:16:3e:ff:a2:b7, Hardware address: fa:16:3e:ff:a2:b7
+        Last flapped   : 2020-06-22 22:29:08 EST (1w1d 00:26 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
         Input rate     : 0 bps (0 pps)
         Output rate    : 0 bps (0 pps)
         Input errors: 0, Output errors: 0"""
@@ -8917,8 +8917,8 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 },
                 'admin-status': 'Enabled',
                 'bpdu-error': 'None',
-                'current-physical-address': '5e:00:40:00:00:00',
-                'hardware-physical-address': '5e:00:40:00:00:00',
+                'current-physical-address': '5e:00:40:ff:00:00',
+                'hardware-physical-address': '5e:00:40:ff:00:00',
                 'if-auto-negotiation': 'Enabled',
                 'if-config-flags': {
                 'iff-snmp-traps': True,
@@ -8936,7 +8936,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'input-error-count': '1568',
                 'interface-flapped': '2020-06-22 '
                 '22:33:51 '
-                'JST '
+                'EST '
                 '(1w1d '
                 '00:22 '
                 'ago)',
@@ -8998,7 +8998,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'speed': '1000mbps',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)',
                 'traffic-statistics': {
@@ -9020,7 +9020,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'snmp-index': '519',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)',
                 'traffic-statistics': {
@@ -9042,7 +9042,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'snmp-index': '520',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)',
                 'traffic-statistics': {
@@ -9060,7 +9060,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 },
                 'interface-flapped': '2020-06-22 '
                 '22:33:52 '
-                'JST '
+                'EST '
                 '(1w1d '
                 '00:22 '
                 'ago)',
@@ -9070,7 +9070,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'snmp-index': '521',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)',
                 'traffic-statistics': {
@@ -9082,8 +9082,8 @@ class TestShowInterfacesStatistics(unittest.TestCase):
             },
             {
                 'admin-status': 'Enabled',
-                'current-physical-address': '02:96:14:10:01:33',
-                'hardware-physical-address': '02:96:14:10:01:33',
+                'current-physical-address': '02:96:14:ff:11:43',
+                'hardware-physical-address': '02:96:14:ff:11:43',
                 'if-device-flags': {
                 'ifdf-present': True,
                 'ifdf-running': True
@@ -9100,7 +9100,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'snmp-index': '523',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)',
                 'traffic-statistics': {
@@ -9122,7 +9122,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'snmp-index': '522',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)',
                 'traffic-statistics': {
@@ -9144,7 +9144,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'input-error-count': '0',
                 'interface-flapped': '2020-06-22 '
                 '22:33:52 '
-                'JST '
+                'EST '
                 '(1w1d '
                 '00:22 '
                 'ago)',
@@ -9184,15 +9184,15 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                         'ifa-local': '10.0.0.6'
                         },
                         {
-                        'ifa-destination': '128.0.1.16',
+                        'ifa-destination': '172.16.66.16',
                         'ifa-flags': {
                             'ifaf-current-preferred': True
                         },
-                        'ifa-local': '128.0.0.1'
+                        'ifa-local': '172.16.64.1'
                         },
                         {
                         'ifa-flags': {},
-                        'ifa-local': '128.0.0.6'
+                        'ifa-local': '172.16.64.6'
                         }
                     ],
                     'mtu': '9192'
@@ -9213,7 +9213,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'snmp-index': '517',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)',
                 'traffic-statistics': {
@@ -9236,8 +9236,8 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 },
                 'admin-status': 'Enabled',
                 'bpdu-error': 'None',
-                'current-physical-address': 'fa:16:3e:23:5c:da',
-                'hardware-physical-address': 'fa:16:3e:23:5c:da',
+                'current-physical-address': 'fa:16:3e:ff:7f:fd',
+                'hardware-physical-address': 'fa:16:3e:ff:7f:fd',
                 'if-auto-negotiation': 'Enabled',
                 'if-config-flags': {
                 'iff-snmp-traps': True,
@@ -9255,7 +9255,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'input-error-count': '8',
                 'interface-flapped': '2020-06-22 '
                 '22:34:01 '
-                'JST '
+                'EST '
                 '(1w1d '
                 '00:22 '
                 'ago)',
@@ -9271,13 +9271,13 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                     },
                     'address-family-name': 'inet',
                     'interface-address': [{
-                        'ifa-broadcast': '40.0.0.255',
+                        'ifa-broadcast': '10.70.0.255',
                         'ifa-destination': '40.0.0/24',
                         'ifa-flags': {
                         'ifaf-current-preferred': True,
                         'ifaf-current-primary': True
                         },
-                        'ifa-local': '40.0.0.4'
+                        'ifa-local': '10.70.0.4'
                     }],
                     'mtu': '1500'
                     },
@@ -9296,7 +9296,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                         'ifa-flags': {
                             'ifaf-current-preferred': True
                         },
-                        'ifa-local': 'fe80::fa16:3eff:fe23:5cda'
+                        'ifa-local': 'fe80::fa16:3eff:feff:7ffd'
                         }
                     ],
                     'mtu': '1500'
@@ -9330,7 +9330,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'speed': '1000mbps',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)',
                 'traffic-statistics': {
@@ -9353,8 +9353,8 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 },
                 'admin-status': 'Enabled',
                 'bpdu-error': 'None',
-                'current-physical-address': 'fa:16:3e:37:d6:1b',
-                'hardware-physical-address': 'fa:16:3e:37:d6:1b',
+                'current-physical-address': 'fa:16:3e:ff:0e:52',
+                'hardware-physical-address': 'fa:16:3e:ff:0e:52',
                 'if-auto-negotiation': 'Enabled',
                 'if-config-flags': {
                 'iff-snmp-traps': True,
@@ -9372,7 +9372,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'input-error-count': '2',
                 'interface-flapped': '2020-06-22 '
                 '22:34:01 '
-                'JST '
+                'EST '
                 '(1w1d '
                 '00:22 '
                 'ago)',
@@ -9388,13 +9388,13 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                     },
                     'address-family-name': 'inet',
                     'interface-address': [{
-                        'ifa-broadcast': '50.0.0.255',
+                        'ifa-broadcast': '10.205.0.255',
                         'ifa-destination': '50.0.0/24',
                         'ifa-flags': {
                         'ifaf-current-preferred': True,
                         'ifaf-current-primary': True
                         },
-                        'ifa-local': '50.0.0.4'
+                        'ifa-local': '10.205.0.4'
                     }],
                     'mtu': '1500'
                     },
@@ -9413,7 +9413,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                         'ifa-flags': {
                             'ifaf-current-preferred': True
                         },
-                        'ifa-local': 'fe80::fa16:3eff:fe37:d61b'
+                        'ifa-local': 'fe80::fa16:3eff:feff:e52'
                         }
                     ],
                     'mtu': '1500'
@@ -9447,7 +9447,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'speed': '1000mbps',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)',
                 'traffic-statistics': {
@@ -9470,8 +9470,8 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 },
                 'admin-status': 'Enabled',
                 'bpdu-error': 'None',
-                'current-physical-address': 'fa:16:3e:32:df:5c',
-                'hardware-physical-address': 'fa:16:3e:32:df:5c',
+                'current-physical-address': 'fa:16:3e:ff:12:8e',
+                'hardware-physical-address': 'fa:16:3e:ff:12:8e',
                 'if-auto-negotiation': 'Enabled',
                 'if-config-flags': {
                 'iff-snmp-traps': True,
@@ -9489,7 +9489,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'input-error-count': '0',
                 'interface-flapped': '2020-06-22 '
                 '22:34:01 '
-                'JST '
+                'EST '
                 '(1w1d '
                 '00:22 '
                 'ago)',
@@ -9513,7 +9513,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                         'ifa-flags': {
                         'ifaf-current-preferred': True
                         },
-                        'ifa-local': 'fe80::fa16:3eff:fe32:df5c'
+                        'ifa-local': 'fe80::fa16:3eff:feff:128e'
                     }],
                     'mtu': '1500'
                     }
@@ -9546,7 +9546,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'speed': '1000mbps',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)',
                 'traffic-statistics': {
@@ -9569,8 +9569,8 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 },
                 'admin-status': 'Enabled',
                 'bpdu-error': 'None',
-                'current-physical-address': 'fa:16:3e:c4:72:f8',
-                'hardware-physical-address': 'fa:16:3e:c4:72:f8',
+                'current-physical-address': 'fa:16:3e:ff:37:bd',
+                'hardware-physical-address': 'fa:16:3e:ff:37:bd',
                 'if-auto-negotiation': 'Enabled',
                 'if-config-flags': {
                 'iff-snmp-traps': True,
@@ -9588,7 +9588,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'input-error-count': '0',
                 'interface-flapped': '2020-06-22 '
                 '22:34:02 '
-                'JST '
+                'EST '
                 '(1w1d '
                 '00:22 '
                 'ago)',
@@ -9612,7 +9612,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                         'ifa-flags': {
                         'ifaf-current-preferred': True
                         },
-                        'ifa-local': 'fe80::fa16:3eff:fec4:72f8'
+                        'ifa-local': 'fe80::fa16:3eff:feff:37bd'
                     }],
                     'mtu': '1500'
                     }
@@ -9645,7 +9645,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'speed': '1000mbps',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)',
                 'traffic-statistics': {
@@ -9668,8 +9668,8 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 },
                 'admin-status': 'Enabled',
                 'bpdu-error': 'None',
-                'current-physical-address': 'fa:16:3e:a5:92:82',
-                'hardware-physical-address': 'fa:16:3e:a5:92:82',
+                'current-physical-address': 'fa:16:3e:ff:38:28',
+                'hardware-physical-address': 'fa:16:3e:ff:38:28',
                 'if-auto-negotiation': 'Enabled',
                 'if-config-flags': {
                 'iff-snmp-traps': True,
@@ -9687,7 +9687,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'input-error-count': '0',
                 'interface-flapped': '2020-06-22 '
                 '22:34:02 '
-                'JST '
+                'EST '
                 '(1w1d '
                 '00:22 '
                 'ago)',
@@ -9710,7 +9710,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'speed': '1000mbps',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)',
                 'traffic-statistics': {
@@ -9733,8 +9733,8 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 },
                 'admin-status': 'Enabled',
                 'bpdu-error': 'None',
-                'current-physical-address': 'fa:16:3e:78:db:72',
-                'hardware-physical-address': 'fa:16:3e:78:db:72',
+                'current-physical-address': 'fa:16:3e:ff:54:ea',
+                'hardware-physical-address': 'fa:16:3e:ff:54:ea',
                 'if-auto-negotiation': 'Enabled',
                 'if-config-flags': {
                 'iff-snmp-traps': True,
@@ -9752,7 +9752,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'input-error-count': '0',
                 'interface-flapped': '2020-06-22 '
                 '22:34:02 '
-                'JST '
+                'EST '
                 '(1w1d '
                 '00:22 '
                 'ago)',
@@ -9775,7 +9775,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'speed': '1000mbps',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)',
                 'traffic-statistics': {
@@ -9798,8 +9798,8 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 },
                 'admin-status': 'Enabled',
                 'bpdu-error': 'None',
-                'current-physical-address': 'fa:16:3e:0c:f8:95',
-                'hardware-physical-address': 'fa:16:3e:0c:f8:95',
+                'current-physical-address': 'fa:16:3e:ff:05:a1',
+                'hardware-physical-address': 'fa:16:3e:ff:05:a1',
                 'if-auto-negotiation': 'Enabled',
                 'if-config-flags': {
                 'iff-snmp-traps': True,
@@ -9817,7 +9817,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'input-error-count': '0',
                 'interface-flapped': '2020-06-22 '
                 '22:34:02 '
-                'JST '
+                'EST '
                 '(1w1d '
                 '00:22 '
                 'ago)',
@@ -9840,7 +9840,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'speed': '1000mbps',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)',
                 'traffic-statistics': {
@@ -9863,8 +9863,8 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 },
                 'admin-status': 'Enabled',
                 'bpdu-error': 'None',
-                'current-physical-address': 'fa:16:3e:e2:bf:d4',
-                'hardware-physical-address': 'fa:16:3e:e2:bf:d4',
+                'current-physical-address': 'fa:16:3e:ff:a2:b7',
+                'hardware-physical-address': 'fa:16:3e:ff:a2:b7',
                 'if-auto-negotiation': 'Enabled',
                 'if-config-flags': {
                 'iff-snmp-traps': True,
@@ -9882,7 +9882,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'input-error-count': '0',
                 'interface-flapped': '2020-06-22 '
                 '22:34:02 '
-                'JST '
+                'EST '
                 '(1w1d '
                 '00:22 '
                 'ago)',
@@ -9905,7 +9905,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'speed': '1000mbps',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)',
                 'traffic-statistics': {
@@ -9933,7 +9933,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'snmp-index': '5',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)'
             },
@@ -9949,7 +9949,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'snmp-index': '8',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)'
             },
@@ -9965,7 +9965,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'snmp-index': '9',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)'
             },
@@ -9988,7 +9988,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                             'ifaf-current-default': True,
                             'ifaf-current-primary': True
                         },
-                        'ifa-local': '4.4.4.4'
+                        'ifa-local': '10.64.4.4'
                         }],
                         'mtu': 'Unlimited'
                     },
@@ -10047,15 +10047,15 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                         },
                         {
                         'ifa-flags': {},
-                        'ifa-local': '128.0.0.1'
+                        'ifa-local': '172.16.64.1'
                         },
                         {
                         'ifa-flags': {},
-                        'ifa-local': '128.0.0.4'
+                        'ifa-local': '172.16.64.4'
                         },
                         {
                         'ifa-flags': {},
-                        'ifa-local': '128.0.1.16'
+                        'ifa-local': '172.16.66.16'
                         }
                     ],
                     'mtu': 'Unlimited'
@@ -10086,7 +10086,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'snmp-index': '6',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)'
             },
@@ -10108,7 +10108,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'snmp-index': '4',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)'
             },
@@ -10124,7 +10124,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'snmp-index': '12',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)'
             },
@@ -10140,7 +10140,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'snmp-index': '11',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)'
             },
@@ -10156,7 +10156,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'snmp-index': '10',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)'
             },
@@ -10177,7 +10177,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'snmp-index': '501',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)',
                 'traffic-statistics': {
@@ -10199,7 +10199,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'snmp-index': '503',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)',
                 'traffic-statistics': {
@@ -10221,7 +10221,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'snmp-index': '504',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)',
                 'traffic-statistics': {
@@ -10243,7 +10243,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'snmp-index': '502',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)',
                 'traffic-statistics': {
@@ -10271,18 +10271,18 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'snmp-index': '7',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)'
             },
             {
                 'admin-status': 'Enabled',
-                'current-physical-address': 'fa:16:3e:e2:bf:d4',
-                'hardware-physical-address': 'fa:16:3e:e2:bf:d4',
+                'current-physical-address': 'fa:16:3e:ff:a2:b7',
+                'hardware-physical-address': 'fa:16:3e:ff:a2:b7',
                 'input-error-count': '0',
                 'interface-flapped': '2020-06-22 '
                 '22:29:08 '
-                'JST '
+                'EST '
                 '(1w1d '
                 '00:26 '
                 'ago)',
@@ -10297,7 +10297,7 @@ class TestShowInterfacesStatistics(unittest.TestCase):
                 'snmp-index': '505',
                 'statistics-cleared': '2020-06-30 '
                 '22:23:44 '
-                'JST '
+                'EST '
                 '(00:32:21 '
                 'ago)',
                 'traffic-statistics': {
