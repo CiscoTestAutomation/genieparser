@@ -86,6 +86,8 @@
         * Enhanced parser
     * Updated ShowIpInterface
         * Enhanced parser and added optional values
+    * Updated ShowSystemUptime
+        * Fixed optional key error, improved regex, and fixed return results
 * IOSXE
     * Updated ShowIpInterface
         * Modified regex to accommodate different outputs

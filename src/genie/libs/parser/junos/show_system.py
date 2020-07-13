@@ -1063,7 +1063,7 @@ class ShowSystemUptime(ShowSystemUptimeSchema):
         #Last configured: 2020-03-05 16:04:34 UTC (2w6d 16:12 ago) by cisco
         p5 = re.compile(r'^Last configured: +(?P<date_time>'
                         r'[A-Za-z\t .\d\-\:]+)+\((?P<time_length>'
-                        r'\w+\s\d+\:\d+) ago\) by (?P<user>\S+)$')
+                        r'[\w+\s\d+\:\d]+) ago\) by (?P<user>\S+)$')
 
         #8:16AM  up 209 days, 23:14, 5 users, load averages: 0.43, 0.43, 0.42
         p6 = re.compile(r'^(?P<date_time>\d+\:\w+)\s+up\s+'
@@ -1175,7 +1175,11 @@ class ShowSystemUptime(ShowSystemUptimeSchema):
                 current_up_time_dict = {}
                 current_up_time_dict["#text"] = group[
                     "days"] + " days," + " " + group["mins"] + " mins,"
-
+                current_up_time_dict["@junos:seconds"] = str(
+                    (int(group['days']) * 86400) + \
+                    (int(group['mins'].split(':')[0]) * 3600) + \
+                    ((int(group['mins'].split(':')[1]) if len(group['mins'].split(':')) == 2 else 0) * 60)
+                )
                 current_active_dict = {}
                 current_active_dict["#text"] = group["user_count"]
 
