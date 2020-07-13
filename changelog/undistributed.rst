@@ -30,3 +30,5 @@
 * IOSXR
     * Updated ShowIsisSpfLogDetail:
         * Added more regex patterns to support various outputs.
+    * Updated ShowIsisInterface:
+        * Modified to support default as instance name
