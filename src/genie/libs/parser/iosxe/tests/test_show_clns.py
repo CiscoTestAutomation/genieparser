@@ -980,30 +980,30 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
         show clns neighbors detail
         Tag core:
         System Id       Interface     SNPA                State  Holdtime  Type Protocol
-        Genie3         Te0/2/0       23f1.234f.2324      Up     28        L1   IS-IS
+        Genie3         Te0/2/0       23f1.23ff.7273      Up     28        L1   IS-IS
         Area Address(es): 01
-        IP Address(es):  98.1.1.0*
+        IP Address(es):  10.111.1.0*
         Uptime: 1w6d
         NSF capable
         BFD enabled: (MTID:0, ipv4)
         Interface name: TenGigabitEthernet0/2/0
-        Genie2         Te0/2/1       34e4.fc32.234b      Up     26        L1   IS-IS
+        Genie2         Te0/2/1       34e4.fcff.557d      Up     26        L1   IS-IS
         Area Address(es): 01
-        IP Address(es):  18.18.1.12*
+        IP Address(es):  10.21.1.12*
         Uptime: 2w0d
         NSF capable
         BFD enabled: (MTID:0, ipv4)
         Interface name: TenGigabitEthernet0/2/1
-        Genie1A     Te0/3/0       234f.23bc.4230      Up     25        L1   IS-IS //missing neighbor, instead RT2 shows in JSON.
+        Genie1A     Te0/3/0       234f.23ff.feec      Up     25        L1   IS-IS //missing neighbor, instead RT2 shows in JSON.
         Area Address(es): 01
-        IP Address(es):  19.18.51.9*
+        IP Address(es):  10.94.51.9*
         Uptime: 2w0d
         NSF capable
         BFD enabled: (MTID:0, ipv4)
         Interface name: TenGigabitEthernet0/3/0
-        Genie1          Gi0/0/7       0230c.2230.5923      Up     28        L1   IS-IS
+        Genie1          Gi0/0/7       0230c.22ff.8953      Up     28        L1   IS-IS
         Area Address(es): 01
-        IP Address(es):  8.18.1.113*
+        IP Address(es):  10.166.1.113*
         Uptime: 2w0d
         NSF capable
         BFD enabled: (MTID:0, ipv4)
@@ -1022,7 +1022,7 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
                                 'area_address': ['01'],
                                 'holdtime': 25,
                                 'interface': 'TenGigabitEthernet0/3/0',
-                                'ip_address': ['19.18.51.9*'],
+                                'ip_address': ['10.94.51.9*'],
                                 'nsf': 'capable',
                                 'protocol': 'IS-IS '
                                 '//missing '
@@ -1031,7 +1031,7 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
                                 'RT2 '
                                 'shows in '
                                 'JSON.',
-                                'snpa': '234f.23bc.4230',
+                                'snpa': '234f.23ff.feec',
                                 'state': 'up',
                                 'uptime': '2w0d'
                             }
@@ -1043,10 +1043,10 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
                                 'area_address': ['01'],
                                 'holdtime': 28,
                                 'interface': 'GigabitEthernet0/0/7',
-                                'ip_address': ['8.18.1.113*'],
+                                'ip_address': ['10.166.1.113*'],
                                 'nsf': 'capable',
                                 'protocol': 'IS-IS',
-                                'snpa': '0230c.2230.5923',
+                                'snpa': '0230c.22ff.8953',
                                 'state': 'up',
                                 'uptime': '2w0d'
                             }
@@ -1058,10 +1058,10 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
                                 'area_address': ['01'],
                                 'holdtime': 26,
                                 'interface': 'TenGigabitEthernet0/2/1',
-                                'ip_address': ['18.18.1.12*'],
+                                'ip_address': ['10.21.1.12*'],
                                 'nsf': 'capable',
                                 'protocol': 'IS-IS',
-                                'snpa': '34e4.fc32.234b',
+                                'snpa': '34e4.fcff.557d',
                                 'state': 'up',
                                 'uptime': '2w0d'
                             }
@@ -1073,10 +1073,10 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
                                 'area_address': ['01'],
                                 'holdtime': 28,
                                 'interface': 'TenGigabitEthernet0/2/0',
-                                'ip_address': ['98.1.1.0*'],
+                                'ip_address': ['10.111.1.0*'],
                                 'nsf': 'capable',
                                 'protocol': 'IS-IS',
-                                'snpa': '23f1.234f.2324',
+                                'snpa': '23f1.23ff.7273',
                                 'state': 'up',
                                 'uptime': '1w6d'
                             }
