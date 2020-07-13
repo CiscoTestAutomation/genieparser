@@ -10,6 +10,8 @@ Parser for the following show commands:
     * show ospf3 overview extensive
     * show ospf3 database network detail
     * show ospf3 database link advertising-router {ipaddress} detail
+    * show ospf3 neighbor
+    * show ospf3 neighbor instance {instance_name}
 '''
 import re
 
@@ -364,6 +366,25 @@ class ShowOspf3Neighbor(ShowOspf3NeighborSchema):
                 continue
 
         return ret_dict
+
+
+class ShowOspf3NeighborInstance(ShowOspf3Neighbor):
+    """ Parser for:
+            * show ospf3 neighbor instance {instance_name}
+    """
+
+    cli_command = 'show ospf3 neighbor instance {instance_name}'
+
+    def cli(self, instance_name, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                                        instance_name=instance_name))
+        else:
+            out = output
+
+        return super().cli(
+            output=' ' if not out else out
+            )
 
 
 class ShowOspf3NeighborDetail(ShowOspf3NeighborExtensive):
@@ -1056,8 +1077,9 @@ class ShowOspf3OverviewSchema(MetaParser):
                 },
                 "ospf-lsa-refresh-time": str,
                 "ospf-route-table-index": str,
+                Optional("ospf-configured-overload-remaining-time"): str,
                 "ospf-router-id": str,
-                "ospf-tilfa-overview": {
+                Optional("ospf-tilfa-overview"): {
                     "ospf-tilfa-enabled": str
                 },
                 "ospf-topology-overview": {
@@ -1145,6 +1167,12 @@ class ShowOspf3Overview(ShowOspf3OverviewSchema):
 
         #Backup SPF: Not Needed
         p15 = re.compile(r'^Backup SPF: +(?P<ospf_backup_spf_status>[\S\s]+)$')
+
+        # Configured overload, expires in 14 seconds
+        p16 = re.compile(
+            r'^Configured +overload, +expires +in +'
+            r'(?P<ospf_configured_overload_remaining_time>\d+) +\S+$'
+        )
 
         for line in out.splitlines():
             line = line.strip()
@@ -1276,6 +1304,14 @@ class ShowOspf3Overview(ShowOspf3OverviewSchema):
                     'ospf-backup-spf-status':
                     group['ospf_backup_spf_status']
                 })
+                continue
+
+            # Configured overload, expires in 14 seconds
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                ospf3_entry_list["ospf-configured-overload-remaining-time"] = \
+                    group["ospf_configured_overload_remaining_time"]
                 continue
 
         return ret_dict

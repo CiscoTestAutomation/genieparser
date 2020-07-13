@@ -1455,6 +1455,7 @@ class TestShowOspf3Overview(unittest.TestCase):
         Instance: master
           Router ID: 10.189.5.252
           Route table index: 0
+          Configured overload, expires in 14 seconds
           AS boundary router
           LSA refresh time: 50 minutes
           Post Convergence Backup: Disabled
@@ -1486,6 +1487,7 @@ class TestShowOspf3Overview(unittest.TestCase):
                 },
                 "ospf-lsa-refresh-time": "50",
                 "ospf-route-table-index": "0",
+                'ospf-configured-overload-remaining-time': '14',
                 "ospf-router-id": "10.189.5.252",
                 "ospf-tilfa-overview": {
                     "ospf-tilfa-enabled": "Disabled"
@@ -1693,7 +1695,7 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
         Aging timer 00:30:46
         Installed 00:29:08 ago, expires in 00:30:46, sent 00:29:06 ago
         Last changed 29w5d 21:33:07 ago, Change count: 1
-        InterArPfx  0.0.0.2          1.1.1.1          0x80000002    52  0x4035  44
+        InterArPfx  0.0.0.2          10.4.1.1          0x80000002    52  0x4035  44
         Prefix 2001::11/128
         Prefix-options 0x0, Metric 0
         Aging timer 00:59:08
@@ -2489,7 +2491,7 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
                     },
                     "sequence-number": "0x8000178c",
                 },
-                {'advertising-router': '1.1.1.1',
+                {'advertising-router': '10.4.1.1',
                     'age': '52',
                     'checksum': '0x4035',
                     'lsa-id': '0.0.0.2',
