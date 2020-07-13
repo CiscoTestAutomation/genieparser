@@ -12,7 +12,9 @@
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
-
+* JUNOS
+    * Updated ShowOspfDatabaseAdvertisingRouterSelfDetail
+        * Added more keys to the schema, in order to support output of ShowOspfDatabaseLsaidDetail
 * IOSXE
     * Updated ShowCdpNeighbors
         * Modified regex to support different output
@@ -25,8 +27,8 @@
     * Updated ShowIpRoute
         * Enhanced parser
 
-
 * IOSXR
     * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea
         * Enhanced parser
-
+    * Updated ShowIsisSpfLogDetail:
+        * Added more regex patterns to support various outputs.
