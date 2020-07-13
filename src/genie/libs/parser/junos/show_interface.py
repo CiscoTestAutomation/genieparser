@@ -6,6 +6,8 @@ JunOS parsers for the following show commands:
     * show interfaces terse {interface}
     * show interfaces {interface} terse
     * show interfaces descriptions
+    * show interfaces queue {interface}
+    * show interfaces policers {interface}
 """
 
 # python
@@ -14,7 +16,7 @@ import re
 # metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.exceptions import SchemaTypeError
-from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use, SchemaTypeError
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use, SchemaTypeError, Or
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -431,6 +433,7 @@ class ShowInterfacesSchema(MetaParser):
                         Optional("ifaf-primary"): bool,
                         Optional("ifaf-is-default"): bool,
                         Optional("ifaf-none"): bool,
+                        Optional("ifaf-dest-route-down"): bool,
                     },
                     Optional("ifa-local"): str
                 })
@@ -742,15 +745,21 @@ class ShowInterfaces(ShowInterfacesSchema):
             r'(, +Speed: +(?P<speed>\S+))?(, +BPDU +Error: +'
             r'(?P<bpdu_error>\S+),)?$')
         
-        # Speed: 800mbps
-        p4_1 = re.compile(r'^Speed: +(?P<speed>\S+)$')
+        # Speed: 1000mbps, BPDU Error: None, Loop Detect PDU Error: None,
+        p4_1 = re.compile(r'^(Speed: +(?P<speed>[^\s,]+))(, +)?'
+                          r'(BPDU +Error: +(?P<bpdu_error>[^\s,]+))?(, +)?'
+                          r'(Loop +Detect +PDU +Error: +(?P<ld_pdu_error>[^\s,]+))?(, +)?')
 
-        p4_2 = re.compile(r'^')
 
         # Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
         p5 = re.compile(r'^Loop +Detect +PDU +Error: +(?P<ld_pdu_error>\S+), +'
             r'Ethernet-Switching +Error: +(?P<eth_switch_error>\S+), +MAC-REWRITE +'
             r'Error: +\S+, +Loopback: +(?P<loopback>\S+),$')
+
+        # Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        p5_1 = re.compile(r'^(Ethernet-Switching +Error: +(?P<eth_switch_error>[^\s,]+))'
+                          r'(, +)?(MAC-REWRITE +Error: +[^\s,]+)?(, +)?'
+                          r'(Loopback: +(?P<loopback>[^\s,]+))(, +)?')
 
         # Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
         p6 = re.compile(r'^Source +filtering: +(?P<source_filtering>\S+), +'
@@ -1039,7 +1048,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                     v for k, v in group.items() if v is not None})
                 continue
 
-            # Speed: 800mbps
+            # Speed: 1000mbps, BPDU Error: None, Loop Detect PDU Error: None,
             m = p4_1.match(line)
             if m:
                 group = m.groupdict()
@@ -1669,3 +1678,1029 @@ class ShowInterfacesExtensiveNoForwarding(ShowInterfacesExtensive):
             out = output
         
         return super().cli(output=out)
+
+
+class ShowInterfacesStatisticsSchema(MetaParser):
+    """ Schema for:
+            * show interfaces statistics
+            * show interfaces statistics {interface}
+    """
+
+    
+
+    def validate_physical_interface_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('physical-interface is not a list')
+
+        def validate_logical_interface_list(value):
+            if not isinstance(value, list):
+                raise SchemaTypeError('logical-interface is not a list')
+
+            def validate_address_family_list(value):
+                if not isinstance(value, list):
+                    raise SchemaTypeError('address-family is not a list')
+
+                def validate_interface_address_list(value):
+                    if not isinstance(value, list):
+                        raise SchemaTypeError('interface-address is not a list')
+
+                    interface_address_schema = Schema ({
+                            "ifa-flags": {
+                                Optional("ifaf-current-preferred"): bool,
+                                Optional("ifaf-current-primary"): bool,
+                                Optional("ifaf-current-default"): bool,
+                            },
+                            Optional("ifa-destination"): str,
+                            Optional("ifa-local"): str,
+                            Optional("ifa-broadcast"): str,
+                        })
+
+                    for item in value:
+                        interface_address_schema.validate(item)
+                    return value
+
+                address_family_schema = Schema({
+                        "address-family-name": str,
+                        "mtu": str,
+                        Optional("address-family-flags"): {
+                            Optional("ifff-is-primary"): bool,
+                            Optional("ifff-sendbcast-pkt-to-re"): bool,
+                        },
+                        Optional("interface-address"): Use(validate_interface_address_list),
+                    })
+
+                for item in value:
+                    address_family_schema.validate(item)
+                return value
+                    
+
+            logical_interface_schema = Schema (
+                {
+                        "name": str,
+                        Optional("local-index"): str,
+                        Optional("snmp-index"): str,
+                        Optional("if-config-flags"): {
+                            "iff-snmp-traps": bool,
+                            "internal-flags": str,
+                        },
+                        Optional("encapsulation"): str,
+                        "traffic-statistics": {
+                            "input-packets": str,
+                            "output-packets": str,
+                        },
+                        Optional("filter-information"): str,
+                        "logical-interface-zone-name": str,
+                        Optional("allowed-host-inbound-traffic"): {
+                            Optional("inbound-dhcp"): bool,
+                            Optional("inbound-http"): bool,
+                            Optional("inbound-https"): bool,
+                            Optional("inbound-ssh"): bool,
+                            Optional("inbound-telnet"): bool,
+                        },
+                        Optional("address-family"): Use(validate_address_family_list),
+                    }
+            )
+
+            for item in value:
+                logical_interface_schema.validate(item)
+            return value
+
+        physical_interface_schema = Schema(
+            {
+                "name": str,
+                "admin-status": str,
+                "oper-status": str,
+                "local-index": str,
+                "snmp-index": str,
+                Optional("link-level-type"): str,
+                Optional("mtu"): str,
+                Optional("source-filtering"): str,
+                Optional("link-mode"): str,
+                Optional("speed"): str,
+                Optional("bpdu-error"): str,
+                Optional("l2pt-error"): str,
+                Optional("loopback"): str,
+                Optional("if-flow-control"): str,
+                Optional("if-auto-negotiation"): str,
+                Optional("if-remote-fault"): str,
+                Optional("if-device-flags"): {
+                    Optional("ifdf-present"): bool,
+                    Optional("ifdf-running"): bool,
+                    Optional("ifdf-none"): bool,
+                },
+                Optional("if-config-flags"): {
+                    Optional("iff-snmp-traps"): bool,
+                    Optional("internal-flags"): str,
+                },
+                Optional("if-media-flags"): {
+                    Optional("ifmf-none"): bool,
+                },
+                Optional("physical-interface-cos-information"): {
+                    "physical-interface-cos-hw-max-queues": str,
+                    "physical-interface-cos-use-max-queues": str,
+                },
+                Optional("current-physical-address"): str,
+                Optional("hardware-physical-address"): str,
+                Optional("interface-flapped"): str,
+                Optional("statistics-cleared"): str,
+                Optional("traffic-statistics"): {
+                    "input-bps": str,
+                    "input-pps": str,
+                    "output-bps": str,
+                    "output-pps": str,
+                },
+                Optional("input-error-count"): str,
+                Optional("output-error-count"): str,
+                Optional("active-alarms"): {
+                    "interface-alarms": {
+                        Optional("alarm-not-present"): bool,
+                    },
+                },
+                Optional("active-defects"): {
+                    "interface-alarms": {
+                        Optional("alarm-not-present"): bool,
+                    },
+                },
+                Optional("interface-transmit-statistics"): str,
+                Optional("logical-interface"): Use(validate_logical_interface_list)
+            }
+        )
+
+        for item in value:
+            physical_interface_schema.validate(item)
+        return value
+
+    schema = {
+        "interface-information": {
+
+            "physical-interface": Use(validate_physical_interface_list)
+        }
+    }
+
+
+class ShowInterfacesStatistics(ShowInterfacesStatisticsSchema):
+    """ Parser for:
+            * show interfaces statistics
+            * show interfaces statistics {interface}
+    """
+
+    cli_command = [
+        "show interfaces statistics",
+        "show interfaces statistics {interface}"
+    ]
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            if interface:
+                out = self.device.execute(self.cli_command[1].format(
+                    interface=interface
+                ))
+            else:
+                out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Physical interface: ge-0/0/0, Enabled, Physical link is Up
+        p1 = re.compile(r'^Physical +interface: +(?P<name>[^\s,]+), +'
+                        r'(?P<admin_status>[^\s,]+), +Physical +link +is +'
+                        r'(?P<oper_status>\S+)$')
+
+        # Interface index: 133, SNMP ifIndex: 506
+        p2 = re.compile(r'^Interface +index: +(?P<local_index>\d+), +'
+                        r'SNMP +ifIndex: +(?P<snmp_index>\d+)$')
+
+        # Link-level type: Ethernet, MTU: 1514, Link-mode: Full-duplex, Speed: 1000mbps,
+        p3 = re.compile(r'^Link-level +type: +(?P<link_level_type>[^\s,]+), +'
+                        r'MTU: +(?P<mtu>\d+), +Link-mode: +(?P<link_mode>[^\s,]+), +'
+                        r'Speed: +(?P<speed>[^\s,]+),$')
+
+        # BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        p4 = re.compile(r'^BPDU +Error: +(?P<bpdu_error>[^\s,]+), +'
+                        r'MAC-REWRITE +Error: +(?P<l2pt_error>[^\s,]+), +'
+                        r'Loopback: +(?P<loopback>[^\s,]+),$')
+
+        # Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled,
+        p5 = re.compile(r'^Source +filtering: +(?P<source_filtering>[^\s,]+), +'
+                        r'Flow +control: +(?P<if_flow_control>[^\s,]+), +'
+                        r'Auto-negotiation: +(?P<if_auto_negotiation>[^\s,]+),$')
+
+        # Remote fault: Online
+        p6 = re.compile(r'^Remote +fault: +(?P<if_remote_fault>[^\s,]+)$')
+
+        # Device flags   : Present Running
+        p7 = re.compile(r'^Device +flags *: +((?P<ifdf_none>None+) *)?'
+                        r'((?P<ifdf_present>Present+) *)?'
+                        r'((?P<ifdf_running>Running+) *)?$')
+
+        # Interface flags: SNMP-Traps Internal: 0x4000
+        p8 = re.compile(r'^Interface +flags: +(?P<iff_snmp_traps>\S+) +'
+                        r'Internal: +(?P<internal_flags>\S+)$')
+
+        # Link flags     : None
+        p9 = re.compile(r'^Link +flags *: +((?P<ifmf_none>None) *)?$')
+
+        # CoS queues     : 8 supported, 8 maximum usable queues
+        p10 = re.compile(r'^CoS +queues *: +(?P<physical_interface_cos_hw_max_queues>\d+) +'
+                         r'supported, +(?P<physical_interface_cos_use_max_queues>\d+) +'
+                         r'maximum +usable +queues$')
+
+        # Current address: 5e:00:40:ff:00:00, Hardware address: 5e:00:40:ff:00:00
+        p11 = re.compile(r'^Current +address: +(?P<current_physical_address>[^\s,]+), +'
+                         r'Hardware +address: +(?P<hardware_physical_address>[^\s,]+)$')
+
+        # Last flapped   : 2020-06-22 22:33:51 EST (4d 06:59 ago)
+        p12 = re.compile(r'^Last +flapped *: +(?P<interface_flapped>.*)$')
+
+        # Statistics last cleared: 2020-06-27 05:22:04 EST (00:11:36 ago)
+        p13 = re.compile(r'^Statistics last cleared: +(?P<statistics_cleared>.*)$')
+
+        # Input rate     : 2144 bps (4 pps)
+        p14 = re.compile(r'^Input rate *: +(?P<input_bps>\d+) +bps +'
+                         r'\((?P<input_pps>\d+) +pps\)$')
+
+        # Output rate    : 0 bps (0 pps)
+        p15 = re.compile(r'^Output rate *: +(?P<output_bps>\d+) +bps +'
+                         r'\((?P<output_pps>\d+) +pps\)$')
+
+        # Input errors: 552, Output errors: 0
+        p16 = re.compile(r'^Input errors: +(?P<input_error_count>\d+), +'
+                         r'Output errors: +(?P<output_error_count>\d+)$')
+
+        # Active alarms  : None
+        p17 = re.compile(r'^Active +alarms *: +(?P<alarm_not_present>None)?$')
+
+        # Active defects : None
+        p18 = re.compile(r'^Active +defects *: +(?P<alarm_not_present>None)?$')
+
+        # Interface transmit statistics: Disabled
+        p19 = re.compile(r'^Interface +transmit +statistics: +'
+                         r'(?P<interface_transmit_statistics>\S+)$')
+
+        # Logical interface ge-0/0/0.0 (Index 70) (SNMP ifIndex 507)
+        p20 = re.compile(r'^Logical +interface +(?P<name>\S+) +'
+                         r'\(Index +(?P<local_index>\d+)\) +'
+                         r'\(SNMP +ifIndex +(?P<snmp_index>\d+)\)$')
+
+        # Flags: SNMP-Traps 0x4000 Encapsulation: ENET2
+        p21 = re.compile(r'^Flags: +(?P<iff_snmp_traps>SNMP-Traps) +'
+                         r'(?P<internal_flags>\S+) +Encapsulation: +'
+                         r'(?P<encapsulation>\S+)$')
+
+        # Input packets : 1684
+        p22 = re.compile(r'^Input +packets *: +(?P<input_packets>\d+)$')
+
+        # Output packets: 49
+        p23 = re.compile(r'^Output +packets *: +(?P<output_packets>\d+)$')
+
+        # Security: Zone: trust
+        p24 = re.compile(r'^Security: +Zone: (?P<logical_interface_zone_name>\S+)$')
+
+        # Allowed host-inbound traffic : dhcp http https ssh telnet
+        p25 = re.compile(r'^Allowed +host-inbound +traffic *: +'
+                         r'(?P<inbound_dhcp>dhcp)( +)?(?P<inbound_http>http)( +)?'
+                         r'(?P<inbound_https>https)( +)?(?P<inbound_ssh>ssh)( +)?'
+                         r'(?P<inbound_telnet>telnet)( +)?$')
+
+        # Protocol inet, MTU: 1500
+        p26 = re.compile(r'^Protocol +(?P<address_family_name>[^\s,]+), +MTU: +(?P<mtu>\S+)$')
+
+        # Flags: Sendbcast-pkt-to-re, Is-Primary
+        p27 = re.compile(r'^Flags: +(?P<ifff_sendbcast_pkt_to_re>Sendbcast-pkt-to-re)'
+                         r'(, +)?(?P<ifff_is_primary>Is-Primary)?$')
+
+        # Addresses, Flags: Is-Preferred Is-Primary
+        p28 = re.compile(r'^Addresses(, Flags: +)?(?P<flags>.+)?$')
+
+        # Destination: 172.16.1/24, Local: 172.16.1.55, Broadcast: 172.16.1.255
+        p29 = re.compile(r'^(Destination: +(?P<ifa_destination>[^\s,]+))?(, +)?'
+                         r'(Local: +(?P<ifa_local>[^\s,]+))?(, +)?'
+                         r'(Broadcast: +(?P<ifa_broadcast>[^\s,]+))?$')
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface_info_dict = ret_dict.setdefault('interface-information', {})
+                physical_interface_list =  interface_info_dict.setdefault('physical-interface', [])
+                physical_interface_dict = {}
+                physical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                physical_interface_list.append(physical_interface_dict)
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+            
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                if_device_flags = physical_interface_dict.setdefault('if-device-flags', {})
+                if_device_flags.update({k.replace('_', '-'):
+                    True for k, v in group.items() if v is not None})
+                continue
+
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                if_config_flags = physical_interface_dict.setdefault('if-config-flags', {})
+                if_config_flags.update({k.replace('_', '-'):
+                    True for k, v in group.items() if v is not None and k != "internal_flags"})
+                if "internal_flags" in group:
+                    if_config_flags.update({"internal-flags": group["internal_flags"]})
+                continue
+
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                if_media_flags = physical_interface_dict.setdefault('if-media-flags', {})
+                if_media_flags.update({k.replace('_', '-'):
+                    True for k, v in group.items() if v is not None})
+                continue
+
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                phys_cos_info = physical_interface_dict.setdefault('physical-interface-cos-information', {})
+                phys_cos_info.update({k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                traffic_stats = physical_interface_dict.setdefault('traffic-statistics', {})
+                traffic_stats.update({k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                traffic_stats.update({k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                active_alarm = physical_interface_dict.setdefault('active-alarms', {})
+                interface_alarm = active_alarm.setdefault('interface-alarms', {})
+                interface_alarm.update({k.replace('_', '-'):
+                    True for k, v in group.items() if v is not None})
+                continue
+
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                active_alarm = physical_interface_dict.setdefault('active-defects', {})
+                interface_defect = active_alarm.setdefault('interface-alarms', {})
+                interface_defect.update({k.replace('_', '-'):
+                    True for k, v in group.items() if v is not None})
+                continue
+
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                logical_interface_list = physical_interface_dict.setdefault('logical-interface', [])
+                logical_interface_dict = {}
+                logical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                logical_interface_list.append(logical_interface_dict)
+                continue
+
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                if_config_flags = logical_interface_dict.setdefault('if-config-flags', {})
+                if_config_flags.update({k.replace('_','-'):
+                    True for k, v in group.items() if v is not None and k not in [
+                        "encapsulation",
+                        "internal_flags"]})
+                if "encapsulation" in group and group["encapsulation"]:
+                    logical_interface_dict.update({"encapsulation": group["encapsulation"]})
+                if "internal_flags" in group and group["internal_flags"]:
+                    if_config_flags.update({"internal-flags": group["internal_flags"]})
+                continue
+
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                traffic_stats = logical_interface_dict.setdefault('traffic-statistics', {})
+                traffic_stats.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                traffic_stats.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                logical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+            
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                allowed_in_traffic = logical_interface_dict.setdefault('allowed-host-inbound-traffic', {})
+                allowed_in_traffic.update({k.replace('_','-'):
+                    True for k, v in group.items() if v is not None})
+                continue
+
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                address_family_list = logical_interface_dict.setdefault('address-family', [])
+                address_family_dict = {}
+                address_family_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                address_family_list.append(address_family_dict)
+                continue
+
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                address_family_flags = address_family_dict.setdefault('address-family-flags', {})
+                address_family_flags.update({k.replace('_','-'):
+                    True for k, v in group.items() if v is not None})
+                continue
+
+            m = p28.match(line)
+            if m:
+                group = m.groupdict()
+                interface_address_list = address_family_dict.setdefault('interface-address', [])
+                interface_address_dict = {}
+                ifa_flags = interface_address_dict.setdefault('ifa-flags', {})
+                if 'flags' in group and group['flags']:
+                    flags = group['flags'].split(' ')
+                    ifa_flags.update({"ifaf-current-{}".format(f.split('-')[-1].lower()):
+                        True for f in flags})
+                interface_address_list.append(interface_address_dict)
+                continue
+
+            m = p29.match(line)
+            if m:
+                group = m.groupdict()
+                if group['ifa_destination']:
+                    interface_address_dict.update({'ifa-destination': group['ifa_destination']})
+                if group['ifa_local']:
+                    interface_address_dict.update({'ifa-local': group['ifa_local']})
+                if group['ifa_broadcast']:
+                    interface_address_dict.update({'ifa-broadcast': group['ifa_broadcast']})
+                continue
+
+        return ret_dict
+
+# =======================================================
+# Schema for 'show interfaces policers {interface}'
+# =======================================================
+class ShowInterfacesPolicersInterfaceSchema(MetaParser):
+    """Schema for show interfaces policers {interface}"""
+
+    '''schema = {
+    Optional("@xmlns:junos"): str,
+    "interface-policer-information": {
+        Optional("@junos:style"): str,
+        Optional("@xmlns"): str,
+        "physical-interface": [
+            "admin-status": str,
+            "logical-interface": [
+                "admin-status": str,
+                "name": str,
+                "oper-status": str,
+                "policer-information": [
+                    {
+                        "policer-family": str,
+                        "policer-input": str,
+                        "policer-output": str
+                    }
+                ]
+            ],
+            "name": str,
+            "oper-status": str
+        ]
+    }
+}'''
+
+    def validate_policer_information_list(value):
+        # Pass ospf3-interface list as value
+        if not isinstance(value, list):
+            raise SchemaTypeError('policer-information is not a list')
+        policer_information_schema = Schema({
+            "policer-family": str,
+            "policer-input": str,
+            Optional("policer-output"): Or(str,None)
+        })
+        # Validate each dictionary in list
+        for item in value:
+            policer_information_schema.validate(item)
+        return value
+
+
+    def validate_logical_interface_list(value):
+        # Pass ospf3-interface list as value
+        if not isinstance(value, list):
+            raise SchemaTypeError('logical-interface is not a list')
+        logical_interface_schema = Schema({
+            "admin-status": str,
+            "name": str,
+            "oper-status": str,
+            "policer-information": Use(ShowInterfacesPolicersInterface.validate_policer_information_list)
+        })
+        # Validate each dictionary in list
+        for item in value:
+            logical_interface_schema.validate(item)
+        return value
+
+
+    def validate_physical_interface_list(value):
+        # Pass ospf3-interface list as value
+        if not isinstance(value, list):
+            raise SchemaTypeError('physical-interface is not a list')
+        physical_interface_schema = Schema({
+            "admin-status": str,
+            "logical-interface": Use(ShowInterfacesPolicersInterface.validate_logical_interface_list),
+            "name": str,
+            "oper-status": str
+        })
+        # Validate each dictionary in list
+
+        for item in value:
+            physical_interface_schema.validate(item)
+        return value
+
+    schema = {
+    Optional("@xmlns:junos"): str,
+    "interface-policer-information": {
+        Optional("@junos:style"): str,
+        Optional("@xmlns"): str,
+        "physical-interface": Use(validate_physical_interface_list)
+    }
+}
+
+# =======================================================
+# Parser for 'show interfaces policers {interface}'
+# =======================================================
+class ShowInterfacesPolicersInterface(ShowInterfacesPolicersInterfaceSchema):
+    """ Parser for:
+            - show interfaces policers {interface}
+    """
+
+    cli_command = 'show interfaces policers {interface}'
+
+    def cli(self, interface=None, output=None):
+        # execute the command
+        if output is None:
+            out = self.device.execute(self.cli_command.format(interface=interface))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # ge-0/0/2        up    up
+        p1 =  re.compile(r'^(?P<interface>[a-zA-Z\-\d\/]+)((?P<physical_interface_value>[\.\d]+))? +(?P<admin>\w+) +(?:(?P<link>\w+))?$')
+
+
+        # inet  GE_1M-ge-0/0/2.0-log_int-i GE_1M-ge-0/0/2.0-log_int-o
+        # multiservice __default_arp_policer__
+        p2 =  re.compile(r'^(?P<policer_family>\w+) +(?P<policer_input>\S+)( +((?P<policer_output>\S+)))?$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            # ge-0/0/2        up    up
+            # ge-0/0/2.0      up    up
+            m = p1.match(line)
+            if m:
+                interface_policer_info = ret_dict.setdefault(
+                    "interface-policer-information", {}).setdefault("physical-interface",[])
+                #logical_interface_list = interface_policer_info.setdefault("logical-interface",[])
+                #policer_information_list = logical_interface_list.setdefault("policer-information", [])
+
+                exists = False
+                policer_information_list = None
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    if group_key == "physical_interface_value":
+                        if group_value != None:
+                            exists = True
+                if exists:
+                    
+                    logical_interface_dict['name'] = group['interface'] + group['physical_interface_value']
+                    logical_interface_dict['admin-status'] = group['admin']
+                    logical_interface_dict['oper-status'] = group['link']
+
+                    policer_information_list = []
+                    logical_interface_dict["policer-information"] = policer_information_list
+                    logical_interface_list.append(logical_interface_dict)
+
+                    interface_policer_info_dict['logical-interface'] = logical_interface_list
+
+                    interface_policer_info.append(interface_policer_info_dict)
+
+                else:
+                    logical_interface_list = []
+                    logical_interface_dict = {}
+                    interface_policer_info_dict= {}
+                    interface_policer_info_dict['name'] = group['interface']
+                    interface_policer_info_dict['admin-status'] = group['admin']
+                    interface_policer_info_dict['oper-status'] = group['link']
+
+                    
+
+            # inet  GE_1M-ge-0/0/2.0-log_int-i GE_1M-ge-0/0/2.0-log_int-o
+            # multiservice __default_arp_policer__
+            m = p2.match(line)
+            if m:    
+                group = m.groupdict()
+                policer_information_dict = {}
+                policer_information_dict['policer-family'] = group['policer_family']
+                policer_information_dict['policer-input'] = group['policer_input']
+
+                for group_key, group_value in group.items():
+                    if group_key == "policer_output":
+                        if group_value != None:
+                            policer_information_dict['policer-output'] = group['policer_output']
+
+                policer_information_list.append(policer_information_dict)
+
+                exists = False
+
+        return ret_dict
+
+
+# =======================================================
+# Schema for 'show interfaces queue {interface}'
+# =======================================================
+class ShowInterfacesQueueSchema(MetaParser):
+    """
+    Schema for:
+        * show interfaces queue {interface}
+    """
+    def validate_queue(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('queue is not a list')
+        queue_schema = Schema(
+            {
+                "forwarding-class-name": str,
+                "queue-counters-queued-bytes": str,
+                "queue-counters-queued-bytes-rate": str,
+                "queue-counters-queued-packets": str,
+                "queue-counters-queued-packets-rate": str,
+                "queue-counters-red-bytes": str,
+                "queue-counters-red-bytes-high": str,
+                "queue-counters-red-bytes-low": str,
+                "queue-counters-red-bytes-medium-high": str,
+                "queue-counters-red-bytes-medium-low": str,
+                "queue-counters-red-bytes-rate": str,
+                "queue-counters-red-bytes-rate-high": str,
+                "queue-counters-red-bytes-rate-low": str,
+                "queue-counters-red-bytes-rate-medium-high": str,
+                "queue-counters-red-bytes-rate-medium-low": str,
+                "queue-counters-red-packets": str,
+                "queue-counters-red-packets-high": str,
+                "queue-counters-red-packets-low": str,
+                "queue-counters-red-packets-medium-high": str,
+                "queue-counters-red-packets-medium-low": str,
+                "queue-counters-red-packets-rate": str,
+                "queue-counters-red-packets-rate-high": str,
+                "queue-counters-red-packets-rate-low": str,
+                "queue-counters-red-packets-rate-medium-high": str,
+                "queue-counters-red-packets-rate-medium-low": str,
+                "queue-counters-tail-drop-packets": str,
+                "queue-counters-tail-drop-packets-rate": str,
+                "queue-counters-trans-bytes": str,
+                "queue-counters-trans-bytes-rate": str,
+                "queue-counters-trans-packets": str,
+                "queue-counters-trans-packets-rate": str,
+                "queue-number": str
+            }
+        )
+        for item in value:
+            queue_schema.validate(item)
+        return value
+
+    schema = {
+        "interface-information": {
+            "physical-interface": {
+                "description": str,
+                "local-index": str,
+                "snmp-index": str,
+                "name": str,
+                "oper-status": str,
+                "queue-counters": {
+                    "interface-cos-summary": {
+                        "intf-cos-forwarding-classes-in-use": str,
+                        "intf-cos-forwarding-classes-supported": str,
+                        "intf-cos-num-queues-in-use": str,
+                        "intf-cos-num-queues-supported": str,
+                        "intf-cos-queue-type": str
+                    },
+                    "queue": Use(validate_queue)
+                }
+            }
+            }
+        }
+
+
+# =======================================================
+# Parser for 'show interfaces queue {interface}'
+# =======================================================
+class ShowInterfacesQueue(ShowInterfacesQueueSchema):
+    """
+    Parser for:
+        * show interfaces queue {interface}
+    """
+    cli_command = 'show interfaces queue {interface}'
+
+    def cli(self, interface=None, output=None):
+        if not output:
+            cmd = self.cli_command.format(interface=interface)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # -------------------------------------------------
+        # Initialize variables
+        # -------------------------------------------------
+        ret_dict = {}
+        red_dropped_bytes = red_dropped_packets = transmitted = None
+
+        # -------------------------------------------------
+        # Regex patterns
+        # -------------------------------------------------
+        # Physical interface: ge-0/0/2, Enabled, Physical link is Up
+        p1 = re.compile(r"^Physical interface: (?P<name>\S+), Enabled, "
+                        r"Physical link is (?P<oper_status>\S+)$")
+        #           Interface index: 143, SNMP ifIndex: 601
+        p2 = re.compile(r"^Interface index: (?P<local_index>\S+), "
+                       r"SNMP ifIndex: (?P<snmp_index>\S+)$")
+        #           Description: to_ixia_2/4
+        p3 = re.compile(r"^Description: (?P<description>\S+)$")
+        #         Forwarding classes: 16 supported, 5 in use
+        p4 = re.compile(r"^Forwarding classes: "
+                        r"(?P<intf_cos_forwarding_classes_supported>\S+) supported, "
+                        r"(?P<intf_cos_forwarding_classes_in_use>\S+) in use$")
+        #         Egress queues: 8 supported, 5 in use
+        p5 = re.compile(r"^(?P<intf_cos_queue_type>Egress queues): (?P<intf_cos_num_queues_supported>\S+) supported, "
+                        r"(?P<intf_cos_num_queues_in_use>\S+) in use$")
+        #         Queue: 0, Forwarding classes: Bronze-FC
+        p6 = re.compile(r"^Queue: (?P<queue_number>\S+), "
+                        r"Forwarding classes: (?P<forwarding_class_name>\S+)$")
+        #           Queued:
+        #             Packets              :            1470816406                     0 pps <-- rate
+        #             Bytes                :          564883280956                     0 bps
+        #           Transmitted:
+        p8 = re.compile(r"^(?P<name>Transmitted):$")
+        #             Packets              :            1470816406                      0 pps
+        #             Bytes                :          564883280956                     0 bps
+        #             Tail-dropped packets :                     0                     0 pps
+        #             RED-dropped packets  :                     0                     0 pps
+        p9 = re.compile(r"^(?P<name>RED-dropped packets) +: +(?P<counts>\S+) +(?P<rates>\S+) +pps$")
+        #              Low                 :                     0                     0 pps
+        #              Medium-low          :                     0                     0 pps
+        #              Medium-high         :                     0                     0 pps
+        #              High                :                     0                     0 pps
+        #             RED-dropped bytes    :                     0                     0 bps
+        p10 = re.compile(r"^(?P<name>RED-dropped bytes) +: +(?P<counts>\S+) +(?P<rates>\S+) +bps$")
+        #              Low                 :                     0                     0 bps
+        #              Medium-low          :                     0                     0 bps
+        #              Medium-high         :                     0                     0 bps
+        #              High                :                     0                     0 bps
+        p7 = re.compile(r"^(?P<name>Packets|Bytes|Tail-dropped packets|"
+                        r"Low|Medium-low|Medium-high|High) +: "
+                        r"+(?P<counts>\S+) +(?P<rates>\S+) +[p|b]ps$")
+
+        # -------------------------------------------------
+        # Build parsed output
+        # -------------------------------------------------
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Physical interface: ge-0/0/2, Enabled, Physical link is Up
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict = ret_dict.setdefault('interface-information', {}).\
+                                                    setdefault('physical-interface', {})
+                physical_interface_dict['name'] = group['name']
+                physical_interface_dict['oper-status'] = group['oper_status']
+                continue
+
+            #           Interface index: 143, SNMP ifIndex: 601
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    physical_interface_dict[entry_key] = group_value
+                continue
+
+            #           Description: to_ixia_2/4
+            m = p3.match(line)
+            if m:
+                physical_interface_dict['description'] = m.groupdict()['description']
+                continue
+
+            #         Forwarding classes: 16 supported, 5 in use
+            #         Egress queues: 8 supported, 5 in use
+            m = p4.match(line) or p5.match(line)
+            if m:
+                if 'queue-counters' not in physical_interface_dict:
+                    interface_cos_summary_dict = physical_interface_dict.\
+                                                 setdefault('queue-counters', {}).\
+                                                 setdefault('interface-cos-summary', {})
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    interface_cos_summary_dict[entry_key] = group_value
+                continue
+
+            #         Queue: 0, Forwarding classes: Bronze-FC
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                if "queue" not in physical_interface_dict['queue-counters']:
+                    physical_interface_dict['queue-counters']['queue'] = []
+                current_queue_dict = {}
+
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    current_queue_dict[entry_key] = group_value
+
+                physical_interface_dict['queue-counters']['queue'].append(current_queue_dict)
+                continue
+
+            #             Packets              :            1470816406                      0 pps
+            #             Bytes                :          564883280956                     0 bps
+            #             Tail-dropped packets :                     0                     0 pps
+            #             ...
+            #              Low                 :                     0                     0 pps
+            #              Medium-low          :                     0                     0 pps
+            #              Medium-high         :                     0                     0 pps
+            #              High                :                     0                     0 pps
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                name = group['name']
+                counts = group['counts']
+                rates = group['rates']
+
+                # RED-dropped bytes
+                if red_dropped_bytes:
+                    if name == 'Low':
+                        current_queue_dict['queue-counters-red-bytes-low'] = counts
+                        current_queue_dict['queue-counters-red-bytes-rate-low'] = rates
+                    elif name == 'Medium-low':
+                        current_queue_dict['queue-counters-red-bytes-medium-low'] = counts
+                        current_queue_dict['queue-counters-red-bytes-rate-medium-low'] = rates
+                    elif name == 'Medium-high':
+                        current_queue_dict['queue-counters-red-bytes-medium-high'] = counts
+                        current_queue_dict['queue-counters-red-bytes-rate-medium-high'] = rates
+                    elif name == 'High':
+                        current_queue_dict['queue-counters-red-bytes-high'] = counts
+                        current_queue_dict['queue-counters-red-bytes-rate-high'] = rates
+                        red_dropped_bytes = None
+
+                # RED-dropped packets
+                elif red_dropped_packets:
+                    if name == 'Low':
+                        current_queue_dict['queue-counters-red-packets-low'] = counts
+                        current_queue_dict['queue-counters-red-packets-rate-low'] = rates
+                    elif name == 'Medium-low':
+                        current_queue_dict['queue-counters-red-packets-medium-low'] = counts
+                        current_queue_dict['queue-counters-red-packets-rate-medium-low'] = rates
+                    elif name == 'Medium-high':
+                        current_queue_dict['queue-counters-red-packets-medium-high'] = counts
+                        current_queue_dict['queue-counters-red-packets-rate-medium-high'] = rates
+                    elif name == 'High':
+                        current_queue_dict['queue-counters-red-packets-high'] = counts
+                        current_queue_dict['queue-counters-red-packets-rate-high'] = rates
+                        red_dropped_packets = None
+
+                # Transmitted
+                elif transmitted:
+                    if name == 'Packets':
+                        current_queue_dict['queue-counters-trans-packets'] = counts
+                        current_queue_dict['queue-counters-trans-packets-rate'] = rates
+                    elif name == 'Bytes':
+                        current_queue_dict['queue-counters-trans-bytes'] = counts
+                        current_queue_dict['queue-counters-trans-bytes-rate'] = rates
+                    elif name == 'Tail-dropped packets':
+                        current_queue_dict['queue-counters-tail-drop-packets'] = counts
+                        current_queue_dict['queue-counters-tail-drop-packets-rate'] = rates
+                        transmitted = None
+
+                # Queued
+                else:
+                    if name == 'Packets':
+                        current_queue_dict['queue-counters-queued-packets'] = counts
+                        current_queue_dict['queue-counters-queued-packets-rate'] = rates
+                    elif name == 'Bytes':
+                        current_queue_dict['queue-counters-queued-bytes'] = counts
+                        current_queue_dict['queue-counters-queued-bytes-rate'] = rates
+
+                continue
+
+            #           Transmitted:
+            m = p8.match(line)
+            if m:
+                transmitted = True
+                continue
+
+            #             RED-dropped packets  :                     0                     0 pps
+            m = p9.match(line)
+            if m:
+                red_dropped_packets = True
+                group = m.groupdict()
+                if group['name'] == 'RED-dropped packets':
+                    current_queue_dict['queue-counters-red-packets'] = group['counts']
+                    current_queue_dict['queue-counters-red-packets-rate'] = group['rates']
+                continue
+
+            #             RED-dropped bytes    :                     0                     0 bps
+            m = p10.match(line)
+            if m:
+                red_dropped_bytes = True
+                group = m.groupdict()
+                if group['name'] == 'RED-dropped bytes':
+                    current_queue_dict['queue-counters-red-bytes'] = group['counts']
+                    current_queue_dict['queue-counters-red-bytes-rate'] = group['rates']
+                continue
+        return ret_dict
