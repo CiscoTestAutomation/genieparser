@@ -26,8 +26,8 @@ class TestShowMPLSLSPNameDetail(unittest.TestCase):
 
         Transit LSP: 30 sessions
 
-        27.85.194.125
-        From: 27.85.194.127, LSPstate: Up, ActiveRoute: 0
+        10.49.194.125
+        From: 10.49.194.127, LSPstate: Up, ActiveRoute: 0
         LSPname: test_lsp_01, LSPpath: Primary
         Suggested label received: -, Suggested label sent: -
         Recovery label received: -, Recovery label sent: 44
@@ -35,15 +35,15 @@ class TestShowMPLSLSPNameDetail(unittest.TestCase):
         Time left:  138, Since: Tue Jun 30 07:22:02 2020
         Tspec: rate 0bps size 0bps peak Infbps m 20 M 1500
         Port number: sender 1 receiver 50088 protocol 0
-        PATH rcvfrom: 106.187.14.157 (ge-0/0/0.0) 1 pkts
+        PATH rcvfrom: 10.169.14.157 (ge-0/0/0.0) 1 pkts
         Adspec: received MTU 1500 sent MTU 1500
-        PATH sentto: 203.181.106.218 (ge-0/0/1.1) 1 pkts
-        RESV rcvfrom: 203.181.106.218 (ge-0/0/1.1) 1 pkts, Entropy label: Yes
-        Explct route: 203.181.106.218 27.85.194.65 27.85.194.66
-        27.85.194.123
-        Record route: 27.85.194.2 106.187.14.157 <self> 203.181.106.218
-        27.85.194.66 27.85.194.12
-        255.255.255.255 1.1.1.1 8.8.8.8 64.64.64.64
+        PATH sentto: 192.168.145.218 (ge-0/0/1.1) 1 pkts
+        RESV rcvfrom: 192.168.145.218 (ge-0/0/1.1) 1 pkts, Entropy label: Yes
+        Explct route: 192.168.145.218 10.49.194.65 10.49.194.66
+        10.49.194.123
+        Record route: 10.49.194.2 10.169.14.157 <self> 192.168.145.218
+        10.49.194.66 10.49.194.12
+        255.255.255.255 10.4.1.1 10.1.8.8 10.64.64.64
         Total 1 displayed, Up 1, Down 0"""}
 
     golden_parsed_output_1 = {
@@ -64,8 +64,8 @@ class TestShowMPLSLSPNameDetail(unittest.TestCase):
             'session-type': 'Transit',
             'count': '30',
             'rsvp-session': {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'name': 'test_lsp_01',
@@ -86,17 +86,17 @@ class TestShowMPLSLSPNameDetail(unittest.TestCase):
                 'proto-id': '0',
                 'packet-information': [{
                 'heading': 'PATH',
-                'previous-hop': '106.187.14.157',
+                'previous-hop': '10.169.14.157',
                 'interface-name': '(ge-0/0/0.0)',
                 'count': '1'
                 }, {
                 'heading': 'PATH',
-                'next-hop': '203.181.106.218',
+                'next-hop': '192.168.145.218',
                 'interface-name': '(ge-0/0/1.1)',
                 'count': '1'
                 }, {
                 'heading': 'RESV',
-                'previous-hop': '203.181.106.218',
+                'previous-hop': '192.168.145.218',
                 'interface-name': '(ge-0/0/1.1)',
                 'count': '1',
                 'entropy-label': 'Yes'
@@ -104,36 +104,36 @@ class TestShowMPLSLSPNameDetail(unittest.TestCase):
                 'adspec': 'received MTU 1500 sent MTU 1500',
                 'explicit-route': {
                 'explicit-route-element': [{
-                    'address': '203.181.106.218'
+                    'address': '192.168.145.218'
                 }, {
-                    'address': '27.85.194.65'
+                    'address': '10.49.194.65'
                 }, {
-                    'address': '27.85.194.66'
+                    'address': '10.49.194.66'
                 }, {
-                    'address': '27.85.194.123'
+                    'address': '10.49.194.123'
                 }]
                 },
                 'record-route': {
                 'record-route-element': [{
-                    'address': '27.85.194.2'
+                    'address': '10.49.194.2'
                 }, {
-                    'address': '106.187.14.157'
+                    'address': '10.169.14.157'
                 }, {
                     'address': '<self>'
                 }, {
-                    'address': '203.181.106.218'
+                    'address': '192.168.145.218'
                 }, {
-                    'address': '27.85.194.66'
+                    'address': '10.49.194.66'
                 }, {
-                    'address': '27.85.194.12'
+                    'address': '10.49.194.12'
                 }, {
                     'address': '255.255.255.255'
                 }, {
-                    'address': '1.1.1.1'
+                    'address': '10.4.1.1'
                 }, {
-                    'address': '8.8.8.8'
+                    'address': '10.1.8.8'
                 }, {
-                    'address': '64.64.64.64'
+                    'address': '10.64.64.64'
                 }]
                 }
             },

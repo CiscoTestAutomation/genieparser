@@ -135,10 +135,10 @@ class ShowMPLSLSPNameDetail(ShowMPLSLSPNameDetailSchema):
         p2 = re.compile(r'^Total (?P<display_count>\d+) +displayed, +Up +'
                         r'(?P<up_count>\d+), +Down +(?P<down_count>\d+)$')
 
-        # 27.85.194.125
+        # 10.49.194.125
         p3 = re.compile(r'^[\d\.]+')
 
-        # From: 27.85.194.127, LSPstate: Up, ActiveRoute: 0
+        # From: 10.49.194.127, LSPstate: Up, ActiveRoute: 0
         p4 = re.compile(r'^From: +(?P<source_address>[\d+\.]+), +LSPstate: +'
                         r'(?P<lsp_state>[^\s,]+), +ActiveRoute: +'
                         r'(?P<route_count>\d+)$')
@@ -172,9 +172,9 @@ class ShowMPLSLSPNameDetail(ShowMPLSLSPNameDetailSchema):
                          r'receiver +(?P<tunnel_id>\d+) +'
                          r'protocol +(?P<proto_id>\d+)$')
 
-        # PATH rcvfrom: 106.187.14.157 (ge-0/0/0.0) 1 pkts
-        # PATH sentto: 203.181.106.218 (ge-0/0/1.1) 1 pkts
-        # RESV rcvfrom: 203.181.106.218 (ge-0/0/1.1) 1 pkts, Entropy label: Yes
+        # PATH rcvfrom: 10.169.14.157 (ge-0/0/0.0) 1 pkts
+        # PATH sentto: 192.168.145.218 (ge-0/0/1.1) 1 pkts
+        # RESV rcvfrom: 192.168.145.218 (ge-0/0/1.1) 1 pkts, Entropy label: Yes
         p12 = re.compile(r'^(?P<heading>(PATH|RESV)) +'
                          r'((rcvfrom: +(?P<previous_hop>\S+))|(sentto: +(?P<next_hop>\S+))) +'
                          r'(?P<interface_name>\S+) +(?P<count>\d+) +pkts'
@@ -183,10 +183,10 @@ class ShowMPLSLSPNameDetail(ShowMPLSLSPNameDetailSchema):
         # Adspec: received MTU 1500 sent MTU 1500
         p13 = re.compile(r'^Adspec: +(?P<adspec>.+)$')
 
-        # Explct route: 203.181.106.218 27.85.194.65 27.85.194.66
+        # Explct route: 192.168.145.218 10.49.194.65 10.49.194.66
         p14 = re.compile(r'^Explct +route: +(?P<addresses>.+)$')
 
-        # Record route: 27.85.194.2 106.187.14.157 <self> 203.181.106.218
+        # Record route: 10.49.194.2 10.169.14.157 <self> 192.168.145.218
         p15 = re.compile(r'^Record +route: +(?P<addresses>.+)$')
 
 
@@ -217,7 +217,7 @@ class ShowMPLSLSPNameDetail(ShowMPLSLSPNameDetailSchema):
                 )
                 continue
 
-            # 27.85.194.125
+            # 10.49.194.125
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -240,7 +240,7 @@ class ShowMPLSLSPNameDetail(ShowMPLSLSPNameDetailSchema):
                     )
                 continue
 
-            # From: 27.85.194.127, LSPstate: Up, ActiveRoute: 0
+            # From: 10.49.194.127, LSPstate: Up, ActiveRoute: 0
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -312,9 +312,9 @@ class ShowMPLSLSPNameDetail(ShowMPLSLSPNameDetailSchema):
                 )
                 continue
 
-            # PATH rcvfrom: 106.187.14.157 (ge-0/0/0.0) 1 pkts
-            # PATH sentto: 203.181.106.218 (ge-0/0/1.1) 1 pkts
-            # RESV rcvfrom: 203.181.106.218 (ge-0/0/1.1) 1 pkts, Entropy label: Yes
+            # PATH rcvfrom: 10.169.14.157 (ge-0/0/0.0) 1 pkts
+            # PATH sentto: 192.168.145.218 (ge-0/0/1.1) 1 pkts
+            # RESV rcvfrom: 192.168.145.218 (ge-0/0/1.1) 1 pkts, Entropy label: Yes
             m = p12.match(line)
             if m:
                 group = m.groupdict()
@@ -335,7 +335,7 @@ class ShowMPLSLSPNameDetail(ShowMPLSLSPNameDetailSchema):
                 )
                 continue
 
-            # Explct route: 203.181.106.218 27.85.194.65 27.85.194.66
+            # Explct route: 192.168.145.218 10.49.194.65 10.49.194.66
             m = p14.match(line)
             if m:
                 group = m.groupdict()
@@ -348,7 +348,7 @@ class ShowMPLSLSPNameDetail(ShowMPLSLSPNameDetailSchema):
                     )
                 continue
 
-            # Record route: 27.85.194.2 106.187.14.157 <self> 203.181.106.218
+            # Record route: 10.49.194.2 10.169.14.157 <self> 192.168.145.218
             m = p15.match(line)
             if m:
                 group = m.groupdict()
