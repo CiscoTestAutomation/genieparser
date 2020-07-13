@@ -49618,8 +49618,8 @@ class TestShowRouteForwardingTableLabel(unittest.TestCase):
         Routing table: default.mpls
         MPLS:
         Destination        Type RtRef Next hop           Type Index    NhRef Netif
-        16                 user     0 106.187.14.158    Pop        578     2 ge-0/0/0.0
-        16(S=0)            user     0 106.187.14.158    Pop        579     2 ge-0/0/0.0
+        16                 user     0 10.169.14.158    Pop        578     2 ge-0/0/0.0
+        16(S=0)            user     0 10.169.14.158    Pop        579     2 ge-0/0/0.0
 
         Routing table: __mpls-oam__.mpls
         MPLS:
@@ -49638,7 +49638,7 @@ class TestShowRouteForwardingTableLabel(unittest.TestCase):
                     'nh-index': '578',
                     'nh-reference-count': '2',
                     'nh-type': 'Pop',
-                    'to': '106.187.14.158',
+                    'to': '10.169.14.158',
                     'via': 'ge-0/0/0.0'
                     },
                     'route-reference-count': '0',
@@ -49650,7 +49650,7 @@ class TestShowRouteForwardingTableLabel(unittest.TestCase):
                     'nh-index': '579',
                     'nh-reference-count': '2',
                     'nh-type': 'Pop',
-                    'to': '106.187.14.158',
+                    'to': '10.169.14.158',
                     'via': 'ge-0/0/0.0'
                     },
                     'route-reference-count': '0',

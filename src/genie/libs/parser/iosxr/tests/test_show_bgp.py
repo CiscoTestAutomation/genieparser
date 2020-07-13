@@ -31899,7 +31899,7 @@ class TestShowBgpSummary(unittest.TestCase):
                                         "input_queue": 0,
                                         "output_queue": 0,
                                         "up_down": "4w0d",
-                                        "state_pfxrcd": "1",
+                                        "state_pfxrcd": "Idle (Admin)!",
                                     }
                                 },
                                 "remote_as": 65000,
@@ -31932,7 +31932,7 @@ class TestShowBgpSummary(unittest.TestCase):
 
         Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
         10.4.1.1           0 65000   44813   40709        7    0    0     1w2d          1
-        10.36.3.3           0 65000   40706   40708        7    0    0     4w0d          1
+        10.36.3.3           0 65000   40706   40708        7    0    0     4w0d Idle (Admin)!
 
         RP/0/RP0/CPU0:R2_xr#
     """
