@@ -944,7 +944,11 @@ class ShowInterfaces(ShowInterfacesSchema):
         p42 = re.compile(r'^Output +errors:$')
 
         # Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Policed discards: 0, L3 incompletes: 0, L2 channel errors: 0,
-        p43_1 = re.compile(r'^Errors: +(?P<input_errors>\d+), +Drops: +(?P<input_drops>\d+), +Framing +errors: +(?P<framing_errors>\d+), +Runts: +(?P<input_runts>\d+), Policed +discards: +(?P<input_discards>\d+),( +L3 +incompletes: +(?P<input_l3_incompletes>\d+), +L2 +channel +errors: +(?P<input_l2_channel_errors>\d+),)?$')
+        p43_1 = re.compile(r'^Errors: +(?P<input_errors>\d+), +'
+            r'Drops: +(?P<input_drops>\d+), +Framing +errors: +(?P<framing_errors>\d+), +'
+            r'Runts: +(?P<input_runts>\d+), Policed +discards: +(?P<input_discards>\d+),'
+            r'( +L3 +incompletes: +(?P<input_l3_incompletes>\d+), +'
+            r'L2 +channel +errors: +(?P<input_l2_channel_errors>\d+),)?$')
         
         # L2 mismatch timeouts: 0, FIFO errors: 0, Resource errors: 0
         p43_2 = re.compile(r'^L2 +mismatch +timeouts: +'
@@ -954,7 +958,11 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # Carrier transitions: 1, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0, FIFO errors: 0, HS link CRC errors: 0,
         # Carrier transitions: 0, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0,
-        p44_1 = re.compile(r'^^Carrier +transitions: +(?P<carrier_transitions>\d+), +Errors: +(?P<output_errors>\d+), +Drops: +(?P<output_drops>\d+), +Collisions: +(?P<output_collisions>\d+), +Aged+ packets: +(?P<aged_packets>\d+),( +FIFO +errors: +(?P<output_fifo_errors>\d+), +HS +link +CRC +errors: +(?P<hs_link_crc_errors>\d+),)?$')
+        p44_1 = re.compile(r'^^Carrier +transitions: +(?P<carrier_transitions>\d+), +'
+            r'Errors: +(?P<output_errors>\d+), +Drops: +(?P<output_drops>\d+), +'
+            r'Collisions: +(?P<output_collisions>\d+), +Aged+ packets: +(?P<aged_packets>\d+),'
+            r'( +FIFO +errors: +(?P<output_fifo_errors>\d+), +'
+            r'HS +link +CRC +errors: +(?P<hs_link_crc_errors>\d+),)?$')
 
         # MTU errors: 0, Resource errors: 0
         p44_2 = re.compile(r'^MTU +errors: +(?P<mtu_errors>\d+), +Resource +'
@@ -2594,6 +2602,8 @@ class ShowInterfacesQueue(ShowInterfacesQueueSchema):
         #              Medium-low          :                     0                     0 bps
         #              Medium-high         :                     0                     0 bps
         #              High                :                     0                     0 bps
+        #              RL-dropped packets   :                     0                     0 pps
+        #              Tail-dropped packets :                     0                     0 pps
         p7 = re.compile(r"^(?P<name>Packets|Bytes|Tail-dropped +packets|"
                         r"RL-dropped +packets|"
                         r"Low|Medium-low|Medium-high|High) +: "
