@@ -13,6 +13,8 @@
         * show ldp session
     * Added ShowRouteForwardingTableLabel
         * show route forwarding-table label {label}
+    * Added ShowRSVPNeighbor
+        * show rsvp neighbor
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
