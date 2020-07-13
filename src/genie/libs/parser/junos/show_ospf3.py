@@ -2495,10 +2495,10 @@ class ShowOspf3DatabaseLinkAdvertisingRouter(
 
 
 class ShowOspf3RouteNetworkExtensiveSchema(MetaParser):
-    schema = {
+    '''schema = {
     "ospf3-route-information": {
         "ospf-topology-route-table": {
-            "ospf3-route": {
+            "ospf3-route": [
                 "ospf3-route-entry": {
                     "address-prefix": str,
                     "interface-cost": str,
@@ -2514,11 +2514,45 @@ class ShowOspf3RouteNetworkExtensiveSchema(MetaParser):
                     "route-priority": str,
                     "route-type": str
                     }
+                ]
+            }
+        }
+    }'''
+
+
+    def validate_ospf3_route_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-route is not a list')
+        ospf3_route_schema = Schema({
+            "ospf3-route-entry": {
+                "address-prefix": str,
+                "interface-cost": str,
+                "next-hop-type": str,
+                "ospf-area": str,
+                Optional("ospf-next-hop"): {
+                    "next-hop-name": {
+                        "interface-name": str
+                    }
+                },
+                "route-origin": str,
+                "route-path-type": str,
+                "route-priority": str,
+                "route-type": str
                 }
+        })
+        for item in value:
+            ospf3_route_schema.validate(item)
+        return value
+
+
+    
+    schema = {
+    "ospf3-route-information": {
+        "ospf-topology-route-table": {
+            "ospf3-route": Use(validate_ospf3_route_list)
             }
         }
     }
-
 
 '''
 Parser for:
@@ -2560,7 +2594,9 @@ class ShowOspf3RouteNetworkExtensive(ShowOspf3RouteNetworkExtensiveSchema):
                 group = m.groupdict()
                 ospf3_topology_route_table = ret_dict.setdefault(
                     'ospf3-route-information', {}).setdefault('ospf-topology-route-table', {}).\
-                    setdefault('ospf3-route', {}).setdefault('ospf3-route-entry', {})
+                    setdefault('ospf3-route', [])
+
+                    
                 
                 route_entry_dict = {}
 
@@ -2583,7 +2619,10 @@ class ShowOspf3RouteNetworkExtensive(ShowOspf3RouteNetworkExtensiveSchema):
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_', '-')
                     route_entry_dict[entry_key] = group_value
-                ospf3_topology_route_table.update(route_entry_dict)
+
+                ospf3_parent_route_dict = {}
+                ospf3_parent_route_dict['ospf3-route-entry'] = route_entry_dict
+                ospf3_topology_route_table.append(ospf3_parent_route_dict)
                 continue
-                
+
         return ret_dict
