@@ -1100,6 +1100,7 @@ class ShowOspfOverviewSchema(MetaParser):
                 },
                 "ospf-lsa-refresh-time": str,
                 "ospf-route-table-index": str,
+                Optional("ospf-configured-overload-remaining-time"): str,
                 "ospf-router-id": str,
                 Optional("ospf-spring-overview"): {
                     "ospf-node-segment": {
@@ -1248,6 +1249,12 @@ class ShowOspfOverview(ShowOspfOverviewSchema):
         #Backup SPF: Not Needed
         p22 = re.compile(
             r'^Backup +SPF: +(?P<ospf_backup_spf_status>[\S\s]+)$')
+
+        # Configured overload, expires in 14 seconds
+        p23 = re.compile(
+            r'^Configured +overload, +expires +in +'
+            r'(?P<ospf_configured_overload_remaining_time>\d+) +\S+$'
+        )
 
         for line in out.splitlines():
             line = line.strip()
@@ -1466,6 +1473,14 @@ class ShowOspfOverview(ShowOspfOverviewSchema):
                 })
                 if spring_dict:
                     ospf_entry_list['ospf-spring-overview'] = spring_dict
+                continue
+
+            # Configured overload, expires in 14 seconds
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_entry_list["ospf-configured-overload-remaining-time"] = \
+                    group["ospf_configured_overload_remaining_time"]
                 continue
 
         return ret_dict

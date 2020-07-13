@@ -19,6 +19,10 @@
         * Added more keys to the schema, in order to support output of ShowOspfDatabaseLsaidDetail
     * Updated ShowSystemUsers
         * Regex issues resolved
+    * Updated ShowOspfOverview
+        * Missing key added
+    * Updated ShowOspf3Overview
+        * Missing key added
 * IOSXE
     * Updated ShowCdpNeighbors
         * Modified regex to support different output
