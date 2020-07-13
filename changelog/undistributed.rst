@@ -9,6 +9,8 @@
                                 New
 --------------------------------------------------------------------------------
 * JUNOS
+    * Address ShowBFDSesssion
+        * show bfd session
     * Added ShowLDPSession
         * show ldp session
     * Added ShowRouteForwardingTableLabel
