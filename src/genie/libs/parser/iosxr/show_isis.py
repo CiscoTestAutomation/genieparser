@@ -1811,6 +1811,7 @@ class ShowIsisSpfLogDetailSchema(MetaParser):
                                     'since_first_trigger_ms': int,
                                     Optional('since_end_of_last_calculation'): int,
                                 },
+                                Optional('trigger_prefix'): str,
                                 Optional('interrupted'): str,
                                 Optional('rib_batches'): {
                                     'total': str,
@@ -1994,9 +1995,12 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
         # 899545ms (since end of last calculation)
         r16 = re.compile(r'^(?P<since_end_of_last_calculation_ms>\d+)ms +\(since '
                 r'+end +of +last +calculation\)$')
+        
+        # Trigger Prefix:        10.234.81.14/32 (optional field)
+        r17 = re.compile(r'^Trigger +Prefix: +(?P<trigger_prefix>\S+) +\(optional +field\)$')
 
         # Mon Aug 16 2004
-        r17 = re.compile(r'(?P<timestamp_date>[\w\d\s]+)')
+        rd = re.compile(r'(?P<timestamp_date>[\w\d\s]+)')
 
         parsed_dict = {}
         log_index = 1
@@ -2240,9 +2244,16 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                 delay_dict = spf_log_dict.setdefault('delay', {})
                 delay_dict['since_end_of_last_calculation'] = delay
                 continue
+            
+            # Trigger Prefix:        10.234.81.14/32 (optional field)
+            result = r17.match(line)
+            if result:
+                group = result.groupdict()
+                spf_log_dict.update({'trigger_prefix': group['trigger_prefix']})
+                continue
 
             # Mon Aug 16 2004
-            result = r17.match(line)
+            result = rd.match(line)
             if result:
                 group = result.groupdict()
                 timestamp_date = group['timestamp_date']
