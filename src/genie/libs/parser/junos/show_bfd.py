@@ -11,15 +11,15 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema
 from genie.metaparser.util.exceptions import SchemaTypeError
 
+
 class ShowBFDSessionSchema(MetaParser):
     """ Schema for
         * show bfd session
     """
-
     def validate_bfd_session(value):
         if not isinstance(value, list):
             raise SchemaTypeError('BFD Session not a list')
-    
+
         bfd_session = Schema({
             "session-neighbor": str,
             "session-state": str,
@@ -28,7 +28,7 @@ class ShowBFDSessionSchema(MetaParser):
             "session-transmission-interval": str,
             "session-adaptive-multiplier": str,
         })
-    
+
         for item in value:
             bfd_session.validate(item)
         return value
@@ -38,6 +38,7 @@ class ShowBFDSessionSchema(MetaParser):
             "bfd-session": Use(validate_bfd_session)
         }
     }
+
 
 class ShowBFDSession(ShowBFDSessionSchema):
     """ Parser for:
@@ -54,14 +55,14 @@ class ShowBFDSession(ShowBFDSessionSchema):
 
         ret_dict = {}
 
-        # 59.128.2.250                        Operational Open          26         DU
+        # 10.0.0.1                        Operational Open          26         DU
+        # 10.0.0.2               Up        ge-0/0/0.0     1.500     0.500        3
         p1 = re.compile(r'^(?P<session_neighbor>\S+) +'
                         r'(?P<session_state>\S+)'
                         r'( +(?P<session_interface>\S+))? +'
                         r'(?P<session_detection_time>[\d\.]+) +'
                         r'(?P<session_transmission_interval>[\d\.]+) +'
                         r'(?P<session_adaptive_multiplier>\S+)$')
-
 
         for line in out.splitlines():
             line = line.strip()
@@ -71,8 +72,9 @@ class ShowBFDSession(ShowBFDSessionSchema):
                 group = m.groupdict()
                 session_list = ret_dict.setdefault("bfd-session-information", {}).\
                     setdefault("bfd-session", [])
-                session_list.append(
-                    {k.replace('_', '-'):v for k, v in group.items() if v is not None}
-                )
+                session_list.append({
+                    k.replace('_', '-'): v
+                    for k, v in group.items() if v is not None
+                })
 
         return ret_dict
