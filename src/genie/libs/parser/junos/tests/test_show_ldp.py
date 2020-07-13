@@ -7,7 +7,8 @@ from pyats.topology import Device
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
-from genie.libs.parser.junos.show_ldp import (ShowLDPSession,)
+from genie.libs.parser.junos.show_ldp import (
+    ShowLDPSession, )
 
 
 # =================================
@@ -23,11 +24,11 @@ class TestShowLDPSession(unittest.TestCase):
     golden_parsed_output = {
         'ldp-session-information': {
             'ldp-session': [{
-            'ldp-neighbor-address': '59.128.2.250',
-            'ldp-session-state': 'Operational',
-            'ldp-connection-state': 'Open',
-            'ldp-remaining-time': '26',
-            'ldp-session-adv-mode': 'DU'
+                'ldp-neighbor-address': '59.128.2.250',
+                'ldp-session-state': 'Operational',
+                'ldp-connection-state': 'Open',
+                'ldp-remaining-time': '26',
+                'ldp-session-adv-mode': 'DU'
             }]
         }
     }
