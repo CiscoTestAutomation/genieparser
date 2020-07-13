@@ -27,3 +27,8 @@
     * Updated ShowIpRoute
         * Enhanced parser
 
+* IOSXR
+    * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea
+        * Enhanced parser
+    * Updated ShowIsisSpfLogDetail:
+        * Added more regex patterns to support various outputs.
