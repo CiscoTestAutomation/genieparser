@@ -415,14 +415,11 @@ class ShowSystemUsers(ShowSystemUsersSchema):
             r'load +averages: (?P<avg1>[\d\.]+), +'
             r'(?P<avg2>[\d\.]+), +(?P<avg3>[\d\.]+)$')
 
-        p1_2 = re.compile(
-            r'^USER +TTY +FROM +LOGIN@ +IDLE +WHAT *$'
-        )
+        p1_2 = re.compile(r'^USER +TTY +FROM +LOGIN@ +IDLE +WHAT *$')
 
         #cisco     pts/0    10.1.0.1                          2:35AM      - -cl
         p2 = re.compile(r'^(?P<user>\S+) +(?P<tty>\S+) +(?P<from>\S+) +'
                         r'(?P<login>\S+) +(?P<idle>\S+) +(?P<command>.*)$')
-
 
         for line in out.splitlines():
             line = line.strip()
@@ -445,8 +442,7 @@ class ShowSystemUsers(ShowSystemUsersSchema):
                 active_users_count = {}
 
                 date_time_entry_dict["#text"] = group['time']
-                up_time_entry_dict[
-                    "#text"] = group['up_time']
+                up_time_entry_dict["#text"] = group['up_time']
                 active_users_count["#text"] = group['user_count']
 
                 user_table_entry_list['active-user-count'] = active_users_count
