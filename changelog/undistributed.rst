@@ -9,6 +9,8 @@
                                 New
 --------------------------------------------------------------------------------
 * JUNOS
+    * Show Ospf3 Route Network Extensive
+        * Created ShowOspf3RouteNetworkExtensive
     * Address ShowBFDSesssion
         * show bfd session
     * Added ShowLDPSession
