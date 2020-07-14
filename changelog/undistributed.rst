@@ -17,7 +17,7 @@
         * show bfd session
     * Added ShowLDPSession
         * show ldp session
-    * Added ShowClassOfServiceSchema
+    * Added ShowClassOfService
         * show class-of-service interface {interface}
     * Added ShowRouteForwardingTableLabel
         * show route forwarding-table label {label}
