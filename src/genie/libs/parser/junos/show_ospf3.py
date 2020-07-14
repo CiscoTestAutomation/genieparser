@@ -2507,3 +2507,137 @@ class ShowOspf3DatabaseLinkAdvertisingRouter(
                 continue
 
         return ret_dict
+
+
+class ShowOspf3RouteNetworkExtensiveSchema(MetaParser):
+    '''schema = {
+    "ospf3-route-information": {
+        "ospf-topology-route-table": {
+            "ospf3-route": [
+                "ospf3-route-entry": {
+                    "address-prefix": str,
+                    "interface-cost": str,
+                    "next-hop-type": str,
+                    "ospf-area": str,
+                    "ospf-next-hop": {
+                        "next-hop-name": {
+                            "interface-name": str
+                        }
+                    },
+                    "route-origin": str,
+                    "route-path-type": str,
+                    "route-priority": str,
+                    "route-type": str
+                    }
+                ]
+            }
+        }
+    }'''
+
+
+    def validate_ospf3_route_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-route is not a list')
+        ospf3_route_schema = Schema({
+            "ospf3-route-entry": {
+                "address-prefix": str,
+                "interface-cost": str,
+                "next-hop-type": str,
+                "ospf-area": str,
+                Optional("ospf-next-hop"): {
+                    "next-hop-name": {
+                        "interface-name": str
+                    }
+                },
+                "route-origin": str,
+                "route-path-type": str,
+                "route-priority": str,
+                "route-type": str
+                }
+        })
+        for item in value:
+            ospf3_route_schema.validate(item)
+        return value
+
+
+    
+    schema = {
+    "ospf3-route-information": {
+        "ospf-topology-route-table": {
+            "ospf3-route": Use(validate_ospf3_route_list)
+            }
+        }
+    }
+
+'''
+Parser for:
+    * show ospf3 route network extensive
+'''
+
+
+class ShowOspf3RouteNetworkExtensive(ShowOspf3RouteNetworkExtensiveSchema):
+    cli_command = 'show ospf3 route network extensive'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        #2001::4/128                                  Intra Network    IP   0
+        p1 = re.compile(r'^(?P<address_prefix>[\d\:\/]+) '
+                        r'+(?P<route_path_type>\S+) +(?P<route_type>\S+) '
+                        r'+(?P<next_hop_type>\S+) +(?P<interface_cost>\d+)$')
+
+        #NH-interface lo0.0
+        p2 = re.compile(r'^NH-interface +(?P<interface_name>\S+)$')
+
+        #Area 0.0.0.0, Origin 4.4.4.4, Priority low
+        p3 = re.compile(r'^Area +(?P<ospf_area>\S+),+ Origin '
+                        r'+(?P<route_origin>\S+), +Priority '
+                        r'+(?P<route_priority>\S+)$')
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #2001::4/128                                  Intra Network    IP   0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ospf3_topology_route_table = ret_dict.setdefault(
+                    'ospf3-route-information', {}).setdefault('ospf-topology-route-table', {}).\
+                    setdefault('ospf3-route', [])
+
+                    
+                
+                route_entry_dict = {}
+
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    route_entry_dict[entry_key] = group_value
+
+            #NH-interface lo0.0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                next_hop_dict = {'next-hop-name':{'interface-name':group['interface_name']}}
+                route_entry_dict['ospf-next-hop'] = next_hop_dict                
+                continue
+
+            #Area 0.0.0.0, Origin 4.4.4.4, Priority low
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    route_entry_dict[entry_key] = group_value
+
+                ospf3_parent_route_dict = {}
+                ospf3_parent_route_dict['ospf3-route-entry'] = route_entry_dict
+                ospf3_topology_route_table.append(ospf3_parent_route_dict)
+                continue
+
+        return ret_dict
