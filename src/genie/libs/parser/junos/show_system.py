@@ -404,22 +404,32 @@ class ShowSystemUsers(ShowSystemUsersSchema):
 
         ret_dict = {}
 
-        #9:38AM  up 209 days, 37 mins, 3 users, load averages: 0.28, 0.39, 0.37
+        # 9:38AM up 209 days, 37 mins, 3 users, load averages: 0.28, 0.39, 0.37
+        # 12:58PM up 2 days, 5:30, 2 users, load averages: 0.36, 0.33, 0.35
+        # 10:08PM up 7 days, 10:56, 1 user, load averages: 0.02, 0.02, 0.00
+        # 1:08AM up 8 days, 5 hrs, 1 user, load averages: 0.07, 0.02, 0.01
         p1 = re.compile(
-            r'^(?P<time>[\d\:a-zA-Z]+) +up '
-            r'(?P<days>\w+\s\w+), +(?P<mins>\d+\s+\w+), +'
-            r'(?P<user_count>\d+) +users, +load +averages: '
-            r'(?P<avg1>[\d\.]+), +(?P<avg2>[\d\.]+), +(?P<avg3>[\d\.]+)$')
+            r'^(?P<time>[\d\:a-zA-Z]+) +up +'
+            r'(?P<up_time>(\d+ +days, +)?([\d:]+( +mins)?( +hrs)?)), +'
+            r'(?P<user_count>\d+) +user(s)?, +'
+            r'load +averages: (?P<avg1>[\d\.]+), +'
+            r'(?P<avg2>[\d\.]+), +(?P<avg3>[\d\.]+)$')
+
+        p1_2 = re.compile(
+            r'^USER +TTY +FROM +LOGIN@ +IDLE +WHAT *$'
+        )
 
         #cisco     pts/0    10.1.0.1                          2:35AM      - -cl
-        p2 = re.compile(r'^(?P<user>\S+)\s+(?P<tty>\S+)\s+'
-                        r'(?P<from>[\d\.]+)\s+(?P<login>\S+)'
-                        r'\s+(?P<idle>\S+)\s+(?P<what>\S+)$')
+        p2 = re.compile(r'^(?P<user>\S+) +(?P<tty>\S+) +(?P<from>\S+) +'
+                        r'(?P<login>\S+) +(?P<idle>\S+) +(?P<command>.*)$')
+
 
         for line in out.splitlines():
             line = line.strip()
 
-            #9:38AM  up 209 days, 37 mins, 3 users, load averages: 0.28, 0.39, 0.37
+            # 9:38AM up 209 days, 37 mins, 3 users, load averages: 0.28, 0.39, 0.37
+            # 12:58PM up 2 days, 5:30, 2 users, load averages: 0.36, 0.33, 0.35
+            # 10:08PM up 7 days, 10:56, 1 user, load averages: 0.02, 0.02, 0.00
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -436,7 +446,7 @@ class ShowSystemUsers(ShowSystemUsersSchema):
 
                 date_time_entry_dict["#text"] = group['time']
                 up_time_entry_dict[
-                    "#text"] = group['days'] + ', ' + group['mins']
+                    "#text"] = group['up_time']
                 active_users_count["#text"] = group['user_count']
 
                 user_table_entry_list['active-user-count'] = active_users_count
@@ -449,6 +459,11 @@ class ShowSystemUsers(ShowSystemUsersSchema):
 
                 continue
 
+            # USER     TTY      FROM                              LOGIN@  IDLE WHAT
+            m = p1_2.match(line)
+            if m:
+                continue
+
             #cisco     pts/0    10.1.0.1                          2:35AM      - -cl
             m = p2.match(line)
             if m:
@@ -456,7 +471,7 @@ class ShowSystemUsers(ShowSystemUsersSchema):
 
                 entry_dict = {}
 
-                entry_dict["command"] = group["what"]
+                entry_dict["command"] = group["command"]
                 entry_dict["from"] = group["from"]
                 entry_dict["tty"] = group["tty"]
                 entry_dict["user"] = group["user"]

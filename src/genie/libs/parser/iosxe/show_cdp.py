@@ -66,17 +66,21 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 
         # No platform
         # R5.cisco.com Gig 0/0 125 R B Gig 0/0
+        # SEP08000F8BA7FD  Gig 1/0/7         179              H P   Mitel 532 Port 1
         p2 = re.compile(r'^(?P<device_id>\S+) +'
-                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
-                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+)'
-                         '(?: +(?P<platform>[\w\-]+) )? +'
-                         '(?P<port_id>[a-zA-Z0-9\/\s]+)$')
+                        r'(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
+                        r'(?P<hold_time>\d+) +'
+                        r'(?P<capability>[RTBSHIrPDCM\s]+)'
+                        r'(?: +(?P<platform>[\w\-]+ (\d+)?))? +'
+                        r'(?P<port_id>[a-zA-Z0-9\/]+( [a-zA-Z0-9\/\s]+)?)$')
 
         # device6 Gig 0 157 R S I C887VA-W-W Gi 0
+        # SEP08000FA9B170  Gig 1/0/9         158              H P   Mitel 532 Port 1
         p3 = re.compile(r'^(?P<device_id>\S+) +'
-                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
-                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+) +'
-                         '(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9\/\s]+)$')
+                        r'(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
+                        r'(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+) +'
+                        r'(?P<platform>\S+(?: \d+)?) '
+                        r'(?P<port_id>[a-zA-Z0-9\/\s]+)$')
 
         # p4 and p5 for two-line output, where device id is on a separate line
         p4 = re.compile(r'^(?P<device_id>\S+)$')
@@ -86,7 +90,6 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 
         device_id_index = 0
         parsed_dict = {}
-        devices_dict_info = {}
 
         for line in out.splitlines():
             line = line.strip()
@@ -101,10 +104,10 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 
                 device_id_index += 1
 
-                device_dict = devices_dict_info.setdefault(device_id_index, {})
+                device_dict = parsed_dict.setdefault('cdp', {}) \
+                        .setdefault('index', {}).setdefault(device_id_index, {})
 
                 group = result.groupdict()
-
                 device_dict['device_id'] = group['device_id'].strip()
                 device_dict['local_interface'] = Common.convert_intf_name\
                     (intf=group['local_interface'].strip())
@@ -149,10 +152,6 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                 device_dict['port_id'] = Common \
                     .convert_intf_name(intf=group['port_id'].strip())
                 continue
-
-        if device_id_index:
-            parsed_dict.setdefault('cdp', {}).\
-                setdefault('index', devices_dict_info)
 
         return parsed_dict
 
@@ -210,8 +209,10 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         # Platform: cisco WS_C6506_E,  Capabilities: Router Switch-6506 IGMP
         # Platform: cisco WS-C6506-E,  Capabilities: Router Switch_6506 IGMP
         # Platform: Meraki MV21 Cloud Managed Indoor HD Dom
-        platf_cap_re = re.compile(r'Platform:\s+(?P<platform>[\w +(\-|\_\/:)]+)'
-                                   '(\,\s*Capabilities:\s+(?P<capabilities>[\w\s\-]+))?$')
+        # Platform: Mitel 5320e,DN 2142      ,  Capabilities: Host Phone
+        platf_cap_re = re.compile(r'Platform:\s+(?P<platform>[\w +(\-|\_\/:)]+'
+                                  r'(?:,[\w ]+)?)(\,\s*Capabilities:\s+'
+                                  r'(?P<capabilities>[\w\s\-]+))?$')
 
         # Interface: GigabitEthernet0/0,  Port ID (outgoing port): mgmt0
         # Interface: Ethernet0/1,  Port ID (outgoing port): Ethernet0/1
