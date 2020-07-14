@@ -9,12 +9,22 @@
                                 New
 --------------------------------------------------------------------------------
 * JUNOS
+    * Created ShowMPLSLSPNameDetail
+        * show mpls lsp name {name} detail
+    * Show Ospf3 Route Network Extensive
+        * Created ShowOspf3RouteNetworkExtensive
+    * Address ShowBFDSesssion
+        * show bfd session
     * Added ShowLDPSession
         * show ldp session
+    * Added ShowClassOfService
+        * show class-of-service interface {interface}
     * Added ShowRouteForwardingTableLabel
         * show route forwarding-table label {label}
     * Added ShowRSVPSession
         * show rsvp session
+    * Added ShowRSVPNeighbor
+        * show rsvp neighbor
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
@@ -27,6 +37,8 @@
         * Missing key added
     * Updated ShowOspf3Overview
         * Missing key added
+    * Updated ShowSystemUptime
+        * Fixed optional key error, improved regex, and fixed return results
 * IOSXE
     * Updated ShowCdpNeighbors
         * Modified regex to support different output
@@ -46,3 +58,5 @@
         * Added more regex patterns to support various outputs.
     * Updated ShowIsisInterface:
         * Modified to support default as instance name
+    * Updated ShowInterfaces:
+        * Added more regex patterns to support various outputs.
