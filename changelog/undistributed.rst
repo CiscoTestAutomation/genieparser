@@ -19,3 +19,7 @@
     * Modified ShowOspf3DatabaseExtensive
         * show ospf3 database advertising-router {address} extensive
         * show ospf3 database {lsa_type} advertising-router {address} extensive
+    ShowOspfDatabaseLsaidDetail
+        * ospf-lsa-topology now optional
+    ShowOspfDatabaseAdvertisingRouterSelfDetail
+        * ospf-lsa-topology now optional
