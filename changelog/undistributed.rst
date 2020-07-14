@@ -17,6 +17,10 @@
         * show route forwarding-table label {label}
     * Added ShowRSVPNeighbor
         * show rsvp neighbor
+* IOSXR
+    * Added ShowIgmpGroupsSummary
+        * show igmp groups summary
+        * show igmp vrf {vrf} groups summary
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------

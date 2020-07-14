@@ -8,7 +8,11 @@ from pyats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from genie.libs.parser.iosxr.show_igmp import ShowIgmpInterface, ShowIgmpSummary, ShowIgmpGroupsDetail
+from genie.libs.parser.iosxr.show_igmp import (ShowIgmpInterface,
+                                               ShowIgmpSummary,
+                                               ShowIgmpGroupsDetail,
+                                               ShowIgmpGroupsSummary)
+
 
 #############################################################################
 # unitest For Show IGMP Interface
@@ -1155,6 +1159,73 @@ class test_show_igmp_groups_detail(unittest.TestCase):
         parsed_output = igmp_groups_detail_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output1)
-      
+
+
+# ==========================================================================
+# Unittest for 'show igmp groups summary'
+# ==========================================================================
+class test_show_igmp_groups_summary(unittest.TestCase):
+    """ Unit test for show igmp groups summary. """
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output_1 = {'execute.return_value': """
+        RP/0/RP0/CPU0:leaf-3#show igmp groups summ
+        Mon Jul 13 15:45:02.517 PDT
+        IGMP Route Summary for vrf default
+          No. of (*,G) routes = 4
+          No. of (S,G) routes = 0
+          No. of Group x Interfaces = 19"""}
+
+    golden_parsed_output_1 = {
+        'vrf':
+            {'default':
+                {'no_*g_routes': 4,
+                 'no_group_x_intfs': 19,
+                 'no_sg_routes': 0
+                 }
+             }
+        }
+
+    golden_output_2 = {'execute.return_value': """
+        RP/0/RSP0/CPU0:leaf-5#show igmp vrf vpn1 groups summary 
+        Thu Jul  9 17:02:32.516 PDT
+        IGMP Route Summary for vrf vpn1
+          No. of (*,G) routes = 4
+          No. of (S,G) routes = 22
+          No. of Group x Interfaces = 29"""}
+
+    golden_parsed_output_2 = {
+        'vrf':
+            {'vpn1':
+                {'no_*g_routes': 4,
+                 'no_group_x_intfs': 29,
+                 'no_sg_routes': 22
+                 }
+             }
+        }
+
+    def test_show_igmp_groups_summary_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowIgmpGroupsSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_igmp_groups_summary_full(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowIgmpGroupsSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_show_igmp_groups_summary_full_custom_vrf(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIgmpGroupsSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+
 if __name__ == '__main__':
     unittest.main()
