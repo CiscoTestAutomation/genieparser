@@ -33,6 +33,8 @@
         * Missing key added
     * Updated ShowOspf3Overview
         * Missing key added
+    * Updated ShowSystemUptime
+        * Fixed optional key error, improved regex, and fixed return results
 * IOSXE
     * Updated ShowCdpNeighbors
         * Modified regex to support different output

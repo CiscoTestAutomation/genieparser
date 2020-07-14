@@ -209,20 +209,18 @@ class TestShowSystemUsers(unittest.TestCase):
                     "#text": "2 days,  1:04"
                 },
                 "user-table": {
-                    "user-entry": [
-                        {
-                            "command": "-cli (cli)",
-                            "from": "-",
-                            "idle-time": {
-                                "#text": "-"
-                            },
-                            "login-time": {
-                                "#text": "Mon10PM"
-                            },
-                            "tty": "d0",
-                            "user": "cisco",
-                        }
-                    ]
+                    "user-entry": [{
+                        "command": "-cli (cli)",
+                        "from": "-",
+                        "idle-time": {
+                            "#text": "-"
+                        },
+                        "login-time": {
+                            "#text": "Mon10PM"
+                        },
+                        "tty": "d0",
+                        "user": "cisco",
+                    }]
                 },
             }
         }
@@ -254,32 +252,29 @@ class TestShowSystemUsers(unittest.TestCase):
                     "#text": "2 days,  5 hrs"
                 },
                 "user-table": {
-                    "user-entry": [
-                        {
-                            "command": "-cli (cli)",
-                            "from": "-",
-                            "idle-time": {
-                                "#text": "2days"
-                            },
-                            "login-time": {
-                                "#text": "Mon10PM"
-                            },
-                            "tty": "d0",
-                            "user": "cisco",
+                    "user-entry": [{
+                        "command": "-cli (cli)",
+                        "from": "-",
+                        "idle-time": {
+                            "#text": "2days"
                         },
-                        {
-                            "command": "-cli (cli)",
-                            "from": "255.255.255.255",
-                            "idle-time": {
-                                "#text": "-"
-                            },
-                            "login-time": {
-                                "#text": "11:36PM"
-                            },
-                            "tty": "p0",
-                            "user": "cisco",
-                        }
-                    ]
+                        "login-time": {
+                            "#text": "Mon10PM"
+                        },
+                        "tty": "d0",
+                        "user": "cisco",
+                    }, {
+                        "command": "-cli (cli)",
+                        "from": "255.255.255.255",
+                        "idle-time": {
+                            "#text": "-"
+                        },
+                        "login-time": {
+                            "#text": "11:36PM"
+                        },
+                        "tty": "p0",
+                        "user": "cisco",
+                    }]
                 },
             }
         }
@@ -302,7 +297,7 @@ class TestShowSystemUsers(unittest.TestCase):
         obj = ShowSystemUsers(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_output_2)
-    
+
     def test_golden_3(self):
         self.device = Mock(**self.golden_parsed_output_3)
         obj = ShowSystemUsers(device=self.device)
@@ -2499,7 +2494,8 @@ class TestShowSystemUptime(unittest.TestCase):
                 "load-average-15": "0.43",
                 "load-average-5": "0.42",
                 "up-time": {
-                    "#text": "209 days, 23:14 mins,"
+                    "#text": "209 days, 23:14 mins,",
+                    '@junos:seconds': '18141240'
                 },
             },
         }
@@ -2583,7 +2579,8 @@ class TestShowSystemUptimeNoForwarding(unittest.TestCase):
                 "load-average-15": "0.41",
                 "load-average-5": "0.38",
                 "up-time": {
-                    "#text": "209 days, 36 mins,"
+                    "#text": "209 days, 36 mins,",
+                    '@junos:seconds': '18187200'
                 },
             },
         }
