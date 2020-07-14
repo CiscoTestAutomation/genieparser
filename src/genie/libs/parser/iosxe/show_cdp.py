@@ -82,7 +82,7 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
         p4 = re.compile(r'^(?P<device_id>\S+)$')
         p5 = re.compile(r'(?P<local_interface>[a-zA-Z]+[\s]*[\d/.]+) +'
                         r'(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+) +'
-                        r'(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9/\s]+)$')
+                        r'(?P<platform>\S+) (?P<port_id>[\.a-zA-Z0-9/\s]+)$')
 
         device_id_index = 0
         parsed_dict = {}
