@@ -184,6 +184,107 @@ class TestShowSystemUsers(unittest.TestCase):
         }
     }
 
+    golden_parsed_output_2 = {
+        "execute.return_value":
+        """
+        11:31PM  up 2 days,  1:04, 1 user, load averages: 0.04, 0.03, 0.01
+        USER     TTY      FROM                              LOGIN@  IDLE WHAT
+        cisco     d0       -                                Mon10PM     - -cli (cli)
+        """
+    }
+
+    golden_output_2 = {
+        "system-users-information": {
+            "uptime-information": {
+                "active-user-count": {
+                    "#text": "1"
+                },
+                "date-time": {
+                    "#text": "11:31PM"
+                },
+                "load-average-1": "0.04",
+                "load-average-15": "0.03",
+                "load-average-5": "0.01",
+                "up-time": {
+                    "#text": "2 days,  1:04"
+                },
+                "user-table": {
+                    "user-entry": [
+                        {
+                            "command": "-cli (cli)",
+                            "from": "-",
+                            "idle-time": {
+                                "#text": "-"
+                            },
+                            "login-time": {
+                                "#text": "Mon10PM"
+                            },
+                            "tty": "d0",
+                            "user": "cisco",
+                        }
+                    ]
+                },
+            }
+        }
+    }
+
+    golden_parsed_output_3 = {
+        "execute.return_value":
+        """
+        11:36PM  up 2 days,  5 hrs, 2 users, load averages: 0.00, 0.00, 0.00
+        USER     TTY      FROM                              LOGIN@  IDLE WHAT
+        cisco     d0       -                                Mon10PM 2days -cli (cli)
+        cisco     p0       255.255.255.255                     11:36PM     - -cli (cli)
+        """
+    }
+
+    golden_output_3 = {
+        "system-users-information": {
+            "uptime-information": {
+                "active-user-count": {
+                    "#text": "2"
+                },
+                "date-time": {
+                    "#text": "11:36PM"
+                },
+                "load-average-1": "0.00",
+                "load-average-15": "0.00",
+                "load-average-5": "0.00",
+                "up-time": {
+                    "#text": "2 days,  5 hrs"
+                },
+                "user-table": {
+                    "user-entry": [
+                        {
+                            "command": "-cli (cli)",
+                            "from": "-",
+                            "idle-time": {
+                                "#text": "2days"
+                            },
+                            "login-time": {
+                                "#text": "Mon10PM"
+                            },
+                            "tty": "d0",
+                            "user": "cisco",
+                        },
+                        {
+                            "command": "-cli (cli)",
+                            "from": "255.255.255.255",
+                            "idle-time": {
+                                "#text": "-"
+                            },
+                            "login-time": {
+                                "#text": "11:36PM"
+                            },
+                            "tty": "p0",
+                            "user": "cisco",
+                        }
+                    ]
+                },
+            }
+        }
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowSystemUsers(device=self.device)
@@ -195,6 +296,18 @@ class TestShowSystemUsers(unittest.TestCase):
         obj = ShowSystemUsers(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_output_1)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_parsed_output_2)
+        obj = ShowSystemUsers(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_output_2)
+    
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_parsed_output_3)
+        obj = ShowSystemUsers(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_output_3)
 
 
 # =========================================================
