@@ -474,6 +474,22 @@ class ShowInterfacesSchema(MetaParser):
                 af_schema.validate(item)
             return value
 
+        def verify_queue_list(value):
+            # Pass address-family list of dict in value
+            if not isinstance(value, list):
+                raise SchemaTypeError('queue is not a list')
+            
+            queue_schema = Schema({
+                "queue-counters-queued-packets": str,
+                "queue-counters-total-drop-packets": str,
+                "queue-counters-trans-packets": str,
+                "queue-number": str
+            })
+            # Validate each dictionary in list
+            for item in value:
+                queue_schema.validate(item)
+            return value
+
         # Create physical-interface Schema
         physical_interface_schema = Schema({
             Optional("active-alarms"): {
@@ -694,7 +710,15 @@ class ShowInterfacesSchema(MetaParser):
                 "output-bytes": str,
                 "output-packets": str,
                 "output-pps": str
-            }
+            },
+            Optional("queue-counters"): {
+                Optional("@junos:style"): str,
+                "interface-cos-short-summary": {
+                    "intf-cos-num-queues-in-use": str,
+                    "intf-cos-num-queues-supported": str,
+                },
+                "queue": Use(verify_queue_list)
+            },
         })
         # Validate each dictionary in list
         for item in value:
@@ -920,12 +944,11 @@ class ShowInterfaces(ShowInterfacesSchema):
         p42 = re.compile(r'^Output +errors:$')
 
         # Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Policed discards: 0, L3 incompletes: 0, L2 channel errors: 0,
-        p43_1 = re.compile(r'^Errors: +(?P<input_errors>\d+), +Drops: +'
-            r'(?P<input_drops>\d+), +Framing +errors: +(?P<framing_errors>\d+), +'
-            r'Runts: +(?P<input_runts>\d+), Policed +discards: +'
-            r'(?P<input_discards>\d+), +L3 +incompletes: +'
-            r'(?P<input_l3_incompletes>\d+), +L2 +channel +errors: +'
-            r'(?P<input_l2_channel_errors>\d+),$')
+        p43_1 = re.compile(r'^Errors: +(?P<input_errors>\d+), +'
+            r'Drops: +(?P<input_drops>\d+), +Framing +errors: +(?P<framing_errors>\d+), +'
+            r'Runts: +(?P<input_runts>\d+), Policed +discards: +(?P<input_discards>\d+),'
+            r'( +L3 +incompletes: +(?P<input_l3_incompletes>\d+), +'
+            r'L2 +channel +errors: +(?P<input_l2_channel_errors>\d+),)?$')
         
         # L2 mismatch timeouts: 0, FIFO errors: 0, Resource errors: 0
         p43_2 = re.compile(r'^L2 +mismatch +timeouts: +'
@@ -934,11 +957,12 @@ class ShowInterfaces(ShowInterfacesSchema):
             r'(?P<input_resource_errors>\d+)')
 
         # Carrier transitions: 1, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0, FIFO errors: 0, HS link CRC errors: 0,
-        p44_1 = re.compile(r'^Carrier +transitions: +(?P<carrier_transitions>\d+), +'
+        # Carrier transitions: 0, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0,
+        p44_1 = re.compile(r'^^Carrier +transitions: +(?P<carrier_transitions>\d+), +'
             r'Errors: +(?P<output_errors>\d+), +Drops: +(?P<output_drops>\d+), +'
-            r'Collisions: +(?P<output_collisions>\d+), +Aged+ packets: +'
-            r'(?P<aged_packets>\d+), +FIFO +errors: +(?P<output_fifo_errors>\d+), +'
-            r'HS +link +CRC +errors: +(?P<hs_link_crc_errors>\d+),$')
+            r'Collisions: +(?P<output_collisions>\d+), +Aged+ packets: +(?P<aged_packets>\d+),'
+            r'( +FIFO +errors: +(?P<output_fifo_errors>\d+), +'
+            r'HS +link +CRC +errors: +(?P<hs_link_crc_errors>\d+),)?$')
 
         # MTU errors: 0, Resource errors: 0
         p44_2 = re.compile(r'^MTU +errors: +(?P<mtu_errors>\d+), +Resource +'
@@ -1003,6 +1027,14 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # Label-switched interface (LSI) traffic statistics:
         p61 = re.compile(r'^Label-switched +interface +\(LSI\) +traffic +statistics:$')
+
+        # Egress queues: 8 supported, 4 in use
+        p62 = re.compile(r'^Egress +queues: +(?P<intf_cos_num_queues_supported>\d+) +'
+            r'supported, +(?P<intf_cos_num_queues_in_use>\d+) +in +use$')
+
+        # 0                                0                    0                    0
+        p63 = re.compile(r'^(?P<queue_number>\d+) +(?P<queue_counters_queued_packets>\d+) +'
+            r'(?P<queue_counters_trans_packets>\d+) +(?P<drop_packets>\d+)$')
 
         cnt = 0
         for line in out.splitlines():
@@ -1473,14 +1505,12 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
             
             # Input errors:
-            # p41 = re.compile(r'^Input +errors:$')
             m = p41.match(line)
             if m:
                 input_error_list_dict = physical_interface_dict.setdefault('input-error-list', {})
                 continue
 
             # Output errors:
-            # p42 = re.compile(r'^Output +errors:$')
             m = p42.match(line)
             if m:
                 output_error_list_dict = physical_interface_dict.setdefault('output-error-list', {})
@@ -1649,6 +1679,31 @@ class ShowInterfaces(ShowInterfacesSchema):
                 statistics_type = 'lsi_traffic_statistics'
                 traffic_statistics_dict = physical_interface_dict.setdefault('lsi-traffic-statistics', {})
                 continue
+
+            # Egress queues: 8 supported, 4 in use
+            m = p62.match(line)
+            if m:
+                group = m.groupdict()
+                cos_short_summary_dict = physical_interface_dict.setdefault('queue-counters', {}). \
+                    setdefault('interface-cos-short-summary', {})
+                cos_short_summary_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # 0                                0                    0                    0
+            m = p63.match(line)
+            if m:
+                group = m.groupdict()
+                queue_list = physical_interface_dict.setdefault('queue-counters', {}). \
+                    setdefault('queue', [])
+                queue_dict = {}
+                queue_dict.update({'queue-number': group['queue_number']})
+                queue_dict.update({'queue-counters-queued-packets': group['queue_counters_queued_packets']})
+                queue_dict.update({'queue-counters-trans-packets': group['queue_counters_trans_packets']})
+                queue_dict.update({'queue-counters-total-drop-packets': group['drop_packets']})
+                queue_list.append(queue_dict)
+                continue
+
         return ret_dict
 
 class ShowInterfacesExtensive(ShowInterfaces):
@@ -1749,7 +1804,7 @@ class ShowInterfacesStatisticsSchema(MetaParser):
                             "output-packets": str,
                         },
                         Optional("filter-information"): str,
-                        "logical-interface-zone-name": str,
+                        Optional("logical-interface-zone-name"): str,
                         Optional("allowed-host-inbound-traffic"): {
                             Optional("inbound-dhcp"): bool,
                             Optional("inbound-http"): bool,
@@ -2445,6 +2500,10 @@ class ShowInterfacesQueueSchema(MetaParser):
                 "queue-counters-red-packets-rate-medium-low": str,
                 "queue-counters-tail-drop-packets": str,
                 "queue-counters-tail-drop-packets-rate": str,
+                Optional("queue-counters-rl-drop-packets"): str,
+                Optional("queue-counters-rl-drop-packets-rate"): str,
+                Optional("queue-counters-rl-drop-bytes"): str,
+                Optional("queue-counters-rl-drop-bytes-rate"): str,
                 "queue-counters-trans-bytes": str,
                 "queue-counters-trans-bytes-rate": str,
                 "queue-counters-trans-packets": str,
@@ -2459,7 +2518,7 @@ class ShowInterfacesQueueSchema(MetaParser):
     schema = {
         "interface-information": {
             "physical-interface": {
-                "description": str,
+                Optional("description"): str,
                 "local-index": str,
                 "snmp-index": str,
                 "name": str,
@@ -2543,7 +2602,10 @@ class ShowInterfacesQueue(ShowInterfacesQueueSchema):
         #              Medium-low          :                     0                     0 bps
         #              Medium-high         :                     0                     0 bps
         #              High                :                     0                     0 bps
-        p7 = re.compile(r"^(?P<name>Packets|Bytes|Tail-dropped packets|"
+        #              RL-dropped packets   :                     0                     0 pps
+        #              Tail-dropped packets :                     0                     0 pps
+        p7 = re.compile(r"^(?P<name>Packets|Bytes|Tail-dropped +packets|"
+                        r"RL-dropped +packets|"
                         r"Low|Medium-low|Medium-high|High) +: "
                         r"+(?P<counts>\S+) +(?P<rates>\S+) +[p|b]ps$")
 
@@ -2596,6 +2658,10 @@ class ShowInterfacesQueue(ShowInterfacesQueueSchema):
             m = p6.match(line)
             if m:
                 group = m.groupdict()
+                red_dropped_packets = None
+                red_dropped_bytes = None
+                transmitted = None
+
                 if "queue" not in physical_interface_dict['queue-counters']:
                     physical_interface_dict['queue-counters']['queue'] = []
                 current_queue_dict = {}
@@ -2636,7 +2702,6 @@ class ShowInterfacesQueue(ShowInterfacesQueueSchema):
                     elif name == 'High':
                         current_queue_dict['queue-counters-red-bytes-high'] = counts
                         current_queue_dict['queue-counters-red-bytes-rate-high'] = rates
-                        red_dropped_bytes = None
 
                 # RED-dropped packets
                 elif red_dropped_packets:
@@ -2652,7 +2717,6 @@ class ShowInterfacesQueue(ShowInterfacesQueueSchema):
                     elif name == 'High':
                         current_queue_dict['queue-counters-red-packets-high'] = counts
                         current_queue_dict['queue-counters-red-packets-rate-high'] = rates
-                        red_dropped_packets = None
 
                 # Transmitted
                 elif transmitted:
@@ -2665,7 +2729,9 @@ class ShowInterfacesQueue(ShowInterfacesQueueSchema):
                     elif name == 'Tail-dropped packets':
                         current_queue_dict['queue-counters-tail-drop-packets'] = counts
                         current_queue_dict['queue-counters-tail-drop-packets-rate'] = rates
-                        transmitted = None
+                    elif name == 'RL-dropped packets':
+                        current_queue_dict['queue-counters-rl-drop-packets'] = counts
+                        current_queue_dict['queue-counters-rl-drop-packets-rate'] = rates
 
                 # Queued
                 else:

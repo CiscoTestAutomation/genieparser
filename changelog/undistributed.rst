@@ -17,6 +17,8 @@
         * show bfd session
     * Added ShowLDPSession
         * show ldp session
+    * Added ShowClassOfService
+        * show class-of-service interface {interface}
     * Added ShowRouteForwardingTableLabel
         * show route forwarding-table label {label}
     * Added ShowRSVPNeighbor
@@ -54,3 +56,5 @@
         * Added more regex patterns to support various outputs.
     * Updated ShowIsisInterface:
         * Modified to support default as instance name
+    * Updated ShowInterfaces:
+        * Added more regex patterns to support various outputs.
