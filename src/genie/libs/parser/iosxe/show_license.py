@@ -24,8 +24,8 @@ class ShowLicenseSchema(MetaParser):
     """Schema for show license."""
 
     schema = {
-        Optional('licenses'): {
-            Optional(str): {
+        'licenses': {
+            int: {
                 'feature': str,
                 'period_left': str,
                 Optional('period_minutes'): int,
@@ -52,7 +52,10 @@ class ShowLicense(ShowLicenseSchema):
     cli_command = 'show license'
 
     def cli(self, output=None):
-        out = output if output else self.device.execute(self.cli_command)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         p1 = re.compile(r"Index\s+(?P<id>\d+)\s+Feature:\s+(?P<feature>\S+)", re.MULTILINE)
         p2 = re.compile(r"\s+Period\s+left:\s+(?P<period_left>(Life\s+time|Not\s+Activated))", re.MULTILINE)
@@ -70,16 +73,25 @@ class ShowLicense(ShowLicenseSchema):
         matches = [p1, p2, p3, p4, p5, p6, p7]
 
         # initial variables
-        ret_dict = {'licenses': {}}
+        ret_dict = {}
+        # Index 1 Feature: appxk9
+        #         Period left: Life time
+        #         License Type: Permanent
+        #         License State: Active, In Use
+        #         License Count: Non-Counted
+        #         License Priority: Medium
+
         group_id = ''
 
         for line in out.splitlines():
             for match in matches:
                 m = match.match(line)
                 if m:
+                    if not ret_dict.get('licenses'):
+                        ret_dict.update({'licenses': {}})
                     groups = m.groupdict()
                     if groups.get('id'):
-                        group_id = groups['id']
+                        group_id = int(groups['id'])
                         ret_dict['licenses'].update({group_id: {'feature': groups['feature']}})
                     else:
                         for k, v in groups.items():
@@ -88,5 +100,4 @@ class ShowLicense(ShowLicenseSchema):
                                     ret_dict['licenses'][group_id].update({k: int(v)})
                                 except ValueError:
                                     ret_dict['licenses'][group_id].update({k: v})
-
         return ret_dict

@@ -21,14 +21,14 @@ class test_show_license(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     golden_parsed_output1 = {
     "licenses": {
-        "1": {
+        1: {
             "feature": "appxk9",
             "period_left": "Life time",
             "license_type": "Permanent",
             "license_state": "Active, In Use",
             "license_priority": "Medium"
         },
-        "2": {
+        2: {
             "feature": "uck9",
             "period_left": "Not Activated",
             "period_minutes": 0,
@@ -37,21 +37,21 @@ class test_show_license(unittest.TestCase):
             "license_state": "Active, Not in Use, EULA not accepted",
             "license_priority": "None"
         },
-        "3": {
+        3: {
             "feature": "securityk9",
             "period_left": "Life time",
             "license_type": "Permanent",
             "license_state": "Active, In Use",
             "license_priority": "Medium"
         },
-        "4": {
+        4: {
             "feature": "ipbasek9",
             "period_left": "Life time",
             "license_type": "Permanent",
             "license_state": "Active, In Use",
             "license_priority": "Medium"
         },
-        "5": {
+        5: {
             "feature": "FoundationSuiteK9",
             "period_left": "Not Activated",
             "period_minutes": 0,
@@ -60,7 +60,7 @@ class test_show_license(unittest.TestCase):
             "license_state": "Active, Not in Use, EULA not accepted",
             "license_priority": "None"
         },
-        "6": {
+        6: {
             "feature": "AdvUCSuiteK9",
             "period_left": "Not Activated",
             "period_minutes": 0,
@@ -69,7 +69,7 @@ class test_show_license(unittest.TestCase):
             "license_state": "Active, Not in Use, EULA not accepted",
             "license_priority": "None"
         },
-        "7": {
+        7: {
             "feature": "cme-srst",
             "period_left": "Not Activated",
             "period_minutes": 0,
@@ -80,14 +80,14 @@ class test_show_license(unittest.TestCase):
             "count_violation": 0,
             "license_priority": "None"
         },
-        "8": {
+        8: {
             "feature": "hseck9",
             "period_left": "Life time",
             "license_type": "Permanent",
             "license_state": "Active, In Use",
             "license_priority": "Medium"
         },
-        "9": {
+        9: {
             "feature": "throughput",
             "period_left": "Not Activated",
             "period_minutes": 0,
