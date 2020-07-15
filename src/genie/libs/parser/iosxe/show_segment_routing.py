@@ -764,7 +764,6 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
                             "affinity": {
                                 Any(): list
                             },
-                        Optional("client"): str
                         },
                         "path_type": {
                             Optional("dynamic"): {
