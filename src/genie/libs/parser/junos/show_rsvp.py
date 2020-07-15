@@ -102,7 +102,7 @@ class ShowRSVPNeighbor(ShowRSVPNeighborSchema):
 
 class ShowRSVPSessionSchema(MetaParser):
     """ Schema for:
-        * show rsvp neighbor
+        * show rsvp session
     """
 
     def validate_session_data_list(value):
@@ -168,28 +168,24 @@ class ShowRSVPSession(ShowRSVPSessionSchema):
         # Transit RSVP: 30 sessions
         p1 = re.compile(r'^(?P<session_type>\S+) RSVP: +(?P<count>\d+) +sessions$')
 
-        # Total 0 displayed, Up 0, Down 0
         # Total 30 displayed, Up 30, Down 0
         p2 = re.compile(r'^Total +(?P<display_count>\d+) +displayed, +'
                         r'Up +(?P<up_count>\d+), +Down +(?P<down_count>\d+)$')
 
         # 27.85.194.125 27.85.194.127 Up 0 1 FF 46 44 test_lsp_01
-        # 27.85.194.125 27.85.194.127 Up 0 1 FF 37 35 test_lsp_02
-        # 27.85.194.125 27.85.194.127 Up 0 1 FF 28 26 test_lsp_03
         p3 = re.compile(r'^(?P<destination_address>[\d\.]+) +'
                         r'(?P<source_address>[\d\.]+) +(?P<lsp_state>\S+) +'
                         r'(?P<route_count>\d+) +(?P<rsb_count>\d+) +'
                         r'(?P<resv_style>\S+) +(?P<label_in>\S+) +'
                         r'(?P<label_out>\S+) +(?P<name>\S+)$')
-
         
 
         for line in out.splitlines():
             line = line.strip()
 
             # Ingress RSVP: 0 sessions
-        # Egress RSVP: 0 sessions
-        # Transit RSVP: 30 sessions
+            # Egress RSVP: 0 sessions
+            # Transit RSVP: 30 sessions
             m = p1.match(line)
             if m:
                 group = m.groupdict()

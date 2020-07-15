@@ -13,7 +13,7 @@ from genie.libs.parser.junos.show_rsvp import (ShowRSVPNeighbor,
                                                )
 
 
-class test_show_rsvp_neighbor(unittest.TestCase):
+class TestShowRSVPNeighbor(unittest.TestCase):
     device = Device(name='aName')
     maxDiff = None
 
@@ -87,7 +87,7 @@ class test_show_rsvp_neighbor(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
-class test_show_rsvp_neighbor(unittest.TestCase):
+class TestShowRSVPSession(unittest.TestCase):
     device = Device(name='aName')
     maxDiff = None
 
