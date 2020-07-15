@@ -34,6 +34,7 @@ class ShowLicenseSchema(MetaParser):
                 'license_state': str,
                 Optional('count_in_use'): int,
                 Optional('count_violation'): int,
+                Optional('count'): str,
                 'license_priority': str
 
             }
@@ -58,22 +59,30 @@ class ShowLicense(ShowLicenseSchema):
             out = output
 
         p1 = re.compile(r"Index\s+(?P<id>\d+)\s+Feature:\s+(?P<feature>\S+)", re.MULTILINE)
-        p2 = re.compile(r"\s+Period\s+left:\s+(?P<period_left>(Life\s+time|Not\s+Activated))", re.MULTILINE)
-        p3 = re.compile(r"\s+Period\s+Used:\s+(?P<period_minutes>\d+)\s+minute\s+(?P<period_seconds>\d+)\s+second",
-                        re.MULTILINE)
-        p4 = re.compile(r"\s+License\s+Type:\s+(?P<license_type>(Permanent|EvalRightToUse))", re.MULTILINE)
+        p2 = re.compile(r"\s+(?P<period_left>(Life\s+time|Not\s+Activated))", re.MULTILINE)
+        p3 = re.compile(r"\s+(?P<period_minutes>\d+)\s+minute\s+(?P<period_seconds>\d+)\s+second", re.MULTILINE)
+        p4 = re.compile(r"\s+(?P<license_type>(Permanent|EvalRightToUse))", re.MULTILINE)
         p5 = re.compile(
-            r"\s+License\s+Count:\s+((?P<count_in_use>\d+)/(?P<count_violation>\d+)\s+\(In-use/Violation\)|(?P<count>)\S+)",
-            re.MULTILINE)
-        p6 = re.compile(r"\s+License\s+Priority:\s+(?P<license_priority>\S+)", re.MULTILINE)
+            r"\s+((?P<count_in_use>\d+)/(?P<count_violation>\d+)\s+\(In-use/Violation\)|(?P<count>\S+))",
+            re.MULTILINE
+        )
+        p6 = re.compile(r"\s+(?P<license_priority>\S+)", re.MULTILINE)
         p7 = re.compile(
-            r"\s+License\s+State:\s+(?P<license_state>(Active,\s+Not\s+in\s+Use,\s+EULA\s+not\s+accepted|Active,\s+In\s+Use))",
-            re.MULTILINE)
+            r"\s+(?P<license_state>(Active,\s+Not\s+in\s+Use,\s+EULA\s+not\s+accepted|Active,\s+In\s+Use))",
+            re.MULTILINE
+        )
 
-        matches = [p1, p2, p3, p4, p5, p6, p7]
+        regex_map = {
+            "Period left": p2,
+            "Period Used": p3,
+            "License Type": p4,
+            "License Count": p5,
+            "License Priority": p6,
+            "License State": p7,
+        }
 
         # initial variables
-        ret_dict = {}
+        license_dict = {}
         # Index 1 Feature: appxk9
         #         Period left: Life time
         #         License Type: Permanent
@@ -81,23 +90,32 @@ class ShowLicense(ShowLicenseSchema):
         #         License Count: Non-Counted
         #         License Priority: Medium
 
-        group_id = ''
-
         for line in out.splitlines():
-            for match in matches:
-                m = match.match(line)
-                if m:
-                    if not ret_dict.get('licenses'):
-                        ret_dict.update({'licenses': {}})
-                    groups = m.groupdict()
-                    if groups.get('id'):
-                        group_id = int(groups['id'])
-                        ret_dict['licenses'].update({group_id: {'feature': groups['feature']}})
-                    else:
-                        for k, v in groups.items():
-                            if k and v:
-                                try:
-                                    ret_dict['licenses'][group_id].update({k: int(v)})
-                                except ValueError:
-                                    ret_dict['licenses'][group_id].update({k: v})
-        return ret_dict
+            line_strip = line.strip()
+            if not line_strip.startswith("Index"):
+                try:
+                    data_type, value = line_strip.split(":", 1)
+                    regex = regex_map.get(data_type)
+                except ValueError:
+                    continue
+            else:
+                match = p1.match(line_strip)
+                groups = match.groupdict()
+                group_id = int(groups['id'])
+                license_dict.update({group_id: {'feature': groups['feature']}})
+                continue
+
+            if regex:
+                match = regex.match(value)
+                groups = match.groupdict()
+                for k, v in groups.items():
+                    if v is None:
+                        continue
+                    if v.isdigit():
+                        v = int(v)
+                    license_dict[group_id].update({k: v})
+
+        if license_dict:
+            return {"licenses": license_dict}
+        else:
+            return {}
