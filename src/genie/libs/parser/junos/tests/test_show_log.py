@@ -187,3 +187,6 @@ class TestShowLogFilename(unittest.TestCase):
         obj = ShowLogFilename(device=self.device)
         parsed_output = obj.parse(filename="messages")
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+if __name__ == '__main__':
+    unittest.main()
