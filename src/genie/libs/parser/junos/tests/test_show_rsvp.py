@@ -12,7 +12,7 @@ from genie.libs.parser.junos.show_rsvp import (ShowRSVPNeighbor,
                                                ShowRSVPNeighborDetail,)
 
 
-class test_show_rsvp_neighbor(unittest.TestCase):
+class TestShowRSVPNeighbor(unittest.TestCase):
     device = Device(name='aName')
     maxDiff = None
 
@@ -86,13 +86,14 @@ class test_show_rsvp_neighbor(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
-class test_show_rsvp_neighbor_detail(unittest.TestCase):
+class TestShowRSVPNeighborDetail(unittest.TestCase):
     device = Device(name='aName')
     maxDiff = None
 
     empty_output = {'execute.return_value': ''}
 
     golden_output_1 = {'execute.return_value': """
+        show rsvp neighbor detail
         RSVP neighbor: 4 learned
         Address: 59.128.3.252 status: Down (Node neighbor)
         Last changed time: 27:54, Idle: 27:55 sec, Up cnt: 0, Down cnt: 0
