@@ -20,7 +20,7 @@ class TestShowRSVPNeighbor(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output_1 = {'execute.return_value': """
-    kddi@sr_hktGCS002> show rsvp neighbor
+    show rsvp neighbor
     RSVP neighbor: 4 learned
     Address            Idle Up/Dn LastChange HelloInt HelloTx/Rx MsgRcvd
     10.34.3.252      15:55  0/0       15:52        9   106/0    0
