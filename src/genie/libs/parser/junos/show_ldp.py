@@ -54,7 +54,7 @@ class ShowLDPSession(ShowLDPSessionSchema):
 
         ret_dict = {}
 
-        # 59.128.2.250                        Operational Open          26         DU
+        # 10.34.2.250                        Operational Open          26         DU
         p1 = re.compile(r'^(?P<ldp_neighbor_address>\S+) +'
                         r'(?P<ldp_session_state>\S+) +'
                         r'(?P<ldp_connection_state>\S+) +'

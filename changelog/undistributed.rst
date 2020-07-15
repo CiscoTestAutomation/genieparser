@@ -21,6 +21,8 @@
         * show class-of-service interface {interface}
     * Added ShowRouteForwardingTableLabel
         * show route forwarding-table label {label}
+    * Added ShowRSVPSession
+        * show rsvp session
     * Added ShowRSVPNeighbor
         * show rsvp neighbor
 --------------------------------------------------------------------------------
