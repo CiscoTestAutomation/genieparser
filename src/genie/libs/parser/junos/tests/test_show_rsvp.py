@@ -95,7 +95,7 @@ class TestShowRSVPNeighborDetail(unittest.TestCase):
     golden_output_1 = {'execute.return_value': """
         show rsvp neighbor detail
         RSVP neighbor: 4 learned
-        Address: 59.128.3.252 status: Down (Node neighbor)
+        Address: 10.34.3.252 status: Down (Node neighbor)
         Last changed time: 27:54, Idle: 27:55 sec, Up cnt: 0, Down cnt: 0
         Message received: 0
         Hello: sent 187, received: 0, interval: 9 sec
@@ -104,7 +104,7 @@ class TestShowRSVPNeighborDetail(unittest.TestCase):
             Remote end: disabled, Ack-extension: disabled
         Enhanced FRR: Disabled
 
-        Address: 106.187.14.240 status: Down (Node neighbor)
+        Address: 10.169.14.240 status: Down (Node neighbor)
         Last changed time: 46:15, Idle: 46:15 sec, Up cnt: 0, Down cnt: 0
         Message received: 0
         Hello: sent 309, received: 0, interval: 9 sec
@@ -113,7 +113,7 @@ class TestShowRSVPNeighborDetail(unittest.TestCase):
             Remote end: disabled, Ack-extension: disabled
         Enhanced FRR: Disabled
 
-        Address: 106.187.14.157 via: ge-0/0/0.0 status: Up
+        Address: 10.169.14.157 via: ge-0/0/0.0 status: Up
         Last changed time: 46:15, Idle: 0 sec, Up cnt: 1, Down cnt: 0
         Message received: 695
         Hello: sent 310, received: 309, interval: 9 sec
@@ -123,7 +123,7 @@ class TestShowRSVPNeighborDetail(unittest.TestCase):
         Enhanced FRR: Enabled
             LSPs (total 30): Phop 30, PPhop 0, Nhop 0, NNhop 0
 
-        Address: 203.181.106.218 via: ge-0/0/1.1 status: Up
+        Address: 192.168.145.218 via: ge-0/0/1.1 status: Up
         Last changed time: 27:57, Idle: 0 sec, Up cnt: 1, Down cnt: 0
         Message received: 557
         Hello: sent 183, received: 183, interval: 9 sec
@@ -147,7 +147,7 @@ class TestShowRSVPNeighborDetail(unittest.TestCase):
                 'rsvp-nbr-enh-local-protection': {
                 'rsvp-nbr-enh-lp-status': 'Disabled'
                 },
-                'rsvp-neighbor-address': '59.128.3.252',
+                'rsvp-neighbor-address': '10.34.3.252',
                 'rsvp-neighbor-local-instance': '0xf81317e',
                 'rsvp-neighbor-node': True,
                 'rsvp-neighbor-remote-instance': '0x0',
@@ -169,7 +169,7 @@ class TestShowRSVPNeighborDetail(unittest.TestCase):
                 'rsvp-nbr-enh-local-protection': {
                 'rsvp-nbr-enh-lp-status': 'Disabled'
                 },
-                'rsvp-neighbor-address': '106.187.14.240',
+                'rsvp-neighbor-address': '10.169.14.240',
                 'rsvp-neighbor-local-instance': '0x1a61c152',
                 'rsvp-neighbor-node': True,
                 'rsvp-neighbor-remote-instance': '0x0',
@@ -196,7 +196,7 @@ class TestShowRSVPNeighborDetail(unittest.TestCase):
                 'rsvp-nbr-enh-lp-status': 'Enabled',
                 'rsvp-nbr-enh-lp-total-lsp-count': '30'
                 },
-                'rsvp-neighbor-address': '106.187.14.157',
+                'rsvp-neighbor-address': '10.169.14.157',
                 'rsvp-neighbor-interface': 'ge-0/0/0.0',
                 'rsvp-neighbor-local-instance': '0xb6ab962a',
                 'rsvp-neighbor-node': True,
@@ -223,7 +223,7 @@ class TestShowRSVPNeighborDetail(unittest.TestCase):
                 'rsvp-nbr-enh-lp-status': 'Enabled',
                 'rsvp-nbr-enh-lp-total-lsp-count': '30'
                 },
-                'rsvp-neighbor-address': '203.181.106.218',
+                'rsvp-neighbor-address': '192.168.145.218',
                 'rsvp-neighbor-interface': 'ge-0/0/1.1',
                 'rsvp-neighbor-local-instance': '0x41ad0a42',
                 'rsvp-neighbor-node': True,

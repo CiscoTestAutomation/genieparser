@@ -166,8 +166,8 @@ class ShowRSVPNeighborDetail(ShowRSVPNeighborDetailSchema):
         # RSVP neighbor: 4 learned
         p1 = re.compile(r'^RSVP +neighbor: +(?P<rsvp_neighbor_count>\d+) +learned$')
 
-        # Address: 59.128.3.252 status: Down (Node neighbor)
-        # Address: 106.187.14.157 via: ge-0/0/0.0 status: Up
+        # Address: 10.34.3.252 status: Down (Node neighbor)
+        # Address: 10.169.14.157 via: ge-0/0/0.0 status: Up
         p2 = re.compile(r'^Address: +(?P<rsvp_neighbor_address>\S+) +'
                         r'(via: +(?P<rsvp_neighbor_interface>\S+) +)?'
                         r'status: +(?P<rsvp_neighbor_status>\S+)'
@@ -220,8 +220,8 @@ class ShowRSVPNeighborDetail(ShowRSVPNeighborDetailSchema):
                 neighbor_information['rsvp-neighbor-count'] = group['rsvp_neighbor_count']
                 continue
 
-            # Address: 59.128.3.252 status: Down (Node neighbor)
-            # Address: 106.187.14.157 via: ge-0/0/0.0 status: Up
+            # Address: 10.34.3.252 status: Down (Node neighbor)
+            # Address: 10.169.14.157 via: ge-0/0/0.0 status: Up
             m = p2.match(line)
             if m:
                 group = m.groupdict()
