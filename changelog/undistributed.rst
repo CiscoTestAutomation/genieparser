@@ -32,6 +32,23 @@
     * Updated ShowSystemUsers
         * Regex issues resolved
     * Updated ShowOspfOverview
+        * Optional key issue resolved
+    * Updated ShowInterfaceExtensive
+        * No longer breaks on use and previously unused data is now used
+    * Updated ShowOspfDatabaseExtensiveSchema
+        * Optional key issue resolved
+    * Updated ShowOspf3DatabaseExtensiveSchema
+        * Optional key issue resolved
+    * Updated ShowOspfVrfAllInclusive
+        * key error resolved
+    * Updated ShowOspfDatabaseLsaidDetail
+        * Resolved issue where empty output would cause error
+    * Updated ShowOspf3DatabaseExtensive
+        * Missing key issue resolved
+    * Updated ShowOspf3Database
+        * List ospf-area
+    * Updated ShowOspfDatabaseExtensiveSchema
+        * Modified ShowOspfDatabaseExtensiveSchema to have optional keys
         * Missing key added
     * Updated ShowOspf3Overview
         * Missing key added
