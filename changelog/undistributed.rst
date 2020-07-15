@@ -39,6 +39,9 @@
         * Missing key added
     * Updated ShowSystemUptime
         * Fixed optional key error, improved regex, and fixed return results
+    * Updated ShowRouteForwardingTableLabel
+        * Fixed regex matching issue
+        
 * IOSXE
     * Updated ShowCdpNeighbors
         * Modified regex to support different output

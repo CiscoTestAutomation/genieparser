@@ -3,6 +3,7 @@
 JUNOS parsers for the following commands:
     * show route table {table}
     * show route table {table} {prefix}
+    * show route table {table} label-switched-path {name}
     * show route
     * show route protocol {protocol} extensive
     * show route protocol {protocol} table {table} extensive
@@ -2465,9 +2466,10 @@ class ShowRouteForwardingTableLabel(ShowRouteForwardingTableLabelSchema):
         # 16(S=0)            user     0 106.187.14.158    Pop        579     2 ge-0/0/0.0
         # 16(S=0) user 0 2001:AE Pop 579 2 ge-0/0/0.0
         # default            perm     0                    dscd      535     1
+        # 575                user     0 203.181.106.218   Swap 526      590     2 ge-0/0/1.0
         p5 = re.compile(r'^(?P<rt_destination>\S+) +(?P<destination_type>\S+) +'
                         r'(?P<route_reference_count>\d+) +(?P<to>[\d\.|\d\:a-fA-F]+)? +'
-                        r'(?P<nh_type>\S+) +(?P<nh_index>\d+) +'
+                        r'(?P<nh_type>\S+( \S+)?) +(?P<nh_index>\d+) +'
                         r'(?P<nh_reference_count>\d+)( +)?(?P<via>\S+)?$')
 
 
@@ -2513,5 +2515,158 @@ class ShowRouteForwardingTableLabel(ShowRouteForwardingTableLabelSchema):
                 route_entry_dict['nh'] = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
 
                 route_entry_list.append(route_entry_dict)
+
+        return ret_dict
+
+
+class ShowRouteTableLabelSwitchedNameSchema(MetaParser):
+    """ Schema for:
+        * show route table {table} label-switched-path {name}
+    """
+
+    def validate_rt_schema(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('rt schema is not a list')
+
+        def validate_rt_entry_schema(value):
+            if not isinstance(value, list):
+                raise SchemaTypeError('rt entry schema is not a list')
+
+            def validate_nh_schema(value):
+                if not isinstance(value, list):
+                    raise SchemaTypeError('nh schema is not a list')
+            
+                nh_schema = Schema({
+                            Optional("selected-next-hop"): bool,
+                            "to": str,
+                            "via": str,
+                            "lsp-name": str,
+                        })
+            
+                for item in value:
+                    nh_schema.validate(item)
+                return value
+        
+            rt_entry_schema = Schema({
+                        Optional("active-tag"): str,
+                        Optional("current-active"): str,
+                        Optional("last-active"): str,
+                        "protocol-name": str,
+                        "preference": str,
+                        "preference2": str,
+                        "age": {
+                            '#text': str,
+                            Optional('@junos:seconds'): str,
+                        },
+                        "metric": str,
+                        "nh": Use(validate_nh_schema)
+                    })
+        
+            for item in value:
+                rt_entry_schema.validate(item)
+            return value
+    
+        rt_schema = Schema({
+                    "rt-destination": str,
+                    "rt-entry": Use(validate_rt_entry_schema)
+                })
+    
+        for item in value:
+            rt_schema.validate(item)
+        return value
+
+    schema = {
+            "route-information": {
+                "route-table": {
+                    "table-name": str,
+                    "destination-count": str,
+                    "total-route-count": str,
+                    "active-route-count": str,
+                    "holddown-route-count": str,
+                    "hidden-route-count": str,
+                    "rt": Use(validate_rt_schema)
+                }
+            }
+        }
+
+class ShowRouteTableLabelSwitchedName(ShowRouteTableLabelSwitchedNameSchema):
+    """ Parser for:
+        * show route table {table} label-switched-path {name}
+    """
+
+    cli_command = ['show route table {table} label-switched-path {name}']
+
+    def cli(self, table, name, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command[0].format(
+                table=table,
+                name=name
+            ))
+        else:
+            out = output
+        
+        ret_dict = {}
+
+        # mpls.0: 36 destinations, 36 routes (36 active, 0 holddown, 0 hidden)
+        p1 = re.compile(r'^(?P<table_name>[^\s:]+): +(?P<destination_count>\d+) +'
+                        r'destinations, +(?P<total_route_count>\d+) +routes +'
+                        r'\((?P<active_route_count>\d+) +active, +'
+                        r'(?P<holddown_route_count>\d+) +holddown, +'
+                        r'(?P<hidden_route_count>\d+) +hidden\)$')
+
+        # 46                 *[RSVP/7/1] 00:10:22, metric 1
+        p2 = re.compile(r'^(?P<rt_destination>\S+) +(?P<active_tag>\*)?'
+                        r'\[(?P<protocol_name>[^\s/]+)/(?P<preference>\d+)/(?P<preference2>\d+)\] +'
+                        r'(?P<age>[\d:]+), +metric +(?P<metric>\d+)$')
+
+        # >  to 203.181.106.218 via ge-0/0/1.1, label-switched-path test_lsp_01
+        p3 = re.compile(r'^(?P<selected_next_hop>\> +)?to +(?P<to>\S+) +via +'
+                        r'(?P<via>[^\s,]+), +label-switched-path +(?P<lsp_name>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # mpls.0: 36 destinations, 36 routes (36 active, 0 holddown, 0 hidden)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                route_table_dict = ret_dict.setdefault('route-information', {}).setdefault('route-table', {})
+                route_table_dict.update(
+                    {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                )
+
+            # 46                 *[RSVP/7/1] 00:10:22, metric 1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                rt_list = route_table_dict.setdefault('rt', [])
+                rt_dict = {
+                    'rt-destination': group.pop('rt_destination')
+                }
+                rt_entry_list = rt_dict.setdefault('rt-entry', [])
+                rt_entry_dict = {
+                    'age': {'#text': group.pop('age')}
+                }
+                rt_entry_dict.update(
+                    {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                )
+                rt_entry_list.append(rt_entry_dict)
+                rt_list.append(rt_dict)
+
+
+            # >  to 203.181.106.218 via ge-0/0/1.1, label-switched-path test_lsp_01
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                nh_list = rt_entry_dict.setdefault('nh', [])
+                nh_dict = {
+                    'selected-next-hop': True if group.pop('selected_next_hop', None) else False
+                }
+                nh_dict.update(
+                    {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                )
+                nh_list.append(nh_dict)
+
 
         return ret_dict
