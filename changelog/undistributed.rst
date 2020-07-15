@@ -93,6 +93,8 @@
         * Missing key issue resolved
     * Updated ShowOspf3Database
         * List ospf-area
+    * Updated ShowOspfDatabaseExtensiveSchema
+        * Modified ShowOspfDatabaseExtensiveSchema to have optional keys
 * IOSXE
     * Updated ShowIpInterface
         * Modified regex to accommodate different outputs
