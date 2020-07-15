@@ -2594,7 +2594,7 @@ class ShowOspf3RouteNetworkExtensive(ShowOspf3RouteNetworkExtensiveSchema):
         #NH-interface lo0.0
         p2 = re.compile(r'^NH-interface +(?P<interface_name>\S+)$')
 
-        #Area 0.0.0.0, Origin 4.4.4.4, Priority low
+        #Area 0.0.0.0, Origin 10.64.4.4, Priority low
         p3 = re.compile(r'^Area +(?P<ospf_area>\S+),+ Origin '
                         r'+(?P<route_origin>\S+), +Priority '
                         r'+(?P<route_priority>\S+)$')
@@ -2627,7 +2627,7 @@ class ShowOspf3RouteNetworkExtensive(ShowOspf3RouteNetworkExtensiveSchema):
                 route_entry_dict['ospf-next-hop'] = next_hop_dict                
                 continue
 
-            #Area 0.0.0.0, Origin 4.4.4.4, Priority low
+            #Area 0.0.0.0, Origin 10.64.4.4, Priority low
             m = p3.match(line)
             if m:
                 group = m.groupdict()

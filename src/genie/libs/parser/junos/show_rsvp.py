@@ -172,7 +172,7 @@ class ShowRSVPSession(ShowRSVPSessionSchema):
         p2 = re.compile(r'^Total +(?P<display_count>\d+) +displayed, +'
                         r'Up +(?P<up_count>\d+), +Down +(?P<down_count>\d+)$')
 
-        # 27.85.194.125 27.85.194.127 Up 0 1 FF 46 44 test_lsp_01
+        # 10.49.194.125 10.49.194.127 Up 0 1 FF 46 44 test_lsp_01
         p3 = re.compile(r'^(?P<destination_address>[\d\.]+) +'
                         r'(?P<source_address>[\d\.]+) +(?P<lsp_state>\S+) +'
                         r'(?P<route_count>\d+) +(?P<rsb_count>\d+) +'
