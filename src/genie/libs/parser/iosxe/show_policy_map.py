@@ -445,7 +445,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
 
         # 8000 bps, 1500 limit, 1500 extended limit
         p7_1 = re.compile(r'^(?P<police_bps>(\d+)) bps, +(?P<police_limit>(\d+)) limit, +'
-                           '(?P<extended_limit>(\d+))(.*)$')
+                          r'(?P<extended_limit>(\d+))(.*)$')
 
         # cir 10000000 bps, be 312500 bytes
         p7_2 = re.compile(r'^cir (?P<cir_bps>(\d+)) bps, +be +(?P<cir_be_bytes>(\d+)) bytes$')
@@ -461,17 +461,17 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
 
         # conformed 15 packets, 6210 bytes; action:transmit
         p8_1 = re.compile(r'^conformed (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes;'
-                           ' action:(?P<action>(\w+))$')
+                          r' action:(?P<action>(\w+))$')
         # exceeded 0 packets, 0 bytes; actions:
         p9 = re.compile(r'^exceeded (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes; actions:$')
 
         # exceeded 5 packets, 5070 bytes; action:drop
         p9_1 = re.compile(r'^exceeded (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes;'
-                           ' action:(?P<action>(\w+))$')
+                          r' action:(?P<action>(\w+))$')
 
         # violated 0 packets, 0 bytes; action:drop
         p10 = re.compile(r'^violated (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes;'
-                          ' action:(?P<action>(\w+))$')
+                         r' action:(?P<action>(\w+))$')
 
         # violated 0 packets, 0 bytes; actions:
         p10_1 = re.compile(r'^violated (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes; actions:$')
@@ -481,7 +481,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
 
         # conformed 0 bps, exceed 0 bps, violate 0 bps
         p11_1 = re.compile(r'^conformed +(?P<c_bps>(\d+)) bps,+ excee(d|ded) (?P<e_bps>(\d+)) bps, '
-                            'violat(e|ed) (?P<v_bps>(\d+)) bps$')
+                           r'violat(e|ed) (?P<v_bps>(\d+)) bps$')
 
         # drop
         # transmit
@@ -655,6 +655,12 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             # Service-policy output: Control_Plane_Out
             m = p1.match(line)
             if m:
+                # in case no top level dict
+                try:
+                    top_level_dict
+                except UnboundLocalError:
+                    top_level_dict = ret_dict.setdefault(interface, {})
+
                 group = m.groupdict()
                 service_policy = group['service_policy'].strip()
                 policy_name = group['policy_name'].strip()

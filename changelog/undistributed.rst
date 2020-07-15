@@ -8,92 +8,74 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
-
 * JUNOS
-    * ShowRouteTable
-        * Added aditional testcase
-    * Added ShowRouteAdvertisingProtocolDetail
-        * show route advertising-protocol {protocol} {ip_address} {route} detail
-    * Added ShowLldp
-        * show lldp
-    * Added ShowSystemStatistics for:
-        * show system statistics
-    * Added ShowSystemStatisticsNoForwarding or:
-        * show system statistics no-forwarding
-    * Added ShowInterfacesExtensiveInterface for:
-        * show interfaces extensive {interface}
-    * Updated ShowOspfDatabaseLsaidDetail:
-        * added testcase
-        *extended from ShowOspfDatabaseAdvertisingRouterSelfDetail
-
-
+    * Created ShowMPLSLSPNameDetail
+        * show mpls lsp name {name} detail
+    * Show Ospf3 Route Network Extensive
+        * Created ShowOspf3RouteNetworkExtensive
+    * Address ShowBFDSesssion
+        * show bfd session
+    * Added ShowLDPSession
+        * show ldp session
+    * Added ShowClassOfService
+        * show class-of-service interface {interface}
+    * Added ShowRouteForwardingTableLabel
+        * show route forwarding-table label {label}
+    * Added ShowRSVPNeighbor
+        * show rsvp neighbor
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
-
-* IOSXE
-    * Updated ShowIsisDatabaseDetail for code issue:
-        * show isis database detail
-    * Updated ShowBgpDetailSuperParser for code issue:
-        * 'show bgp all detail'
-        * 'show ip bgp all detail'
-        * 'show bgp {address_family} vrf {vrf} detail'
-        * 'show bgp {address_family} rd {rd} detail'
-        * 'show ip bgp {address_family} vrf {vrf} detail'
-        * 'show ip bgp {address_family} rd {rd} detail'
-    * Updated ShowBootvar:
-        * Modified the regex patterns to support various outputs.
-* NXOS
-    * Updated ShowMacAddressTableBase:
-        * Modified the regex patterns to support various outputs.
-    * Updated ShowIpArpDetailVrfAll:
-        * Modified the regex patterns to support various outputs.
-    * Update ShowIpRoute:
-        * Modified the regex patterns to support various outputs.
-    * Update ShowIpMrouteVrfAll:
-        * Modified the regex patterns to support various outputs.
-    * Update ShowIpv6MrouteVrfAll:
-        * Modified the regex patterns to support various outputs.
-    * Updated ShowRunningConfigInterface:
-        * Added regex to support vpc
-        * Added regex to support native vlan
-        * Added regex to support switchport_mode access
-        * Fixed regex to allow white spaces in description
-* IOSXR
-    * Updated ShowVrfAllDetail:
-        * Modified the regex patterns to support various outputs.
-    * Updated ShowControllersOptics:
-        * Added more regex patterns to support various outputs.
-    * Updated ShowIsisSchema:
-        * Made the key 'protocols_redistributed' optional.
 * JUNOS
-    * Updated ShowRoute
-        * Modified cli method to accept only ip_address as input
-    * Updated ShowRouteTable
-        * Modified cli method to take an additional parameter
-    * Updated ShowRouteAdvertisingProtocol
-        * Added {route} parameter option
-    * Added MonitorInterfaceTraffic for:
-        * monitor interface traffic
+    * Updated ShowOspfDatabaseAdvertisingRouterSelfDetail
+        * Added more keys to the schema, in order to support output of ShowOspfDatabaseLsaidDetail
+    * Updated ShowSystemUsers
+        * Regex issues resolved
     * Updated ShowOspfOverview
         * Optional key issue resolved
-<<<<<<< HEAD
-    * Updated ShowInterfaces
-        * Optional key issue resolved
-        * Regex modified to support more output
-        * 'show interfaces extensive {interface}' changed to 'show interfaces {interface} extensive'
-=======
     * Updated ShowInterfaceExtensive
         * No longer breaks on use and previously unused data is now used
     * Updated ShowOspfDatabaseExtensiveSchema
         * Optional key issue resolved
     * Updated ShowOspf3DatabaseExtensiveSchema
         * Optional key issue resolved
->>>>>>> dev
+    * Updated ShowOspfVrfAllInclusive
+        * key error resolved
+    * Updated ShowOspfDatabaseLsaidDetail
+        * Resolved issue where empty output would cause error
+    * Updated ShowOspf3DatabaseExtensive
+        * Missing key issue resolved
+    * Updated ShowOspf3Database
+        * List ospf-area
+    * Updated ShowOspfDatabaseExtensiveSchema
+        * Modified ShowOspfDatabaseExtensiveSchema to have optional keys
+        * Missing key added
+    * Updated ShowOspf3Overview
+        * Missing key added
+    * Updated ShowSystemUptime
+        * Fixed optional key error, improved regex, and fixed return results
+    * Updated ShowInterfaces
+        * Optional key issue resolved
+        * Regex modified to support more output
+        * 'show interfaces extensive {interface}' changed to 'show interfaces {interface} extensive'
 * IOSXE
+    * Updated ShowCdpNeighbors
+        * Modified regex to support different output
+    * Updated ShowCdpNeighborsDetail
+        * Modified regex to support different output
     * Updated ShowIpInterface
-        * Modified regex to accommodate different outputs
+        * Enhanced parser and added optional values
 
-* IOSXE
-    * Updated ShowClnsNeighborsDetail
-        * Modified regex to accommodate diffrent outputs
+* NXOS
+    * Updated ShowIpRoute
+        * Enhanced parser
+
+* IOSXR
+    * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea
+        * Enhanced parser
+    * Updated ShowIsisSpfLogDetail:
+        * Added more regex patterns to support various outputs.
+    * Updated ShowIsisInterface:
+        * Modified to support default as instance name
+    * Updated ShowInterfaces:
+        * Added more regex patterns to support various outputs.
