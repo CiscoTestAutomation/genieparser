@@ -199,15 +199,18 @@ class ShowMPLSLSPNameDetail(ShowMPLSLSPNameDetailSchema):
             r'(?P<interface_name>\S+) +(?P<count>\d+) +pkts'
             r'(, +Entropy +label: +(?P<entropy_label>\S+))?$')
 
+        # RESV
+        p12_1 = re.compile(r'^(?P<heading>(PATH|RESV))$')
+
         # incoming message handle: P-8/1, Message ID: 23, Epoch: 385353
-        p12_2 = re.compile(r'incoming +message +handle: '
-                           r'(?P<in_message_handle>\S+), Message ID: '
-                           r'(?P<in_message_id>\S+), Epoch: (?P<in_epoch>\S+)')
+        p12_2 = re.compile(r'incoming +message +handle: +'
+                           r'(?P<in_message_handle>\S+), +Message +ID: +'
+                           r'(?P<in_message_id>\S+), +Epoch: +(?P<in_epoch>\S+)')
 
         # outgoing message state: refreshing, Message ID: 23, Epoch: 385318
-        p12_3 = re.compile(r'outgoing +message +state: '
-                           r'(?P<out_message_state>\S+), Message ID: '
-                           r'(?P<out_message_id>\S+), Epoch: (?P<out_epoch>\S+)')
+        p12_3 = re.compile(r'outgoing +message +state: +'
+                           r'(?P<out_message_state>\S+), +Message +ID: +'
+                           r'(?P<out_message_id>\S+), +Epoch: +(?P<out_epoch>\S+)')
 
         # Adspec: received MTU 1500 sent MTU 1500
         p13 = re.compile(r'^Adspec: +(?P<adspec>.+)$')
@@ -221,12 +224,12 @@ class ShowMPLSLSPNameDetail(ShowMPLSLSPNameDetailSchema):
         # Enhanced FRR: Disabled (Upstream), Reason: Compatibility, Refresh: 30 secs
         p16_1 = re.compile(r'Enhanced +FRR: (?P<rsvp_lsp_enh_lp_upstream_status>\S+)'
                            r' +\(Upstream\), +Reason: +Compatibility, +Refresh: '
-                           r'+(?P<rsvp_lsp_enh_local_prot_refresh_interval>\S+)')
+                           r'+(?P<rsvp_lsp_enh_local_prot_refresh_interval>[\s\S]+)')
 
         # Enhanced FRR: Disabled (Downstream), Reason: Compatibility, Refresh: 30 secs
         p16_2 = re.compile(r'Enhanced +FRR: (?P<rsvp_lsp_enh_lp_downstream_status>\S+)'
                            r' +\(Downstream\), +Reason: +Compatibility, +Refresh: '
-                           r'+(?P<rsvp_lsp_enh_local_prot_refresh_interval>\S+)')
+                           r'+(?P<rsvp_lsp_enh_local_prot_refresh_interval>[\s\S]+)')
 
         for line in out.splitlines():
             line = line.strip()
@@ -364,7 +367,9 @@ class ShowMPLSLSPNameDetail(ShowMPLSLSPNameDetailSchema):
             # PATH rcvfrom: 10.169.14.157 (ge-0/0/0.0) 1 pkts
             # PATH sentto: 192.168.145.218 (ge-0/0/1.1) 1 pkts
             # RESV rcvfrom: 192.168.145.218 (ge-0/0/1.1) 1 pkts, Entropy label: Yes
-            m = p12.match(line)
+
+            # RESV
+            m = p12.match(line) or p12_1.match(line)
             if m:
                 group = m.groupdict()
 
@@ -383,10 +388,12 @@ class ShowMPLSLSPNameDetail(ShowMPLSLSPNameDetailSchema):
                 # 'interface-name': 'ge-0/0/0.0',
                 elif self.cli_command == 'show mpls lsp name {name} extensive':
                     for k, v in group.items():
-                        if k == 'interface-name':
-                            packet_dict[k.replace('_', '-')] = re.search('\((.+?)\)',v).group(1)
-                        else:
-                            packet_dict[k.replace('_', '-')] = v
+                        if v is not None:
+                            if k == 'interface_name':
+                                v = re.search('\((.+?)\)',v).group(1)
+                                packet_dict[k.replace('_', '-')] = v
+                            else:
+                                packet_dict[k.replace('_', '-')] = v
 
                 packet_list.append(packet_dict)
                 continue
