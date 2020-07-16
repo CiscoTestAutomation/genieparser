@@ -22,7 +22,6 @@ class ShowConfigurationProtocolsMplsLabelSwitchedPathSchema(MetaParser):
                 "protocols": {
                     "mpls": {
                         "label-switched-path": {
-                            Optional("name"): str,
                             "to": str,
                             "revert-timer": str,
                             Optional("no-cspf"): bool,
@@ -142,7 +141,6 @@ class ShowConfigurationProtocolsMplsPathSchema(MetaParser):
             "protocols": {
                 "mpls": {
                     "path": {
-                        Optional("name"): str,
                         "path-list": Use(validate_path_list_schema)
                     }
                 }
