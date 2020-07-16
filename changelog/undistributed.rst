@@ -25,6 +25,9 @@
         * show rsvp session
     * Added ShowRSVPNeighbor
         * show rsvp neighbor
+    * Added ShowConfigurationProtocolsMplsLabelSwitchedPath
+        * show configuration protocols mpls label-switched-path {path}
+        
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
