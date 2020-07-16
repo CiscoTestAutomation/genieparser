@@ -13,8 +13,10 @@
         * show mpls lsp name {name} detail
     * Show Ospf3 Route Network Extensive
         * Created ShowOspf3RouteNetworkExtensive
-    * Address ShowBFDSesssion
+    * Added ShowBFDSesssion
         * show bfd session
+    * Added ShowBFDSesssionDetail
+        * show bfd session {ipaddress} detail
     * Added ShowLDPSession
         * show ldp session
     * Added ShowClassOfService
