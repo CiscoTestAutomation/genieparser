@@ -2461,8 +2461,8 @@ class ShowRouteForwardingTableLabel(ShowRouteForwardingTableLabelSchema):
         # Destination        Type RtRef Next hop           Type Index    NhRef Netif
         p4 = re.compile(r'^Destination +Type +RtRef +Next hop +Type Index  +NhRef +Netif$')
 
-        # 16                 user     0 106.187.14.158    Pop        578     2 ge-0/0/0.0
-        # 16(S=0)            user     0 106.187.14.158    Pop        579     2 ge-0/0/0.0
+        # 16                 user     0 10.169.14.158    Pop        578     2 ge-0/0/0.0
+        # 16(S=0)            user     0 10.169.14.158    Pop        579     2 ge-0/0/0.0
         # 16(S=0) user 0 2001:AE Pop 579 2 ge-0/0/0.0
         # default            perm     0                    dscd      535     1
         p5 = re.compile(r'^(?P<rt_destination>\S+) +(?P<destination_type>\S+) +'

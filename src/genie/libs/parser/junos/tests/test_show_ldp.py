@@ -24,7 +24,7 @@ class TestShowLDPSession(unittest.TestCase):
     golden_parsed_output = {
         'ldp-session-information': {
             'ldp-session': [{
-                'ldp-neighbor-address': '59.128.2.250',
+                'ldp-neighbor-address': '10.34.2.250',
                 'ldp-session-state': 'Operational',
                 'ldp-connection-state': 'Open',
                 'ldp-remaining-time': '26',
@@ -37,7 +37,7 @@ class TestShowLDPSession(unittest.TestCase):
         'execute.return_value':
         '''
           Address                           State       Connection  Hold time  Adv. Mode
-        59.128.2.250                        Operational Open          26         DU
+        10.34.2.250                        Operational Open          26         DU
         '''
     }
 

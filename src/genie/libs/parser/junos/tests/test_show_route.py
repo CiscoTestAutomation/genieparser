@@ -49614,7 +49614,7 @@ class TestShowRouteForwardingTableLabel(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output_1 = {'execute.return_value': '''
-        kddi@sr_hktGCS002> show route forwarding-table label 16
+        show route forwarding-table label 16
         Routing table: default.mpls
         MPLS:
         Destination        Type RtRef Next hop           Type Index    NhRef Netif

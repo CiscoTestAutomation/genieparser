@@ -13,16 +13,24 @@
         * show mpls lsp name {name} detail
     * Show Ospf3 Route Network Extensive
         * Created ShowOspf3RouteNetworkExtensive
-    * Address ShowBFDSesssion
+    * Added ShowBFDSesssion
         * show bfd session
+    * Added ShowBFDSesssionDetail
+        * show bfd session {ipaddress} detail
     * Added ShowLDPSession
         * show ldp session
     * Added ShowClassOfService
         * show class-of-service interface {interface}
     * Added ShowRouteForwardingTableLabel
         * show route forwarding-table label {label}
+    * Added ShowRSVPSession
+        * show rsvp session
     * Added ShowRSVPNeighbor
         * show rsvp neighbor
+    * Added ShowRSVPNeighborDetail
+        * show rsvp neighbor detail
+
+
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
