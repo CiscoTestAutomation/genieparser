@@ -123,7 +123,7 @@ class ShowBFDSessionDetail(ShowBFDSessionDetailSchema):
 
     cli_command = 'show bfd session {ipaddress} detail'
 
-    def cli(self, ipaddress=None, output=None):
+    def cli(self, ipaddress, output=None):
         if not output:
             cmd = self.cli_command.format(ipaddress=ipaddress)
             out = self.device.execute(cmd)

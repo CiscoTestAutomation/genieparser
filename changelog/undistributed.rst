@@ -27,6 +27,10 @@
         * show rsvp session
     * Added ShowRSVPNeighbor
         * show rsvp neighbor
+    * Added ShowRSVPNeighborDetail
+        * show rsvp neighbor detail
+
+
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
