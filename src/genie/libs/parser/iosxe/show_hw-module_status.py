@@ -88,6 +88,8 @@ class Show_Hw-Module_Status(Show_Hw-Module_StatusSchema):
                 groups = match.groupdict()
                 subslot = f"subslot_{groups['slot_id']}/{groups['subslot_id']}"
                 transceiver = f"transceiver_{groups['port_id']}"
+                # These if statements are used to prevent overwriting an existing dict.
+                # The module subslot may have multiple modules and modules may have multiple interfaces
                 if transceiver_dict == {}:
                     transceiver_dict.update({'transceiver_status': {}})
                 if not transceiver_dict['transceiver_status'].get(subslot):
