@@ -54,7 +54,7 @@ class ShowConfigurationProtocolsMplsLabelSwitchedPath(ShowConfigurationProtocols
 
         ret_dict = {}
 
-        # to 27.85.194.125;
+        # to 10.49.194.125;
         p1 = re.compile(r'^to +(?P<to>[^\s;]+);$')
 
         # revert-timer 0;
@@ -74,7 +74,7 @@ class ShowConfigurationProtocolsMplsLabelSwitchedPath(ShowConfigurationProtocols
         for line in out.splitlines():
             line = line.strip()
 
-            # to 27.85.194.125;
+            # to 10.49.194.125;
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -124,5 +124,66 @@ class ShowConfigurationProtocolsMplsPathSchema(MetaParser):
         show configuration protocols mpls path {path}
     """
 
+    def validate_path_list_schema(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('path list schema is not a list')
+    
+        path_list_schema = Schema({
+            'name': str,
+            'type': str,
+        })
+    
+        for item in value:
+            path_list_schema.validate(item)
+        return value
+
+    schema = {
+        "configuration": {
+            "protocols": {
+                "mpls": {
+                    "path": {
+                        Optional("name"): str,
+                        "path-list": Use(validate_path_list_schema)
+                    }
+                }
+            }
+        }
+    }
+
 class ShowConfigurationProtocolsMplsPath(ShowConfigurationProtocolsMplsPathSchema):
-    pass
+    """ Parser for:
+        * show configuration protocols mpls path {path}
+    """
+
+    cli_command = 'show configuration protocols mpls path {path}'
+
+    def cli(self, path, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(path=path))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # 10.0.0.1 strict;
+        p1 = re.compile(r'^(?P<name>\S+) +(?P<type>[^\s;]+);$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 10.0.0.1 strict;
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                path_list = ret_dict.setdefault('configuration', {})\
+                                    .setdefault('protocols', {})\
+                                    .setdefault('mpls', {})\
+                                    .setdefault('path', {})\
+                                    .setdefault('path-list', [])
+                path_dict = {}
+                path_dict.update({
+                    k.replace('_', '-'): v for k, v in group.items() if v is not None
+                })
+                path_list.append(path_dict)
+
+        return ret_dict
