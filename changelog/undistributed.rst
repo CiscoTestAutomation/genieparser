@@ -67,6 +67,8 @@
         * Modified regex to support different output
     * Updated ShowIpInterface
         * Enhanced parser and added optional values
+    * Updated ShowPlatformIntegrity
+        * to pretty print the rpc reply for netconf
 
 * NXOS
     * Updated ShowIpRoute
