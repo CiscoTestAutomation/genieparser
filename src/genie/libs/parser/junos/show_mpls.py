@@ -2,6 +2,7 @@
 
 JUNOS parsers for the following commands:
     * show mpls lsp name {name} detail
+    * show mpls lsp name {name} extensive
 """
 
 import re

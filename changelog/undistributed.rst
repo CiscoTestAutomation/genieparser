@@ -11,6 +11,8 @@
 * JUNOS
     * Created ShowMPLSLSPNameDetail
         * show mpls lsp name {name} detail
+    * Created ShowMPLSLSPNameExtensive
+        * show mpls lsp name {name} extensive
     * Show Ospf3 Route Network Extensive
         * Created ShowOspf3RouteNetworkExtensive
     * Address ShowBFDSesssion
