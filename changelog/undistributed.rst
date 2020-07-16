@@ -44,6 +44,8 @@
         * Modified regex to support different output
     * Updated ShowIpInterface
         * Enhanced parser and added optional values
+    * Updated ShowSegmentRoutingTrafficEngPolicy
+        * Enhanced the schema to support updated outputs
 
 * NXOS
     * Updated ShowIpRoute

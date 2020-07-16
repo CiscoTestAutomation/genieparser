@@ -1708,7 +1708,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(
         p1 = re.compile(r'^OSPF +database, +Area +(?P<ospf_area>[\d\.]+)$')
 
         # Router  *10.189.5.252     10.189.5.252     0x80001b9e  1801  0x22 0x1e2  120
-        # Network *20.0.0.3         3.3.3.3          0x80000002    65  0x22 0x9958  36
+        # Network *10.145.0.3         10.36.3.3          0x80000002    65  0x22 0x9958  36
         p2 = re.compile(
             r'^(?P<lsa_type>[a-zA-Z]+)( *)(?P<lsa_id>\*?[\d\.]+)'
             r'( +)(?P<advertising_router>\S+)( +)(?P<sequence_number>\S+)( +)(?P<age>\S+)'

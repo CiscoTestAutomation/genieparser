@@ -960,6 +960,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
 
             # Candidate-paths:
             #   Preference 400:
+            #   Preference 10 (PCEP)
             m = p3.match(line)
             if m:
                 aff_flag = False
@@ -971,6 +972,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                 continue
 
             #   Dynamic (pce) (inactive)
+            #   Dynamic (pce 10.229.11.11) (active)
             m = p4.match(line)
             if m:
                 aff_flag = False
