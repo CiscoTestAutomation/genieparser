@@ -71,10 +71,10 @@ class TestShowBFDSessionDetail(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value':'''
-    show bfd session address 59.128.2.250 detail
+    show bfd session address 10.34.2.250 detail
                                                       Detect   Transmit
     Address                  State     Interface      Time     Interval  Multiplier
-    59.128.2.250             Up                       1.500     0.500        3
+    10.34.2.250             Up                       1.500     0.500        3
      Client LDP-OAM, TX interval 0.050, RX interval 0.050
      Session up time 00:02:46
      Local diagnostic None, remote diagnostic None
@@ -97,7 +97,7 @@ class TestShowBFDSessionDetail(unittest.TestCase):
                 "remote-state": "Up",
                 "session-adaptive-multiplier": "3",
                 "session-detection-time": "1.500",
-                "session-neighbor": "59.128.2.250",
+                "session-neighbor": "10.34.2.250",
                 "session-state": "Up",
                 "session-transmission-interval": "0.500",
                 "session-type": "Multi hop BFD",
@@ -119,7 +119,7 @@ class TestShowBFDSessionDetail(unittest.TestCase):
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        obj = ShowBFDSessionDetail(device=self.device, ipaddress='59.128.2.250')
+        obj = ShowBFDSessionDetail(device=self.device, ipaddress='10.34.2.250')
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 

@@ -137,7 +137,7 @@ class ShowBFDSessionDetail(ShowBFDSessionDetailSchema):
         # ========================================================
         #                                                       Detect   Transmit
         #     Address                  State     Interface      Time     Interval  Multiplier
-        #     59.128.2.250             Up                       1.500     0.500        3
+        #     10.34.2.250             Up                       1.500     0.500        3
         p1 = re.compile(r'^(?P<session_neighbor>\S+) +'
                         r'(?P<session_state>\S+)'
                         r'( +(?P<session_interface>\S+))? +'
@@ -179,7 +179,7 @@ class ShowBFDSessionDetail(ShowBFDSessionDetailSchema):
 
             #                                                       Detect   Transmit
             #     Address                  State     Interface      Time     Interval  Multiplier
-            #     59.128.2.250             Up                       1.500     0.500        3
+            #     10.34.2.250             Up                       1.500     0.500        3
             #  ...
             #      Session up time 00:02:46
             #      Local diagnostic None, remote diagnostic None
