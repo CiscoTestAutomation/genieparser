@@ -422,7 +422,3 @@ class ShowRSVPSession(ShowRSVPSessionSchema):
                 continue
 
         return ret_dict
-
-
-
-        return ret_dict
