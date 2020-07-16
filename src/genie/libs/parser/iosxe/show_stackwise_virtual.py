@@ -18,8 +18,7 @@ class ShowStackwise_VirtualSchema(MetaParser):
             int: {
                   "id": int,
                   "ports": {
-                     "a_side": str,
-                     "b_side": str,
+                     int: str,
                 },
             }
         },
@@ -78,12 +77,12 @@ class ShowStackwise_Virtual(ShowStackwise_VirtualSchema):
             if pattern.match(line):
                 match = pattern.match(line)
                 switch = int(match.group("switch"))
-                a_side = match.group("port")
+                port = match.group("port")
                 vlink = match.group("vlink")
                 if not stackwise_obj.get("switches"):
                     stackwise_obj["switches"] = {}
                 stackwise_obj["switches"][switch] = {
-                    "ports": {"a_side": a_side, "b_side": "b_side"}
+                    "ports": {1: port}
                 }
                 stackwise_obj["switches"][switch]["id"] = int(vlink)
                 continue
@@ -91,9 +90,9 @@ class ShowStackwise_Virtual(ShowStackwise_VirtualSchema):
             #                                 TenGigabitEthernet1/0/47"
             pattern = re.compile("\s{10,}(?P<port>\S+)\s*$")
             if pattern.match(line):
-                b_side = match.group("port")
-                vlink = match.group("vlink")
-                stackwise_obj["switches"][switch]["ports"]["b_side"] = b_side
+                port = match.group("port")
+                num = len(stackwise_obj["switches"][switch]["ports"]) + 1
+                stackwise_obj["switches"][switch]["ports"][num] = port
                 continue
             raise ValueError(f"The following line was encounterd, and did not match any known pattern: '{line}'")
         return stackwise_obj
