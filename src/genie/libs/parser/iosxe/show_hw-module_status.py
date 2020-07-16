@@ -11,6 +11,8 @@ from genie.metaparser.util.schemaengine import Any, Optional
 # parser utils
 from genie.libs.parser.utils.common import Common
 
+from collections import defaultdict
+
 # ==========================
 # Schema for:
 #  * 'show_hw-module_status'
@@ -88,15 +90,7 @@ class Show_Hw-Module_Status(Show_Hw-Module_StatusSchema):
                 groups = match.groupdict()
                 subslot = f"subslot_{groups['slot_id']}/{groups['subslot_id']}"
                 transceiver = f"transceiver_{groups['port_id']}"
-                # These if statements are used to prevent overwriting an existing dict.
-                # The module subslot may have multiple modules and modules may have multiple interfaces
-                if transceiver_dict == {}:
-                    transceiver_dict.update({'transceiver_status': {}})
-                if not transceiver_dict['transceiver_status'].get(subslot):
-                    transceiver_dict['transceiver_status'].update({subslot: {}})
-                if not transceiver_dict['transceiver_status'][subslot].get(transceiver):
-                    transceiver_dict['transceiver_status'][subslot].update({transceiver: {}})
-                transceiver_dict['transceiver_status'][subslot][transceiver].update({'status': groups['status']})
+                transceiver_dict['transceiver_status'][subslot] = {transceiver: {'status': groups['status']}}
                 continue
             if regex:
                 match = regex.match((value))
