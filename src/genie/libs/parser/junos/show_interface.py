@@ -908,9 +908,10 @@ class ShowInterfaces(ShowInterfacesSchema):
             r'(?P<snmp_index>\d+)\)( +\(Generation +\S+\))?$')
 
         # Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
+        # Flags: Up SNMP-Traps 0x4000 VLAN-Tag [ 0x8100.1 ]  Encapsulation: ENET2
         p25 = re.compile(r'^Flags: +(?P<iff_up>\S+)( +SNMP-Traps)?'
-            r'( +(?P<internal_flags>\S+))?( +VLAN-Tag +\[ *\S+ *\])? +'
-            r'Encapsulation: +(?P<encapsulation>\S+)$$')
+            r'( +(?P<internal_flags>\S+))?( +VLAN-Tag +\[[\S\s]+\])? +'
+            r'Encapsulation: +(?P<encapsulation>\S+)$')
 
         # Input packets : 133657033
         p26 = re.compile(r'^Input +packets *: +(?P<input_packets>\S+)$')
