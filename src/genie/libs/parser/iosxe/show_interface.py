@@ -1884,7 +1884,7 @@ class ShowIpInterfaceSchema(MetaParser):
                     },
                     Optional('mtu'): int,
                     Optional('address_determined_by'): str,
-                    Optional('helper_address'): str,
+                    Optional('helper_address'): list,
                     Optional('directed_broadcast_forwarding'): bool,
                     Optional('out_common_access_list'): str,
                     Optional('out_access_list'): str,
@@ -2071,6 +2071,27 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                     interface_dict[interface]['helper_address'] = \
                         m.groupdict()['address']
                 continue
+            # Helper addresses are 10.1.1.1
+            p5_1 = re.compile(r'^Helper +addresses +are +(?P<address>[\w\.\:\s]+)$')
+            m = p5_1.match(line)
+            if m:
+                helper_flag = True
+                if 'not set' not in m.groupdict()['address']:
+                    helper_list = []
+                    helper_list.append(m.groupdict()['address'])
+                    interface_dict[interface]['helper_address'] = \
+                        helper_list
+                continue
+            
+            # 10.2.2.2
+            p5_2 = re.compile(r'^(?P<address>[\d\.]+)$')
+            m = p5_2.match(line)
+            if m:
+                if helper_flag:
+                    helper_list.append(m.groupdict()['address'])
+                    continue
+            else:
+                helper_flag = False
 
             # Directed broadcast forwarding is disabled
             p6 = re.compile(r'^Directed +broadcast +forwarding +is +(?P<status>\w+)$')

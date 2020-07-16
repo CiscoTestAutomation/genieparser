@@ -20,6 +20,7 @@ import re
 import logging
 from collections import OrderedDict
 import xml.etree.ElementTree as ET
+from xml.dom import minidom
 
 # Metaparser
 from genie.metaparser import MetaParser
@@ -30,6 +31,8 @@ try:
     import genie.parsergen
 except (ImportError, OSError):
     pass
+
+log = logging.getLogger(__name__)
 
 class ShowBootvarSchema(MetaParser):
     """Schema for show bootvar"""
@@ -6133,6 +6136,8 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
             out = self.device.get(filter=('xpath', '/boot-integrity-oper-data')).data_xml
         else:
             out = output
+
+        log.info(minidom.parseString(out).toprettyxml())
 
         root = ET.fromstring(out)
         boot_integrity_oper_data = Common.retrieve_xml_child(root=root, key='boot-integrity-oper-data')

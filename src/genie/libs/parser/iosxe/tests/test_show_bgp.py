@@ -2896,11 +2896,11 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                                                 '65100:601 '
                                                                 '65351:1 '
                                                                 'no-export',
-                                                    'gateway': '1.1.1.1',
+                                                    'gateway': '10.4.1.1',
                                                     'localpref': 150,
-                                                    'next_hop': '1.1.1.1',
+                                                    'next_hop': '10.4.1.1',
                                                     'origin_codes': 'i',
-                                                    'originator': '2.2.2.2',
+                                                    'originator': '10.16.2.2',
                                                     'route_info': '65000 '
                                                                     '65191 '
                                                                     '1111111002 '
@@ -2917,11 +2917,11 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
                                                                 '65100:500 '
                                                                 '65100:601 '
                                                                 '65351:1',
-                                                    'gateway': '1.1.1.1',
+                                                    'gateway': '10.4.1.1',
                                                     'localpref': 100,
-                                                    'next_hop': '1.1.1.1',
+                                                    'next_hop': '10.4.1.1',
                                                     'origin_codes': 'i',
-                                                    'originator': '2.2.2.2',
+                                                    'originator': '10.16.2.2',
                                                     'route_info': '65000 '
                                                                     '65191 '
                                                                     '1111111002 '
@@ -2961,11 +2961,11 @@ class TestShowIpBgpAllDetail(unittest.TestCase):
         Advertised to update-groups:
         8
         65000 65191 1111111002 1111111502 1111111001 1111111505 1111111005 1111111504 222222 333
-        1.1.1.1 from 1.1.1.1 (2.2.2.2)
+        10.4.1.1 from 10.4.1.1 (10.16.2.2)
         Origin IGP, localpref 150, valid, external, best
         Community: 65100:106 65100:500 65100:601 65351:1 no-export
         65000 65191 1111111002 1111111502 1111111001 1111111505 1111111005 1111111504 222222 333, (received-only)
-        1.1.1.1 from 1.1.1.1 (2.2.2.2)
+        10.4.1.1 from 10.4.1.1 (10.16.2.2)
         Origin IGP, localpref 100, valid, external
         Community: 65100:106 65100:500 65100:601 65351:1
 
