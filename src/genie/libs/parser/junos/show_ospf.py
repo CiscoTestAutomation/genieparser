@@ -1100,6 +1100,7 @@ class ShowOspfOverviewSchema(MetaParser):
                 },
                 "ospf-lsa-refresh-time": str,
                 "ospf-route-table-index": str,
+                Optional("ospf-configured-overload-remaining-time"): str,
                 "ospf-router-id": str,
                 Optional("ospf-spring-overview"): {
                     "ospf-node-segment": {
@@ -1248,6 +1249,12 @@ class ShowOspfOverview(ShowOspfOverviewSchema):
         #Backup SPF: Not Needed
         p22 = re.compile(
             r'^Backup +SPF: +(?P<ospf_backup_spf_status>[\S\s]+)$')
+
+        # Configured overload, expires in 14 seconds
+        p23 = re.compile(
+            r'^Configured +overload, +expires +in +'
+            r'(?P<ospf_configured_overload_remaining_time>\d+) +\S+$'
+        )
 
         for line in out.splitlines():
             line = line.strip()
@@ -1466,6 +1473,14 @@ class ShowOspfOverview(ShowOspfOverviewSchema):
                 })
                 if spring_dict:
                     ospf_entry_list['ospf-spring-overview'] = spring_dict
+                continue
+
+            # Configured overload, expires in 14 seconds
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_entry_list["ospf-configured-overload-remaining-time"] = \
+                    group["ospf_configured_overload_remaining_time"]
                 continue
 
         return ret_dict
@@ -1693,7 +1708,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(
         p1 = re.compile(r'^OSPF +database, +Area +(?P<ospf_area>[\d\.]+)$')
 
         # Router  *10.189.5.252     10.189.5.252     0x80001b9e  1801  0x22 0x1e2  120
-        # Network *20.0.0.3         3.3.3.3          0x80000002    65  0x22 0x9958  36
+        # Network *10.145.0.3         10.36.3.3          0x80000002    65  0x22 0x9958  36
         p2 = re.compile(
             r'^(?P<lsa_type>[a-zA-Z]+)( *)(?P<lsa_id>\*?[\d\.]+)'
             r'( +)(?P<advertising_router>\S+)( +)(?P<sequence_number>\S+)( +)(?P<age>\S+)'
@@ -2288,10 +2303,10 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
                 "aging-timer": {
                     "#text": str
                 },
-                "expiration-time": {
+                Optional("expiration-time"): {
                     "#text": str
                 },
-                "installation-time": {
+                Optional("installation-time"): {
                     "#text": str
                 },
                 Optional("generation-timer"): {
@@ -2310,7 +2325,7 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
                 "bits": str,
                 "link-count": str,
                 "ospf-link": Use(validate_ospf_link),
-                "ospf-lsa-topology": {
+                Optional("ospf-lsa-topology"): {
                     "ospf-lsa-topology-link":
                     Use(validate_ospf_lsa_topology_link),
                     "ospf-topology-id": str,
@@ -4072,13 +4087,13 @@ class ShowOspfRouteNetworkExtensive(ShowOspfRouteNetworkExtensiveSchema):
         # Topology default Route Table:
         p1 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +Route +Table:$')
 
-        # 1.0.0.0/24         Ext2  Network    IP            0 ge-0/0/0.0    40.0.0.4
+        #10.1.0.0/24         Ext2  Network    IP            0 ge-0/0/0.0    10.70.0.4
         p2 = re.compile(r'^(?P<address_prefix>\S+) +(?P<route_path_type>\S+) '
                         r'+(?P<route_type>\S+) +(?P<next_hop_type>\S+) +'
                         r'(?P<interface_cost>\d+) +(?P<interface_name>\S+)'
                         r'( +(?P<interface_address>\S+))?$')
 
-        # area 0.0.0.0, origin 4.4.4.4, priority medium
+        #area 0.0.0.0, origin 10.64.4.4, priority medium
         p3 = re.compile(r'^area +(?P<ospf_area>[\d\.]+)+, +origin '
                         r'+(?P<route_origin>[\d\.]+), +priority +'
                         r'(?P<route_priority>\w+)$')
@@ -4096,7 +4111,7 @@ class ShowOspfRouteNetworkExtensive(ShowOspfRouteNetworkExtensiveSchema):
 
                 ospf_topology_route_table['ospf-topology-name'] = group['ospf_topology_name']
 
-            # 1.0.0.0/24         Ext2  Network    IP            0 ge-0/0/0.0    40.0.0.4
+            #10.1.0.0/24         Ext2  Network    IP            0 ge-0/0/0.0    10.70.0.4
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -4124,7 +4139,7 @@ class ShowOspfRouteNetworkExtensive(ShowOspfRouteNetworkExtensiveSchema):
                 ospf_route_entry_dict.update({'ospf-next-hop': ospf_next_hop_dict})
                 continue
 
-            # area 0.0.0.0, origin 4.4.4.4, priority medium
+            #area 0.0.0.0, origin 10.64.4.4, priority medium
             m = p3.match(line)
             if m:
                 group = m.groupdict()
