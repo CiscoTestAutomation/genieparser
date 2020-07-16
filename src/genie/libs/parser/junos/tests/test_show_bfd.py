@@ -101,7 +101,7 @@ class TestShowBFDSessionDetail(unittest.TestCase):
                 "session-state": "Up",
                 "session-transmission-interval": "0.500",
                 "session-type": "Multi hop BFD",
-                "session-up-time": "00:02:53",
+                "session-up-time": "00:02:46",
                 "session-version": "1"
             },
             "clients": "1",
@@ -115,12 +115,12 @@ class TestShowBFDSessionDetail(unittest.TestCase):
         self.device = Mock(**self.empty_output)
         obj = ShowBFDSessionDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
+            parsed_output = obj.parse(ipaddress='')
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        obj = ShowBFDSessionDetail(device=self.device, ipaddress='59.128.2.250')
-        parsed_output = obj.parse()
+        obj = ShowBFDSessionDetail(device=self.device)
+        parsed_output = obj.parse(ipaddress='59.128.2.250')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
