@@ -8,7 +8,7 @@ from genie.metaparser.util.schemaengine import Optional
 # Schema for:
 #  * 'show stackwise-virtual'
 # ===========================
-class ShowStackwise_VirtualSchema(MetaParser):
+class ShowStackwiseVirtualSchema(MetaParser):
     """Schema for show stackwise-virtual."""
 
     schema = {
@@ -29,7 +29,7 @@ class ShowStackwise_VirtualSchema(MetaParser):
 # Parser for:
 #  * 'show stackwise-virtual'
 # ===========================
-class ShowStackwise_Virtual(ShowStackwise_VirtualSchema):
+class ShowStackwiseVirtual(ShowStackwiseVirtualSchema):
     """Parser for show stackwise-virtual"""
 
     cli_command = ["show stackwise-virtual"]

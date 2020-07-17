@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
-from genie.libs.parser.iosxe.show_stackwise_virtual import ShowStackwise_Virtual
+from genie.libs.parser.iosxe.show_stackwise_virtual import ShowStackwiseVirtual
 
 
 # ======================================
