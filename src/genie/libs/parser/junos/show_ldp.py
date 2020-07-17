@@ -84,102 +84,102 @@ class ShowLDPOverviewSchema(MetaParser):
         * show ldp overview
     """
     schema = {
-        "ldp_overview_information": {
-            "ldp_overview": {
-                "ldp_instance_name": str,
-                "ldp_reference_count": int,
-                "ldp_router_id": str,
-                "ldp_inet": str,
-                "ldp_transport_preference": str,
-                "ldp_message_id": int,
-                "ldp_configuration_sequence": int,
-                "ldp_deaggregate": str,
-                "ldp_explicit_null": str,
-                "ldp_ipv6_tunneling": str,
-                "ldp_strict_targeted_hellos": str,
-                "ldp_loopback_if_added": str,
-                "ldp_route_preference": int,
-                "ldp_unicast_transit_lsp_chaining": str,
-                "ldp_p2mp_transit_lsp_chaining": str,
-                "ldp_transit_lsp_route_stats": str,
-                "ldp_route_acknowledgement": str,
-                "ldp_bgp_export": str,
-                "ldp_mtu_discovery": str,
-                "ldp_sr_mapping_client": str,
-                "ldp_instance_capability": {
-                    "ldp_capability": str
+        "ldp-overview-information": {
+            "ldp-overview": {
+                "ldp-instance-name": str,
+                "ldp-reference-count": int,
+                "ldp-router-id": str,
+                "ldp-inet": str,
+                "ldp-transport-preference": str,
+                "ldp-message-id": int,
+                "ldp-configuration-sequence": int,
+                "ldp-deaggregate": str,
+                "ldp-explicit-null": str,
+                "ldp-ipv6-tunneling": str,
+                "ldp-strict-targeted-hellos": str,
+                "ldp-loopback-if-added": str,
+                "ldp-route-preference": int,
+                "ldp-unicast-transit-lsp-chaining": str,
+                "ldp-p2mp-transit-lsp-chaining": str,
+                "ldp-transit-lsp-route-stats": str,
+                "ldp-route-acknowledgement": str,
+                "ldp-bgp-export": str,
+                "ldp-mtu-discovery": str,
+                "ldp-sr-mapping-client": str,
+                "ldp-instance-capability": {
+                    "ldp-capability": str
                 },
-                "ldp_instance_egress_fec_capability": {
-                    "ldp_egress_fec_capability": str
+                "ldp-instance-egress-fec-capability": {
+                    "ldp-egress-fec-capability": str
                 },
-                "ldp_session_count": {
-                    "ldp_session_operational": int,
-                    "ldp_retention_mode": str,
-                    "ldp_control_mode": str
+                "ldp-session-count": {
+                    "ldp-session-operational": int,
+                    "ldp-retention-mode": str,
+                    "ldp-control-mode": str
                 },
-                Optional("ldp_dod_session_count"): str,
-                "ldp_auto_targeted_session": {
-                    "ldp_auto_targeted_session_enabled": str,
-                    "ldp_auto_targeted_dyn_tun_ses_count": int
+                Optional("ldp-dod-session-count"): str,
+                "ldp-auto-targeted-session": {
+                    "ldp-auto-targeted-session-enabled": str,
+                    "ldp-auto-targeted-dyn-tun-ses-count": int
                 },
-                "ldp_p2mp": {
-                    "ldp_p2mp_recursive_route_enabled": str,
-                    "ldp_p2mp_no_rsvp_tunneling_enabled": str
+                "ldp-p2mp": {
+                    "ldp-p2mp-recursive-route-enabled": str,
+                    "ldp-p2mp-no-rsvp-tunneling-enabled": str
                 },
-                "ldp_timer_overview": {
-                    "ldp_instance_keepalive_interval": int,
-                    "ldp_instance_keepalive_timeout": int,
-                    "ldp_instance_link_hello_interval": int,
-                    "ldp_instance_link_hello_hold_time": int,
-                    "ldp_instance_targeted_hello_interval": int,
-                    "ldp_instance_targeted_hello_hold_time": int,
-                    "ldp_instance_label_withdraw_delay": int,
-                    "ldp_instance_make_before_break_timeout": int,
-                    "ldp_instance_make_before_break_switchover_delay": int,
-                    "ldp_instance_link_protection_timeout": int
+                "ldp-timer-overview": {
+                    "ldp-instance-keepalive-interval": int,
+                    "ldp-instance-keepalive-timeout": int,
+                    "ldp-instance-link-hello-interval": int,
+                    "ldp-instance-link-hello-hold-time": int,
+                    "ldp-instance-targeted-hello-interval": int,
+                    "ldp-instance-targeted-hello-hold-time": int,
+                    "ldp-instance-label-withdraw-delay": int,
+                    "ldp-instance-make-before-break-timeout": int,
+                    "ldp-instance-make-before-break-switchover-delay": int,
+                    "ldp-instance-link-protection-timeout": int
                 },
-                "ldp_gr_overview": {
-                    "ldp_gr_restart": str,
-                    "ldp_gr_helper": str,
-                    "ldp_gr_restarting": str,
-                    "ldp_gr_reconnect_time": int,
-                    "ldp_gr_max_neighbor_reconnect_time": int,
-                    "ldp_gr_recovery_time": int,
-                    "ldp_gr_max_neighbor_recovery_time": int
+                "ldp-gr-overview": {
+                    "ldp-gr-restart": str,
+                    "ldp-gr-helper": str,
+                    "ldp-gr-restarting": str,
+                    "ldp-gr-reconnect-time": int,
+                    "ldp-gr-max-neighbor-reconnect-time": int,
+                    "ldp-gr-recovery-time": int,
+                    "ldp-gr-max-neighbor-recovery-time": int
                 },
-                "ldp_te_overview": {
-                    "ldp_te_bgp_igp": str,
-                    "ldp_te_both_ribs": str,
-                    "ldp_te_mpls_forwarding": str,
-                    Optional("ldp_rib_group_change_pending"): str
+                "ldp-te-overview": {
+                    "ldp-te-bgp-igp": str,
+                    "ldp-te-both-ribs": str,
+                    "ldp-te-mpls-forwarding": str,
+                    Optional("ldp-rib-group-change-pending"): str
                 },
-                "ldp_igp_overview": {
-                    "ldp_tracking_igp_metric": str,
-                    "ldp_igp_sync_session_up_delay": int
+                "ldp-igp-overview": {
+                    "ldp-tracking-igp-metric": str,
+                    "ldp-igp-sync-session-up-delay": int
                 },
-                "ldp_session_protect_overview": {
-                    "ldp_session_protect": str,
-                    "ldp_session_protect_timeout": int
+                "ldp-session-protect-overview": {
+                    "ldp-session-protect": str,
+                    "ldp-session-protect-timeout": int
                 },
-                "ldp_interface_address": {
-                    "interface_address": str
+                "ldp-interface-address": {
+                    "interface-address": str
                 },
-                "ldp_job_overview": {
-                    "ldp_read_job_time_quantum": int,
-                    "ldp_write_job_time_quantum": int,
-                    "ldp_read_job_loop_quantum": int,
-                    "ldp_write_job_loop_quantum": int,
-                    "ldp_inbound_read_job_time_quantum": int,
-                    "ldp_outbound_read_job_time_quantum": int,
-                    "ldp_inbound_read_job_loop_quantum": int,
-                    "ldp_outbound_read_job_loop_quantum": int
+                "ldp-job-overview": {
+                    "ldp-read-job-time-quantum": int,
+                    "ldp-write-job-time-quantum": int,
+                    "ldp-read-job-loop-quantum": int,
+                    "ldp-write-job-loop-quantum": int,
+                    "ldp-inbound-read-job-time-quantum": int,
+                    "ldp-outbound-read-job-time-quantum": int,
+                    "ldp-inbound-read-job-loop-quantum": int,
+                    "ldp-outbound-read-job-loop-quantum": int
                 },
-                "ldp_label_allocation": {
-                    "ldp_label_current_allocs": int,
-                    "ldp_label_total_allocs": int,
-                    "ldp_label_total_frees": int,
-                    "ldp_label_alloc_failure": int,
-                    "ldp_global_label_current_allocs": int
+                "ldp-label-allocation": {
+                    "ldp-label-current-allocs": int,
+                    "ldp-label-total-allocs": int,
+                    "ldp-label-total-frees": int,
+                    "ldp-label-alloc-failure": int,
+                    "ldp-global-label-current-allocs": int
                 }
             }
         }
@@ -192,8 +192,6 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
     """
 
     cli_command = 'show ldp overview'
-
-    # def insert_dict(a_dict, key, value):
 
     def cli(self, output=None):
         if not output:
@@ -215,83 +213,83 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
         ret_dict = {}
         overview_dict = {}
         var_dict = {
-            'Instance': ['ldp_instance_name', 'str'],
-            'Reference count': ['ldp_reference_count', 'int'],
-            'Router ID': ['ldp_router_id', 'str'],
-            'LDP inet': ['ldp_inet', 'str'],
-            'Transport preference': ['ldp_transport_preference', 'str'],
-            'Message id': ['ldp_message_id', 'int'],
-            'Configuration sequence': ['ldp_configuration_sequence', 'int'],
-            'Deaggregate': ['ldp_deaggregate', 'str'],
-            'Explicit null': ['ldp_explicit_null', 'str'],
-            'IPv6 tunneling': ['ldp_ipv6_tunneling', 'str'],
-            'Strict targeted hellos': ['ldp_strict_targeted_hellos', 'str'],
-            'Loopback if added': ['ldp_loopback_if_added', 'str'],
-            'Route preference': ['ldp_route_preference', 'int'],
-            'Unicast transit LSP chaining': ['ldp_unicast_transit_lsp_chaining', 'str'],
-            'P2MP transit LSP chaining': ['ldp_p2mp_transit_lsp_chaining', 'str'],
-            'Transit LSP statistics based on route statistics': ['ldp_transit_lsp_route_stats', 'str'],
-            'LDP route acknowledgement': ['ldp_route_acknowledgement', 'str'],
-            'BGP export': ['ldp_bgp_export', 'str'],
-            'LDP mtu discovery': ['ldp_mtu_discovery', 'str'],
-            'LDP SR Mapping Client': ['ldp_sr_mapping_client', 'str'],
-            'Capabilities enabled': ['ldp_capability', 'str'],
-            'Egress FEC capabilities enabled': ['ldp_egress_fec_capability', 'str'],
+            'Instance': ['ldp-instance-name', 'str'],
+            'Reference count': ['ldp-reference-count', 'int'],
+            'Router ID': ['ldp-router-id', 'str'],
+            'LDP inet': ['ldp-inet', 'str'],
+            'Transport preference': ['ldp-transport-preference', 'str'],
+            'Message id': ['ldp-message-id', 'int'],
+            'Configuration sequence': ['ldp-configuration-sequence', 'int'],
+            'Deaggregate': ['ldp-deaggregate', 'str'],
+            'Explicit null': ['ldp-explicit-null', 'str'],
+            'IPv6 tunneling': ['ldp-ipv6-tunneling', 'str'],
+            'Strict targeted hellos': ['ldp-strict-targeted-hellos', 'str'],
+            'Loopback if added': ['ldp-loopback-if-added', 'str'],
+            'Route preference': ['ldp-route-preference', 'int'],
+            'Unicast transit LSP chaining': ['ldp-unicast-transit-lsp-chaining', 'str'],
+            'P2MP transit LSP chaining': ['ldp-p2mp-transit-lsp-chaining', 'str'],
+            'Transit LSP statistics based on route statistics': ['ldp-transit-lsp-route-stats', 'str'],
+            'LDP route acknowledgement': ['ldp-route-acknowledgement', 'str'],
+            'BGP export': ['ldp-bgp-export', 'str'],
+            'LDP mtu discovery': ['ldp-mtu-discovery', 'str'],
+            'LDP SR Mapping Client': ['ldp-sr-mapping-client', 'str'],
+            'Capabilities enabled': ['ldp-capability', 'str'],
+            'Egress FEC capabilities enabled': ['ldp-egress-fec-capability', 'str'],
             # Downstream unsolicited sessions
-            'Operational': ['ldp_session_operational', 'int'],
-            'Retention': ['ldp_retention_mode', 'str'],
-            'Control': ['ldp_control_mode', 'str'],
+            'Operational': ['ldp-session-operational', 'int'],
+            'Retention': ['ldp-retention-mode', 'str'],
+            'Control': ['ldp-control-mode', 'str'],
             # Auto targeted sessions
-            'Auto targeted': ['ldp_auto_targeted_session_enabled', 'str'],
-            'Dynamic tunnel session count': ['ldp_auto_targeted_dyn_tun_ses_count', 'int'],
+            'Auto targeted': ['ldp-auto-targeted-session-enabled', 'str'],
+            'Dynamic tunnel session count': ['ldp-auto-targeted-dyn-tun-ses-count', 'int'],
             # P2MP
-            'Recursive route': ['ldp_p2mp_recursive_route_enabled', 'str'],
-            'No rsvp tunneling': ['ldp_p2mp_no_rsvp_tunneling_enabled', 'str'],
+            'Recursive route': ['ldp-p2mp-recursive-route-enabled', 'str'],
+            'No rsvp tunneling': ['ldp-p2mp-no-rsvp-tunneling-enabled', 'str'],
             # Timers
-            'Keepalive interval': ['ldp_instance_keepalive_interval', 'int'],
-            'Keepalive timeout': ['ldp_instance_keepalive_timeout', 'int'],
-            'Link hello interval': ['ldp_instance_link_hello_interval', 'int'],
-            'Link hello hold time': ['ldp_instance_link_hello_hold_time', 'int'],
-            'Targeted hello interval': ['ldp_instance_targeted_hello_interval', 'int'],
-            'Targeted hello hold time': ['ldp_instance_targeted_hello_hold_time', 'int'],
-            'Label withdraw delay': ['ldp_instance_label_withdraw_delay', 'int'],
-            'Make before break timeout': ['ldp_instance_make_before_break_timeout', 'int'],
-            'Make before break switchover delay': ['ldp_instance_make_before_break_switchover_delay', 'int'],
-            'Link protection timeout': ['ldp_instance_link_protection_timeout', 'int'],
+            'Keepalive interval': ['ldp-instance-keepalive-interval', 'int'],
+            'Keepalive timeout': ['ldp-instance-keepalive-timeout', 'int'],
+            'Link hello interval': ['ldp-instance-link-hello-interval', 'int'],
+            'Link hello hold time': ['ldp-instance-link-hello-hold-time', 'int'],
+            'Targeted hello interval': ['ldp-instance-targeted-hello-interval', 'int'],
+            'Targeted hello hold time': ['ldp-instance-targeted-hello-hold-time', 'int'],
+            'Label withdraw delay': ['ldp-instance-label-withdraw-delay', 'int'],
+            'Make before break timeout': ['ldp-instance-make-before-break-timeout', 'int'],
+            'Make before break switchover delay': ['ldp-instance-make-before-break-switchover-delay', 'int'],
+            'Link protection timeout': ['ldp-instance-link-protection-timeout', 'int'],
             # Graceful restart
-            'Restart': ['ldp_gr_restart', 'str'],
-            'Helper': ['ldp_gr_helper', 'str'],
-            'Restart in process': ['ldp_gr_restarting', 'str'],
-            'Reconnect time': ['ldp_gr_reconnect_time', 'int'],
-            'Max neighbor reconnect time': ['ldp_gr_max_neighbor_reconnect_time', 'int'],
-            'Recovery time': ['ldp_gr_recovery_time', 'int'],
-            'Max neighbor recovery time': ['ldp_gr_max_neighbor_recovery_time', 'int'],
+            'Restart': ['ldp-gr-restart', 'str'],
+            'Helper': ['ldp-gr-helper', 'str'],
+            'Restart in process': ['ldp-gr-restarting', 'str'],
+            'Reconnect time': ['ldp-gr-reconnect-time', 'int'],
+            'Max neighbor reconnect time': ['ldp-gr-max-neighbor-reconnect-time', 'int'],
+            'Recovery time': ['ldp-gr-recovery-time', 'int'],
+            'Max neighbor recovery time': ['ldp-gr-max-neighbor-recovery-time', 'int'],
             # Traffic Engineering
-            'Bgp igp': ['ldp_te_bgp_igp', 'str'],
-            'Both ribs': ['ldp_te_both_ribs', 'str'],
-            'Mpls forwarding': ['ldp_te_mpls_forwarding', 'str'],
+            'Bgp igp': ['ldp-te-bgp-igp', 'str'],
+            'Both ribs': ['ldp-te-both-ribs', 'str'],
+            'Mpls forwarding': ['ldp-te-mpls-forwarding', 'str'],
             # IGP
-            'Tracking igp metric': ['ldp_tracking_igp_metric', 'str'],
-            'Sync session up delay': ['ldp_igp_sync_session_up_delay', 'int'],
+            'Tracking igp metric': ['ldp-tracking-igp-metric', 'str'],
+            'Sync session up delay': ['ldp-igp-sync-session-up-delay', 'int'],
             # Session protection
-            'Session protection': ['ldp_session_protect', 'str'],
-            'Session protection timeout': ['ldp_session_protect_timeout', 'int'],
+            'Session protection': ['ldp-session-protect', 'str'],
+            'Session protection timeout': ['ldp-session-protect-timeout', 'int'],
             # LDP Job
-            'Read job time quantum': ['ldp_read_job_time_quantum', 'int'],
-            'Write job time quantum': ['ldp_write_job_time_quantum', 'int'],
-            'Read job loop quantum': ['ldp_read_job_loop_quantum', 'int'],
-            'Write job loop quantum': ['ldp_write_job_loop_quantum', 'int'],
-            'Backup inbound read job time quantum': ['ldp_inbound_read_job_time_quantum', 'int'],
-            'Backup outbound read job time quantum': ['ldp_outbound_read_job_time_quantum', 'int'],
-            'Backup inbound read job loop quantum': ['ldp_inbound_read_job_loop_quantum', 'int'],
+            'Read job time quantum': ['ldp-read-job-time-quantum', 'int'],
+            'Write job time quantum': ['ldp-write-job-time-quantum', 'int'],
+            'Read job loop quantum': ['ldp-read-job-loop-quantum', 'int'],
+            'Write job loop quantum': ['ldp-write-job-loop-quantum', 'int'],
+            'Backup inbound read job time quantum': ['ldp-inbound-read-job-time-quantum', 'int'],
+            'Backup outbound read job time quantum': ['ldp-outbound-read-job-time-quantum', 'int'],
+            'Backup inbound read job loop quantum': ['ldp-inbound-read-job-loop-quantum', 'int'],
             'Backup outbound read job loop quantum': [
-                'ldp_outbound_read_job_loop_quantum', 'int'],
+                'ldp-outbound-read-job-loop-quantum', 'int'],
             # Label allocation
-            'Current number of LDP labels allocated': ['ldp_label_current_allocs', 'int'],
-            'Total number of LDP labels allocated': ['ldp_label_total_allocs', 'int'],
-            'Total number of LDP labels freed': ['ldp_label_total_frees', 'int'],
-            'Total number of LDP label allocation failure': ['ldp_label_alloc_failure', 'int'],
-            'Current number of labels allocated by all protocols': ['ldp_global_label_current_allocs', 'int'],
+            'Current number of LDP labels allocated': ['ldp-label-current-allocs', 'int'],
+            'Total number of LDP labels allocated': ['ldp-label-total-allocs', 'int'],
+            'Total number of LDP labels freed': ['ldp-label-total-frees', 'int'],
+            'Total number of LDP label allocation failure': ['ldp-label-alloc-failure', 'int'],
+            'Current number of labels allocated by all protocols': ['ldp-global-label-current-allocs', 'int'],
         }
 
         # Instance: master
@@ -338,78 +336,91 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            m1 = p1.match(line)
+            # Downstream unsolicited Sessions:
             m2 = p2.match(line)
-            m3 = p3.match(line)
-            m4 = p4.match(line)
-            m5 = p5.match(line)
-            m6 = p6.match(line)
-            m7 = p7.match(line)
-            m8 = p8.match(line)
-            m9 = p9.match(line)
-            m10 = p10.match(line)
-            m11 = p11.match(line)
-
             if m2:
                 # Initialize sub dict
                 session_dict = overview_dict.setdefault(
-                    "ldp_session_count", {})
+                    "ldp-session-count", {})
                 session_flag = True
 
+            # Auto targeted sessions:
+            m3 = p3.match(line)
             if m3:
+                # if 'Auto targeted sessions' in line:
                 # Initialize sub dict
                 targeted_dict = overview_dict.setdefault(
-                    'ldp_auto_targeted_session', {})
+                    'ldp-auto-targeted-session', {})
                 auto_targeted_flag = True
 
+            # P2MP:
+            m4 = p4.match(line)
             if m4:
                 # Initialize sub dict
-                p2mp_dict = overview_dict.setdefault('ldp_p2mp', {})
+                p2mp_dict = overview_dict.setdefault('ldp-p2mp', {})
                 p2mp_flag = True
 
+            # Timers:
+            m5 = p5.match(line)
             if m5:
                 # Initialize sub dict
                 timers_dict = overview_dict.setdefault(
-                    'ldp_timer_overview', {})
+                    'ldp-timer-overview', {})
                 timers_flag = True
 
+            # Graceful restart:
+            m6 = p6.match(line)
             if m6:
                 # Initialize sub dict
-                gr_dict = overview_dict.setdefault('ldp_gr_overview', {})
+                gr_dict = overview_dict.setdefault('ldp-gr-overview', {})
                 grace_restart_flag = True
 
+            # IGP:
+            m7 = p7.match(line)
             if m7:
                 # Initialize sub dict
-                igp_dict = overview_dict.setdefault('ldp_igp_overview', {})
+                igp_dict = overview_dict.setdefault('ldp-igp-overview', {})
                 igp_flag = True
 
+            # Session protection:
+            m8 = p8.match(line)
             if m8:
                 # Initialize sub dict
                 session_pr_dict = overview_dict.setdefault(
-                    'ldp_session_protect_overview', {})
+                    'ldp-session-protect-overview', {})
                 session_protection_flag = True
 
+            # Traffic Engineering:
+            m9 = p9.match(line)
             if m9:
                 # Initialize sub dict
-                te_dict = overview_dict.setdefault('ldp_te_overview', {})
+                te_dict = overview_dict.setdefault('ldp-te-overview', {})
                 traffic_engineering_flag = True
 
+            # LDP Job:
+            m10 = p10.match(line)
             if m10:
                 # Initialize sub dict
-                job_dict = overview_dict.setdefault('ldp_job_overview', {})
+                job_dict = overview_dict.setdefault('ldp-job-overview', {})
                 ldp_job_flag = True
 
+            # Label allocation:
+            m11 = p11.match(line)
             if m11:
                 # Initialize sub dict
                 label_alloc_dict = overview_dict.setdefault(
-                    'ldp_label_allocation', {})
+                    'ldp-label-allocation', {})
                 label_alloc_flag = True
 
+            # Instance: master
+            # Reconnect time: 60000, Max neighbor reconnect time: 120000
+            # Restart: disabled, Helper: enabled, Restart in process: false
+            m1 = p1.match(line)
             if m1:
                 group = m1.groupdict()
                 # Initialize dict structure
                 overview_dict = ret_dict.setdefault(
-                    "ldp_overview_information", {}).setdefault("ldp_overview", {})
+                    "ldp-overview-information", {}).setdefault("ldp-overview", {})
 
                 # Retrieve a list from predefined dict
                 hold_list = var_dict.get(group['var'])
@@ -445,11 +456,11 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
                         session_flag = False
                 elif 'Egress FEC capabilities enabled' in group['var']:
                     overview_dict.setdefault(
-                        'ldp_instance_egress_fec_capability', {'ldp_egress_fec_capability': group['value']})
+                        'ldp-instance-egress-fec-capability', {'ldp-egress-fec-capability': group['value']})
 
                 elif 'Capabilities enabled' in group['var']:
                     overview_dict.setdefault(
-                        'ldp_instance_capability', {'ldp_capability': group['value']})
+                        'ldp-instance-capability', {'ldp-capability': group['value']})
 
                 elif auto_targeted_flag:
                     targeted_dict.update({hold_list[0]: defined_value})
@@ -516,7 +527,7 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
             if m12:
                 group = m12.groupdict()
                 interface_dict = overview_dict.setdefault(
-                    'ldp_interface_address', {})
-                interface_dict.update({'interface_address': group['ip']})
+                    'ldp-interface-address', {})
+                interface_dict.update({'interface-address': group['ip']})
 
         return ret_dict

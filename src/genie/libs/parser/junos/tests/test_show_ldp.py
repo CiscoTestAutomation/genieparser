@@ -137,101 +137,101 @@ class TestShowLDPOverview(unittest.TestCase):
     '''}
 
     golden_parsed_output = {
-        'ldp_overview_information': {
-            'ldp_overview': {
-                'ldp_auto_targeted_session': {
-                    'ldp_auto_targeted_dyn_tun_ses_count': 0,
-                    'ldp_auto_targeted_session_enabled': 'disabled'
+        'ldp-overview-information': {
+            'ldp-overview': {
+                'ldp-auto-targeted-session': {
+                    'ldp-auto-targeted-dyn-tun-ses-count': 0,
+                    'ldp-auto-targeted-session-enabled': 'disabled'
                 },
-                'ldp_bgp_export': 'enabled',
-                'ldp_configuration_sequence': 1,
-                'ldp_deaggregate': 'disabled',
-                'ldp_explicit_null': 'disabled',
-                'ldp_gr_overview': {
-                    'ldp_gr_helper': 'enabled',
-                    'ldp_gr_max_neighbor_reconnect_time': 120000,
-                    'ldp_gr_max_neighbor_recovery_time': 240000,
-                    'ldp_gr_reconnect_time': 60000,
-                    'ldp_gr_recovery_time': 160000,
-                    'ldp_gr_restart': 'disabled',
-                    'ldp_gr_restarting': 'false'
+                'ldp-bgp-export': 'enabled',
+                'ldp-configuration-sequence': 1,
+                'ldp-deaggregate': 'disabled',
+                'ldp-explicit-null': 'disabled',
+                'ldp-gr-overview': {
+                    'ldp-gr-helper': 'enabled',
+                    'ldp-gr-max-neighbor-reconnect-time': 120000,
+                    'ldp-gr-max-neighbor-recovery-time': 240000,
+                    'ldp-gr-reconnect-time': 60000,
+                    'ldp-gr-recovery-time': 160000,
+                    'ldp-gr-restart': 'disabled',
+                    'ldp-gr-restarting': 'false'
                 },
-                'ldp_igp_overview': {
-                    'ldp_igp_sync_session_up_delay': 10,
-                    'ldp_tracking_igp_metric': 'disabled'
+                'ldp-igp-overview': {
+                    'ldp-igp-sync-session-up-delay': 10,
+                    'ldp-tracking-igp-metric': 'disabled'
                 },
-                'ldp_inet': 'enabled',
-                'ldp_instance_capability': {
-                    'ldp_capability': 'none'
+                'ldp-inet': 'enabled',
+                'ldp-instance-capability': {
+                    'ldp-capability': 'none'
                 },
-                'ldp_instance_egress_fec_capability': {
-                    'ldp_egress_fec_capability': 'entropy-label-capability'
+                'ldp-instance-egress-fec-capability': {
+                    'ldp-egress-fec-capability': 'entropy-label-capability'
                 },
-                'ldp_instance_name': 'master',
-                'ldp_interface_address': {
-                    'interface_address': '106.187.14.157'
+                'ldp-instance-name': 'master',
+                'ldp-interface-address': {
+                    'interface-address': '106.187.14.157'
                 },
-                'ldp_ipv6_tunneling': 'disabled',
-                'ldp_job_overview': {
-                    'ldp_inbound_read_job_loop_quantum': 100,
-                    'ldp_inbound_read_job_time_quantum': 1000,
-                    'ldp_outbound_read_job_loop_quantum': 100,
-                    'ldp_outbound_read_job_time_quantum': 1000,
-                    'ldp_read_job_loop_quantum': 100,
-                    'ldp_read_job_time_quantum': 1000,
-                    'ldp_write_job_loop_quantum': 100,
-                    'ldp_write_job_time_quantum': 1000
+                'ldp-ipv6-tunneling': 'disabled',
+                'ldp-job-overview': {
+                    'ldp-inbound-read-job-loop-quantum': 100,
+                    'ldp-inbound-read-job-time-quantum': 1000,
+                    'ldp-outbound-read-job-loop-quantum': 100,
+                    'ldp-outbound-read-job-time-quantum': 1000,
+                    'ldp-read-job-loop-quantum': 100,
+                    'ldp-read-job-time-quantum': 1000,
+                    'ldp-write-job-loop-quantum': 100,
+                    'ldp-write-job-time-quantum': 1000
                 },
-                'ldp_label_allocation': {
-                    'ldp_global_label_current_allocs': 0,
-                    'ldp_label_alloc_failure': 0,
-                    'ldp_label_current_allocs': 1,
-                    'ldp_label_total_allocs': 1,
-                    'ldp_label_total_frees': 0
+                'ldp-label-allocation': {
+                    'ldp-global-label-current-allocs': 0,
+                    'ldp-label-alloc-failure': 0,
+                    'ldp-label-current-allocs': 1,
+                    'ldp-label-total-allocs': 1,
+                    'ldp-label-total-frees': 0
                 },
-                'ldp_loopback_if_added': 'no',
-                'ldp_message_id': 4,
-                'ldp_mtu_discovery': 'disabled',
-                'ldp_p2mp': {
-                    'ldp_p2mp_no_rsvp_tunneling_enabled': 'disabled',
-                    'ldp_p2mp_recursive_route_enabled': 'disabled'
+                'ldp-loopback-if-added': 'no',
+                'ldp-message-id': 4,
+                'ldp-mtu-discovery': 'disabled',
+                'ldp-p2mp': {
+                    'ldp-p2mp-no-rsvp-tunneling-enabled': 'disabled',
+                    'ldp-p2mp-recursive-route-enabled': 'disabled'
                 },
-                'ldp_p2mp_transit_lsp_chaining': 'disabled',
-                'ldp_reference_count': 2,
-                'ldp_route_acknowledgement': 'enabled',
-                'ldp_route_preference': 9,
-                'ldp_router_id': '106.187.14.240',
-                'ldp_session_count': {
-                    'ldp_control_mode': 'ordered',
-                    'ldp_retention_mode': 'liberal',
-                    'ldp_session_operational': 1
+                'ldp-p2mp-transit-lsp-chaining': 'disabled',
+                'ldp-reference-count': 2,
+                'ldp-route-acknowledgement': 'enabled',
+                'ldp-route-preference': 9,
+                'ldp-router-id': '106.187.14.240',
+                'ldp-session-count': {
+                    'ldp-control-mode': 'ordered',
+                    'ldp-retention-mode': 'liberal',
+                    'ldp-session-operational': 1
                 },
-                'ldp_session_protect_overview': {
-                    'ldp_session_protect': 'disabled',
-                    'ldp_session_protect_timeout': 0
+                'ldp-session-protect-overview': {
+                    'ldp-session-protect': 'disabled',
+                    'ldp-session-protect-timeout': 0
                 },
-                'ldp_sr_mapping_client': 'disabled',
-                'ldp_strict_targeted_hellos': 'disabled',
-                'ldp_te_overview': {
-                    'ldp_te_bgp_igp': 'disabled',
-                    'ldp_te_both_ribs': 'disabled',
-                    'ldp_te_mpls_forwarding': 'disabled'
+                'ldp-sr-mapping-client': 'disabled',
+                'ldp-strict-targeted-hellos': 'disabled',
+                'ldp-te-overview': {
+                    'ldp-te-bgp-igp': 'disabled',
+                    'ldp-te-both-ribs': 'disabled',
+                    'ldp-te-mpls-forwarding': 'disabled'
                 },
-                'ldp_timer_overview': {
-                    'ldp_instance_keepalive_interval': 10,
-                    'ldp_instance_keepalive_timeout': 30,
-                    'ldp_instance_label_withdraw_delay': 60,
-                    'ldp_instance_link_hello_hold_time': 15,
-                    'ldp_instance_link_hello_interval': 5,
-                    'ldp_instance_link_protection_timeout': 120,
-                    'ldp_instance_make_before_break_switchover_delay': 3,
-                    'ldp_instance_make_before_break_timeout': 30,
-                    'ldp_instance_targeted_hello_hold_time': 45,
-                    'ldp_instance_targeted_hello_interval': 15
+                'ldp-timer-overview': {
+                    'ldp-instance-keepalive-interval': 10,
+                    'ldp-instance-keepalive-timeout': 30,
+                    'ldp-instance-label-withdraw-delay': 60,
+                    'ldp-instance-link-hello-hold-time': 15,
+                    'ldp-instance-link-hello-interval': 5,
+                    'ldp-instance-link-protection-timeout': 120,
+                    'ldp-instance-make-before-break-switchover-delay': 3,
+                    'ldp-instance-make-before-break-timeout': 30,
+                    'ldp-instance-targeted-hello-hold-time': 45,
+                    'ldp-instance-targeted-hello-interval': 15
                 },
-                'ldp_transit_lsp_route_stats': 'disabled',
-                'ldp_transport_preference': 'IPv4',
-                'ldp_unicast_transit_lsp_chaining': 'disabled'
+                'ldp-transit-lsp-route-stats': 'disabled',
+                'ldp-transport-preference': 'IPv4',
+                'ldp-unicast-transit-lsp-chaining': 'disabled'
             }
         }
     }
