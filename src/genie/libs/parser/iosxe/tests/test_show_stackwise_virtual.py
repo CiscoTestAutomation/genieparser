@@ -44,13 +44,13 @@ class test_show_stackwise_virtual(unittest.TestCase):
 
     def test_show_stackwise_virtual_full(self):
         self.device = Mock(**self.golden_output1)
-        obj = ShowStackwise_Virtual(device=self.device)
+        obj = ShowStackwiseVirtual(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_show_stackwise_virtual_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowStackwise_Virtual(device=self.device)
+        obj = ShowStackwiseVirtual(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
