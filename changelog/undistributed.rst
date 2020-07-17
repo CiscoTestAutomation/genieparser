@@ -31,7 +31,8 @@
         * show rsvp neighbor
     * Added ShowRSVPNeighborDetail
         * show rsvp neighbor detail
-
+    * Added ShowLDPInterface
+        * show ldp interface {interface}
 
 --------------------------------------------------------------------------------
                                 Fix
