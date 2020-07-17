@@ -93,7 +93,10 @@ class ShowLDPInterfaceSchema(MetaParser):
                 "ldp-interface-local-address": str,
                 "ldp-label-space-id": str,
                 "ldp-neighbor-count": str,
-                "ldp-next-hello": str
+                "ldp-next-hello": str,
+                Optional("ldp-holdtime"): str,
+                Optional("ldp-hello-interval"): str,
+                Optional("ldp-transport-address"): str,
             }
         }
     }
@@ -144,7 +147,7 @@ class ShowLDPInterface(ShowLDPInterfaceSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                ldp_interface_info_dict.update({k.replace('-', '_'):v for k, v in group.items() 
+                ldp_interface_info_dict.update({k.replace('_', '-'):v for k, v in group.items() 
                     if v is not None})
                 continue
 
@@ -152,7 +155,7 @@ class ShowLDPInterface(ShowLDPInterfaceSchema):
 
 class ShowLDPInterfaceDetail(ShowLDPInterface):
     cli_command = 'show ldp interface {interface} detail'
-    def cli(self, output=None):
+    def cli(self, interface, output=None):
 
         if not output:
             out = self.device.execute(self.cli_command.format(
@@ -161,4 +164,4 @@ class ShowLDPInterfaceDetail(ShowLDPInterface):
         else:
             out = output
         
-        return super().cli(output=' ' if not out else
+        return super().cli(interface=interface, output=' ' if not out else out)

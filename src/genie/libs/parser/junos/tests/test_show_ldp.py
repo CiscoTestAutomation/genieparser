@@ -115,7 +115,10 @@ class TestShowLDPInterfaceDetail(unittest.TestCase):
                 "ldp-interface-local-address": "10.169.14.157",
                 "ldp-label-space-id": "10.169.14.240:0",
                 "ldp-neighbor-count": "1",
-                "ldp-next-hello": "3"
+                "ldp-next-hello": "1",
+                "ldp-transport-address": "10.169.14.240",
+                "ldp-hello-interval": "5",
+                "ldp-holdtime": "15",
             }
         }
     }
@@ -126,8 +129,8 @@ class TestShowLDPInterfaceDetail(unittest.TestCase):
             show ldp interface ge-0/0/0.0 detail
             Interface          Address                          Label space ID   Nbr   Next
                                                                                 count  hello
-            ge-0/0/0.0         106.187.14.157                   106.187.14.240:0  1      1
-            Hello interval: 5, Hold time: 15, Transport address: 106.187.14.240
+            ge-0/0/0.0         10.169.14.157                   10.169.14.240:0  1      1
+            Hello interval: 5, Hold time: 15, Transport address: 10.169.14.240
         '''
     }
 
