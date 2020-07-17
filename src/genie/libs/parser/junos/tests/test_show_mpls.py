@@ -203,8 +203,8 @@ class TestShowMPLSLSPNameExtensive(unittest.TestCase):
 
     Transit LSP: 30 sessions
 
-    27.85.194.125
-      From: 27.85.194.127, LSPstate: Up, ActiveRoute: 0
+    10.49.194.125
+      From: 10.49.194.127, LSPstate: Up, ActiveRoute: 0
       LSPname: test_lsp_01, LSPpath: Primary
       Suggested label received: -, Suggested label sent: -
       Recovery label received: -, Recovery label sent: 44
@@ -214,17 +214,17 @@ class TestShowMPLSLSPNameExtensive(unittest.TestCase):
       Port number: sender 1 receiver 50088 protocol 0
       Enhanced FRR: Disabled (Upstream), Reason: Compatibility, Refresh: 30 secs
       Enhanced FRR: Disabled (Downstream), Reason: Compatibility, Refresh: 30 secs
-      PATH rcvfrom: 106.187.14.157 (ge-0/0/0.0) 1 pkts
+      PATH rcvfrom: 10.169.14.157 (ge-0/0/0.0) 1 pkts
            incoming message handle: P-8/1, Message ID: 23, Epoch: 385353
       Adspec: received MTU 1500 sent MTU 1500
-      PATH sentto: 203.181.106.218 (ge-0/0/1.1) 1 pkts
+      PATH sentto: 192.168.145.218 (ge-0/0/1.1) 1 pkts
            outgoing message state: refreshing, Message ID: 23, Epoch: 385318
-      RESV rcvfrom: 203.181.106.218 (ge-0/0/1.1) 1 pkts, Entropy label: Yes
+      RESV rcvfrom: 192.168.145.218 (ge-0/0/1.1) 1 pkts, Entropy label: Yes
            incoming message handle: R-59/1, Message ID: 74, Epoch: 385436
       RESV
            outgoing message state: refreshing, Message ID: 74, Epoch: 385318
-      Explct route: 203.181.106.218 27.85.194.65 27.85.194.66
-      Record route: 27.85.194.2 106.187.14.157 <self> 203.181.106.218 27.85.194.66
+      Explct route: 192.168.145.218 10.49.194.65 10.49.194.66
+      Record route: 10.49.194.2 10.169.14.157 <self> 192.168.145.218 10.49.194.66
     Total 1 displayed, Up 1, Down 0
     '''}
 
@@ -251,17 +251,17 @@ class TestShowMPLSLSPNameExtensive(unittest.TestCase):
                     "down-count": "0",
                     "rsvp-session": {
                         "adspec": "received MTU 1500 sent MTU 1500",
-                        "destination-address": "27.85.194.125",
+                        "destination-address": "10.49.194.125",
                         "explicit-route": {
                             "explicit-route-element": [
                                 {
-                                    "address": "203.181.106.218"
+                                    "address": "192.168.145.218"
                                 },
                                 {
-                                    "address": "27.85.194.65"
+                                    "address": "10.49.194.65"
                                 },
                                 {
-                                    "address": "27.85.194.66"
+                                    "address": "10.49.194.66"
                                 }
                             ]
                         },
@@ -279,13 +279,13 @@ class TestShowMPLSLSPNameExtensive(unittest.TestCase):
                                 "in-message-handle": "P-8/1",
                                 "in-message-id": "23",
                                 "interface-name": "ge-0/0/0.0",
-                                "previous-hop": "106.187.14.157"
+                                "previous-hop": "10.169.14.157"
                             },
                             {
                                 'heading': 'PATH',
                                 "count": "1",
                                 "interface-name": "ge-0/0/1.1",
-                                "next-hop": "203.181.106.218",
+                                "next-hop": "192.168.145.218",
                                 "out-epoch": "385318",
                                 "out-message-id": "23",
                                 "out-message-state": "refreshing"
@@ -298,7 +298,7 @@ class TestShowMPLSLSPNameExtensive(unittest.TestCase):
                                 "in-message-handle": "R-59/1",
                                 "in-message-id": "74",
                                 "interface-name": "ge-0/0/1.1",
-                                "previous-hop": "203.181.106.218"
+                                "previous-hop": "192.168.145.218"
                             },
                             {
                                 'heading': 'RESV',
@@ -312,10 +312,10 @@ class TestShowMPLSLSPNameExtensive(unittest.TestCase):
                         "psb-lifetime": "146",
                         "record-route": {
                             "address": [
-                                "27.85.194.2",
-                                "106.187.14.157",
-                                "203.181.106.218",
-                                "27.85.194.66"
+                                "10.49.194.2",
+                                "10.169.14.157",
+                                "192.168.145.218",
+                                "10.49.194.66"
                             ],
                         },
                         "recovery-label-in": "-",
@@ -332,7 +332,7 @@ class TestShowMPLSLSPNameExtensive(unittest.TestCase):
                             "rsvp-lsp-enh-lp-upstream-status": "Disabled"
                         },
                         "sender-tspec": "rate 0bps size 0bps peak Infbps m 20 M 1500",
-                        "source-address": "27.85.194.127",
+                        "source-address": "10.49.194.127",
                         "suggested-label-in": "-",
                         "suggested-label-out": "-",
                         "tunnel-id": "50088"

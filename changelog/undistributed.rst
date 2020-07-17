@@ -15,8 +15,10 @@
         * show mpls lsp name {name} extensive
     * Show Ospf3 Route Network Extensive
         * Created ShowOspf3RouteNetworkExtensive
-    * Address ShowBFDSesssion
+    * Added ShowBFDSesssion
         * show bfd session
+    * Added ShowBFDSesssionDetail
+        * show bfd session {ipaddress} detail
     * Added ShowLDPSession
         * show ldp session
     * Added ShowClassOfService
@@ -62,6 +64,10 @@
         * Missing key added
     * Updated ShowSystemUptime
         * Fixed optional key error, improved regex, and fixed return results
+    * Updated ShowInterfaces
+        * Optional key issue resolved
+        * Regex modified to support more output
+        * 'show interfaces extensive {interface}' changed to 'show interfaces {interface} extensive'
 * IOSXE
     * Updated ShowCdpNeighbors
         * Modified regex to support different output
@@ -69,6 +75,10 @@
         * Modified regex to support different output
     * Updated ShowIpInterface
         * Enhanced parser and added optional values
+    * Updated ShowSegmentRoutingTrafficEngPolicy
+        * Enhanced the schema to support updated outputs
+    * Updated ShowPlatformIntegrity
+        * to pretty print the rpc reply for netconf
 
 * NXOS
     * Updated ShowIpRoute

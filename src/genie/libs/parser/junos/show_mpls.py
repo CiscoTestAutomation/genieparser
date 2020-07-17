@@ -455,9 +455,9 @@ class ShowMPLSLSPNameDetail(ShowMPLSLSPNameDetailSchema):
 
                 #                         "record-route": {
                 #                             "address": [
-                #                                 "27.85.194.2",
-                #                                 "106.187.14.157",
-                #                                 "203.181.106.218",
+                #                                 "10.49.194.2",
+                #                                 "10.169.14.157",
+                #                                 "192.168.145.218",
                 #                             ],
                 #                         },
                 elif self.cli_command == 'show mpls lsp name {name} extensive':
