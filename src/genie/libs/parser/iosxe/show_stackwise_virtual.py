@@ -40,6 +40,18 @@ class ShowStackwise_Virtual(ShowStackwise_VirtualSchema):
         else:
             output = output
 
+        # Stackwise Virtual Configuration:
+        # --------------------------------
+        # Stackwise Virtual : Enabled
+        # Domain Number : 1  
+        # 
+        # Switch  Stackwise Virtual Link  Ports
+        # ------  ----------------------  ------
+        # 1       1                       TenGigabitEthernet1/0/47  
+        #                                 TenGigabitEthernet1/0/48  
+        # 2       1                       TenGigabitEthernet2/0/47  
+        #                                 TenGigabitEthernet2/0/48  
+
         # Stackwise Virtual : Enabled
         enabled_capture = "(?P<enabled>Enabled|Disabled)"
         p_enabled = re.compile(f"Stackwise\s+Virtual\s+:\s+{enabled_capture}")
