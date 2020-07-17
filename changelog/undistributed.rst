@@ -35,6 +35,8 @@
         * show ldp interface {interface}
     * Added ShowLDPInterfaceDetail
         * show ldp interface {interface} detail
+    * Added PingMplsRsvp
+        * ping mpls rsvp {rspv}
 
 --------------------------------------------------------------------------------
                                 Fix
