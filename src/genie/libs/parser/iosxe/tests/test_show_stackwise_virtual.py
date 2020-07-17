@@ -19,11 +19,11 @@ class test_show_stackwise_virtual(unittest.TestCase):
         "switches": {
             1: {
                 "id": 1,
-                "ports": {1: "HundredGigE1/0/3", 2: "HundredGigE1/0/3"},
+                "ports": {1: "HundredGigE1/0/3", 2: "HundredGigE1/0/4"},
             },
             2: {
                 "id": 1,
-                "ports": {1: "HundredGigE2/0/3", 2: "HundredGigE2/0/3"},
+                "ports": {1: "HundredGigE2/0/3", 2: "HundredGigE2/0/4"},
             },
         },
     }
