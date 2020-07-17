@@ -40,6 +40,23 @@ class ShowStackwise_Virtual(ShowStackwise_VirtualSchema):
         else:
             output = output
 
+        # Stackwise Virtual : Enabled
+        enabled_capture = "(?P<enabled>Enabled|Disabled)"
+        p_enabled = re.compile(f"Stackwise\s+Virtual\s+:\s+{enabled_capture}")
+
+        # Domain Number : 100
+        domain_capture = "(?P<domain>\d+)"
+        p_domain = re.compile(f"Domain\s+Number\s+:\s+{domain_capture}")
+
+        # 1       1                       TenGigabitEthernet1/0/47"
+        switch_capture = "(?P<switch>\d+)"
+        vlink_capture = "(?P<vlink>\d+)"
+        port_capture = "(?P<port>\S+)"
+        p_st_all = re.compile(f"{switch_capture}\s+{vlink_capture}\s+{port_capture}")
+
+        #                                 TenGigabitEthernet1/0/47"
+        p_st_int = re.compile("\s{10,}(?P<port>\S+)\s*$")
+
         stackwise_obj = {}
         for line in output.splitlines():
             # remove headers and empty lines
@@ -51,31 +68,20 @@ class ShowStackwise_Virtual(ShowStackwise_VirtualSchema):
             # remove headers
             elif re.search(r"Switch\s+Stackwise\s+Virtual\s+Link\s+Ports", line):
                 continue
-
-            # Stackwise Virtual : Enabled
-            enabled_capture = "(?P<enabled>Enabled|Disabled)"
-            match = re.search(f"Stackwise\s+Virtual\s+:\s+{enabled_capture}", line)
-            if match:
-                enabled = True if match.groupdict()["enabled"] == "Enabled" else False
+            elif p_enabled.match(line):
+                match = p_enabled.match(line)
+                enabled = True if match.group("enabled") == "Enabled" else False
                 stackwise_obj["enabled"] = enabled
                 continue
-
-            # Domain Number : 100
-            domain_capture = "(?P<domain>\d+)"
-            match = re.search(f"Domain\s+Number\s+:\s+{domain_capture}", line)
-            if match:
-                stackwise_obj["domain"] = int(match.groupdict()["domain"])
+            elif p_domain.match(line):
+                match = p_domain.match(line)
+                stackwise_obj["domain"] = int(match.group("domain"))
                 continue
-
-            # 1       1                       TenGigabitEthernet1/0/47"
-            switch_capture = "(?P<switch>\d+)"
-            vlink_capture = "(?P<vlink>\d+)"
-            port_capture = "(?P<port>\S+)"
-            match = re.search(f"{switch_capture}\s+{vlink_capture}\s+{port_capture}", line)
-            if match:
-                switch = int(match.groupdict()["switch"])
-                port = match.groupdict()["port"]
-                vlink = match.groupdict()["vlink"]
+            elif p_st_all.match(line):
+                match = p_st_all.match(line)
+                switch = int(match.group("switch"))
+                port = match.group("port")
+                vlink = match.group("vlink")
                 if not stackwise_obj.get("switches"):
                     stackwise_obj["switches"] = {}
                 stackwise_obj["switches"][switch] = {
@@ -83,11 +89,9 @@ class ShowStackwise_Virtual(ShowStackwise_VirtualSchema):
                 }
                 stackwise_obj["switches"][switch]["id"] = int(vlink)
                 continue
-
-            #                                 TenGigabitEthernet1/0/47"
-            match = re.search("\s{10,}(?P<port>\S+)\s*$", line)
-            if match:
-                port = match.groupdict()["port"]
+            elif p_st_int.match(line):
+                match = p_st_int.match(line)
+                port = match.group("port")
                 num = len(stackwise_obj["switches"][switch]["ports"]) + 1
                 stackwise_obj["switches"][switch]["ports"][num] = port
                 continue
