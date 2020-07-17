@@ -9,6 +9,7 @@ from pyats.topology import Device, loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 from genie.libs.parser.junos.show_ted import ShowTedDatabaseExtensive
+from genie.libs.parser.junos.show_ted import ShowTedDatabaseIpAddress
 
 '''
 Unit tests for:
@@ -17,7 +18,9 @@ Unit tests for:
 '''
 class test_show_ted_database(unittest.TestCase):
     device = Device(name='aDevice')
-
+    
+    maxDiff = None
+    
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
@@ -692,8 +695,7 @@ class test_show_ted_database(unittest.TestCase):
             }
         }
     }
-
-
+    
     def test_show_ted_database_extensive_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowTedDatabaseExtensive(device=self.device)
@@ -712,6 +714,70 @@ class test_show_ted_database(unittest.TestCase):
         parsed_output = obj.parse(node_id='10.34.2.250')
         self.assertEqual(parsed_output, self.golden_parsed_output_node_id)
 
+class TestShowTedDatabaseIpAddress(unittest.TestCase):
+    device = Device(name='aDevice')
+    
+    maxDiff = None
+    
+    empty_output = {'execute.return_value': ''}
+    
+    golden_output_ip_address = {'execute.return_value': '''
+        show ted database 59.128.2.250
+        TED database: 0 ISIS nodes 5 INET nodes
+        ID                            Type Age(s) LnkIn LnkOut Protocol
+        59.128.2.250                  Rtr    1876     2      2 OSPF(0.0.0.8)
+            To: 106.187.14.240, Local: 106.187.14.158, Remote: 106.187.14.157
+            Local interface index: 333, Remote interface index: 0
+            To: 59.128.3.252, Local: 203.181.106.217, Remote: 203.181.106.218
+            Local interface index: 337, Remote interface index: 0
+    '''}
+    
+    golden_parsed_output_ip_address = {
+        "ted-database-information": {
+            "ted-database": {
+                "ted-database-age": "1876",
+                "ted-database-id": "59.128.2.250",
+                "ted-database-link-in": "2",
+                "ted-database-link-out": "2",
+                "ted-database-protocol": "OSPF(0.0.0.8)",
+                "ted-database-type": "Rtr",
+                "ted-link": [
+                    {
+                        "ted-link-local-address": "106.187.14.158",
+                        "ted-link-local-ifindex": "333",
+                        "ted-link-protocol": "OSPF(0.0.0.8)",
+                        "ted-link-remote-address": "106.187.14.157",
+                        "ted-link-remote-ifindex": "0",
+                        "ted-link-to": "106.187.14.240"
+                    },
+                    {
+                        "ted-link-local-address": "203.181.106.217",
+                        "ted-link-local-ifindex": "337",
+                        "ted-link-protocol": "OSPF(0.0.0.8)",
+                        "ted-link-remote-address": "203.181.106.218",
+                        "ted-link-remote-ifindex": "0",
+                        "ted-link-to": "59.128.3.252"
+                    }
+                ]
+            },
+            "ted-database-summary": {
+                "ted-database-inet-count": "5",
+                "ted-database-iso-count": "0"
+            }
+        }
+    }
+    
+    def test_show_ted_database_extensive_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowTedDatabaseExtensive(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+        
+    def test_show_ted_database_ip_address(self):
+        self.device = Mock(**self.golden_output_ip_address)
+        obj = ShowTedDatabaseIpAddress(device=self.device)
+        parsed_output = obj.parse(ip_address='59.128.2.250')
+        self.assertEqual(parsed_output, self.golden_parsed_output_ip_address)
 
 if __name__ == '__main__':
     unittest.main()
