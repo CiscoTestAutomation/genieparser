@@ -2,6 +2,7 @@
 
 JUNOS parsers for the following commands:
     * show mpls lsp name {name} detail
+    * show mpls lsp name {name} extensive
 """
 
 import re
@@ -28,9 +29,15 @@ class ShowMPLSLSPNameDetailSchema(MetaParser):
                 "heading": str,
                 Optional("next-hop"): str,
                 Optional("previous-hop"): str,
-                "interface-name": str,
-                "count": str,
+                Optional("interface-name"): str,
+                Optional("count"): str,
                 Optional("entropy-label"): str,
+                Optional("in-epoch"): str,
+                Optional("in-message-handle"): str,
+                Optional("in-message-id"): str,
+                Optional("out-epoch"): str,
+                Optional("out-message-state"): str,
+                Optional("out-message-id"): str,
             })
 
             for item in value:
@@ -91,8 +98,17 @@ class ShowMPLSLSPNameDetailSchema(MetaParser):
                     "explicit-route-element": Use(validate_explicit_route)
                 },
                 "record-route": {
-                    "record-route-element": Use(validate_record_route)
-                }
+                    Optional("record-route-element"): Use(validate_record_route),
+                    Optional("address"): list,
+                },
+                Optional("rsvp-lsp-enh-local-prot-downstream"): {
+                    "rsvp-lsp-enh-local-prot-refresh-interval": str,
+                    "rsvp-lsp-enh-lp-downstream-status": str
+                },
+                Optional("rsvp-lsp-enh-local-prot-upstream"): {
+                    "rsvp-lsp-enh-local-prot-refresh-interval": str,
+                    "rsvp-lsp-enh-lp-upstream-status": str
+                },
             },
             "display-count": str,
             "up-count": str,
@@ -184,6 +200,19 @@ class ShowMPLSLSPNameDetail(ShowMPLSLSPNameDetailSchema):
             r'(?P<interface_name>\S+) +(?P<count>\d+) +pkts'
             r'(, +Entropy +label: +(?P<entropy_label>\S+))?$')
 
+        # RESV
+        p12_1 = re.compile(r'^(?P<heading>(PATH|RESV))$')
+
+        # incoming message handle: P-8/1, Message ID: 23, Epoch: 385353
+        p12_2 = re.compile(r'incoming +message +handle: +'
+                           r'(?P<in_message_handle>\S+), +Message +ID: +'
+                           r'(?P<in_message_id>\S+), +Epoch: +(?P<in_epoch>\S+)')
+
+        # outgoing message state: refreshing, Message ID: 23, Epoch: 385318
+        p12_3 = re.compile(r'outgoing +message +state: +'
+                           r'(?P<out_message_state>\S+), +Message +ID: +'
+                           r'(?P<out_message_id>\S+), +Epoch: +(?P<out_epoch>\S+)')
+
         # Adspec: received MTU 1500 sent MTU 1500
         p13 = re.compile(r'^Adspec: +(?P<adspec>.+)$')
 
@@ -192,6 +221,16 @@ class ShowMPLSLSPNameDetail(ShowMPLSLSPNameDetailSchema):
 
         # Record route: 10.49.194.2 10.169.14.157 <self> 192.168.145.218
         p15 = re.compile(r'^Record +route: +(?P<addresses>.+)$')
+
+        # Enhanced FRR: Disabled (Upstream), Reason: Compatibility, Refresh: 30 secs
+        p16_1 = re.compile(r'Enhanced +FRR: (?P<rsvp_lsp_enh_lp_upstream_status>\S+)'
+                           r' +\(Upstream\), +Reason: +Compatibility, +Refresh: '
+                           r'+(?P<rsvp_lsp_enh_local_prot_refresh_interval>[\s\S]+)')
+
+        # Enhanced FRR: Disabled (Downstream), Reason: Compatibility, Refresh: 30 secs
+        p16_2 = re.compile(r'Enhanced +FRR: (?P<rsvp_lsp_enh_lp_downstream_status>\S+)'
+                           r' +\(Downstream\), +Reason: +Compatibility, +Refresh: '
+                           r'+(?P<rsvp_lsp_enh_local_prot_refresh_interval>[\s\S]+)')
 
         for line in out.splitlines():
             line = line.strip()
@@ -329,16 +368,47 @@ class ShowMPLSLSPNameDetail(ShowMPLSLSPNameDetailSchema):
             # PATH rcvfrom: 10.169.14.157 (ge-0/0/0.0) 1 pkts
             # PATH sentto: 192.168.145.218 (ge-0/0/1.1) 1 pkts
             # RESV rcvfrom: 192.168.145.218 (ge-0/0/1.1) 1 pkts, Entropy label: Yes
-            m = p12.match(line)
+
+            # RESV
+            m = p12.match(line) or p12_1.match(line)
             if m:
                 group = m.groupdict()
-                packet_list = rsvp_session.setdefault('packet-information', [])
+
+                if 'packet-information' not in rsvp_session:
+                    packet_list = rsvp_session.setdefault('packet-information', [])
+
                 packet_dict = {}
+
+                # 'interface-name': '(ge-0/0/0.0)',
+                if self.cli_command == 'show mpls lsp name {name} detail':
+                    packet_dict.update({
+                        k.replace('_', '-'): v
+                        for k, v in group.items() if v is not None
+                    })
+
+                # 'interface-name': 'ge-0/0/0.0',
+                elif self.cli_command == 'show mpls lsp name {name} extensive':
+                    for k, v in group.items():
+                        if v is not None:
+                            if k == 'interface_name':
+                                v = re.search('\((.+?)\)',v).group(1)
+                                packet_dict[k.replace('_', '-')] = v
+                            else:
+                                packet_dict[k.replace('_', '-')] = v
+
+                packet_list.append(packet_dict)
+                continue
+
+            # incoming message handle: P-8/1, Message ID: 23, Epoch: 385353
+            # outgoing message state: refreshing, Message ID: 23, Epoch: 385318
+            m = p12_2.match(line) or p12_3.match(line)
+            if m:
+                group = m.groupdict()
+
                 packet_dict.update({
                     k.replace('_', '-'): v
                     for k, v in group.items() if v is not None
                 })
-                packet_list.append(packet_dict)
                 continue
 
             # Adspec: received MTU 1500 sent MTU 1500
@@ -366,11 +436,79 @@ class ShowMPLSLSPNameDetail(ShowMPLSLSPNameDetailSchema):
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-                record_route_element = rsvp_session.setdefault('record-route', {}).\
-                    setdefault('record-route-element', [])
-                elements = group['addresses'].split(' ')
-                for address in elements:
-                    record_route_element.append({'address': address})
+
+                #                     'record-route': {
+                #                         'record-route-element': [{
+                #                             'address': '10.49.194.2'
+                #                         }, {
+                #                             'address': '10.169.14.157'
+                #                         }, {
+                #                             'address': '10.64.64.64'
+                #                         }]
+                #                     }
+                if self.cli_command == 'show mpls lsp name {name} detail':
+                    record_route_element = rsvp_session.setdefault('record-route', {}).\
+                        setdefault('record-route-element', [])
+                    elements = group['addresses'].split(' ')
+                    for address in elements:
+                        record_route_element.append({'address': address})
+
+                #                         "record-route": {
+                #                             "address": [
+                #                                 "10.49.194.2",
+                #                                 "10.169.14.157",
+                #                                 "192.168.145.218",
+                #                             ],
+                #                         },
+                elif self.cli_command == 'show mpls lsp name {name} extensive':
+                    record_route_address_list = rsvp_session.setdefault('record-route', {}).\
+                                            setdefault('address', [])
+                    elements = group['addresses'].split(' ')
+                    for address in elements:
+                        if address == '<self>':
+                            continue
+                        record_route_address_list.append(address)
+                continue
+
+            # Enhanced FRR: Disabled (Upstream), Reason: Compatibility, Refresh: 30 secs
+            m = p16_1.match(line)
+            if m:
+                group = m.groupdict()
+                upstream_dict = rsvp_session.setdefault("rsvp-lsp-enh-local-prot-upstream", {})
+
+                for k, v in group.items():
+                    upstream_dict[k.replace('_', '-')] = v
+
+                continue
+
+            # Enhanced FRR: Disabled (Downstream), Reason: Compatibility, Refresh: 30 secs
+            m = p16_2.match(line)
+            if m:
+                group = m.groupdict()
+                downstream_dict = rsvp_session.setdefault("rsvp-lsp-enh-local-prot-downstream", {})
+
+                for k, v in group.items():
+                    downstream_dict[k.replace('_', '-')] = v
+
                 continue
 
         return ret_dict
+
+
+class ShowMPLSLSPNameExtensive(ShowMPLSLSPNameDetail):
+    """
+    Parser for:
+        * show mpls lsp name {name} extensive
+    """
+
+    cli_command = 'show mpls lsp name {name} extensive'
+
+    def cli(self, name, output=None):
+
+        if not output:
+            cmd = self.cli_command.format(name=name)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        return super().cli(output=out, name=name)
