@@ -67,8 +67,8 @@ class TestShowLDPInterface(unittest.TestCase):
         "ldp-interface-information": {
             "ldp-interface": {
                 "interface-name": "ge-0/0/0.0",
-                "ldp-interface-local-address": "106.187.14.157",
-                "ldp-label-space-id": "106.187.14.240:0",
+                "ldp-interface-local-address": "10.169.14.157",
+                "ldp-label-space-id": "10.169.14.240:0",
                 "ldp-neighbor-count": "1",
                 "ldp-next-hello": "3"
             }
@@ -81,7 +81,7 @@ class TestShowLDPInterface(unittest.TestCase):
             show ldp interface ge-0/0/0.0
             Interface          Address                          Label space ID   Nbr   Next
                                                                                 count  hello
-            ge-0/0/0.0         106.187.14.157                   106.187.14.240:0  1      3
+            ge-0/0/0.0         10.169.14.157                   10.169.14.240:0  1      3
         '''
     }
 

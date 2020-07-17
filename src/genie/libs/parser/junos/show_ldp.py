@@ -112,7 +112,7 @@ class ShowLDPInterface(ShowLDPInterfaceSchema):
         else:
             out = output
         
-        # ge-0/0/0.0         106.187.14.157                   106.187.14.240:0  1      3
+        # ge-0/0/0.0         10.169.14.157                   10.169.14.240:0  1      3
         p1 = re.compile(r'^(?P<interface_name>\S+) +(?P<local_address>\S+) +'
             r'(?P<space_id>\S+) +(?P<neighbor_count>\d+) +(?P<next_hello>\d+)$')
 
@@ -121,7 +121,7 @@ class ShowLDPInterface(ShowLDPInterfaceSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # ge-0/0/0.0         106.187.14.157                   106.187.14.240:0  1      3
+            # ge-0/0/0.0         10.169.14.157                   10.169.14.240:0  1      3
             m = p1.match(line)
             if m:
                 group = m.groupdict()
