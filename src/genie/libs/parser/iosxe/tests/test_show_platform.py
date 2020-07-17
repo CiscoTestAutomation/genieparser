@@ -1706,7 +1706,7 @@ class TestShowVersion(unittest.TestCase):
         Smart Licensing Status: Registration Not Applicable/Not Applicable
 
         cisco C9500-24Y4C (X86) processor with 2900319K/6147K bytes of memory.
-        Processor board ID CAT2305L41U
+        Processor board ID CAT1111L41F
         1 Virtual Ethernet interface
         24 TwentyFive Gigabit Ethernet interfaces
         4 Hundred Gigabit Ethernet interfaces
@@ -1715,13 +1715,13 @@ class TestShowVersion(unittest.TestCase):
         11161600K bytes of Bootflash at bootflash:.
         1638400K bytes of Crash Files at crashinfo:.
 
-        Base Ethernet MAC Address          : 6c:8b:d3:ff:9f:ed
-        Motherboard Assembly Number        : 4874
-        Motherboard Serial Number          : CAT2305L41U
+        Base Ethernet MAC Address          : 1c:2b:d4:cc:7f:fd
+        Motherboard Assembly Number        : 1111
+        Motherboard Serial Number          : CAT1111L41F
         Model Revision Number              : V02
         Motherboard Revision Number        : 2
         Model Number                       : C9500-24Y4C
-        System Serial Number               : CAT2305L41U
+        System Serial Number               : CAT1111L41F
 
     '''}
 
@@ -1747,7 +1747,7 @@ class TestShowVersion(unittest.TestCase):
         "main_mem": "2900319",
         "processor_type": "X86",
         "rtr_type": "C9500-24Y4C",
-        "chassis_sn": "CAT2305L41U",
+        "chassis_sn": "CAT1111L41F",
         "number_of_intfs": {
             "Virtual Ethernet": "1",
             "TwentyFive Gigabit Ethernet": "24",
