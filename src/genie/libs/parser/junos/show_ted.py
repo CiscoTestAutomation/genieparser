@@ -356,7 +356,7 @@ class ShowTedDatabaseExtensive(ShowTedDatabaseExtensiveSchema):
 
 
 class ShowTedDatabaseIpAddressSchema(MetaParser):
-	""" Schema for:
+    """ Schema for:
             * show
 
 	schema = {
@@ -391,11 +391,11 @@ class ShowTedDatabaseIpAddressSchema(MetaParser):
     }
     """
     # Subschema ted link
-	def validate_ted_link(val):
-		''' Validates each value in ted link '''
-		if not isinstance(val, list):
-			raise SchemaTypeError('ted link is not a list')
-		ted_link_schema = Schema({
+    def validate_ted_link(val):
+        ''' Validates each value in ted link '''
+        if not isinstance(val, list):
+            raise SchemaTypeError('ted link is not a list')
+        ted_link_schema = Schema({
             Optional("@junos:style"): str,
             "ted-link-local-address": str,
             "ted-link-local-ifindex": str,
@@ -405,11 +405,11 @@ class ShowTedDatabaseIpAddressSchema(MetaParser):
             "ted-link-to": str
         })
 
-		for item in val:
-			ted_link_schema.validate(item)
-		return val
+        for item in val:
+            ted_link_schema.validate(item)
+        return val
     
-	schema = {
+    schema = {
         Optional("@xmlns:junos"): str,
         "ted-database-information": {
             Optional("@xmlns"): str,
@@ -431,87 +431,87 @@ class ShowTedDatabaseIpAddressSchema(MetaParser):
     }
 
 class ShowTedDatabaseIpAddress(ShowTedDatabaseIpAddressSchema):
-	""" Parser for:
+    """ Parser for:
             * show 
     """
-	cli_command = 'show ted database {ip_address}'
+    cli_command = 'show ted database {ip_address}'
 
-	def cli(self, ip_address, output=None):
-		if not output:
-			out = self.device.execute(self.cli_command.format(ip_address = ip_address))
-		else:
-			out = output
+    def cli(self, ip_address, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(ip_address = ip_address))
+        else:
+            out = output
 
-		ret_dict = {}
+        ret_dict = {}
 
         # TED database: 0 ISIS nodes 0 INET nodes
-		p1 = re.compile(r'^TED +database: +(?P<isis_nodes>\d+) +ISIS +nodes +' 
+        p1 = re.compile(r'^TED +database: +(?P<isis_nodes>\d+) +ISIS +nodes +' 
                   r'(?P<inet_nodes>\d+) +INET +nodes$')
         
         # 59.128.2.250                  Rtr    1876     2      2 OSPF(0.0.0.8)
-		p2 = re.compile(r'^(?P<id>\S+) +(?P<type>\S+) +(?P<age>\d+) +' 
+        p2 = re.compile(r'^(?P<id>\S+) +(?P<type>\S+) +(?P<age>\d+) +' 
                   r'(?P<link_in>\d) +(?P<link_out>\d) +(?P<protocol>[\w().]+)$')
 
         # To: 106.187.14.240, Local: 106.187.14.158, Remote: 106.187.14.157
-		p3 = re.compile(r'^To: +(?P<to>\S+), +Local: +(?P<local>\S+), +Remote: +' 
+        p3 = re.compile(r'^To: +(?P<to>\S+), +Local: +(?P<local>\S+), +Remote: +' 
                   r'(?P<remote>\S+)$')
   
         # Local interface index: 333, Remote interface index: 0
-		p4 = re.compile(r'^Local +interface +index: +' 
+        p4 = re.compile(r'^Local +interface +index: +' 
                   r'(?P<local_interface_index>\d+), +Remote +interface +index: +' 
                   r'(?P<remote_interface_index>\d+)$')
         
-		for line in out.splitlines():
-			line = line.strip()
+        for line in out.splitlines():
+            line = line.strip()
 
-			m = p1.match(line)
-			if m:
-			    group = m.groupdict()
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
 
-			    ted_link_enrty_list = []
+                ted_link_enrty_list = []
 			    
-			    ted_db_info = ret_dict.setdefault('ted-database-information', {})
-			    ted_db_summary = ted_db_info.setdefault("ted-database-summary", {})
-			    ted_db = ted_db_info.setdefault("ted-database", {})
+                ted_db_info = ret_dict.setdefault('ted-database-information', {})
+                ted_db_summary = ted_db_info.setdefault("ted-database-summary", {})
+                ted_db = ted_db_info.setdefault("ted-database", {})
 			    
-			    ted_db['ted-link'] = ted_link_enrty_list    # Ted link (list)
+                ted_db['ted-link'] = ted_link_enrty_list    # Ted link (list)
                 
-			    ted_db_summary.setdefault('ted-database-iso-count', 
+                ted_db_summary.setdefault('ted-database-iso-count', 
                                         group['isis_nodes'])
-			    ted_db_summary.setdefault('ted-database-inet-count', 
+                ted_db_summary.setdefault('ted-database-inet-count', 
                                         group['inet_nodes'])
-			    continue
+                continue
             
-			m = p2.match(line)
-			if m:
-			    group = m.groupdict()
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
        
-			    ted_db['ted-database-age'] = group['age']
-			    ted_db['ted-database-id'] = group['id']
-			    ted_db['ted-database-link-in'] = group['link_in']
-			    ted_db['ted-database-link-out'] = group['link_out']
-			    ted_db['ted-database-protocol'] = group['protocol']
-			    ted_db['ted-database-type'] = group['type']
+                ted_db['ted-database-age'] = group['age']
+                ted_db['ted-database-id'] = group['id']
+                ted_db['ted-database-link-in'] = group['link_in']
+                ted_db['ted-database-link-out'] = group['link_out']
+                ted_db['ted-database-protocol'] = group['protocol']
+                ted_db['ted-database-type'] = group['type']
                 
-			m = p3.match(line)
-			if m:
-			    group = m.groupdict()
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
        
-			    ted_link_entry_dict = {}
-			    ted_link_entry_dict['ted-link-to'] = group['to']
-			    ted_link_entry_dict['ted-link-local-address'] = group['local']
-			    ted_link_entry_dict['ted-link-remote-address'] = group['remote']
-			    continue
+                ted_link_entry_dict = {}
+                ted_link_entry_dict['ted-link-to'] = group['to']
+                ted_link_entry_dict['ted-link-local-address'] = group['local']
+                ted_link_entry_dict['ted-link-remote-address'] = group['remote']
+                continue
             
-			m = p4.match(line)
-			if m:
-			    group = m.groupdict()
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
        
-			    ted_link_entry_dict['ted-link-local-ifindex'] = group['local_interface_index']
-			    ted_link_entry_dict['ted-link-remote-ifindex'] = group['remote_interface_index']    
-			    ted_link_entry_dict['ted-link-protocol'] = ted_db['ted-database-protocol']
+                ted_link_entry_dict['ted-link-local-ifindex'] = group['local_interface_index']
+                ted_link_entry_dict['ted-link-remote-ifindex'] = group['remote_interface_index']    
+                ted_link_entry_dict['ted-link-protocol'] = ted_db['ted-database-protocol']
                 
-			    ted_link_enrty_list.append(ted_link_entry_dict)
-			    continue
+                ted_link_enrty_list.append(ted_link_entry_dict)
+                continue
             
-		return ret_dict
+        return ret_dict
