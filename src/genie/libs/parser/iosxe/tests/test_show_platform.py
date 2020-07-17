@@ -1640,10 +1640,10 @@ class TestShowVersion(unittest.TestCase):
 
     def test_golden_4(self):
         self.maxDiff = None
-        self.dev_1 = Mock(**self.golden_output_5)
+        self.dev_1 = Mock(**self.golden_output_4)
         obj = ShowVersion(device=self.dev_1)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_5)
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
     golden_output_5 = {'execute.return_value': '''
         show version
@@ -1766,10 +1766,7 @@ class TestShowVersion(unittest.TestCase):
                 "disk_size": "1638400",
                 "type_of_disk": "Crash Files"
             }
-        },
-        "license_level": "Next reload AIR lic",
-        "license_type": "ense Level: AIR DNA Advantag",
-        "next_reload_license_level": "e"
+        }
     }
 }
 
