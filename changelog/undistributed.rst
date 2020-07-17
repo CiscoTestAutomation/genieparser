@@ -79,6 +79,8 @@
         * Enhanced the schema to support updated outputs
     * Updated ShowPlatformIntegrity
         * to pretty print the rpc reply for netconf
+    * Updated ShowVersion
+        * Enhanced parser
 
 * NXOS
     * Updated ShowIpRoute
