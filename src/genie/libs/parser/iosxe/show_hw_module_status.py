@@ -1,4 +1,4 @@
-''' show_hw-module_status.py
+''' show_hw_module_status.py
 IOSXE parsers for the following show commands:
     * show hw-module subslot 0/1 transceiver 0 status
 '''
@@ -11,43 +11,44 @@ from genie.metaparser.util.schemaengine import Any, Optional
 # parser utils
 from genie.libs.parser.utils.common import Common
 
-from collections import defaultdict
 
 # ==========================
 # Schema for:
 #  * 'show_hw-module_status'
 # ==========================
-class Show_Hw-Module_StatusSchema(MetaParser):
+class Show_Hw_Module_StatusSchema(MetaParser):
     """Schema for show_hw-module_status."""
 
     schema = {
     "transceiver_status": {
-        str: {
-            str: {
-                "status": str,
-                "module_temperature": str,
-                "supply_voltage": str,
-                "bias_current": int,
-                "tx_power": str,
-                "optical_power": str
+        int: {
+            int: {
+                int: {
+                    "status": str,
+                    "module_temperature": str,
+                    "supply_voltage_mVolts": str,
+                    "bias_current_uAmps": int,
+                    "tx_power_dBm": str,
+                    "optical_power_dBm":str
+                    }
+                }
             }
         }
     }
-}
 
 
 # ==========================
 # Parser for:
 #  * 'show_hw-module_status'
 # ==========================
-class Show_Hw-Module_Status(Show_Hw-Module_StatusSchema):
+class Show_Hw_Module_Status(Show_Hw_Module_StatusSchema):
     """Parser for show_hw-module_status"""
 
     cli_command = ['show hw-module subslot 0/1 transceiver 0 status']
 
     def cli(self, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command[0])
+            out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -87,10 +88,21 @@ class Show_Hw-Module_Status(Show_Hw-Module_StatusSchema):
                     continue
             else:
                 match = p1.match(line_strip)
-                groups = match.groupdict()
-                subslot = f"subslot_{groups['slot_id']}/{groups['subslot_id']}"
-                transceiver = f"transceiver_{groups['port_id']}"
-                transceiver_dict['transceiver_status'][subslot] = {transceiver: {'status': groups['status']}}
+                if match:
+                    groups = match.groupdict()
+                    slot_id = int(groups['slot_id'])
+                    subslot = int(groups['subslot_id'])
+                    port_id = int(groups['port_id'])
+                    if not transceiver_dict.get('transceiver_status'):
+                        transceiver_dict.update({'transceiver_status': {}})
+                    if not transceiver_dict['transceiver_status'].get(slot_id):
+                        transceiver_dict['transceiver_status'].update({slot_id: {}})
+                    if not transceiver_dict['transceiver_status'][slot_id].get(subslot):
+                        transceiver_dict['transceiver_status'][slot_id].update({subslot: {}})
+                    if not transceiver_dict['transceiver_status'][slot_id][subslot].get(port_id):
+                        transceiver_dict['transceiver_status'][slot_id][subslot].update({port_id: {}})
+                    transceiver_dict['transceiver_status'][slot_id][subslot][port_id].update(
+                        {'status': groups['status']})
                 continue
             if regex:
                 match = regex.match((value))
@@ -100,10 +112,10 @@ class Show_Hw-Module_Status(Show_Hw-Module_StatusSchema):
                         continue
                     if v.isdigit():
                         v = int(v)
-                    transceiver_dict['transceiver_status'][subslot][transceiver].update({k: v})
+                    transceiver_dict['transceiver_status'][slot_id][subslot][port_id].update({k: v})
 
         if transceiver_dict:
-            return {"transceiver_status": transceiver_dict}
+            return transceiver_dict
         else:
             return {}
 
