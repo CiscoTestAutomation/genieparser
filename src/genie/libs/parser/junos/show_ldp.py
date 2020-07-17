@@ -3,6 +3,7 @@
 JUNOS parsers for the following commands:
     * show ldp session
     * show ldp interface {interface}
+    * show ldp interface {interface} detail
 """
 
 import re
@@ -116,6 +117,11 @@ class ShowLDPInterface(ShowLDPInterfaceSchema):
         p1 = re.compile(r'^(?P<interface_name>\S+) +(?P<local_address>\S+) +'
             r'(?P<space_id>\S+) +(?P<neighbor_count>\d+) +(?P<next_hello>\d+)$')
 
+        # Hello interval: 5, Hold time: 15, Transport address: 10.169.14.240
+        p2 = re.compile(r'^Hello +interval: +(?P<ldp_hello_interval>\d+), +'
+            r'Hold +time: +(?P<ldp_holdtime>\d+), +'
+            r'Transport +address: +(?P<ldp_transport_address>\S+)')
+
         ret_dict = {}
 
         for line in out.splitlines():
@@ -133,5 +139,26 @@ class ShowLDPInterface(ShowLDPInterfaceSchema):
                 ldp_interface_info_dict.update({'ldp-neighbor-count': group['neighbor_count']})
                 ldp_interface_info_dict.update({'ldp-next-hello': group['next_hello']})
                 continue
+            
+            # Hello interval: 5, Hold time: 15, Transport address: 10.169.14.240
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_interface_info_dict.update({k.replace('-', '_'):v for k, v in group.items() 
+                    if v is not None})
+                continue
 
         return ret_dict
+
+class ShowLDPInterfaceDetail(ShowLDPInterface):
+    cli_command = 'show ldp interface {interface} detail'
+    def cli(self, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                interface=interface
+            ))
+        else:
+            out = output
+        
+        return super().cli(output=' ' if not out else
