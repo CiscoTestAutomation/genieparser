@@ -73,6 +73,8 @@
         * Modified regex to support different output
     * Updated ShowIpInterface
         * Enhanced parser and added optional values
+    * Updated ShowSegmentRoutingTrafficEngPolicy
+        * Enhanced the schema to support updated outputs
     * Updated ShowPlatformIntegrity
         * to pretty print the rpc reply for netconf
 
