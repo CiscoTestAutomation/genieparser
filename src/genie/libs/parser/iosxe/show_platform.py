@@ -188,7 +188,7 @@ class ShowVersionSchema(MetaParser):
             Optional('chassis_sn'): str,
             Optional('rtr_type'): str,
             'os': str,
-            'curr_config_register': str,
+            Optional('curr_config_register'): str,
             Optional('license_udi'): {
                 Optional('device_num'): {
                     Any(): {
@@ -309,7 +309,7 @@ class ShowVersion(ShowVersionSchema):
         active_dict = {}
         rtr_type = ''
         suite_flag = False
-        license_flag = False
+        license_flag = False              
 
         # version
         # Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.5, RELEASE SOFTWARE (fc3)
@@ -330,7 +330,7 @@ class ShowVersion(ShowVersionSchema):
         # Cisco IOS Software [Fuji], ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.7.1prd4, RELEASE SOFTWARE (fc1)
         # Cisco IOS Software [Fuji], Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Experimental Version 16.8.20170924:182909 [polaris_dev-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20170924_191550 132]
         # Cisco IOS Software, 901 Software (ASR901-UNIVERSALK9-M), Version 15.6(2)SP4, RELEASE SOFTWARE (fc3)
-
+        # Cisco IOS Software [Amsterdam], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.4.20200702:124009 [S2C-build-polaris_dev-116872-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20200702_122021 243]
         p3 = re.compile(r'^[Cc]isco +(?P<os>[A-Z]+) +[Ss]oftware(.+)?\, '
                         r'+(?P<platform>.+) +Software +\((?P<image_id>.+)\).+( '
                         r'+Experimental)? +[Vv]ersion '
