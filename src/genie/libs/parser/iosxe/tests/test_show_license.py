@@ -7,7 +7,7 @@ from pyats.topology import Device
 
 # Metaparset
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
-from genie.libs.parser.ios.show_license import ShowLicense
+from genie.libs.parser.iosxe.show_license import ShowLicense
 
 
 # ============================
@@ -17,6 +17,7 @@ from genie.libs.parser.ios.show_license import ShowLicense
 
 class test_show_license(unittest.TestCase):
     """Unit test for 'show license'"""
+    maxDiff = None
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output1 = {
@@ -26,7 +27,8 @@ class test_show_license(unittest.TestCase):
             "period_left": "Life time",
             "license_type": "Permanent",
             "license_state": "Active, In Use",
-            "license_priority": "Medium"
+            "count": "Non-Counted",
+            "license_priority": "Medium",
         },
         2: {
             "feature": "uck9",
@@ -35,6 +37,7 @@ class test_show_license(unittest.TestCase):
             "period_seconds": 0,
             "license_type": "EvalRightToUse",
             "license_state": "Active, Not in Use, EULA not accepted",
+            "count": "Non-Counted",
             "license_priority": "None"
         },
         3: {
@@ -42,6 +45,7 @@ class test_show_license(unittest.TestCase):
             "period_left": "Life time",
             "license_type": "Permanent",
             "license_state": "Active, In Use",
+            "count": "Non-Counted",
             "license_priority": "Medium"
         },
         4: {
@@ -49,6 +53,7 @@ class test_show_license(unittest.TestCase):
             "period_left": "Life time",
             "license_type": "Permanent",
             "license_state": "Active, In Use",
+            "count": "Non-Counted",
             "license_priority": "Medium"
         },
         5: {
@@ -58,6 +63,7 @@ class test_show_license(unittest.TestCase):
             "period_seconds": 0,
             "license_type": "EvalRightToUse",
             "license_state": "Active, Not in Use, EULA not accepted",
+            "count": "Non-Counted",
             "license_priority": "None"
         },
         6: {
@@ -67,6 +73,7 @@ class test_show_license(unittest.TestCase):
             "period_seconds": 0,
             "license_type": "EvalRightToUse",
             "license_state": "Active, Not in Use, EULA not accepted",
+            "count": "Non-Counted",
             "license_priority": "None"
         },
         7: {
@@ -85,6 +92,7 @@ class test_show_license(unittest.TestCase):
             "period_left": "Life time",
             "license_type": "Permanent",
             "license_state": "Active, In Use",
+            "count": "Non-Counted",
             "license_priority": "Medium"
         },
         9: {
@@ -94,6 +102,7 @@ class test_show_license(unittest.TestCase):
             "period_seconds": 0,
             "license_type": "EvalRightToUse",
             "license_state": "Active, Not in Use, EULA not accepted",
+            "count": "Non-Counted",
             "license_priority": "None"
         }
     }
