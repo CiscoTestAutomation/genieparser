@@ -85,7 +85,7 @@ class ShowLdpNeighborSchema(MetaParser):
             * show ldp neighbor
     """
 
-    schema = {
+    '''schema = {
     Optional("@xmlns:junos"): str,
     "ldp-neighbor-information": {
         Optional("@xmlns"): str,
@@ -98,7 +98,7 @@ class ShowLdpNeighborSchema(MetaParser):
                 }
             ]
         }
-    }
+    }'''
 
     def validate_ldp_neighbor(value):
         if not isinstance(value, list):
@@ -169,20 +169,6 @@ class ShowLdpDatabaseSessionIpaddressSchema(MetaParser):
     """ Schema for:
             * show ldp database session ipaddress
     """
-    '''schema = {
-    Optional("@xmlns:junos"): str,
-    "ldp-neighbor-information": {
-        Optional("@xmlns"): str,
-        "ldp-neighbor": [
-            {
-            "interface-name": str,
-            "ldp-label-space-id": str,
-            "ldp-neighbor-address": str,
-            "ldp-remaining-time": str
-        }
-        ]
-    }
-}'''
 
     '''schema = {
     "ldp-database-information": {
