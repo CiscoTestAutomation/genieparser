@@ -17,6 +17,10 @@
         * show route forwarding-table label {label}
     * Added ShowRSVPNeighbor
         * show rsvp neighbor
+    * Added ShowLdpDatabaseSessionIpaddress
+        * show ldp database session ipaddress
+    * Added ShowLdpNeighbor
+        * show ldp neighbor
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
