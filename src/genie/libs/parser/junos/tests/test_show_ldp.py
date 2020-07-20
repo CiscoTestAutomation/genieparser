@@ -8,7 +8,7 @@ from pyats.topology import Device
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.junos.show_ldp import (
-    ShowLDPSession, ShowLdpNeighbor)
+    ShowLDPSession, ShowLdpNeighbor, ShowLdpDatabaseSessionIpaddress)
 
 
 # =================================
@@ -54,31 +54,6 @@ class TestShowLDPSession(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # =================================
 # Unit test for 'show ldp neighbor'
 # =================================
@@ -120,6 +95,84 @@ class TestShowLDPSession(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowLdpNeighbor(device=self.device)
         parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+# =================================
+# Unit test for 'show ldp database session ipaddress'
+# =================================
+class TestShowLDPSession(unittest.TestCase):
+    '''unit test for "show ldp database session ipaddress'''
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "ldp-database-information": {
+        "ldp-database": [
+            {
+                "ldp-binding": [
+                    {
+                        "ldp-label": "3",
+                        "ldp-prefix": "59.128.2.250/32"
+                    },
+                    {
+                        "ldp-label": "16",
+                        "ldp-prefix": "106.187.14.240/32"
+                    }
+                ],
+                "ldp-database-type": "Input label database",
+                "ldp-label-received": "2",
+                "ldp-session-id": "106.187.14.240:0--59.128.2.250:0"
+            },
+            {
+                "ldp-binding": [
+                    {
+                        "ldp-label": "16",
+                        "ldp-prefix": "59.128.2.250/32"
+                    },
+                    {
+                        "ldp-label": "3",
+                        "ldp-prefix": "106.187.14.240/32"
+                    }
+                ],
+                "ldp-database-type": "Output label database",
+                "ldp-label-advertised": "2",
+                "ldp-session-id": "106.187.14.240:0--59.128.2.250:0"
+            }
+        ]
+    }
+    }
+
+    golden_output = {
+        'execute.return_value':
+        '''
+          show ldp database 59.128.2.250 
+        Input label database, 106.187.14.240:0--59.128.2.250:0
+        Labels received: 2
+        Label     Prefix
+            3      59.128.2.250/32
+            16      106.187.14.240/32
+
+        Output label database, 106.187.14.240:0--59.128.2.250:0
+        Labels advertised: 2
+        Label     Prefix
+            16      59.128.2.250/32
+            3      106.187.14.240/32
+        '''
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowLdpDatabaseSessionIpaddress(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowLdpDatabaseSessionIpaddress(device=self.device)
+        parsed_output = obj.parse(ipaddress='59.128.2.250')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
