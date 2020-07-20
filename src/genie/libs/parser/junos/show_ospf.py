@@ -2357,6 +2357,14 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
                     "type-value": str
                 }
             },
+            Optional("ospf-summary-lsa"): {
+                "address-mask": str,
+                "ospf-summary-lsa-topology": {
+                    "ospf-topology-name": str,
+                    "ospf-topology-id": str,
+                    "ospf-topology-metric": str,
+                }
+            },
             "sequence-number": str
         })
         for item in value:
@@ -2377,11 +2385,19 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
     """ Parser for:
             * show ospf database extensive
     """
-    cli_command = 'show ospf database extensive'
+    cli_command = [
+        'show ospf database extensive',
+        'show ospf database {data_type} extensive'
+        ]
 
-    def cli(self, output=None):
+    def cli(self, data_type=None, output=None):
         if not output:
-            out = self.device.execute(self.cli_command)
+            if data_type:
+                out = self.device.execute(self.cli_command[1].format(
+                    data_type=data_type
+                ))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -2442,6 +2458,12 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
         # Topology default (ID 0)
         p14 = re.compile(
             r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\S+)\)$'
+        )
+
+        # Topology default (ID 0) -> Metric: 0
+        p14_1 = re.compile(
+            r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\S+)\) +'
+            r'-> +Metric: +(?P<ospf_topology_metric>\d+)$'
         )
 
         # Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
@@ -3049,6 +3071,109 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                         .setdefault("ospf-external-lsa-topology", {})\
                             .setdefault("tag", group["tag"])
 
+                    continue
+
+                # Aging timer 00:18:16
+                m = p16.match(line)
+                if m:
+                    last_database = ret_dict["ospf-database-information"][
+                        "ospf-database"][-1]
+                    last_database.setdefault("ospf-database-extensive",
+                                             {}).setdefault("aging-timer", {})
+
+                    group = m.groupdict()
+                    last_database["ospf-database-extensive"]["aging-timer"][
+                        "#text"] = group["aging_timer"]
+
+                    continue
+
+                # Installed 00:10:20 ago, expires in 00:49:31, sent 00:10:18 ago
+                m = p17.match(line)
+                if m:
+                    last_entry = ret_dict["ospf-database-information"][
+                        "ospf-database"][-1]
+
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("expiration-time", {})
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("installation-time", {})
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("send-time", {})
+
+                    group = m.groupdict()
+                    last_entry["ospf-database-extensive"]["expiration-time"]\
+                        ["#text"] = group["expiration_time"]
+                    last_entry["ospf-database-extensive"]["installation-time"]\
+                        ["#text"] = group["installation_time"]
+                    last_entry["ospf-database-extensive"]["send-time"]["#text"]\
+                     = group["send_time"]
+
+                    continue
+
+                # Last changed 2w6d 04:50:31 ago, Change count: 196
+                m = p18.match(line)  # lsa_changed_time , lsa_changed_count
+                if m:
+                    last_entry = ret_dict["ospf-database-information"][
+                        "ospf-database"][-1]
+
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("lsa-changed-time", {})
+
+                    group = m.groupdict()
+                    last_entry["ospf-database-extensive"]["lsa-changed-time"]["#text"]\
+                        = group["lsa_changed_time"]
+                    last_entry["ospf-database-extensive"]["lsa-change-count"] = \
+                        group["lsa_change_count"]
+
+                    continue
+
+                # Gen timer 00:49:49
+                m = p19.match(line)
+                if m:
+                    last_database = ret_dict["ospf-database-information"][
+                        "ospf-database"][-1]
+
+                    last_database.setdefault("ospf-database-extensive", {})\
+                        .setdefault("generation-timer", {})
+
+                    group = m.groupdict()
+                    last_database["ospf-database-extensive"]["generation-timer"]\
+                        ["#text"] = group["generation_timer"]
+
+                    continue
+
+            if self.lsa_type == "Summary":
+                
+                # mask 255.255.255.255
+                m = p13.match(line)
+                if m:
+                    group = m.groupdict()
+
+                    last_database = ret_dict["ospf-database-information"][
+                        "ospf-database"][-1]
+                    last_database.setdefault("ospf-summary-lsa", {})\
+                        .setdefault("address-mask", group['address_mask'])
+                    continue
+
+                # Topology default (ID 0) -> Metric: 0
+                m = p14_1.match(line)
+                if m:
+                    group = m.groupdict()
+                    last_database = ret_dict["ospf-database-information"][
+                            "ospf-database"][-1]
+
+                    last_database.setdefault("ospf-summary-lsa", {})\
+                            .setdefault("ospf-summary-lsa-topology", {})\
+                                .setdefault("ospf-topology-name", group["ospf_topology_name"])
+
+                    last_database.setdefault("ospf-summary-lsa", {})\
+                        .setdefault("ospf-summary-lsa-topology", {})\
+                            .setdefault("ospf-topology-id", group["ospf_topology_id"])
+
+                    last_database.setdefault("ospf-summary-lsa", {})\
+                        .setdefault("ospf-summary-lsa-topology", {})\
+                            .setdefault("ospf-topology-metric", group["ospf_topology_metric"])
+                    
                     continue
 
                 # Aging timer 00:18:16
