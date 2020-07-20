@@ -4156,7 +4156,7 @@ class ShowOspfRouteNetworkExtensive(ShowOspfRouteNetworkExtensiveSchema):
         return ret_dict
 
 class ShowOspfDatabaseOpaqueAreaSchema(MetaParser):
-	""" Schema for:
+    """ Schema for:
             * show ospf database opaque-area 
 
 	schema = {
@@ -4184,12 +4184,12 @@ class ShowOspfDatabaseOpaqueAreaSchema(MetaParser):
     }
     """
     
-	def validate_ospf_database_entry(ospf_db_list):
-		''' Validates each entry in ospf-database '''
-		if not isinstance(ospf_db_list, list):
-		    raise SchemaTypeError('ospf-database is not a list')
+    def validate_ospf_database_entry(ospf_db_list):
+        ''' Validates each entry in ospf-database '''
+        if not isinstance(ospf_db_list, list):
+            raise SchemaTypeError('ospf-database is not a list')
         
-		ospf_db_entry_schema = Schema({
+        ospf_db_entry_schema = Schema({
             Optional("@heading"): str,
                 "advertising-router": str,
                 "age": str,
@@ -4202,11 +4202,11 @@ class ShowOspfDatabaseOpaqueAreaSchema(MetaParser):
                 "sequence-number": str
         })
 
-		for entry in ospf_db_list:
-		    ospf_db_entry_schema.validate(entry)    
-		return ospf_db_list
+        for entry in ospf_db_list:
+            ospf_db_entry_schema.validate(entry)    
+        return ospf_db_list
 
-	schema = {
+    schema = {
         Optional("@xmlns:junos"): str,
         "ospf-database-information": {
             Optional("@xmlns"): str,
@@ -4218,65 +4218,64 @@ class ShowOspfDatabaseOpaqueAreaSchema(MetaParser):
     }
 
 class ShowOspfDatabaseOpaqueArea(ShowOspfDatabaseOpaqueAreaSchema):
-	""" Parser for:
+    """ Parser for:
             * show ospf database opaque-area
     """
-	cli_command = 'show ospf database opaque-area'
+    cli_command = 'show ospf database opaque-area'
 
-	def cli(self, output=None):
-		if not output:
-			out = self.device.execute(self.cli_command)
-		else:
-			out = output
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
-		ret_dict = {}   
+        ret_dict = {}   
   
         # OSPF database, Area 0.0.0.8
-		p1 = re.compile(r'^OSPF database, Area +(?P<ospf_area>[\w\.\:\/]+)$')
+        p1 = re.compile(r'^OSPF database, Area +(?P<ospf_area>[\w\.\:\/]+)$')
       
         # OpaqArea 1.0.0.1          27.85.194.125    0x80000002   359  0x22 0x6f5d  28
-		p2 = re.compile(
+        p2 = re.compile(
             r'^(?P<lsa_type>[a-zA-Z]+)( *)(?P<lsa_id>\*?[\d\.]+)'
             r'( +)(?P<advertising_router>\S+)( +)(?P<sequence_number>\S+)( +)(?P<age>\S+)'
             r'( +)(?P<options>\S+)( +)(?P<checksum>\S+)( +)(?P<lsa_length>\S+)$'
         )
 
-		for line in out.splitlines():
-		    line = line.strip()
+        for line in out.splitlines():
+            line = line.strip()
 
-		    m = p1.match(line)
-		    if m:
-		        group = m.groupdict()
-		        ospf_db_info = ret_dict.setdefault('ospf-database-information', 
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_db_info = ret_dict.setdefault('ospf-database-information', 
                                                     {})
-		        ospf_area_header = ospf_db_info.setdefault('ospf-area-header', 
+                ospf_area_header = ospf_db_info.setdefault('ospf-area-header', 
                                                     {})
-		        ospf_area = ospf_area_header.setdefault('ospf-area', 
-                                                    group['ospf_area'])
+                ospf_area_header.setdefault('ospf-area', group['ospf_area'])
 		        
                 # OSPF DB Entry List
-		        ospf_db_entry_list = []
-		        ospf_db_info['ospf-database'] = ospf_db_entry_list
-		        continue
+                ospf_db_entry_list = []
+                ospf_db_info['ospf-database'] = ospf_db_entry_list
+                continue
             
-		    m = p2.match(line)
-		    if m:
-		        group = m.groupdict()
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
 		        
                 # OSPF DB Entry dict
-		        ospf_db_entry_dict = {}
+                ospf_db_entry_dict = {}
           
-		        for group_key, group_value in group.items():
-		            entry_key = group_key.replace('_', '-')
-		            ospf_db_entry_dict[entry_key] = group_value
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ospf_db_entry_dict[entry_key] = group_value
     
-		        if ospf_db_entry_dict['lsa-id'][0] == "*":
-		            ospf_db_entry_dict['lsa-id'] = group['lsa_id'][1:]
-		            ospf_db_entry_dict['our-entry'] = "True"
-		        else:
-		            ospf_db_entry_dict['our-entry'] = "False"
+                if ospf_db_entry_dict['lsa-id'][0] == "*":
+                    ospf_db_entry_dict['lsa-id'] = group['lsa_id'][1:]
+                    ospf_db_entry_dict['our-entry'] = "True"
+                else:
+                    ospf_db_entry_dict['our-entry'] = "False"
                     
-		        ospf_db_entry_list.append(ospf_db_entry_dict)
-		        continue
+                ospf_db_entry_list.append(ospf_db_entry_dict)
+                continue
                                       
-		return ret_dict
+        return ret_dict
