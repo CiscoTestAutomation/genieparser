@@ -3,6 +3,7 @@
 JUNOS parsers for the following commands:
     * show ldp session
     * show ldp neighbor
+    * show ldp database session {ipaddress}
 """
 
 import re
@@ -166,7 +167,7 @@ class ShowLdpNeighbor(ShowLdpNeighborSchema):
 
 class ShowLdpDatabaseSessionIpaddressSchema(MetaParser):
     """ Schema for:
-            * show ldp neighbor
+            * show ldp database session ipaddress
     """
     '''schema = {
     Optional("@xmlns:junos"): str,
