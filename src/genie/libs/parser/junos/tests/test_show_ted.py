@@ -8,8 +8,10 @@ from pyats.topology import Device, loader
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from genie.libs.parser.junos.show_ted import ShowTedDatabaseExtensive
-from genie.libs.parser.junos.show_ted import ShowTedDatabaseIpAddress
+from genie.libs.parser.junos.show_ted import (
+    ShowTedDatabaseExtensive,
+    ShowTedDatabaseIpAddress
+)
 
 '''
 Unit tests for:

@@ -449,17 +449,19 @@ class ShowTedDatabaseIpAddress(ShowTedDatabaseIpAddressSchema):
                   r'(?P<inet_nodes>\d+) +INET +nodes$')
         
         # 59.128.2.250                  Rtr    1876     2      2 OSPF(0.0.0.8)
-        p2 = re.compile(r'^(?P<id>\S+) +(?P<type>\S+) +(?P<age>\d+) +' 
-                  r'(?P<link_in>\d) +(?P<link_out>\d) +(?P<protocol>[\w().]+)$')
+        p2 = re.compile(r'^(?P<ted_database_id>\S+) +(?P<ted_database_type>\S+) +'
+                        r'(?P<ted_database_age>\d+) +(?P<ted_database_link_in>\d+) +'
+                        r'(?P<ted_database_link_out>\d+) +(?P<ted_database_protocol>[\w().]+)$')
 
         # To: 106.187.14.240, Local: 106.187.14.158, Remote: 106.187.14.157
-        p3 = re.compile(r'^To: +(?P<to>\S+), +Local: +(?P<local>\S+), +Remote: +' 
-                  r'(?P<remote>\S+)$')
+        p3 = re.compile(r'^To: +(?P<ted_link_to>\S+), +Local: +'
+                        r'(?P<ted_link_local_address>\S+), +Remote: +' 
+                        r'(?P<ted_link_remote_address>\S+)$')
   
         # Local interface index: 333, Remote interface index: 0
         p4 = re.compile(r'^Local +interface +index: +' 
-                  r'(?P<local_interface_index>\d+), +Remote +interface +index: +' 
-                  r'(?P<remote_interface_index>\d+)$')
+                  r'(?P<ted_link_local_ifindex>\d+), +Remote +interface +index: +' 
+                  r'(?P<ted_link_remote_ifindex>\d+)$')
         
         for line in out.splitlines():
             line = line.strip()
@@ -485,32 +487,33 @@ class ShowTedDatabaseIpAddress(ShowTedDatabaseIpAddressSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-       
-                ted_db['ted-database-age'] = group['age']
-                ted_db['ted-database-id'] = group['id']
-                ted_db['ted-database-link-in'] = group['link_in']
-                ted_db['ted-database-link-out'] = group['link_out']
-                ted_db['ted-database-protocol'] = group['protocol']
-                ted_db['ted-database-type'] = group['type']
                 
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ted_db[entry_key] = group_value
+                    
+                continue
+            
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-       
+                
                 ted_link_entry_dict = {}
-                ted_link_entry_dict['ted-link-to'] = group['to']
-                ted_link_entry_dict['ted-link-local-address'] = group['local']
-                ted_link_entry_dict['ted-link-remote-address'] = group['remote']
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ted_link_entry_dict[entry_key] = group_value
+        
                 continue
             
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-       
-                ted_link_entry_dict['ted-link-local-ifindex'] = group['local_interface_index']
-                ted_link_entry_dict['ted-link-remote-ifindex'] = group['remote_interface_index']    
-                ted_link_entry_dict['ted-link-protocol'] = ted_db['ted-database-protocol']
                 
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ted_link_entry_dict[entry_key] = group_value
+                    
+                ted_link_entry_dict['ted-link-protocol'] = ted_db['ted-database-protocol']
                 ted_link_enrty_list.append(ted_link_entry_dict)
                 continue
             
