@@ -116,7 +116,23 @@ class Show_Cts_Sxp_Connections_Brief(Show_Cts_Sxp_Connections_BriefSchema):
             "Retry open timer is not running": p11,
         }
 
-        for line in out.splitlines():
+        # Remove lines with these leading strings
+        remove_lines = ('---', 'Peer_IP')
+
+        # Remove unwanted lines from raw text
+        def filter_lines(raw_output, remove_lines):
+            # Remove empty lines
+            clean_lines = list(filter(None, raw_output.splitlines()))
+            for clean_line in clean_lines:
+                clean_line_strip = clean_line.strip()
+                # Remove lines unwanted lines from list of "remove_lines"
+                if clean_line_strip.startswith(remove_lines):
+                    clean_lines.remove(clean_line)
+            return clean_lines
+
+        out = filter_lines(raw_output=out, remove_lines=remove_lines)
+
+        for line in out:
             line_strip = line.strip()
             if ": " in line:
                 try:
