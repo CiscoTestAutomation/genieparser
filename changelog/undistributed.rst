@@ -42,6 +42,7 @@
 * JUNOS
     * Updated ShowOspfDatabaseAdvertisingRouterSelfDetail
         * Added more keys to the schema, in order to support output of ShowOspfDatabaseLsaidDetail
+        * ospf-lsa-topology now optional
     * Updated ShowSystemUsers
         * Regex issues resolved
     * Updated ShowOspfOverview
@@ -56,8 +57,11 @@
         * key error resolved
     * Updated ShowOspfDatabaseLsaidDetail
         * Resolved issue where empty output would cause error
+        * ospf-lsa-topology now optional
     * Updated ShowOspf3DatabaseExtensive
         * Missing key issue resolved
+        * show ospf3 database advertising-router {address} extensive
+        * show ospf3 database {lsa_type} advertising-router {address} extensive
     * Updated ShowOspf3Database
         * List ospf-area
     * Updated ShowOspfDatabaseExtensiveSchema
