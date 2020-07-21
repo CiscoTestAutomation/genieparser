@@ -236,6 +236,116 @@ class TestShowLDPOverview(unittest.TestCase):
         }
     }
 
+    golden_output_2 = {'execute.return_value': '''
+        show ldp overview 
+        Instance: master
+        Router ID: 106.187.14.240
+        Message id: 345
+        Configuration sequence: 1
+        Deaggregate: disabled
+        Explicit null: disabled
+        IPv6 tunneling: disabled
+        Strict targeted hellos: disabled
+        Loopback if added: no
+        Route preference: 9
+        Unicast transit LSP chaining: disabled
+        P2MP transit LSP chaining: disabled
+        Transit LSP statistics based on route statistics: disabled
+        Capabilities enabled: none
+        Protocol modes:
+            Distribution: unsolicited
+            Retention: liberal
+            Control: ordered
+        Sessions:
+            Operational: 1
+        Timers:
+            Keepalive interval: 10, Keepalive timeout: 30
+            Link hello interval: 5, Link hello hold time: 15
+            Targeted hello interval: 15, Targeted hello hold time: 45
+            Label withdraw delay: 60
+        Graceful restart:
+            Restart: enabled, Helper: enabled, Restart in process: false
+            Reconnect time: 60000, Max neighbor reconnect time: 120000
+            Recovery time: 160000, Max neighbor recovery time: 240000
+        Traffic Engineering:
+            Bgp igp: disabled
+            Both ribs: disabled
+            Mpls forwarding: disabled
+        IGP:
+            Tracking igp metric: disabled
+            Sync session up delay: 10
+        Session protection:
+            Session protection: disabled
+            Session protecton timeout: 0
+        Interface addresses advertising:
+            106.187.14.157
+    '''}
+
+    golden_parsed_output_2 = {
+        'ldp-overview-information': {
+            'ldp-overview': {
+                'ldp-configuration-sequence': 1,
+                'ldp-deaggregate': 'disabled',
+                'ldp-explicit-null': 'disabled',
+                'ldp-gr-overview': {
+                    'ldp-gr-helper': 'enabled',
+                    'ldp-gr-max-neighbor-reconnect-time': 120000,
+                    'ldp-gr-max-neighbor-recovery-time': 240000,
+                    'ldp-gr-reconnect-time': 60000,
+                    'ldp-gr-recovery-time': 160000,
+                    'ldp-gr-restart': 'enabled',
+                    'ldp-gr-restarting': 'false'
+                },
+                'ldp-igp-overview': {
+                    'ldp-igp-sync-session-up-delay': 10,
+                    'ldp-tracking-igp-metric': 'disabled'
+                },
+                'ldp-instance-capability': {
+                    'ldp-capability': 'none'
+                },
+                'ldp-instance-name': 'master',
+                'ldp-interface-address': {
+                    'interface-address': '106.187.14.157'
+                },
+                'ldp-ipv6-tunneling': 'disabled',
+                'ldp-loopback-if-added': 'no',
+                'ldp-message-id': 345,
+                'ldp-p2mp-transit-lsp-chaining': 'disabled',
+                'ldp-protocol-modes': {
+                    'ldp-control-mode': 'ordered',
+                    'ldp-distribution-mode': 'unsolicited',
+                    'ldp-retention-mode': 'liberal'
+                },
+                'ldp-route-preference': 9,
+                'ldp-router-id': '106.187.14.240',
+                'ldp-session-count': {
+                    'ldp-session-operational': 1
+                },
+                'ldp-session-protect-overview': {
+                    'ldp-session-protect': 'disabled',
+                    'ldp-session-protect-timeout': 0
+                },
+                'ldp-strict-targeted-hellos': 'disabled',
+                'ldp-te-overview': {
+                    'ldp-te-bgp-igp': 'disabled',
+                    'ldp-te-both-ribs': 'disabled',
+                    'ldp-te-mpls-forwarding': 'disabled'
+                },
+                'ldp-timer-overview': {
+                    'ldp-instance-keepalive-interval': 10,
+                    'ldp-instance-keepalive-timeout': 30,
+                    'ldp-instance-label-withdraw-delay': 60,
+                    'ldp-instance-link-hello-hold-time': 15,
+                    'ldp-instance-link-hello-interval': 5,
+                    'ldp-instance-targeted-hello-hold-time': 45,
+                    'ldp-instance-targeted-hello-interval': 15
+                },
+                'ldp-transit-lsp-route-stats': 'disabled',
+                'ldp-unicast-transit-lsp-chaining': 'disabled'
+            }
+        }
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowLDPOverview(device=self.device)
@@ -247,6 +357,12 @@ class TestShowLDPOverview(unittest.TestCase):
         obj = ShowLDPOverview(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowLDPOverview(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 if __name__ == '__main__':

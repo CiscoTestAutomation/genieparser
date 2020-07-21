@@ -87,10 +87,10 @@ class ShowLDPOverviewSchema(MetaParser):
         "ldp-overview-information": {
             "ldp-overview": {
                 "ldp-instance-name": str,
-                "ldp-reference-count": int,
+                Optional("ldp-reference-count"): int,
                 "ldp-router-id": str,
-                "ldp-inet": str,
-                "ldp-transport-preference": str,
+                Optional("ldp-inet"): str,
+                Optional("ldp-transport-preference"): str,
                 "ldp-message-id": int,
                 "ldp-configuration-sequence": int,
                 "ldp-deaggregate": str,
@@ -102,27 +102,27 @@ class ShowLDPOverviewSchema(MetaParser):
                 "ldp-unicast-transit-lsp-chaining": str,
                 "ldp-p2mp-transit-lsp-chaining": str,
                 "ldp-transit-lsp-route-stats": str,
-                "ldp-route-acknowledgement": str,
-                "ldp-bgp-export": str,
-                "ldp-mtu-discovery": str,
-                "ldp-sr-mapping-client": str,
-                "ldp-instance-capability": {
+                Optional("ldp-route-acknowledgement"): str,
+                Optional("ldp-bgp-export"): str,
+                Optional("ldp-mtu-discovery"): str,
+                Optional("ldp-sr-mapping-client"): str,
+                Optional("ldp-instance-capability"): {
                     "ldp-capability": str
                 },
-                "ldp-instance-egress-fec-capability": {
+                Optional("ldp-instance-egress-fec-capability"): {
                     "ldp-egress-fec-capability": str
                 },
-                "ldp-session-count": {
-                    "ldp-session-operational": int,
-                    "ldp-retention-mode": str,
-                    "ldp-control-mode": str
+                Optional("ldp-session-count"): {
+                    Optional("ldp-session-operational"): int,
+                    Optional("ldp-retention-mode"): str,
+                    Optional("ldp-control-mode"): str
                 },
                 Optional("ldp-dod-session-count"): str,
-                "ldp-auto-targeted-session": {
+                Optional("ldp-auto-targeted-session"): {
                     "ldp-auto-targeted-session-enabled": str,
                     "ldp-auto-targeted-dyn-tun-ses-count": int
                 },
-                "ldp-p2mp": {
+                Optional("ldp-p2mp"): {
                     "ldp-p2mp-recursive-route-enabled": str,
                     "ldp-p2mp-no-rsvp-tunneling-enabled": str
                 },
@@ -134,9 +134,9 @@ class ShowLDPOverviewSchema(MetaParser):
                     "ldp-instance-targeted-hello-interval": int,
                     "ldp-instance-targeted-hello-hold-time": int,
                     "ldp-instance-label-withdraw-delay": int,
-                    "ldp-instance-make-before-break-timeout": int,
-                    "ldp-instance-make-before-break-switchover-delay": int,
-                    "ldp-instance-link-protection-timeout": int
+                    Optional("ldp-instance-make-before-break-timeout"): int,
+                    Optional("ldp-instance-make-before-break-switchover-delay"): int,
+                    Optional("ldp-instance-link-protection-timeout"): int
                 },
                 "ldp-gr-overview": {
                     "ldp-gr-restart": str,
@@ -164,7 +164,7 @@ class ShowLDPOverviewSchema(MetaParser):
                 "ldp-interface-address": {
                     "interface-address": str
                 },
-                "ldp-job-overview": {
+                Optional("ldp-job-overview"): {
                     "ldp-read-job-time-quantum": int,
                     "ldp-write-job-time-quantum": int,
                     "ldp-read-job-loop-quantum": int,
@@ -174,13 +174,18 @@ class ShowLDPOverviewSchema(MetaParser):
                     "ldp-inbound-read-job-loop-quantum": int,
                     "ldp-outbound-read-job-loop-quantum": int
                 },
-                "ldp-label-allocation": {
+                Optional("ldp-label-allocation"): {
                     "ldp-label-current-allocs": int,
                     "ldp-label-total-allocs": int,
                     "ldp-label-total-frees": int,
                     "ldp-label-alloc-failure": int,
                     "ldp-global-label-current-allocs": int
-                }
+                },
+                Optional("ldp-protocol-modes"): {
+                    Optional("ldp-distribution-mode"): str,
+                    Optional("ldp-retention-mode"): str,
+                    Optional("ldp-control-mode"): str,
+                },
             }
         }
     }
@@ -209,11 +214,14 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
         session_protection_flag = False
         ldp_job_flag = False
         label_alloc_flag = False
+        protocol_mode_flag = False
 
         ret_dict = {}
         overview_dict = {}
         var_dict = {
             'Instance': ['ldp-instance-name', 'str'],
+            'Protocol modes': ['ldp-protocol-modes', 'str'],
+            'Distribution': ['ldp-distribution-mode', 'str'],
             'Reference count': ['ldp-reference-count', 'int'],
             'Router ID': ['ldp-router-id', 'str'],
             'LDP inet': ['ldp-inet', 'str'],
@@ -333,15 +341,29 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
         # 106.187.14.157
         p12 = re.compile(r'^(?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$')
 
+        # Protocol modes:
+        p13 = re.compile(r'^Protocol +modes\:$')
+
+        # Sessions:
+        p14 = re.compile(r'Sessions\:$')
+
         for line in out.splitlines():
             line = line.strip()
 
             # Downstream unsolicited Sessions:
             m2 = p2.match(line)
-            if m2:
+            m13 = p13.match(line)
+            m14 = p14.match(line)
+            if m2 or m13 or m14:
                 # Initialize sub dict
-                session_dict = overview_dict.setdefault(
-                    "ldp-session-count", {})
+                if m2 or m14:
+                    session_dict = overview_dict.setdefault(
+                        "ldp-session-count", {})
+                if m13:
+                    session_dict = overview_dict.setdefault(
+                        "ldp-protocol-modes", {})
+                    protocol_mode_flag = True
+
                 session_flag = True
 
             # Auto targeted sessions:
@@ -352,6 +374,7 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
                 targeted_dict = overview_dict.setdefault(
                     'ldp-auto-targeted-session', {})
                 auto_targeted_flag = True
+                continue
 
             # P2MP:
             m4 = p4.match(line)
@@ -359,6 +382,7 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
                 # Initialize sub dict
                 p2mp_dict = overview_dict.setdefault('ldp-p2mp', {})
                 p2mp_flag = True
+                continue
 
             # Timers:
             m5 = p5.match(line)
@@ -367,6 +391,7 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
                 timers_dict = overview_dict.setdefault(
                     'ldp-timer-overview', {})
                 timers_flag = True
+                continue
 
             # Graceful restart:
             m6 = p6.match(line)
@@ -374,6 +399,7 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
                 # Initialize sub dict
                 gr_dict = overview_dict.setdefault('ldp-gr-overview', {})
                 grace_restart_flag = True
+                continue
 
             # IGP:
             m7 = p7.match(line)
@@ -381,6 +407,7 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
                 # Initialize sub dict
                 igp_dict = overview_dict.setdefault('ldp-igp-overview', {})
                 igp_flag = True
+                continue
 
             # Session protection:
             m8 = p8.match(line)
@@ -389,6 +416,7 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
                 session_pr_dict = overview_dict.setdefault(
                     'ldp-session-protect-overview', {})
                 session_protection_flag = True
+                continue
 
             # Traffic Engineering:
             m9 = p9.match(line)
@@ -396,6 +424,7 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
                 # Initialize sub dict
                 te_dict = overview_dict.setdefault('ldp-te-overview', {})
                 traffic_engineering_flag = True
+                continue
 
             # LDP Job:
             m10 = p10.match(line)
@@ -403,6 +432,7 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
                 # Initialize sub dict
                 job_dict = overview_dict.setdefault('ldp-job-overview', {})
                 ldp_job_flag = True
+                continue
 
             # Label allocation:
             m11 = p11.match(line)
@@ -411,6 +441,7 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
                 label_alloc_dict = overview_dict.setdefault(
                     'ldp-label-allocation', {})
                 label_alloc_flag = True
+                continue
 
             # Instance: master
             # Reconnect time: 60000, Max neighbor reconnect time: 120000
@@ -423,6 +454,11 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
                     "ldp-overview-information", {}).setdefault("ldp-overview", {})
 
                 # Retrieve a list from predefined dict
+                # handle misspell from the device
+                # Session protecton timeout vs Session protection timeout
+                if 'Session protecton timeout' in group['var']:
+                    group['var'] = 'Session protection timeout'
+
                 hold_list = var_dict.get(group['var'])
 
                 # Get defined type for the data
@@ -454,6 +490,10 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
 
                     if 'Control' in group['var']:
                         session_flag = False
+
+                    if 'Operational' in group['var'] and protocol_mode_flag:
+                        session_flag = False
+
                 elif 'Egress FEC capabilities enabled' in group['var']:
                     overview_dict.setdefault(
                         'ldp-instance-egress-fec-capability', {'ldp-egress-fec-capability': group['value']})
@@ -477,6 +517,9 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
                     timers_dict.update({hold_list_var2[0]: defined_value2})
 
                     if 'Link protection timeout' in group['var']:
+                        timers_flag = False
+
+                    if 'Label withdraw delay' in group['var'] and not group['var2']:
                         timers_flag = False
 
                 elif grace_restart_flag:
