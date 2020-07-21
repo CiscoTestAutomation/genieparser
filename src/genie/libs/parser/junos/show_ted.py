@@ -3,6 +3,7 @@
 JunOS parsers for the following show commands:
     - 'show ted database extensive'
     - 'show ted database extensive {node_id}'
+    - 'show ted database {ipaddress}'
 """
 
 # python
@@ -126,8 +127,7 @@ class ShowTedDatabaseExtensive(ShowTedDatabaseExtensiveSchema):
         ret_dict = {}
 
         # TED database: 0 ISIS nodes 0 INET nodes
-        p1 = re.compile(
-            r'^TED +database: +(?P<isis_nodes>\d+) +ISIS +nodes +(?P<inet_nodes>\d+) +INET +nodes$')
+        p1 = re.compile(r'^TED +database: +(?P<isis_nodes>\d+) +ISIS +nodes +(?P<inet_nodes>\d+) +INET +nodes$')
 
         # NodeID: 172.16.1.1
         p2 = re.compile(r'^NodeID: +(?P<node_id>\S+)$')
@@ -140,8 +140,7 @@ class ShowTedDatabaseExtensive(ShowTedDatabaseExtensiveSchema):
         p4 = re.compile(r'^Protocol: +(?P<protocol>[\w().]+)$')
 
         # To: 172.16.1.1, Local: 10.16.0.1, Remote: 10.16.0.2
-        p5 = re.compile(
-            r'^To: +(?P<to>\S+), +Local: +(?P<local>\S+), +Remote: +(?P<remote>\S+)$')
+        p5 = re.compile(r'^To: +(?P<to>\S+), +Local: +(?P<local>\S+), +Remote: +(?P<remote>\S+)$')
 
         # Local interface index: 0, Remote interface index: 0
         p6 = re.compile(r'^Local +interface +index: +(?P<local_interface_index>\d+), +'
