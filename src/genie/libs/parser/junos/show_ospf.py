@@ -4177,7 +4177,7 @@ class ShowOspfDatabaseOpaqueAreaSchema(MetaParser):
                     "lsa-length": str,
                     "lsa-type": str,
                     "options": str,
-                    "our-entry": str,
+                    Optional("our-entry"): bool,
                     "sequence-number": str
                 }
             ]
@@ -4199,7 +4199,7 @@ class ShowOspfDatabaseOpaqueAreaSchema(MetaParser):
                 "lsa-length": str,
                 "lsa-type": str,
                 "options": str,
-                "our-entry": str,
+                Optional("our-entry"): bool,
                 "sequence-number": str
         })
 
@@ -4233,9 +4233,10 @@ class ShowOspfDatabaseOpaqueArea(ShowOspfDatabaseOpaqueAreaSchema):
         ret_dict = {}   
   
         # OSPF database, Area 0.0.0.8
-        p1 = re.compile(r'^OSPF database, Area +(?P<ospf_area>[\w\.\:\/]+)$')
+        p1 = re.compile(r'^OSPF database, Area +(?P<ospf_area>[\w\.]+)$')
       
         # OpaqArea 1.0.0.1          27.85.194.125    0x80000002   359  0x22 0x6f5d  28
+        # OpaqArea*1.0.0.1          59.128.2.250     0x80000003   227  0x22 0xa11a  28
         p2 = re.compile(
             r'^(?P<lsa_type>[a-zA-Z]+)( *)(?P<lsa_id>\*?[\d\.]+)'
             r'( +)(?P<advertising_router>\S+)( +)(?P<sequence_number>\S+)( +)(?P<age>\S+)'
@@ -4272,9 +4273,7 @@ class ShowOspfDatabaseOpaqueArea(ShowOspfDatabaseOpaqueAreaSchema):
     
                 if ospf_db_entry_dict['lsa-id'][0] == "*":
                     ospf_db_entry_dict['lsa-id'] = group['lsa_id'][1:]
-                    ospf_db_entry_dict['our-entry'] = "True"
-                else:
-                    ospf_db_entry_dict['our-entry'] = "False"
+                    ospf_db_entry_dict['our-entry'] = True
                     
                 ospf_db_entry_list.append(ospf_db_entry_dict)
                 continue

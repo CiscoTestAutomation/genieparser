@@ -77,7 +77,6 @@ class TestShowOspfDatabaseOpaqueArea(unittest.TestCase):
                     "lsa-length": "28",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
-                    "our-entry": "False",
                     "sequence-number": "0x80000002"
                 },
                 {
@@ -88,7 +87,6 @@ class TestShowOspfDatabaseOpaqueArea(unittest.TestCase):
                     "lsa-length": "28",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
-                    "our-entry": "False",
                     "sequence-number": "0x80000002"
                 },
                 {
@@ -99,7 +97,7 @@ class TestShowOspfDatabaseOpaqueArea(unittest.TestCase):
                     "lsa-length": "28",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
-                    "our-entry": "True",
+                    "our-entry": True,
                     "sequence-number": "0x80000003"
                 },
                 {
@@ -110,7 +108,6 @@ class TestShowOspfDatabaseOpaqueArea(unittest.TestCase):
                     "lsa-length": "28",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
-                    "our-entry": "False",
                     "sequence-number": "0x80000002"
                 },
                 {
@@ -121,7 +118,6 @@ class TestShowOspfDatabaseOpaqueArea(unittest.TestCase):
                     "lsa-length": "28",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
-                    "our-entry": "False",
                     "sequence-number": "0x80000002"
                 },
                 {
@@ -132,7 +128,6 @@ class TestShowOspfDatabaseOpaqueArea(unittest.TestCase):
                     "lsa-length": "136",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
-                    "our-entry": "False",
                     "sequence-number": "0x80000001"
                 },
                 {
@@ -143,7 +138,6 @@ class TestShowOspfDatabaseOpaqueArea(unittest.TestCase):
                     "lsa-length": "136",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
-                    "our-entry": "False",
                     "sequence-number": "0x80000001"
                 },
                 {
@@ -154,7 +148,7 @@ class TestShowOspfDatabaseOpaqueArea(unittest.TestCase):
                     "lsa-length": "136",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
-                    "our-entry": "True",
+                    "our-entry": True,
                     "sequence-number": "0x80000002"
                 },
                 {
@@ -165,7 +159,6 @@ class TestShowOspfDatabaseOpaqueArea(unittest.TestCase):
                     "lsa-length": "136",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
-                    "our-entry": "False",
                     "sequence-number": "0x80000001"
                 },
                 {
@@ -176,7 +169,6 @@ class TestShowOspfDatabaseOpaqueArea(unittest.TestCase):
                     "lsa-length": "136",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
-                    "our-entry": "False",
                     "sequence-number": "0x80000002"
                 },
                 {
@@ -187,7 +179,7 @@ class TestShowOspfDatabaseOpaqueArea(unittest.TestCase):
                     "lsa-length": "136",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
-                    "our-entry": "True",
+                    "our-entry": True,
                     "sequence-number": "0x80000001"
                 },
                 {
@@ -198,7 +190,6 @@ class TestShowOspfDatabaseOpaqueArea(unittest.TestCase):
                     "lsa-length": "136",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
-                    "our-entry": "False",
                     "sequence-number": "0x80000001"
                 },
                 {
@@ -209,7 +200,6 @@ class TestShowOspfDatabaseOpaqueArea(unittest.TestCase):
                     "lsa-length": "136",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
-                    "our-entry": "False",
                     "sequence-number": "0x80000001"
                 }
             ]
