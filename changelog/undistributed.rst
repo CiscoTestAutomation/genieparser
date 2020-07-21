@@ -71,6 +71,8 @@
         * Optional key issue resolved
         * Regex modified to support more output
         * 'show interfaces extensive {interface}' changed to 'show interfaces {interface} extensive'
+    * Updated ShowOspfDatabaseExtensive
+        * Now accounts for netsummary
 * IOSXE
     * Updated ShowCdpNeighbors
         * Modified regex to support different output
