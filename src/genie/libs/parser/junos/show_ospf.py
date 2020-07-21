@@ -15,6 +15,7 @@ JunOs parsers for the following show commands:
     * show ospf database
     * show ospf database summary
     * show ospf database external extensive
+    * show ospf database opaque-area
     * show ospf overview
     * show ospf overview extensive
     * show ospf database advertising-router self detail
