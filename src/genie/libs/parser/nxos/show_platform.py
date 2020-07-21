@@ -248,6 +248,22 @@ class ShowVersion(ShowVersionSchema):
 
                 if 'rp' not in version_dict['platform']['hardware']:
                     version_dict['platform']['hardware']['rp'] = rp
+                continue
+
+            # cisco N9K-C93180YC-EX ("supervisor")
+            p15a = re.compile(r'^\s*cisco +(?P<model>[a-zA-Z0-9\-\s]+)'
+                    '\(\"(?P<slot>[a-zA-Z0-9]+)\"\)$')
+            m = p15a.match(line)
+            if m:
+                model = chassis = str(m.groupdict()['model'])
+                slot = str(m.groupdict()['slot'])
+
+                if 'model' not in version_dict['platform']['hardware']:
+                    version_dict['platform']['hardware']['model'] = model
+                    version_dict['platform']['hardware']['chassis'] = chassis
+
+                if 'slots' not in version_dict['platform']['hardware']:
+                    version_dict['platform']['hardware']['slots'] = slot
 
                 continue
 

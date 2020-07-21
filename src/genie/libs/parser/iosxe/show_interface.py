@@ -255,9 +255,16 @@ class ShowInterfaces(ShowInterfacesSchema):
         # MTU 1500 bytes, BW 768 Kbit/sec, DLY 3330 usec,
         # MTU 1500 bytes, BW 10000 Kbit, DLY 1000 usec, 
         # MTU 1600 bytes, sub MTU 1600, BW 3584 Kbit/sec, DLY 410 usec,
+        # MTU 1500 bytes, BW 5200 Kbit/sec, RxBW 25000 Kbit/sec, DLY 100 usec, 
+        p6 = re.compile(r'^MTU +(?P<mtu>\d+) +bytes(, +sub +MTU +'
+                        r'(?P<sub_mtu>\d+))?, +BW +(?P<bandwidth>[0-9]+) +Kbit(\/sec)?'
+                        r'(, +RxBW +[0-9]+ +Kbit(\/sec)?)?, +'
+                        r'DLY +(?P<delay>[0-9]+) +usec,$')
+        '''
         p6 = re.compile(r'^MTU +(?P<mtu>\d+) +bytes(, +sub +MTU +'
                         r'(?P<sub_mtu>\d+))?, +BW +(?P<bandwidth>[0-9]+) +Kbit(\/sec)?, +'
                         r'DLY +(?P<delay>[0-9]+) +usec,$')
+        '''
 
         # reliability 255/255, txload 1/255, rxload 1/255
         p7 = re.compile(r'^reliability +(?P<reliability>[\d\/]+),'
@@ -3145,7 +3152,9 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
         # initial regexp pattern
         # GigabitEthernet0/0/0/0
         # GigabitEthernet11 OOB Net
-        p1 = re.compile(r'^(?P<interface>[a-zA-Z\-\d\/\.]+)(?P<description>( (\S)+)*)$')
+        # allow for multiple spaces in desccription
+        p1 = re.compile(r'^(?P<interface>[a-zA-Z\-\d\/\.]+)(?P<description>( +(\S)+)*)$')
+        #p1 = re.compile(r'^(?P<interface>[a-zA-Z\-\d\/\.]+)(?P<description>( (\S)+)*)$')
 
         # Tunnel0 Pim Register Tunnel (Encap) for RP 10.186.1.1
         p1_1 = re.compile(r'^(?P<interface>Tunnel\d+) +Pim +Register +'
@@ -3162,6 +3171,8 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
         for line in out.splitlines():
             if line:
                 line = line.strip()
+                ###DEBUG
+                #print("deb: ",line)
             else:
                 continue
 

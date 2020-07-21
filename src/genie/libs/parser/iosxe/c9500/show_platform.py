@@ -59,8 +59,12 @@ class ShowVersionSchema(MetaParser):
                     Optional('mem_size'): {
                         Any(): str,
                     },
-                    'license_level': str,
-                    'next_reload_license_level': str,
+                    Optional('license_level'): {
+                        Any(): str,
+                    },
+                    Optional('next_reload_license_level'): {
+                        Any(): str,
+                    },
                     'smart_licensing_status': str,
                     Optional('number_of_intfs'): {
                         Any(): str,
