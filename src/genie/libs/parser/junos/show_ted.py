@@ -356,14 +356,11 @@ class ShowTedDatabaseExtensive(ShowTedDatabaseExtensiveSchema):
 
 class ShowTedDatabaseIpAddressSchema(MetaParser):
     """ Schema for:
-            * show
+            * show ted database {ipaddress}
 
 	schema = {
-        Optional("@xmlns:junos"): str,
         "ted-database-information": {
-            Optional("@xmlns"): str,
             "ted-database": {
-                Optional("@junos:style"): str,
                 "ted-database-age": str,
                 "ted-database-id": str,
                 "ted-database-link-in": str,
@@ -372,7 +369,6 @@ class ShowTedDatabaseIpAddressSchema(MetaParser):
                 "ted-database-type": str,
                 "ted-link": [
                     {
-                        Optional("@junos:style"): str,
                         "ted-link-local-address": str,
                         "ted-link-local-ifindex": str,
                         "ted-link-protocol": str,
@@ -394,8 +390,8 @@ class ShowTedDatabaseIpAddressSchema(MetaParser):
         ''' Validates each value in ted link '''
         if not isinstance(val, list):
             raise SchemaTypeError('ted link is not a list')
+        
         ted_link_schema = Schema({
-            Optional("@junos:style"): str,
             "ted-link-local-address": str,
             "ted-link-local-ifindex": str,
             "ted-link-protocol": str,
@@ -409,11 +405,8 @@ class ShowTedDatabaseIpAddressSchema(MetaParser):
         return val
     
     schema = {
-        Optional("@xmlns:junos"): str,
         "ted-database-information": {
-            Optional("@xmlns"): str,
             "ted-database": {
-                Optional("@junos:style"): str,
                 "ted-database-age": str,
                 "ted-database-id": str,
                 "ted-database-link-in": str,
@@ -431,7 +424,7 @@ class ShowTedDatabaseIpAddressSchema(MetaParser):
 
 class ShowTedDatabaseIpAddress(ShowTedDatabaseIpAddressSchema):
     """ Parser for:
-            * show 
+            * 'show ted database {ipaddress}'
     """
     cli_command = 'show ted database {ip_address}'
 
@@ -447,12 +440,12 @@ class ShowTedDatabaseIpAddress(ShowTedDatabaseIpAddressSchema):
         p1 = re.compile(r'^TED +database: +(?P<isis_nodes>\d+) +ISIS +nodes +' 
                   r'(?P<inet_nodes>\d+) +INET +nodes$')
         
-        # 59.128.2.250                  Rtr    1876     2      2 OSPF(0.0.0.8)
+        # 10.34.2.250                  Rtr    1876     2      2 OSPF(0.0.0.8)
         p2 = re.compile(r'^(?P<ted_database_id>\S+) +(?P<ted_database_type>\S+) +'
                         r'(?P<ted_database_age>\d+) +(?P<ted_database_link_in>\d+) +'
-                        r'(?P<ted_database_link_out>\d+) +(?P<ted_database_protocol>[\w().]+)$')
+                        r'(?P<ted_database_link_out>\d+) +(?P<ted_database_protocol>\S+)$')
 
-        # To: 106.187.14.240, Local: 106.187.14.158, Remote: 106.187.14.157
+        # To: 10.169.14.240, Local: 10.169.14.158, Remote: 10.169.14.157
         p3 = re.compile(r'^To: +(?P<ted_link_to>\S+), +Local: +'
                         r'(?P<ted_link_local_address>\S+), +Remote: +' 
                         r'(?P<ted_link_remote_address>\S+)$')
@@ -465,6 +458,7 @@ class ShowTedDatabaseIpAddress(ShowTedDatabaseIpAddressSchema):
         for line in out.splitlines():
             line = line.strip()
 
+            # TED database: 0 ISIS nodes 0 INET nodes
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -477,12 +471,11 @@ class ShowTedDatabaseIpAddress(ShowTedDatabaseIpAddressSchema):
 			    
                 ted_db['ted-link'] = ted_link_enrty_list    # Ted link (list)
                 
-                ted_db_summary.setdefault('ted-database-iso-count', 
-                                        group['isis_nodes'])
-                ted_db_summary.setdefault('ted-database-inet-count', 
-                                        group['inet_nodes'])
+                ted_db_summary['ted-database-iso-count'] = group['isis_nodes']
+                ted_db_summary['ted-database-inet-count'] = group['inet_nodes']
                 continue
             
+            # 10.34.2.250                  Rtr    1876     2      2 OSPF(0.0.0.8)
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -493,6 +486,7 @@ class ShowTedDatabaseIpAddress(ShowTedDatabaseIpAddressSchema):
                     
                 continue
             
+            # To: 10.169.14.240, Local: 10.169.14.158, Remote: 10.169.14.157
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -504,6 +498,7 @@ class ShowTedDatabaseIpAddress(ShowTedDatabaseIpAddressSchema):
         
                 continue
             
+            # Local interface index: 333, Remote interface index: 0
             m = p4.match(line)
             if m:
                 group = m.groupdict()

@@ -9,6 +9,8 @@
                                 New
 --------------------------------------------------------------------------------
 * JUNOS
+    * Added ShowTedDatabaseIpAddress
+        * show ted database {ipaddress}
     * Created ShowMPLSLSPNameDetail
         * show mpls lsp name {name} detail
     * Show Ospf3 Route Network Extensive
