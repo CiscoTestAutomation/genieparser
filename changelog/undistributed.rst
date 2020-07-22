@@ -88,6 +88,8 @@
         * to pretty print the rpc reply for netconf
     * Updated ShowVersion
         * Enhanced parser
+    * Updated ShowProcessesMemory
+        * Modified schema to support different output
 
 * NXOS
     * Updated ShowIpRoute
