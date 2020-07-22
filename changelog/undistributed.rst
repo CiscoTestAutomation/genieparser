@@ -33,6 +33,8 @@
         * show rsvp neighbor
     * Added ShowRSVPNeighborDetail
         * show rsvp neighbor detail
+    * Added ShowOspfDatabaseOpaqueArea
+        * show ospf database opaque-area
     * Added ShowLDPInterface
         * show ldp interface {interface}
     * Added ShowLDPInterfaceDetail
