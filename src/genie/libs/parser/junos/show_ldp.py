@@ -116,6 +116,7 @@ class ShowLDPOverviewSchema(MetaParser):
                 },
                 Optional("ldp-session-count"): {
                     Optional("ldp-session-operational"): int,
+                    Optional("ldp-session-nonexistent"): int,
                     Optional("ldp-retention-mode"): str,
                     Optional("ldp-control-mode"): str
                 },
@@ -246,6 +247,7 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
             'Capabilities enabled': ['ldp-capability', 'str'],
             'Egress FEC capabilities enabled': ['ldp-egress-fec-capability', 'str'],
             # Downstream unsolicited sessions
+            'Nonexistent': ['ldp-session-nonexistent', 'int'],
             'Operational': ['ldp-session-operational', 'int'],
             'Retention': ['ldp-retention-mode', 'str'],
             'Control': ['ldp-control-mode', 'str'],
