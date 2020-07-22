@@ -27,7 +27,8 @@
         * show rsvp neighbor
     * Added ShowRSVPNeighborDetail
         * show rsvp neighbor detail
-
+    * Added ShowOspfDatabaseOpaqueArea
+        * show ospf database opaque-area
 
 --------------------------------------------------------------------------------
                                 Fix

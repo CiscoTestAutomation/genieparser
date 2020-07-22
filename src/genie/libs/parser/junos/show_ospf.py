@@ -4161,9 +4161,7 @@ class ShowOspfDatabaseOpaqueAreaSchema(MetaParser):
             * show ospf database opaque-area 
 
 	schema = {
-        Optional("@xmlns:junos"): str,
         "ospf-database-information": {
-            Optional("@xmlns"): str,
             "ospf-area-header": {
                 "ospf-area": str
             },
@@ -4208,9 +4206,7 @@ class ShowOspfDatabaseOpaqueAreaSchema(MetaParser):
         return ospf_db_list
 
     schema = {
-        Optional("@xmlns:junos"): str,
         "ospf-database-information": {
-            Optional("@xmlns"): str,
             "ospf-area-header": {
                 "ospf-area": str
             },
@@ -4233,19 +4229,19 @@ class ShowOspfDatabaseOpaqueArea(ShowOspfDatabaseOpaqueAreaSchema):
         ret_dict = {}   
   
         # OSPF database, Area 0.0.0.8
-        p1 = re.compile(r'^OSPF database, Area +(?P<ospf_area>[\w\.]+)$')
+        p1 = re.compile(r'^OSPF database, Area +(?P<ospf_area>\S+)$')
       
-        # OpaqArea 1.0.0.1          27.85.194.125    0x80000002   359  0x22 0x6f5d  28
-        # OpaqArea*1.0.0.1          59.128.2.250     0x80000003   227  0x22 0xa11a  28
-        p2 = re.compile(
-            r'^(?P<lsa_type>[a-zA-Z]+)( *)(?P<lsa_id>\*?[\d\.]+)'
-            r'( +)(?P<advertising_router>\S+)( +)(?P<sequence_number>\S+)( +)(?P<age>\S+)'
-            r'( +)(?P<options>\S+)( +)(?P<checksum>\S+)( +)(?P<lsa_length>\S+)$'
-        )
+        # OpaqArea 10.1.0.1          10.49.194.125    0x80000002   359  0x22 0x6f5d  28
+        # OpaqArea*10.1.0.1          10.34.2.250     0x80000003   227  0x22 0xa11a  28
+        p2 = re.compile(r'^(?P<lsa_type>[a-zA-Z]+) *(?P<lsa_id>\*?[\d\.]+) +' 
+                        r'(?P<advertising_router>\S+) +(?P<sequence_number>\S+)' 
+                        r'+(?P<age>\S+) +(?P<options>\S+) +(?P<checksum>\S+) +' 
+                        r'(?P<lsa_length>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
 
+            # OSPF database, Area 0.0.0.8
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -4260,6 +4256,8 @@ class ShowOspfDatabaseOpaqueArea(ShowOspfDatabaseOpaqueAreaSchema):
                 ospf_db_info['ospf-database'] = ospf_db_entry_list
                 continue
             
+            # OpaqArea 10.1.0.1          10.49.194.125    0x80000002   359  0x22 0x6f5d  28
+            # OpaqArea*10.1.0.1          10.34.2.250     0x80000003   227  0x22 0xa11a  28
             m = p2.match(line)
             if m:
                 group = m.groupdict()

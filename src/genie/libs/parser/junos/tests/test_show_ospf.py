@@ -47,19 +47,19 @@ class TestShowOspfDatabaseOpaqueArea(unittest.TestCase):
             show ospf database opaque-area
             OSPF database, Area 0.0.0.8
         Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
-        OpaqArea 1.0.0.1          27.85.194.125    0x80000002   359  0x22 0x6f5d  28
-        OpaqArea 1.0.0.1          27.85.194.127    0x80000002   595  0x22 0x7751  28
-        OpaqArea*1.0.0.1          59.128.2.250     0x80000003   227  0x22 0xa11a  28
-        OpaqArea 1.0.0.1          59.128.3.252     0x80000002   754  0x22 0xad09  28
-        OpaqArea 1.0.0.1          106.187.14.240   0x80000002  2210  0x22 0x35ae  28
-        OpaqArea 1.0.0.3          27.85.194.125    0x80000001  1168  0x22 0x27f4 136
-        OpaqArea 1.0.0.3          27.85.194.127    0x80000001  1441  0x22 0xa27  136
-        OpaqArea*1.0.0.3          59.128.2.250     0x80000002   934  0x22 0x2ac3 136
-        OpaqArea 1.0.0.3          59.128.3.252     0x80000001  1815  0x22 0x90dd 136
-        OpaqArea 1.0.0.3          106.187.14.240   0x80000002   597  0x22 0x5697 136
-        OpaqArea*1.0.0.4          59.128.2.250     0x80000001  1814  0x22 0xb7b3 136
-        OpaqArea 1.0.0.4          59.128.3.252     0x80000001  1167  0x22 0x412  136
-        OpaqArea 1.0.0.4          106.187.14.240   0x80000001  1440  0x22 0x58d5 136
+        OpaqArea 10.1.0.1          10.49.194.125    0x80000002   359  0x22 0x6f5d  28
+        OpaqArea 10.1.0.1          10.49.194.127    0x80000002   595  0x22 0x7751  28
+        OpaqArea*10.1.0.1          10.34.2.250     0x80000003   227  0x22 0xa11a  28
+        OpaqArea 10.1.0.1          10.34.3.252     0x80000002   754  0x22 0xad09  28
+        OpaqArea 10.1.0.1          10.169.14.240   0x80000002  2210  0x22 0x35ae  28
+        OpaqArea 10.1.0.3          10.49.194.125    0x80000001  1168  0x22 0x27f4 136
+        OpaqArea 10.1.0.3          10.49.194.127    0x80000001  1441  0x22 0xa27  136
+        OpaqArea*10.1.0.3          10.34.2.250     0x80000002   934  0x22 0x2ac3 136
+        OpaqArea 10.1.0.3          10.34.3.252     0x80000001  1815  0x22 0x90dd 136
+        OpaqArea 10.1.0.3          10.169.14.240   0x80000002   597  0x22 0x5697 136
+        OpaqArea*10.1.0.4          10.34.2.250     0x80000001  1814  0x22 0xb7b3 136
+        OpaqArea 10.1.0.4          10.34.3.252     0x80000001  1167  0x22 0x412  136
+        OpaqArea 10.1.0.4          10.169.14.240   0x80000001  1440  0x22 0x58d5 136
         """
     }
     
@@ -70,30 +70,30 @@ class TestShowOspfDatabaseOpaqueArea(unittest.TestCase):
             },
             "ospf-database": [
                 {
-                    "advertising-router": "27.85.194.125",
+                    "advertising-router": "10.49.194.125",
                     "age": "359",
                     "checksum": "0x6f5d",
-                    "lsa-id": "1.0.0.1",
+                    "lsa-id": "10.1.0.1",
                     "lsa-length": "28",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
                     "sequence-number": "0x80000002"
                 },
                 {
-                    "advertising-router": "27.85.194.127",
+                    "advertising-router": "10.49.194.127",
                     "age": "595",
                     "checksum": "0x7751",
-                    "lsa-id": "1.0.0.1",
+                    "lsa-id": "10.1.0.1",
                     "lsa-length": "28",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
                     "sequence-number": "0x80000002"
                 },
                 {
-                    "advertising-router": "59.128.2.250",
+                    "advertising-router": "10.34.2.250",
                     "age": "227",
                     "checksum": "0xa11a",
-                    "lsa-id": "1.0.0.1",
+                    "lsa-id": "10.1.0.1",
                     "lsa-length": "28",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
@@ -101,50 +101,50 @@ class TestShowOspfDatabaseOpaqueArea(unittest.TestCase):
                     "sequence-number": "0x80000003"
                 },
                 {
-                    "advertising-router": "59.128.3.252",
+                    "advertising-router": "10.34.3.252",
                     "age": "754",
                     "checksum": "0xad09",
-                    "lsa-id": "1.0.0.1",
+                    "lsa-id": "10.1.0.1",
                     "lsa-length": "28",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
                     "sequence-number": "0x80000002"
                 },
                 {
-                    "advertising-router": "106.187.14.240",
+                    "advertising-router": "10.169.14.240",
                     "age": "2210",
                     "checksum": "0x35ae",
-                    "lsa-id": "1.0.0.1",
+                    "lsa-id": "10.1.0.1",
                     "lsa-length": "28",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
                     "sequence-number": "0x80000002"
                 },
                 {
-                    "advertising-router": "27.85.194.125",
+                    "advertising-router": "10.49.194.125",
                     "age": "1168",
                     "checksum": "0x27f4",
-                    "lsa-id": "1.0.0.3",
+                    "lsa-id": "10.1.0.3",
                     "lsa-length": "136",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
                     "sequence-number": "0x80000001"
                 },
                 {
-                    "advertising-router": "27.85.194.127",
+                    "advertising-router": "10.49.194.127",
                     "age": "1441",
                     "checksum": "0xa27",
-                    "lsa-id": "1.0.0.3",
+                    "lsa-id": "10.1.0.3",
                     "lsa-length": "136",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
                     "sequence-number": "0x80000001"
                 },
                 {
-                    "advertising-router": "59.128.2.250",
+                    "advertising-router": "10.34.2.250",
                     "age": "934",
                     "checksum": "0x2ac3",
-                    "lsa-id": "1.0.0.3",
+                    "lsa-id": "10.1.0.3",
                     "lsa-length": "136",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
@@ -152,30 +152,30 @@ class TestShowOspfDatabaseOpaqueArea(unittest.TestCase):
                     "sequence-number": "0x80000002"
                 },
                 {
-                    "advertising-router": "59.128.3.252",
+                    "advertising-router": "10.34.3.252",
                     "age": "1815",
                     "checksum": "0x90dd",
-                    "lsa-id": "1.0.0.3",
+                    "lsa-id": "10.1.0.3",
                     "lsa-length": "136",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
                     "sequence-number": "0x80000001"
                 },
                 {
-                    "advertising-router": "106.187.14.240",
+                    "advertising-router": "10.169.14.240",
                     "age": "597",
                     "checksum": "0x5697",
-                    "lsa-id": "1.0.0.3",
+                    "lsa-id": "10.1.0.3",
                     "lsa-length": "136",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
                     "sequence-number": "0x80000002"
                 },
                 {
-                    "advertising-router": "59.128.2.250",
+                    "advertising-router": "10.34.2.250",
                     "age": "1814",
                     "checksum": "0xb7b3",
-                    "lsa-id": "1.0.0.4",
+                    "lsa-id": "10.1.0.4",
                     "lsa-length": "136",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
@@ -183,20 +183,20 @@ class TestShowOspfDatabaseOpaqueArea(unittest.TestCase):
                     "sequence-number": "0x80000001"
                 },
                 {
-                    "advertising-router": "59.128.3.252",
+                    "advertising-router": "10.34.3.252",
                     "age": "1167",
                     "checksum": "0x412",
-                    "lsa-id": "1.0.0.4",
+                    "lsa-id": "10.1.0.4",
                     "lsa-length": "136",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
                     "sequence-number": "0x80000001"
                 },
                 {
-                    "advertising-router": "106.187.14.240",
+                    "advertising-router": "10.169.14.240",
                     "age": "1440",
                     "checksum": "0x58d5",
-                    "lsa-id": "1.0.0.4",
+                    "lsa-id": "10.1.0.4",
                     "lsa-length": "136",
                     "lsa-type": "OpaqArea",
                     "options": "0x22",
