@@ -118,7 +118,7 @@ class Ping(PingSchema):
         # 5 packets transmitted, 5 packets received, 0% packet loss
         # 5 packets transmitted, 0 packets received, 100% packet loss
         p3 = re.compile(r'^(?P<send>\d+) +packets +transmitted, +'
-                r'(?P<received>\d+) packets +received, +'
+                r'(?P<received>\d+) +packets +received, +'
                 r'(?P<loss_rate>\d+)\% +packet +loss$')
         
         # round-trip min/avg/max/stddev = 1.823/2.175/2.399/0.191 ms

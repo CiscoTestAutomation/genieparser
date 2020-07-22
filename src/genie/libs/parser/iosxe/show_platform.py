@@ -5615,7 +5615,7 @@ class ShowProcessesMemorySchema(MetaParser):
             'used': int,
             'free': int,
         },
-        'reserve_p_pool': {
+        Optional('reserve_p_pool'): {
             'total': int,
             'used': int,
             'free': int,
