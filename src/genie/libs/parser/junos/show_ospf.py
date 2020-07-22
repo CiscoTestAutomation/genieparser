@@ -4234,8 +4234,8 @@ class ShowOspfDatabaseOpaqueArea(ShowOspfDatabaseOpaqueAreaSchema):
         # OpaqArea 10.1.0.1          10.49.194.125    0x80000002   359  0x22 0x6f5d  28
         # OpaqArea*10.1.0.1          10.34.2.250     0x80000003   227  0x22 0xa11a  28
         p2 = re.compile(r'^(?P<lsa_type>[a-zA-Z]+) *(?P<lsa_id>\*?[\d\.]+) +' 
-                        r'(?P<advertising_router>\S+) +(?P<sequence_number>\S+)' 
-                        r'+(?P<age>\S+) +(?P<options>\S+) +(?P<checksum>\S+) +' 
+                        r'(?P<advertising_router>\S+) +(?P<sequence_number>\S+) +' 
+                        r'(?P<age>\S+) +(?P<options>\S+) +(?P<checksum>\S+) +' 
                         r'(?P<lsa_length>\S+)$')
 
         for line in out.splitlines():
@@ -4275,5 +4275,5 @@ class ShowOspfDatabaseOpaqueArea(ShowOspfDatabaseOpaqueAreaSchema):
                     
                 ospf_db_entry_list.append(ospf_db_entry_dict)
                 continue
-                                      
+                                           
         return ret_dict
