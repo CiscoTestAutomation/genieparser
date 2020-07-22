@@ -20,6 +20,7 @@ import re
 import logging
 from collections import OrderedDict
 import xml.etree.ElementTree as ET
+from xml.dom import minidom
 
 # Metaparser
 from genie.metaparser import MetaParser
@@ -30,6 +31,8 @@ try:
     import genie.parsergen
 except (ImportError, OSError):
     pass
+
+log = logging.getLogger(__name__)
 
 class ShowBootvarSchema(MetaParser):
     """Schema for show bootvar"""
@@ -185,7 +188,7 @@ class ShowVersionSchema(MetaParser):
             Optional('chassis_sn'): str,
             Optional('rtr_type'): str,
             'os': str,
-            'curr_config_register': str,
+            Optional('curr_config_register'): str,
             Optional('license_udi'): {
                 Optional('device_num'): {
                     Any(): {
@@ -306,7 +309,7 @@ class ShowVersion(ShowVersionSchema):
         active_dict = {}
         rtr_type = ''
         suite_flag = False
-        license_flag = False
+        license_flag = False              
 
         # version
         # Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.5, RELEASE SOFTWARE (fc3)
@@ -327,7 +330,7 @@ class ShowVersion(ShowVersionSchema):
         # Cisco IOS Software [Fuji], ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.7.1prd4, RELEASE SOFTWARE (fc1)
         # Cisco IOS Software [Fuji], Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Experimental Version 16.8.20170924:182909 [polaris_dev-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20170924_191550 132]
         # Cisco IOS Software, 901 Software (ASR901-UNIVERSALK9-M), Version 15.6(2)SP4, RELEASE SOFTWARE (fc3)
-
+        # Cisco IOS Software [Amsterdam], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.4.20200702:124009 [S2C-build-polaris_dev-116872-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20200702_122021 243]
         p3 = re.compile(r'^[Cc]isco +(?P<os>[A-Z]+) +[Ss]oftware(.+)?\, '
                         r'+(?P<platform>.+) +Software +\((?P<image_id>.+)\).+( '
                         r'+Experimental)? +[Vv]ersion '
@@ -5612,7 +5615,7 @@ class ShowProcessesMemorySchema(MetaParser):
             'used': int,
             'free': int,
         },
-        'reserve_p_pool': {
+        Optional('reserve_p_pool'): {
             'total': int,
             'used': int,
             'free': int,
@@ -6133,6 +6136,8 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
             out = self.device.get(filter=('xpath', '/boot-integrity-oper-data')).data_xml
         else:
             out = output
+
+        log.info(minidom.parseString(out).toprettyxml())
 
         root = ET.fromstring(out)
         boot_integrity_oper_data = Common.retrieve_xml_child(root=root, key='boot-integrity-oper-data')

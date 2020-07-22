@@ -409,69 +409,126 @@ class ShowInterfacesSchema(MetaParser):
         # Pass physical-interface list of dict in value
         if not isinstance(value, list):
             raise SchemaTypeError('physical interface is not a list')
-
-        def verify_address_family_list(value):
+        def verify_logical_interface_list(value):
             # Pass address-family list of dict in value
             if not isinstance(value, list):
-                raise SchemaTypeError('address-family is not a list')
+                raise SchemaTypeError('logical-interface is not a list')
 
-            def verify_interface_address_list(value):
-                # Pass physical-interface list of dict in value
-                if not isinstance(value, list) and not isinstance(value, dict):
-                    raise SchemaTypeError('interface-address is not a list/dict')
+            def verify_address_family_list(value):
+                # Pass address-family list of dict in value
+                if not isinstance(value, list):
+                    raise SchemaTypeError('address-family is not a list')
 
-                interface_address_schema = Schema({
-                    Optional("ifa-broadcast"): str,
-                    Optional("ifa-destination"): str,
-                    "ifa-flags": {
-                        Optional("ifaf-current-preferred"): bool,
-                        Optional("ifaf-current-primary"): bool,
-                        Optional("ifaf-is-primary"): bool,
-                        Optional("ifaf-is-preferred"): bool,
-                        Optional("ifaf-kernel"): bool,
-                        Optional("ifaf-preferred"): bool,
-                        Optional("ifaf-primary"): bool,
-                        Optional("ifaf-is-default"): bool,
-                        Optional("ifaf-none"): bool,
-                        Optional("ifaf-dest-route-down"): bool,
+                def verify_interface_address_list(value):
+                    # Pass physical-interface list of dict in value
+                    if not isinstance(value, list) and not isinstance(value, dict):
+                        raise SchemaTypeError('interface-address is not a list/dict')
+
+                    interface_address_schema = Schema({
+                        Optional("ifa-broadcast"): str,
+                        Optional("ifa-destination"): str,
+                        "ifa-flags": {
+                            Optional("ifaf-current-preferred"): bool,
+                            Optional("ifaf-current-primary"): bool,
+                            Optional("ifaf-is-primary"): bool,
+                            Optional("ifaf-is-preferred"): bool,
+                            Optional("ifaf-kernel"): bool,
+                            Optional("ifaf-preferred"): bool,
+                            Optional("ifaf-primary"): bool,
+                            Optional("ifaf-is-default"): bool,
+                            Optional("ifaf-none"): bool,
+                            Optional("ifaf-dest-route-down"): bool,
+                        },
+                        Optional("ifa-local"): str
+                    })
+
+                    # Validate each dictionary in list
+                    if isinstance(value, dict):
+                        value = [value]
+                    for item in value:
+                        interface_address_schema.validate(item)
+                    return value
+
+                af_schema = Schema({
+                    Optional("address-family-flags"): {
+                        Optional("ifff-is-primary"): bool,
+                        Optional("ifff-no-redirects"): bool,
+                        Optional("ifff-none"): bool,
+                        Optional("ifff-sendbcast-pkt-to-re"): bool,
+                        Optional("internal-flags"): bool,
+                        Optional("ifff-primary"): bool,
+                        Optional("ifff-receive-ttl-exceeded"): bool,
+                        Optional("ifff-receive-options"): bool,
+                        Optional("ifff-encapsulation"): str,
                     },
-                    Optional("ifa-local"): str
+                    "address-family-name": str,
+                    Optional("interface-address"): Use(verify_interface_address_list),
+                    Optional("intf-curr-cnt"): str,
+                    Optional("intf-dropcnt"): str,
+                    Optional("intf-unresolved-cnt"): str,
+                    Optional("generation"): str,
+                    Optional("route-table"): str,
+                    Optional("max-local-cache"): str,
+                    Optional("maximum-labels"): str,
+                    "mtu": str,
+                    Optional("new-hold-limit"): str
                 })
-
                 # Validate each dictionary in list
-                if isinstance(value, dict):
-                    value = [value]
                 for item in value:
-                    interface_address_schema.validate(item)
+                    af_schema.validate(item)
                 return value
 
-            af_schema = Schema({
-                Optional("address-family-flags"): {
-                    Optional("ifff-is-primary"): bool,
-                    Optional("ifff-no-redirects"): bool,
-                    Optional("ifff-none"): bool,
-                    Optional("ifff-sendbcast-pkt-to-re"): bool,
-                    Optional("internal-flags"): bool,
-                    Optional("ifff-primary"): bool,
-                    Optional("ifff-receive-ttl-exceeded"): bool,
-                    Optional("ifff-receive-options"): bool,
-                    Optional("ifff-encapsulation"): str,
+            l_i_schema = Schema({
+                Optional("address-family"): Use(verify_address_family_list),
+                Optional("encapsulation"): str,
+                Optional("filter-information"): str,
+                "if-config-flags": {
+                    "iff-snmp-traps": bool,
+                    "iff-up": bool,
+                    Optional("internal-flags"): str
                 },
-                "address-family-name": str,
-                Optional("interface-address"): Use(verify_interface_address_list),
-                Optional("intf-curr-cnt"): str,
-                Optional("intf-dropcnt"): str,
-                Optional("intf-unresolved-cnt"): str,
-                Optional("generation"): str,
-                Optional("route-table"): str,
-                Optional("max-local-cache"): str,
-                Optional("maximum-labels"): str,
-                "mtu": str,
-                Optional("new-hold-limit"): str
+                "local-index": str,
+                Optional("logical-interface-bandwidth"): str,
+                "name": str,
+                Optional("policer-overhead"): str,
+                Optional("snmp-index"): str,
+                Optional("traffic-statistics"): {
+                    Optional("@junos:style"): str,
+                    "input-packets": str,
+                    Optional("input-bytes"): str,
+                    "output-packets": str,
+                    Optional("output-bytes"): str,
+                    Optional("ipv6-transit-statistics"): {
+                        "input-bytes": str,
+                        "input-packets": str,
+                        "output-bytes": str,
+                        "output-packets": str,
+                    },
+                },
+                Optional("transit-traffic-statistics"): {
+                        "input-bps": str,
+                        "input-bytes": str,
+                        "input-packets": str,
+                        "input-pps": str,
+                        Optional("ipv6-transit-statistics"): {
+                            "input-bps": str,
+                            "input-bytes": str,
+                            "input-packets": str,
+                            "input-pps": str,
+                            "output-bps": str,
+                            "output-bytes": str,
+                            "output-packets": str,
+                            "output-pps": str
+                        },
+                        "output-bps": str,
+                        "output-bytes": str,
+                        "output-packets": str,
+                        "output-pps": str
+                    }
             })
             # Validate each dictionary in list
             for item in value:
-                af_schema.validate(item)
+                l_i_schema.validate(item)
             return value
 
         def verify_queue_list(value):
@@ -562,34 +619,7 @@ class ShowInterfacesSchema(MetaParser):
             Optional("link-type"): str,
             Optional("link-mode"): str,
             Optional("local-index"): str,
-            Optional("logical-interface"): {
-                Optional("address-family"): Use(verify_address_family_list),
-                Optional("encapsulation"): str,
-                Optional("filter-information"): str,
-                "if-config-flags": {
-                    "iff-snmp-traps": bool,
-                    "iff-up": bool,
-                    Optional("internal-flags"): str
-                },
-                "local-index": str,
-                Optional("logical-interface-bandwidth"): str,
-                "name": str,
-                Optional("policer-overhead"): str,
-                Optional("snmp-index"): str,
-                Optional("traffic-statistics"): {
-                    Optional("@junos:style"): str,
-                    "input-packets": str,
-                    Optional("input-bytes"): str,
-                    "output-packets": str,
-                    Optional("output-bytes"): str,
-                    Optional("ipv6-transit-statistics"): {
-                        "input-bytes": str,
-                        "input-packets": str,
-                        "output-bytes": str,
-                        "output-packets": str,
-                    },
-                }
-            },
+            Optional("logical-interface"): Use(verify_logical_interface_list),
             Optional("loopback"): str,
             Optional("lsi-traffic-statistics"): {
                 Optional("@junos:style"): str,
@@ -878,9 +908,10 @@ class ShowInterfaces(ShowInterfacesSchema):
             r'(?P<snmp_index>\d+)\)( +\(Generation +\S+\))?$')
 
         # Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
+        # Flags: Up SNMP-Traps 0x4000 VLAN-Tag [ 0x8100.1 ]  Encapsulation: ENET2
         p25 = re.compile(r'^Flags: +(?P<iff_up>\S+)( +SNMP-Traps)?'
-            r'( +(?P<internal_flags>\S+))? +Encapsulation: +'
-            r'(?P<encapsulation>\S+)$')
+            r'( +(?P<internal_flags>\S+))?( +VLAN-Tag +\[[\S\s]+\])? +'
+            r'Encapsulation: +(?P<encapsulation>\S+)$')
 
         # Input packets : 133657033
         p26 = re.compile(r'^Input +packets *: +(?P<input_packets>\S+)$')
@@ -1182,9 +1213,9 @@ class ShowInterfaces(ShowInterfacesSchema):
             # IPv6 transit statistics:
             m = p36.match(line)
             if m:
-                statistics_type = 'ipv6_transit'
                 group = m.groupdict()
                 traffic_statistics_dict = traffic_statistics_dict.setdefault('ipv6-transit-statistics', {})
+                statistics_type = 'ipv6_transit'
                 continue
             
             # Dropped traffic statistics due to STP State:
@@ -1198,9 +1229,12 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Transit statistics:
             m = p38.match(line)
             if m:
-                statistics_type = 'transit_statistics'
                 group = m.groupdict()
-                traffic_statistics_dict = physical_interface_dict.setdefault('transit-traffic-statistics', {})
+                if statistics_type == 'physical':
+                    traffic_statistics_dict = physical_interface_dict.setdefault('transit-traffic-statistics', {})
+                else:
+                    traffic_statistics_dict = logical_interface_dict.setdefault('transit-traffic-statistics', {})
+                statistics_type = 'transit_statistics'
                 continue
 
             # Input rate     : 2952 bps (5 pps)
@@ -1390,9 +1424,11 @@ class ShowInterfaces(ShowInterfacesSchema):
             if m:
                 statistics_type = 'logical'
                 group = m.groupdict()
-                logical_interface_dict = physical_interface_dict.setdefault('logical-interface', {})
+                logical_interface_dict = {}
+                logical_interface_list = physical_interface_dict.setdefault('logical-interface', [])
                 logical_interface_dict.update({k.replace('_','-'):
                     v for k, v in group.items() if v is not None})
+                logical_interface_list.append(logical_interface_dict)
                 continue
 
             # Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
@@ -1708,7 +1744,7 @@ class ShowInterfaces(ShowInterfacesSchema):
 
 class ShowInterfacesExtensive(ShowInterfaces):
     cli_command = ['show interfaces extensive',
-        'show interfaces extensive {interface}']
+        'show interfaces {interface} extensive']
     def cli(self, interface=None, output=None):
 
         if not output:
@@ -2770,3 +2806,16 @@ class ShowInterfacesQueue(ShowInterfacesQueueSchema):
                     current_queue_dict['queue-counters-red-bytes-rate'] = group['rates']
                 continue
         return ret_dict
+
+class ShowInterfacesExtensiveInterface(ShowInterfaces):
+    cli_command = 'show interfaces extensive {interface}'
+    def cli(self, interface, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                interface=interface
+            ))
+        else:
+            out = output
+        
+        return super().cli(output=out)
