@@ -763,13 +763,13 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
                         Optional("constraints"): {
                             "affinity": {
                                 Any(): list
-                            }
+                            },
                         },
                         "path_type": {
                             Optional("dynamic"): {
                                 "status": str,
                                 Optional("pce"): bool,
-                                "weight": int,
+                                Optional("weight"): int,
                                 "metric_type": str,
                                 Optional("path_accumulated_metric"): int,
                                 Optional("hops"): {
@@ -859,11 +859,11 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
 
         # Candidate-paths:
         #     Preference 400:
-        p3 = re.compile(r'^Preference +(?P<preference>\d+):$')
+        p3 = re.compile(r'^Preference +(?P<preference>\d+)+\s*\w*:$')
 
         #     Dynamic (pce) (inactive)
         #     Dynamic (active)
-        p4 = re.compile(r'^Dynamic( +(?P<pce>\(pce\)))? +\((?P<status>\w+)\)$')
+        p4 = re.compile(r'^Dynamic( +(?P<pce>\(pce.*\)))? +\((?P<status>\w+)\)$')
 
         #         Weight: 0, Metric Type: TE
         p5 = re.compile(r'^Weight: +(?P<weight>[\d]+), +Metric +Type: '
@@ -960,6 +960,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
 
             # Candidate-paths:
             #   Preference 400:
+            #   Preference 10 (PCEP)
             m = p3.match(line)
             if m:
                 aff_flag = False
@@ -971,6 +972,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                 continue
 
             #   Dynamic (pce) (inactive)
+            #   Dynamic (pce 10.229.11.11) (active)
             m = p4.match(line)
             if m:
                 aff_flag = False
