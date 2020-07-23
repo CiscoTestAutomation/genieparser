@@ -166,7 +166,7 @@ class TestShowLDPOverview(unittest.TestCase):
         show ldp overview
         Instance: master
         Reference count: 2
-        Router ID: 106.187.14.240
+        Router ID: 10.169.14.240
         LDP inet: enabled
         Transport preference: IPv4
         Message id: 4
@@ -218,7 +218,7 @@ class TestShowLDPOverview(unittest.TestCase):
             Session protection: disabled
             Session protection timeout: 0
         Interface addresses advertising:
-            106.187.14.157
+            10.169.14.157
         LDP Job:
             Read job time quantum: 1000, Write job time quantum: 1000
             Read job loop quantum: 100, Write job loop quantum: 100
@@ -265,7 +265,7 @@ class TestShowLDPOverview(unittest.TestCase):
                 },
                 'ldp-instance-name': 'master',
                 'ldp-interface-address': {
-                    'interface-address': '106.187.14.157'
+                    'interface-address': '10.169.14.157'
                 },
                 'ldp-ipv6-tunneling': 'disabled',
                 'ldp-job-overview': {
@@ -296,7 +296,7 @@ class TestShowLDPOverview(unittest.TestCase):
                 'ldp-reference-count': 2,
                 'ldp-route-acknowledgement': 'enabled',
                 'ldp-route-preference': 9,
-                'ldp-router-id': '106.187.14.240',
+                'ldp-router-id': '10.169.14.240',
                 'ldp-session-count': {
                     'ldp-control-mode': 'ordered',
                     'ldp-retention-mode': 'liberal',
@@ -335,7 +335,7 @@ class TestShowLDPOverview(unittest.TestCase):
     golden_output_2 = {'execute.return_value': '''
         show ldp overview 
         Instance: master
-        Router ID: 106.187.14.240
+        Router ID: 10.169.14.240
         Message id: 345
         Configuration sequence: 1
         Deaggregate: disabled
@@ -374,7 +374,7 @@ class TestShowLDPOverview(unittest.TestCase):
             Session protection: disabled
             Session protecton timeout: 0
         Interface addresses advertising:
-            106.187.14.157
+            10.169.14.157
     '''}
 
     golden_parsed_output_2 = {
@@ -401,7 +401,7 @@ class TestShowLDPOverview(unittest.TestCase):
                 },
                 'ldp-instance-name': 'master',
                 'ldp-interface-address': {
-                    'interface-address': '106.187.14.157'
+                    'interface-address': '10.169.14.157'
                 },
                 'ldp-ipv6-tunneling': 'disabled',
                 'ldp-loopback-if-added': 'no',
@@ -413,7 +413,7 @@ class TestShowLDPOverview(unittest.TestCase):
                     'ldp-retention-mode': 'liberal'
                 },
                 'ldp-route-preference': 9,
-                'ldp-router-id': '106.187.14.240',
+                'ldp-router-id': '10.169.14.240',
                 'ldp-session-count': {
                     'ldp-session-operational': 1
                 },
@@ -446,7 +446,7 @@ class TestShowLDPOverview(unittest.TestCase):
         show ldp overview 
         Instance: master
         Reference count: 2
-        Router ID: 106.187.14.240
+        Router ID: 10.169.14.240
         LDP inet: enabled
         Transport preference: IPv4
         Message id: 4
@@ -498,7 +498,7 @@ class TestShowLDPOverview(unittest.TestCase):
             Session protection: disabled
             Session protection timeout: 0
         Interface addresses advertising:
-            106.187.14.157
+            10.169.14.157
         LDP Job:
             Read job time quantum: 1000, Write job time quantum: 1000
             Read job loop quantum: 100, Write job loop quantum: 100
@@ -545,7 +545,7 @@ class TestShowLDPOverview(unittest.TestCase):
                 },
                 'ldp-instance-name': 'master',
                 'ldp-interface-address': {
-                    'interface-address': '106.187.14.157'
+                    'interface-address': '10.169.14.157'
                 },
                 'ldp-ipv6-tunneling': 'disabled',
                 'ldp-job-overview': {
@@ -576,7 +576,7 @@ class TestShowLDPOverview(unittest.TestCase):
                 'ldp-reference-count': 2,
                 'ldp-route-acknowledgement': 'enabled',
                 'ldp-route-preference': 9,
-                'ldp-router-id': '106.187.14.240',
+                'ldp-router-id': '10.169.14.240',
                 'ldp-session-count': {
                     'ldp-control-mode': 'ordered',
                     'ldp-retention-mode': 'liberal',
@@ -616,7 +616,7 @@ class TestShowLDPOverview(unittest.TestCase):
         show ldp overview 
         Instance: master
         Reference count: 2
-        Router ID: 106.187.14.240
+        Router ID: 10.169.14.240
         LDP inet: enabled
         Transport preference: IPv4
         Message id: 4
@@ -668,7 +668,7 @@ class TestShowLDPOverview(unittest.TestCase):
             Session protection: disabled
             Session protection timeout: 0
         Interface addresses advertising:
-            106.187.14.157
+            10.169.14.157
         LDP Job:
             Read job time quantum: 1000, Write job time quantum: 1000
             Read job loop quantum: 100, Write job loop quantum: 100
@@ -715,7 +715,7 @@ class TestShowLDPOverview(unittest.TestCase):
                 },
                 'ldp-instance-name': 'master',
                 'ldp-interface-address': {
-                    'interface-address': '106.187.14.157'
+                    'interface-address': '10.169.14.157'
                 },
                 'ldp-ipv6-tunneling': 'disabled',
                 'ldp-job-overview': {
@@ -746,7 +746,7 @@ class TestShowLDPOverview(unittest.TestCase):
                 'ldp-reference-count': 2,
                 'ldp-route-acknowledgement': 'enabled',
                 'ldp-route-preference': 9,
-                'ldp-router-id': '106.187.14.240',
+                'ldp-router-id': '10.169.14.240',
                 'ldp-session-count': {
                     'ldp-control-mode': 'ordered',
                     'ldp-retention-mode': 'liberal',
