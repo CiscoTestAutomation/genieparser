@@ -70,8 +70,8 @@ class TestShowLDPInterface(unittest.TestCase):
         "ldp-interface-information": {
             "ldp-interface": {
                 "interface-name": "ge-0/0/0.0",
-                "ldp-interface-local-address": "10.169.14.157",
-                "ldp-label-space-id": "10.169.14.240:0",
+                "ldp-interface-local-address": "10.1.2.2",
+                "ldp-label-space-id": "100.2.14.100:0",
                 "ldp-neighbor-count": "1",
                 "ldp-next-hello": "3"
             }
@@ -84,7 +84,7 @@ class TestShowLDPInterface(unittest.TestCase):
             show ldp interface ge-0/0/0.0
             Interface          Address                          Label space ID   Nbr   Next
                                                                                 count  hello
-            ge-0/0/0.0         10.169.14.157                   10.169.14.240:0  1      3
+            ge-0/0/0.0         10.1.2.2                   100.2.14.100:0  1      3
         '''
     }
 
@@ -116,11 +116,11 @@ class TestShowLDPInterfaceDetail(unittest.TestCase):
         "ldp-interface-information": {
             "ldp-interface": {
                 "interface-name": "ge-0/0/0.0",
-                "ldp-interface-local-address": "10.169.14.157",
-                "ldp-label-space-id": "10.169.14.240:0",
+                "ldp-interface-local-address": "10.1.2.2",
+                "ldp-label-space-id": "100.2.14.100:0",
                 "ldp-neighbor-count": "1",
                 "ldp-next-hello": "1",
-                "ldp-transport-address": "10.169.14.240",
+                "ldp-transport-address": "100.2.14.100",
                 "ldp-hello-interval": "5",
                 "ldp-holdtime": "15",
             }
@@ -133,8 +133,8 @@ class TestShowLDPInterfaceDetail(unittest.TestCase):
             show ldp interface ge-0/0/0.0 detail
             Interface          Address                          Label space ID   Nbr   Next
                                                                                 count  hello
-            ge-0/0/0.0         10.169.14.157                   10.169.14.240:0  1      1
-            Hello interval: 5, Hold time: 15, Transport address: 10.169.14.240
+            ge-0/0/0.0         10.1.2.2                   100.2.14.100:0  1      1
+            Hello interval: 5, Hold time: 15, Transport address: 100.2.14.100
         '''
     }
 
@@ -166,7 +166,7 @@ class TestShowLDPOverview(unittest.TestCase):
         show ldp overview
         Instance: master
         Reference count: 2
-        Router ID: 10.169.14.240
+        Router ID: 100.2.14.100
         LDP inet: enabled
         Transport preference: IPv4
         Message id: 4
@@ -218,7 +218,7 @@ class TestShowLDPOverview(unittest.TestCase):
             Session protection: disabled
             Session protection timeout: 0
         Interface addresses advertising:
-            10.169.14.157
+            10.1.2.2
         LDP Job:
             Read job time quantum: 1000, Write job time quantum: 1000
             Read job loop quantum: 100, Write job loop quantum: 100
@@ -265,7 +265,7 @@ class TestShowLDPOverview(unittest.TestCase):
                 },
                 'ldp-instance-name': 'master',
                 'ldp-interface-address': {
-                    'interface-address': '10.169.14.157'
+                    'interface-address': '10.1.2.2'
                 },
                 'ldp-ipv6-tunneling': 'disabled',
                 'ldp-job-overview': {
@@ -296,7 +296,7 @@ class TestShowLDPOverview(unittest.TestCase):
                 'ldp-reference-count': 2,
                 'ldp-route-acknowledgement': 'enabled',
                 'ldp-route-preference': 9,
-                'ldp-router-id': '10.169.14.240',
+                'ldp-router-id': '100.2.14.100',
                 'ldp-session-count': {
                     'ldp-control-mode': 'ordered',
                     'ldp-retention-mode': 'liberal',
@@ -335,7 +335,7 @@ class TestShowLDPOverview(unittest.TestCase):
     golden_output_2 = {'execute.return_value': '''
         show ldp overview 
         Instance: master
-        Router ID: 10.169.14.240
+        Router ID: 100.2.14.100
         Message id: 345
         Configuration sequence: 1
         Deaggregate: disabled
@@ -374,7 +374,7 @@ class TestShowLDPOverview(unittest.TestCase):
             Session protection: disabled
             Session protecton timeout: 0
         Interface addresses advertising:
-            10.169.14.157
+            10.1.2.2
     '''}
 
     golden_parsed_output_2 = {
@@ -401,7 +401,7 @@ class TestShowLDPOverview(unittest.TestCase):
                 },
                 'ldp-instance-name': 'master',
                 'ldp-interface-address': {
-                    'interface-address': '10.169.14.157'
+                    'interface-address': '10.1.2.2'
                 },
                 'ldp-ipv6-tunneling': 'disabled',
                 'ldp-loopback-if-added': 'no',
@@ -413,7 +413,7 @@ class TestShowLDPOverview(unittest.TestCase):
                     'ldp-retention-mode': 'liberal'
                 },
                 'ldp-route-preference': 9,
-                'ldp-router-id': '10.169.14.240',
+                'ldp-router-id': '100.2.14.100',
                 'ldp-session-count': {
                     'ldp-session-operational': 1
                 },
@@ -446,7 +446,7 @@ class TestShowLDPOverview(unittest.TestCase):
         show ldp overview 
         Instance: master
         Reference count: 2
-        Router ID: 10.169.14.240
+        Router ID: 100.2.14.100
         LDP inet: enabled
         Transport preference: IPv4
         Message id: 4
@@ -498,7 +498,7 @@ class TestShowLDPOverview(unittest.TestCase):
             Session protection: disabled
             Session protection timeout: 0
         Interface addresses advertising:
-            10.169.14.157
+            10.1.2.2
         LDP Job:
             Read job time quantum: 1000, Write job time quantum: 1000
             Read job loop quantum: 100, Write job loop quantum: 100
@@ -545,7 +545,7 @@ class TestShowLDPOverview(unittest.TestCase):
                 },
                 'ldp-instance-name': 'master',
                 'ldp-interface-address': {
-                    'interface-address': '10.169.14.157'
+                    'interface-address': '10.1.2.2'
                 },
                 'ldp-ipv6-tunneling': 'disabled',
                 'ldp-job-overview': {
@@ -576,7 +576,7 @@ class TestShowLDPOverview(unittest.TestCase):
                 'ldp-reference-count': 2,
                 'ldp-route-acknowledgement': 'enabled',
                 'ldp-route-preference': 9,
-                'ldp-router-id': '10.169.14.240',
+                'ldp-router-id': '100.2.14.100',
                 'ldp-session-count': {
                     'ldp-control-mode': 'ordered',
                     'ldp-retention-mode': 'liberal',
@@ -616,7 +616,7 @@ class TestShowLDPOverview(unittest.TestCase):
         show ldp overview 
         Instance: master
         Reference count: 2
-        Router ID: 10.169.14.240
+        Router ID: 100.2.14.100
         LDP inet: enabled
         Transport preference: IPv4
         Message id: 4
@@ -668,7 +668,7 @@ class TestShowLDPOverview(unittest.TestCase):
             Session protection: disabled
             Session protection timeout: 0
         Interface addresses advertising:
-            10.169.14.157
+            10.1.2.2
         LDP Job:
             Read job time quantum: 1000, Write job time quantum: 1000
             Read job loop quantum: 100, Write job loop quantum: 100
@@ -715,7 +715,7 @@ class TestShowLDPOverview(unittest.TestCase):
                 },
                 'ldp-instance-name': 'master',
                 'ldp-interface-address': {
-                    'interface-address': '10.169.14.157'
+                    'interface-address': '10.1.2.2'
                 },
                 'ldp-ipv6-tunneling': 'disabled',
                 'ldp-job-overview': {
@@ -746,7 +746,7 @@ class TestShowLDPOverview(unittest.TestCase):
                 'ldp-reference-count': 2,
                 'ldp-route-acknowledgement': 'enabled',
                 'ldp-route-preference': 9,
-                'ldp-router-id': '10.169.14.240',
+                'ldp-router-id': '100.2.14.100',
                 'ldp-session-count': {
                     'ldp-control-mode': 'ordered',
                     'ldp-retention-mode': 'liberal',
