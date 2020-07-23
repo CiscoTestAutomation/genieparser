@@ -23,18 +23,16 @@ class TracerouteNoResolveSchema(MetaParser):
             },
             "max-hops": str,
             "packet-size": str,
-            "hops": {
-                "hop": [
-                    {
-                        "hop-number": str,
-                        Optional("router-name"): str,
-                        "address": str,
-                        "round-trip-time": str
-                    }
-                ]
-              }
-           }
+            "hops": [
+                        {
+                            "hop-number": str,
+                            Optional("router-name"): str,
+                            "address": str,
+                            "round-trip-time": str
+                        }
+            ]
         }
+    }
     """
 
     def validate_hops_list(value):
