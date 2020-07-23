@@ -11,7 +11,7 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import (Any,
         Optional, Use, SchemaTypeError, Schema)
 
-class TracerouteSchema(MetaParser):
+class TracerouteNoResolveSchema(MetaParser):
     """ Schema for:
                 * traceroute {ipaddress} no-resolve
     """
@@ -37,10 +37,10 @@ class TracerouteSchema(MetaParser):
         }
     """
 
-    def validate_hop_list(value):
-        # Pass hop list of dict in value
+    def validate_hops_list(value):
+        # Pass hops list of dict in value
         if not isinstance(value, list):
-            raise SchemaTypeError('hop is not a list')
+            raise SchemaTypeError('hops is not a list')
         # Create hop Schema
         hop_schema = Schema({
                        "hop-number": str,
@@ -62,21 +62,18 @@ class TracerouteSchema(MetaParser):
             },
             "max-hops": str,
             "packet-size": str,
-            "hops": {
-                "hop": Use(validate_hop_list)
-            }
+            "hops": Use(validate_hops_list)
         }
     }
 
-
-class Traceroute(TracerouteSchema):
+class TracerouteNoResolve(TracerouteNoResolveSchema):
     """ Parser for:
             * traceroute {ipaddress} no-resolve
     """
     cli_command = 'traceroute {addr} no-resolve'
 
     def cli(self, addr, output=None):
-        cmd = self.cli_command[0].format(addr=addr)
+        cmd = self.cli_command.format(addr=addr)
         if not output:
             out = self.device.execute(cmd)
         else:
@@ -112,12 +109,11 @@ class Traceroute(TracerouteSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                hops_dict = traceroute_dict.setdefault('hops', {})
-                hop_list = hops_dict.setdefault('hop', [])
+                hops_list = traceroute_dict.setdefault('hops', [])
                 hop_dict = {}
                 hop_dict.update({k.replace('_', '-'):
                                                  v for k, v in group.items() if v is not None})
-                hop_list.append(hop_dict)
+                hops_list.append(hop_dict)
                 continue
 
         return ret_dict

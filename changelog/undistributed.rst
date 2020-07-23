@@ -41,6 +41,8 @@
         * show ldp interface {interface} detail
     * Added PingMplsRsvp
         * ping mpls rsvp {rspv}
+    * Added TracerouteNoResolve
+        * traceroute {ipaddress} no-resolve
 
 --------------------------------------------------------------------------------
                                 Fix
