@@ -41,6 +41,9 @@
         * show ldp interface {interface} detail
     * Added PingMplsRsvp
         * ping mpls rsvp {rspv}
+* SDWAN
+    * Added ShowPlatformHardwareQfpActiveFeatureAppqoe
+        * show platform hardware qfp active feature appqoe stats all
 
 --------------------------------------------------------------------------------
                                 Fix
