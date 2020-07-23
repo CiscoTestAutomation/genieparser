@@ -342,7 +342,7 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
         # Label allocation:
         p11 = re.compile(r'^Label +allocation\:$')
 
-        # 10.169.14.157
+        # 10.1.2.2
         p12 = re.compile(r'^(?P<ip>[\d\.]+)$')
 
         # Protocol modes:
@@ -616,11 +616,11 @@ class ShowLDPInterface(ShowLDPInterfaceSchema):
         else:
             out = output
 
-        # ge-0/0/0.0         10.169.14.157                   10.169.14.240:0  1      3
+        # ge-0/0/0.0         10.1.2.2                   100.2.14.100:0  1      3
         p1 = re.compile(r'^(?P<interface_name>\S+) +(?P<local_address>\S+) +'
                         r'(?P<space_id>\S+) +(?P<neighbor_count>\d+) +(?P<next_hello>\d+)$')
 
-        # Hello interval: 5, Hold time: 15, Transport address: 10.169.14.240
+        # Hello interval: 5, Hold time: 15, Transport address: 100.2.14.100
         p2 = re.compile(r'^Hello +interval: +(?P<ldp_hello_interval>\d+), +'
                         r'Hold +time: +(?P<ldp_holdtime>\d+), +'
                         r'Transport +address: +(?P<ldp_transport_address>\S+)')
@@ -630,7 +630,7 @@ class ShowLDPInterface(ShowLDPInterfaceSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # ge-0/0/0.0         10.169.14.157                   10.169.14.240:0  1      3
+            # ge-0/0/0.0         10.1.2.2                   100.2.14.100:0  1      3
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -648,7 +648,7 @@ class ShowLDPInterface(ShowLDPInterfaceSchema):
                     {'ldp-next-hello': group['next_hello']})
                 continue
 
-            # Hello interval: 5, Hold time: 15, Transport address: 10.169.14.240
+            # Hello interval: 5, Hold time: 15, Transport address: 100.2.14.100
             m = p2.match(line)
             if m:
                 group = m.groupdict()

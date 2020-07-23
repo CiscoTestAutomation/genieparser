@@ -9,7 +9,8 @@ from pyats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # junos ping
-from genie.libs.parser.junos.ping import (Ping)
+from genie.libs.parser.junos.ping import (Ping,
+    PingMplsRsvp)
 
 
 class TestPing(unittest.TestCase):
@@ -218,6 +219,42 @@ class TestPing(unittest.TestCase):
         obj = Ping(device=self.device)
         parsed_output = obj.parse(addr='2001:db8:223c:2c16::2', count='10')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+class TestPingMplsRsvp(unittest.TestCase):
+    """ Unit tests for:
+            * ping mpls rsvp {rspv}
+    """
+
+    device = Device(name='aDevice')
+    maxDiff = None
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        ping mpls rsvp test_lsp_01
+        !!!!!
+        --- lsping statistics ---
+        5 packets transmitted, 5 packets received, 0% packet loss
+    '''}
+    
+    golden_parsed_output = {
+        "lsping-statistics": {
+            "loss-rate": 0,
+            "received": 5,
+            "send": 5
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = PingMplsRsvp(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse(rsvp='test_lsp_01')
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = PingMplsRsvp(device=self.device)
+        parsed_output = obj.parse(rsvp='test_lsp_01')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()

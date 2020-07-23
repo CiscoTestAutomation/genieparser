@@ -9,6 +9,8 @@
                                 New
 --------------------------------------------------------------------------------
 * JUNOS
+    * Added ShowTedDatabaseIpAddress
+        * show ted database {ipaddress}
     * Created ShowMPLSLSPNameDetail
         * show mpls lsp name {name} detail
     * Created ShowMPLSLSPNameExtensive
@@ -33,10 +35,14 @@
         * show rsvp neighbor detail
     * Added ShowLDPOverview
         * show ldp overview
+    * Added ShowOspfDatabaseOpaqueArea
+        * show ospf database opaque-area
     * Added ShowLDPInterface
         * show ldp interface {interface}
     * Added ShowLDPInterfaceDetail
         * show ldp interface {interface} detail
+    * Added PingMplsRsvp
+        * ping mpls rsvp {rspv}
 
 --------------------------------------------------------------------------------
                                 Fix
@@ -90,6 +96,8 @@
         * to pretty print the rpc reply for netconf
     * Updated ShowVersion
         * Enhanced parser
+    * Updated ShowProcessesMemory
+        * Modified schema to support different output
 
 * NXOS
     * Updated ShowIpRoute
