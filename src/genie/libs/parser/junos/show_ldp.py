@@ -118,7 +118,8 @@ class ShowLDPOverviewSchema(MetaParser):
                     Optional("ldp-session-operational"): int,
                     Optional("ldp-session-nonexistent"): int,
                     Optional("ldp-retention-mode"): str,
-                    Optional("ldp-control-mode"): str
+                    Optional("ldp-control-mode"): str,
+                    Optional("ldp-session-connecting"): int
                 },
                 Optional("ldp-dod-session-count"): str,
                 Optional("ldp-auto-targeted-session"): {
@@ -226,6 +227,7 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
             'Protocol modes': ['ldp-protocol-modes', 'str'],
             'Distribution': ['ldp-distribution-mode', 'str'],
             'Reference count': ['ldp-reference-count', 'int'],
+            'Connecting': ['ldp-session-connecting', 'int'],
             'Router ID': ['ldp-router-id', 'str'],
             'LDP inet': ['ldp-inet', 'str'],
             'Transport preference': ['ldp-transport-preference', 'str'],
@@ -496,6 +498,9 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
                         session_flag = False
 
                     if 'Operational' in group['var'] and protocol_mode_flag:
+                        session_flag = False
+
+                    if 'Connecting' in group['var'] and protocol_mode_flag:
                         session_flag = False
 
                 elif 'Egress FEC capabilities enabled' in group['var']:
