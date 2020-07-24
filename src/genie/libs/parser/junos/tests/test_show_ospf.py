@@ -13609,21 +13609,21 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
 
     golden_output_3 = {
         "execute.return_value": """
-    show ospf database lsa-id 20.0.0.3 detail 
+    show ospf database lsa-id 10.145.0.3 detail 
 
         OSPF database, Area 0.0.0.0
      Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len 
-    Network *20.0.0.3         3.3.3.3          0x80000002    64  0x22 0x9958  36
+    Network *10.145.0.3         10.36.3.3          0x80000002    64  0x22 0x9958  36
       mask 255.255.255.0
-      attached router 3.3.3.3
-      attached router 4.4.4.4
-      attached router 1.1.1.1
+      attached router 10.36.3.3
+      attached router 10.64.4.4
+      attached router 10.4.1.1
       Topology default (ID 0)
-        Type: Transit, Node ID: 1.1.1.1
+        Type: Transit, Node ID: 10.4.1.1
           Metric: 0, Bidirectional
-        Type: Transit, Node ID: 4.4.4.4
+        Type: Transit, Node ID: 10.64.4.4
           Metric: 0, Bidirectional
-        Type: Transit, Node ID: 3.3.3.3
+        Type: Transit, Node ID: 10.36.3.3
           Metric: 0, Bidirectional
     """
     }
@@ -13633,34 +13633,34 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
             "ospf-area-header": {"ospf-area": "0.0.0.0"},
             "ospf-database": [
                 {
-                    "advertising-router": "3.3.3.3",
+                    "advertising-router": "10.36.3.3",
                     "age": "64",
                     "checksum": "0x9958",
-                    "lsa-id": "20.0.0.3",
+                    "lsa-id": "10.145.0.3",
                     "lsa-length": "36",
                     "lsa-type": "Network",
                     "options": "0x22",
                     "ospf-network-lsa": {
                         "address-mask": "255.255.255.0",
-                        "attached-router": ["3.3.3.3", "4.4.4.4", "1.1.1.1"],
+                        "attached-router": ["10.36.3.3", "10.64.4.4", "10.4.1.1"],
                         "ospf-lsa-topology": {
                             "ospf-lsa-topology-link": [
                                 {
                                     "link-type-name": "Transit",
                                     "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "1.1.1.1",
+                                    "ospf-lsa-topology-link-node-id": "10.4.1.1",
                                     "ospf-lsa-topology-link-state": "Bidirectional",
                                 },
                                 {
                                     "link-type-name": "Transit",
                                     "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "4.4.4.4",
+                                    "ospf-lsa-topology-link-node-id": "10.64.4.4",
                                     "ospf-lsa-topology-link-state": "Bidirectional",
                                 },
                                 {
                                     "link-type-name": "Transit",
                                     "ospf-lsa-topology-link-metric": "0",
-                                    "ospf-lsa-topology-link-node-id": "3.3.3.3",
+                                    "ospf-lsa-topology-link-node-id": "10.36.3.3",
                                     "ospf-lsa-topology-link-state": "Bidirectional",
                                 },
                             ],
@@ -13698,7 +13698,7 @@ class TestShowOspfDatabaseLsaidDetail(unittest.TestCase):
     def test_golden_3(self):
         self.device = Mock(**self.golden_output_3)
         obj = ShowOspfDatabaseLsaidDetail(device=self.device)
-        parsed_output = obj.parse(ipaddress="20.0.0.3")
+        parsed_output = obj.parse(ipaddress="10.145.0.3")
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 

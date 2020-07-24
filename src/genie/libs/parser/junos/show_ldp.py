@@ -56,7 +56,7 @@ class ShowLDPSession(ShowLDPSessionSchema):
 
         ret_dict = {}
 
-        # 59.128.2.250                        Operational Open          26         DU
+        # 10.34.2.250                        Operational Open          26         DU
         p1 = re.compile(r'^(?P<ldp_neighbor_address>\S+) +'
                         r'(?P<ldp_session_state>\S+) +'
                         r'(?P<ldp_connection_state>\S+) +'
@@ -138,7 +138,7 @@ class ShowLdpNeighbor(ShowLdpNeighborSchema):
 
         ret_dict = {}
 
-        # 106.187.14.158                      ge-0/0/0.0      59.128.2.250:0       14
+        # 10.169.14.158                      ge-0/0/0.0      10.34.2.250:0       14
         p1 = re.compile(
             r'^(?P<ldp_neighbor_address>\S+) '
             r'+(?P<interface_name>\S+) +(?P<ldp_label_space_id>\S+) '
@@ -148,7 +148,7 @@ class ShowLdpNeighbor(ShowLdpNeighborSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 106.187.14.158                      ge-0/0/0.0      59.128.2.250:0       14
+            # 10.169.14.158                      ge-0/0/0.0      10.34.2.250:0       14
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -240,7 +240,7 @@ class ShowLdpDatabaseSessionIpaddress(ShowLdpDatabaseSessionIpaddressSchema):
 
         ret_dict = {}
 
-        # Input label database, 106.187.14.240:0--59.128.2.250:0
+        # Input label database, 10.169.14.240:0--10.34.2.250:0
         p1 = re.compile(
             r'^(?P<ldp_database_type>[\S\s]+), '
             r'+(?P<ldp_session_id>[\d\.\:\-]+)$'
@@ -252,7 +252,7 @@ class ShowLdpDatabaseSessionIpaddress(ShowLdpDatabaseSessionIpaddressSchema):
         )
 
         
-        # 3      59.128.2.250/32
+        # 3      10.34.2.250/32
         p3 = re.compile(
             r'^(?P<ldp_label>\d+) +(?P<ldp_prefix>[\d\.\/]+)$'
         )
@@ -260,7 +260,7 @@ class ShowLdpDatabaseSessionIpaddress(ShowLdpDatabaseSessionIpaddressSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 106.187.14.158                      ge-0/0/0.0      59.128.2.250:0       14
+            # 10.169.14.158                      ge-0/0/0.0      10.34.2.250:0       14
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -277,6 +277,7 @@ class ShowLdpDatabaseSessionIpaddress(ShowLdpDatabaseSessionIpaddressSchema):
                 ldp_neighbor_list.append(ldp_entry_dict)
                 continue
 
+            # Labels received: 2
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -286,6 +287,7 @@ class ShowLdpDatabaseSessionIpaddress(ShowLdpDatabaseSessionIpaddressSchema):
                     ldp_entry_dict['ldp-label-received'] = group['ldp_label_received']
                 continue
 
+            # 3      10.34.2.250/32
             m = p3.match(line)
             if m:
                 group = m.groupdict()

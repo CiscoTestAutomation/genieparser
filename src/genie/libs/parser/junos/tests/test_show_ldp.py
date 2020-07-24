@@ -24,7 +24,7 @@ class TestShowLDPSession(unittest.TestCase):
     golden_parsed_output = {
         'ldp-session-information': {
             'ldp-session': [{
-                'ldp-neighbor-address': '59.128.2.250',
+                'ldp-neighbor-address': '10.34.2.250',
                 'ldp-session-state': 'Operational',
                 'ldp-connection-state': 'Open',
                 'ldp-remaining-time': '26',
@@ -37,7 +37,7 @@ class TestShowLDPSession(unittest.TestCase):
         'execute.return_value':
         '''
           Address                           State       Connection  Hold time  Adv. Mode
-        59.128.2.250                        Operational Open          26         DU
+        10.34.2.250                        Operational Open          26         DU
         '''
     }
 
@@ -68,8 +68,8 @@ class TestShowLDPSession(unittest.TestCase):
             'ldp-neighbor-information': 
                 {'ldp-neighbor': [
                     {'interface-name': 'ge-0/0/0.0',
-                     'ldp-label-space-id': '59.128.2.250:0',
-                     'ldp-neighbor-address': '106.187.14.158',
+                     'ldp-label-space-id': '10.34.2.250:0',
+                     'ldp-neighbor-address': '10.169.14.158',
                      'ldp-remaining-time': '14'
                      }
                 ]
@@ -81,7 +81,7 @@ class TestShowLDPSession(unittest.TestCase):
         '''
           show ldp neighbor
         Address                             Interface       Label space ID     Hold time
-        106.187.14.158                      ge-0/0/0.0      59.128.2.250:0       14
+        10.169.14.158                      ge-0/0/0.0      10.34.2.250:0       14
         '''
     }
 
@@ -115,31 +115,31 @@ class TestShowLDPSession(unittest.TestCase):
                 "ldp-binding": [
                     {
                         "ldp-label": "3",
-                        "ldp-prefix": "59.128.2.250/32"
+                        "ldp-prefix": "10.34.2.250/32"
                     },
                     {
                         "ldp-label": "16",
-                        "ldp-prefix": "106.187.14.240/32"
+                        "ldp-prefix": "10.169.14.240/32"
                     }
                 ],
                 "ldp-database-type": "Input label database",
                 "ldp-label-received": "2",
-                "ldp-session-id": "106.187.14.240:0--59.128.2.250:0"
+                "ldp-session-id": "10.169.14.240:0--10.34.2.250:0"
             },
             {
                 "ldp-binding": [
                     {
                         "ldp-label": "16",
-                        "ldp-prefix": "59.128.2.250/32"
+                        "ldp-prefix": "10.34.2.250/32"
                     },
                     {
                         "ldp-label": "3",
-                        "ldp-prefix": "106.187.14.240/32"
+                        "ldp-prefix": "10.169.14.240/32"
                     }
                 ],
                 "ldp-database-type": "Output label database",
                 "ldp-label-advertised": "2",
-                "ldp-session-id": "106.187.14.240:0--59.128.2.250:0"
+                "ldp-session-id": "10.169.14.240:0--10.34.2.250:0"
             }
         ]
     }
@@ -148,18 +148,18 @@ class TestShowLDPSession(unittest.TestCase):
     golden_output = {
         'execute.return_value':
         '''
-          show ldp database 59.128.2.250 
-        Input label database, 106.187.14.240:0--59.128.2.250:0
+          show ldp database 10.34.2.250 
+        Input label database, 10.169.14.240:0--10.34.2.250:0
         Labels received: 2
         Label     Prefix
-            3      59.128.2.250/32
-            16      106.187.14.240/32
+            3      10.34.2.250/32
+            16      10.169.14.240/32
 
-        Output label database, 106.187.14.240:0--59.128.2.250:0
+        Output label database, 10.169.14.240:0--10.34.2.250:0
         Labels advertised: 2
         Label     Prefix
-            16      59.128.2.250/32
-            3      106.187.14.240/32
+            16      10.34.2.250/32
+            3      10.169.14.240/32
         '''
     }
 
@@ -172,7 +172,7 @@ class TestShowLDPSession(unittest.TestCase):
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowLdpDatabaseSessionIpaddress(device=self.device)
-        parsed_output = obj.parse(ipaddress='59.128.2.250')
+        parsed_output = obj.parse(ipaddress='10.34.2.250')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 

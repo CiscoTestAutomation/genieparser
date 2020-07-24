@@ -25,7 +25,7 @@ class TestShowBFDSession(unittest.TestCase):
             'bfd-session': [{
                 'session-adaptive-multiplier': '3',
                 'session-detection-time': '1.500',
-                'session-neighbor': '59.128.2.250',
+                'session-neighbor': '10.34.2.250',
                 'session-state': 'Up',
                 'session-transmission-interval': '0.500'
             },
@@ -45,7 +45,7 @@ class TestShowBFDSession(unittest.TestCase):
         'execute.return_value':
         '''
         Address                  State     Interface      Time     Interval  Multiplier
-        59.128.2.250             Up                       1.500     0.500        3
+        10.34.2.250             Up                       1.500     0.500        3
         127.0.0.64               Up        ge-0/0/0.0     1.500     0.500        3
         '''
     }
