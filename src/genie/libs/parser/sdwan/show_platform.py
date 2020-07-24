@@ -6,6 +6,11 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 
 
+# =======================================================================
+# Parser for 'show platform hardware qfp active feature appqoe stats all'
+# =======================================================================
+
+
 class ShowPlatformHardwareQfpActiveFeatureAppqoeSchema(MetaParser):
     schema = {
         'feature': {
@@ -77,10 +82,10 @@ class ShowPlatformHardwareQfpActiveFeatureAppqoe(ShowPlatformHardwareQfpActiveFe
         # SN Index [Default]
         p4 = re.compile(r'^SN +Index +\[(?P<index>[\s\S]+)\]$')
 
-        # SDVT Count stats
-        # SDVT Packet stats
-        # SDVT Drop Cause stats
-        # SDVT Errors stats
+        # SDVT Count stats:
+        # SDVT Packet stats:
+        # SDVT Drop Cause stats:
+        # SDVT Errors stats:
         p5 = re.compile(r'^(?P<sdvt_stats_type>SDVT +[\s\S]+ +stats):$')
 
         # decaps: Processed control messages from SN: 14200

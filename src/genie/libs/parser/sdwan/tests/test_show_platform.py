@@ -13,6 +13,8 @@ from genie.libs.parser.sdwan.show_platform import ShowPlatformHardwareQfpActiveF
 
 
 class TestShowPlatformHardwareQfpActiveFeatureAppqoe(unittest.TestCase):
+    maxDiff = None
+    
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -105,14 +107,12 @@ class TestShowPlatformHardwareQfpActiveFeatureAppqoe(unittest.TestCase):
 
 
     def test_show_platform_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowPlatformHardwareQfpActiveFeatureAppqoe(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_show_platform_empty(self):
-        self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = ShowPlatformHardwareQfpActiveFeatureAppqoe(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
