@@ -41,6 +41,10 @@
         * show ldp interface {interface} detail
     * Added PingMplsRsvp
         * ping mpls rsvp {rspv}
+    * Added TracerouteNoResolve
+        * traceroute {ipaddress} no-resolve
+    * Added Ping
+        * ping {addr} ttl {ttl} count {count} wait {wait}
 * SDWAN
     * Added ShowPlatformHardwareQfpActiveFeatureAppqoe
         * show platform hardware qfp active feature appqoe stats all

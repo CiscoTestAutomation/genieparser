@@ -202,6 +202,116 @@ class TestPing(unittest.TestCase):
         }
     }
 
+    golden_output_3 = {'execute.return_value': '''
+            ping 30.0.0.2 ttl 5 count 10 wait 1
+            PING 30.0.0.2 (30.0.0.2): 56 data bytes
+            64 bytes from 30.0.0.2: icmp_seq=0 ttl=64 time=1.013 ms
+            64 bytes from 30.0.0.2: icmp_seq=1 ttl=64 time=1.013 ms
+            64 bytes from 30.0.0.2: icmp_seq=2 ttl=64 time=1.117 ms
+            64 bytes from 30.0.0.2: icmp_seq=3 ttl=64 time=1.086 ms
+            64 bytes from 30.0.0.2: icmp_seq=4 ttl=64 time=0.904 ms
+            64 bytes from 30.0.0.2: icmp_seq=5 ttl=64 time=1.037 ms
+            64 bytes from 30.0.0.2: icmp_seq=6 ttl=64 time=0.913 ms
+            64 bytes from 30.0.0.2: icmp_seq=7 ttl=64 time=0.935 ms
+            64 bytes from 30.0.0.2: icmp_seq=8 ttl=64 time=0.946 ms
+            64 bytes from 30.0.0.2: icmp_seq=9 ttl=64 time=1.156 ms
+            
+            --- 30.0.0.2 ping statistics ---
+            10 packets transmitted, 10 packets received, 0% packet loss
+            round-trip min/avg/max/stddev = 0.904/1.012/1.156/0.083 ms
+        '''}
+
+    golden_parsed_output_3 = {
+        "ping": {
+            "address": "30.0.0.2",
+            "data-bytes": 56,
+            "result": [
+                {
+                    "bytes": 64,
+                    "from": "30.0.0.2",
+                    "icmp-seq": 0,
+                    "time": "1.013",
+                    "ttl": 64
+                },
+                {
+                    "bytes": 64,
+                    "from": "30.0.0.2",
+                    "icmp-seq": 1,
+                    "time": "1.013",
+                    "ttl": 64
+                },
+                {
+                    "bytes": 64,
+                    "from": "30.0.0.2",
+                    "icmp-seq": 2,
+                    "time": "1.117",
+                    "ttl": 64
+                },
+                {
+                    "bytes": 64,
+                    "from": "30.0.0.2",
+                    "icmp-seq": 3,
+                    "time": "1.086",
+                    "ttl": 64
+                },
+                {
+                    "bytes": 64,
+                    "from": "30.0.0.2",
+                    "icmp-seq": 4,
+                    "time": "0.904",
+                    "ttl": 64
+                },
+                {
+                    "bytes": 64,
+                    "from": "30.0.0.2",
+                    "icmp-seq": 5,
+                    "time": "1.037",
+                    "ttl": 64
+                },
+                {
+                    "bytes": 64,
+                    "from": "30.0.0.2",
+                    "icmp-seq": 6,
+                    "time": "0.913",
+                    "ttl": 64
+                },
+                {
+                    "bytes": 64,
+                    "from": "30.0.0.2",
+                    "icmp-seq": 7,
+                    "time": "0.935",
+                    "ttl": 64
+                },
+                {
+                    "bytes": 64,
+                    "from": "30.0.0.2",
+                    "icmp-seq": 8,
+                    "time": "0.946",
+                    "ttl": 64
+                },
+                {
+                    "bytes": 64,
+                    "from": "30.0.0.2",
+                    "icmp-seq": 9,
+                    "time": "1.156",
+                    "ttl": 64
+                }
+            ],
+            "source": "30.0.0.2",
+            "statistics": {
+                "loss-rate": 0,
+                "received": 10,
+                "round-trip": {
+                    "avg": "1.012",
+                    "max": "1.156",
+                    "min": "0.904",
+                    "stddev": "0.083"
+                },
+                "send": 10
+            }
+        }
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = Ping(device=self.device)
@@ -219,6 +329,13 @@ class TestPing(unittest.TestCase):
         obj = Ping(device=self.device)
         parsed_output = obj.parse(addr='2001:db8:223c:2c16::2', count='10')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = Ping(device=self.device)
+        parsed_output = obj.parse(addr='30.0.0.2', count='10', ttl=5, wait=1)
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
 
 class TestPingMplsRsvp(unittest.TestCase):
     """ Unit tests for:
