@@ -330,12 +330,6 @@ class TestPing(unittest.TestCase):
         parsed_output = obj.parse(addr='2001:db8:223c:2c16::2', count='10')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
-    def test_empty_1(self):
-        self.device = Mock(**self.empty_output)
-        obj = Ping(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            obj.parse(addr='30.0.0.2', count='10', ttl=5, wait=1)
-
     def test_golden_3(self):
         self.device = Mock(**self.golden_output_3)
         obj = Ping(device=self.device)
