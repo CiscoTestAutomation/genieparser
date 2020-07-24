@@ -45,6 +45,9 @@
         * traceroute {ipaddress} no-resolve
     * Added Ping
         * ping {addr} ttl {ttl} count {count} wait {wait}
+* SDWAN
+    * Added ShowPlatformHardwareQfpActiveFeatureAppqoe
+        * show platform hardware qfp active feature appqoe stats all
 
 --------------------------------------------------------------------------------
                                 Fix
