@@ -31,6 +31,10 @@
         * show rsvp session
     * Added ShowRSVPNeighbor
         * show rsvp neighbor
+    * Added ShowLdpDatabaseSessionIpaddress
+        * show ldp database session ipaddress
+    * Added ShowLdpNeighbor
+        * show ldp neighbor
     * Added ShowRSVPNeighborDetail
         * show rsvp neighbor detail
     * Added ShowOspfDatabaseOpaqueArea
