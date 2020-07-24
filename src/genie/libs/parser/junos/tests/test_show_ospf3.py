@@ -14,7 +14,8 @@ from genie.libs.parser.junos.show_ospf3 import ShowOspf3Interface, \
                                                ShowOspf3DatabaseExternalExtensive, \
                                                ShowOspf3DatabaseExtensive,\
                                                ShowOspf3DatabaseNetworkDetail,\
-                                               ShowOspf3DatabaseLinkAdvertisingRouter
+                                               ShowOspf3DatabaseLinkAdvertisingRouter,\
+                                               ShowOspf3RouteNetworkExtensive
 
 
 class TestShowOspf3Interface(unittest.TestCase):
@@ -305,7 +306,7 @@ class TestShowOspf3Database(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_output = {
+    golden_output_1 = {
         'execute.return_value':
         '''
 
@@ -359,7 +360,7 @@ class TestShowOspf3Database(unittest.TestCase):
     '''
     }
 
-    golden_parsed_output = {
+    golden_parsed_output_1 = {
         'ospf3-database-information': [{
             'ospf3-area-header': {
                 'ospf-area': '0.0.0.8'
@@ -654,12 +655,13 @@ class TestShowOspf3Database(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             obj.parse()
 
-    def test_golden(self):
-        self.device = Mock(**self.golden_output)
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
         obj = ShowOspf3Database(device=self.device)
         parsed_output = obj.parse()
 
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
 
 
 class TestShowOspf3InterfaceExtensive(unittest.TestCase):
@@ -3493,6 +3495,239 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
         }
     }
 
+    golden_output_2 = {'execute.return_value': """
+        show ospf3 database advertising-router 10.16.2.2 extensive
+
+        OSPF3 database, Area 0.0.0.0
+            Type       ID               Adv Rtr           Seq         Age  Cksum  Len
+            Router      0.0.0.0          10.16.2.2          0x80000002   491  0x549c  40
+            bits 0x0, Options 0x33
+            Type PointToPoint (1), Metric 1
+                Loc-If-Id 1, Nbr-If-Id 1, Nbr-Rtr-Id 10.4.1.1
+            Type: PointToPoint, Node ID: 10.4.1.1, Metric: 1, Bidirectional
+            Aging timer 00:51:48
+            Installed 00:08:08 ago, expires in 00:51:49, sent 00:08:06 ago
+            Last changed 00:08:37 ago, Change count: 1
+            IntraArPfx  0.0.0.1          10.16.2.2          0x80000003   491  0x991d  64
+            Ref-lsa-type Router, Ref-lsa-id 0.0.0.0, Ref-router-id 10.16.2.2
+            Prefix-count 2
+            Prefix 2001:20::/64
+                Prefix-options 0x0, Metric 1
+            Prefix 2001::2/128
+                Prefix-options 0x2, Metric 0
+            Aging timer 00:51:48
+            Installed 00:08:08 ago, expires in 00:51:49, sent 00:08:06 ago
+            Last changed 00:08:39 ago, Change count: 1
+
+                OSPF3 Link-Local database, interface ge-0/0/0.0 Area 0.0.0.0
+            Type       ID               Adv Rtr           Seq         Age  Cksum  Len
+            Link        0.0.0.1          10.16.2.2          0x80000001   520  0x7045  56
+            fe80::250:56ff:fe8d:3f55
+            Options 0x33, Priority 128
+            Prefix-count 1
+            Prefix 2001:20::/64 Prefix-options 0x0
+            Aging timer 00:51:19
+            Installed 00:08:37 ago, expires in 00:51:20
+            Last changed 00:08:37 ago, Change count: 1"""}
+
+    golden_parsed_output_2 = {
+        'ospf3-database-information': {
+            'ospf3-area-header': {
+            'ospf-area': '0.0.0.0'
+            },
+            'ospf3-database': [{
+            'lsa-type': 'Router',
+            'lsa-id': '0.0.0.0',
+            'advertising-router': '10.16.2.2',
+            'sequence-number': '0x80000002',
+            'age': '491',
+            'checksum': '0x549c',
+            'lsa-length': '40',
+            'ospf3-router-lsa': {
+                'bits': '0x0',
+                'ospf3-options': '0x33',
+                'ospf3-link': [{
+                'link-type-name': 'PointToPoint',
+                'link-type-value': '1',
+                'link-metric': '1',
+                'link-intf-id': '1',
+                'nbr-intf-id': '1',
+                'nbr-rtr-id': '10.4.1.1'
+                }],
+                'ospf3-lsa-topology': {
+                'ospf-topology-id': '0',
+                'ospf-topology-name': 'default',
+                'ospf3-lsa-topology-link': [{
+                    'link-type-name': 'PointToPoint',
+                    'ospf-lsa-topology-link-node-id': '10.4.1.1',
+                    'ospf-lsa-topology-link-metric': '1',
+                    'ospf-lsa-topology-link-state': 'Bidirectional'
+                }]
+                }
+            },
+            'ospf-database-extensive': {
+                'aging-timer': {
+                '#text': '00:51:48'
+                },
+                'expiration-time': {
+                '#text': '00:51:49'
+                },
+                'installation-time': {
+                '#text': '00:08:08'
+                },
+                'send-time': {
+                '#text': '00:08:06'
+                },
+                'lsa-changed-time': {
+                '#text': '00:08:37'
+                },
+                'lsa-change-count': '1'
+            }
+            }, {
+            'lsa-type': 'IntraArPfx',
+            'lsa-id': '0.0.0.1',
+            'advertising-router': '10.16.2.2',
+            'sequence-number': '0x80000003',
+            'age': '491',
+            'checksum': '0x991d',
+            'lsa-length': '64',
+            'ospf3-intra-area-prefix-lsa': {
+                'reference-lsa-type': 'Router',
+                'reference-lsa-id': '0.0.0.0',
+                'reference-lsa-router-id': '10.16.2.2',
+                'prefix-count': '2',
+                'ospf3-prefix': ['2001:20::/64', '2001::2/128'],
+                'ospf3-prefix-options': ['0x0', '0x2'],
+                'ospf3-prefix-metric': ['1', '0']
+            },
+            'ospf-database-extensive': {
+                'aging-timer': {
+                '#text': '00:51:48'
+                },
+                'expiration-time': {
+                '#text': '00:51:49'
+                },
+                'installation-time': {
+                '#text': '00:08:08'
+                },
+                'send-time': {
+                '#text': '00:08:06'
+                },
+                'lsa-changed-time': {
+                '#text': '00:08:39'
+                },
+                'lsa-change-count': '1'
+            }
+            }, {
+            'lsa-type': 'Link',
+            'lsa-id': '0.0.0.1',
+            'advertising-router': '10.16.2.2',
+            'sequence-number': '0x80000001',
+            'age': '520',
+            'checksum': '0x7045',
+            'lsa-length': '56',
+            'ospf3-link-lsa': {
+                'linklocal-address': 'fe80::250:56ff:fe8d:3f55',
+                'ospf3-options': '0x33',
+                'router-priority': '128',
+                'prefix-count': '1',
+                'ospf3-prefix': '2001:20::/64',
+                'ospf3-prefix-options': '0x0'
+            },
+            'ospf-database-extensive': {
+                'aging-timer': {
+                '#text': '00:51:19'
+                },
+                'expiration-time': {
+                '#text': '00:51:20'
+                },
+                'installation-time': {
+                '#text': '00:08:37'
+                },
+                'lsa-changed-time': {
+                '#text': '00:08:37'
+                },
+                'lsa-change-count': '1'
+            }
+            }],
+            'ospf3-intf-header': [{
+            'ospf-intf': 'ge-0/0/0.0',
+            'ospf-area': '0.0.0.0'
+            }]
+        }
+        }
+
+    golden_output_3 = {'execute.return_value': """
+        show ospf3 database router advertising-router 10.16.2.2 extensive
+
+            OSPF3 database, Area 0.0.0.0
+        Type       ID               Adv Rtr           Seq         Age  Cksum  Len
+        Router      0.0.0.0          10.16.2.2          0x80000002   823  0x549c  40
+        bits 0x0, Options 0x33
+        Type PointToPoint (1), Metric 1
+            Loc-If-Id 1, Nbr-If-Id 1, Nbr-Rtr-Id 10.4.1.1
+        Type: PointToPoint, Node ID: 10.4.1.1, Metric: 1, Bidirectional
+        Aging timer 00:46:16
+        Installed 00:13:40 ago, expires in 00:46:17, sent 00:13:38 ago
+        Last changed 00:14:09 ago, Change count: 1"""}
+
+    golden_parsed_output_3 = {
+        'ospf3-database-information': {
+            'ospf3-area-header': {
+            'ospf-area': '0.0.0.0'
+            },
+            'ospf3-database': [{
+            'lsa-type': 'Router',
+            'lsa-id': '0.0.0.0',
+            'advertising-router': '10.16.2.2',
+            'sequence-number': '0x80000002',
+            'age': '823',
+            'checksum': '0x549c',
+            'lsa-length': '40',
+            'ospf3-router-lsa': {
+                'bits': '0x0',
+                'ospf3-options': '0x33',
+                'ospf3-link': [{
+                'link-type-name': 'PointToPoint',
+                'link-type-value': '1',
+                'link-metric': '1',
+                'link-intf-id': '1',
+                'nbr-intf-id': '1',
+                'nbr-rtr-id': '10.4.1.1'
+                }],
+                'ospf3-lsa-topology': {
+                'ospf-topology-id': '0',
+                'ospf-topology-name': 'default',
+                'ospf3-lsa-topology-link': [{
+                    'link-type-name': 'PointToPoint',
+                    'ospf-lsa-topology-link-node-id': '10.4.1.1',
+                    'ospf-lsa-topology-link-metric': '1',
+                    'ospf-lsa-topology-link-state': 'Bidirectional'
+                }]
+                }
+            },
+            'ospf-database-extensive': {
+                'aging-timer': {
+                '#text': '00:46:16'
+                },
+                'expiration-time': {
+                '#text': '00:46:17'
+                },
+                'installation-time': {
+                '#text': '00:13:40'
+                },
+                'send-time': {
+                '#text': '00:13:38'
+                },
+                'lsa-changed-time': {
+                '#text': '00:14:09'
+                },
+                'lsa-change-count': '1'
+            }
+            }]
+        }
+        }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowOspf3DatabaseExtensive(device=self.device)
@@ -3504,6 +3739,20 @@ class TestShowOspf3DatabaseExtensive(unittest.TestCase):
         obj = ShowOspf3DatabaseExtensive(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowOspf3DatabaseExtensive(device=self.device)
+        parsed_output = obj.parse(address='10.16.2.2')
+
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowOspf3DatabaseExtensive(device=self.device)
+        parsed_output = obj.parse(address='10.16.2.2', lsa_type='router')
+
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 
 class TestShowOspf3DatabaseNetworkDetail(unittest.TestCase):
@@ -3915,6 +4164,182 @@ class TestShowOspf3DatabaseLinkAdvertisingRouter(unittest.TestCase):
         obj = ShowOspf3DatabaseLinkAdvertisingRouter(device=self.device)
         parsed_output = obj.parse(ipaddress='192.168.219.235')
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class TestShowOspf3RouteNetworkExtensive(unittest.TestCase):
+    """ Unit tests for:
+            * show ospf3 route network extensive
+    """
+
+    device = Device(name='aDevice')
+
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {
+        'execute.return_value':
+        '''
+        show ospf3 route network extensive
+        Prefix                                       Path  Route      NH   Metric
+                                             Type  Type       Type
+        2001::4/128                                  Intra Network    IP   0
+        NH-interface lo0.0
+        Area 0.0.0.0, Origin 10.64.4.4, Priority low
+    '''
+    }
+
+    golden_parsed_output = {
+        "ospf3-route-information": {
+        "ospf-topology-route-table": {
+            "ospf3-route": [{
+                "ospf3-route-entry": {
+                    "address-prefix": "2001::4/128",
+                    "interface-cost": "0",
+                    "next-hop-type": "IP",
+                    "ospf-area": "0.0.0.0",
+                    "ospf-next-hop": {
+                        "next-hop-name": {
+                            "interface-name": "lo0.0"
+                        }
+                    },
+                    "route-origin": "10.64.4.4",
+                    "route-path-type": "Intra",
+                    "route-priority": "low",
+                    "route-type": "Network"
+                }
+            }]
+        }
+    }
+        
+    }
+
+    golden_output2 = {
+        'execute.return_value':
+        '''
+        show ospf3 route network extensive
+        Prefix                                       Path  Route      NH   Metric
+                                             Type  Type       Type
+        2001::1/128                                  Intra Network    IP   0
+        NH-interface lo0.0
+        Area 0.0.0.0, Origin 10.4.1.1, Priority low
+        2001::4/128                                  Intra Network    IP   1
+        NH-interface ge-0/0/0.0, NH-addr fe80::250:56ff:fe8d:e8e8
+        Area 0.0.0.0, Origin 10.64.4.4, Priority medium
+        2001:30::/64                                 Intra Network    IP   1
+        NH-interface ge-0/0/1.0
+        Area 0.0.0.0, Origin 10.4.1.1, Priority low
+        2001:40::/64                                 Intra Network    IP   1
+        NH-interface ge-0/0/0.0
+        Area 0.0.0.0, Origin 10.64.4.4, Priority low
+        2001:50::/64                                 Intra Network    IP   2
+        NH-interface ge-0/0/0.0, NH-addr fe80::250:56ff:fe8d:e8e8
+        Area 0.0.0.0, Origin 10.64.4.4, Priority medium
+    '''
+    }
+
+    golden_parsed_output2 = {
+        "ospf3-route-information": {
+        "ospf-topology-route-table": {
+            "ospf3-route": [
+                {
+                    "ospf3-route-entry": {
+                        "address-prefix": "2001::1/128",
+                        "interface-cost": "0",
+                        "next-hop-type": "IP",
+                        "ospf-area": "0.0.0.0",
+                        "ospf-next-hop": {
+                            "next-hop-name": {
+                                "interface-name": "lo0.0"
+                            }
+                        },
+                        "route-origin": "10.4.1.1",
+                        "route-path-type": "Intra",
+                        "route-priority": "low",
+                        "route-type": "Network"
+                    }
+                },
+                {
+                    "ospf3-route-entry": {
+                        "address-prefix": "2001::4/128",
+                        "interface-cost": "1",
+                        "next-hop-type": "IP",
+                        "ospf-area": "0.0.0.0",
+                        "route-origin": "10.64.4.4",
+                        "route-path-type": "Intra",
+                        "route-priority": "medium",
+                        "route-type": "Network"
+                    }
+                },
+                {
+                    "ospf3-route-entry": {
+                        "address-prefix": "2001:30::/64",
+                        "interface-cost": "1",
+                        "next-hop-type": "IP",
+                        "ospf-area": "0.0.0.0",
+                        "ospf-next-hop": {
+                            "next-hop-name": {
+                                "interface-name": "ge-0/0/1.0"
+                            }
+                        },
+                        "route-origin": "10.4.1.1",
+                        "route-path-type": "Intra",
+                        "route-priority": "low",
+                        "route-type": "Network"
+                    }
+                },
+                {
+                    "ospf3-route-entry": {
+                        "address-prefix": "2001:40::/64",
+                        "interface-cost": "1",
+                        "next-hop-type": "IP",
+                        "ospf-area": "0.0.0.0",
+                        "ospf-next-hop": {
+                            "next-hop-name": {
+                                "interface-name": "ge-0/0/0.0"
+                            }
+                        },
+                        "route-origin": "10.64.4.4",
+                        "route-path-type": "Intra",
+                        "route-priority": "low",
+                        "route-type": "Network"
+                    }
+                },
+                {
+                    "ospf3-route-entry": {
+                        "address-prefix": "2001:50::/64",
+                        "interface-cost": "2",
+                        "next-hop-type": "IP",
+                        "ospf-area": "0.0.0.0",
+                        "route-origin": "10.64.4.4",
+                        "route-path-type": "Intra",
+                        "route-priority": "medium",
+                        "route-type": "Network"
+                    }
+                }
+            ]
+        }
+    }
+        
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspf3RouteNetworkExtensive(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspf3RouteNetworkExtensive(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowOspf3RouteNetworkExtensive(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
 if __name__ == '__main__':
