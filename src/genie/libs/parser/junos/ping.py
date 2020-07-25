@@ -4,6 +4,7 @@ JunOS parsers for the following show commands:
     * ping {addr}
     * ping {addr} count {count} 
     * ping mpls rsvp {rsvp}
+    * ping {addr} ttl {ttl} count {count} wait {wait}
 """
 # Python
 import re
@@ -85,13 +86,22 @@ class PingSchema(MetaParser):
 
 class Ping(PingSchema):
 
-    cli_command = ['ping {addr}',
-        'ping {addr} count {count}']
+    cli_command = [
+        'ping {addr}',
+        'ping {addr} count {count}',
+        'ping {addr} ttl {ttl} count {count} wait {wait}'
+    ]
 
-    def cli(self, addr, count=None, output=None):
-        
+    def cli(self, addr, count=None, ttl=None, wait=None, output=None):
+
         if not output:
-            if count:
+            if count and ttl and wait:
+                cmd = self.cli_command[2].format(
+                    addr=addr,
+                    count=count,
+                    ttl=ttl,
+                    wait=wait)
+            elif count:
                 cmd = self.cli_command[1].format(addr=addr, count=count)
             else:
                 cmd = self.cli_command[0].format(addr=addr)
