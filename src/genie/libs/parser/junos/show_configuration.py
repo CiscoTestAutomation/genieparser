@@ -54,16 +54,16 @@ class ShowConfigurationProtocolsMplsLabelSwitchedPath(ShowConfigurationProtocols
         ret_dict = {}
 
         # to 10.49.194.125;
-        p1 = re.compile(r'^to +(?P<to>[^\s;]+);$')
+        p1 = re.compile(r'^to +(?P<to>[\S]+);$')
 
         # revert-timer 0;
-        p2 = re.compile(r'^revert-timer +(?P<revert_timer>[^\s;]+);$')
+        p2 = re.compile(r'^revert-timer +(?P<revert_timer>[\S]+);$')
 
         # priority 3 3;
-        p3 = re.compile(r'^priority +(?P<setup_priority>[^\s;]+) +(?P<reservation_priority>[^\s;]+);$')
+        p3 = re.compile(r'^priority +(?P<setup_priority>[\S]+) +(?P<reservation_priority>[\S]+);$')
 
         # primary test_path_01;
-        p4 = re.compile(r'^primary +(?P<primary>[^\s;]+);$')
+        p4 = re.compile(r'^primary +(?P<primary>[\S]+);$')
 
         # no-cspf;
         # record;
@@ -164,7 +164,7 @@ class ShowConfigurationProtocolsMplsPath(ShowConfigurationProtocolsMplsPathSchem
         ret_dict = {}
 
         # 10.0.0.1 strict;
-        p1 = re.compile(r'^(?P<name>\S+) +(?P<type>[^\s;]+);$')
+        p1 = re.compile(r'^(?P<name>\S+) +(?P<type>[\S]+);$')
 
         for line in out.splitlines():
             line = line.strip()
