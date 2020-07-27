@@ -59,8 +59,8 @@ class TestShowLDPSession(unittest.TestCase):
 # =================================
 # Unit test for 'show ldp neighbor'
 # =================================
-class TestShowLDPSession(unittest.TestCase):
-    '''unit test for "show ldp session'''
+class TestShowLdpNeighbor(unittest.TestCase):
+    '''unit test for "show ldp neighbor '''
     device = Device(name='aDevice')
     maxDiff = None
 
@@ -103,7 +103,7 @@ class TestShowLDPSession(unittest.TestCase):
 # =================================
 # Unit test for 'show ldp database session ipaddress'
 # =================================
-class TestShowLDPSession(unittest.TestCase):
+class TestShowLdpDatabaseSessionIpaddress(unittest.TestCase):
     '''unit test for "show ldp database session ipaddress'''
     device = Device(name='aDevice')
     maxDiff = None
