@@ -107,6 +107,8 @@
         * Enhanced parser
     * Updated ShowProcessesMemory
         * Modified schema to support different output
+    * Added ShowSdwanOmpSummary
+        * show sdwan omp summary
 
 * NXOS
     * Updated ShowIpRoute
@@ -121,3 +123,7 @@
         * Modified to support default as instance name
     * Updated ShowInterfaces:
         * Added more regex patterns to support various outputs.
+
+* VIPTELA
+    * Added ShowOmpSummary
+        * show omp summary
