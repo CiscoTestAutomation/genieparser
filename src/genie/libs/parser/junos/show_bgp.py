@@ -6,8 +6,6 @@ JunOs parsers for the following show commands:
     * show bgp group detail
     * show bgp group detail | no-more
     * show bgp group summary
-    * show bgp neighbor
-    * show bgp neighbor {neighbor_address}
     * show bgp summary
 """
 

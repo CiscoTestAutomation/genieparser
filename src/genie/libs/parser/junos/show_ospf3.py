@@ -5,11 +5,15 @@ Parser for the following show commands:
     * show ospf3 interface extensive
     * show ospf3 database
     * show ospf3 database extensive
+    * show ospf3 database advertising-router {address} extensive
+    * show ospf3 database {lsa_type} advertising-router {address} extensive
     * show ospf3 database external extensive
     * show ospf3 overview
     * show ospf3 overview extensive
     * show ospf3 database network detail
     * show ospf3 database link advertising-router {ipaddress} detail
+    * show ospf3 neighbor
+    * show ospf3 neighbor instance {instance_name}
 '''
 import re
 
@@ -364,6 +368,25 @@ class ShowOspf3Neighbor(ShowOspf3NeighborSchema):
                 continue
 
         return ret_dict
+
+
+class ShowOspf3NeighborInstance(ShowOspf3Neighbor):
+    """ Parser for:
+            * show ospf3 neighbor instance {instance_name}
+    """
+
+    cli_command = 'show ospf3 neighbor instance {instance_name}'
+
+    def cli(self, instance_name, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                                        instance_name=instance_name))
+        else:
+            out = output
+
+        return super().cli(
+            output=' ' if not out else out
+            )
 
 
 class ShowOspf3NeighborDetail(ShowOspf3NeighborExtensive):
@@ -1056,8 +1079,9 @@ class ShowOspf3OverviewSchema(MetaParser):
                 },
                 "ospf-lsa-refresh-time": str,
                 "ospf-route-table-index": str,
+                Optional("ospf-configured-overload-remaining-time"): str,
                 "ospf-router-id": str,
-                "ospf-tilfa-overview": {
+                Optional("ospf-tilfa-overview"): {
                     "ospf-tilfa-enabled": str
                 },
                 "ospf-topology-overview": {
@@ -1145,6 +1169,12 @@ class ShowOspf3Overview(ShowOspf3OverviewSchema):
 
         #Backup SPF: Not Needed
         p15 = re.compile(r'^Backup SPF: +(?P<ospf_backup_spf_status>[\S\s]+)$')
+
+        # Configured overload, expires in 14 seconds
+        p16 = re.compile(
+            r'^Configured +overload, +expires +in +'
+            r'(?P<ospf_configured_overload_remaining_time>\d+) +\S+$'
+        )
 
         for line in out.splitlines():
             line = line.strip()
@@ -1276,6 +1306,14 @@ class ShowOspf3Overview(ShowOspf3OverviewSchema):
                     'ospf-backup-spf-status':
                     group['ospf_backup_spf_status']
                 })
+                continue
+
+            # Configured overload, expires in 14 seconds
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                ospf3_entry_list["ospf-configured-overload-remaining-time"] = \
+                    group["ospf_configured_overload_remaining_time"]
                 continue
 
         return ret_dict
@@ -1481,10 +1519,19 @@ class ShowOspf3DatabaseExtensiveSchema(MetaParser):
                 Optional("database-entry-state"): str,
             },
             Optional("ospf3-intra-area-prefix-lsa"): {
-                "prefix-count": str,
-                "reference-lsa-id": str,
-                "reference-lsa-router-id": str,
-                "reference-lsa-type": str,
+                Optional("prefix-count"): str,
+                Optional("reference-lsa-id"): str,
+                Optional("reference-lsa-router-id"): str,
+                Optional("reference-lsa-type"): str,
+                "ospf3-prefix": list,
+                "ospf3-prefix-metric": list,
+                "ospf3-prefix-options": list,
+            },
+            Optional("ospf3-inter-area-prefix-lsa"): {
+                Optional("prefix-count"): str,
+                Optional("reference-lsa-id"): str,
+                Optional("reference-lsa-router-id"): str,
+                Optional("reference-lsa-type"): str,
                 "ospf3-prefix": list,
                 "ospf3-prefix-metric": list,
                 "ospf3-prefix-options": list,
@@ -1538,11 +1585,11 @@ class ShowOspf3DatabaseExtensiveSchema(MetaParser):
 
     schema = {
         "ospf3-database-information": {
-            "ospf3-area-header": {
+            Optional("ospf3-area-header"): {
                 "ospf-area": str
             },
             "ospf3-database": Use(validate_ospf3_database_list),
-            "ospf3-intf-header": Use(validate_ospf3_intf_header_list),
+            Optional("ospf3-intf-header"): Use(validate_ospf3_intf_header_list),
         }
     }
 
@@ -1550,13 +1597,25 @@ class ShowOspf3DatabaseExtensiveSchema(MetaParser):
 class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
     """ Parser for:
     * show ospf3 database extensive
+    * show ospf3 database advertising-router {address} extensive
+    * show ospf3 database {lsa_type} advertising-router {address} extensive
     """
 
-    cli_command = "show ospf3 database extensive"
+    cli_command = [
+        "show ospf3 database extensive",
+        "show ospf3 database advertising-router {address} extensive",
+        "show ospf3 database {lsa_type} advertising-router {address} extensive"]
 
-    def cli(self, output=None):
+    def cli(self, lsa_type=None, address=None, output=None):
         if not output:
-            out = self.device.execute(self.cli_command)
+            if lsa_type and address:
+                out = self.device.execute(self.cli_command[2].format(
+                    address=address,
+                    lsa_type=lsa_type))
+            elif address:
+                out = self.device.execute(self.cli_command[1].format(address=address))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -2459,6 +2518,140 @@ class ShowOspf3DatabaseLinkAdvertisingRouter(
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_', '-')
                     ospf3_link_lsa[entry_key] = group_value
+                continue
+
+        return ret_dict
+
+
+class ShowOspf3RouteNetworkExtensiveSchema(MetaParser):
+    '''schema = {
+    "ospf3-route-information": {
+        "ospf-topology-route-table": {
+            "ospf3-route": [
+                "ospf3-route-entry": {
+                    "address-prefix": str,
+                    "interface-cost": str,
+                    "next-hop-type": str,
+                    "ospf-area": str,
+                    "ospf-next-hop": {
+                        "next-hop-name": {
+                            "interface-name": str
+                        }
+                    },
+                    "route-origin": str,
+                    "route-path-type": str,
+                    "route-priority": str,
+                    "route-type": str
+                    }
+                ]
+            }
+        }
+    }'''
+
+
+    def validate_ospf3_route_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('ospf-route is not a list')
+        ospf3_route_schema = Schema({
+            "ospf3-route-entry": {
+                "address-prefix": str,
+                "interface-cost": str,
+                "next-hop-type": str,
+                "ospf-area": str,
+                Optional("ospf-next-hop"): {
+                    "next-hop-name": {
+                        "interface-name": str
+                    }
+                },
+                "route-origin": str,
+                "route-path-type": str,
+                "route-priority": str,
+                "route-type": str
+                }
+        })
+        for item in value:
+            ospf3_route_schema.validate(item)
+        return value
+
+
+    
+    schema = {
+    "ospf3-route-information": {
+        "ospf-topology-route-table": {
+            "ospf3-route": Use(validate_ospf3_route_list)
+            }
+        }
+    }
+
+'''
+Parser for:
+    * show ospf3 route network extensive
+'''
+
+
+class ShowOspf3RouteNetworkExtensive(ShowOspf3RouteNetworkExtensiveSchema):
+    cli_command = 'show ospf3 route network extensive'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        #2001::4/128                                  Intra Network    IP   0
+        p1 = re.compile(r'^(?P<address_prefix>[\d\:\/]+) '
+                        r'+(?P<route_path_type>\S+) +(?P<route_type>\S+) '
+                        r'+(?P<next_hop_type>\S+) +(?P<interface_cost>\d+)$')
+
+        #NH-interface lo0.0
+        p2 = re.compile(r'^NH-interface +(?P<interface_name>\S+)$')
+
+        #Area 0.0.0.0, Origin 10.64.4.4, Priority low
+        p3 = re.compile(r'^Area +(?P<ospf_area>\S+),+ Origin '
+                        r'+(?P<route_origin>\S+), +Priority '
+                        r'+(?P<route_priority>\S+)$')
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #2001::4/128                                  Intra Network    IP   0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ospf3_topology_route_table = ret_dict.setdefault(
+                    'ospf3-route-information', {}).setdefault('ospf-topology-route-table', {}).\
+                    setdefault('ospf3-route', [])
+
+                    
+                
+                route_entry_dict = {}
+
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    route_entry_dict[entry_key] = group_value
+
+            #NH-interface lo0.0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                next_hop_dict = {'next-hop-name':{'interface-name':group['interface_name']}}
+                route_entry_dict['ospf-next-hop'] = next_hop_dict                
+                continue
+
+            #Area 0.0.0.0, Origin 10.64.4.4, Priority low
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    route_entry_dict[entry_key] = group_value
+
+                ospf3_parent_route_dict = {}
+                ospf3_parent_route_dict['ospf3-route-entry'] = route_entry_dict
+                ospf3_topology_route_table.append(ospf3_parent_route_dict)
                 continue
 
         return ret_dict
