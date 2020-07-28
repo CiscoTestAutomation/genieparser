@@ -329,7 +329,7 @@ class TestShowInterfacesDescriptions(unittest.TestCase):
                 },
                 {
                     "admin-status": "up",
-                    "description": "YW7079/9.6G/BB/sjkGCS001-EC11_xe-0/1/5[SJC]_Area8_Cost100",
+                    "description": "YW7079/9.6G/BB/sjkGDS221-EC11_xe-0/1/5[SJC]_Area8_Cost100",
                     "name": "ge-0/0/1",
                     "oper-status": "up",
                 },
@@ -348,7 +348,7 @@ class TestShowInterfacesDescriptions(unittest.TestCase):
         show interfaces descriptions
         Interface       Admin Link Description
         ge-0/0/0        up    up   none/100G/in/hktGCS002_ge-0/0/0
-        ge-0/0/1        up    up   YW7079/9.6G/BB/sjkGCS001-EC11_xe-0/1/5[SJC]_Area8_Cost100
+        ge-0/0/1        up    up   YW7079/9.6G/BB/sjkGDS221-EC11_xe-0/1/5[SJC]_Area8_Cost100
         ge-0/0/2        up    up   ve-hkgasr01_Gi2[DefaultCost1000]
     """
     }
@@ -731,7 +731,7 @@ class TestShowInterfaces(unittest.TestCase):
                     },
                     "bpdu-error": "None",
                     "current-physical-address": "00:50:56:ff:37:f9",
-                    "description": "YW7079/9.6G/BB/sjkGCS001-EC11_xe-0/1/5[SJC]_Area8_Cost100",
+                    "description": "YW7079/9.6G/BB/sjkGDS221-EC11_xe-0/1/5[SJC]_Area8_Cost100",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
                         "fec_ccw_count": "0",
@@ -2576,7 +2576,7 @@ class TestShowInterfaces(unittest.TestCase):
 
         Physical interface: ge-0/0/1, Enabled, Physical link is Up
         Interface index: 149, SNMP ifIndex: 527
-        Description: YW7079/9.6G/BB/sjkGCS001-EC11_xe-0/1/5[SJC]_Area8_Cost100
+        Description: YW7079/9.6G/BB/sjkGDS221-EC11_xe-0/1/5[SJC]_Area8_Cost100
         Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
         Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
         Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
@@ -3544,7 +3544,7 @@ class TestShowInterfaces(unittest.TestCase):
 
             Physical interface: ge-0/0/1, Enabled, Physical link is Up
             Interface index: 149, SNMP ifIndex: 527, Generation: 152
-            Description: YW7079/9.6G/BB/sjkGCS001-EC11_xe-0/1/5[SJC]_Area8_Cost100
+            Description: YW7079/9.6G/BB/sjkGDS221-EC11_xe-0/1/5[SJC]_Area8_Cost100
             Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
             Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
             Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
@@ -6052,7 +6052,7 @@ class TestShowInterfaces(unittest.TestCase):
                     },
                     "bpdu-error": "None",
                     "current-physical-address": "00:50:56:ff:37:f9",
-                    "description": "YW7079/9.6G/BB/sjkGCS001-EC11_xe-0/1/5[SJC]_Area8_Cost100",
+                    "description": "YW7079/9.6G/BB/sjkGDS221-EC11_xe-0/1/5[SJC]_Area8_Cost100",
                     "eth-switch-error": "None",
                     "ethernet-fec-statistics": {
                         "fec_ccw_count": "0",
@@ -9419,7 +9419,7 @@ class TestShowInterfacesQueue(unittest.TestCase):
              Medium-low          :                     0                     0 bps
              Medium-high         :                     0                     0 bps
              High                :                     0                     0 bps
-    
+
     """
     }
 
@@ -9701,7 +9701,7 @@ class test_show_interfaces_policers_interface(unittest.TestCase):
         parsed_output = interface_obj.parse(interface='ge-0/0/2')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-        
+
 class TestShowInterfacesStatistics(unittest.TestCase):
     device = Device(name='aDevice')
     maxDiff = None
