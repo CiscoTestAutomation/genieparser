@@ -33,7 +33,7 @@ PKG_NAME      = genie.libs.parser
 BUILD_DIR     = $(shell pwd)/__build__
 DIST_DIR      = $(BUILD_DIR)/dist
 PROD_USER     = pyadm@pyats-ci
-PROD_PKGS     = /auto/pyats/packages/cisco-shared/genie/libs
+PROD_PKGS     = /auto/pyats/packages
 PYTHON        = python
 TESTCMD       = runAll --path=$(shell pwd)/tests
 BUILD_CMD     = $(PYTHON) setup.py bdist_wheel --dist-dir=$(DIST_DIR)
@@ -170,8 +170,8 @@ distribute:
 	@echo "--------------------------------------------------------------------"
 	@echo "Copying all distributable to $(PROD_PKGS)"
 	@test -d $(DIST_DIR) || { echo "Nothing to distribute! Exiting..."; exit 1; }
-	@ssh -q $(PROD_USER) 'test -e $(PROD_PKGS)/ || mkdir $(PROD_PKGS)'
-	@scp $(DIST_DIR)/* $(PROD_USER):$(PROD_PKGS)/
+	@ssh -q $(PROD_USER) 'test -e $(PROD_PKGS)/$(PKG_NAME) || mkdir $(PROD_PKGS)/$(PKG_NAME)'
+	@scp $(DIST_DIR)/* $(PROD_USER):$(PROD_PKGS)/$(PKG_NAME)/
 	@echo ""
 	@echo "Done."
 	@echo ""
