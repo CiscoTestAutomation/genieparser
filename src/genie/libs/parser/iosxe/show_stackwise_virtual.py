@@ -16,11 +16,12 @@ class ShowStackwiseVirtualSchema(MetaParser):
         "enabled": bool,
         Optional("switches"): {
             int: {
-                  "id": int,
-                  "ports": {
-                     int: str,
-                },
-            }
+            Optional("stackwise_virtual_link"): {
+                int: {
+                  "ports": list,
+              },
+            },
+          }
         },
     }
 
@@ -54,17 +55,17 @@ class ShowStackwiseVirtual(ShowStackwiseVirtualSchema):
 
         # Stackwise Virtual : Enabled
         enabled_capture = "(?P<enabled>Enabled|Disabled)"
-        p_enabled = re.compile(f"Stackwise\s+Virtual\s+:\s+{enabled_capture}")
+        p_enabled = re.compile("Stackwise\s+Virtual\s+:\s+{enabled_capture}".format(enabled_capture=enabled_capture))
 
         # Domain Number : 100
         domain_capture = "(?P<domain>\d+)"
-        p_domain = re.compile(f"Domain\s+Number\s+:\s+{domain_capture}")
+        p_domain = re.compile("Domain\s+Number\s+:\s+{domain_capture}".format(domain_capture=domain_capture))
 
         # 1       1                       TenGigabitEthernet1/0/47"
         switch_capture = "(?P<switch>\d+)"
         vlink_capture = "(?P<vlink>\d+)"
         port_capture = "(?P<port>\S+)"
-        p_st_all = re.compile(f"{switch_capture}\s+{vlink_capture}\s+{port_capture}")
+        p_st_all = re.compile("{switch_capture}\s+{vlink_capture}\s+{port_capture}".format(switch_capture=switch_capture, vlink_capture=vlink_capture, port_capture=port_capture))
 
         #                                 TenGigabitEthernet1/0/47"
         p_st_int = re.compile("\s{10,}(?P<port>\S+)\s*$")
@@ -96,15 +97,11 @@ class ShowStackwiseVirtual(ShowStackwiseVirtualSchema):
                 vlink = match.group("vlink")
                 if not stackwise_obj.get("switches"):
                     stackwise_obj["switches"] = {}
-                stackwise_obj["switches"][switch] = {
-                    "ports": {1: port}
-                }
-                stackwise_obj["switches"][switch]["id"] = int(vlink)
+                stackwise_obj["switches"].update({switch: {"stackwise_virtual_link": { int(vlink): { "ports": [port]}}}})
                 continue
             elif p_st_int.match(line):
                 match = p_st_int.match(line)
                 port = match.group("port")
-                num = len(stackwise_obj["switches"][switch]["ports"]) + 1
-                stackwise_obj["switches"][switch]["ports"][num] = port
+                stackwise_obj["switches"][switch]["stackwise_virtual_link"][int(vlink)]["ports"].append(port)
                 continue
         return stackwise_obj

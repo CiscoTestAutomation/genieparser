@@ -7,5 +7,5 @@
 --------------------------------------------------------------------------------
 
 * IOSXE
-    * Added ShowStackwiseVirtual for code issue:
+    * Added ShowStackwiseVirtual
         * show stackwise-virtual

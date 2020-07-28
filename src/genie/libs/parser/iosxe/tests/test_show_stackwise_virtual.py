@@ -18,12 +18,18 @@ class test_show_stackwise_virtual(unittest.TestCase):
         "enabled": True,
         "switches": {
             1: {
-                "id": 1,
-                "ports": {1: "HundredGigE1/0/3", 2: "HundredGigE1/0/4"},
+               "stackwise_virtual_link": {
+                 1: {
+                    "ports": ["HundredGigE1/0/3", "HundredGigE1/0/4"],
+                 },
+               },
             },
             2: {
-                "id": 1,
-                "ports": {1: "HundredGigE2/0/3", 2: "HundredGigE2/0/4"},
+               "stackwise_virtual_link": {
+                 1: {
+                   "ports": ["HundredGigE2/0/3", "HundredGigE2/0/4"],
+                 },
+               },
             },
         },
     }
