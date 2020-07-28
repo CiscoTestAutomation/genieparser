@@ -1182,16 +1182,16 @@ class ShowBgpNeighborSchema(MetaParser):
                 "bgp-options": str,
                 "bgp-options2": bool,
                 "bgp-options-extended": str,
-                "export-policy": str,
+                Optional("export-policy"): str,
                 "gshut-recv-local-preference": str,
-                "holdtime": str,
+                Optional("holdtime"): str,
                 Optional("import-policy"): str,
-                "local-address": str,
-                "preference": str,
+                Optional("local-address"): str,
+                Optional("preference"): str,
                 Optional("authentication-configured"): bool,
                 Optional("address-families"): str
             },
-            "description":
+            Optional("description"):
             str,
             "flap-count":
             str,
