@@ -121,3 +121,6 @@
         * Modified to support default as instance name
     * Updated ShowInterfaces:
         * Added more regex patterns to support various outputs.
+* VIPTELA
+    * Added ShowSoftware
+        * show software
