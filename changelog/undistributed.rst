@@ -52,7 +52,8 @@
 * IOSXE
     * Added ShowPlatformHardwareQfpActiveFeatureAppqoe
         * show platform hardware qfp active feature appqoe stats all
-
+    * Added ShowSslproxyStatus
+        * show sslproxy status
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
