@@ -28,9 +28,9 @@ class Show_Stackwise_Virtual_Dual_Active_DetectionSchema(MetaParser):
 #  * 'show_stackwise_virtual_dual_active_detection'
 # =================================================
 class Show_Stackwise_Virtual_Dual_Active_Detection(Show_Stackwise_Virtual_Dual_Active_DetectionSchema):
-    """Parser for show_stackwise_virtual_dual_active_detection"""
+    """Parser for show stackwise-virtual dual-active-detection"""
 
-    cli_command = ['show_stackwise_virtual_dual_active_detection']
+    cli_command = ['show stackwise-virtual dual-active-detection']
 
     def cli(self, output=None):
         if output is None:
