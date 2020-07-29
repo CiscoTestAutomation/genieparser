@@ -50,6 +50,8 @@
 * IOSXE
     * Added ShowPlatformHardwareQfpActiveFeatureAppqoe
         * show platform hardware qfp active feature appqoe stats all
+    * Added ShowStackwiseVirtual
+        * show stackwise-virtual
 
 --------------------------------------------------------------------------------
                                 Fix
@@ -107,8 +109,6 @@
         * Enhanced parser
     * Updated ShowProcessesMemory
         * Modified schema to support different output
-    * Added ShowStackwiseVirtual
-        * show stackwise-virtual
 
 * NXOS
     * Updated ShowIpRoute
