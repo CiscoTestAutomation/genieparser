@@ -57,6 +57,8 @@
         * show platform hardware qfp active feature appqoe stats all
     * Added ShowBgpNeighbor for:
         * show bgp neighbor
+    * Added ShowOspfDatabaseAdvertisingRouterExtensive for:
+        * show ospf database advertising-router {ipaddress} extensive
 
 --------------------------------------------------------------------------------
                                 Fix
