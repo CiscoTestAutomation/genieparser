@@ -5,7 +5,6 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
-
 * JUNOS
     * Added ShowTedDatabaseIpAddress
         * show ted database {ipaddress}
@@ -50,8 +49,6 @@
 * IOSXE
     * Added ShowPlatformHardwareQfpActiveFeatureAppqoe
         * show platform hardware qfp active feature appqoe stats all
-    * Added ShowStackwiseVirtual
-        * show stackwise-virtual
 
 --------------------------------------------------------------------------------
                                 Fix
@@ -123,3 +120,4 @@
         * Modified to support default as instance name
     * Updated ShowInterfaces:
         * Added more regex patterns to support various outputs.
+
