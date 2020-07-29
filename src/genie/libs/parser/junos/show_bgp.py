@@ -2061,4 +2061,3 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
                 continue
 
         return ret_dict
-
