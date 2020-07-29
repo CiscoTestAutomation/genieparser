@@ -996,6 +996,205 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
             State: Programmed
     '''}
 
+    golden_parsed_output_1 = {
+        "*10.100.5.5|100":{
+          "name":"*10.100.5.5|100",
+          "color":100,
+          "end_point":"10.100.5.5",
+          "status":{
+             "admin":"up",
+             "operational":{
+                "state":"up",
+                "time_for_state":"00:07:55",
+                "since":"07-14 05:57:14.068"
+             }
+          },
+          "candidate_paths":{
+             "preference":{
+                10:{
+                   "path_type":{
+                      "dynamic":{
+                         "status":"active",
+                         "pce":True,
+                         "metric_type":"IGP",
+                         "path_accumulated_metric":1,
+                         "hops":{
+                            1:{
+                               "sid":17105,
+                               "sid_type":"Prefix-SID",
+                               "local_address":"10.100.5.5"
+                            }
+                         }
+                      }
+                   }
+                }
+             }
+          },
+          "attributes":{
+             "binding_sid":{
+                211:{
+                   "allocation_mode":"dynamic",
+                   "state":"programmed"
+                }
+             }
+          }
+       },
+       "p1":{
+          "name":"p1",
+          "color":100,
+          "end_point":"10.144.6.6",
+          "status":{
+             "admin":"up",
+             "operational":{
+                "state":"up",
+                "time_for_state":"00:02:28",
+                "since":"07-14 06:02:41.073"
+             }
+          },
+          "candidate_paths":{
+             "preference":{
+                10:{
+                   "path_type":{
+                      "dynamic":{
+                         "status":"active",
+                         "metric_type":"TE",
+                         "path_accumulated_metric":2,
+                         "hops":{
+                            1:{
+                               "sid":15034,
+                               "sid_type":"Adjacency-SID",
+                               "local_address":"10.136.0.3",
+                               "remote_address":"10.136.0.4"
+                            },
+                            2:{
+                               "sid":15047,
+                               "sid_type":"Adjacency-SID",
+                               "local_address":"10.76.0.4",
+                               "remote_address":"10.76.0.6"
+                            }
+                         }
+                      }
+                   }
+                }
+             }
+          },
+          "attributes":{
+             "binding_sid":{
+                212:{
+                   "allocation_mode":"dynamic",
+                   "state":"programmed"
+                }
+             }
+          }
+       },
+       "p2":{
+          "name":"p2",
+          "color":200,
+          "end_point":"10.144.6.6",
+          "status":{
+             "admin":"up",
+             "operational":{
+                "state":"up",
+                "time_for_state":"00:00:50",
+                "since":"07-14 06:04:19.216"
+             }
+          },
+          "candidate_paths":{
+             "preference":{
+                10:{
+                   "path_type":{
+                      "dynamic":{
+                         "status":"active",
+                         "pce":True,
+                         "metric_type":"TE",
+                         "path_accumulated_metric":2,
+                         "hops":{
+                            1:{
+                               "sid":114,
+                               "sid_type":"Adjacency-SID",
+                               "local_address":"10.136.0.3",
+                               "remote_address":"10.136.0.4"
+                            },
+                            2:{
+                               "sid":17106,
+                               "sid_type":"Prefix-SID",
+                               "local_address":"10.144.6.6"
+                            }
+                         }
+                      }
+                   }
+                }
+             }
+          },
+          "attributes":{
+             "binding_sid":{
+                213:{
+                   "allocation_mode":"dynamic",
+                   "state":"programmed"
+                }
+             }
+          }
+       }
+    }
+
+    golden_output_1 = {'execute.return_value': ''' 
+        2020-07-14 06:05:10,266: %UNICON-INFO: +++ PE1: executing command 'show segment-routing traffic-eng policy all' +++
+        show segment-routing traffic-eng policy all
+
+        Name: *10.100.5.5|100 (Color: 100 End-point: 10.100.5.5)
+          Owners : PCEP
+          Status:
+            Admin: up, Operational: up for 00:07:55 (since 07-14 05:57:14.068)
+          Candidate-paths:
+            Preference 10 (PCEP):
+              PCC profile: 100 
+              Dynamic (pce 10.229.11.11) (active)
+                Metric Type: IGP, Path Accumulated Metric: 1
+                  17105 [Prefix-SID, 10.100.5.5]
+          Attributes:
+            Binding SID: 211
+              Allocation mode: dynamic
+              State: Programmed
+            Autoroute:
+              Include all (Strict) 
+
+        Name: p1 (Color: 100 End-point: 10.144.6.6)
+          Owners : CLI
+          Status:
+            Admin: up, Operational: up for 00:02:28 (since 07-14 06:02:41.073)
+          Candidate-paths:
+            Preference 10 (CLI):
+              Dynamic (active)
+                Metric Type: TE, Path Accumulated Metric: 2
+                  15034 [Adjacency-SID, 10.136.0.3 - 10.136.0.4]
+                  15047 [Adjacency-SID, 10.76.0.4 - 10.76.0.6]
+          Attributes:
+            Binding SID: 212
+              Allocation mode: dynamic
+              State: Programmed
+            Autoroute:
+              Include all (Strict) 
+              Mode: relative, Value: -1
+
+        Name: p2 (Color: 200 End-point: 10.144.6.6)
+          Owners : CLI
+          Status:
+            Admin: up, Operational: up for 00:00:50 (since 07-14 06:04:19.216)
+          Candidate-paths:
+            Preference 10 (CLI):
+              Dynamic (pce 10.229.11.11) (active)
+                Metric Type: TE, Path Accumulated Metric: 2
+                  114 [Adjacency-SID, 10.136.0.3 - 10.136.0.4]
+                  17106 [Prefix-SID, 10.144.6.6]
+          Attributes:
+            Binding SID: 213
+              Allocation mode: dynamic
+              State: Programmed
+            Autoroute:
+              Include all (Strict) 
+              Mode: constant, Value: 1
+    '''}
+
     golden_parsed_output_affinity = {
         'test1': {
             'name': 'test1',
