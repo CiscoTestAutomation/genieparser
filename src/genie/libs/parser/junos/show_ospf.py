@@ -2379,20 +2379,12 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
 class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
     """ Parser for:
             * show ospf database extensive
-            * show ospf database advertising-router {ipaddress} extensive
     """
-    cli_command = [
-        'show ospf database extensive',
-        'show ospf database advertising-router {ipaddress} extensive'
-    ]
+    cli_command = 'show ospf database extensive'
 
-    def cli(self, ipaddress=None, output=None):
+    def cli(self, output=None):
         if not output:
-            if ipaddress:
-                out = self.device.execute(
-                    self.cli_command[1].format(ipaddress=ipaddress))
-            else:
-                out = self.device.execute(self.cli_command[0])
+            out = self.device.execute(self.cli_command)
         else:
             out = output
 
@@ -2465,6 +2457,7 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
         p16 = re.compile(r"^Aging timer +(?P<aging_timer>(\S+ ){0,1}[\d\:]+)$")
 
         # Installed 00:10:20 ago, expires in 00:49:31, sent 00:10:18 ago
+        # Installed 00:10:20 ago, expires in 00:49:31
         p17 = re.compile(
             r"^Installed +(?P<installation_time>(\S+ ){0,1}[\d\:]+) +ago, +expires +in +"
             r"(?P<expiration_time>(\S+ ){0,1}[\d\:]+)(, +sent +(?P<send_time>(\S+ ){0,1}[\d\:]+) +ago)?$"
@@ -3135,6 +3128,19 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
 
         return ret_dict
 
+class ShowOspfDatabaseAdvertisingRouterExtensive(ShowOspfDatabaseExtensive):
+    """ Parser for:
+            * show ospf database advertising-router {ipaddress} extensive
+    """
+
+    cli_command = 'show ospf database advertising-router {ipaddress} extensive'
+
+    def cli(self, ipaddress, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(ipaddress=ipaddress))
+        else:
+            out = output
+        return super().cli(output=out)
 
 class ShowOspfNeighborExtensiveSchema(MetaParser):
     """ Schema for:

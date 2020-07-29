@@ -29,7 +29,8 @@ from genie.libs.parser.junos.show_ospf import (
     ShowOspfDatabaseLsaidDetail,
     ShowOspfRouteBrief,
     ShowOspfRouteDetail,
-    ShowOspfRouteNetworkExtensive
+    ShowOspfRouteNetworkExtensive,
+    ShowOspfDatabaseAdvertisingRouterExtensive,
 )
 
 class TestShowOspfDatabaseOpaqueArea(unittest.TestCase):
@@ -5862,19 +5863,19 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
     }
     golden_output_1 = {
         "execute.return_value": """
-        show ospf database advertising-router 59.128.2.250 extensive
+        show ospf database advertising-router 10.34.2.250 extensive
             OSPF database, Area 0.0.0.8
         Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
-        Router   59.128.2.250     59.128.2.250     0x80000003  1107  0x22 0x29f7  60
+        Router   10.34.2.250     10.34.2.250     0x80000003  1107  0x22 0x29f7  60
         bits 0x0, link count 3
-        id 106.187.14.240, data 106.187.14.158, Type PointToPoint (1)
+        id 10.169.14.240, data 10.169.14.158, Type PointToPoint (1)
             Topology count: 0, Default metric: 1
-        id 106.187.14.156, data 255.255.255.252, Type Stub (3)
+        id 10.169.14.156, data 255.255.255.252, Type Stub (3)
             Topology count: 0, Default metric: 1
-        id 59.128.2.250, data 255.255.255.255, Type Stub (3)
+        id 10.34.2.250, data 255.255.255.255, Type Stub (3)
             Topology count: 0, Default metric: 0
         Topology default (ID 0)
-            Type: PointToPoint, Node ID: 106.187.14.240
+            Type: PointToPoint, Node ID: 10.169.14.240
             Metric: 1, Bidirectional
         Aging timer 00:41:32
         Installed 00:18:24 ago, expires in 00:41:33
@@ -10677,10 +10678,10 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
             "ospf-area-header": {"ospf-area": "0.0.0.8"},
             "ospf-database": [
                 {
-                    "advertising-router": "59.128.2.250",
+                    "advertising-router": "10.34.2.250",
                     "age": "1107",
                     "checksum": "0x29f7",
-                    "lsa-id": "59.128.2.250",
+                    "lsa-id": "10.34.2.250",
                     "lsa-length": "60",
                     "lsa-type": "Router",
                     "options": "0x22",
@@ -10696,16 +10697,16 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                         "link-count": "3",
                         "ospf-link": [
                             {
-                                "link-data": "106.187.14.158",
-                                "link-id": "106.187.14.240",
+                                "link-data": "10.169.14.158",
+                                "link-id": "10.169.14.240",
                                 "link-type-name": "PointToPoint",
                                 "link-type-value": "1",
                                 "metric": "1",
                                 "ospf-topology-count": "0",
                             },
                             {
-                                "link-data": "106.187.14.158",
-                                "link-id": "106.187.14.240",
+                                "link-data": "10.169.14.158",
+                                "link-id": "10.169.14.240",
                                 "link-type-name": "PointToPoint",
                                 "link-type-value": "1",
                                 "metric": "1",
@@ -10713,7 +10714,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                             },
                             {
                                 "link-data": "255.255.255.252",
-                                "link-id": "106.187.14.156",
+                                "link-id": "10.169.14.156",
                                 "link-type-name": "Stub",
                                 "link-type-value": "3",
                                 "metric": "1",
@@ -10721,7 +10722,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                             },
                             {
                                 "link-data": "255.255.255.252",
-                                "link-id": "106.187.14.156",
+                                "link-id": "10.169.14.156",
                                 "link-type-name": "Stub",
                                 "link-type-value": "3",
                                 "metric": "1",
@@ -10729,7 +10730,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                             },
                             {
                                 "link-data": "255.255.255.255",
-                                "link-id": "59.128.2.250",
+                                "link-id": "10.34.2.250",
                                 "link-type-name": "Stub",
                                 "link-type-value": "3",
                                 "metric": "0",
@@ -10737,7 +10738,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                             },
                             {
                                 "link-data": "255.255.255.255",
-                                "link-id": "59.128.2.250",
+                                "link-id": "10.34.2.250",
                                 "link-type-name": "Stub",
                                 "link-type-value": "3",
                                 "metric": "0",
@@ -10749,7 +10750,7 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
                                 {
                                     "link-type-name": "PointToPoint",
                                     "ospf-lsa-topology-link-metric": "1",
-                                    "ospf-lsa-topology-link-node-id": "106.187.14.240",
+                                    "ospf-lsa-topology-link-node-id": "10.169.14.240",
                                     "ospf-lsa-topology-link-state": "Bidirectional",
                                 }
                             ],
@@ -10779,8 +10780,8 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
 
     def test_golden_1(self):
         self.device = Mock(**self.golden_output_1)
-        obj = ShowOspfDatabaseExtensive(device=self.device)
-        parsed_output = obj.parse(ipaddress='59.128.2.250')
+        obj = ShowOspfDatabaseAdvertisingRouterExtensive(device=self.device)
+        parsed_output = obj.parse(ipaddress='10.34.2.250')
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 
