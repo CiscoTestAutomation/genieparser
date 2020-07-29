@@ -52,6 +52,29 @@ class TestTracerouteNoResolve(unittest.TestCase):
         }
     }
 
+    golden_output_2 = {'execute.return_value': '''
+        traceroute 11.0.0.1 no-resolve 
+        traceroute to 11.0.0.1 (11.0.0.1), 30 hops max, 52 byte packets
+        traceroute: sendto: No route to host
+        1 traceroute: wrote 11.0.0.1 52 chars, ret=-1
+        *traceroute: sendto: No route to host
+        traceroute: wrote 11.0.0.1 52 chars, ret=-1
+        *traceroute: sendto: No route to host
+        traceroute: wrote 11.0.0.1 52 chars, ret=-1
+        *
+        traceroute: sendto: No route to host
+        2 traceroute: wrote 11.0.0.1 52 chars, ret=-1
+        * 11.0.0.1  2.111 ms  1.642 ms
+        '''}
+
+    golden_parsed_output_2 = {
+        'traceroute': 
+                {'max-hops': '30',
+                'packet-size': '52',
+                'to': {
+                    'address': '11.0.0.1', 
+                    'domain': '11.0.0.1'}}}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = TracerouteNoResolve(device=self.device)
@@ -63,6 +86,12 @@ class TestTracerouteNoResolve(unittest.TestCase):
         obj = TracerouteNoResolve(device=self.device)
         parsed_output = obj.parse(addr='30.0.0.2')
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_traceroute_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = TracerouteNoResolve(device=self.device)
+        parsed_output = obj.parse(addr='11.0.0.1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)        
 
 
 if __name__ == '__main__':
