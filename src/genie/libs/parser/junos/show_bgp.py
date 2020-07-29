@@ -1191,70 +1191,45 @@ class ShowBgpNeighborSchema(MetaParser):
                 Optional("authentication-configured"): bool,
                 Optional("address-families"): str
             },
-            Optional("description"):
-            str,
-            "flap-count":
-            str,
-            "last-error":
-            str,
-            "last-event":
-            str,
-            "last-state":
-            str,
-            "local-as":
-            str,
-            "peer-address":
-            str,
-            "peer-as":
-            str,
-            "peer-cfg-rti":
-            str,
-            "peer-fwd-rti":
-            str,
-            "peer-group":
-            str,
-            "peer-state":
-            str,
-            "peer-type":
-            str,
-            'peer-flags':
-            str,
-            'local-address':
-            str,
-            Optional('route-reflector-client'):
-            bool,
-            Optional("peer-index"):
-            str,
-            Optional("last-flap-event"):
-            str,
+            Optional("description"): str,
+            "flap-count": str,
+            "last-error": str,
+            "last-event": str,
+            "last-state": str,
+            "local-as": str,
+            "peer-address": str,
+            "peer-as":str,
+            "peer-cfg-rti":str,
+            "peer-fwd-rti":str,
+            "peer-group":str,
+            "peer-state":str,
+            "peer-type":str,
+            'peer-flags':str,
+            'local-address':str,
+            Optional('route-reflector-client'):bool,
+            Optional("peer-index"):str,
+            Optional("last-flap-event"):str,
             Optional("bgp-peer-iosession"): {
                 "iosession-thread-name": str,
                 "iosession-state": str
             },
             Optional("bgp-output-queue"):
             Use(validate_bgp_output_queue),
-            Optional("peer-addpath-not-supported"):
-            bool,
-            Optional("peer-no-llgr-restarter"):
-            bool,
-            Optional("group-index"):
-            str,
+            Optional("peer-addpath-not-supported"):bool,
+            Optional("peer-no-llgr-restarter"):bool,
+            Optional("group-index"):str,
             Optional("bgp-rib"):
             Use(validate_bgp_rib),
             Optional("bgp-bfd"): {
                 "bfd-configuration-state": str,
                 "bfd-operational-state": str
             },
-            Optional("iosession-thread-name"):
-            str,
+            Optional("iosession-thread-name"):str,
             Optional("bgp-error"):
             Use(validate_bgp_error),
-            Optional("keepalive-interval"):
-            str,
-            Optional("peer-no-restart"):
-            bool,
-            Optional("iosession-state"):
-            str,
+            Optional("keepalive-interval"):str,
+            Optional("peer-no-restart"):bool,
+            Optional("iosession-state"):str,
             Optional("entropy-label-info"): {
                 "entropy-label": str,
                 "entropy-label-capability": str,
@@ -1262,74 +1237,40 @@ class ShowBgpNeighborSchema(MetaParser):
                 "entropy-label-stitching-capability": str,
                 "nlri-type": str
             },
-            Optional("last-checked"):
-            str,
-            Optional("input-refreshes"):
-            str,
-            Optional("input-messages"):
-            str,
-            Optional("peer-stale-route-time-configured"):
-            str,
-            Optional("nlri-type-session"):
-            str,
-            Optional("nlri-type-peer"):
-            str,
-            Optional("local-ext-nh-color-nlri"):
-            str,
-            Optional("entropy-label-capability"):
-            str,
-            Optional("output-octets"):
-            str,
-            Optional("input-updates"):
-            str,
-            Optional("peer-restart-flags-received"):
-            str,
-            Optional("peer-end-of-rib-received"):
-            str,
-            Optional("nlri-type"):
-            str,
-            Optional("peer-end-of-rib-sent"):
-            str,
-            Optional("output-updates"):
-            str,
-            Optional("last-received"):
-            str,
-            Optional("input-octets"):
-            str,
-            Optional("peer-4byte-as-capability-advertised"):
-            str,
-            Optional("peer-restart-nlri-configured"):
-            str,
-            Optional("peer-restart-nlri-negotiated"):
-            str,
-            Optional("output-messages"):
-            str,
-            Optional("output-refreshes"):
-            str,
-            Optional("entropy-label"):
-            str,
-            Optional("peer-4byte-as-capability-advertised"):
-            str,
-            Optional("peer-restart-nlri-configured"):
-            str,
-            Optional("peer-restart-nlri-negotiated"):
-            str,
-            Optional("output-messages"):
-            str,
-            Optional("output-refreshes"):
-            str,
-            Optional("entropy-label"):
-            str,
-            Optional("entropy-label-no-next-hop-validation"):
-            str,
-            Optional("last-sent"):
-            str,
-            Optional("entropy-label-stitching-capability"):
-            str,
-            Optional("peer-refresh-capability"):
-            str,
-            Optional("snmp-index"):
-            str,
+            Optional("last-checked"):str,
+            Optional("input-refreshes"):str,
+            Optional("input-messages"):str,
+            Optional("peer-stale-route-time-configured"):str,
+            Optional("nlri-type-session"):str,
+            Optional("nlri-type-peer"):str,
+            Optional("local-ext-nh-color-nlri"):str,
+            Optional("entropy-label-capability"):str,
+            Optional("output-octets"):str,
+            Optional("input-updates"):str,
+            Optional("peer-restart-flags-received"):str,
+            Optional("peer-end-of-rib-received"):str,
+            Optional("nlri-type"):str,
+            Optional("peer-end-of-rib-sent"):str,
+            Optional("output-updates"):str,
+            Optional("last-received"):str,
+            Optional("input-octets"):str,
+            Optional("peer-4byte-as-capability-advertised"):str,
+            Optional("peer-restart-nlri-configured"):str,
+            Optional("peer-restart-nlri-negotiated"):str,
+            Optional("output-messages"):str,
+            Optional("output-refreshes"):str,
+            Optional("entropy-label"):str,
+            Optional("peer-4byte-as-capability-advertised"):str,
+            Optional("peer-restart-nlri-configured"):str,
+            Optional("peer-restart-nlri-negotiated"):str,
+            Optional("output-messages"):str,
+            Optional("output-refreshes"):str,
+            Optional("entropy-label"):str,
+            Optional("entropy-label-no-next-hop-validation"):str,
+            Optional("last-sent"):str,
+            Optional("entropy-label-stitching-capability"):str,
+            Optional("peer-refresh-capability"):str,
+            Optional("snmp-index"):str,
         })
         for item in value:
             entry_schema.validate(item)
