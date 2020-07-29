@@ -10,41 +10,39 @@ class ShowOmpSummarySchema(MetaParser):
 # =====================================
  schema = {
         'admin_state': str,
-        'alert_received': str,
-        'alert_sent': str,
-        'handshake_received': str,
-        'handshake_sent': str,
-        'hello_received': str,
-        'hello_sent': str,
-        'inform_received': str,
-        'inform_sent': str,
-        'mcast_routes_received': str,
-        'mcast_routes_sent': str,
+        'alert_received': int,
+        'alert_sent': int,
+        'handshake_received': int,
+        'handshake_sent': int,
+        'hello_received': int,
+        'hello_sent': int,
+        'inform_received': int,
+        'inform_sent': int,
+        'mcast_routes_received': int,
+        'mcast_routes_sent': int,
         'omp_uptime': str,
         'oper_state': str,
         'personality': str,
-        'policy_received': str,
-        'policy_sent': str,
-        'routes_installed': str,
-        'routes_received': str,
-        'routes_sent': str,
-        'services_installed': str,
-        'services_received': str,
-        'services_sent': str,
-        'tlocs_installed': str,
-        'tlocs_received': str,
-        'tlocs_sent': str,
-        'total_packets_sent': str,
-        'update_received': str,
-        'update_sent': str,
-        'vsmart_peers': str,
+        'policy_received': int,
+        'policy_sent': int,
+        'routes_installed': int,
+        'routes_received': int,
+        'routes_sent': int,
+        'services_installed': int,
+        'services_received': int,
+        'services_sent': int,
+        'tlocs_installed': int,
+        'tlocs_received': int,
+        'tlocs_sent': int,
+        'total_packets_sent': int,
+        'update_received': int,
+        'update_sent': int,
+        'vsmart_peers': int,
  }
 
 class ShowOmpSummary(ShowOmpSummarySchema):
 
     """ Parser for "show omp summary" """
-
-    exclude = ['uptime']
 
     cli_command = "show omp summary"
 
@@ -64,8 +62,12 @@ class ShowOmpSummary(ShowOmpSummarySchema):
             if m:
                 groups = m.groupdict()
                 key = groups['key'].replace('-', '_').lower()
-                parsed_dict.update({key: (groups['value'])})
+                
+                try:
+                    value = int(groups['value'])
+                except ValueError:
+                    value = groups['value']
 
-        print(parsed_dict)
-
+                parsed_dict.update({key: value})
+        
         return parsed_dict

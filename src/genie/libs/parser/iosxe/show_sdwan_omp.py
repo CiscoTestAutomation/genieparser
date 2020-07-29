@@ -16,7 +16,5 @@ class ShowSdwanOmpSummary(ShowOmpSummary_viptela):
     def cli(self, output = None):
         if output is None:
             show_output = self.device.execute(self.cli_command)
-        else:
-            show_output = output
     
         return super().cli(output = show_output)

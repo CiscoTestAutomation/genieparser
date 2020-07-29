@@ -56,36 +56,35 @@ vsmart-peers           1
 '''}
 
     golden_parsed_output = {
-        'admin_state': 'UP',
-        'alert_received': '0',
-        'alert_sent': '1',
-        'handshake_received': '2',
-        'handshake_sent': '2',
-        'hello_received': '146337',
-        'hello_sent': '146344',
-        'inform_received': '16',
-        'inform_sent': '16',
-        'mcast_routes_received': '0',
-        'mcast_routes_sent': '0',
-        'omp_uptime': '34:03:00:35',
         'oper_state': 'UP',
+        'admin_state': 'UP',
         'personality': 'vedge',
-        'policy_received': '2',
-        'policy_sent': '0',
-        'routes_installed': '3',
-        'routes_received': '5',
-        'routes_sent': '2',
-        'services_installed': '0',
-        'services_received': '3',
-        'services_sent': '3',
-        'tlocs_installed': '2',
-        'tlocs_received': '3',
-        'tlocs_sent': '1',
-        'total_packets_sent': '146442',
-        'update_received': '157',
-        'update_sent': '79',
-        'vsmart_peers': '1'
-    }
+        'omp_uptime': '34:03:00:35',
+        'routes_received': 5,
+        'routes_installed': 3,
+        'routes_sent': 2,
+        'tlocs_received': 3,
+        'tlocs_installed': 2,
+        'tlocs_sent': 1,
+        'services_received': 3,
+        'services_installed': 0,
+        'services_sent': 3,
+        'mcast_routes_received': 0,
+        'mcast_routes_sent': 0,
+        'hello_sent': 146344,
+        'hello_received': 146337,
+        'handshake_sent': 2,
+        'handshake_received': 2,
+        'alert_sent': 1,
+        'alert_received': 0,
+        'inform_sent': 16,
+        'inform_received': 16,
+        'update_sent': 79,
+        'update_received': 157,
+        'policy_sent': 0,
+        'policy_received': 2,
+        'total_packets_sent': 146442,
+         'vsmart_peers': 1}
 
 
     def test_empty(self):
@@ -98,7 +97,8 @@ vsmart-peers           1
         self.device = Mock(**self.golden_output)
         obj = ShowOmpSummary(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        #self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertDictEqual(parsed_output,self.golden_parsed_output)
 
 
 if __name__ == '__main__':
