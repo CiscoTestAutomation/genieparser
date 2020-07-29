@@ -14,19 +14,25 @@ class test_show_stackwise_virtual_dual_active_detection(unittest.TestCase):
     maxDiff = None
     empty_output = {'execute.return_value': ''}
     golden_parsed_output1 = {
-        "switches": {
-            1: {
-                "FortyGigabitEthernet1/0/4": {
-                    "status": "up"
-                }
+    "switches": {
+        1: {
+            "FortyGigabitEthernet1/0/3": {
+                "status": "up"
             },
-            2: {
-                "FortyGigabitEthernet2/0/4": {
-                    "status": "up"
-                }
+            "FortyGigabitEthernet1/0/4": {
+                "status": "up"
+            }
+        },
+        2: {
+            "FortyGigabitEthernet2/0/3": {
+                "status": "up"
+            },
+            "FortyGigabitEthernet2/0/4": {
+                "status": "up"
             }
         }
     }
+}
 
     golden_output1 = {'execute.return_value': '''
 Dual-Active-Detection Configuration:

@@ -52,7 +52,7 @@ class Show_Stackwise_Virtual_Dual_Active_Detection(Show_Stackwise_Virtual_Dual_A
 
         dad_dict = {}
 
-        switch_port_capture = re.compile(r"^(?P<switch_id>\d+)\s+(?P<dad_port>\S+)\s+(?P<status>(up|down))",
+        switch_id_capture = re.compile(r"^(?P<switch_id>\d+)\s+(?P<dad_port>\S+)\s+(?P<status>(up|down))",
                                          re.MULTILINE)
         port_capture = re.compile(r"^\s+(?P<dad_port>\S+)\s+(?P<status>(up|down))", re.MULTILINE)
 
@@ -72,17 +72,16 @@ class Show_Stackwise_Virtual_Dual_Active_Detection(Show_Stackwise_Virtual_Dual_A
         switch_id = ''
 
         for line in out:
-            match = switch_port_capture.match(line)
+            match = switch_id_capture.match(line)
             if not dad_dict.get('switches'):
                 dad_dict['switches'] = {}
             if match:
                 groups = match.groupdict()
                 switch_id = int(groups['switch_id'])
-                dad_dict['switches'].update({switch_id: {}})
-            else:
-                match = port_capture.match(line)
-                if match:
-                    groups = match.groupdict()
-                    dad_dict['switches'][switch_id].update({groups['dad_port']: {'status': groups['status']}})
+                dad_dict['switches'].update({switch_id: {groups['dad_port']: {'status': groups['status']}}})
+            port_match = port_capture.match(line)
+            if port_match:
+                groups = port_match.groupdict()
+                dad_dict['switches'][switch_id].update({groups['dad_port']: {'status': groups['status']}})
 
         return dad_dict
