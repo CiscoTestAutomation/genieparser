@@ -60,7 +60,7 @@ class TracerouteNoResolveSchema(MetaParser):
             },
             "max-hops": str,
             "packet-size": str,
-            "hops": Use(validate_hops_list)
+            Optional("hops"): Use(validate_hops_list)
         }
     }
 
