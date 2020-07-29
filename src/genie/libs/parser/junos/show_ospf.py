@@ -28,6 +28,7 @@ JunOs parsers for the following show commands:
     * show ospf database lsa-id {ipaddress} detail
     * show ospf route brief
     * show ospf route network extensive
+    * show ospf database advertising-router {ipaddress} extensive
 """
 
 # Python
@@ -2141,6 +2142,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(
 class ShowOspfDatabaseExtensiveSchema(MetaParser):
     """ Schema for:
             * show ospf database extensive
+            * show ospf database advertising-router {ipaddress} extensive
     """
     '''schema = {
         "ospf-database-information": {
@@ -2455,9 +2457,10 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
         p16 = re.compile(r"^Aging timer +(?P<aging_timer>(\S+ ){0,1}[\d\:]+)$")
 
         # Installed 00:10:20 ago, expires in 00:49:31, sent 00:10:18 ago
+        # Installed 00:10:20 ago, expires in 00:49:31
         p17 = re.compile(
             r"^Installed +(?P<installation_time>(\S+ ){0,1}[\d\:]+) +ago, +expires +in +"
-            r"(?P<expiration_time>(\S+ ){0,1}[\d\:]+), +sent +(?P<send_time>(\S+ ){0,1}[\d\:]+) +ago$"
+            r"(?P<expiration_time>(\S+ ){0,1}[\d\:]+)(, +sent +(?P<send_time>(\S+ ){0,1}[\d\:]+) +ago)?$"
         )
 
         # Last changed 2w6d 04:50:31 ago, Change count: 196
@@ -2640,16 +2643,18 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                         .setdefault("expiration-time", {})
                     last_entry.setdefault("ospf-database-extensive", {})\
                         .setdefault("installation-time", {})
-                    last_entry.setdefault("ospf-database-extensive", {})\
-                        .setdefault("send-time", {})
+
 
                     group = m.groupdict()
                     last_entry["ospf-database-extensive"]["expiration-time"]["#text"]\
                      = group["expiration_time"]
                     last_entry["ospf-database-extensive"]["installation-time"]["#text"]\
                      = group["installation_time"]
-                    last_entry["ospf-database-extensive"]["send-time"]["#text"]\
-                     = group["send_time"]
+                    if group.get('send_time'):
+                        last_entry.setdefault("ospf-database-extensive", {}) \
+                            .setdefault("send-time", {})
+                        last_entry["ospf-database-extensive"]["send-time"]["#text"]\
+                         = group["send_time"]
 
                     continue
 
@@ -3123,6 +3128,19 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
 
         return ret_dict
 
+class ShowOspfDatabaseAdvertisingRouterExtensive(ShowOspfDatabaseExtensive):
+    """ Parser for:
+            * show ospf database advertising-router {ipaddress} extensive
+    """
+
+    cli_command = 'show ospf database advertising-router {ipaddress} extensive'
+
+    def cli(self, ipaddress, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(ipaddress=ipaddress))
+        else:
+            out = output
+        return super().cli(output=out)
 
 class ShowOspfNeighborExtensiveSchema(MetaParser):
     """ Schema for:
