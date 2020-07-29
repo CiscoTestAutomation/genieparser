@@ -47,6 +47,8 @@
     * Added Ping
         * ping {addr} ttl {ttl} count {count} wait {wait}
 * IOSXE
+    * Added ShowLicense
+        * show license
     * Added ShowPlatformHardwareQfpActiveFeatureAppqoe
         * show platform hardware qfp active feature appqoe stats all
 
