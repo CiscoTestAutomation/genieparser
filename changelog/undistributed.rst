@@ -15,6 +15,11 @@
         * show ldp overview
     * Added ShowOspfDatabaseAdvertisingRouterExtensive for:
         * show ospf database advertising-router {ipaddress} extensive
+* IOSXE
+    * Added ShowRunInterface for:
+        * show running-config interface {interface}
+    * Added ShowInterfaceTransceiverDetail for:
+        * show interface {interface} transceiver detail
 
 --------------------------------------------------------------------------------
                                 Fix
