@@ -22,6 +22,8 @@
 * JUNOS
     * Fixed ShowBgpNeighbor:
         * Updated few keys into Optional.
+    * Fixed ShowOspfDatabaseExtensive:
+        * Adjusted code to not capture Null values.
 * IOS
     * Fixed ShowNtpConfig:
         * Added prefered key
