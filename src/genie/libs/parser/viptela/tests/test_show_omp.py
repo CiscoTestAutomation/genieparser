@@ -16,7 +16,7 @@ from genie.libs.parser.viptela.show_omp import ShowOmpSummary
 # Parser for the following commands
 #   * 'show bfd sessions'
 # ============================================
-class TestShowBfdSessions(unittest.TestCase):
+class TestShowOmpSummary(unittest.TestCase):
     device = Device(name='aDevice')
     maxDiff = None 
     empty_output = {'execute.return_value' : ''}

@@ -1718,7 +1718,7 @@ class TestShowVersion(unittest.TestCase):
         11161600K bytes of Bootflash at bootflash:.
         1638400K bytes of Crash Files at crashinfo:.
 
-        Base Ethernet MAC Address          : 1c:2b:d4:cc:7f:fd
+        Base Ethernet MAC Address          : 1c:2b:d4:ff:4c:ca
         Motherboard Assembly Number        : 1111
         Motherboard Serial Number          : CAT1111L41F
         Model Revision Number              : V02

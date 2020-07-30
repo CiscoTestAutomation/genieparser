@@ -3237,7 +3237,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowBgpNeighbor(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output)     
 
 
 if __name__ == "__main__":

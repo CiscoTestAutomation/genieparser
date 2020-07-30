@@ -54,6 +54,14 @@ class ShowOmpSummary(ShowOmpSummarySchema):
 
         parsed_dict = {}
 
+        #show sdwan omp summary 
+        #oper-state             UP
+        # admin-state            UP
+        # personality            vedge
+        # omp-uptime             34:03:00:35
+        # routes-received        5
+        # routes-installed       3
+        # routes-sent            2
         p1 = re.compile(r'^(?P<key>[\w0-9\-]+) + (?P<value>[\d\w\:]+)$')
 
         for line in out.splitlines():
