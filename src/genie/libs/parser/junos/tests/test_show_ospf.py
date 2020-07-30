@@ -10768,55 +10768,55 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
     golden_output_2={
         "execute.return_value": """
         show ospf database extensive 
-    OSPF database, Area 0.0.0.0
- Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len 
-Router   1.1.1.1          1.1.1.1          0x80000005    14  0x22 0x9f32  48
-  bits 0x2, link count 2
-  id 30.0.0.2, data 30.0.0.1, Type Transit (2)
-    Topology count: 0, Default metric: 1
-  id 1.1.1.1, data 255.255.255.255, Type Stub (3)
-    Topology count: 0, Default metric: 0
-  Topology default (ID 0)
-    Type: Transit, Node ID: 30.0.0.2
-      Metric: 1, Bidirectional
-  Aging timer 00:59:46
-  Installed 00:00:11 ago, expires in 00:59:46
-  Last changed 00:00:11 ago, Change count: 3
-Router  *3.3.3.3          3.3.3.3          0x80000003    99  0x22 0xb705  48
-  bits 0x0, link count 2
-  id 30.0.0.2, data 30.0.0.2, Type Transit (2)
-    Topology count: 0, Default metric: 1
-  id 3.3.3.3, data 255.255.255.255, Type Stub (3)
-    Topology count: 0, Default metric: 0
-  Topology default (ID 0)
-    Type: Transit, Node ID: 30.0.0.2
-      Metric: 1, Bidirectional
-  Gen timer 00:48:21
-  Aging timer 00:58:21
-  Installed 00:01:39 ago, expires in 00:58:21, sent 00:01:37 ago
-  Last changed 00:01:39 ago, Change count: 2, Ours
-Network *30.0.0.2         3.3.3.3          0x80000001   104  0x22 0x42bb  32
-  mask 255.255.255.0
-  attached router 3.3.3.3
-  attached router 1.1.1.1
-  Topology default (ID 0)
-    Type: Transit, Node ID: 1.1.1.1
-      Metric: 0, Bidirectional
-    Type: Transit, Node ID: 3.3.3.3
-      Metric: 0, Bidirectional
-  Gen timer 00:48:16
-  Aging timer 00:58:16
-  Installed 00:01:44 ago, expires in 00:58:16, sent 00:01:42 ago
-  Last changed 00:01:44 ago, Change count: 1, Ours
-    OSPF AS SCOPE link state database
- Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len 
-Extern   11.11.11.11      1.1.1.1          0x80000001    14  0x22 0xe69b  36
-  mask 255.255.255.255
-  Topology default (ID 0)
-    Type: 2, Metric: 0, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
-  Aging timer 00:59:46
-  Installed 00:00:11 ago, expires in 00:59:46
-  Last changed 00:00:11 ago, Change count: 1
+            OSPF database, Area 0.0.0.0
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len 
+        Router   1.1.1.1          1.1.1.1          0x80000005    14  0x22 0x9f32  48
+        bits 0x2, link count 2
+        id 30.0.0.2, data 30.0.0.1, Type Transit (2)
+            Topology count: 0, Default metric: 1
+        id 1.1.1.1, data 255.255.255.255, Type Stub (3)
+            Topology count: 0, Default metric: 0
+        Topology default (ID 0)
+            Type: Transit, Node ID: 30.0.0.2
+            Metric: 1, Bidirectional
+        Aging timer 00:59:46
+        Installed 00:00:11 ago, expires in 00:59:46
+        Last changed 00:00:11 ago, Change count: 3
+        Router  *3.3.3.3          3.3.3.3          0x80000003    99  0x22 0xb705  48
+        bits 0x0, link count 2
+        id 30.0.0.2, data 30.0.0.2, Type Transit (2)
+            Topology count: 0, Default metric: 1
+        id 3.3.3.3, data 255.255.255.255, Type Stub (3)
+            Topology count: 0, Default metric: 0
+        Topology default (ID 0)
+            Type: Transit, Node ID: 30.0.0.2
+            Metric: 1, Bidirectional
+        Gen timer 00:48:21
+        Aging timer 00:58:21
+        Installed 00:01:39 ago, expires in 00:58:21, sent 00:01:37 ago
+        Last changed 00:01:39 ago, Change count: 2, Ours
+        Network *30.0.0.2         3.3.3.3          0x80000001   104  0x22 0x42bb  32
+        mask 255.255.255.0
+        attached router 3.3.3.3
+        attached router 1.1.1.1
+        Topology default (ID 0)
+            Type: Transit, Node ID: 1.1.1.1
+            Metric: 0, Bidirectional
+            Type: Transit, Node ID: 3.3.3.3
+            Metric: 0, Bidirectional
+        Gen timer 00:48:16
+        Aging timer 00:58:16
+        Installed 00:01:44 ago, expires in 00:58:16, sent 00:01:42 ago
+        Last changed 00:01:44 ago, Change count: 1, Ours
+            OSPF AS SCOPE link state database
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len 
+        Extern   11.11.11.11      1.1.1.1          0x80000001    14  0x22 0xe69b  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 2, Metric: 0, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:59:46
+        Installed 00:00:11 ago, expires in 00:59:46
+        Last changed 00:00:11 ago, Change count: 1
   """
     }
 
