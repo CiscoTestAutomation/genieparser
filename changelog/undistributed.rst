@@ -28,3 +28,10 @@
 * IOSXE
     * Fixed ShowNtpConfig:
         * Added prefered key
+    * Added ShowSdwanOmpSummary
+	* show sdwan omp summary
+
+* VIPTELA
+    * Added ShowOmpSummary
+        * show omp summary
+
