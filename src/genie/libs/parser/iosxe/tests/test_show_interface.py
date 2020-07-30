@@ -21,17 +21,20 @@ from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from genie.libs.parser.iosxe.show_interface import ShowInterfacesSwitchport,\
-                                        ShowIpInterfaceBriefPipeVlan,\
-                                        ShowInterfaces, ShowIpInterface,\
-                                        ShowIpv6Interface, \
-                                        ShowInterfacesTrunk, \
-                                        ShowInterfacesCounters, \
-                                        ShowInterfacesAccounting, \
-                                        ShowIpInterfaceBriefPipeIp,\
-                                        ShowInterfacesStats,\
-                                        ShowInterfacesDescription,\
-                                        ShowInterfacesStatus
+from genie.libs.parser.iosxe.show_interface import (
+                                        ShowInterfaces,
+                                        ShowIpInterface,
+                                        ShowIpv6Interface,
+                                        ShowInterfacesStats,
+                                        ShowInterfacesTrunk,
+                                        ShowInterfacesStatus,
+                                        ShowInterfacesCounters,
+                                        ShowInterfacesAccounting,
+                                        ShowInterfacesSwitchport,
+                                        ShowInterfacesDescription,
+                                        ShowIpInterfaceBriefPipeIp,
+                                        ShowIpInterfaceBriefPipeVlan,
+                                        ShowInterfaceTransceiverDetail)
 
 
 class TestShowInterfaceParsergen(unittest.TestCase):
@@ -19433,6 +19436,64 @@ class TestShowInterfacesStatus(unittest.TestCase):
         obj = ShowInterfacesStatus(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_interface_output1)
+
+
+class TestShowInterfaceTransceiverDetail(unittest.TestCase):
+    """unit test for show interface {interface} transceiver detail """
+
+    maxDiff = None
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        # show interface GigabitEthernet1/0/0 transceiver detail
+
+        transceiver is present
+        type is 10Gbase-LR
+        name is CISCO-FINISAR   
+        part number is FTLX1474D3BCL-CS
+        revision is A   
+        serial number is FNS17221JJZ     
+        nominal bitrate is 10300 MBit/sec
+        Link length supported for 9/125um fiber is 10 km
+        cisco id is --
+        cisco extended id number is 4
+        cisco part number is 10-2457-02
+        cisco product id is SFP-10G-LR          
+        cisco vendor id is V02 
+        number of lanes 1
+    '''}
+
+    golden_parsed_output = {
+        'GigabitEthernet1/0/0': {
+            'cisco_extended_id_number': '4',
+            'cisco_id': '--',
+            'cisco_part_number': '10-2457-02',
+            'cisco_product_id': 'SFP-10G-LR',
+            'cisco_vendor_id': 'V02',
+            'link_length_supported_for_9/125um_fiber': '10 km',
+            'name': 'CISCO-FINISAR',
+            'nominal_bitrate': '10300 MBit/sec',
+            'number_of_lanes': '1',
+            'part_number': 'FTLX1474D3BCL-CS',
+            'revision': 'A',
+            'serial_number': 'FNS17221JJZ',
+            'transceiver': 'present',
+            'type': '10Gbase-LR',
+        },
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfaceTransceiverDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(interface='GigabitEthernet1/0/0')
+
+    def test_golden_interface1(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowInterfaceTransceiverDetail(device=self.device)
+        parsed_output = obj.parse(interface='GigabitEthernet1/0/0')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 if __name__ == '__main__':
     unittest.main()
