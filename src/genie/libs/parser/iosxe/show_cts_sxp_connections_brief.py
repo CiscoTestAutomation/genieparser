@@ -44,7 +44,7 @@ class Show_Cts_Sxp_Connections_BriefSchema(MetaParser):
 class Show_Cts_Sxp_Connections_Brief(Show_Cts_Sxp_Connections_BriefSchema):
     """Parser for show_cts_sxp_connections_brief"""
 
-    cli_command = ['show_cts_sxp_connections_brief']
+    cli_command = ['show cts sxp connections brief']
 
     def cli(self, output=None):
         if output is None:
