@@ -57,6 +57,11 @@
         * show platform hardware qfp active feature appqoe stats all
     * Added ShowBgpNeighbor for:
         * show bgp neighbor
+* IOSXE
+    * Added ShowRunInterface for:
+        * show running-config interface {interface}
+    * Added ShowInterfaceTransceiverDetail for:
+        * show interface {interface} transceiver detail
 
 --------------------------------------------------------------------------------
                                 Fix
