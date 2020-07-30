@@ -2320,7 +2320,7 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
                     "#text": str
                 },
                 Optional("send-time"): {
-                    "#text": str
+                    Optional("#text"): str
                 },
                 Optional("database-entry-state"): str
             },
@@ -3089,8 +3089,9 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                         ["#text"] = group["expiration_time"]
                     last_entry["ospf-database-extensive"]["installation-time"]\
                         ["#text"] = group["installation_time"]
-                    last_entry["ospf-database-extensive"]["send-time"]["#text"]\
-                     = group["send_time"]
+                    if group["send_time"]:
+                        last_entry["ospf-database-extensive"]["send-time"]["#text"]\
+                        = group["send_time"]
 
                     continue
 
@@ -4138,7 +4139,6 @@ class ShowOspfRouteNetworkExtensive(ShowOspfRouteNetworkExtensiveSchema):
                 ospf_route_entry_dict = {}
                 ospf_next_hop_dict = {}
 
-                # import pdb;pdb.set_trace()
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_', '-')
 
