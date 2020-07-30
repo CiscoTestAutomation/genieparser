@@ -49,8 +49,7 @@
 * IOSXE
     * Added ShowPlatformHardwareQfpActiveFeatureAppqoe
         * show platform hardware qfp active feature appqoe stats all
-    * Added Show_Stackwise_Virtual_Dual_Active_Detection
-        * show stackwise-virtual dual-active-detection
+
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
