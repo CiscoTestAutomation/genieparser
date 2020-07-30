@@ -3441,22 +3441,23 @@ class ShowInterfaceTransceiverDetailSchema(MetaParser):
         show interface {interface} transceiver detail"""
 
     schema = {
-        # interface name
-        Any(): { 
-            Optional('cisco_extended_id_number'): str,
-            Optional('cisco_id'): str,
-            Optional('cisco_part_number'): str,
-            Optional('cisco_product_id'): str,
-            Optional('cisco_vendor_id'): str,
-            Optional('name'): str,
-            Optional('nominal_bitrate'): str,
-            Optional('number_of_lanes'): str,
-            Optional('part_number'): str,
-            Optional('revision'): str,
-            Optional('serial_number'): str,
-            Optional('transceiver'): str,
-            Optional('type'): str,
-            Any(): str,
+        'interfaces': {
+            Any(): {# interface name
+                Optional('cisco_extended_id_number'): str,
+                Optional('cisco_id'): str,
+                Optional('cisco_part_number'): str,
+                Optional('cisco_product_id'): str,
+                Optional('cisco_vendor_id'): str,
+                Optional('name'): str,
+                Optional('nominal_bitrate'): str,
+                Optional('number_of_lanes'): str,
+                Optional('part_number'): str,
+                Optional('revision'): str,
+                Optional('serial_number'): str,
+                Optional('transceiver'): str,
+                Optional('type'): str,
+                Any(): str,
+            }
         }
     }
 
@@ -3497,7 +3498,7 @@ class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
                 key = group['key'].strip().replace(" ", '_').lower()
                 value = group['value'].strip()
 
-                intf_dict = result_dict.setdefault(interface, {})
+                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
                 intf_dict.update({key: value})
                 continue
             
