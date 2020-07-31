@@ -1180,7 +1180,7 @@ class test_show_igmp_groups_summary(unittest.TestCase):
     golden_parsed_output_1 = {
         'vrf':
             {'default':
-                {'no_*g_routes': 4,
+                {'no_g_routes': 4,
                  'no_group_x_intfs': 19,
                  'no_sg_routes': 0
                  }
@@ -1198,7 +1198,7 @@ class test_show_igmp_groups_summary(unittest.TestCase):
     golden_parsed_output_2 = {
         'vrf':
             {'vpn1':
-                {'no_*g_routes': 4,
+                {'no_g_routes': 4,
                  'no_group_x_intfs': 29,
                  'no_sg_routes': 22
                  }

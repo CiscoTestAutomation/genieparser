@@ -617,7 +617,7 @@ class ShowIgmpGroupsSummarySchema(MetaParser):
     schema = {
         'vrf':
             {Any():
-                {'no_*g_routes': int,
+                {'no_g_routes': int,
                  'no_sg_routes': int,
                  'no_group_x_intfs': int
                  },
@@ -652,7 +652,7 @@ class ShowIgmpGroupsSummary(ShowIgmpGroupsSummarySchema):
 
     {'vrf':
         {'default':
-            {'no_*g_routes': 4,
+            {'no_g_routes': 4,
              'no_group_x_intfs': 27,
              'no_sg_routes': 2
             }
@@ -661,12 +661,16 @@ class ShowIgmpGroupsSummary(ShowIgmpGroupsSummarySchema):
 
     """
 
-    cli_command = "show igmp {}groups summary"
+    cli_command = ["show igmp groups summary",
+                   "show igmp vrf {vrf} groups summary"]
 
     def cli(self, vrf='', output=None):
 
         if output is None:
-            cmd = self.cli_command.format(vrf)
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -674,17 +678,17 @@ class ShowIgmpGroupsSummary(ShowIgmpGroupsSummarySchema):
         parsed_dict = {}
 
         # IGMP Route Summary for vrf default
-        p1 = re.compile(r"IGMP Route Summary for vrf (?P<vrf>\S+)")
+        p1 = re.compile(r"IGMP +Route +Summary +for +vrf +(?P<vrf>\S+)")
 
         # No. of (*,G) routes = 4
-        p2 = re.compile(r"No\. of \(\*,G\) routes = (?P<no_stg_routes>[0-9]+)")
+        p2 = re.compile(r"No\. +of +\(\*,G\) +routes += +(?P<no_g_routes>\d+)")
 
         # No. of (S,G) routes = 2
-        p3 = re.compile(r"No\. of \(\S,G\) routes = (?P<no_sg_routes>[0-9]+)")
+        p3 = re.compile(r"No\. +of +\(\S,G\) +routes += +(?P<no_sg_routes>\d+)")
 
         # No. of Group x Interfaces = 27
-        p4 = re.compile(r"No\. of Group x Interfaces = "
-                        r"(?P<no_group_x_intfs>[0-9]+)")
+        p4 = re.compile(r"No\. +of +Group +x +Interfaces += +"
+                        r"(?P<no_group_x_intfs>\d+)")
 
         for line in out.splitlines():
             line = line.strip()
@@ -700,7 +704,7 @@ class ShowIgmpGroupsSummary(ShowIgmpGroupsSummarySchema):
             m2 = p2.match(line)
             if m2:
                 group = m2.groupdict()
-                vrf_dict['no_*g_routes'] = int(group['no_stg_routes'])
+                vrf_dict['no_g_routes'] = int(group['no_g_routes'])
                 continue
 
             m3 = p3.match(line)
