@@ -55580,13 +55580,13 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
     golden_output_2 = {
         'execute.return_value':
         '''
-    show route advertising-protocol bgp 20.0.0.3 
+    show route advertising-protocol bgp 10.145.0.3 
 
     inet.0: 10 destinations, 10 routes (10 active, 0 holddown, 0 hidden)
     Prefix                  Nexthop              MED     Lclpref    AS path
     * 0.0.0.0/0               Self                                    I
-    * 1.1.1.1/32              Self                                    I
-    * 3.3.3.3/32              Self                                    2 I
+    * 10.4.1.1/32              Self                                    I
+    * 10.36.3.3/32              Self                                    2 I
     '''
     }
 
@@ -55614,7 +55614,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
                         'protocol-name': 'BGP'
                     }
                 }, {
-                    'rt-destination': '1.1.1.1/32',
+                    'rt-destination': '10.4.1.1/32',
                     'rt-entry': {
                         'active-tag': '*',
                         'as-path': 'I',
@@ -55626,7 +55626,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
                         'protocol-name': 'BGP'
                     }
                 }, {
-                    'rt-destination': '3.3.3.3/32',
+                    'rt-destination': '10.36.3.3/32',
                     'rt-entry': {
                         'active-tag': '*',
                         'as-path': '2 I',
@@ -55661,7 +55661,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
     def test_golden_2(self):
         self.device = Mock(**self.golden_output_2)
         obj = ShowRouteAdvertisingProtocol(device=self.device)
-        parsed_output = obj.parse(protocol='bgp', neighbor='20.0.0.3')
+        parsed_output = obj.parse(protocol='bgp', neighbor='10.145.0.3')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
