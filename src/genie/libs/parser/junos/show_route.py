@@ -1586,8 +1586,8 @@ class ShowRouteReceiveProtocolSchema(MetaParser):
                 "rt-entry": {
                     Optional("active-tag"): str,
                     "as-path": str,
-                    "local-preference": str,
-                    "med": str,
+                    Optional("local-preference"): str,
+                    Optional("med"): str,
                     "nh": {
                         "to": str
                     },
@@ -1647,9 +1647,10 @@ class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
 
         # * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
         # 10.220.0.0/16           10.189.5.253         12003   120        (65151 65000) I
-        p2 = re.compile(r'^((?P<active_tag>\*) +)?(?P<rt_destination>\S+) +'
-                        r'(?P<to>\S+) +(?P<med>\d+) +(?P<local_preference>\d+) +'
-                        r'(?P<as_path>\([\S\s]+\) +\w+)$')
+        p2 = re.compile(r'(?P<active_tag>\*) +(?P<rt_destination>\S+)'
+                        r' +(?P<to>\S+)( +(?P<med>\d+) +(?P<local_preference>\d+))? '
+                        r'+(?P<as_path>(\(([\S\s]+\)) +\w+)|((\d\s)?\w))')
+                        
 
         for line in out.splitlines():
             line = line.strip()
