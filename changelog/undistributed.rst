@@ -31,6 +31,8 @@
         * Adjusted code to not capture Null values.
     * Fixed ShowClassOfService:
         * Updated regex to support more varied output
+    * Fixed ShowRouteAdvertisingProtocol and ShowRouteReceiveProtocol:
+        * Changed few keys into Optional, and modified regex to support various outputs. 
 * IOS
     * Fixed ShowNtpConfig:
         * Added prefered key
