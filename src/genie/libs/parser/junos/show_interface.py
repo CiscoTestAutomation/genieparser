@@ -975,6 +975,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         p42 = re.compile(r'^Output +errors:$')
 
         # Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Policed discards: 0, L3 incompletes: 0, L2 channel errors: 0,
+        # Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Policed discards: 0, L3 incompletes: 0, L2 channel errors: 0, L2 mismatch timeouts: 0, FIFO errors: 0, Resource errors: 0
         p43_1 = re.compile(r'^Errors: +(?P<input_errors>\d+), +'
             r'Drops: +(?P<input_drops>\d+), +Framing +errors: +(?P<framing_errors>\d+), +'
             r'Runts: +(?P<input_runts>\d+), Policed +discards: +(?P<input_discards>\d+),'
@@ -992,6 +993,7 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # Carrier transitions: 1, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0, FIFO errors: 0, HS link CRC errors: 0,
         # Carrier transitions: 0, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0,
+        # Carrier transitions: 0, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0, FIFO errors: 0, HS link CRC errors: 0, MTU errors: 0, Resource errors: 0
         p44_1 = re.compile(r'^Carrier +transitions: +(?P<carrier_transitions>\d+), +'
             r'Errors: +(?P<output_errors>\d+), +Drops: +(?P<output_drops>\d+), +'
             r'Collisions: +(?P<output_collisions>\d+), +Aged+ packets: +'
