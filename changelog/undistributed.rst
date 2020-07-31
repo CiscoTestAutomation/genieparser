@@ -30,7 +30,7 @@
     * Fixed ShowOspfDatabaseExtensive:
         * Adjusted code to not capture Null values.
     * Fixed ShowClassOfService:
-        * Updated key into Optional
+        * Updated regex to support more varied output
 * IOS
     * Fixed ShowNtpConfig:
         * Added prefered key
