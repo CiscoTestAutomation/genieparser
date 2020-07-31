@@ -1651,7 +1651,7 @@ class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
         # * 10.36.3.3/32              Self                                    2 I        
         p2 = re.compile(r'^((?P<active_tag>\*) +)?(?P<rt_destination>\S+) +'
                         r'(?P<to>\S+) +((?P<med>\d+) +(?P<local_preference>\d+) +)?'
-                        r'(?P<as_path>\([\S\s]+\) +\w+)$')
+                        r'(?P<as_path>(\([\S\s]+\) +\w+)|((\d\s)?\w))$')
                         
 
         for line in out.splitlines():
