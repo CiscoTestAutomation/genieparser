@@ -29,6 +29,8 @@
         * Updated few keys into Optional.
     * Fixed ShowOspfDatabaseExtensive:
         * Adjusted code to not capture Null values.
+    * Fixed ShowRouteAdvertisingProtocol:
+        * Changed few keys into Optional, and modified regex to support various outputs. 
 * IOS
     * Fixed ShowNtpConfig:
         * Added prefered key
