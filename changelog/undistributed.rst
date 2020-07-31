@@ -29,6 +29,8 @@
         * Updated few keys into Optional.
     * Fixed ShowOspfDatabaseExtensive:
         * Adjusted code to not capture Null values.
+    * Fixed ShowClassOfService:
+        * Updated key into Optional
 * IOS
     * Fixed ShowNtpConfig:
         * Added prefered key
