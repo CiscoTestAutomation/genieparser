@@ -1307,7 +1307,7 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
         # Type: Internal    State: Active       (route reflector client)Flags: <>
         # Type: External    State: Established    Flags: <Sync InboundConvergencePending>
         p5 = re.compile(
-            r'^Type: +(?P<peer_type>\S+) +State: +(?P<peer_state>\S+) +(\(route +reflector +client\))?Flags: +<(?P<peer_flags>[\s\S]+)>$'
+            r'^Type: +(?P<peer_type>\S+) +State: +(?P<peer_state>\S+) +(\(route +reflector +client\))?Flags: +<(?P<peer_flags>[\s\S]*)>$'
         )
         # Last State: Idle          Last Event: Start
         p6 = re.compile(
