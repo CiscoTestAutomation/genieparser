@@ -3,6 +3,8 @@
 JunOS parsers for the following show commands:
     * ping {addr}
     * ping {addr} count {count} 
+    * ping mpls rsvp {rsvp}
+    * ping {addr} ttl {ttl} count {count} wait {wait}
 """
 # Python
 import re
@@ -84,13 +86,22 @@ class PingSchema(MetaParser):
 
 class Ping(PingSchema):
 
-    cli_command = ['ping {addr}',
-        'ping {addr} count {count}']
+    cli_command = [
+        'ping {addr}',
+        'ping {addr} count {count}',
+        'ping {addr} ttl {ttl} count {count} wait {wait}'
+    ]
 
-    def cli(self, addr, count=None, output=None):
-        
+    def cli(self, addr, count=None, ttl=None, wait=None, output=None):
+
         if not output:
-            if count:
+            if count and ttl and wait:
+                cmd = self.cli_command[2].format(
+                    addr=addr,
+                    count=count,
+                    ttl=ttl,
+                    wait=wait)
+            elif count:
                 cmd = self.cli_command[1].format(addr=addr, count=count)
             else:
                 cmd = self.cli_command[0].format(addr=addr)
@@ -117,7 +128,7 @@ class Ping(PingSchema):
         # 5 packets transmitted, 5 packets received, 0% packet loss
         # 5 packets transmitted, 0 packets received, 100% packet loss
         p3 = re.compile(r'^(?P<send>\d+) +packets +transmitted, +'
-                r'(?P<received>\d+) packets +received, +'
+                r'(?P<received>\d+) +packets +received, +'
                 r'(?P<loss_rate>\d+)\% +packet +loss$')
         
         # round-trip min/avg/max/stddev = 1.823/2.175/2.399/0.191 ms
@@ -173,4 +184,46 @@ class Ping(PingSchema):
                 round_trip_dict = ping_statistics_dict.setdefault('round-trip', {})
                 round_trip_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
+        return ret_dict
+
+class PingMplsRsvpSchema(MetaParser):
+    schema = {
+        'lsping-statistics': {
+            'send': int,
+            'received': int,
+            'loss-rate': int,
+        }
+    }
+
+class PingMplsRsvp(PingMplsRsvpSchema):
+
+    cli_command = 'ping mpls rsvp {rsvp}'
+
+    def cli(self, rsvp, output=None):
+        
+        if not output:
+            cmd = self.cli_command.format(rsvp=rsvp)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        ret_dict = {}
+
+        # 5 packets transmitted, 5 packets received, 0% packet loss
+        p1 = re.compile(r'^(?P<send>\d+) +packets +transmitted, +'
+                r'(?P<received>\d+) packets +received, +'
+                r'(?P<loss_rate>\d+)\% +packet +loss$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 5 packets transmitted, 5 packets received, 0% packet loss
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ping_statistics_dict = ret_dict.setdefault('lsping-statistics', {})
+                ping_statistics_dict.update({k.replace('_', '-'): (
+                    int(v) if v.isdigit() else v) for k, v in group.items() if v is not None})
+                continue
+        
         return ret_dict
