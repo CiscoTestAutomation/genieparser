@@ -20,7 +20,10 @@
         * show running-config interface {interface}
     * Added ShowInterfaceTransceiverDetail for:
         * show interface {interface} transceiver detail
-
+* IOSXR
+    * Added ShowIgmpGroupsSummary
+        * show igmp groups summary
+        * show igmp vrf {vrf} groups summary
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
@@ -48,3 +51,10 @@
     * Added ShowOmpSummary
         * show omp summary
 
+* IOSXR
+    * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea
+        * Enhanced parser
+    * Updated ShowIsisSpfLogDetail:
+        * Added more regex patterns to support various outputs.
+    * Updated ShowIsisInterface:
+        * Modified to support default as instance name
