@@ -9,14 +9,17 @@
                                 New
 --------------------------------------------------------------------------------
 * JUNOS
-    * Address ShowBFDSesssion
-        * show bfd session
-    * Added ShowLDPSession
-        * show ldp session
-    * Added ShowRouteForwardingTableLabel
-        * show route forwarding-table label {label}
-    * Added ShowRSVPNeighbor
-        * show rsvp neighbor
+    * Added ShowBgpNeighbor for:
+        * show bgp neighbor
+    * Added ShowLDPOverview
+        * show ldp overview
+    * Added ShowOspfDatabaseAdvertisingRouterExtensive for:
+        * show ospf database advertising-router {ipaddress} extensive
+* IOSXE
+    * Added ShowRunInterface for:
+        * show running-config interface {interface}
+    * Added ShowInterfaceTransceiverDetail for:
+        * show interface {interface} transceiver detail
 * IOSXR
     * Added ShowIgmpGroupsSummary
         * show igmp groups summary
@@ -25,25 +28,28 @@
                                 Fix
 --------------------------------------------------------------------------------
 * JUNOS
-    * Updated ShowOspfDatabaseAdvertisingRouterSelfDetail
-        * Added more keys to the schema, in order to support output of ShowOspfDatabaseLsaidDetail
-    * Updated ShowSystemUsers
-        * Regex issues resolved
-    * Updated ShowOspfOverview
-        * Missing key added
-    * Updated ShowOspf3Overview
-        * Missing key added
+    * Fixed ShowBgpNeighbor:
+        * Updated few keys into Optional.
+    * Fixed ShowOspfDatabaseExtensive:
+        * Adjusted code to not capture Null values.
+    * Fixed ShowClassOfService:
+        * Updated regex to support more varied output
+    * Fixed ShowRouteAdvertisingProtocol and ShowRouteReceiveProtocol:
+        * Changed few keys into Optional, and modified regex to support various outputs. 
+    * Fixed ShowInterfaces:
+        * Modified regex to support various outputs.
+* IOS
+    * Fixed ShowNtpConfig:
+        * Added prefered key
 * IOSXE
-    * Updated ShowCdpNeighbors
-        * Modified regex to support different output
-    * Updated ShowCdpNeighborsDetail
-        * Modified regex to support different output
-    * Updated ShowIpInterface
-        * Enhanced parser and added optional values
+    * Fixed ShowNtpConfig:
+        * Added prefered key
+    * Added ShowSdwanOmpSummary
+	* show sdwan omp summary
 
-* NXOS
-    * Updated ShowIpRoute
-        * Enhanced parser
+* VIPTELA
+    * Added ShowOmpSummary
+        * show omp summary
 
 * IOSXR
     * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea
