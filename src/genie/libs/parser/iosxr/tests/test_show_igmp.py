@@ -13,6 +13,7 @@ from genie.libs.parser.iosxr.show_igmp import (ShowIgmpInterface,
                                                ShowIgmpGroupsDetail,
                                                ShowIgmpGroupsSummary)
 
+
 #############################################################################
 # unitest For Show IGMP Interface
 #############################################################################
@@ -1225,6 +1226,6 @@ class test_show_igmp_groups_summary(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
-      
+
 if __name__ == '__main__':
     unittest.main()

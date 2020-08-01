@@ -470,7 +470,7 @@ class ShowIgmpGroupsDetailSchema(MetaParser):
             }
         }
     }
-    
+
 class ShowIgmpGroupsDetail(ShowIgmpGroupsDetailSchema):
     """Parser for show igmp groups detail"""
     #*************************
@@ -606,7 +606,7 @@ class ShowIgmpGroupsDetail(ShowIgmpGroupsDetailSchema):
                 continue
             
         return result_dict
-        
+
 
 # ==========================================================================
 # Schema for 'show igmp groups summary'
