@@ -3177,9 +3177,7 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
         # initial regexp pattern
         # GigabitEthernet0/0/0/0
         # GigabitEthernet11 OOB Net
-        # allow for multiple spaces in desccription
-        p1 = re.compile(r'^(?P<interface>[a-zA-Z\-\d\/\.]+)(?P<description>( +(\S)+)*)$')
-        #p1 = re.compile(r'^(?P<interface>[a-zA-Z\-\d\/\.]+)(?P<description>( (\S)+)*)$')
+        p1 = re.compile(r'^(?P<interface>[a-zA-Z\-\d\/\.]+)(?P<description>( (\S)+)*)$')
 
         # Tunnel0 Pim Register Tunnel (Encap) for RP 10.186.1.1
         p1_1 = re.compile(r'^(?P<interface>Tunnel\d+) +Pim +Register +'
@@ -3196,8 +3194,6 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
         for line in out.splitlines():
             if line:
                 line = line.strip()
-                ###DEBUG
-                #print("deb: ",line)
             else:
                 continue
 
