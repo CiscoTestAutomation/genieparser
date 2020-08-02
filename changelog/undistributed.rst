@@ -108,6 +108,8 @@
         * Enhanced parser
     * Updated ShowProcessesMemory
         * Modified schema to support different output
+    * Updated ShowSslproxyStatus
+        * Modified the schema to support output
 
 * NXOS
     * Updated ShowIpRoute
