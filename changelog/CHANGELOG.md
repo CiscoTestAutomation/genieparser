@@ -4,6 +4,7 @@
 * [April](2020/APRIL.md)
 * [May](2020/MAY.md)
 * [June](2020/JUNE.md)
+* [July](2020/JULY.md)
 
 
 # 2019
