@@ -12,6 +12,8 @@
 * IOSXE
     * Added Show_Hw_Module_Status
         * show hw-module subslot 0/1 transceiver 0 status
+    * Added ShowStackwiseVirtual
+        * show stackwise-virtual
 
 --------------------------------------------------------------------------------
                                 Fix
