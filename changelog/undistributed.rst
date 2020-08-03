@@ -12,6 +12,8 @@
 * IOSXE
     * Added ShowLicense
         * show license
+    * Added ShowStackwiseVirtual
+        * show stackwise-virtual
 
 --------------------------------------------------------------------------------
                                 Fix
