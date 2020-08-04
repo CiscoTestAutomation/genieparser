@@ -15,64 +15,20 @@ class test_show_hw_module_status(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     golden_parsed_output1 = {
         "transceiver_status": {
-            "transceivers": {
-                "1/1/1": {
-                    "status": "enabled",
-                    "module_temperature": "+28.750",
-                    "supply_voltage_mVolts": "3252.5",
-                    "bias_current_uAmps": 6706,
-                    "tx_power_dBm": "-2.7",
-                    "optical_power_dBm": "-2.1"
-                },
-                "1/1/2": {
-                    "status": "disabled",
-                    "module_temperature": "+28.625",
-                    "supply_voltage_mVolts": "3252.5",
-                    "bias_current_uAmps": 6706,
-                    "tx_power_dBm": "-2.7",
-                    "optical_power_dBm": "-2.1"
-                },
-                "1/2/2": {
-                    "status": "enabled",
-                    "module_temperature": "+28.750",
-                    "supply_voltage_mVolts": "3252.5",
-                    "bias_current_uAmps": 6706,
-                    "tx_power_dBm": "-2.7",
-                    "optical_power_dBm": "-2.1"
-                },
-                "2/1/1": {
-                    "status": "disabled",
-                    "module_temperature": "+28.625",
-                    "supply_voltage_mVolts": "3252.5",
-                    "bias_current_uAmps": 6706,
-                    "tx_power_dBm": "-2.7",
-                    "optical_power_dBm": "-2.1"
-                }
-            }
+            "slot_id": 0,
+            "subslot": 1,
+            "port_id": 0,
+            "module_temperature": "+28.750",
+            "supply_voltage_mVolts": "3252.5",
+            "bias_current_uAmps": 6706,
+            "tx_power_dBm": "-2.7",
+            "optical_power_dBm": "-2.1"
         }
     }
 
     golden_output1 = {'execute.return_value': '''
-The Transceiver in slot 1 subslot 1 port 1 is enabled.
+The Transceiver in slot 0 subslot 1 port 0 is enabled.
   Module temperature                        = +28.750 C
-  Transceiver Tx supply voltage             = 3252.5 mVolts
-  Transceiver Tx bias current               = 6706 uAmps
-  Transceiver Tx power                      = -2.7 dBm
-  Transceiver Rx optical power              = -2.1 dBm
-The Transceiver in slot 1 subslot 1 port 2 is disabled.
-  Module temperature                        = +28.625 C
-  Transceiver Tx supply voltage             = 3252.5 mVolts
-  Transceiver Tx bias current               = 6706 uAmps
-  Transceiver Tx power                      = -2.7 dBm
-  Transceiver Rx optical power              = -2.1 dBm
-The Transceiver in slot 1 subslot 2 port 2 is enabled.
-  Module temperature                        = +28.750 C
-  Transceiver Tx supply voltage             = 3252.5 mVolts
-  Transceiver Tx bias current               = 6706 uAmps
-  Transceiver Tx power                      = -2.7 dBm
-  Transceiver Rx optical power              = -2.1 dBm
-The Transceiver in slot 2 subslot 1 port 1 is disabled.
-  Module temperature                        = +28.625 C
   Transceiver Tx supply voltage             = 3252.5 mVolts
   Transceiver Tx bias current               = 6706 uAmps
   Transceiver Tx power                      = -2.7 dBm

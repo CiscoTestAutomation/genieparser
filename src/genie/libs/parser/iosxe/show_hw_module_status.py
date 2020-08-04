@@ -20,19 +20,17 @@ class Show_Hw_Module_StatusSchema(MetaParser):
     """Schema for show_hw_module_status."""
 
     schema = {
-        "transceiver_status": {
-            "transceivers": {
-                str: {
-                    "status": str,
-                    "module_temperature": str,
-                    "supply_voltage_mVolts": str,
-                    "bias_current_uAmps": int,
-                    "tx_power_dBm": str,
-                    "optical_power_dBm": str
-                }
-            }
-        }
+    "transceiver_status": {
+        "slot_id": int,
+        "subslot": int,
+        "port_id": 0,
+        "module_temperature": str,
+        "supply_voltage_mVolts": str,
+        "bias_current_uAmps": int,
+        "tx_power_dBm": str,
+        "optical_power_dBm": str
     }
+}
 
 
 # ==========================
@@ -97,17 +95,11 @@ class Show_Hw_Module_Status(Show_Hw_Module_StatusSchema):
                 match = p1.match(line_strip)
                 if match:
                     groups = match.groupdict()
-                    slot_id = groups['slot_id']
-                    subslot = groups['subslot_id']
-                    port_id = groups['port_id']
-                    transceiver = f"{slot_id}/{subslot}/{port_id}"
-                    if not transceiver_dict.get('transceiver_status'):
-                        transceiver_dict.update(
-                            {'transceiver_status': {
-                                'transceivers': {}}})
-                    if not transceiver_dict['transceiver_status']['transceivers'].get(transceiver):
-                        transceiver_dict['transceiver_status']['transceivers'].update({transceiver: {}})
-                    transceiver_dict['transceiver_status']['transceivers'][transceiver].update({'status': groups['status']})
+                    slot_id = int(groups['slot_id'])
+                    sub_slot = int(groups['subslot_id'])
+                    port_id = int(groups['port_id'])
+                    transceiver_dict.update(
+                        {'transceiver_status': {'slot_id': slot_id, 'subslot': sub_slot, 'port_id': port_id}})
                 continue
             if regex:
                 match = regex.match((value))
@@ -117,8 +109,7 @@ class Show_Hw_Module_Status(Show_Hw_Module_StatusSchema):
                         continue
                     if v.isdigit():
                         v = int(v)
-                    transceiver_dict['transceiver_status']['transceivers'][transceiver].update({k: v})
-
+                    transceiver_dict['transceiver_status'].update({k: v})
         if transceiver_dict:
             return transceiver_dict
         else:
