@@ -11,7 +11,7 @@
 
 * IOSXE
     * Added Show_Hw_Module_Status
-        * show hw-module subslot 0/1 transceiver 0 status
+        * show hw_module subslot {subslot} transceiver {transceiver} status
 
 --------------------------------------------------------------------------------
                                 Fix
