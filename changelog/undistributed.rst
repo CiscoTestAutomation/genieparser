@@ -22,12 +22,17 @@
         * show interface {interface} transceiver detail
     * Added ShowPlatformHardwareQfpActiveDatapathUtilSum
         * show platform hardware qfp active datapath utilization summary
+* IOSXR
+    * Added ShowIgmpGroupsSummary
+        * show igmp groups summary
+        * show igmp vrf {vrf} groups summary
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
 * JUNOS
     * Fixed ShowBgpNeighbor:
         * Updated few keys into Optional.
+        * Updated regex to support various outputs.
     * Fixed ShowOspfDatabaseExtensive:
         * Adjusted code to not capture Null values.
     * Fixed ShowClassOfService:
@@ -36,6 +41,8 @@
         * Changed few keys into Optional, and modified regex to support various outputs. 
     * Fixed ShowInterfaces:
         * Modified regex to support various outputs.
+    * Updated ShowOspfDatabaseExtensive
+        * Now accounts for netsummary
 * IOS
     * Fixed ShowNtpConfig:
         * Added prefered key
@@ -49,3 +56,10 @@
     * Added ShowOmpSummary
         * show omp summary
 
+* IOSXR
+    * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea
+        * Enhanced parser
+    * Updated ShowIsisSpfLogDetail:
+        * Added more regex patterns to support various outputs.
+    * Updated ShowIsisInterface:
+        * Modified to support default as instance name
