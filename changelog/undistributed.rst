@@ -109,7 +109,7 @@
     * Updated ShowProcessesMemory
         * Modified schema to support different output
     * Updated ShowSslproxyStatus
-        * Modified the schema to support output
+        * Modified the schema and regex to support output
 
 * NXOS
     * Updated ShowIpRoute
