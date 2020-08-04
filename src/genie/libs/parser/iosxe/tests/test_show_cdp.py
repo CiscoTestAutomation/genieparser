@@ -45,7 +45,14 @@ class test_show_cdp_neighbors(unittest.TestCase):
                     'hold_time': 148,
                     'local_interface': 'FastEthernet0/0',
                     'platform': 'WS-C2950T-',
-                    'port_id': 'FastEthernet0/15'}
+                    'port_id': 'FastEthernet0/15'},
+                4: {
+                    'capability': 'H P',
+                    'device_id': 'SEP08000F8BA7FD',
+                    'hold_time': 179,
+                    'local_interface': 'GigabitEthernet1/0/7',
+                    'platform': 'Mitel 532',
+                    'port_id': 'Port1'}
                 }
             }
         }
@@ -62,6 +69,7 @@ class test_show_cdp_neighbors(unittest.TestCase):
         R5.cisco.com     Gig 0/0           125              R B              Gig 0/0
         RX-SWV.cisco.com Fas 0/1            167         T S       WS-C3524-XFas 0/13
         C2950-1          Fas 0/0            148         S I       WS-C2950T-Fas 0/15
+        SEP08000F8BA7FD  Gig 1/0/7         179              H P   Mitel 532 Port 1
     '''}
 
     expected_parsed_output_2 = {
@@ -751,7 +759,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         Interface: GigabitEthernet1/0/2,  Port ID (outgoing port): gi25
         Holdtime : 155 sec
         Version :
-        1.3.0.62
+        10.16.0.62
         advertisement version: 2
         Native VLAN: 1
         Duplex: full
@@ -785,7 +793,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                 'port_id': 'gi25',
                 'local_interface': 'GigabitEthernet1/0/2',
                 'hold_time': 155,
-                'software_version': '1.3.0.62',
+                'software_version': '10.16.0.62',
                 'advertisement_ver': 2},
             2: {
                 'device_id': 'Router02',

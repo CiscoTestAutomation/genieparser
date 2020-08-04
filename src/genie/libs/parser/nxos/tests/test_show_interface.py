@@ -6388,9 +6388,11 @@ class TestShowRunInterface(unittest.TestCase):
     golden_parsed_output_2 = {
         'interface': {
             'Ethernet1/1': {
+                'description': '*** Peer Link ***',
                 'switchport': True,
                 'switchport_mode': 'trunk',
                 'trunk_vlans': '1-99,101-199,201-1399,1401-4094',
+                'trunk_native_vlan': '330',
                 'port_channel':{
                     'port_channel_mode': 'active',
                     'port_channel_int': '1',
@@ -6411,6 +6413,7 @@ class TestShowRunInterface(unittest.TestCase):
           description *** Peer Link ***
           switchport
           switchport mode trunk
+          switchport trunk native vlan 330
           switchport trunk allowed vlan 1-99,101-199,201-1399,1401-4094
           channel-group 1 mode active
           no shutdown
@@ -6433,11 +6436,36 @@ class TestShowRunInterface(unittest.TestCase):
             'Ethernet1/4': {
                 'duplex': 'full',
                 'access_vlan': 'x',
+                'switchport_mode': 'access',
                 'speed': 1000,
                 'description': 'DeviceA-description',
             },
         },
     }
+
+    golden_output_4 = {'execute.return_value': '''
+    interface port-channel5
+      description Port Channel Config Tst
+      switchport mode trunk
+      switchport trunk native vlan 2253
+      switchport trunk allowed vlan 2253
+      speed 10000
+      vpc 5
+    '''}
+
+    golden_parsed_output_4 = {
+        'interface': {
+            'port-channel5': {
+                'description': 'Port Channel Config Tst',
+                'switchport_mode': 'trunk',
+                'trunk_native_vlan': '2253',
+                'trunk_vlans': '2253',
+                'speed': 10000,
+                'vpc': '5'
+            },
+        },
+    }
+
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
@@ -6468,6 +6496,12 @@ class TestShowRunInterface(unittest.TestCase):
         intf_obj = ShowRunningConfigInterface(device=self.device)
         parsed_output = intf_obj.parse(interface='Ethernet1/4')
         self.assertEqual(parsed_output,self.golden_parsed_output_3)
+
+    def test_golden_4(self):
+        self.device = Mock(**self.golden_output_4)
+        intf_obj = ShowRunningConfigInterface(device=self.device)
+        parsed_output = intf_obj.parse(interface='port-channel10')
+        self.assertEqual(parsed_output,self.golden_parsed_output_4)
 
 
 class TestShowNveInterface(unittest.TestCase):
@@ -7028,7 +7062,7 @@ class test_show_interface_status(unittest.TestCase):
             },
             'Ethernet1/4': {
                 'duplex_code': 'full',
-                'name': '*** FEX 2248TP ',
+                'name': '*** FEX 2248TP',
                 'port_speed': 'a-10G',
                 'status': 'connected',
                 'type': 'Fabric Exte',

@@ -34,14 +34,14 @@ class test_show_run_key_chain(unittest.TestCase):
                 'accept_tolerance': 'infinite'}}}
 
     golden_output1 = {'execute.return_value': '''
-        show run key chain 
-        Wed Mar 27 22:31:22.533 UTC 
-        key chain ISIS-HELLO-CORE 
-            key 1 
-                accept-lifetime 00:01:00 january 01 2013 infinite 
-                key-string password 020F175218 
-                cryptographic-algorithm HMAC-MD5 
-                ! 
+        show run key chain
+        Wed Mar 27 22:31:22.533 UTC
+        key chain ISIS-HELLO-CORE
+            key 1
+                accept-lifetime 00:01:00 january 01 2013 infinite
+                key-string password 020F175218
+                cryptographic-algorithm HMAC-MD5
+                !
             accept-tolerance infinite !
     '''}
 
@@ -95,19 +95,19 @@ class test_show_run_router_isis(unittest.TestCase):
                     'secondary_wait': '250'}}}}
 
     golden_output1 = {'execute.return_value': '''
-        RP/0/RP0/CPU0:R2#sh run router isis 
-        Wed Apr 10 15:11:45.748 UTC 
-        router isis test 
-            segment-routing global-block 160000 167999 
-            lsp-gen-interval maximum-wait 8000 initial-wait 1 secondary-wait 250 
-            address-family ipv4 unicast 
-                fast-reroute per-prefix tiebreaker srlg-disjoint index 255 
-                mpls traffic-eng level-2-only spf-interval maximum-wait 8000 initial-wait 300 secondary-wait 500 
-                segment-routing mpls sr-prefer 
-                spf prefix-priority critical tag 1000 
-            ! 
-            interface Bundle-Ether2 
-                passive 
+        RP/0/RP0/CPU0:R2#sh run router isis
+        Wed Apr 10 15:11:45.748 UTC
+        router isis test
+            segment-routing global-block 160000 167999
+            lsp-gen-interval maximum-wait 8000 initial-wait 1 secondary-wait 250
+            address-family ipv4 unicast
+                fast-reroute per-prefix tiebreaker srlg-disjoint index 255
+                mpls traffic-eng level-2-only spf-interval maximum-wait 8000 initial-wait 300 secondary-wait 500
+                segment-routing mpls sr-prefer
+                spf prefix-priority critical tag 1000
+            !
+            interface Bundle-Ether2
+                passive
             !
         !
     '''}
