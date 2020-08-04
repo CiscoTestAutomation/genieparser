@@ -9,69 +9,54 @@
                                 New
 --------------------------------------------------------------------------------
 * JUNOS
-    * Created ShowMPLSLSPNameDetail
-        * show mpls lsp name {name} detail
-    * Show Ospf3 Route Network Extensive
-        * Created ShowOspf3RouteNetworkExtensive
-    * Address ShowBFDSesssion
-        * show bfd session
-    * Added ShowLDPSession
-        * show ldp session
-    * Added ShowClassOfService
-        * show class-of-service interface {interface}
-    * Added ShowRouteForwardingTableLabel
-        * show route forwarding-table label {label}
-    * Added ShowRSVPSession
-        * show rsvp session
-    * Added ShowRSVPNeighbor
-        * show rsvp neighbor
+    * Added ShowBgpNeighbor for:
+        * show bgp neighbor
+    * Added ShowLDPOverview
+        * show ldp overview
+    * Added ShowOspfDatabaseAdvertisingRouterExtensive for:
+        * show ospf database advertising-router {ipaddress} extensive
     * Added ShowConfigurationProtocolsMplsLabelSwitchedPath
         * show configuration protocols mpls label-switched-path {path}
     * Added ShowConfigurationProtocolsMplsPath
         * show configuration protocols mpls path {path}
-
+* IOSXE
+    * Added ShowRunInterface for:
+        * show running-config interface {interface}
+    * Added ShowInterfaceTransceiverDetail for:
+        * show interface {interface} transceiver detail
+* IOSXR
+    * Added ShowIgmpGroupsSummary
+        * show igmp groups summary
+        * show igmp vrf {vrf} groups summary
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
 * JUNOS
-    * Updated ShowOspfDatabaseAdvertisingRouterSelfDetail
-        * Added more keys to the schema, in order to support output of ShowOspfDatabaseLsaidDetail
-    * Updated ShowSystemUsers
-        * Regex issues resolved
-    * Updated ShowOspfOverview
-        * Optional key issue resolved
-    * Updated ShowInterfaceExtensive
-        * No longer breaks on use and previously unused data is now used
-    * Updated ShowOspfDatabaseExtensiveSchema
-        * Optional key issue resolved
-    * Updated ShowOspf3DatabaseExtensiveSchema
-        * Optional key issue resolved
-    * Updated ShowOspfVrfAllInclusive
-        * key error resolved
-    * Updated ShowOspfDatabaseLsaidDetail
-        * Resolved issue where empty output would cause error
-    * Updated ShowOspf3DatabaseExtensive
-        * Missing key issue resolved
-    * Updated ShowOspf3Database
-        * List ospf-area
-    * Updated ShowOspfDatabaseExtensiveSchema
-        * Modified ShowOspfDatabaseExtensiveSchema to have optional keys
-        * Missing key added
-    * Updated ShowOspf3Overview
-        * Missing key added
-    * Updated ShowSystemUptime
-        * Fixed optional key error, improved regex, and fixed return results
+    * Fixed ShowBgpNeighbor:
+        * Updated few keys into Optional.
+        * Updated regex to support various outputs.
+    * Fixed ShowOspfDatabaseExtensive:
+        * Adjusted code to not capture Null values.
+    * Fixed ShowClassOfService:
+        * Updated regex to support more varied output
+    * Fixed ShowRouteAdvertisingProtocol and ShowRouteReceiveProtocol:
+        * Changed few keys into Optional, and modified regex to support various outputs. 
+    * Fixed ShowInterfaces:
+        * Modified regex to support various outputs.
+    * Updated ShowOspfDatabaseExtensive
+        * Now accounts for netsummary
+* IOS
+    * Fixed ShowNtpConfig:
+        * Added prefered key
 * IOSXE
-    * Updated ShowCdpNeighbors
-        * Modified regex to support different output
-    * Updated ShowCdpNeighborsDetail
-        * Modified regex to support different output
-    * Updated ShowIpInterface
-        * Enhanced parser and added optional values
+    * Fixed ShowNtpConfig:
+        * Added prefered key
+    * Added ShowSdwanOmpSummary
+	* show sdwan omp summary
 
-* NXOS
-    * Updated ShowIpRoute
-        * Enhanced parser
+* VIPTELA
+    * Added ShowOmpSummary
+        * show omp summary
 
 * IOSXR
     * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea
@@ -80,5 +65,3 @@
         * Added more regex patterns to support various outputs.
     * Updated ShowIsisInterface:
         * Modified to support default as instance name
-    * Updated ShowInterfaces:
-        * Added more regex patterns to support various outputs.
