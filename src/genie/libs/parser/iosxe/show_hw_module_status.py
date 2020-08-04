@@ -97,27 +97,17 @@ class Show_Hw_Module_Status(Show_Hw_Module_StatusSchema):
                 match = p1.match(line_strip)
                 if match:
                     groups = match.groupdict()
-                    slot_id = int(groups['slot_id'])
-                    subslot = int(groups['subslot_id'])
-                    port_id = int(groups['port_id'])
+                    slot_id = groups['slot_id']
+                    subslot = groups['subslot_id']
+                    port_id = groups['port_id']
                     transceiver = f"{slot_id}/{subslot}/{port_id}"
                     if not transceiver_dict.get('transceiver_status'):
                         transceiver_dict.update(
                             {'transceiver_status': {
                                 'transceivers': {}}})
-                    if not transceiver_dict[
-                            'transceiver_status']['transceivers'].get(
-                        transceiver
-                    ):
-                        transceiver_dict['transceiver_status'][
-                            'transceivers'].update(
-                            {transceiver: {}}
-                        )
-                    transceiver_dict[
-                        'transceiver_status'][
-                        'transceivers'
-                    ][transceiver].update(
-                        {'status': groups['status']})
+                    if not transceiver_dict['transceiver_status']['transceivers'].get(transceiver):
+                        transceiver_dict['transceiver_status']['transceivers'].update({transceiver: {}})
+                    transceiver_dict['transceiver_status']['transceivers'][transceiver].update({'status': groups['status']})
                 continue
             if regex:
                 match = regex.match((value))
@@ -127,8 +117,7 @@ class Show_Hw_Module_Status(Show_Hw_Module_StatusSchema):
                         continue
                     if v.isdigit():
                         v = int(v)
-                    transceiver_dict['transceiver_status']
-                    ['transceivers'][transceiver].update({k: v})
+                    transceiver_dict['transceiver_status']['transceivers'][transceiver].update({k: v})
 
         if transceiver_dict:
             return transceiver_dict
