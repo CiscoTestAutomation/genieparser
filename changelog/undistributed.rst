@@ -20,7 +20,8 @@
         * show running-config interface {interface}
     * Added ShowInterfaceTransceiverDetail for:
         * show interface {interface} transceiver detail
-
+    * Added ShowPlatformHardwareQfpActiveDatapathUtilSum
+        * show platform hardware qfp active datapath utilization summary
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------

@@ -14,6 +14,7 @@ IOSXE parsers for the following show commands:
     * 'show switch'
     * 'show environment all'
     * 'show module'
+    * 'show platform hardware qfp active datapath utilization summary'
 '''
 
 # Python
@@ -6394,4 +6395,96 @@ class ShowPlatformHardwareQfpActiveFeatureAppqoe(ShowPlatformHardwareQfpActiveFe
                 key = groups['key'].replace('-', '_').replace(' ', '_').lower()
                 last_dict_ptr.update({key: int(groups['value'])})
 
+        return ret_dict
+
+class ShowPlatformHardwareQfpActiveDatapathUtilSumSchema(MetaParser):
+
+    schema = {
+        'cpp': {
+            Any(): {
+                Any(): {
+                    'pps': {
+                    '5 secs': int,
+                    '1 min': int,
+                    '5 min': int,
+                    '60 min': int
+                    },
+                    'bps': {
+                    '5 secs': int,
+                    '1 min': int,
+                    '5 min': int,
+                    '60 min': int
+                    }
+                },
+                'Processing': {
+                    'pct': {
+                    '5 secs': int,
+                    '1 min': int,
+                    '5 min': int,
+                    '60 min': int
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareQfpActiveDatapathUtilSum(ShowPlatformHardwareQfpActiveDatapathUtilSumSchema):
+
+    cli_command = ['show platform hardware qfp active datapath utilization summary']
+
+    def cli(self, output=None):
+
+        # if the user does not provide output to the parser
+        # we need to get it from the device
+        if not output:
+            output = self.device.execute(self.cli_command[0])
+
+
+        #CPP 0:                     5 secs        1 min        5 min       60 min
+        p1 = re.compile(r'^CPP (?P<cpp_num>\d)\: +(\d\s\S+) +(\d\s\S+) +(\d\s\S+) +(\d+\s\S+)$')
+        #Input:     Total (pps)            2            2            1            0
+        p2 = re.compile(r'^(?P<dir>\w+)\: +\S+ \((?P<type>\S+)\) +(?P<value5s>\d+) +(?P<value1m>\d+) +(?P<value5m>\d+) +(?P<value60m>\d+)$')
+        #(bps)         2928         1856         1056           88
+        p3 = re.compile(r'^\((?P<type>bps)\) +(?P<value5s>\d+) +(?P<value1m>\d+) +(?P<value5m>\d+) +(?P<value60m>\d+)$')
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            #   CPP 0:                     5 secs        1 min        5 min       60 min
+            m = p1.match(line)
+            
+            if m:
+                groups = m.groupdict()
+                cpp_number = groups['cpp_num'].lower()
+                feature_dict = ret_dict.setdefault('cpp', {}).setdefault(cpp_number, {})
+                last_dict_ptr = feature_dict
+                continue
+            
+            #Input:     Total (pps)            2            2            1            0
+            #Processing: Load (pct)            0            0            0            0
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                dir_dict = feature_dict.setdefault(groups['dir'], {})
+                type_dict = dir_dict.setdefault(groups['type'], {})
+                type_dict.update({'5 secs': int(groups['value5s'])})
+                type_dict.update({'1 min': int(groups['value1m'])})
+                type_dict.update({'5 min': int(groups['value5m'])})
+                type_dict.update({'60 min': int(groups['value60m'])})
+                last_dict_ptr = type_dict
+                continue
+            
+            
+            #(bps)         2928         1856         1056           88
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                type_dict = dir_dict.setdefault(groups['type'], {})
+                type_dict.update({'5 secs': int(groups['value5s'])})
+                type_dict.update({'1 min': int(groups['value1m'])})
+                type_dict.update({'5 min': int(groups['value5m'])})
+                type_dict.update({'60 min': int(groups['value60m'])})
+                last_dict_ptr = type_dict
+                continue
+        
         return ret_dict
