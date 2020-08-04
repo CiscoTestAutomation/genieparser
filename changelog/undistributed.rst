@@ -30,6 +30,7 @@
 * JUNOS
     * Fixed ShowBgpNeighbor:
         * Updated few keys into Optional.
+        * Updated regex to support various outputs.
     * Fixed ShowOspfDatabaseExtensive:
         * Adjusted code to not capture Null values.
     * Fixed ShowClassOfService:

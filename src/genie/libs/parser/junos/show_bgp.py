@@ -1305,8 +1305,9 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
         p4 = re.compile(
             r'^Forwarding +routing-instance: +(?P<peer_fwd_rti>\S+)$')
         # Type: Internal    State: Active       (route reflector client)Flags: <>
+        # Type: External    State: Established    Flags: <Sync InboundConvergencePending>
         p5 = re.compile(
-            r'^Type: +(?P<peer_type>\S+) +State: +(?P<peer_state>\S+) +\(route +reflector +client\)Flags: +<(?P<peer_flags>\S*)>$'
+            r'^Type: +(?P<peer_type>\S+) +State: +(?P<peer_state>\S+) +(?P<route_reflector>\(route +reflector +client\))?Flags: +<(?P<peer_flags>[\s\S]*)>$'
         )
         # Last State: Idle          Last Event: Start
         p6 = re.compile(
@@ -1512,14 +1513,18 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
                 continue
 
             # Type: Internal    State: Active       (route reflector client)Flags: <>
+            # Type: External    State: Established    Flags: <Sync  Sync>
             m = p5.match(line)
             if m:
                 group = m.groupdict()
                 entry = ret_dict["bgp-information"]["bgp-peer"][-1]
-                for key, value in group.items():
-                    key = key.replace('_', '-')
-                    entry[key] = value
-                entry['route-reflector-client'] = True
+                
+                entry['peer-type'] = group['peer_type']
+                entry['peer-state'] = group['peer_state']
+                entry['peer-flags'] = group['peer_flags']
+
+                if group['route_reflector']:
+                    entry['route-reflector-client'] = True
                 continue
 
             # Last State: Idle          Last Event: Start
