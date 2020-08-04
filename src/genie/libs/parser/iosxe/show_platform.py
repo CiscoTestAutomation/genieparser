@@ -6404,24 +6404,24 @@ class ShowPlatformHardwareQfpActiveDatapathUtilSumSchema(MetaParser):
             Any(): {
                 Any(): {
                     'pps': {
-                    '5 secs': int,
-                    '1 min': int,
-                    '5 min': int,
-                    '60 min': int
+                    	'5_secs': int,
+                    	'1_min': int,
+                    	'5_min': int,
+                    	'60_min': int
                     },
                     'bps': {
-                    '5 secs': int,
-                    '1 min': int,
-                    '5 min': int,
-                    '60 min': int
+                    	'5_secs': int,
+                    	'1_min': int,
+                    	'5_min': int,
+                    	'60_min': int
                     }
                 },
                 'Processing': {
                     'pct': {
-                    '5 secs': int,
-                    '1 min': int,
-                    '5 min': int,
-                    '60 min': int
+                    	'5_secs': int,
+                    	'1_min': int,
+                    	'5_min': int,
+                    	'60_min': int
                     }
                 }
             }
@@ -6467,10 +6467,10 @@ class ShowPlatformHardwareQfpActiveDatapathUtilSum(ShowPlatformHardwareQfpActive
                 groups = m.groupdict()
                 dir_dict = feature_dict.setdefault(groups['dir'], {})
                 type_dict = dir_dict.setdefault(groups['type'], {})
-                type_dict.update({'5 secs': int(groups['value5s'])})
-                type_dict.update({'1 min': int(groups['value1m'])})
-                type_dict.update({'5 min': int(groups['value5m'])})
-                type_dict.update({'60 min': int(groups['value60m'])})
+                type_dict.update({'5_secs': int(groups['value5s'])})
+                type_dict.update({'1_min': int(groups['value1m'])})
+                type_dict.update({'5_min': int(groups['value5m'])})
+                type_dict.update({'60_min': int(groups['value60m'])})
                 last_dict_ptr = type_dict
                 continue
             
@@ -6480,10 +6480,10 @@ class ShowPlatformHardwareQfpActiveDatapathUtilSum(ShowPlatformHardwareQfpActive
             if m:
                 groups = m.groupdict()
                 type_dict = dir_dict.setdefault(groups['type'], {})
-                type_dict.update({'5 secs': int(groups['value5s'])})
-                type_dict.update({'1 min': int(groups['value1m'])})
-                type_dict.update({'5 min': int(groups['value5m'])})
-                type_dict.update({'60 min': int(groups['value60m'])})
+                type_dict.update({'5_secs': int(groups['value5s'])})
+                type_dict.update({'1_min': int(groups['value1m'])})
+                type_dict.update({'5_min': int(groups['value5m'])})
+                type_dict.update({'60_min': int(groups['value60m'])})
                 last_dict_ptr = type_dict
                 continue
         
