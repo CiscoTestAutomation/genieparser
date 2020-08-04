@@ -9,37 +9,26 @@
                                 New
 --------------------------------------------------------------------------------
 * JUNOS
-    * Created ShowMPLSLSPNameDetail
-        * show mpls lsp name {name} detail
-    * Created ShowMPLSLSPNameExtensive
-        * show mpls lsp name {name} extensive
-    * Show Ospf3 Route Network Extensive
-        * Created ShowOspf3RouteNetworkExtensive
-    * Added ShowBFDSesssion
-        * show bfd session
-    * Added ShowBFDSesssionDetail
-        * show bfd session {ipaddress} detail
-    * Added ShowLDPSession
-        * show ldp session
-    * Added ShowClassOfService
-        * show class-of-service interface {interface}
-    * Added ShowRouteForwardingTableLabel
-        * show route forwarding-table label {label}
-    * Added ShowRSVPSession
-        * show rsvp session
-    * Added ShowRSVPNeighbor
-        * show rsvp neighbor
-    * Added ShowRSVPNeighborDetail
-        * show rsvp neighbor detail
-    * Added ShowLDPInterface
-        * show ldp interface {interface}
-    * Added ShowLDPInterfaceDetail
-        * show ldp interface {interface} detail
-
+    * Added ShowBgpNeighbor for:
+        * show bgp neighbor
+    * Added ShowLDPOverview
+        * show ldp overview
+    * Added ShowOspfDatabaseAdvertisingRouterExtensive for:
+        * show ospf database advertising-router {ipaddress} extensive
+* IOSXE
+    * Added ShowRunInterface for:
+        * show running-config interface {interface}
+    * Added ShowInterfaceTransceiverDetail for:
+        * show interface {interface} transceiver detail
+* IOSXR
+    * Added ShowIgmpGroupsSummary
+        * show igmp groups summary
+        * show igmp vrf {vrf} groups summary
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
 * JUNOS
+<<<<<<< HEAD
     * Updated ShowOspfDatabaseAdvertisingRouterSelfDetail
         * Added more keys to the schema, in order to support output of ShowOspfDatabaseLsaidDetail
     * Updated ShowSystemUsers
@@ -73,23 +62,31 @@
         * 'show interfaces extensive {interface}' changed to 'show interfaces {interface} extensive'
     * Updated ShowOspfDatabaseExtensive
         * Now accounts for netsummary
+=======
+    * Fixed ShowBgpNeighbor:
+        * Updated few keys into Optional.
+        * Updated regex to support various outputs.
+    * Fixed ShowOspfDatabaseExtensive:
+        * Adjusted code to not capture Null values.
+    * Fixed ShowClassOfService:
+        * Updated regex to support more varied output
+    * Fixed ShowRouteAdvertisingProtocol and ShowRouteReceiveProtocol:
+        * Changed few keys into Optional, and modified regex to support various outputs. 
+    * Fixed ShowInterfaces:
+        * Modified regex to support various outputs.
+* IOS
+    * Fixed ShowNtpConfig:
+        * Added prefered key
+>>>>>>> dev
 * IOSXE
-    * Updated ShowCdpNeighbors
-        * Modified regex to support different output
-    * Updated ShowCdpNeighborsDetail
-        * Modified regex to support different output
-    * Updated ShowIpInterface
-        * Enhanced parser and added optional values
-    * Updated ShowSegmentRoutingTrafficEngPolicy
-        * Enhanced the schema to support updated outputs
-    * Updated ShowPlatformIntegrity
-        * to pretty print the rpc reply for netconf
-    * Updated ShowVersion
-        * Enhanced parser
+    * Fixed ShowNtpConfig:
+        * Added prefered key
+    * Added ShowSdwanOmpSummary
+	* show sdwan omp summary
 
-* NXOS
-    * Updated ShowIpRoute
-        * Enhanced parser
+* VIPTELA
+    * Added ShowOmpSummary
+        * show omp summary
 
 * IOSXR
     * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea
@@ -98,5 +95,3 @@
         * Added more regex patterns to support various outputs.
     * Updated ShowIsisInterface:
         * Modified to support default as instance name
-    * Updated ShowInterfaces:
-        * Added more regex patterns to support various outputs.

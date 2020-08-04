@@ -1586,8 +1586,8 @@ class ShowRouteReceiveProtocolSchema(MetaParser):
                 "rt-entry": {
                     Optional("active-tag"): str,
                     "as-path": str,
-                    "local-preference": str,
-                    "med": str,
+                    Optional("local-preference"): str,
+                    Optional("med"): str,
                     "nh": {
                         "to": str
                     },
@@ -1647,9 +1647,12 @@ class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
 
         # * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
         # 10.220.0.0/16           10.189.5.253         12003   120        (65151 65000) I
+        # * 10.4.1.1/32              Self                                    I
+        # * 10.36.3.3/32              Self                                    2 I        
         p2 = re.compile(r'^((?P<active_tag>\*) +)?(?P<rt_destination>\S+) +'
-                        r'(?P<to>\S+) +(?P<med>\d+) +(?P<local_preference>\d+) +'
-                        r'(?P<as_path>\([\S\s]+\) +\w+)$')
+                        r'(?P<to>\S+) +((?P<med>\d+) +(?P<local_preference>\d+) +)?'
+                        r'(?P<as_path>(\([\S\s]+\) +\w+)|((\d\s)?\w))$')
+                        
 
         for line in out.splitlines():
             line = line.strip()
@@ -1735,8 +1738,8 @@ class ShowRouteAdvertisingProtocolSchema(MetaParser):
                 "active-tag": str,
                 "as-path": str,
                 "bgp-metric-flags": str,
-                "local-preference": str,
-                "med": str,
+                Optional("local-preference"): str,
+                Optional("med"): str,
                 "nh": {
                     "to": str
                 },
@@ -1800,9 +1803,11 @@ class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
                         r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
 
         # * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
-        p2 = re.compile(r'^(?P<active_tag>\*) +(?P<rt_destination>\S+) +'
-                        r'(?P<to>\S+) +(?P<med>\d+) +(?P<local_preference>\d+) +'
-                        r'(?P<as_path>\([\S\s]+\) +\w+)$')
+        # * 10.4.1.1/32              Self                                    I
+        # * 10.36.3.3/32              Self                                    2 I
+        p2 = re.compile(r'(?P<active_tag>\*) +(?P<rt_destination>\S+)'
+                        r' +(?P<to>\S+)( +(?P<med>\d+) +(?P<local_preference>\d+))? '
+                        r'+(?P<as_path>(\(([\S\s]+\)) +\w+)|((\d\s)?\w))')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1820,16 +1825,22 @@ class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
+
                 rt_list = route_table_dict.setdefault('rt', [])
                 rt_dict = {'rt-destination': group['rt_destination']}
                 rt_entry_dict = rt_dict.setdefault('rt-entry', {})
                 keys = ['active_tag', 'as_path', 'local_preference', 'med']
+
                 for key in keys:
-                    rt_entry_dict.update({key.replace('_', '-'): group[key]})
+                    if group[key]:
+                        rt_entry_dict.update({key.replace('_', '-'): group[key]})
+
                 nh_dict = rt_entry_dict.setdefault('nh', {})
                 nh_dict.update({'to': group['to']})
+
                 rt_entry_dict.update({'bgp-metric-flags': 'Nexthop Change'})
                 rt_entry_dict.update({'protocol-name': protocol.upper()})
+
                 rt_list.append(rt_dict)
 
         return ret_dict
