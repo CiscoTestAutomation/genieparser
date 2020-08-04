@@ -39,6 +39,8 @@
         * Changed few keys into Optional, and modified regex to support various outputs. 
     * Fixed ShowInterfaces:
         * Modified regex to support various outputs.
+    * Updated ShowOspfDatabaseExtensive
+        * Now accounts for netsummary
 * IOS
     * Fixed ShowNtpConfig:
         * Added prefered key
