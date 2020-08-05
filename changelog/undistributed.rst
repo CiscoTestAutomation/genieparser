@@ -24,6 +24,8 @@
         * show running-config interface {interface}
     * Added ShowInterfaceTransceiverDetail for:
         * show interface {interface} transceiver detail
+    * Added ShowSslproxyStatus for:
+        * show sslproxy status
 * IOSXR
     * Added ShowIgmpGroupsSummary
         * show igmp groups summary
@@ -54,7 +56,7 @@
     * Fixed ShowNtpConfig:
         * Added prefered key
     * Added ShowSdwanOmpSummary
-	* show sdwan omp summary
+        * show sdwan omp summary
 
 * VIPTELA
     * Added ShowOmpSummary
