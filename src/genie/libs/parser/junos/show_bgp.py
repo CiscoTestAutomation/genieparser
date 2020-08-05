@@ -1322,6 +1322,10 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
         # Options: <Preference LocalAddress HoldTime LogUpDown Cluster PeerAS Refresh Confed>
         # Options: <GracefulShutdownRcv>
         p9 = re.compile(r'^Options: +<(?P<options>[\S\s]+)>$')
+
+        # Holdtime: 30 Preference: 170
+        p9_1 = re.compile(r'Holdtime: +(?P<holdtime>\S+) Preference: +(?P<preference>\S+)')
+
         # Local Address: 10.189.5.252 Holdtime: 720 Preference: 170
         p10 = re.compile(
             r'^Local +Address: +(?P<local_address>\S+) +Holdtime: +(?P<holdtime>\S+) +Preference: +(?P<preference>\S+)$'
@@ -1570,6 +1574,16 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
                 else:
                     entry['bgp-options2'] = True
                     entry['bgp-options-extended'] = group['options']
+                continue
+
+            # Holdtime: 30 Preference: 170
+            m = p9_1.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict["bgp-information"]["bgp-peer"][-1]
+                entry = entry.setdefault("bgp-option-information", {})
+                entry['holdtime'] = group['holdtime']
+                entry['preference'] = group['preference']
                 continue
 
             # Local Address: 10.189.5.252 Holdtime: 720 Preference: 170
