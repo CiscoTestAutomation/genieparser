@@ -45,6 +45,8 @@
         * Modified regex to support various outputs.
     * Updated ShowOspfDatabaseExtensive
         * Now accounts for netsummary
+    * Updated ShowInterfacesExtensive
+        * Included extra output case
 * IOS
     * Fixed ShowNtpConfig:
         * Added prefered key
