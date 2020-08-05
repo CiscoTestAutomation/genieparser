@@ -8,11 +8,18 @@ from pyats.topology import Device, loader
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from genie.libs.parser.junos.show_route import (
-    ShowRouteTable, ShowRouteProtocolExtensive, ShowRouteInstanceDetail,
-    ShowRoute, ShowRouteSummary, ShowRouteAdvertisingProtocol,
-    ShowRouteAdvertisingProtocolDetail, ShowRouteForwardingTableSummary,
-    ShowRouteForwardingTableLabel, ShowRouteReceiveProtocol)
+from genie.libs.parser.junos.show_route import (ShowRouteTable,
+                                                ShowRouteProtocolExtensive,
+                                                ShowRouteInstanceDetail,
+                                                ShowRoute,
+                                                ShowRouteSummary,
+                                                ShowRouteAdvertisingProtocol,
+                                                ShowRouteAdvertisingProtocolDetail,
+                                                ShowRouteForwardingTableSummary,
+                                                ShowRouteForwardingTableLabel,
+                                                ShowRouteReceiveProtocol,
+                                                ShowRouteTableLabelSwitchedName)
+
 '''
 Unit test for:
     * show route table {table}
@@ -56339,6 +56346,66 @@ class TestShowRouteForwardingTableLabel(unittest.TestCase):
         parsed_output = obj.parse(label="16")
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
+
+class TestShowRouteTableLabelSwitchedName(unittest.TestCase):
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output_1 = {'execute.return_value': '''
+        show route table mpls.0 label-switched-path test_lsp_01
+
+        mpls.0: 36 destinations, 36 routes (36 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
+
+        46                 *[RSVP/7/1] 00:10:22, metric 1
+                            >  to 203.181.106.218 via ge-0/0/1.1, label-switched-path test_lsp_01
+    '''}
+
+    golden_parsed_output_1 = {
+        'route-information': {
+            'route-table': {
+            'table-name': 'mpls.0',
+            'destination-count': '36',
+            'total-route-count': '36',
+            'active-route-count': '36',
+            'holddown-route-count': '0',
+            'hidden-route-count': '0',
+            'rt': [{
+                'rt-destination': '46',
+                'rt-entry': [{
+                'age': {
+                    '#text': '00:10:22'
+                },
+                'active-tag': '*',
+                'protocol-name': 'RSVP',
+                'preference': '7',
+                'preference2': '1',
+                'metric': '1',
+                'nh': [{
+                    'selected-next-hop': True,
+                    'to': '203.181.106.218',
+                    'via': 'ge-0/0/1.1',
+                    'lsp-name': 'test_lsp_01'
+                }]
+                }]
+            }]
+            }
+        }
+        }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRouteTableLabelSwitchedName(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(table="mpls.0", name='test_lsp_01')
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowRouteTableLabelSwitchedName(device=self.device)
+        parsed_output = obj.parse(table="mpls.0", name='test_lsp_01')
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 if __name__ == '__main__':
     unittest.main()
