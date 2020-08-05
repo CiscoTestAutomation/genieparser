@@ -3239,92 +3239,6 @@ class TestShowBgpNeighbor(unittest.TestCase):
         }
     }
 
-    golden_output_2 = {'execute.return_value': '''
-    show bgp neighbor 
-    Peer: 20.0.0.3+179 AS 30000    Local: 20.0.0.1+56166 AS 1    
-    Group: eBGP_SUT-2            Routing-Instance: master
-    Forwarding routing-instance: master  
-    Type: External    State: Established    Flags: <Sync>
-    Last State: OpenConfirm   Last Event: RecvKeepAlive
-    Last Error: None
-    Options: <Preference HoldTime PeerAS Refresh>
-    Options: <GracefulShutdownRcv>
-    Holdtime: 30 Preference: 170
-    Graceful Shutdown Receiver local-preference: 0
-    Number of flaps: 0
-    Peer ID: 2.2.2.2         Local ID: 1.1.1.1           Active Holdtime: 30
-    Keepalive Interval: 10         Group index: 0    Peer index: 0    SNMP index: 277   
-    I/O Session Thread: bgpio-0 State: Enabled
-    BFD: disabled, down
-    Local Interface: ge-0/0/0.0                       
-    NLRI for restart configured on peer: inet-unicast
-    NLRI advertised by peer: inet-unicast
-    NLRI for this session: inet-unicast
-    Peer supports Refresh capability (2)
-    Stale routes from peer are kept for: 300
-    Peer does not support Restarter functionality
-    Restart flag received from the peer: Notification
-    NLRI that restart is negotiated for: inet-unicast
-    NLRI of received end-of-rib markers: inet-unicast
-    NLRI of all end-of-rib markers sent: inet-unicast
-    Peer does not support LLGR Restarter functionality
-    Peer supports 4 byte AS extension (peer-as 30000)
-    Peer does not support Addpath
-    Table inet.0 Bit: 20000
-        RIB State: BGP restart is complete
-        Send state: in sync
-        Active prefixes:              1
-        Received prefixes:            1
-        Accepted prefixes:            1
-        Suppressed due to damping:    0
-        Advertised prefixes:          0
-    Last traffic (seconds): Received 8    Sent 8    Checked 286 
-    Input messages:  Total 34     Updates 2       Refreshes 0     Octets 679
-    Output messages: Total 33     Updates 0       Refreshes 0     Octets 631
-    Output Queue[1]: 0            (inet.0, inet-unicast)
-    
-    Peer: 2001:20::3+179 AS 30000  Local: 2001:20::1+53688 AS 1    
-    Group: v6_eBGP_SUT-2         Routing-Instance: master
-    Forwarding routing-instance: master  
-    Type: External    State: Established    Flags: <Sync>
-    Last State: OpenConfirm   Last Event: RecvKeepAlive
-    Last Error: None
-    Options: <Preference HoldTime PeerAS Refresh>
-    Options: <GracefulShutdownRcv>
-    Holdtime: 30 Preference: 170
-    Graceful Shutdown Receiver local-preference: 0
-    Number of flaps: 0
-    Peer ID: 2.2.2.2         Local ID: 1.1.1.1           Active Holdtime: 30
-    Keepalive Interval: 10         Group index: 1    Peer index: 0    SNMP index: 278   
-    I/O Session Thread: bgpio-0 State: Enabled
-    BFD: disabled, down
-    Local Interface: ge-0/0/0.0                       
-    NLRI for restart configured on peer: inet6-unicast
-    NLRI advertised by peer: inet6-unicast
-    NLRI for this session: inet6-unicast
-    Peer supports Refresh capability (2)
-    Stale routes from peer are kept for: 300
-    Peer does not support Restarter functionality
-    Restart flag received from the peer: Notification
-    NLRI that restart is negotiated for: inet6-unicast
-    NLRI of received end-of-rib markers: inet6-unicast
-    NLRI of all end-of-rib markers sent: inet6-unicast
-    Peer does not support LLGR Restarter functionality
-    Peer supports 4 byte AS extension (peer-as 30000)
-    Peer does not support Addpath
-    Table inet6.0 Bit: 30000
-        RIB State: BGP restart is complete
-        Send state: in sync
-        Active prefixes:              1
-        Received prefixes:            1
-        Accepted prefixes:            1
-        Suppressed due to damping:    0
-        Advertised prefixes:          0
-    Last traffic (seconds): Received 6    Sent 6    Checked 282 
-    Input messages:  Total 34     Updates 2       Refreshes 0     Octets 732
-    Output messages: Total 33     Updates 0       Refreshes 0     Octets 638
-    Output Queue[2]: 0            (inet6.0, inet6-unicast)
-    '''}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -3336,14 +3250,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowBgpNeighbor(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)    
-
-    def test_golden_2(self):
-        self.device = Mock(**self.golden_output_2)
-        obj = ShowBgpNeighbor(device=self.device)
-        parsed_output = obj.parse()     
-        import pprint; pprint.pprint(parsed_output)    
-
+        self.assertEqual(parsed_output, self.golden_parsed_output)      
 
 if __name__ == "__main__":
     unittest.main()
