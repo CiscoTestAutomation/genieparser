@@ -804,6 +804,14 @@ class ShowInterfaces(ShowInterfacesSchema):
                           r'(BPDU +Error: +(?P<bpdu_error>[^\s,]+))?(, +)?'
                           r'(Loop +Detect +PDU +Error: +(?P<ld_pdu_error>[^\s,]+))?(, +)?')
 
+        # Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None, Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None,
+        p4_2 = re.compile(r'^Link-level +type: +(?P<link_level_type>\S+), +MTU: +(?P<mtu>\S+)'
+                          r'(, +MRU: +(?P<mru>\d+))?(, +(?P<sonet_mode>\S+) +mode)?'
+                          r'(, +Speed: +(?P<speed>\S+))?(, +BPDU +Error: +(?P<bpdu_error>\S+),)?'
+                          r'( +Loop +Detect +PDU +Error: +(?P<ld_pdu_error>\S+),)?'
+                          r'( +Ethernet-Switching +Error: +(?P<eth_switch_error>\S+),)?'
+                          r'( +MAC-REWRITE +Error: +\S+)?$')
+
 
         # Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
         p5 = re.compile(r'^Loop +Detect +PDU +Error: +(?P<ld_pdu_error>\S+), +'
@@ -814,6 +822,13 @@ class ShowInterfaces(ShowInterfacesSchema):
         p5_1 = re.compile(r'^(Ethernet-Switching +Error: +(?P<eth_switch_error>[^\s,]+))'
                           r'(, +)?(MAC-REWRITE +Error: +[^\s,]+)?(, +)?'
                           r'(Loopback: +(?P<loopback>[^\s,]+))(, +)?')
+
+        # Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
+        p5_2 = re.compile(r'^(Loopback: +(?P<loopback>\S+),)?'
+                          r'( +Source +filtering: +(?P<source_filtering>\S+),)?'
+                          r'( +Flow +control: +(?P<if_flow_control>\S+),)?'
+                          r'( +Auto-negotiation: +(?P<if_auto_negotiation>\S+),)?'
+                          r'( +Remote +fault: +(?P<if_remote_fault>\S+))$')
 
         # Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
         p6 = re.compile(r'^Source +filtering: +(?P<source_filtering>\S+), +'
@@ -1126,8 +1141,23 @@ class ShowInterfaces(ShowInterfacesSchema):
                     v for k, v in group.items() if v is not None})
                 continue
 
+            # Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None, Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None,
+            m = p4_2.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
             # Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
             m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            m = p5_2.match(line)
             if m:
                 group = m.groupdict()
                 physical_interface_dict.update({k.replace('_','-'):
