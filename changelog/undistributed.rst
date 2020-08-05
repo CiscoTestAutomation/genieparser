@@ -24,6 +24,12 @@
         * show running-config interface {interface}
     * Added ShowInterfaceTransceiverDetail for:
         * show interface {interface} transceiver detail
+    * Added ShowSdwanAppqoeTcpoptStatus for:
+        * show sdwan appqoe tcpopt status
+    * Added ShowSdwanAppqoeNatStatistics for:
+        * show sdwan appqoe nat-statistics
+    * Added ShowSdwanAppqoeRmResources for:
+        * show sdwan appqoe rm-resources
 * IOSXR
     * Added ShowIgmpGroupsSummary
         * show igmp groups summary
