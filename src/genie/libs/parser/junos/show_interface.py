@@ -1157,6 +1157,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                     v for k, v in group.items() if v is not None})
                 continue
 
+            # Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
             m = p5_2.match(line)
             if m:
                 group = m.groupdict()
