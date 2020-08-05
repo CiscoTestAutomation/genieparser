@@ -59,7 +59,8 @@
         * Added prefered key
     * Added ShowSdwanOmpSummary
 	* show sdwan omp summary
-
+    * Fixed ShowSdwanAppqoeRmResources
+	* show sdwan appqoe rm-resources 
 * VIPTELA
     * Added ShowOmpSummary
         * show omp summary

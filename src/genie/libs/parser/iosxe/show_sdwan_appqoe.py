@@ -175,7 +175,7 @@ class ShowSdwanAppqoeRmResources(ShowSdwanAppqoeRmResourcesSchema):
         # if the user does not provide output to the parser
         # we need to get it from the device
         if not output:
-            output = self.device.execute(self.cli_command[0])
+            output = self.device.execute(self.cli_command)
 
         # RM Resources
         p1 = re.compile(r'^RM +Resources$')
@@ -268,4 +268,3 @@ class ShowSdwanAppqoeRmResources(ShowSdwanAppqoeRmResourcesSchema):
                 last_dict_ptr.update({key: value})
 
         return ret_dict
-
