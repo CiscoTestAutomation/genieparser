@@ -15,6 +15,10 @@
         * show ldp overview
     * Added ShowOspfDatabaseAdvertisingRouterExtensive for:
         * show ospf database advertising-router {ipaddress} extensive
+    * Added ShowConfigurationProtocolsMplsLabelSwitchedPath
+        * show configuration protocols mpls label-switched-path {path}
+    * Added ShowConfigurationProtocolsMplsPath
+        * show configuration protocols mpls path {path}
 * IOSXE
     * Added ShowRunInterface for:
         * show running-config interface {interface}
