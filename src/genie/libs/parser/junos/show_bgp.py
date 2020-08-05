@@ -1192,6 +1192,9 @@ class ShowBgpNeighborSchema(MetaParser):
                 Optional("address-families"): str
             },
             Optional("description"): str,
+            Optional('active-holdtime'): str,
+            Optional('local-id'): str,
+            Optional('peer-id'): str,
             "flap-count": str,
             "last-error": str,
             "last-event": str,
@@ -1324,11 +1327,9 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
         p9 = re.compile(r'^Options: +<(?P<options>[\S\s]+)>$')
 
         # Holdtime: 30 Preference: 170
-        p9_1 = re.compile(r'Holdtime: +(?P<holdtime>\S+) Preference: +(?P<preference>\S+)')
-
         # Local Address: 10.189.5.252 Holdtime: 720 Preference: 170
         p10 = re.compile(
-            r'^Local +Address: +(?P<local_address>\S+) +Holdtime: +(?P<holdtime>\S+) +Preference: +(?P<preference>\S+)$'
+            r'^(Local +Address: +(?P<local_address>\S+) +)?Holdtime: +(?P<holdtime>\S+) +Preference: +(?P<preference>\S+)$'
         )
         # Graceful Shutdown Receiver local-preference: 0
         p11 = re.compile(
@@ -1577,15 +1578,6 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
                 continue
 
             # Holdtime: 30 Preference: 170
-            m = p9_1.match(line)
-            if m:
-                group = m.groupdict()
-                entry = ret_dict["bgp-information"]["bgp-peer"][-1]
-                entry = entry.setdefault("bgp-option-information", {})
-                entry['holdtime'] = group['holdtime']
-                entry['preference'] = group['preference']
-                continue
-
             # Local Address: 10.189.5.252 Holdtime: 720 Preference: 170
             m = p10.match(line)
             if m:
@@ -1593,8 +1585,9 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
                 entry = ret_dict["bgp-information"]["bgp-peer"][-1]
                 entry = entry.setdefault("bgp-option-information", {})
                 for key, value in group.items():
-                    key = key.replace('_', '-')
-                    entry[key] = value
+                    if group[key]:
+                        key = key.replace('_', '-')
+                        entry[key] = value
                 continue
 
             # Graceful Shutdown Receiver local-preference: 0
@@ -1688,7 +1681,8 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
                 for key, value in group.items():
                     key = key.replace('_', '-')
                     entry[key] = value
-                entry_location = ret_dict["bgp-information"]["bgp-peer"][-1]
+                ret_dict["bgp-information"]["bgp-peer"][-1].update(entry)
+                
                 continue
 
             # Keepalive Interval: 10         Group index: 10   Peer index: 0    SNMP index: 15
