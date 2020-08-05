@@ -9,18 +9,19 @@ from pyats.topology import Device, loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 from genie.libs.parser.junos.show_rsvp import (ShowRSVPNeighbor,
+                                               ShowRSVPNeighborDetail,
                                                ShowRSVPSession,
                                                )
 
 
-class test_show_rsvp_neighbor(unittest.TestCase):
+class TestShowRSVPNeighbor(unittest.TestCase):
     device = Device(name='aName')
     maxDiff = None
 
     empty_output = {'execute.return_value': ''}
 
     golden_output_1 = {'execute.return_value': """
-    kddi@sr_hktGCS002> show rsvp neighbor
+    show rsvp neighbor
     RSVP neighbor: 4 learned
     Address            Idle Up/Dn LastChange HelloInt HelloTx/Rx MsgRcvd
     10.34.3.252      15:55  0/0       15:52        9   106/0    0
@@ -87,7 +88,171 @@ class test_show_rsvp_neighbor(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
-class test_show_rsvp_neighbor(unittest.TestCase):
+class TestShowRSVPNeighborDetail(unittest.TestCase):
+    device = Device(name='aName')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output_1 = {'execute.return_value': """
+        show rsvp neighbor detail
+        RSVP neighbor: 4 learned
+        Address: 10.34.3.252 status: Down (Node neighbor)
+        Last changed time: 27:54, Idle: 27:55 sec, Up cnt: 0, Down cnt: 0
+        Message received: 0
+        Hello: sent 187, received: 0, interval: 9 sec
+        Remote instance: 0x0, Local instance: 0xf81317e
+        Refresh reduction:  not operational
+            Remote end: disabled, Ack-extension: disabled
+        Enhanced FRR: Disabled
+
+        Address: 10.169.14.240 status: Down (Node neighbor)
+        Last changed time: 46:15, Idle: 46:15 sec, Up cnt: 0, Down cnt: 0
+        Message received: 0
+        Hello: sent 309, received: 0, interval: 9 sec
+        Remote instance: 0x0, Local instance: 0x1a61c152
+        Refresh reduction:  not operational
+            Remote end: disabled, Ack-extension: disabled
+        Enhanced FRR: Disabled
+
+        Address: 10.169.14.157 via: ge-0/0/0.0 status: Up
+        Last changed time: 46:15, Idle: 0 sec, Up cnt: 1, Down cnt: 0
+        Message received: 695
+        Hello: sent 310, received: 309, interval: 9 sec
+        Remote instance: 0xe6740271, Local instance: 0xb6ab962a
+        Refresh reduction:  operational
+            Remote end: enabled, Ack-extension: enabled
+        Enhanced FRR: Enabled
+            LSPs (total 30): Phop 30, PPhop 0, Nhop 0, NNhop 0
+
+        Address: 192.168.145.218 via: ge-0/0/1.1 status: Up
+        Last changed time: 27:57, Idle: 0 sec, Up cnt: 1, Down cnt: 0
+        Message received: 557
+        Hello: sent 183, received: 183, interval: 9 sec
+        Remote instance: 0xa1a75540, Local instance: 0x41ad0a42
+        Refresh reduction:  operational
+            Remote end: enabled, Ack-extension: enabled
+        Enhanced FRR: Enabled
+            LSPs (total 30): Phop 0, PPhop 0, Nhop 30, NNhop 0"""}
+
+    golden_parsed_output_1 = {
+        'rsvp-neighbor-information': {
+            'rsvp-neighbor': [{
+                'hello-interval': '9',
+                'hellos-received': '0',
+                'hellos-sent': '187',
+                'last-changed-time': '27:54',
+                'messages-received': '0',
+                'neighbor-down-count': '0',
+                'neighbor-idle': '27:55',
+                'neighbor-up-count': '0',
+                'rsvp-nbr-enh-local-protection': {
+                'rsvp-nbr-enh-lp-status': 'Disabled'
+                },
+                'rsvp-neighbor-address': '10.34.3.252',
+                'rsvp-neighbor-local-instance': '0xf81317e',
+                'rsvp-neighbor-node': True,
+                'rsvp-neighbor-remote-instance': '0x0',
+                'rsvp-neighbor-status': 'Down',
+                'rsvp-refresh-reduct-ack-status': 'disabled',
+                'rsvp-refresh-reduct-remote-status': 'disabled',
+                'rsvp-refresh-reduct-status': 'not '
+                'operational'
+            },
+            {
+                'hello-interval': '9',
+                'hellos-received': '0',
+                'hellos-sent': '309',
+                'last-changed-time': '46:15',
+                'messages-received': '0',
+                'neighbor-down-count': '0',
+                'neighbor-idle': '46:15',
+                'neighbor-up-count': '0',
+                'rsvp-nbr-enh-local-protection': {
+                'rsvp-nbr-enh-lp-status': 'Disabled'
+                },
+                'rsvp-neighbor-address': '10.169.14.240',
+                'rsvp-neighbor-local-instance': '0x1a61c152',
+                'rsvp-neighbor-node': True,
+                'rsvp-neighbor-remote-instance': '0x0',
+                'rsvp-neighbor-status': 'Down',
+                'rsvp-refresh-reduct-ack-status': 'disabled',
+                'rsvp-refresh-reduct-remote-status': 'disabled',
+                'rsvp-refresh-reduct-status': 'not '
+                'operational'
+            },
+            {
+                'hello-interval': '9',
+                'hellos-received': '309',
+                'hellos-sent': '310',
+                'last-changed-time': '46:15',
+                'messages-received': '695',
+                'neighbor-down-count': '0',
+                'neighbor-idle': '0',
+                'neighbor-up-count': '1',
+                'rsvp-nbr-enh-local-protection': {
+                'rsvp-nbr-enh-lp-nhop-lsp-count': '0',
+                'rsvp-nbr-enh-lp-nnhop-lsp-count': '0',
+                'rsvp-nbr-enh-lp-phop-lsp-count': '30',
+                'rsvp-nbr-enh-lp-pphop-lsp-count': '0',
+                'rsvp-nbr-enh-lp-status': 'Enabled',
+                'rsvp-nbr-enh-lp-total-lsp-count': '30'
+                },
+                'rsvp-neighbor-address': '10.169.14.157',
+                'rsvp-neighbor-interface': 'ge-0/0/0.0',
+                'rsvp-neighbor-local-instance': '0xb6ab962a',
+                'rsvp-neighbor-node': True,
+                'rsvp-neighbor-remote-instance': '0xe6740271',
+                'rsvp-neighbor-status': 'Up',
+                'rsvp-refresh-reduct-ack-status': 'enabled',
+                'rsvp-refresh-reduct-remote-status': 'enabled',
+                'rsvp-refresh-reduct-status': 'operational'
+            },
+            {
+                'hello-interval': '9',
+                'hellos-received': '183',
+                'hellos-sent': '183',
+                'last-changed-time': '27:57',
+                'messages-received': '557',
+                'neighbor-down-count': '0',
+                'neighbor-idle': '0',
+                'neighbor-up-count': '1',
+                'rsvp-nbr-enh-local-protection': {
+                'rsvp-nbr-enh-lp-nhop-lsp-count': '30',
+                'rsvp-nbr-enh-lp-nnhop-lsp-count': '0',
+                'rsvp-nbr-enh-lp-phop-lsp-count': '0',
+                'rsvp-nbr-enh-lp-pphop-lsp-count': '0',
+                'rsvp-nbr-enh-lp-status': 'Enabled',
+                'rsvp-nbr-enh-lp-total-lsp-count': '30'
+                },
+                'rsvp-neighbor-address': '192.168.145.218',
+                'rsvp-neighbor-interface': 'ge-0/0/1.1',
+                'rsvp-neighbor-local-instance': '0x41ad0a42',
+                'rsvp-neighbor-node': True,
+                'rsvp-neighbor-remote-instance': '0xa1a75540',
+                'rsvp-neighbor-status': 'Up',
+                'rsvp-refresh-reduct-ack-status': 'enabled',
+                'rsvp-refresh-reduct-remote-status': 'enabled',
+                'rsvp-refresh-reduct-status': 'operational'
+            }
+            ],
+            'rsvp-neighbor-count': '4'
+        }
+        }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRSVPNeighborDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowRSVPNeighborDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+class TestShowRSVPSession(unittest.TestCase):
     device = Device(name='aName')
     maxDiff = None
 
@@ -103,36 +268,36 @@ class test_show_rsvp_neighbor(unittest.TestCase):
 
         Transit RSVP: 30 sessions
         To              From            State   Rt Style Labelin Labelout LSPname
-        27.85.194.125   27.85.194.127   Up       0  1 FF      46       44 test_lsp_01
-        27.85.194.125   27.85.194.127   Up       0  1 FF      37       35 test_lsp_02
-        27.85.194.125   27.85.194.127   Up       0  1 FF      28       26 test_lsp_03
-        27.85.194.125   27.85.194.127   Up       0  1 FF      20       18 test_lsp_04
-        27.85.194.125   27.85.194.127   Up       0  1 FF      26       24 test_lsp_05
-        27.85.194.125   27.85.194.127   Up       0  1 FF      30       28 test_lsp_06
-        27.85.194.125   27.85.194.127   Up       0  1 FF      19       17 test_lsp_07
-        27.85.194.125   27.85.194.127   Up       0  1 FF      21       19 test_lsp_08
-        27.85.194.125   27.85.194.127   Up       0  1 FF      39       37 test_lsp_09
-        27.85.194.125   27.85.194.127   Up       0  1 FF      45       43 test_lsp_10
-        27.85.194.125   27.85.194.127   Up       0  1 FF      23       21 test_lsp_11
-        27.85.194.125   27.85.194.127   Up       0  1 FF      36       34 test_lsp_12
-        27.85.194.125   27.85.194.127   Up       0  1 FF      42       40 test_lsp_13
-        27.85.194.125   27.85.194.127   Up       0  1 FF      47       45 test_lsp_14
-        27.85.194.125   27.85.194.127   Up       0  1 FF      18       16 test_lsp_15
-        27.85.194.125   27.85.194.127   Up       0  1 FF      40       38 test_lsp_16
-        27.85.194.125   27.85.194.127   Up       0  1 FF      22       20 test_lsp_17
-        27.85.194.125   27.85.194.127   Up       0  1 FF      31       29 test_lsp_18
-        27.85.194.125   27.85.194.127   Up       0  1 FF      41       39 test_lsp_19
-        27.85.194.125   27.85.194.127   Up       0  1 FF      24       22 test_lsp_20
-        27.85.194.125   27.85.194.127   Up       0  1 FF      32       30 test_lsp_21
-        27.85.194.125   27.85.194.127   Up       0  1 FF      33       31 test_lsp_22
-        27.85.194.125   27.85.194.127   Up       0  1 FF      34       32 test_lsp_23
-        27.85.194.125   27.85.194.127   Up       0  1 FF      38       36 test_lsp_24
-        27.85.194.125   27.85.194.127   Up       0  1 FF      43       41 test_lsp_25
-        27.85.194.125   27.85.194.127   Up       0  1 FF      29       27 test_lsp_26
-        27.85.194.125   27.85.194.127   Up       0  1 FF      44       42 test_lsp_27
-        27.85.194.125   27.85.194.127   Up       0  1 FF      27       25 test_lsp_28
-        27.85.194.125   27.85.194.127   Up       0  1 FF      25       23 test_lsp_29
-        27.85.194.125   27.85.194.127   Up       0  1 FF      35       33 test_lsp_30
+        10.49.194.125   10.49.194.127   Up       0  1 FF      46       44 test_lsp_01
+        10.49.194.125   10.49.194.127   Up       0  1 FF      37       35 test_lsp_02
+        10.49.194.125   10.49.194.127   Up       0  1 FF      28       26 test_lsp_03
+        10.49.194.125   10.49.194.127   Up       0  1 FF      20       18 test_lsp_04
+        10.49.194.125   10.49.194.127   Up       0  1 FF      26       24 test_lsp_05
+        10.49.194.125   10.49.194.127   Up       0  1 FF      30       28 test_lsp_06
+        10.49.194.125   10.49.194.127   Up       0  1 FF      19       17 test_lsp_07
+        10.49.194.125   10.49.194.127   Up       0  1 FF      21       19 test_lsp_08
+        10.49.194.125   10.49.194.127   Up       0  1 FF      39       37 test_lsp_09
+        10.49.194.125   10.49.194.127   Up       0  1 FF      45       43 test_lsp_10
+        10.49.194.125   10.49.194.127   Up       0  1 FF      23       21 test_lsp_11
+        10.49.194.125   10.49.194.127   Up       0  1 FF      36       34 test_lsp_12
+        10.49.194.125   10.49.194.127   Up       0  1 FF      42       40 test_lsp_13
+        10.49.194.125   10.49.194.127   Up       0  1 FF      47       45 test_lsp_14
+        10.49.194.125   10.49.194.127   Up       0  1 FF      18       16 test_lsp_15
+        10.49.194.125   10.49.194.127   Up       0  1 FF      40       38 test_lsp_16
+        10.49.194.125   10.49.194.127   Up       0  1 FF      22       20 test_lsp_17
+        10.49.194.125   10.49.194.127   Up       0  1 FF      31       29 test_lsp_18
+        10.49.194.125   10.49.194.127   Up       0  1 FF      41       39 test_lsp_19
+        10.49.194.125   10.49.194.127   Up       0  1 FF      24       22 test_lsp_20
+        10.49.194.125   10.49.194.127   Up       0  1 FF      32       30 test_lsp_21
+        10.49.194.125   10.49.194.127   Up       0  1 FF      33       31 test_lsp_22
+        10.49.194.125   10.49.194.127   Up       0  1 FF      34       32 test_lsp_23
+        10.49.194.125   10.49.194.127   Up       0  1 FF      38       36 test_lsp_24
+        10.49.194.125   10.49.194.127   Up       0  1 FF      43       41 test_lsp_25
+        10.49.194.125   10.49.194.127   Up       0  1 FF      29       27 test_lsp_26
+        10.49.194.125   10.49.194.127   Up       0  1 FF      44       42 test_lsp_27
+        10.49.194.125   10.49.194.127   Up       0  1 FF      27       25 test_lsp_28
+        10.49.194.125   10.49.194.127   Up       0  1 FF      25       23 test_lsp_29
+        10.49.194.125   10.49.194.127   Up       0  1 FF      35       33 test_lsp_30
         Total 30 displayed, Up 30, Down 0"""}
 
     golden_parsed_output_1 = {
@@ -153,8 +318,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
             'session-type': 'Transit',
             'count': '30',
             'rsvp-session': [{
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -163,8 +328,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '44',
                 'name': 'test_lsp_01'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -173,8 +338,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '35',
                 'name': 'test_lsp_02'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -183,8 +348,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '26',
                 'name': 'test_lsp_03'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -193,8 +358,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '18',
                 'name': 'test_lsp_04'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -203,8 +368,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '24',
                 'name': 'test_lsp_05'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -213,8 +378,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '28',
                 'name': 'test_lsp_06'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -223,8 +388,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '17',
                 'name': 'test_lsp_07'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -233,8 +398,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '19',
                 'name': 'test_lsp_08'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -243,8 +408,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '37',
                 'name': 'test_lsp_09'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -253,8 +418,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '43',
                 'name': 'test_lsp_10'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -263,8 +428,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '21',
                 'name': 'test_lsp_11'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -273,8 +438,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '34',
                 'name': 'test_lsp_12'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -283,8 +448,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '40',
                 'name': 'test_lsp_13'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -293,8 +458,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '45',
                 'name': 'test_lsp_14'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -303,8 +468,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '16',
                 'name': 'test_lsp_15'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -313,8 +478,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '38',
                 'name': 'test_lsp_16'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -323,8 +488,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '20',
                 'name': 'test_lsp_17'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -333,8 +498,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '29',
                 'name': 'test_lsp_18'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -343,8 +508,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '39',
                 'name': 'test_lsp_19'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -353,8 +518,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '22',
                 'name': 'test_lsp_20'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -363,8 +528,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '30',
                 'name': 'test_lsp_21'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -373,8 +538,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '31',
                 'name': 'test_lsp_22'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -383,8 +548,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '32',
                 'name': 'test_lsp_23'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -393,8 +558,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '36',
                 'name': 'test_lsp_24'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -403,8 +568,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '41',
                 'name': 'test_lsp_25'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -413,8 +578,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '27',
                 'name': 'test_lsp_26'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -423,8 +588,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '42',
                 'name': 'test_lsp_27'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -433,8 +598,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '25',
                 'name': 'test_lsp_28'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -443,8 +608,8 @@ class test_show_rsvp_neighbor(unittest.TestCase):
                 'label-out': '23',
                 'name': 'test_lsp_29'
             }, {
-                'destination-address': '27.85.194.125',
-                'source-address': '27.85.194.127',
+                'destination-address': '10.49.194.125',
+                'source-address': '10.49.194.127',
                 'lsp-state': 'Up',
                 'route-count': '0',
                 'rsb-count': '1',
@@ -471,7 +636,6 @@ class test_show_rsvp_neighbor(unittest.TestCase):
         obj = ShowRSVPSession(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
-
-
+        
 if __name__ == '__main__':
     unittest.main()

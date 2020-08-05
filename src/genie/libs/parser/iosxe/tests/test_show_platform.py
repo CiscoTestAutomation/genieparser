@@ -6,39 +6,42 @@ from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                              SchemaMissingKeyError
-from genie.libs.parser.iosxe.show_platform import ShowVersion,\
-                                                  Dir,\
-                                                  ShowBootvar,\
-                                                  ShowRedundancy,\
-                                                  ShowRedundancyStates,\
-                                                  ShowInventory,\
-                                                  ShowPlatform, ShowBoot, \
-                                                  ShowSwitchDetail, \
-                                                  ShowSwitch, \
-                                                  ShowModule, \
-                                                  ShowPlatformSoftwareStatusControl, \
-                                                  ShowPlatformSoftwareMemoryCallsite, \
-                                                  ShowPlatformSoftwareMemoryBacktrace, \
-                                                  ShowPlatformSoftwareSlotActiveMonitorMem, \
-                                                  ShowProcessesCpuSorted, \
-                                                  ShowProcessesCpuPlatform, \
-                                                  ShowEnvironment, \
-                                                  ShowProcessesCpu, \
-                                                  ShowVersionRp, \
-                                                  ShowPlatformHardware, \
-                                                  ShowPlatformHardwarePlim, \
-                                                  ShowPlatformHardwareQfpBqsOpmMapping, \
-                                                  ShowPlatformHardwareQfpBqsIpmMapping, \
-                                                  ShowPlatformHardwareSerdes, \
-                                                  ShowPlatformHardwareSerdesInternal, \
-                                                  ShowPlatformPower, \
-                                                  ShowPlatformHardwareQfpBqsStatisticsChannelAll, \
-                                                  ShowPlatformHardwareQfpInterfaceIfnameStatistics, \
-                                                  ShowPlatformHardwareQfpStatisticsDrop, \
-                                                  ShowProcessesCpuHistory, \
-                                                  ShowProcessesMemory, \
-                                                  ShowProcessesMemorySorted, \
-                                                  ShowPlatformIntegrity
+from genie.libs.parser.iosxe.show_platform import (
+    ShowVersion,
+    Dir,
+    ShowBootvar,
+    ShowRedundancy,
+    ShowRedundancyStates,
+    ShowInventory,
+    ShowPlatform,
+    ShowBoot,
+    ShowSwitchDetail,
+    ShowSwitch,
+    ShowModule,
+    ShowPlatformSoftwareStatusControl,
+    ShowPlatformSoftwareMemoryCallsite,
+    ShowPlatformSoftwareMemoryBacktrace,
+    ShowPlatformSoftwareSlotActiveMonitorMem,
+    ShowProcessesCpuSorted,
+    ShowProcessesCpuPlatform,
+    ShowEnvironment,
+    ShowProcessesCpu,
+    ShowVersionRp,
+    ShowPlatformHardware,
+    ShowPlatformHardwarePlim,
+    ShowPlatformHardwareQfpBqsOpmMapping,
+    ShowPlatformHardwareQfpBqsIpmMapping,
+    ShowPlatformHardwareSerdes,
+    ShowPlatformHardwareSerdesInternal,
+    ShowPlatformPower,
+    ShowPlatformHardwareQfpBqsStatisticsChannelAll,
+    ShowPlatformHardwareQfpInterfaceIfnameStatistics,
+    ShowPlatformHardwareQfpStatisticsDrop,
+    ShowProcessesCpuHistory,
+    ShowProcessesMemory,
+    ShowProcessesMemorySorted,
+    ShowPlatformIntegrity,
+    ShowPlatformHardwareQfpActiveFeatureAppqoe)
 
 # ============================
 # Unit test for 'show bootvar'
@@ -1644,6 +1647,138 @@ class TestShowVersion(unittest.TestCase):
         obj = ShowVersion(device=self.dev_1)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
+
+    golden_output_5 = {'execute.return_value': '''
+        show version
+        Cisco IOS XE Software, Version BLD_POLARIS_DEV_LATEST_20200702_122021_V17_4_0_67_2
+        Cisco IOS Software [Amsterdam], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.4.20200702:124009 [S2C-build-polaris_dev-116872-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20200702_122021 243]
+        Copyright (c) 1986-2020 by Cisco Systems, Inc.
+        Compiled Thu 02-Jul-20 19:19 by mcpre
+
+
+        Cisco IOS-XE software, Copyright (c) 2005-2020 by cisco Systems, Inc.
+        All rights reserved.  Certain components of Cisco IOS-XE software are
+        licensed under the GNU General Public License ("GPL") Version 2.0.  The
+        software code licensed under GPL Version 2.0 is free software that comes
+        with ABSOLUTELY NO WARRANTY.  You can redistribute and/or modify such
+        GPL code under the terms of GPL Version 2.0.  For more details, see the
+        documentation or "License Notice" file accompanying the IOS-XE software,
+        or the applicable URL provided on the flyer accompanying the IOS-XE
+        software.
+
+
+        ROM: IOS-XE ROMMON
+        BOOTLDR: System Bootstrap, Version 17.3.1r[FC2], RELEASE SOFTWARE (P)
+
+        sisf-c9500-vtep-1 uptime is 6 minutes
+        Uptime for this control processor is 7 minutes
+        System returned to ROM by Reload Command
+        System image file is "bootflash:/cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20200702_122021_V17_4_0_67_2.SSA.bin"
+        Last reload reason: Reload Command
+
+
+
+        This product contains cryptographic features and is subject to United
+        States and local country laws governing import, export, transfer and
+        use. Delivery of Cisco cryptographic products does not imply
+        third-party authority to import, export, distribute or use encryption.
+        Importers, exporters, distributors and users are responsible for
+        compliance with U.S. and local country laws. By using this product you
+        agree to comply with applicable laws and regulations. If you are unable
+        to comply with U.S. and local laws, return this product immediately.
+
+        A summary of U.S. laws governing Cisco cryptographic products may be found at:
+        http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+
+        If you require further assistance please contact us by sending email to
+        export@cisco.com.
+
+
+        Technology Package License Information:
+
+        ------------------------------------------------------------------------------
+        Technology-package                                     Technology-package
+        Current                        Type                       Next reboot
+        ------------------------------------------------------------------------------
+        network-advantage       Smart License                    network-advantage
+        dna-advantage           Subscription Smart License       dna-advantage
+        AIR License Level: AIR DNA Advantage
+        Next reload AIR license Level: AIR DNA Advantage
+
+
+        Smart Licensing Status: Registration Not Applicable/Not Applicable
+
+        cisco C9500-24Y4C (X86) processor with 2900319K/6147K bytes of memory.
+        Processor board ID CAT1111L41F
+        1 Virtual Ethernet interface
+        24 TwentyFive Gigabit Ethernet interfaces
+        4 Hundred Gigabit Ethernet interfaces
+        32768K bytes of non-volatile configuration memory.
+        16002516K bytes of physical memory.
+        11161600K bytes of Bootflash at bootflash:.
+        1638400K bytes of Crash Files at crashinfo:.
+
+        Base Ethernet MAC Address          : 1c:2b:d4:ff:4c:ca
+        Motherboard Assembly Number        : 1111
+        Motherboard Serial Number          : CAT1111L41F
+        Model Revision Number              : V02
+        Motherboard Revision Number        : 2
+        Model Number                       : C9500-24Y4C
+        System Serial Number               : CAT1111L41F
+
+    '''}
+
+    golden_parsed_output_5 = {
+    "version": {
+        "version_short": "17.4",
+        "platform": "Catalyst L3 Switch",
+        "version": "17.4.20200702:124009",
+        "image_id": "CAT9K_IOSXE",
+        "os": "IOS-XE",
+        "image_type": "developer image",
+        "compiled_date": "Thu 02-Jul-20 19:19",
+        "compiled_by": "mcpre",
+        "rom": "IOS-XE ROMMON",
+        "bootldr": "System Bootstrap, Version 17.3.1r[FC2], RELEASE SOFTWARE (P)",
+        "hostname": "sisf-c9500-vtep-1",
+        "uptime": "6 minutes",
+        "uptime_this_cp": "7 minutes",
+        "returned_to_rom_by": "Reload Command",
+        "system_image": "bootflash:/cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20200702_122021_V17_4_0_67_2.SSA.bin",
+        "last_reload_reason": "Reload Command",
+        "chassis": "C9500-24Y4C",
+        "main_mem": "2900319",
+        "processor_type": "X86",
+        "rtr_type": "C9500-24Y4C",
+        "chassis_sn": "CAT1111L41F",
+        "number_of_intfs": {
+            "Virtual Ethernet": "1",
+            "TwentyFive Gigabit Ethernet": "24",
+            "Hundred Gigabit Ethernet": "4"
+        },
+        "mem_size": {
+            "non-volatile configuration": "32768",
+            "physical": "16002516"
+        },
+        "disks": {
+            "bootflash:.": {
+                "disk_size": "11161600",
+                "type_of_disk": "Bootflash"
+            },
+            "crashinfo:.": {
+                "disk_size": "1638400",
+                "type_of_disk": "Crash Files"
+            }
+        }
+    }
+}
+
+    def test_golden_5(self):
+        self.maxDiff = None
+        self.dev_1 = Mock(**self.golden_output_5)
+        obj = ShowVersion(device=self.dev_1)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
 class TestDir(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -20935,6 +21070,112 @@ class TestShowPlatformIntegrity(unittest.TestCase):
         version_obj = ShowPlatformIntegrity(device=None)
         parsed_output = version_obj.yang(output=self.golden_output_c9300_xml)
         self.assertEqual(parsed_output, self.golden_parsed_output_c9300_xml)
+
+
+class TestShowPlatformHardwareQfpActiveFeatureAppqoe(unittest.TestCase):
+    maxDiff = None
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': """
+        show platform hardware qfp active feature appqoe stats all
+        APPQOE Feature Statistics:
+        Global:
+               ip-non-tcp-pkts: 0
+               not-enabled: 0
+               cft_handle_pkt: 0
+               sdvt_divert_req_fail: 0
+               syn_policer_rate: 800
+           SDVT Global stats:
+             AppNAV registration: 1
+             within SDVT syn policer limit: 266004
+        SN Index [0 (Green)]
+           SDVT Count stats:
+             decaps: 679143
+             encaps: 743013
+             packets unmarked in ingress: 502868
+             Expired Connections: 64609
+             Idle timed-out persistent Connections: 50409
+             decaps: Processed control messages from SN: 14200
+             decaps: delete requests received total: 14200
+               decaps: delete - protocol decision: 14200
+           SDVT Packet stats:
+             Divert packets/bytes: 743013/43313261
+             Reinject packets/bytes: 679010/503129551
+           SDVT Drop Cause stats:
+           SDVT Errors stats:
+        SN Index [Default]
+           SDVT Count stats:
+           SDVT Packet stats:
+           SDVT Drop Cause stats:
+           SDVT Errors stats:
+        """
+                     }
+
+    golden_parsed_output = {
+        'feature': {
+            'appqoe': {
+                'global': {
+                    'cft_handle_pkt': 0,
+                    'ip_non_tcp_pkts': 0,
+                    'not_enabled': 0,
+                    'sdvt_divert_req_fail': 0,
+                    'sdvt_global_stats': {
+                        'appnav_registration': 1,
+                        'within_sdvt_syn_policer_limit': 266004
+                    },
+                    'syn_policer_rate': 800
+                },
+                'sn_index': {
+                    '0 (Green)': {
+                        'sdvt_count_stats': {
+                            'decap_messages': {
+                                'delete_requests_recieved': 14200,
+                                'deleted_protocol_decision': 14200,
+                                'processed_control_messages': 14200
+                            },
+                            'decaps': 679143,
+                            'encaps': 743013,
+                            'expired_connections': 64609,
+                            'idle_timed_out_persistent_connections': 50409,
+                            'packets_unmarked_in_ingress': 502868
+                        },
+                        'sdvt_drop_cause_stats': {},
+                        'sdvt_errors_stats': {},
+                        'sdvt_packet_stats': {
+                            'divert': {
+                                'bytes': 43313261,
+                                'packets': 743013
+                            },
+                            'reinject': {
+                                'bytes': 503129551,
+                                'packets': 679010
+                            }
+                        }
+                    },
+                    'Default': {
+                        'sdvt_count_stats': {},
+                        'sdvt_drop_cause_stats': {},
+                        'sdvt_errors_stats': {},
+                        'sdvt_packet_stats': {}
+                    }
+                }
+            }
+        }
+    }
+
+    def test_show_platform_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowPlatformHardwareQfpActiveFeatureAppqoe(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_platform_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowPlatformHardwareQfpActiveFeatureAppqoe(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
 
 if __name__ == '__main__':
     unittest.main()

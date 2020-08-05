@@ -3,6 +3,7 @@
 JunOS parsers for the following show commands:
     - 'show ted database extensive'
     - 'show ted database extensive {node_id}'
+    - 'show ted database {ipaddress}'
 """
 
 # python
@@ -10,7 +11,8 @@ import re
 
 # metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use
+from genie.metaparser.util.exceptions import SchemaTypeError
 
 
 class ShowTedDatabaseExtensiveSchema(MetaParser):
@@ -163,7 +165,8 @@ class ShowTedDatabaseExtensive(ShowTedDatabaseExtensiveSchema):
         p11 = re.compile(r'\[(?P<priority>\d+)\] +(?P<bw>\w+)')
 
         # Interface Switching Capability Descriptor(1):
-        p12 = re.compile(r'^Interface +Switching +Capability +Descriptor\((?P<descriptor>[\w ]+)\):$')
+        p12 = re.compile(
+            r'^Interface +Switching +Capability +Descriptor\((?P<descriptor>[\w ]+)\):$')
 
         # Switching type: Packet
         p13 = re.compile(r'^Switching +type: +(?P<switching_type>\w+)$')
@@ -182,7 +185,8 @@ class ShowTedDatabaseExtensive(ShowTedDatabaseExtensiveSchema):
         p17 = re.compile(r'^Flags: +(?P<flags>\w+)$')
 
         # SID: 1234, Flags: 0x00, Algo: 0
-        p18 = re.compile(r'^SID: +(?P<sid>\d+), +Flags: +(?P<flags>\w+), +Algo: +(?P<algo>\d+)$')
+        p18 = re.compile(
+            r'^SID: +(?P<sid>\d+), +Flags: +(?P<flags>\w+), +Algo: +(?P<algo>\d+)$')
 
         # SRGB block [Start: 12345, Range: 1234, Flags: 0x00]
         p19 = re.compile(r'^SRGB +block +\[Start: +(?P<start>\d+), +Range: +'
@@ -203,7 +207,8 @@ class ShowTedDatabaseExtensive(ShowTedDatabaseExtensiveSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                node_dict = ret_dict.setdefault('node', {}).setdefault(group['node_id'], {})
+                node_dict = ret_dict.setdefault(
+                    'node', {}).setdefault(group['node_id'], {})
                 continue
 
             m = p3.match(line)
@@ -218,7 +223,8 @@ class ShowTedDatabaseExtensive(ShowTedDatabaseExtensiveSchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                protocol_dict = node_dict.setdefault('protocol', {}).setdefault(group['protocol'], {})
+                protocol_dict = node_dict.setdefault(
+                    'protocol', {}).setdefault(group['protocol'], {})
                 continue
 
             m = p5.match(line)
@@ -283,13 +289,15 @@ class ShowTedDatabaseExtensive(ShowTedDatabaseExtensiveSchema):
             m = p13.match(line)
             if m:
                 group = m.groupdict()
-                descriptor_dict.update({'switching_type': group['switching_type']})
+                descriptor_dict.update(
+                    {'switching_type': group['switching_type']})
                 continue
 
             m = p14.match(line)
             if m:
                 group = m.groupdict()
-                descriptor_dict.update({'encoding_type': group['encoding_type']})
+                descriptor_dict.update(
+                    {'encoding_type': group['encoding_type']})
                 continue
 
             m = p15.match(line)
@@ -298,7 +306,8 @@ class ShowTedDatabaseExtensive(ShowTedDatabaseExtensiveSchema):
                 p2p_adj_sid_dict = (remote_dict.setdefault('p2p_adj_sid', {})
                                     .setdefault('sid', {})
                                     .setdefault(group['sid'], {}))
-                p2p_adj_sid_dict.update({'address_family': group['address_family']})
+                p2p_adj_sid_dict.update(
+                    {'address_family': group['address_family']})
                 p2p_adj_sid_dict.update({'flags': group['flags']})
                 p2p_adj_sid_dict.update({'weight': int(group['weight'])})
                 continue
@@ -344,3 +353,162 @@ class ShowTedDatabaseExtensive(ShowTedDatabaseExtensiveSchema):
 
         return ret_dict
 
+
+class ShowTedDatabaseIpAddressSchema(MetaParser):
+    """ Schema for:
+            * show ted database {ipaddress}
+
+	schema = {
+        "ted-database-information": {
+            "ted-database": {
+                "ted-database-age": str,
+                "ted-database-id": str,
+                "ted-database-link-in": str,
+                "ted-database-link-out": str,
+                "ted-database-protocol": str,
+                "ted-database-type": str,
+                "ted-link": [
+                    {
+                        "ted-link-local-address": str,
+                        "ted-link-local-ifindex": str,
+                        "ted-link-protocol": str,
+                        "ted-link-remote-address": str,
+                        "ted-link-remote-ifindex": str,
+                        "ted-link-to": str
+                    }
+                ]
+            },
+            "ted-database-summary": {
+                "ted-database-inet-count": str,
+                "ted-database-iso-count": str
+            }
+        }
+    }
+    """
+    # Subschema ted link
+    def validate_ted_link(val):
+        ''' Validates each value in ted link '''
+        if not isinstance(val, list):
+            raise SchemaTypeError('ted link is not a list')
+        
+        ted_link_schema = Schema({
+            "ted-link-local-address": str,
+            "ted-link-local-ifindex": str,
+            "ted-link-protocol": str,
+            "ted-link-remote-address": str,
+            "ted-link-remote-ifindex": str,
+            "ted-link-to": str
+        })
+
+        for item in val:
+            ted_link_schema.validate(item)
+        return val
+    
+    schema = {
+        "ted-database-information": {
+            "ted-database": {
+                "ted-database-age": str,
+                "ted-database-id": str,
+                "ted-database-link-in": str,
+                "ted-database-link-out": str,
+                "ted-database-protocol": str,
+                "ted-database-type": str,
+                "ted-link": Use(validate_ted_link)
+            },
+            "ted-database-summary": {
+                "ted-database-inet-count": str,
+                "ted-database-iso-count": str
+            }
+        }
+    }
+
+class ShowTedDatabaseIpAddress(ShowTedDatabaseIpAddressSchema):
+    """ Parser for:
+            * 'show ted database {ipaddress}'
+    """
+    cli_command = 'show ted database {ip_address}'
+
+    def cli(self, ip_address, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(ip_address = ip_address))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # TED database: 0 ISIS nodes 0 INET nodes
+        p1 = re.compile(r'^TED +database: +(?P<isis_nodes>\d+) +ISIS +nodes +' 
+                  r'(?P<inet_nodes>\d+) +INET +nodes$')
+        
+        # 10.34.2.250                  Rtr    1876     2      2 OSPF(0.0.0.8)
+        p2 = re.compile(r'^(?P<ted_database_id>\S+) +(?P<ted_database_type>\S+) +'
+                        r'(?P<ted_database_age>\d+) +(?P<ted_database_link_in>\d+) +'
+                        r'(?P<ted_database_link_out>\d+) +(?P<ted_database_protocol>\S+)$')
+
+        # To: 10.169.14.240, Local: 10.169.14.158, Remote: 10.169.14.157
+        p3 = re.compile(r'^To: +(?P<ted_link_to>\S+), +Local: +'
+                        r'(?P<ted_link_local_address>\S+), +Remote: +' 
+                        r'(?P<ted_link_remote_address>\S+)$')
+  
+        # Local interface index: 333, Remote interface index: 0
+        p4 = re.compile(r'^Local +interface +index: +' 
+                  r'(?P<ted_link_local_ifindex>\d+), +Remote +interface +index: +' 
+                  r'(?P<ted_link_remote_ifindex>\d+)$')
+        
+        for line in out.splitlines():
+            line = line.strip()
+
+            # TED database: 0 ISIS nodes 0 INET nodes
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+
+                ted_link_enrty_list = []
+			    
+                ted_db_info = ret_dict.setdefault('ted-database-information', {})
+                ted_db_summary = ted_db_info.setdefault("ted-database-summary", {})
+                ted_db = ted_db_info.setdefault("ted-database", {})
+			    
+                ted_db['ted-link'] = ted_link_enrty_list    # Ted link (list)
+                
+                ted_db_summary['ted-database-iso-count'] = group['isis_nodes']
+                ted_db_summary['ted-database-inet-count'] = group['inet_nodes']
+                continue
+            
+            # 10.34.2.250                  Rtr    1876     2      2 OSPF(0.0.0.8)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ted_db[entry_key] = group_value
+                    
+                continue
+            
+            # To: 10.169.14.240, Local: 10.169.14.158, Remote: 10.169.14.157
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                
+                ted_link_entry_dict = {}
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ted_link_entry_dict[entry_key] = group_value
+        
+                continue
+            
+            # Local interface index: 333, Remote interface index: 0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ted_link_entry_dict[entry_key] = group_value
+                    
+                ted_link_entry_dict['ted-link-protocol'] = ted_db['ted-database-protocol']
+                ted_link_enrty_list.append(ted_link_entry_dict)
+                continue
+            
+        return ret_dict
