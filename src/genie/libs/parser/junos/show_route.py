@@ -582,6 +582,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                                     "announce-bits": str,
                                     "announce-tasks": str,
                                     "as-path": str,
+                                    "cluster-list": str,
                                     "bgp-path-attributes": {
                                         "attr-as-path-effective": {
                                             "aspath-effective-string": str,
@@ -614,6 +615,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                                     "nh-index": str,
                                     "nh-kernel-id": str,
                                     "nh-reference-count": str,
+                                    "gateway": str,
                                     "nh-type": str,
                                     "preference": str,
                                     "preference2": str,
@@ -742,6 +744,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                     Optional("announce-bits"): str,
                     Optional("announce-tasks"): str,
                     Optional("as-path"): str,
+                    Optional("cluster-list"): str,
                     Optional("bgp-path-attributes"): {
                         "attr-as-path-effective": {
                             "aspath-effective-string": str,
@@ -758,6 +761,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                     Optional("nh-index"): str,
                     Optional("nh-kernel-id"): str,
                     "nh-reference-count": str,
+                    Optional("gateway"): str,
                     Optional("nh-type"): str,
                     "preference": str,
                     Optional("preference2"): str,
@@ -899,6 +903,9 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         # Next-hop reference count: 458
         p7 = re.compile(r'^Next-hop +reference +count: +(?P<nh_reference_count>\d+)$')
 
+        # Source: 2.2.2.2
+        p7_1 = re.compile(r'^Source: +(?P<gateway>\S+)$')
+
         # Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
         # Nexthop: 10.169.14.121 via ge-0/0/1.0
         p8 = re.compile(r'^(?P<nh_string>Next *hop):( +(?P<to>\S+))? +via +(?P<via>\S+)'
@@ -1006,6 +1013,9 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         # Forwarding nexthops: 1
         p35 = re.compile(r'^(Node +path +count: +)|(Forwarding +nexthops: +)[\S\s]+$')
 
+        # Cluster list:  2.2.2.2 4.4.4.4
+        p36 = re.compile(r'^Cluster +list: +(?P<cluster_list>[\S\s]+)$')
+
         for line in out.splitlines():
             line = line.strip()
             # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
@@ -1108,6 +1118,13 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             if m:
                 group = m.groupdict()
                 rt_entry_dict.update({'nh-reference-count': group['nh_reference_count']})
+                continue
+
+            # Source: 2.2.2.2
+            m = p7_1.match(line)
+            if m:
+                group = m.groupdict()
+                rt_entry_dict.update({'gateway': group['gateway']})
                 continue
 
             # Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
@@ -1402,6 +1419,13 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 proto_output = protocol_nh_dict.get('output', '')
                 proto_output = '{}{}\n'.format(proto_output, line)
                 protocol_nh_dict.update({'output': proto_output})
+                continue
+
+            # Cluster list:  2.2.2.2 4.4.4.4
+            m = p36.match(line)
+            if m:
+                group = m.groupdict()
+                rt_entry_dict.update({'cluster-list': group['cluster_list']})
                 continue
         
         return ret_dict
