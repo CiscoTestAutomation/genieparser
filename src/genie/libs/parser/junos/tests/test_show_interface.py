@@ -14,7 +14,8 @@ from genie.libs.parser.junos.show_interface import (ShowInterfacesTerse,
                                                     ShowInterfaces,
                                                     ShowInterfacesPolicersInterface,
                                                     ShowInterfacesStatistics,
-                                                    ShowInterfacesQueue)
+                                                    ShowInterfacesQueue,
+                                                    ShowInterfacesExtensive)
 
 #############################################################################
 # unitest For show interfaces terse [| match <interface>]
@@ -11679,6 +11680,425 @@ class TestShowInterfacesStatistics(unittest.TestCase):
         interface_obj = ShowInterfacesStatistics(device=self.device)
         parsed_output = interface_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+class TestShowInterfacesExtensive(unittest.TestCase):
+    device = Device(name="aDevice")
+    maxDiff = None
+    empty_output = {"execute.return_value": ""}
+
+    golden_output = {"execute.return_value": """
+        show interfaces extensive ge-0/0/0 
+        Physical interface: ge-0/0/0, Enabled, Physical link is Up
+        Interface index: 148, SNMP ifIndex: 526, Generation: 2988
+        Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None, Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None,
+        Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
+        Pad to minimum frame size: Disabled
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Schedulers     : 0
+        Hold-times     : Up 0 ms, Down 0 ms
+        Damping        : half-life: 0 sec, max-suppress: 0 sec, reuse: 0, suppress: 0, state: unsuppressed
+        Current address: 00:50:56:8d:c7:98, Hardware address: 00:50:56:8d:c7:98
+        Last flapped   : 2020-08-05 02:58:37 UTC (03:17:16 ago)
+        Statistics last cleared: 2020-08-05 06:15:50 UTC (00:00:03 ago)
+        Traffic statistics:
+        Input  bytes  :                 1900                 3912 bps
+        Output bytes  :                  648                 1544 bps
+        Input  packets:                   26                    6 pps
+        Output packets:                    7                    2 pps
+        IPv6 transit statistics:
+        Input  bytes  :                  256
+        Output bytes  :                    0
+        Input  packets:                    4
+        Output packets:                    0
+        Dropped traffic statistics due to STP State:
+        Input  bytes  :                    0
+        Output bytes  :                    0
+        Input  packets:                    0
+        Output packets:                    0
+        Input errors:
+            Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Policed discards: 0, L3 incompletes: 0, L2 channel errors: 0, L2 mismatch timeouts: 0, FIFO errors: 0, Resource errors: 0
+        Output errors:
+            Carrier transitions: 0, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0, FIFO errors: 0, HS link CRC errors: 0, MTU errors: 0, Resource errors: 0
+        Egress queues: 8 supported, 4 in use
+        Queue counters:       Queued packets  Transmitted packets      Dropped packets
+            0                                0                    0                    0
+            1                                0                    0                    0
+            2                                0                    0                    0
+            3                                2                    2                    0
+        Queue number:         Mapped forwarding classes
+            0                   best-effort
+            1                   expedited-forwarding
+            2                   assured-forwarding
+            3                   network-control
+        Active alarms  : None
+        Active defects : None
+        PCS statistics                      Seconds
+            Bit errors                             0
+            Errored blocks                         0
+        Ethernet FEC statistics              Errors
+            FEC Corrected Errors                    0
+            FEC Uncorrected Errors                  0
+            FEC Corrected Errors Rate               0
+            FEC Uncorrected Errors Rate             0
+        MAC statistics:                      Receive         Transmit
+            Total octets                          2230              404
+            Total packets                           12                2
+            Unicast packets                         27                6
+            Broadcast packets                        0                0
+            Multicast packets                        0                0
+            CRC/Align errors                         0                0
+            FIFO errors                              0                0
+            MAC control frames                       0                0
+            MAC pause frames                         0                0
+            Oversized frames                         0
+            Jabber frames                            0
+            Fragment frames                          0
+            VLAN tagged frames                       0
+            Code violations                          0
+            Total errors                             0                0
+        Filter statistics:
+            Input packet count                      27
+            Input packet rejects                    22
+            Input DA rejects                         0
+            Input SA rejects                         0
+            Output packet count                                       6
+            Output packet pad count                                   0
+            Output packet error count                                 0
+            CAM destination filters: 0, CAM source filters: 0
+        Autonegotiation information:
+            Negotiation status: Incomplete
+        Packet Forwarding Engine configuration:
+            Destination slot: 0 (0x00)
+        CoS information:
+            Direction : Output
+            CoS transmit queue               Bandwidth               Buffer Priority   Limit
+                                    %%            bps     %%           usec
+            0 best-effort            95      950000000    95              0      low    none
+            3 network-control         5       50000000     5              0      low    none
+        Interface transmit statistics: Disabled
+
+        Logical interface ge-0/0/0.0 (Index 332) (SNMP ifIndex 537) (Generation 30193)
+            Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
+            Traffic statistics:
+            Input  bytes  :                 1900
+            Output bytes  :                  606
+            Input  packets:                   26
+            Output packets:                    7
+            IPv6 transit statistics:
+            Input  bytes  :                  256
+            Output bytes  :                    0
+            Input  packets:                    4
+            Output packets:                    0
+            Local statistics:
+            Input  bytes  :                    0
+            Output bytes  :                  606
+            Input  packets:                    0
+            Output packets:                    7
+            Transit statistics:
+            Input  bytes  :                 1900                 3912 bps
+            Output bytes  :                    0                    0 bps
+            Input  packets:                   26                    6 pps
+            Output packets:                    0                    0 pps
+            IPv6 transit statistics:
+            Input  bytes  :                 256                  504 bps
+            Output bytes  :                   0                    0 bps
+            Input  packets:                   4                    0 pps
+            Output packets:                   0                    0 pps
+            Protocol inet, MTU: 1500
+            Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 0, Curr new hold cnt: 0, NH drop cnt: 0
+            Generation: 82967, Route table: 0
+            Flags: Sendbcast-pkt-to-re
+            Addresses, Flags: Is-Preferred Is-Primary
+                Destination: 20.0.0/24, Local: 20.0.0.1, Broadcast: 20.0.0.255, Generation: 172354
+            Protocol inet6, MTU: 1500
+            Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 0, Curr new hold cnt: 0, NH drop cnt: 0
+            Generation: 82968, Route table: 0
+            Flags: Is-Primary
+            Addresses, Flags: Is-Preferred Is-Primary
+                Destination: 2001:20::/64, Local: 2001:20::1
+            Generation: 172356
+            Addresses, Flags: Is-Preferred
+                Destination: fe80::/64, Local: fe80::250:56ff:fe8d:c798
+            Protocol multiservice, MTU: Unlimited, Generation: 172358
+            Generation: 82969, Route table: 0
+            Flags: Is-Primary
+            Policer: Input: __default_arp_policer__
+            """}
+
+    golden_parsed_output = {
+        'interface-information': {
+            'physical-interface': [{
+            'name': 'ge-0/0/0',
+            'admin-status': {
+                '@junos:format': 'Enabled'
+            },
+            'local-index': '148',
+            'snmp-index': '526',
+            'link-level-type': 'Ethernet',
+            'mtu': '1514',
+            'mru': '1522',
+            'sonet-mode': 'LAN-PHY',
+            'speed': '1000mbps',
+            'bpdu-error': 'None',
+            'ld-pdu-error': 'None',
+            'eth-switch-error': 'None',
+            'loopback': 'Disabled',
+            'source-filtering': 'Disabled',
+            'if-flow-control': 'Enabled',
+            'if-auto-negotiation': 'Enabled',
+            'if-remote-fault': 'Online',
+            'pad-to-minimum-frame-size': 'Disabled',
+            'if-device-flags': {
+                'ifdf-present': True,
+                'ifdf-running': True
+            },
+            'if-config-flags': {
+                'iff-snmp-traps': True,
+                'internal-flags': '0x4000'
+            },
+            'if-media-flags': {
+                'ifmf-none': True
+            },
+            'physical-interface-cos-information': {
+                'physical-interface-cos-hw-max-queues': '8',
+                'physical-interface-cos-use-max-queues': '8'
+            },
+            'current-physical-address': '00:50:56:8d:c7:98',
+            'hardware-physical-address': '00:50:56:8d:c7:98',
+            'interface-flapped': {
+                '#text': '2020-08-05 02:58:37 UTC (03:17:16 ago)'
+            },
+            'traffic-statistics': {
+                'input-bytes': '1900',
+                'input-bps': '3912',
+                'output-bytes': '648',
+                'output-bps': '1544',
+                'input-packets': '26',
+                'input-pps': '6',
+                'output-packets': '7',
+                'output-pps': '2',
+                'ipv6-transit-statistics': {
+                'input-bytes': '256',
+                'output-bytes': '0',
+                'input-packets': '4',
+                'output-packets': '0'
+                }
+            },
+            'stp-traffic-statistics': {
+                'stp-input-bytes-dropped': '0',
+                'stp-output-bytes-dropped': '0',
+                'stp-input-packets-dropped': '0',
+                'stp-output-packets-dropped': '0'
+            },
+            'input-error-list': {
+                'input-errors': '0',
+                'input-drops': '0',
+                'framing-errors': '0',
+                'input-runts': '0',
+                'input-discards': '0',
+                'input-l3-incompletes': '0',
+                'input-l2-channel-errors': '0',
+                'input-l2-mismatch-timeouts': '0',
+                'input-fifo-errors': '0',
+                'input-resource-errors': '0'
+            },
+            'output-error-list': {
+                'carrier-transitions': '0',
+                'output-errors': '0',
+                'output-drops': '0',
+                'output-collisions': '0',
+                'aged-packets': '0',
+                'output-fifo-errors': '0',
+                'hs-link-crc-errors': '0',
+                'mtu-errors': '0',
+                'output-resource-errors': '0'
+            },
+            'queue-counters': {
+                'interface-cos-short-summary': {
+                'intf-cos-num-queues-supported': '8',
+                'intf-cos-num-queues-in-use': '4'
+                },
+                'queue': [{
+                'queue-number': '0',
+                'queue-counters-queued-packets': '0',
+                'queue-counters-trans-packets': '0',
+                'queue-counters-total-drop-packets': '0'
+                }, {
+                'queue-number': '1',
+                'queue-counters-queued-packets': '0',
+                'queue-counters-trans-packets': '0',
+                'queue-counters-total-drop-packets': '0'
+                }, {
+                'queue-number': '2',
+                'queue-counters-queued-packets': '0',
+                'queue-counters-trans-packets': '0',
+                'queue-counters-total-drop-packets': '0'
+                }, {
+                'queue-number': '3',
+                'queue-counters-queued-packets': '2',
+                'queue-counters-trans-packets': '2',
+                'queue-counters-total-drop-packets': '0'
+                }]
+            },
+            'active-alarms': {
+                'interface-alarms': {
+                'alarm-not-present': True
+                }
+            },
+            'active-defects': {
+                'interface-alarms': {
+                'alarm-not-present': True
+                }
+            },
+            'ethernet-pcs-statistics': {
+                'bit-error-seconds': '0',
+                'errored-blocks-seconds': '0'
+            },
+            'ethernet-fec-statistics': {
+                'fec_ccw_count': '0',
+                'fec_nccw_count': '0',
+                'fec_ccw_error_rate': '0',
+                'fec_nccw_error_rate': '0'
+            },
+            'ethernet-mac-statistics': {
+                'input-bytes': '2230',
+                'output-bytes': '404',
+                'input-packets': '12',
+                'output-packets': '2',
+                'input-unicasts': '27',
+                'output-unicasts': '6',
+                'input-broadcasts': '0',
+                'output-broadcasts': '0',
+                'input-multicasts': '0',
+                'output-multicasts': '0',
+                'input-crc-errors': '0',
+                'output-crc-errors': '0',
+                'input-fifo-errors': '0',
+                'output-fifo-errors': '0',
+                'input-mac-control-frames': '0',
+                'output-mac-control-frames': '0',
+                'input-mac-pause-frames': '0',
+                'output-mac-pause-frames': '0',
+                'input-oversized-frames': '0',
+                'input-jabber-frames': '0',
+                'input-fragment-frames': '0',
+                'input-vlan-tagged-frames': '0',
+                'input-code-violations': '0'
+            },
+            'interface-transmit-statistics': 'Disabled',
+            'logical-interface': [{
+                'name': 'ge-0/0/0.0',
+                'local-index': '332',
+                'snmp-index': '537',
+                'if-config-flags': {
+                'iff-up': True,
+                'iff-snmp-traps': True,
+                'internal-flags': '0x4004000'
+                },
+                'encapsulation': 'ENET2',
+                'traffic-statistics': {
+                'input-bytes': '1900',
+                'output-bytes': '606',
+                'input-packets': '26',
+                'output-packets': '7',
+                'ipv6-transit-statistics': {
+                    'input-bytes': '0',
+                    'output-bytes': '606',
+                    'input-packets': '0',
+                    'output-packets': '7'
+                }
+                },
+                'transit-traffic-statistics': {
+                'input-bytes': '1900',
+                'input-bps': '3912',
+                'output-bytes': '0',
+                'output-bps': '0',
+                'input-packets': '26',
+                'input-pps': '6',
+                'output-packets': '0',
+                'output-pps': '0',
+                'ipv6-transit-statistics': {
+                    'input-bytes': '256',
+                    'input-bps': '504',
+                    'output-bytes': '0',
+                    'output-bps': '0',
+                    'input-packets': '4',
+                    'input-pps': '0',
+                    'output-packets': '0',
+                    'output-pps': '0'
+                }
+                },
+                'address-family': [{
+                'address-family-name': 'inet',
+                'mtu': '1500',
+                'max-local-cache': '75000',
+                'new-hold-limit': '75000',
+                'intf-curr-cnt': '0',
+                'intf-unresolved-cnt': '0',
+                'intf-dropcnt': '0',
+                'address-family-flags': {
+                    'ifff-sendbcast-pkt-to-re': True
+                },
+                'interface-address': {
+                    'ifa-flags': {
+                    'ifaf-is-preferred': True,
+                    'ifaf-is-primary': True
+                    }
+                }
+                }, {
+                'address-family-name': 'inet6',
+                'mtu': '1500',
+                'max-local-cache': '75000',
+                'new-hold-limit': '75000',
+                'intf-curr-cnt': '0',
+                'intf-unresolved-cnt': '0',
+                'intf-dropcnt': '0',
+                'address-family-flags': {
+                    'ifff-is-primary': True
+                },
+                'interface-address': [{
+                    'ifa-flags': {
+                    'ifaf-is-preferred': True,
+                    'ifaf-is-primary': True
+                    },
+                    'ifa-destination': '2001:20::/64',
+                    'ifa-local': '2001:20::1'
+                }, {
+                    'ifa-flags': {
+                    'ifaf-is-preferred': True
+                    },
+                    'ifa-destination': 'fe80::/64',
+                    'ifa-local': 'fe80::250:56ff:fe8d:c798'
+                }]
+                }, {
+                'address-family-name': 'multiservice',
+                'mtu': 'Unlimited',
+                'generation': '172358',
+                'address-family-flags': {
+                    'ifff-is-primary': True
+                }
+                }]
+            }]
+            }]
+        }
+        }
+
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        interface_obj = ShowInterfacesExtensive(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            interface_obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        interface_obj = ShowInterfacesExtensive(device=self.device)
+        parsed_output = interface_obj.parse(interface='ge-0/0/0')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 if __name__ == "__main__":
     unittest.main()
