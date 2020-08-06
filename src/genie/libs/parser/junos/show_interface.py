@@ -804,6 +804,14 @@ class ShowInterfaces(ShowInterfacesSchema):
                           r'(BPDU +Error: +(?P<bpdu_error>[^\s,]+))?(, +)?'
                           r'(Loop +Detect +PDU +Error: +(?P<ld_pdu_error>[^\s,]+))?(, +)?')
 
+        # Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None, Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None,
+        p4_2 = re.compile(r'^Link-level +type: +(?P<link_level_type>\S+), +MTU: +(?P<mtu>\S+)'
+                          r'(, +MRU: +(?P<mru>\d+))?(, +(?P<sonet_mode>\S+) +mode)?'
+                          r'(, +Speed: +(?P<speed>\S+))?(, +BPDU +Error: +(?P<bpdu_error>\S+),)?'
+                          r'( +Loop +Detect +PDU +Error: +(?P<ld_pdu_error>\S+),)?'
+                          r'( +Ethernet-Switching +Error: +(?P<eth_switch_error>\S+),)?'
+                          r'( +MAC-REWRITE +Error: +\S+)?$')
+
 
         # Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
         p5 = re.compile(r'^Loop +Detect +PDU +Error: +(?P<ld_pdu_error>\S+), +'
@@ -814,6 +822,13 @@ class ShowInterfaces(ShowInterfacesSchema):
         p5_1 = re.compile(r'^(Ethernet-Switching +Error: +(?P<eth_switch_error>[^\s,]+))'
                           r'(, +)?(MAC-REWRITE +Error: +[^\s,]+)?(, +)?'
                           r'(Loopback: +(?P<loopback>[^\s,]+))(, +)?')
+
+        # Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
+        p5_2 = re.compile(r'^(Loopback: +(?P<loopback>\S+),)?'
+                          r'( +Source +filtering: +(?P<source_filtering>\S+),)?'
+                          r'( +Flow +control: +(?P<if_flow_control>\S+),)?'
+                          r'( +Auto-negotiation: +(?P<if_auto_negotiation>\S+),)?'
+                          r'( +Remote +fault: +(?P<if_remote_fault>\S+))$')
 
         # Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
         p6 = re.compile(r'^Source +filtering: +(?P<source_filtering>\S+), +'
@@ -975,11 +990,15 @@ class ShowInterfaces(ShowInterfacesSchema):
         p42 = re.compile(r'^Output +errors:$')
 
         # Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Policed discards: 0, L3 incompletes: 0, L2 channel errors: 0,
+        # Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Policed discards: 0, L3 incompletes: 0, L2 channel errors: 0, L2 mismatch timeouts: 0, FIFO errors: 0, Resource errors: 0
         p43_1 = re.compile(r'^Errors: +(?P<input_errors>\d+), +'
             r'Drops: +(?P<input_drops>\d+), +Framing +errors: +(?P<framing_errors>\d+), +'
             r'Runts: +(?P<input_runts>\d+), Policed +discards: +(?P<input_discards>\d+),'
             r'( +L3 +incompletes: +(?P<input_l3_incompletes>\d+), +'
-            r'L2 +channel +errors: +(?P<input_l2_channel_errors>\d+),)?$')
+            r'L2 +channel +errors: +(?P<input_l2_channel_errors>\d+),)?'
+            r'( +L2 +mismatch +timeouts: +(?P<input_l2_mismatch_timeouts>\d+),?)?'
+            r'( +FIFO +errors: +(?P<input_fifo_errors>\d+),?)?'
+            r'( +Resource +errors: +(?P<input_resource_errors>\d+))?$')
         
         # L2 mismatch timeouts: 0, FIFO errors: 0, Resource errors: 0
         p43_2 = re.compile(r'^L2 +mismatch +timeouts: +'
@@ -989,11 +1008,14 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # Carrier transitions: 1, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0, FIFO errors: 0, HS link CRC errors: 0,
         # Carrier transitions: 0, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0,
-        p44_1 = re.compile(r'^^Carrier +transitions: +(?P<carrier_transitions>\d+), +'
+        # Carrier transitions: 0, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0, FIFO errors: 0, HS link CRC errors: 0, MTU errors: 0, Resource errors: 0
+        p44_1 = re.compile(r'^Carrier +transitions: +(?P<carrier_transitions>\d+), +'
             r'Errors: +(?P<output_errors>\d+), +Drops: +(?P<output_drops>\d+), +'
-            r'Collisions: +(?P<output_collisions>\d+), +Aged+ packets: +(?P<aged_packets>\d+),'
-            r'( +FIFO +errors: +(?P<output_fifo_errors>\d+), +'
-            r'HS +link +CRC +errors: +(?P<hs_link_crc_errors>\d+),)?$')
+            r'Collisions: +(?P<output_collisions>\d+), +Aged+ packets: +'
+            r'(?P<aged_packets>\d+),( +FIFO +errors: +(?P<output_fifo_errors>\d+), +'
+            r'HS +link +CRC +errors: +(?P<hs_link_crc_errors>\d+),)?'
+            r'( +MTU +errors: +(?P<mtu_errors>\d+),?)?'
+            r'( +Resource +errors: +(?P<output_resource_errors>\d+))?$')
 
         # MTU errors: 0, Resource errors: 0
         p44_2 = re.compile(r'^MTU +errors: +(?P<mtu_errors>\d+), +Resource +'
@@ -1119,8 +1141,24 @@ class ShowInterfaces(ShowInterfacesSchema):
                     v for k, v in group.items() if v is not None})
                 continue
 
+            # Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None, Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None,
+            m = p4_2.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
             # Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
             m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
+            m = p5_2.match(line)
             if m:
                 group = m.groupdict()
                 physical_interface_dict.update({k.replace('_','-'):
