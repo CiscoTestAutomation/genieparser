@@ -26,6 +26,12 @@
         * show interface {interface} transceiver detail
     * Added ShowSslproxyStatus for:
         * show sslproxy status
+    * Added ShowSdwanAppqoeTcpoptStatus for:
+        * show sdwan appqoe tcpopt status
+    * Added ShowSdwanAppqoeNatStatistics for:
+        * show sdwan appqoe nat-statistics
+    * Added ShowSdwanAppqoeRmResources for:
+        * show sdwan appqoe rm-resources
 * IOSXR
     * Added ShowIgmpGroupsSummary
         * show igmp groups summary
