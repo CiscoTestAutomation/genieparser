@@ -24,6 +24,8 @@
         * show running-config interface {interface}
     * Added ShowInterfaceTransceiverDetail for:
         * show interface {interface} transceiver detail
+    * Added ShowSslproxyStatus for:
+        * show sslproxy status
     * Added ShowSdwanAppqoeTcpoptStatus for:
         * show sdwan appqoe tcpopt status
     * Added ShowSdwanAppqoeNatStatistics for:
@@ -34,10 +36,32 @@
     * Added ShowIgmpGroupsSummary
         * show igmp groups summary
         * show igmp vrf {vrf} groups summary
+* NXOS
+    * Added ShowProcessesCpu
+        * show processes cpu
+        * show processes cpu | include <include>
+    * Added ShowProcessesMemory
+        * show processes memory
+        * show processes memory | include <include>
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
 * JUNOS
+<<<<<<< HEAD
+    * Updated ShowOspfDatabaseAdvertisingRouterSelfDetail
+        * Added more keys to the schema, in order to support output of ShowOspfDatabaseLsaidDetail
+    * Updated ShowSystemUsers
+        * Regex issues resolved
+    * Updated ShowOspfOverview
+        * Missing key added
+    * Updated ShowOspf3Overview
+        * Missing key added
+    * Updated ShowSystemUptime
+        * Fixed optional key error, improved regex, and fixed return results
+    * Updated ShowRouteForwardingTableLabel
+        * Fixed regex matching issue
+        
+=======
     * Fixed ShowBgpNeighbor:
         * Updated few keys into Optional.
         * Updated regex to support various outputs.
@@ -51,16 +75,20 @@
         * Modified regex to support various outputs.
     * Updated ShowOspfDatabaseExtensive
         * Now accounts for netsummary
+    * Updated ShowInterfacesExtensive
+        * Included extra output case
+    * Fixed ShowRouteProtocolExtensive:
+        * Updated few keys into Optional.
 * IOS
     * Fixed ShowNtpConfig:
         * Added prefered key
+>>>>>>> dev
 * IOSXE
     * Fixed ShowNtpConfig:
         * Added prefered key
     * Added ShowSdwanOmpSummary
-	* show sdwan omp summary
-    * Fixed ShowSdwanAppqoeRmResources
-	* show sdwan appqoe rm-resources 
+        * show sdwan omp summary
+
 * VIPTELA
     * Added ShowOmpSummary
         * show omp summary
