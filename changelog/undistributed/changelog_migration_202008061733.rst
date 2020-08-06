@@ -1,48 +1,42 @@
-* Please follow the template we introduced in NOVEMBER.md file.
-* Every parser need to be added under the corresponding feature.
-
-| Module                  | Version       |
-| ------------------------|:-------------:|
-| ``genie.libs.parser``   |               |
-
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
 * JUNOS
-    * Added ShowBgpNeighbor for:
+    * Added ShowBgpNeighbor:
         * show bgp neighbor
-    * Added ShowLDPOverview
+    * Added ShowLDPOverview:
         * show ldp overview
-    * Added ShowOspfDatabaseAdvertisingRouterExtensive for:
+    * Added ShowOspfDatabaseAdvertisingRouterExtensive:
         * show ospf database advertising-router {ipaddress} extensive
-    * Added ShowConfigurationProtocolsMplsLabelSwitchedPath
+    * Added ShowConfigurationProtocolsMplsLabelSwitchedPath:
         * show configuration protocols mpls label-switched-path {path}
-    * Added ShowConfigurationProtocolsMplsPath
+    * Added ShowConfigurationProtocolsMplsPath:
         * show configuration protocols mpls path {path}
 * IOSXE
-    * Added ShowRunInterface for:
+    * Added ShowRunInterface:
         * show running-config interface {interface}
-    * Added ShowInterfaceTransceiverDetail for:
+    * Added ShowInterfaceTransceiverDetail:
         * show interface {interface} transceiver detail
-    * Added ShowSslproxyStatus for:
+    * Added ShowSslproxyStatus:
         * show sslproxy status
-    * Added ShowSdwanAppqoeTcpoptStatus for:
+    * Added ShowSdwanAppqoeTcpoptStatus:
         * show sdwan appqoe tcpopt status
-    * Added ShowSdwanAppqoeNatStatistics for:
+    * Added ShowSdwanAppqoeNatStatistics:
         * show sdwan appqoe nat-statistics
-    * Added ShowSdwanAppqoeRmResources for:
+    * Added ShowSdwanAppqoeRmResources:
         * show sdwan appqoe rm-resources
 * IOSXR
-    * Added ShowIgmpGroupsSummary
+    * Added ShowIgmpGroupsSummary:
         * show igmp groups summary
         * show igmp vrf {vrf} groups summary
 * NXOS
-    * Added ShowProcessesCpu
+    * Added ShowProcessesCpu:
         * show processes cpu
         * show processes cpu | include <include>
-    * Added ShowProcessesMemory
+    * Added ShowProcessesMemory:
         * show processes memory
         * show processes memory | include <include>
+
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
@@ -58,29 +52,29 @@
         * Changed few keys into Optional, and modified regex to support various outputs. 
     * Fixed ShowInterfaces:
         * Modified regex to support various outputs.
-    * Updated ShowOspfDatabaseExtensive
+    * Updated ShowOspfDatabaseExtensive:
         * Now accounts for netsummary
-    * Updated ShowInterfacesExtensive
+    * Updated ShowInterfacesExtensive:
         * Included extra output case
     * Fixed ShowRouteProtocolExtensive:
-        * Updated few keys into Optional.
+        * Updated few keys into Optional
 * IOS
     * Fixed ShowNtpConfig:
         * Added prefered key
 * IOSXE
     * Fixed ShowNtpConfig:
         * Added prefered key
-    * Added ShowSdwanOmpSummary
+    * Added ShowSdwanOmpSummary:
         * show sdwan omp summary
 
 * VIPTELA
-    * Added ShowOmpSummary
+    * Added ShowOmpSummary:
         * show omp summary
 
 * IOSXR
-    * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea
+    * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea:
         * Enhanced parser
     * Updated ShowIsisSpfLogDetail:
-        * Added more regex patterns to support various outputs.
+        * Added more regex patterns to support various outputs
     * Updated ShowIsisInterface:
         * Modified to support default as instance name
