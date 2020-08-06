@@ -810,12 +810,6 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
                     'ldp-interface-address', {})
                 interface_dict.update({'interface-address': group['ip']})
 
-        
-        import json
-        json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
-        f = open("dict22.txt","w")
-        f.write(json_data)
-        f.close()
         return ret_dict
 
 
@@ -910,49 +904,6 @@ class ShowLDPInterfaceDetail(ShowLDPInterface):
             out = output
 
         return super().cli(interface=interface, output=' ' if not out else out)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 class ShowLdpSessionIpaddressDetailSchema(MetaParser):
