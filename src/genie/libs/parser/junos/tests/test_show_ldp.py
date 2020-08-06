@@ -7,10 +7,7 @@ from pyats.topology import Device
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
-from genie.libs.parser.junos.show_ldp import (
-    ShowLDPSession, ShowLdpNeighbor,
-    ShowLdpDatabaseSessionIpaddress, ShowLDPInterface,
-    ShowLDPInterfaceDetail, ShowLDPOverview)
+from genie.libs.parser.junos.show_ldp import ShowLDPSession, ShowLdpNeighbor, ShowLdpSessionIpaddressDetail, ShowLdpDatabaseSessionIpaddress, ShowLDPInterface,ShowLDPInterfaceDetail, ShowLDPOverview
 
 
 # =================================
@@ -1052,6 +1049,112 @@ class TestShowLDPOverview(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
+
+
+
+
+# =================================
+# Unit test for 'show ldp session {ipaddress} detail'
+# =================================
+class TestShowLDPSession(unittest.TestCase):
+    '''unit test for "show ldp session {ipaddress} detail'''
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "ldp-session-information": {
+        "ldp-session": {
+            "ldp-connection-state": "Open",
+            "ldp-graceful-restart-local": "disabled",
+            "ldp-graceful-restart-remote": "disabled",
+            "ldp-holdtime": "30",
+            "ldp-keepalive-interval": "10",
+            "ldp-keepalive-time": "3",
+            "ldp-local-address": "59.128.2.250",
+            "ldp-local-helper-mode": "enabled",
+            "ldp-local-label-adv-mode": "Downstream unsolicited",
+            "ldp-local-maximum-reconnect": "120000",
+            "ldp-local-maximum-recovery": "240000",
+            "ldp-mtu-discovery": "disabled",
+            "ldp-neg-label-adv-mode": "Downstream unsolicited",
+            "ldp-neighbor-address": "106.187.14.240",
+            "ldp-neighbor-count": "1",
+            "ldp-neighbor-types": {
+                "ldp-neighbor-type": "discovered"
+            },
+            "ldp-remaining-time": "23",
+            "ldp-remote-address": "106.187.14.240",
+            "ldp-remote-helper-mode": "enabled",
+            "ldp-remote-label-adv-mode": "Downstream unsolicited",
+            "ldp-retry-interval": "1",
+            "ldp-session-address": {
+                "interface-address": "106.187.14.157"
+            },
+            "ldp-session-capabilities-advertised": {
+                "ldp-capability": "none"
+            },
+            "ldp-session-capabilities-received": {
+                "ldp-capability": "none"
+            },
+            "ldp-session-flags": {
+                "ldp-session-flag": "none"
+            },
+            "ldp-session-id": "59.128.2.250:0--106.187.14.240:0",
+            "ldp-session-max-pdu": "4096",
+            "ldp-session-nsr-state": "Not in sync",
+            "ldp-session-protection": {
+                "ldp-session-protection-state": "disabled"
+            },
+            "ldp-session-role": "Passive",
+            "ldp-session-state": "Operational",
+            "ldp-up-time": "00:00:47"
+        }
+    }
+    }
+
+    golden_output = {
+        'execute.return_value':
+        '''
+        show ldp session 106.187.14.240 detail
+          Address: 106.187.14.240, State: Operational, Connection: Open, Hold time: 23
+            Session ID: 59.128.2.250:0--106.187.14.240:0
+            Next keepalive in 3 seconds
+            Passive, Maximum PDU: 4096, Hold time: 30, Neighbor count: 1
+            Neighbor types: discovered
+            Keepalive interval: 10, Connect retry interval: 1
+            Local address: 59.128.2.250, Remote address: 106.187.14.240
+            Up for 00:00:47
+            Capabilities advertised: none
+            Capabilities received: none
+            Protection: disabled
+            Session flags: none
+            Local - Restart: disabled, Helper mode: enabled
+            Remote - Restart: disabled, Helper mode: enabled
+            Local maximum neighbor reconnect time: 120000 msec
+            Local maximum neighbor recovery time: 240000 msec
+            Local Label Advertisement mode: Downstream unsolicited
+            Remote Label Advertisement mode: Downstream unsolicited
+            Negotiated Label Advertisement mode: Downstream unsolicited
+            MTU discovery: disabled
+            Nonstop routing state: Not in sync
+            Next-hop addresses received:
+                106.187.14.157
+        '''
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowLdpSessionIpaddressDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(ipaddress='106.187.14.240')
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowLdpSessionIpaddressDetail(device=self.device)
+        parsed_output = obj.parse(ipaddress='106.187.14.240')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()
