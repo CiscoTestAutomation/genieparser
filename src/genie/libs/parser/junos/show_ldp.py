@@ -320,6 +320,7 @@ class ShowLDPOverviewSchema(MetaParser):
                 Optional("ldp-transport-preference"): str,
                 "ldp-message-id": int,
                 "ldp-configuration-sequence": int,
+                Optional("ldp-control-mode"): str,
                 "ldp-deaggregate": str,
                 "ldp-explicit-null": str,
                 "ldp-ipv6-tunneling": str,
@@ -329,6 +330,7 @@ class ShowLDPOverviewSchema(MetaParser):
                 "ldp-unicast-transit-lsp-chaining": str,
                 "ldp-p2mp-transit-lsp-chaining": str,
                 "ldp-transit-lsp-route-stats": str,
+                Optional("ldp-retention-mode"): str,
                 Optional("ldp-route-acknowledgement"): str,
                 Optional("ldp-bgp-export"): str,
                 Optional("ldp-mtu-discovery"): str,
@@ -346,6 +348,7 @@ class ShowLDPOverviewSchema(MetaParser):
                     Optional("ldp-control-mode"): str,
                     Optional("ldp-session-connecting"): int
                 },
+                Optional("ldp-session-operational"): int,
                 Optional("ldp-dod-session-count"): str,
                 Optional("ldp-auto-targeted-session"): {
                     "ldp-auto-targeted-session-enabled": str,
@@ -807,6 +810,12 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
                     'ldp-interface-address', {})
                 interface_dict.update({'interface-address': group['ip']})
 
+        
+        import json
+        json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
+        f = open("dict22.txt","w")
+        f.write(json_data)
+        f.close()
         return ret_dict
 
 
@@ -956,7 +965,7 @@ class ShowLdpSessionIpaddressDetailSchema(MetaParser):
         "ldp-session": {
             "ldp-connection-state": str,
             "ldp-graceful-restart-local": str,
-            "ldp-graceful-restart-remote": str,
+            Optional("ldp-graceful-restart-remote"): str,
             "ldp-holdtime": str,
             "ldp-keepalive-interval": str,
             "ldp-keepalive-time": str,
@@ -974,7 +983,7 @@ class ShowLdpSessionIpaddressDetailSchema(MetaParser):
             },
             "ldp-remaining-time": str,
             "ldp-remote-address": str,
-            "ldp-remote-helper-mode": str,
+            Optional("ldp-remote-helper-mode"): str,
             Optional("ldp-remote-label-adv-mode"): str,
             "ldp-retry-interval": str,
             "ldp-session-address": {
@@ -1355,9 +1364,4 @@ class ShowLdpSessionIpaddressDetail(ShowLdpSessionIpaddressDetailSchema):
                 next_hop_flag = False
                 continue
 
-        import json
-        json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
-        f = open("dict3.txt","w")
-        f.write(json_data)
-        f.close()
         return ret_dict
