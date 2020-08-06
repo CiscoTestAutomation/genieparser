@@ -30,16 +30,27 @@
         * show sdwan ipsec inbound-connections
     * Added ShowSdwanIpsecOutboundConnections for:
         * show sdwan ipsec outbound-connections
-
+    * Added ShowSdwanAppqoeTcpoptStatus for:
+        * show sdwan appqoe tcpopt status
+    * Added ShowSdwanAppqoeNatStatistics for:
+        * show sdwan appqoe nat-statistics
+    * Added ShowSdwanAppqoeRmResources for:
+        * show sdwan appqoe rm-resources
 * IOSXR
     * Added ShowIgmpGroupsSummary
         * show igmp groups summary
         * show igmp vrf {vrf} groups summary
+* NXOS
+    * Added ShowProcessesCpu
+        * show processes cpu
+        * show processes cpu | include <include>
+    * Added ShowProcessesMemory
+        * show processes memory
+        * show processes memory | include <include>
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
 * JUNOS
-<<<<<<< HEAD
     * Updated ShowOspfDatabaseAdvertisingRouterSelfDetail
         * Added more keys to the schema, in order to support output of ShowOspfDatabaseLsaidDetail
     * Updated ShowSystemUsers
@@ -53,7 +64,6 @@
     * Updated ShowRouteForwardingTableLabel
         * Fixed regex matching issue
         
-=======
     * Fixed ShowBgpNeighbor:
         * Updated few keys into Optional.
         * Updated regex to support various outputs.
@@ -74,7 +84,6 @@
 * IOS
     * Fixed ShowNtpConfig:
         * Added prefered key
->>>>>>> dev
 * IOSXE
     * Fixed ShowNtpConfig:
         * Added prefered key
