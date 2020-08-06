@@ -124,5 +124,5 @@
     * Updated ShowInterfaces:
         * Added more regex patterns to support various outputs.
 * VIPTELA
-    * Added ShowSoftware
-        * show software
+    * Added ShowSoftwareTab
+        * show software | tab
