@@ -16,7 +16,8 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or
 # import iosxe parser
 from genie.libs.parser.iosxe.show_ntp import ShowNtpAssociationsDetail as ShowNtpAssociationsDetail_iosxe,\
-                                             ShowNtpStatus as ShowNtpStatus_iosxe
+                                             ShowNtpStatus as ShowNtpStatus_iosxe,\
+                                             ShowNtpConfig as ShowNtpConfig_iosxe
 
 # ==============================================
 #  Schema for show ntp associations
@@ -209,37 +210,7 @@ class ShowNtpStatus(ShowNtpStatus_iosxe):
 # =========================================================
 # Parser for 'show ntp config'
 # =========================================================
-class ShowNtpConfigSchema(MetaParser):
-    """Schema for: show ntp config"""
-
-    schema = {
-        'vrf': {
-            Any(): {
-                'address': {
-                    Any(): {
-                        'type': {
-                            Any(): {
-                                'address': str,
-                                'type': str,
-                                'vrf': str,
-                                Optional('source'): str,
-                            }
-                        },
-                        'isconfigured': {
-                            Any(): {
-                                'address': str,
-                                'isconfigured': bool,
-                            }
-                        }
-
-                    }
-                }
-            }
-        }
-    }
-
-
-class ShowNtpConfig(ShowNtpConfigSchema):
+class ShowNtpConfig(ShowNtpConfig_iosxe):
     """Parser for: show ntp config"""
 
     cli_command = 'show ntp config'
@@ -250,46 +221,7 @@ class ShowNtpConfig(ShowNtpConfigSchema):
         else:
             out = output
 
-        # initial variables
-        ret_dict = {}
-
-        # R1#show ntp config
-        # ntp server 10.4.1.1
-        # ntp server 10.16.2.2
-        # ntp server vrf VRF1 10.64.4.4
-        # ntp server 10.16.2.2 source Loopback0
-
-        p1 = re.compile(r"^ntp +(?P<type>\w+)( +vrf +(?P<vrf>[\d\w]+))? "
-                        "+(?P<address>[\w\.\:]+)( +source +(?P<source_interface>[\w]+))?$")
-
-        for line in out.splitlines():
-            line = line.strip()
-            if not line:
-                continue
-
-            m = p1.match(line)
-            if m:
-                groups = m.groupdict()
-                vrf = groups['vrf'] or 'default'
-                ntp_type = groups['type']
-                address = groups['address']
-                source = groups['source_interface'] or ''
-                isconfigured = True
-
-                addr_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {})\
-                    .setdefault('address', {}).setdefault(address, {})
-
-                addr_dict.setdefault('type', {}).setdefault(ntp_type, {}).update({'address': address,
-                                                                                  'type': ntp_type,
-                                                                                  'vrf': vrf})
-                if source:
-                    addr_dict['type'][ntp_type]['source'] = source
-
-                addr_dict.setdefault('isconfigured', {}).\
-                    setdefault(str(isconfigured), {}).update({'address': address,
-                                                              'isconfigured': isconfigured})
-
-        return ret_dict
+        return super().cli(output=out)
 
 
 # ==============================================

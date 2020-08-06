@@ -9,6 +9,7 @@
                                 New
 --------------------------------------------------------------------------------
 * JUNOS
+
     * Added ShowTedDatabaseIpAddress
         * show ted database {ipaddress}
     * Created ShowMPLSLSPNameDetail
@@ -54,46 +55,24 @@
         * show platform hardware qfp active feature appqoe stats all
     * Added ShowSdwanSoftware
         * show sdwan software
+    * Added ShowBgpNeighbor for:
+        * show bgp neighbor
+    * Added ShowLDPOverview
+        * show ldp overview
+    * Added ShowOspfDatabaseAdvertisingRouterExtensive for:
+        * show ospf database advertising-router {ipaddress} extensive
+
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
 * JUNOS
-    * Updated ShowOspfDatabaseAdvertisingRouterSelfDetail
-        * Added more keys to the schema, in order to support output of ShowOspfDatabaseLsaidDetail
-        * ospf-lsa-topology now optional
-    * Updated ShowSystemUsers
-        * Regex issues resolved
-    * Updated ShowOspfOverview
-        * Optional key issue resolved
-    * Updated ShowInterfaceExtensive
-        * No longer breaks on use and previously unused data is now used
-    * Updated ShowOspfDatabaseExtensiveSchema
-        * Optional key issue resolved
-    * Updated ShowOspf3DatabaseExtensiveSchema
-        * Optional key issue resolved
-    * Updated ShowOspfVrfAllInclusive
-        * key error resolved
-    * Updated ShowOspfDatabaseLsaidDetail
-        * Resolved issue where empty output would cause error
-        * ospf-lsa-topology now optional
-    * Updated ShowOspf3DatabaseExtensive
-        * Missing key issue resolved
-        * show ospf3 database advertising-router {address} extensive
-        * show ospf3 database {lsa_type} advertising-router {address} extensive
-    * Updated ShowOspf3Database
-        * List ospf-area
-    * Updated ShowOspfDatabaseExtensiveSchema
-        * Modified ShowOspfDatabaseExtensiveSchema to have optional keys
-        * Missing key added
-    * Updated ShowOspf3Overview
-        * Missing key added
-    * Updated ShowSystemUptime
-        * Fixed optional key error, improved regex, and fixed return results
-    * Updated ShowInterfaces
-        * Optional key issue resolved
-        * Regex modified to support more output
-        * 'show interfaces extensive {interface}' changed to 'show interfaces {interface} extensive'
+    * Fixed ShowBgpNeighbor:
+        * Updated few keys into Optional.
+* IOS
+    * Fixed ShowNtpConfig:
+        * Added prefered key
 * IOSXE
+
     * Updated ShowCdpNeighbors
         * Modified regex to support different output
     * Updated ShowCdpNeighborsDetail
@@ -108,11 +87,14 @@
         * Enhanced parser
     * Updated ShowProcessesMemory
         * Modified schema to support different output
-   
+    * Fixed ShowNtpConfig:
+        * Added prefered key
+    * Added ShowSdwanOmpSummary
+	* show sdwan omp summary
 
-* NXOS
-    * Updated ShowIpRoute
-        * Enhanced parser
+* VIPTELA
+    * Added ShowOmpSummary
+        * show omp summary
 
 * IOSXR
     * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea
