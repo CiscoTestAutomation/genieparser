@@ -26,6 +26,11 @@
         * show interface {interface} transceiver detail
     * Added ShowSslproxyStatus for:
         * show sslproxy status
+    * Added ShowSdwanIpsecInboundConnections for:
+        * show sdwan ipsec inbound-connections
+    * Added ShowSdwanIpsecOutboundConnections for:
+        * show sdwan ipsec outbound-connections
+
 * IOSXR
     * Added ShowIgmpGroupsSummary
         * show igmp groups summary
