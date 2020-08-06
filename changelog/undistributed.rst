@@ -30,6 +30,13 @@
     * Added ShowIgmpGroupsSummary
         * show igmp groups summary
         * show igmp vrf {vrf} groups summary
+* NXOS
+    * Added ShowProcessesCpu
+        * show processes cpu
+        * show processes cpu | include <include>
+    * Added ShowProcessesMemory
+        * show processes memory
+        * show processes memory | include <include>
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
