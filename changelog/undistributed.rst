@@ -50,19 +50,7 @@
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
-* JUNOS
-    * Updated ShowOspfDatabaseAdvertisingRouterSelfDetail
-        * Added more keys to the schema, in order to support output of ShowOspfDatabaseLsaidDetail
-    * Updated ShowSystemUsers
-        * Regex issues resolved
-    * Updated ShowOspfOverview
-        * Missing key added
-    * Updated ShowOspf3Overview
-        * Missing key added
-    * Updated ShowSystemUptime
-        * Fixed optional key error, improved regex, and fixed return results
-    * Updated ShowRouteForwardingTableLabel
-        * Fixed regex matching issue      
+* JUNOS 
     * Fixed ShowBgpNeighbor:
         * Updated few keys into Optional.
         * Updated regex to support various outputs.
