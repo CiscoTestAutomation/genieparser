@@ -26,16 +26,16 @@
         * show interface {interface} transceiver detail
     * Added ShowSslproxyStatus for:
         * show sslproxy status
-    * Added ShowSdwanIpsecInboundConnections for:
-        * show sdwan ipsec inbound-connections
-    * Added ShowSdwanIpsecOutboundConnections for:
-        * show sdwan ipsec outbound-connections
     * Added ShowSdwanAppqoeTcpoptStatus for:
         * show sdwan appqoe tcpopt status
     * Added ShowSdwanAppqoeNatStatistics for:
         * show sdwan appqoe nat-statistics
     * Added ShowSdwanAppqoeRmResources for:
         * show sdwan appqoe rm-resources
+    * Added ShowSdwanIpsecInboundConnections for:
+        * show sdwan ipsec inbound-connections
+    * Added ShowSdwanIpsecOutboundConnections for:
+        * show sdwan ipsec outbound-connections
 * IOSXR
     * Added ShowIgmpGroupsSummary
         * show igmp groups summary
@@ -50,7 +50,7 @@
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
-* JUNOS 
+* JUNOS
     * Fixed ShowBgpNeighbor:
         * Updated few keys into Optional.
         * Updated regex to support various outputs.
