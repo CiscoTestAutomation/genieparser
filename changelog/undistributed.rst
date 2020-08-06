@@ -52,7 +52,8 @@
 * IOSXE
     * Added ShowPlatformHardwareQfpActiveFeatureAppqoe
         * show platform hardware qfp active feature appqoe stats all
-
+    * Added ShowSdwanSoftware
+        * show sdwan software
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
@@ -107,6 +108,7 @@
         * Enhanced parser
     * Updated ShowProcessesMemory
         * Modified schema to support different output
+   
 
 * NXOS
     * Updated ShowIpRoute
