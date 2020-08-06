@@ -10,7 +10,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
     SchemaMissingKeyError
 
 # Parser
-from genieparser.src.genie.libs.parser.viptela.show_software import ShowSoftware, ShowSoftwaretab
+from genie.libs.parser.viptela.show_software import ShowSoftwaretab
 
 
 
@@ -54,17 +54,11 @@ class TestShowSoftware(unittest.TestCase):
  }
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowSoftware(device=self.device)
+        obj = ShowSoftwaretab(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-    def test_golden(self):
-        self.device = Mock(**self.golden_output)
-        obj = ShowSoftware(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
-
-    def test_golden_1(self):
+    def test_golden_new(self):
         self.device = Mock(**self.golden_output)
         obj = ShowSoftwaretab(device=self.device)
         parsed_output = obj.parse()
