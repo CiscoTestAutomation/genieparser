@@ -52,7 +52,7 @@ class ShowSdwanIpsecOutboundConnections(ShowSdwanIpsecOutboundConnectionsSchema)
 
         parsed_dict = {}
 
-        #77.27.2.2 12346   77.27.8.2 12406   78.78.0.6 biz-internet     78.78.0.9 biz-internet     AES-GCM-256           8            
+        #77.27.8.2                               12346   77.27.2.2                               12366   271     1438        78.78.0.6        biz-internet     AH_SHA1_HMAC   *****b384  AES-GCM-256           8            
         p1=re.compile(r"^(?P<source_ip>[\S]+) +(?P<source_port>[\d]+) +"
                       r"(?P<destination_ip>[\S]+) +(?P<destination_port>[\d]+) +"
                       r"(?P<spi>[\d]+) +(?P<tunnel_mtu>[\d]+) +"
