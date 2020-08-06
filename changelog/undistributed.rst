@@ -62,8 +62,7 @@
     * Updated ShowSystemUptime
         * Fixed optional key error, improved regex, and fixed return results
     * Updated ShowRouteForwardingTableLabel
-        * Fixed regex matching issue
-        
+        * Fixed regex matching issue      
     * Fixed ShowBgpNeighbor:
         * Updated few keys into Optional.
         * Updated regex to support various outputs.
