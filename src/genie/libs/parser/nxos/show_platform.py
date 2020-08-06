@@ -3,7 +3,9 @@
 NXOS parser class for below commands:
        show version
         show processes cpu
-        show processes cpu | include <WORD>
+        show processes cpu | include <include>
+        show processes memory
+        show processes memory | include <include>
 """
 import re
 import xmltodict
