@@ -19,29 +19,29 @@ class ShowCtsEnvironmentDataSchema(MetaParser):
           Optional("tag_status"): str,
           Optional("server_list_name"): str,
           Optional("server_count"): int,
-          Optional("servers"): [
-            {
-              "server_ip": str,
-              "port": int,
-              "aid": str,
-              "server_status": str,
-              "auto_test": str,
-              "keywrap_enable": str,
-              "idle_time_mins": int,
-              "dead_time_secs": int
-            }
-          ],
-          Optional("security_groups"): [
-            {
-              "sec_group": str,
-              "sec_group_name": str
-            }
-          ],
+          Optional("servers"): list
+            # {
+            #   Optional("server_ip"): str,
+            #   Optional("port"): int,
+            #   Optional("aid"): str,
+            #   Optional("server_status"): str,
+            #   Optional("auto_test"): str,
+            #   Optional("keywrap_enable"): str,
+            #   Optional("idle_time_mins"): int,
+            #   Optional("dead_time_secs"): int
+            # }
+          ,
+          Optional("security_groups"): list
+            # {
+            #   Optional("sec_group"): str,
+            #   Optional("sec_group_name"): str
+            # }
+          ,
           Optional("env_data_lifetime_secs"): str,
           Optional("last_update"): {
-            "date": str,
-            "time": str,
-            "time_zone": str
+            Optional("date"): str,
+            Optional("time"): str,
+            Optional("time_zone"): str
           },
           Optional("expiration"): str,
           Optional("refresh"): str,
