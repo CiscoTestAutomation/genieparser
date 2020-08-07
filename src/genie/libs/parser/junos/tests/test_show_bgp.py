@@ -2301,6 +2301,9 @@ class TestShowBgpNeighbor(unittest.TestCase):
                             "suppressed-prefix-count": "0",
                         },
                     ],
+                    "active-holdtime": '30',
+                    "peer-id": "10.169.14.240",
+                    "local-id": "10.189.5.252",
                     "description": "sjkGDS221-EC11",
                     "entropy-label": "No",
                     "entropy-label-capability": "Yes",
@@ -2682,6 +2685,9 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "output-updates": "61307",
                     "peer-4byte-as-capability-advertised": "65171",
                     "peer-addpath-not-supported": True,
+                    "active-holdtime": '60',
+                    "peer-id": "10.189.5.253",
+                    "local-id": "10.189.5.252",
                     "peer-address": "10.189.5.253+179",
                     "peer-as": "65171",
                     "peer-cfg-rti": "master",
@@ -2867,6 +2873,9 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "output-updates": "0",
                     "peer-4byte-as-capability-advertised": "65151",
                     "peer-addpath-not-supported": True,
+                    "active-holdtime": '30',
+                    "peer-id": "10.169.14.240",
+                    "local-id": "10.189.5.252",
                     "peer-address": "2001:db8:eb18:ca45::1+179",
                     "peer-as": "65151",
                     "peer-cfg-rti": "master",
@@ -3162,6 +3171,9 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     "output-updates": "0",
                     "peer-4byte-as-capability-advertised": "65171",
                     "peer-addpath-not-supported": True,
+                    "active-holdtime": '60',
+                    "peer-id": "10.189.5.253",
+                    "local-id": "10.189.5.252",
                     "peer-address": "2001:db8:223c:ca45::c+60268",
                     "peer-as": "65171",
                     "peer-cfg-rti": "master",
@@ -3227,6 +3239,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         }
     }
 
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpNeighbor(device=self.device)
@@ -3237,8 +3250,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowBgpNeighbor(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)     
-
+        self.assertEqual(parsed_output, self.golden_parsed_output)      
 
 if __name__ == "__main__":
     unittest.main()

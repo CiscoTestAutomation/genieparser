@@ -41,7 +41,8 @@ from genie.libs.parser.iosxe.show_platform import (
     ShowProcessesMemory,
     ShowProcessesMemorySorted,
     ShowPlatformIntegrity,
-    ShowPlatformHardwareQfpActiveFeatureAppqoe)
+    ShowPlatformHardwareQfpActiveFeatureAppqoe,
+    ShowPlatformHardwareQfpActiveDatapathUtilSum)
 
 # ============================
 # Unit test for 'show bootvar'
@@ -21177,5 +21178,84 @@ class TestShowPlatformHardwareQfpActiveFeatureAppqoe(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             obj.parse()
 
+
+class TestShowPlatformHardwareQfpActiveDatapathUtilSum(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+                            'cpp': {
+                                '0': {
+                                'Input': {
+                                    'pps': {
+                                    '5_secs': 2,
+                                    '1_min': 2,
+                                    '5_min': 1,
+                                    '60_min': 0
+                                    },
+                                    'bps': {
+                                    '5_secs': 2928,
+                                    '1_min': 1856,
+                                    '5_min': 1056,
+                                    '60_min': 88
+                                    }
+                                },
+                                'Output': {
+                                    'pps': {
+                                    '5_secs': 593,
+                                    '1_min': 596,
+                                    '5_min': 494,
+                                    '60_min': 41
+                                    },
+                                    'bps': {
+                                    '5_secs': 1190056,
+                                    '1_min': 1206976,
+                                    '5_min': 921624,
+                                    '60_min': 76792
+                                    }
+                                },
+                                'Processing': {
+                                    'pct': {
+                                    '5_secs': 0,
+                                    '1_min': 0,
+                                    '5_min': 0,
+                                    '60_min': 0
+                                    }
+                                }
+                                }
+                            }
+                        }
+    
+
+    golden_output = {'execute.return_value': '''\
+        Router#show platform hardware qfp active datapath utilization summary
+           CPP 0:                     5 secs        1 min        5 min       60 min
+            Input:     Total (pps)            2            2            1            0
+                            (bps)         2928         1856         1056           88
+            Output:    Total (pps)          593          596          494           41
+                            (bps)      1190056      1206976       921624        76792
+            Processing: Load (pct)            0            0            0            0      
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowPlatformHardwareQfpActiveDatapathUtilSum(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()  
+
+    def test_golden(self):
+        #self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowPlatformHardwareQfpActiveDatapathUtilSum(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
 if __name__ == '__main__':
     unittest.main()
+
+
+

@@ -2,7 +2,10 @@
 
 NXOS parser class for below commands:
        show version
-
+        show processes cpu
+        show processes cpu | include <include>
+        show processes memory
+        show processes memory | include <include>
 """
 import re
 import xmltodict
@@ -403,7 +406,7 @@ class ShowInventory(ShowInventorySchema):
         p1 = re.compile(r'^NAME: +\"(?P<name>[\S\s]+)\", +DESCR: +\"(?P<description>[\S\s]+)\"$')
 
         p1_1 = re.compile(r'^Slot +(?P<slot>\d+)$')
-        
+
         # PID: N9K-NXOSV , VID: , SN: 92XXRQ9UCZS
         # PID: N9K-C9300-FAN2 , VID: V01 , SN: N/A
         # PID: N2K-C2248-FAN       ,  VID: N/A ,  SN: N/A
@@ -945,18 +948,18 @@ class ShowModule(ShowModuleSchema):
                 header_number = m.groupdict()['number']
                 module_type = m.groupdict()['module_type']
                 if 'Supervisor' in module_type:
-                  header_type = 'rp'
-                  if header_type not in module_dict['slot']:
-                      module_dict['slot'][header_type] = {}
-                  rp_list.append(header_number)
-                  rp_name =  m.groupdict()['module_type'].strip()
-                  map_dic[header_number] = rp_name
+                    header_type = 'rp'
+                    if header_type not in module_dict['slot']:
+                        module_dict['slot'][header_type] = {}
+                    rp_list.append(header_number)
+                    rp_name =  m.groupdict()['module_type'].strip()
+                    map_dic[header_number] = rp_name
                 else:
-                  header_type = 'lc'
-                  if header_type not in module_dict['slot']:
-                      module_dict['slot'][header_type] = {}
-                  lc_name =  m.groupdict()['module_type'].strip()
-                  map_dic[header_number] = lc_name
+                    header_type = 'lc'
+                    if header_type not in module_dict['slot']:
+                        module_dict['slot'][header_type] = {}
+                    lc_name =  m.groupdict()['module_type'].strip()
+                    map_dic[header_number] = lc_name
                 if table_header == 'slot':
                     if header_number in rp_list:
                         if header_number not in module_dict['slot']['rp']:
@@ -1403,9 +1406,198 @@ class ShowVdcMembershipStatus(ShowVdcMembershipStatusSchema):
                     member_status_vdc_dict['virtual_device'][identity]['membership'][vdc_name][port] = {}
                 status = m.groupdict()['status']
                 if 'Eth' in port_type:
-                    port_type = 'Ethernet'      
+                    port_type = 'Ethernet'
                 member_status_vdc_dict['virtual_device'][identity]['membership'][vdc_name][port]['vd_ms_status'] = status
                 member_status_vdc_dict['virtual_device'][identity]['membership'][vdc_name][port]['vd_ms_type'] = port_type
                 continue
 
         return member_status_vdc_dict
+
+
+class ShowProcessesMemorySchema(MetaParser):
+    """Schema for show processes memory
+                  show processes memory | include <WORD>
+    """
+
+    schema = {
+        'pid': {
+            Any(): {
+                'index': {
+                    Any(): {
+                        'pid': int,
+                        'mem_alloc': int,
+                        'mem_limit': int,
+                        'mem_used': int,
+                        'stack_base_ptr': str,
+                        'process': str,
+                    }
+                }
+            }
+        },
+        Optional('all_mem_alloc'): int,
+    }
+
+
+class ShowProcessesMemory(ShowProcessesMemorySchema):
+    """Schema for show processes memory
+                  show processes memory | include <WORD>
+    """
+
+    cli_command = [
+        'show processes memory', 'show processes memory | include {include}'
+    ]
+
+    def cli(self, include=None, output=None):
+
+        ret_dict = {}
+        pid_index = {}
+
+        if not output:
+            if include:
+                cmd = self.cli_command[1].format(include=include)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        #  8178  45387776  4294967295  1029939200  ffc31360/ffc311a0  bgp
+        p1 = re.compile(
+            r'^(\s+)?(?P<pid>\d+)\s+(?P<mem_alloc>\d+)\s+(?P<mem_limit>\d+)\s+(?P<mem_used>\d+)\s+(?P<stack_base_ptr>\S+)\s+(?P<process>\S+)'
+        )
+
+        # All processes: MemAlloc = 4693938176
+        p2 = re.compile(
+            r'^(\s+)?All\s+processes:\s+MemAlloc\s+=\s+(?P<all_mem_alloc>\d+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #  8178  45387776  4294967295  1029939200  ffc31360/ffc311a0  bgp
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                pid = int(group['pid'])
+                index = pid_index.get(pid, 0) + 1
+                pid_dict = ret_dict.setdefault('pid', {}). \
+                    setdefault(pid, {}). \
+                    setdefault('index', {}). \
+                    setdefault(index, {})
+
+                pid_index.update({pid: index})
+                pid_dict.update({
+                    k: int(v) if v.isdigit() else v
+                    for k, v in group.items() if v is not None
+                })
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'all_mem_alloc': int(group['all_mem_alloc'])})
+
+        return ret_dict
+
+
+class ShowProcessesCpuSchema(MetaParser):
+    """Schema for show processes cpu
+                  show processes cpu | include <WORD>
+    """
+
+    schema = {
+        Optional('five_sec_cpu_interrupts'): int,
+        Optional('five_sec_cpu_total'): int,
+        Optional('one_min_cpu'): int,
+        Optional('five_min_cpu'): int,
+        Optional('user_percent'): float,
+        Optional('kernel_percent'): float,
+        Optional('idle_percent'): float,
+        Optional('index'): {
+            Any(): {
+                'pid': int,
+                'runtime_ms': int,
+                'invoked': int,
+                'usecs': int,
+                'one_sec': float,
+                'process': str,
+            }
+        }
+    }
+
+
+class ShowProcessesCpu(ShowProcessesCpuSchema):
+    """Schema for show processes cpu
+                  show processes cpu | include <WORD>
+    """
+
+    cli_command = [
+        'show processes cpu', 'show processes cpu | include {include}'
+    ]
+
+    def cli(self, include='', output=None):
+
+        if output is None:
+            if include:
+                out = self.device.execute(
+                    self.cli_command[1].format(include=include))
+            else:
+                out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+        index = 0
+
+        #   958          810       728      0   2.95%  nginx
+        p1 = re.compile(
+            r'^(\s+)?(?P<pid>\d+)\s+(?P<runtime_ms>\d+)\s+(?P<invoked>\d+)\s+(?P<usecs>\d+)\s+(?P<one_sec>\d+\.\d+)%\s+(?P<process>\S+)'
+        )
+
+        # CPU util  :    2.07% user,   29.01% kernel,   68.91% idle
+        p2 = re.compile(
+            r'^(\s+)?CPU\s+util\s+:\s+(?P<user_percent>\d+\.\d+)%\s+user,\s+(?P<kernel_percent>\d+\.\d+)%\s+kernel,\s+(?P<idle_percent>\d+\.\d+)%\s+idle'
+        )
+
+        # CPU utilization for five seconds: 18%/7%; one minute: 20%; five minutes: 20%
+        p3 = re.compile(
+            r'^(\s+)?CPU\s+utilization\s+for\s+five\s+seconds:\s+(?P<five_sec_cpu_total>\d+)%/(?P<five_sec_cpu_interrupts>\d+)%;\s+one\s+minute:\s+(?P<one_min_cpu>\d+)%;\s+five\s+minutes:\s+(?P<five_min_cpu>\d+)%'
+        )
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #   958          810       728      0   2.95%  nginx
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                index += 1
+                sort_dict = ret_dict.setdefault('index',
+                                                {}).setdefault(index, {})
+                sort_dict['process'] = group['process']
+                sort_dict.update({
+                    k: int(v)
+                    for k, v in group.items()
+                    if k in ['pid', 'runtime_ms', 'invoked', 'usecs']
+                })
+                sort_dict.update({
+                    k: float(v)
+                    for k, v in group.items() if k in ['one_sec']
+                })
+                continue
+
+            # CPU util  :    2.07% user,   29.01% kernel,   68.91% idle
+            m = p2.match(line)
+            if m:
+                ret_dict.update(
+                    {k: float(v)
+                     for k, v in m.groupdict().items()})
+                continue
+
+            # CPU utilization for five seconds: 18%/7%; one minute: 20%; five minutes: 20%
+            m = p3.match(line)
+            if m:
+                ret_dict.update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+        return ret_dict
