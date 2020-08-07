@@ -1192,6 +1192,9 @@ class ShowBgpNeighborSchema(MetaParser):
                 Optional("address-families"): str
             },
             Optional("description"): str,
+            Optional('active-holdtime'): str,
+            Optional('local-id'): str,
+            Optional('peer-id'): str,
             "flap-count": str,
             "last-error": str,
             "last-event": str,
@@ -1305,8 +1308,9 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
         p4 = re.compile(
             r'^Forwarding +routing-instance: +(?P<peer_fwd_rti>\S+)$')
         # Type: Internal    State: Active       (route reflector client)Flags: <>
+        # Type: External    State: Established    Flags: <Sync InboundConvergencePending>
         p5 = re.compile(
-            r'^Type: +(?P<peer_type>\S+) +State: +(?P<peer_state>\S+) +\(route +reflector +client\)Flags: +<(?P<peer_flags>\S*)>$'
+            r'^Type: +(?P<peer_type>\S+) +State: +(?P<peer_state>\S+) +(?P<route_reflector>\(route +reflector +client\))?Flags: +<(?P<peer_flags>[\s\S]*)>$'
         )
         # Last State: Idle          Last Event: Start
         p6 = re.compile(
@@ -1321,9 +1325,11 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
         # Options: <Preference LocalAddress HoldTime LogUpDown Cluster PeerAS Refresh Confed>
         # Options: <GracefulShutdownRcv>
         p9 = re.compile(r'^Options: +<(?P<options>[\S\s]+)>$')
+
+        # Holdtime: 30 Preference: 170
         # Local Address: 10.189.5.252 Holdtime: 720 Preference: 170
         p10 = re.compile(
-            r'^Local +Address: +(?P<local_address>\S+) +Holdtime: +(?P<holdtime>\S+) +Preference: +(?P<preference>\S+)$'
+            r'^(Local +Address: +(?P<local_address>\S+) +)?Holdtime: +(?P<holdtime>\S+) +Preference: +(?P<preference>\S+)$'
         )
         # Graceful Shutdown Receiver local-preference: 0
         p11 = re.compile(
@@ -1512,14 +1518,18 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
                 continue
 
             # Type: Internal    State: Active       (route reflector client)Flags: <>
+            # Type: External    State: Established    Flags: <Sync  Sync>
             m = p5.match(line)
             if m:
                 group = m.groupdict()
                 entry = ret_dict["bgp-information"]["bgp-peer"][-1]
-                for key, value in group.items():
-                    key = key.replace('_', '-')
-                    entry[key] = value
-                entry['route-reflector-client'] = True
+                
+                entry['peer-type'] = group['peer_type']
+                entry['peer-state'] = group['peer_state']
+                entry['peer-flags'] = group['peer_flags']
+
+                if group['route_reflector']:
+                    entry['route-reflector-client'] = True
                 continue
 
             # Last State: Idle          Last Event: Start
@@ -1567,6 +1577,7 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
                     entry['bgp-options-extended'] = group['options']
                 continue
 
+            # Holdtime: 30 Preference: 170
             # Local Address: 10.189.5.252 Holdtime: 720 Preference: 170
             m = p10.match(line)
             if m:
@@ -1574,8 +1585,9 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
                 entry = ret_dict["bgp-information"]["bgp-peer"][-1]
                 entry = entry.setdefault("bgp-option-information", {})
                 for key, value in group.items():
-                    key = key.replace('_', '-')
-                    entry[key] = value
+                    if group[key]:
+                        key = key.replace('_', '-')
+                        entry[key] = value
                 continue
 
             # Graceful Shutdown Receiver local-preference: 0
@@ -1669,7 +1681,8 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
                 for key, value in group.items():
                     key = key.replace('_', '-')
                     entry[key] = value
-                entry_location = ret_dict["bgp-information"]["bgp-peer"][-1]
+                ret_dict["bgp-information"]["bgp-peer"][-1].update(entry)
+                
                 continue
 
             # Keepalive Interval: 10         Group index: 10   Peer index: 0    SNMP index: 15
