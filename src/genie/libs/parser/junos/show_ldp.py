@@ -908,7 +908,7 @@ class ShowLDPInterfaceDetail(ShowLDPInterface):
 
 class ShowLdpSessionIpaddressDetailSchema(MetaParser):
     """ Schema for:
-            * show ldp database session ipaddress
+            * show ldp session ipaddress detail
     """
 
     schema = {
@@ -971,7 +971,7 @@ class ShowLdpSessionIpaddressDetail(ShowLdpSessionIpaddressDetailSchema):
 
     cli_command = 'show ldp session {ipaddress} detail'
 
-    def cli(self, ipaddress=None, output=None):
+    def cli(self, ipaddress, output=None):
         if not output:
             cmd = self.cli_command.format(ipaddress=ipaddress)
             out = self.device.execute(cmd)
