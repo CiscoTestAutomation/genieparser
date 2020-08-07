@@ -17,6 +17,8 @@
         * show running-config interface {interface}
     * Added ShowInterfaceTransceiverDetail:
         * show interface {interface} transceiver detail
+    * Added ShowPlatformHardwareQfpActiveDatapathUtilSum
+        * show platform hardware qfp active datapath utilization summary
     * Added ShowSslproxyStatus:
         * show sslproxy status
     * Added ShowSdwanAppqoeTcpoptStatus:
