@@ -27,6 +27,12 @@
         * show sdwan appqoe nat-statistics
     * Added ShowSdwanAppqoeRmResources:
         * show sdwan appqoe rm-resources
+    * Added ShowSdwanRebootHistory
+        * show sdwan reboot history
+    * Added ShowSdwanSystemStatus
+        * show sdwan system status
+    * Added ShowSdwanVersion
+        * show sdwan version
 * IOSXR
     * Added ShowIgmpGroupsSummary:
         * show igmp groups summary
@@ -38,7 +44,13 @@
     * Added ShowProcessesMemory:
         * show processes memory
         * show processes memory | include <include>
-
+* VIPTELA
+    * Added ShowRebootHistory
+        * show reboot history
+    * Added ShowSystemStatus
+        * show system status
+    * Added ShowVersion
+        * show version
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
