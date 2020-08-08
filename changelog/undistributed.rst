@@ -12,6 +12,10 @@
 * IOSXE
     * Added Show_Cts_Sxp_Connections_Brief
         * show show cts sxp connections brief
+    * Added ShowStackwiseVirtual
+        * show stackwise-virtual
+
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
+
