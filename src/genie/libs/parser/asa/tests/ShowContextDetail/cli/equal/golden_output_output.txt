@@ -1,0 +1,26 @@
+
+        ciscoasa# show context
+        Context "pod1", has been created
+          Config URL: disk0:/pod-context/pod1
+          Real Interfaces: Vlan100, Vlan200
+          Mapped Interfaces: Vlan100, Vlan200
+          Class: default, Flags: 0x00000112, ID: 2
+
+        Context "null", is a system resource
+          Config URL: ... null ...
+          Real Interfaces:
+          Mapped Interfaces:
+          Class: default, Flags: 0x00000114, ID: 4
+
+        Context "admin", has been created
+          Config URL: disk0:/pod-context/admin.cfg
+          Real Interfaces: Vlan1000, Vlan1001, Vlan1030, Vlan1031, Vlan1032,
+            Vlan993, Vlan994, Vlan995, Vlan996, Vlan997, Vlan998, Vlan999
+          Class: default, Flags: 0x00000111, ID: 1
+
+        Context "pod3", has been created
+          Config URL: disk0:/pod-context/pod3
+          Real Interfaces: Vlan303, Vlan603
+          Mapped Interfaces: Vlan303, Vlan603
+          Class: default, Flags: 0x00000113, ID: 3
+          

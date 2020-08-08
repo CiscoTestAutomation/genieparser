@@ -1,0 +1,68 @@
+
+    Session Type: AnyConnect
+    
+     
+    
+    Username     : xxxxxxxx               Index        : 1917
+    
+    Assigned IP  : x.x.x.x            Public IP    : x.x.x.x
+    
+    Protocol     : AnyConnect-Parent SSL-Tunnel
+    
+    License      : AnyConnect Premium, AnyConnect for Mobile
+    
+    Encryption   : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)AES256
+    
+    Hashing      : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)SHA1
+    
+    Bytes Tx     : 8360206                Bytes Rx     : 7533909
+    
+    Group Policy : GroupPolicy_Employee
+    
+    Tunnel Group : Employee
+    
+    Login Time   : 13:50:15 CDT Thu Mar 19 2020
+    
+    Duration     : 2h:26m:41s
+    
+    Inactivity   : 0h:00m:00s
+    
+    VLAN Mapping : N/A                    VLAN         : none
+    
+    Audt Sess ID : 0af034360077d0005e73bee7
+    
+    Security Grp : none                  
+    
+     
+    
+    Username     : xxxxxxxx               Index        : 18594
+    
+    Assigned IP  : x.x.x.x            Public IP    : x.x.x.x
+    
+    Protocol     : AnyConnect-Parent SSL-Tunnel DTLS-Tunnel
+    
+    License      : AnyConnect Premium
+    
+    Encryption   : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)AES256  DTLS-Tunnel: (1)AES256
+    
+    Hashing      : AnyConnect-Parent: (1)none  SSL-Tunnel: (1)SHA1  DTLS-Tunnel: (1)SHA1
+    
+    Bytes Tx     : 26059343               Bytes Rx     : 12795265
+    
+    Group Policy : GroupPolicy_Employee
+    
+    Tunnel Group : Employee
+    
+    Login Time   : 09:48:37 CDT Thu Mar 19 2020
+    
+    Duration     : 6h:28m:19s
+    
+    Inactivity   : 0h:00m:00s
+    
+    VLAN Mapping : N/A                    VLAN         : none
+    
+    Audt Sess ID : 0af03436048a20005e738645
+    
+    Security Grp : none                  
+           
+    

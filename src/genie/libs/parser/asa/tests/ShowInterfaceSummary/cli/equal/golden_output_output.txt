@@ -1,0 +1,6 @@
+
+		ciscoasa/admin# show interface summary
+		Interface Vlan100 "pod10", is up, line protocol is up
+			MAC address aa11.bbff.ee55, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
+	

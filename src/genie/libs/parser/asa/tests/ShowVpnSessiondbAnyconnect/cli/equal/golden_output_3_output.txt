@@ -1,0 +1,35 @@
+
+        Session Type: AnyConnect
+
+        Username : user1 Index : 37670
+        Assigned IP : 10.10.10.80 Public IP : 10.66.2.2
+        Protocol : AnyConnect-Parent
+        License : AnyConnect Premium
+        Encryption : AnyConnect-Parent: (1)none
+        Hashing : AnyConnect-Parent: (1)none
+        Bytes Tx : 92531620 Bytes Rx : 38126521
+        Group Policy : GroupPolicy_Employee
+        Tunnel Group : Employee
+        Login Time : 15:56:33 CDT Fri Mar 13 2020
+        Duration : 2d 4h:21m:44s
+        Inactivity : 1d 9h:13m:24s
+        VLAN Mapping : N/A VLAN : none
+        Audt Sess ID : 0adc27fd093260005381
+        Security Grp : none
+
+        Username : user1 Index : 56867
+        Assigned IP : 10.10.10.213 Public IP : 10.4.1.1
+        Protocol : AnyConnect-Parent
+        License : AnyConnect Premium
+        Encryption : AnyConnect-Parent: (1)none
+        Hashing : AnyConnect-Parent: (1)none
+        Bytes Tx : 18318907 Bytes Rx : 5297986
+        Group Policy : GroupPolicy_Employee
+        Tunnel Group : Employee
+        Login Time : 08:36:57 CDT Sat Mar 14 2020
+        Duration : 1d 11h:41m:20s
+        Inactivity : 1d 9h:04m:29s
+        VLAN Mapping : N/A VLAN : none
+        Audt Sess ID : 0adc27fd0de230005e6f9
+        Security Grp : none
+        
