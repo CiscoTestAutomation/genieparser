@@ -2,7 +2,6 @@
 * 'show sdwan version'
 '''
 from genie.libs.parser.viptela.show_version import ShowVersion as ShowVersion_viptela
-import re
 
 # =====================================
 # Parser for 'show sdwan version'

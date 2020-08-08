@@ -1,11 +1,10 @@
 '''
-* 'show sdwan software'
+* 'show sdwan reboot history'
 '''
 from genie.libs.parser.viptela.show_reboot_history import ShowRebootHistory as ShowRebootHistory_viptela
-import re
 
 # =====================================
-# Parser for 'show sdwan software'
+# Parser for 'show sdwan reboot history'
 # =====================================
 class ShowSdwanRebootHistory(ShowRebootHistory_viptela):
 

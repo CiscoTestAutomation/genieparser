@@ -26,7 +26,7 @@ class TestShowSdwanVersion(unittest.TestCase):
         17.3.01.0.214   
     '''}
 
-    golden_parsed_output = {'VERSION': '17.3.01.0.214'}
+    golden_parsed_output = {'version': '17.3.01.0.214'}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)

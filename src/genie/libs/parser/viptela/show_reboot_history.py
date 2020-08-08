@@ -1,3 +1,6 @@
+'''
+* 'show reboot history'
+'''
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Or, Optional
@@ -6,7 +9,7 @@ import re
 
 
 # ===========================================
-# Schema for 'show software | tab'
+# Schema for 'show reboot history'
 # ===========================================
 
 
@@ -14,9 +17,10 @@ class ShowRebootHistorySchema(MetaParser):
     """ Schema for "show reboot history" """
 
     schema = {
-        Any():{
-            'REBOOT DATE TIME': str,
-            'REBOOT REASON': str,
+        'reboot_date_time': {
+            str: {
+                'reboot_reason': str,
+            }
         }
     }
 # ===========================================
@@ -47,5 +51,11 @@ class ShowRebootHistory(ShowRebootHistorySchema):
             out = pg.oper_fill_tabular(device_output=out,
                                     header_fields=["REBOOT DATE TIME", "REBOOT REASON"],
                                     index=[0])
-            parsed_dict = out.entries
+            return_dict = out.entries
+            reboot_date_time ={}
+            for keys in return_dict.keys() :
+                dict1={}
+                dict1['reboot_reason'] = return_dict[keys]['REBOOT REASON']
+                reboot_date_time[keys] = dict1
+            parsed_dict['reboot_date_time'] = reboot_date_time
         return parsed_dict

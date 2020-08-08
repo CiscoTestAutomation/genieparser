@@ -27,7 +27,7 @@ class TestShowVersion(unittest.TestCase):
         99.99.999-4567
     '''}
 
-    golden_parsed_output = {'VERSION': '99.99.999-4567'}
+    golden_parsed_output = {'version': '99.99.999-4567'}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)

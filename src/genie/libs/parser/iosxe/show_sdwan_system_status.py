@@ -2,7 +2,6 @@
 * 'show sdwan system status'
 '''
 from genie.libs.parser.viptela.show_system_status import ShowSystemStatus as ShowSystemStatus_viptela
-import re
 
 # =====================================
 # Parser for 'show sdwan system status'

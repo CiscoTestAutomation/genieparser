@@ -1,3 +1,6 @@
+'''
+* 'show version'
+'''
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Or, Optional
@@ -6,7 +9,7 @@ import re
 
 
 # ===========================================
-# Schema for 'show software | tab'
+# Schema for 'show version'
 # ===========================================
 
 
@@ -14,7 +17,7 @@ class ShowVersionSchema(MetaParser):
     """ Schema for "show version" """
 
     schema = {
-        'VERSION': str
+        'version': str
     }
 # ===========================================
 # Parser for 'show version'
@@ -31,14 +34,13 @@ class ShowVersion(ShowVersionSchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        # srp_vedge# show version
-        # 99.99.999-4567
         if out:
+            # 99.99.999-4567
+            p1 = re.compile('^(?P<value>[\d\w/\.\:\-]+)$')
             for line in out.splitlines():
                 line = line.strip()
-                p1 = re.compile('^(?P<value>[\d\w/\.\:\-]+)$')
                 m = p1.match(line)
                 if m:
                     groups = m.groupdict()
-                    parsed_dict.update({'VERSION': (groups['value'])})
+                    parsed_dict.update({'version': (groups['value'])})
         return parsed_dict
