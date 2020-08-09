@@ -1,75 +1,74 @@
 
-    	ciscoasa/admin# show interface detail
-		Interface Vlan300 "admin-out", is up, line protocol is up
-			MAC address aa11.bbff.ee55, MTU 1500
-			IP address 10.10.1.1, subnet mask 255.255.255.0
-		  Traffic Statistics for "admin-out":
-			889007666 packets input, 785740327549 bytes
-			621453837 packets output, 428046938178 bytes
-			2988535 packets dropped
-		  Control Point Interface States:
-			Interface number is 5
-			Interface config status is active
-			Interface state is active
-		  Control Point Vlan300 States:
-			Interface vlan config status is active
-			Interface vlan state is UP
-		Interface Vlan400 "pod10-in", is up, line protocol is up
-			MAC address aa11.bbff.ee55, MTU 1500
-			IP address 10.10.1.1, subnet mask 255.255.255.0
-		  Traffic Statistics for "pod10-in":
-			1286035 packets input, 100030768 bytes
-			1 packets output, 28 bytes
-			1285569 packets dropped
-		  Control Point Interface States:
-			Interface number is 105
-			Interface config status is active
-			Interface state is active
-		  Control Point Vlan400 States:
-			Interface vlan config status is active
-			Interface vlan state is UP
-		Interface Vlan500 "", is up, line protocol is up
-			Available but not configured via nameif
-		Interface Vlan600 "adminTEST", is up, line protocol is up
-			MAC address aa11.bbff.ee55, MTU 1500
-			IP address 10.10.1.1, subnet mask 255.255.255.0
-		  Traffic Statistics for "adminTEST":
-			1212307 packets input, 96880666 bytes
-			1 packets output, 28 bytes
-			1212268 packets dropped
-		  Control Point Interface States:
-			Interface number is 507
-			Interface config status is active
-			Interface state is active
-		  Control Point Vlan600 States:
-			Interface vlan config status is active
-			Interface vlan state is UP
-		Interface Vlan700 "pod1", is up, line protocol is up
-			MAC address aa11.bbff.ee55, MTU 1500
-			IP address 10.10.1.1, subnet mask 255.255.255.0
-		  Traffic Statistics for "pod1":
-			7299914 packets input, 6411442725 bytes
-			2862092 packets output, 118819269 bytes
-			1288374 packets dropped
-		  Control Point Interface States:
-			Interface number is 508
-			Interface config status is active
-			Interface state is active
-		  Control Point Vlan700 States:
-			Interface vlan config status is active
-			Interface vlan state is UP
-		Interface Vlan1600 "pod249", is down, line protocol is down
-			MAC address aa11.bbff.ee55, MTU 1500
-			IP address 10.10.1.1, subnet mask 255.255.255.0
-		  Traffic Statistics for "pod249":
-			0 packets input, 0 bytes
-			0 packets output, 0 bytes
-			0 packets dropped
-		  Control Point Interface States:
-			Interface number is 757
-			Interface config status is active
-			Interface state is not active
-		  Control Point Vlan1600 States:
-			Interface vlan config status is not active
-			Interface vlan state is DOWN (down in system space)
-	
+ciscoasa/admin# show interface detail
+Interface Vlan300 "admin-out", is up, line protocol is up
+	MAC address aa11.bbff.ee55, MTU 1500
+	IP address 10.10.1.1, subnet mask 255.255.255.0
+	Traffic Statistics for "admin-out":
+	889007666 packets input, 785740327549 bytes
+	621453837 packets output, 428046938178 bytes
+	2988535 packets dropped
+	Control Point Interface States:
+	Interface number is 5
+	Interface config status is active
+	Interface state is active
+	Control Point Vlan300 States:
+	Interface vlan config status is active
+	Interface vlan state is UP
+Interface Vlan400 "pod10-in", is up, line protocol is up
+	MAC address aa11.bbff.ee55, MTU 1500
+	IP address 10.10.1.1, subnet mask 255.255.255.0
+	Traffic Statistics for "pod10-in":
+	1286035 packets input, 100030768 bytes
+	1 packets output, 28 bytes
+	1285569 packets dropped
+	Control Point Interface States:
+	Interface number is 105
+	Interface config status is active
+	Interface state is active
+	Control Point Vlan400 States:
+	Interface vlan config status is active
+	Interface vlan state is UP
+Interface Vlan500 "", is up, line protocol is up
+	Available but not configured via nameif
+Interface Vlan600 "adminTEST", is up, line protocol is up
+	MAC address aa11.bbff.ee55, MTU 1500
+	IP address 10.10.1.1, subnet mask 255.255.255.0
+	Traffic Statistics for "adminTEST":
+	1212307 packets input, 96880666 bytes
+	1 packets output, 28 bytes
+	1212268 packets dropped
+	Control Point Interface States:
+	Interface number is 507
+	Interface config status is active
+	Interface state is active
+	Control Point Vlan600 States:
+	Interface vlan config status is active
+	Interface vlan state is UP
+Interface Vlan700 "pod1", is up, line protocol is up
+	MAC address aa11.bbff.ee55, MTU 1500
+	IP address 10.10.1.1, subnet mask 255.255.255.0
+	Traffic Statistics for "pod1":
+	7299914 packets input, 6411442725 bytes
+	2862092 packets output, 118819269 bytes
+	1288374 packets dropped
+	Control Point Interface States:
+	Interface number is 508
+	Interface config status is active
+	Interface state is active
+	Control Point Vlan700 States:
+	Interface vlan config status is active
+	Interface vlan state is UP
+Interface Vlan1600 "pod249", is down, line protocol is down
+	MAC address aa11.bbff.ee55, MTU 1500
+	IP address 10.10.1.1, subnet mask 255.255.255.0
+	Traffic Statistics for "pod249":
+	0 packets input, 0 bytes
+	0 packets output, 0 bytes
+	0 packets dropped
+	Control Point Interface States:
+	Interface number is 757
+	Interface config status is active
+	Interface state is not active
+	Control Point Vlan1600 States:
+	Interface vlan config status is not active
+	Interface vlan state is DOWN (down in system space)

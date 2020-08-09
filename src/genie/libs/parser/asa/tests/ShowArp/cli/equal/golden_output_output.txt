@@ -1,9 +1,9 @@
 
-		ciscoasa# show arp
-		outside 10.10.1.1 aa11.bbff.ee55 2
-		outside 10.10.1.1 aa11.bbff.ee55 -
-		outside 10.10.1.1 aa11.bbff.ee55 alias
-		outside 10.10.1.1/1 aa11.bbff.ee55 -
-		pod100 10.10.1.1 aa11.bbff.ee55 1111
-		pod100 10.10.1.1 aa11.bbff.ee55 2222
+ciscoasa# show arp
+outside 10.10.1.1 aa11.bbff.ee55 2
+outside 10.10.1.1 aa11.bbff.ee55 -
+outside 10.10.1.1 aa11.bbff.ee55 alias
+outside 10.10.1.1/1 aa11.bbff.ee55 -
+pod100 10.10.1.1 aa11.bbff.ee55 1111
+pod100 10.10.1.1 aa11.bbff.ee55 2222
     

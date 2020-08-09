@@ -1,44 +1,43 @@
 
-    	ciscoasa/admin# show interface summary
-		Interface Vlan300 "admin-out", is up, line protocol is up
-			MAC address aa11.bbff.ee55, MTU 1500
-			IP address 10.10.1.1, subnet mask 255.255.255.0
-		Interface Vlan400 "pod10-in", is up, line protocol is up
-			MAC address aa11.bbff.ee55, MTU 1500
-			IP address 10.10.1.1, subnet mask 255.255.255.0
-		Interface Vlan500 "", is up, line protocol is up
-			Available but not configured via nameif
-		Interface Vlan600 "adminTEST", is up, line protocol is up
-			MAC address aa11.bbff.ee55, MTU 1500
-			IP address 10.10.1.1, subnet mask 255.255.255.0
-		Interface Vlan700 "pod1", is up, line protocol is up
-			MAC address aa11.bbff.ee55, MTU 1500
-			IP address 10.10.1.1, subnet mask 255.255.255.0
-		Interface Vlan902 "pod2", is up, line protocol is up
-			MAC address aa11.bbff.ee55, MTU 1500
-			IP address 10.10.1.1, subnet mask 255.255.255.0
-		Interface Vlan900 "pod3", is up, line protocol is up
-			MAC address aa11.bbff.ee55, MTU 1500
-			IP address 10.10.1.1, subnet mask 255.255.255.0
-		Interface Vlan1000 "pod4", is up, line protocol is up
-			MAC address aa11.bbff.ee55, MTU 1500
-			IP address 10.10.1.1, subnet mask 255.255.255.0
-		Interface Vlan1100 "pod5", is up, line protocol is up
-			MAC address aa11.bbff.ee55, MTU 1500
-			IP address 10.10.1.1, subnet mask 255.255.255.0
-		Interface Vlan1200 "pod6", is up, line protocol is up
-			MAC address aa11.bbff.ee55, MTU 1500
-			IP address 10.10.1.1, subnet mask 255.255.255.0
-		Interface Vlan1300 "pod7", is up, line protocol is up
-			MAC address aa11.bbff.ee55, MTU 1500
-			IP address 10.10.1.1, subnet mask 255.255.255.0
-		Interface Vlan1400 "pod8", is up, line protocol is up
-			MAC address aa11.bbff.ee55, MTU 1500
-			IP address 10.10.1.1, subnet mask 255.255.255.0
-		Interface Vlan1500 "pod9", is up, line protocol is up
-			MAC address aa11.bbff.ee55, MTU 1500
-			IP address 10.10.1.1, subnet mask 255.255.255.0
-		Interface Vlan1600 "pod249", is down, line protocol is down
-			MAC address aa11.bbff.ee55, MTU 1500
-			IP address 10.10.1.1, subnet mask 255.255.255.0
-	
+ciscoasa/admin# show interface summary
+Interface Vlan300 "admin-out", is up, line protocol is up
+	MAC address aa11.bbff.ee55, MTU 1500
+	IP address 10.10.1.1, subnet mask 255.255.255.0
+Interface Vlan400 "pod10-in", is up, line protocol is up
+	MAC address aa11.bbff.ee55, MTU 1500
+	IP address 10.10.1.1, subnet mask 255.255.255.0
+Interface Vlan500 "", is up, line protocol is up
+	Available but not configured via nameif
+Interface Vlan600 "adminTEST", is up, line protocol is up
+	MAC address aa11.bbff.ee55, MTU 1500
+	IP address 10.10.1.1, subnet mask 255.255.255.0
+Interface Vlan700 "pod1", is up, line protocol is up
+	MAC address aa11.bbff.ee55, MTU 1500
+	IP address 10.10.1.1, subnet mask 255.255.255.0
+Interface Vlan902 "pod2", is up, line protocol is up
+	MAC address aa11.bbff.ee55, MTU 1500
+	IP address 10.10.1.1, subnet mask 255.255.255.0
+Interface Vlan900 "pod3", is up, line protocol is up
+	MAC address aa11.bbff.ee55, MTU 1500
+	IP address 10.10.1.1, subnet mask 255.255.255.0
+Interface Vlan1000 "pod4", is up, line protocol is up
+	MAC address aa11.bbff.ee55, MTU 1500
+	IP address 10.10.1.1, subnet mask 255.255.255.0
+Interface Vlan1100 "pod5", is up, line protocol is up
+	MAC address aa11.bbff.ee55, MTU 1500
+	IP address 10.10.1.1, subnet mask 255.255.255.0
+Interface Vlan1200 "pod6", is up, line protocol is up
+	MAC address aa11.bbff.ee55, MTU 1500
+	IP address 10.10.1.1, subnet mask 255.255.255.0
+Interface Vlan1300 "pod7", is up, line protocol is up
+	MAC address aa11.bbff.ee55, MTU 1500
+	IP address 10.10.1.1, subnet mask 255.255.255.0
+Interface Vlan1400 "pod8", is up, line protocol is up
+	MAC address aa11.bbff.ee55, MTU 1500
+	IP address 10.10.1.1, subnet mask 255.255.255.0
+Interface Vlan1500 "pod9", is up, line protocol is up
+	MAC address aa11.bbff.ee55, MTU 1500
+	IP address 10.10.1.1, subnet mask 255.255.255.0
+Interface Vlan1600 "pod249", is down, line protocol is down
+	MAC address aa11.bbff.ee55, MTU 1500
+	IP address 10.10.1.1, subnet mask 255.255.255.0

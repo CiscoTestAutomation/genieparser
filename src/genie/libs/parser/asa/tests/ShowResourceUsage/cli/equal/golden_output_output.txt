@@ -1,11 +1,11 @@
 
-    Resource              Current         Peak      Limit        Denied Context
-    SSH                         1            5          5             0 System
-    ASDM                        1            1          5             0 System
-    Syslogs [rate]             18          861        N/A             0 System
-    Conns                  176981      1999939    2000000      16815496 System
-    Xlates                   9873        70234        N/A             0 System
-    Hosts                   56874      1996513        N/A             0 System
-    Conns [rate]             1227       103095        N/A             0 System
-    Inspects [rate]           435        88557        N/A             0 System
+Resource              Current         Peak      Limit        Denied Context
+SSH                         1            5          5             0 System
+ASDM                        1            1          5             0 System
+Syslogs [rate]             18          861        N/A             0 System
+Conns                  176981      1999939    2000000      16815496 System
+Xlates                   9873        70234        N/A             0 System
+Hosts                   56874      1996513        N/A             0 System
+Conns [rate]             1227       103095        N/A             0 System
+Inspects [rate]           435        88557        N/A             0 System
     

@@ -1,16 +1,16 @@
 
-    Frame drop:
-      Reverse-path verify failed (rpf-violated)                                   23
-      Flow is denied by configured rule (acl-drop)                                29
-      Slowpath security checks failed (sp-security-failed)                        11
-      FP L2 rule drop (l2_acl)                                                    35
-      FP no mcast output intrf (no-mcast-intrf)                                   31
-    
-    Last clearing: 10:43:33 EDT Mar 27 2019 by genie
-    
-    Flow drop:
-      NAT failed (nat-failed)                                                    528
-      Inspection failure (inspect-fail)                                        67870
-      SSL received close alert (ssl-received-close-alert)                          9
-    Last clearing: 10:43:33 EDT Mar 27 2019 by genie    
+Frame drop:
+  Reverse-path verify failed (rpf-violated)                                   23
+  Flow is denied by configured rule (acl-drop)                                29
+  Slowpath security checks failed (sp-security-failed)                        11
+  FP L2 rule drop (l2_acl)                                                    35
+  FP no mcast output intrf (no-mcast-intrf)                                   31
+
+Last clearing: 10:43:33 EDT Mar 27 2019 by genie
+
+Flow drop:
+  NAT failed (nat-failed)                                                    528
+  Inspection failure (inspect-fail)                                        67870
+  SSL received close alert (ssl-received-close-alert)                          9
+Last clearing: 10:43:33 EDT Mar 27 2019 by genie    
     

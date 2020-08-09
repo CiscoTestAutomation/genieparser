@@ -1,12 +1,12 @@
 
-		Interface IP-Address OK? Method Status Protocol
-		Control0/0 10.10.1.1 YES CONFIG up up
-		GigabitEthernet0/0 10.10.1.1 YES CONFIG up up
-		GigabitEthernet0/1 unassigned YES unset admin down down
-		GigabitEthernet0/2 10.10.1.1 YES manual admin down down
-		GigabitEthernet0/3 10.10.1.1 YES DHCP admin down down
-		Management0/0 10.10.1.1 YES CONFIG up
-		Vlan150                   10.10.1.1  YES CONFIG up                    up
-		Vlan160                   10.10.1.1  YES CONFIG down                  down
-		Vlan170                    unassigned      YES unset  up                    up
+Interface IP-Address OK? Method Status Protocol
+Control0/0 10.10.1.1 YES CONFIG up up
+GigabitEthernet0/0 10.10.1.1 YES CONFIG up up
+GigabitEthernet0/1 unassigned YES unset admin down down
+GigabitEthernet0/2 10.10.1.1 YES manual admin down down
+GigabitEthernet0/3 10.10.1.1 YES DHCP admin down down
+Management0/0 10.10.1.1 YES CONFIG up
+Vlan150                   10.10.1.1  YES CONFIG up                    up
+Vlan160                   10.10.1.1  YES CONFIG down                  down
+Vlan170                    unassigned      YES unset  up                    up
 	

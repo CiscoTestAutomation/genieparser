@@ -1,17 +1,17 @@
 
-    	DevNet-asa-sm-1/admin# show interface detail
-		Interface Vlan6000 "pod555", is down, line protocol is down
-			MAC address aa11.bbff.ee55, MTU 1500
-			IP address 10.10.1.1, subnet mask 255.255.255.0
-		  Traffic Statistics for "pod555":
-			0 packets input, 0 bytes
-			0 packets output, 0 bytes
-			0 packets dropped
-		  Control Point Interface States:
-			Interface number is 612
-			Interface config status is active
-			Interface state is not active
-		  Control Point Vlan1600 States:
-			Interface vlan config status is not active
-			Interface vlan state is DOWN (down in system space)
+DevNet-asa-sm-1/admin# show interface detail
+Interface Vlan6000 "pod555", is down, line protocol is down
+	MAC address aa11.bbff.ee55, MTU 1500
+	IP address 10.10.1.1, subnet mask 255.255.255.0
+	Traffic Statistics for "pod555":
+	0 packets input, 0 bytes
+	0 packets output, 0 bytes
+	0 packets dropped
+	Control Point Interface States:
+	Interface number is 612
+	Interface config status is active
+	Interface state is not active
+	Control Point Vlan1600 States:
+	Interface vlan config status is not active
+	Interface vlan state is DOWN (down in system space)
 	

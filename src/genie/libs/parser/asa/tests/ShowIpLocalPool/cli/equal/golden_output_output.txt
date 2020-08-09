@@ -1,13 +1,13 @@
 
-        show ip local pool test1 
-        Begin           End             Mask            Free     Held     In use
-        192.168.1.144   192.168.1.147   255.255.255.252     2        0        2
+show ip local pool test1 
+Begin           End             Mask            Free     Held     In use
+192.168.1.144   192.168.1.147   255.255.255.252     2        0        2
 
-        Available Addresses:
-        192.168.1.145
-        192.168.1.146
+Available Addresses:
+192.168.1.145
+192.168.1.146
 
-        In Use Addresses:
-        192.168.1.144
-        192.168.1.147
+In Use Addresses:
+192.168.1.144
+192.168.1.147
           

@@ -1,17 +1,17 @@
 
-    	DevNet-asa-sm-1/admin# show interface detail
-		Interface Vlan5000 "pod248", is up, line protocol is up
-			MAC address aa11.bbff.ee55, MTU 1500
-			IP address 10.10.1.1, subnet mask 255.255.255.0
-		  Traffic Statistics for "pod248":
-			34354322 packets input, 32443242111 bytes
-			92739172 packets output, 4309803982 bytes
-			2551519 packets dropped
-		  Control Point Interface States:
-			Interface number is 899
-			Interface config status is active
-			Interface state is active
-		  Control Point Vlan5000 States:
-			Interface vlan config status is active
-			Interface vlan state is UP
+DevNet-asa-sm-1/admin# show interface detail
+Interface Vlan5000 "pod248", is up, line protocol is up
+	MAC address aa11.bbff.ee55, MTU 1500
+	IP address 10.10.1.1, subnet mask 255.255.255.0
+	Traffic Statistics for "pod248":
+	34354322 packets input, 32443242111 bytes
+	92739172 packets output, 4309803982 bytes
+	2551519 packets dropped
+	Control Point Interface States:
+	Interface number is 899
+	Interface config status is active
+	Interface state is active
+	Control Point Vlan5000 States:
+	Interface vlan config status is active
+	Interface vlan state is UP
 	
