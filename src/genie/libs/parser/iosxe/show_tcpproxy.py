@@ -24,7 +24,7 @@ class ShowTcpproxyStatusSchema(MetaParser):
 class ShowTcpproxyStatus(ShowTcpproxyStatusSchema):
 
     """ Parser for "show tcpproxy status" """
-    
+
     cli_command = "show tcpproxy status"
 
     def cli(self, output=None):
@@ -35,6 +35,7 @@ class ShowTcpproxyStatus(ShowTcpproxyStatusSchema):
             output = self.device.execute(self.cli_command)
 
         parsed_dict = {}
+        last_dict_ptr = {}
 
         # Configuration
         p1 = re.compile(r'^Configuration$')
@@ -79,10 +80,7 @@ class ShowTcpproxyStatus(ShowTcpproxyStatusSchema):
             if m:
                 groups = m.groupdict()
                 key = groups['key'].replace(' ', '_').lower()
-                try:
-                    value = int(groups['value'])
-                except ValueError:
-                    value = groups['value']
+                value = groups['value']
                 last_dict_ptr.update({key: value})
 
         return parsed_dict
@@ -241,7 +239,7 @@ class ShowTcpProxyStatisticsSchema(MetaParser):
 class ShowTcpProxyStatistics(ShowTcpProxyStatisticsSchema):
 
     """ Parser for "show tcpproxy statistics" """
-    
+
     cli_command = "show tcpproxy statistics"
 
     def cli(self, output=None):
@@ -404,6 +402,7 @@ class ShowTcpProxyStatistics(ShowTcpProxyStatisticsSchema):
         p2 = re.compile(r'^(?P<key>[\s\S]+\S)(\s+:|:) +(?P<value>[\d]+)$')
 
         parsed_dict = {}
+        last_dict_ptr = {}
 
         for line in output.splitlines():
             line = line.strip()
@@ -429,7 +428,7 @@ class ShowTcpProxyStatistics(ShowTcpProxyStatisticsSchema):
             if m:
                 groups = m.groupdict()
                 key = groups['key'].replace(' ', '_').lower()
-                key = re.sub('[^a-zA-Z0-9 \n\.]', '_', key)
+                key = re.sub(r'[^a-zA-Z0-9 \n\.]', '_', key)
                 key = key.strip('_').replace('____', '_').replace('___', '_').replace('__', '_')
                 try:
                     value = int(groups['value'])
