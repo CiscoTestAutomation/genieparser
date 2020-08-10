@@ -923,7 +923,8 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         # Age: 3w2d 4:43:35   Metric: 101 
         # Age: 3:07:25    Metric: 200
         # Age: 29w6d 21:42:46
-        p11 = re.compile(r'^Age:\s+(?P<age>\w+(\s+\S+)?)(\s+Metric:\s+(?P<metric>\d+))?$')
+        # Age: 12 Metric2: 50
+        p11 = re.compile(r'^Age:\s+(?P<age>(\w+(\s+\S+)?)|[\d:]+)(\s+Metric(\d+)?:\s+(?P<metric>\d+))?$')
 
         # Validation State: unverified 
         p12 = re.compile(r'^Validation +State: +(?P<validation_state>\S+)$')
