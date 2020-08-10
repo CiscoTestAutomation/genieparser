@@ -10,13 +10,15 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                              SchemaMissingKeyError
 
 # Parser
-from genie.libs.parser.iosxe.show_sdwan_ipsec import ShowSdwanIpsecInboundConnections,ShowSdwanIpsecOutboundConnections
+from genie.libs.parser.iosxe.show_sdwan_ipsec import ShowSdwanIpsecInboundConnections,\
+ShowSdwanIpsecOutboundConnections,ShowSdwanIpsecLocalsa
 
 
 # ============================================
 # Parser for the following commands
 #   * 'show sdwan ipsec inbound-connections'
 #   * 'show sdwan ipsec outbound-connections'
+#   * 'show sdwan ipsec local-sa <WORD>'
 # ============================================
 
 class TestShowSdwanIpsecInboundConnections(unittest.TestCase):
@@ -137,6 +139,55 @@ class TestShowSdwanIpsecOutboundConnections(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowSdwanIpsecOutboundConnections(device=self.device)
         parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+class TestShowSdwanIpsecLocalsa(unittest.TestCase):
+    device = Device(name='aDevice')
+    maxDiff = None 
+    empty_output = {'execute.return_value' : ''}
+    golden_output = {'execute.return_value': '''
+    #show sdwan ipsec local-sa 78.78.0.9
+                                              SOURCE           SOURCE                                  SOURCE            
+    TLOC ADDRESS     TLOC COLOR       SPI     IPv4             IPv6                                    PORT    KEY HASH  
+    ----------------------------------------------------------------------------------------------------------------------
+    78.78.0.9        biz-internet     259     77.27.8.2        ::                                      12346   *****8d95 
+    78.78.0.9        biz-internet     260     77.27.8.2        ::                                      12346   *****4447'''}
+
+    golden_parsed_output = {
+        'local_sa': {
+            'inbound':
+                {
+                 'spi': 259,
+                 'source_ipv4': '77.27.8.2',
+                 'source_port': 12346,
+                 'source_ipv6': '::',
+                 'tloc_color': 'biz-internet',
+                 'key_hash': '*****8d95',
+                },
+            'outbound':
+                {
+                 'spi': 260,
+                 'source_ipv4': '77.27.8.2',
+                 'source_port': 12346,
+                 'source_ipv6': '::',
+                 'tloc_color': 'biz-internet',
+                 'key_hash': '*****4447',
+                },
+            },
+        }
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowSdwanIpsecLocalsa(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+    
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowSdwanIpsecLocalsa(device=self.device)
+        parsed_output = obj.parse(tloc_address='78.78.0.9')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 

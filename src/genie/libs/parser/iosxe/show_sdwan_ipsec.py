@@ -1,6 +1,7 @@
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any,Optional
 import re
+from collections import OrderedDict
 
 # =================================================
 # Schema for 'show sdwan ipsec inbound-connections'
@@ -58,6 +59,35 @@ class ShowSdwanIpsecOutboundConnectionsSchema(MetaParser):
     }
 
 
+# =================================================
+# Schema for 'show sdwan ipsec local-sa <WORD>'
+# =================================================
+class ShowSdwanIpsecLocalsaSchema(MetaParser):
+
+    """ Schema for "show sdwan ipsec local-sa <WORD>" command """
+
+    schema = {
+        "local_sa": {
+            'inbound':
+                {
+                 'spi': int,
+                 'source_ipv4': str,
+                 'source_port': int,
+                 'source_ipv6': str,
+                 'tloc_color': str,
+                 'key_hash': str,
+                },
+             'outbound':
+                {
+                 'spi': int,
+                 'source_ipv4': str,
+                 'source_port': int,
+                 'source_ipv6': str,
+                 'tloc_color': str,
+                 'key_hash': str,
+                },
+            },
+        }
 # =================================================
 # Parser for 'show sdwan ipsec inbound-connections'
 # =================================================
@@ -163,5 +193,57 @@ class ShowSdwanIpsecOutboundConnections(ShowSdwanIpsecOutboundConnectionsSchema)
                 })
                 ipsec_dict = destination_dict.setdefault(destination_ip, parameters_dict)
                 continue
+
+        return parsed_dict
+
+# =================================================
+# Parser for 'show sdwan ipsec local-sa <WORD>'
+# =================================================
+
+class ShowSdwanIpsecLocalsa(ShowSdwanIpsecLocalsaSchema):
+
+    """ Parser for "show sdwan ipsec local-sa <WORD>" """
+
+    exclude = ['uptime']
+
+    cli_command = "show sdwan ipsec local-sa {tloc_address}"
+
+    def cli(self, tloc_address='', output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(tloc_address=tloc_address))
+        else:
+            out = output
+
+        parsed_dict = {}
+                
+        #78.78.0.9        biz-internet     259     77.27.8.2        ::                                      12346   *****8d95 
+        #78.78.0.9        biz-internet     260     77.27.8.2        ::                                      12346   *****4447
+        p1=re.compile(r"^(?P<tloc_address>[\S]+) +(?P<tloc_color>[\S]+) +"
+                      r"(?P<spi>[\d]+) +(?P<source_ipv4>[\S]+) +"
+                      r"(?P<source_ipv6>[\S]+) +(?P<source_port>[\d]+) +(?P<key_hash>[\S]+)$")
+
+        count = 0
+        for line in out.splitlines():
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                count = count + 1
+                groups=m.groupdict()
+                if count is not 2:
+                    spi_dict=parsed_dict.setdefault("local_sa", OrderedDict()).setdefault("inbound", OrderedDict())
+                    keys = ["spi","source_ipv4","source_port","source_ipv6","tloc_color","key_hash"]
+                    for k in keys:
+                        if k is "spi" or k is "source_port":
+                            spi_dict[k] = int(groups[k])
+                        else:
+                            spi_dict[k] = groups[k]
+                else:
+                    spi_dict=parsed_dict.setdefault("local_sa", OrderedDict()).setdefault("outbound", OrderedDict())
+                    keys = ["spi","source_ipv4","source_port","source_ipv6","tloc_color","key_hash"]
+                    for k in keys:
+                        if k is "spi" or k is "source_port":
+                            spi_dict[k] = int(groups[k])
+                        else:
+                            spi_dict[k] = groups[k]
 
         return parsed_dict
