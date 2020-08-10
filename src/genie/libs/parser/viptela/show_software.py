@@ -1,9 +1,11 @@
+'''
+* 'show software | tab'
+'''
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Or, Optional
 import genie.parsergen as pg
 import re
-
 
 # ===========================================
 # Schema for 'show software | tab'
@@ -14,13 +16,14 @@ class ShowSoftwaretabSchema(MetaParser):
     """ Schema for "show software | tab" """
 
     schema = {
-        Any():{
-            'ACTIVE': str,
-            'CONFIRMED': str,
-            'DEFAULT': str,
-            'PREVIOUS': str,
-            'TIMESTAMP': str,
-            'VERSION': str
+        'version':{
+            str: {
+                'actve': str,
+                'confirmed': str,
+                'default': str,
+                'previous': str,
+                'timestamp': str,
+            }
         }
     }
 # ===========================================
@@ -46,7 +49,13 @@ class ShowSoftwaretab(ShowSoftwaretabSchema):
         if out:
             out = pg.oper_fill_tabular(device_output=out,
                                     header_fields=["VERSION", "ACTIVE", "DEFAULT", "PREVIOUS", "CONFIRMED", "TIMESTAMP"],
+                                    label_fields=["version", "active", "default", "previous", "confirmed", "timestamp"],
                                     index=[0])
             parsed_dict = out.entries
-
+            version_dict ={}
+            for keys in return_dict.keys() :
+                dict1={}
+                del return_dict[keys]['version']
+                version_dict[keys] = return_dict[keys]
+            parsed_dict['version'] = version_dict
         return parsed_dict

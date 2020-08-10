@@ -32,26 +32,24 @@ class TestShowSdwanSoftware(unittest.TestCase):
         Total Space:387M Used Space:141M Available Space:241M     
     '''}
 
-    golden_parsed_output = {
-        '17.2.01.0.12': {'ACTIVE': 'false',
-                  'CONFIRMED': 'user',
-                  'DEFAULT': 'false',
-                  'PREVIOUS': 'true',
-                  'TIMESTAMP': '2020-03-30T02:15:00-00:00',
-                  'VERSION': '17.2.01.0.12'},
-        '17.2.01.0.32': {'ACTIVE': 'true',
-                  'CONFIRMED': 'user',
-                  'DEFAULT': 'false',
-                  'PREVIOUS': 'false',
-                  'TIMESTAMP': '2020-04-11T09:43:37-00:00',
-                  'VERSION': '17.2.01.0.32'},
-        '17.2.02.0.1857': {'ACTIVE': 'false',
-                    'CONFIRMED': 'auto',
-                    'DEFAULT': 'true',
-                    'PREVIOUS': 'false',
-                    'TIMESTAMP': '2020-03-30T02:13:24-00:00',
-                    'VERSION': '17.2.02.0.1857'}
- }
+    golden_parsed_output = {'version': {
+                '17.2.01.0.12': {'active': 'false',
+                            'confirmed': 'user',
+                            'default': 'false',
+                            'previous': 'true',
+                            'timestamp': '2020-03-30T02:15:00-00:00'},
+                '17.2.01.0.32': {'active': 'true',
+                            'confirmed': 'user',
+                            'default': 'false',
+                            'previous': 'false',
+                            'timestamp': '2020-04-11T09:43:37-00:00'},
+                '17.2.02.0.1857': {'active': 'false',
+                            'confirmed': 'auto',
+                            'default': 'true',
+                            'previous': 'false',
+                            'timestamp': '2020-03-30T02:13:24-00:00'}
+                        }
+                    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
