@@ -27,10 +27,6 @@
         * show sdwan appqoe nat-statistics
     * Added ShowSdwanAppqoeRmResources:
         * show sdwan appqoe rm-resources
-    * Added ShowSdwanIpsecInboundConnections for:
-        * show sdwan ipsec inbound-connections
-    * Added ShowSdwanIpsecOutboundConnections for:
-        * show sdwan ipsec outbound-connections
 * IOSXR
     * Added ShowIgmpGroupsSummary:
         * show igmp groups summary
