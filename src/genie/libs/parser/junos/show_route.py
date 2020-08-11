@@ -595,6 +595,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                                     "last-active": str,
                                     "local-as": str,
                                     "metric": str,
+                                    "metric2": str,
                                     "nh": {
                                         Optional("@junos:indent"): str,
                                         "label-element": str,
@@ -757,6 +758,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                     Optional("last-active"): str,
                     Optional("local-as"): str,
                     Optional("metric"): str,
+                    Optional("metric2"): str,
                     Optional("nh"): Use(validate_nh_list),
                     "nh-address": str,
                     Optional("nh-index"): str,
@@ -924,7 +926,10 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         # Age: 3w2d 4:43:35   Metric: 101 
         # Age: 3:07:25    Metric: 200
         # Age: 29w6d 21:42:46
-        p11 = re.compile(r'^Age:\s+(?P<age>\w+(\s+\S+)?)(\s+Metric:\s+(?P<metric>\d+))?$')
+        p11 = re.compile(r'^Age:\s+(?P<age>(\w+(\s+\S+)?)|[\d:]+)(\s+Metric:\s+(?P<metric>\d+))?$')
+
+        # Age: 12 Metric2: 50
+        p11_2 = re.compile(r'^Age:\s+(?P<age>(\w+(\s+\S+)?)|[\d:]+)(\s+Metric2:\s+(?P<metric2>\d+))?$')
 
         # Validation State: unverified 
         p12 = re.compile(r'^Validation +State: +(?P<validation_state>\S+)$')
@@ -1201,6 +1206,17 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 if metric:
                     rt_entry_dict.update({'metric': metric})
                 continue
+
+            # Age: 12 Metric2: 50
+            m = p11_2.match(line)
+            if m:
+                group = m.groupdict()
+                age_dict = rt_entry_dict.setdefault('age', {})
+                age_dict.update({'#text': group['age']})
+                metric2 = group['metric2']
+                if metric2:
+                    rt_entry_dict.update({'metric2': metric2})
+                continue            
 
             # Validation State: unverified 
             m = p12.match(line)

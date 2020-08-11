@@ -55020,6 +55020,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "nh-address": "0xbb68bf4",
                                     "nh-reference-count": "4",
                                     "gateway": "2.2.2.2",
+                                    'age': {'#text': '13'},
+                                    'metric2': '3',
                                     "nh": [
                                         {
                                             "to": "20.0.0.2",
