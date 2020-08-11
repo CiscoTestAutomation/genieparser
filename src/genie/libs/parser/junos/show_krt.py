@@ -9,7 +9,7 @@ import re
 
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import (Any,
-        Optional, Use, SchemaTypeError, Schema)
+        Optional, Use, Schema)
 
 class ShowKrtStateSchema(MetaParser):
 
@@ -278,7 +278,7 @@ class ShowKrtQueueSchema(MetaParser):
     def validate_krt_queue_list(value):
         # Pass ospf3-interface list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-interface is not a list')
+            raise Exception('ospf-interface is not a list')
         krt_queue_schema = Schema({
                 "krtq-queue-length": str,
                 "krtq-type": str

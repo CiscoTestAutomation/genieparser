@@ -10,7 +10,7 @@ import re
 
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import (Any,
-        Optional, Use, SchemaTypeError, Schema)
+        Optional, Use, Schema)
 
 class ShowVersionDetailSchema(MetaParser):
 
@@ -50,7 +50,7 @@ class ShowVersionDetailSchema(MetaParser):
     def validate_version_information_list(value):
         # Pass ospf3-interface list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('version_information is not a list')
+            raise Exception('version_information is not a list')
         version_information_schema = Schema({
             "build-date": str,
             Optional("build-number"): str,
@@ -71,7 +71,7 @@ class ShowVersionDetailSchema(MetaParser):
     def validate_package_information_list(value):
         # Pass ospf3-interface list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('package_information is not a list')
+            raise Exception('package_information is not a list')
         package_information_schema = Schema({
             "comment": str,
             "name": str
@@ -344,7 +344,7 @@ class ShowVersionInvokeOnAllRoutingEnginesSchema(MetaParser):
     def validate_package_information_list(value):
         # Pass ospf3-interface list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('package_information is not a list')
+            raise Exception('package_information is not a list')
         package_information_schema = Schema({
             "comment": str,
             "name": str

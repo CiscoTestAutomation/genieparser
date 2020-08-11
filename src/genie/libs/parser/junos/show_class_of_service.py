@@ -8,8 +8,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import (Any, Optional, Use,
-                                                SchemaTypeError, Schema)
+from genie.metaparser.util.schemaengine import (Any, Optional, Use, Schema)
 
 
 class ShowClassOfServiceSchema(MetaParser):

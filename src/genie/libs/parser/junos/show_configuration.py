@@ -10,7 +10,7 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema
-from genie.metaparser.util.exceptions import SchemaTypeError
+
 
 class ShowConfigurationProtocolsMplsLabelSwitchedPathSchema(MetaParser):
     """ Schema for:
@@ -125,7 +125,7 @@ class ShowConfigurationProtocolsMplsPathSchema(MetaParser):
 
     def validate_path_list_schema(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('path list schema is not a list')
+            raise Exception('path list schema is not a list')
     
         path_list_schema = Schema({
             'name': str,

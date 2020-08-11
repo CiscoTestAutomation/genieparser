@@ -14,7 +14,6 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema
-from genie.metaparser.util.exceptions import SchemaTypeError
 
 
 class ShowLDPSessionSchema(MetaParser):
@@ -23,7 +22,7 @@ class ShowLDPSessionSchema(MetaParser):
     """
     def validate_ldp_session(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('LDP Session not a list')
+            raise Exception('LDP Session not a list')
 
         ldp_session = Schema({
             "ldp-neighbor-address": str,
@@ -105,7 +104,7 @@ class ShowLdpNeighborSchema(MetaParser):
 
     def validate_ldp_neighbor(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('LDP neighbor is not a list')
+            raise Exception('LDP neighbor is not a list')
 
         ldp_neighbor = Schema({
             "interface-name": str,
@@ -195,7 +194,7 @@ class ShowLdpDatabaseSessionIpaddressSchema(MetaParser):
 
     def validate_ldp_binding(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('LDP binding is not a list')
+            raise Exception('LDP binding is not a list')
 
         ldp_binding = Schema({
             "ldp-label": str,
@@ -208,7 +207,7 @@ class ShowLdpDatabaseSessionIpaddressSchema(MetaParser):
 
     def validate_ldp_database(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('LDP database is not a list')
+            raise Exception('LDP database is not a list')
 
         ldp_database = Schema({
             "ldp-binding": Use(ShowLdpDatabaseSessionIpaddress.validate_ldp_binding),

@@ -10,7 +10,6 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema
-from genie.metaparser.util.exceptions import SchemaTypeError
 
 
 class ShowMPLSLSPNameDetailSchema(MetaParser):
@@ -19,11 +18,11 @@ class ShowMPLSLSPNameDetailSchema(MetaParser):
     """
     def validate_rsvp_session_data(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('RSVP session data is not a list')
+            raise Exception('RSVP session data is not a list')
 
         def validate_packet_information(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('Packet information is not a list')
+                raise Exception('Packet information is not a list')
 
             packet_information = Schema({
                 "heading": str,
@@ -46,7 +45,7 @@ class ShowMPLSLSPNameDetailSchema(MetaParser):
 
         def validate_explicit_route(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('Explicit route is not a list')
+                raise Exception('Explicit route is not a list')
 
             explicit_route = Schema({
                 "address": str,
@@ -58,7 +57,7 @@ class ShowMPLSLSPNameDetailSchema(MetaParser):
 
         def validate_record_route(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('Record route is not a list')
+                raise Exception('Record route is not a list')
 
             record_route = Schema({
                 "address": str,

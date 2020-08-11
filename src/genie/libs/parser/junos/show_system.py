@@ -21,7 +21,6 @@ import re
 # metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use
-from genie.metaparser.util.exceptions import SchemaTypeError
 
 
 class ShowSystemBuffersSchema(MetaParser):
@@ -342,7 +341,7 @@ class ShowSystemUsersSchema(MetaParser):
 } """
     def validate_system_user_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-neighbor is not a list')
+            raise Exception('ospf-neighbor is not a list')
         neighbor_schema = Schema({
             "command": str,
             "from": str,
@@ -496,7 +495,7 @@ class ShowSystemCommitSchema(MetaParser):
     def validate_commit_history_list(value):
         # Pass commit-history list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('commit-history is not a list')
+            raise Exception('commit-history is not a list')
         commit_history_schema = Schema({
             "client": str,
             "date-time": {
@@ -596,7 +595,7 @@ class ShowSystemQueuesSchema(MetaParser):
     def validate_interface_queue_list(value):
         # Pass interface-queue list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('commit-history is not a list')
+            raise Exception('commit-history is not a list')
         interface_queue_schema = Schema({
             "max-octets-allowed": str,
             "max-packets-allowed": str,
@@ -726,7 +725,7 @@ class ShowSystemStorageSchema(MetaParser):
     def validate_filesystem_list(value):
         # Pass filesystem list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('filesystem is not a list')
+            raise Exception('filesystem is not a list')
         filesystem_schema = Schema({
             "available-blocks": {
                 "junos:format": str
@@ -856,7 +855,7 @@ class ShowSystemCoreDumpsSchema(MetaParser):
     def validate_file_information_list(value):
         # Pass file-information list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-interface is not a list')
+            raise Exception('ospf-interface is not a list')
         file_information_schema = Schema({
             "file-date": {
                 Optional("#text"): str,
@@ -1910,11 +1909,11 @@ class ShowSystemStatisticsSchema(MetaParser):
     """
     def statistics_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError("statistics is not a list")
+            raise Exception("statistics is not a list")
 
         def icmp_histogram_list(value):
             if not isinstance(value, list):
-                raise SchemaTypeError("icmp-histogram is not a list")
+                raise Exception("icmp-histogram is not a list")
             icmp_histogram_schema = Schema({
                 "destination-unreachable": str,
                 "icmp-echo": str,
@@ -1928,7 +1927,7 @@ class ShowSystemStatisticsSchema(MetaParser):
 
         def ip6_header_type(value):
             if not isinstance(value, list):
-                raise SchemaTypeError("statistics is not a list")
+                raise Exception("statistics is not a list")
             ip6_header_type_schema = Schema({
                 "globals":
                 str,

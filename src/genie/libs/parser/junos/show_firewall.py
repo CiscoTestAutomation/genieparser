@@ -11,7 +11,7 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import (Any, 
-        Optional, Use, SchemaTypeError, Schema, Or)
+        Optional, Use, Schema, Or)
 
 class ShowFirewallSchema(MetaParser):
 
@@ -44,7 +44,7 @@ class ShowFirewallSchema(MetaParser):
     def validate_counter_list(value):
         # Pass firmware list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('counter is not a list')
+            raise Exception('counter is not a list')
         counter_inner_schema = Schema(
                         {
                             "byte-count": str,
@@ -62,7 +62,7 @@ class ShowFirewallSchema(MetaParser):
     
     def validate_filter_information_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('filter-information is not a list')
+            raise Exception('filter-information is not a list')
         filter_schema = Schema({
                 Optional("counter"): Use(ShowFirewall.validate_counter_list),
                 "filter-name": str,

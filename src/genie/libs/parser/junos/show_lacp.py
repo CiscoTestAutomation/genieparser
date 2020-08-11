@@ -10,7 +10,7 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import (Any,
-        Optional, Use, SchemaTypeError, Schema)
+        Optional, Use, Schema)
 
 
 class ShowLacpInterfacesInterfaceSchema(MetaParser):
@@ -19,7 +19,7 @@ class ShowLacpInterfacesInterfaceSchema(MetaParser):
     """
     def validate_lag_lacp_state_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('lag-lacp-state is not a list')
+            raise Exception('lag-lacp-state is not a list')
         entry_schema = Schema({
             "lacp-activity": str,
             "lacp-aggregation": str,
@@ -39,7 +39,7 @@ class ShowLacpInterfacesInterfaceSchema(MetaParser):
 
     def validate_lag_lacp_protocol_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('lag-lacp-protocol is not a list')
+            raise Exception('lag-lacp-protocol is not a list')
         entry_schema = Schema({
                 "lacp-mux-state": str,
                 "lacp-receive-state": str,
