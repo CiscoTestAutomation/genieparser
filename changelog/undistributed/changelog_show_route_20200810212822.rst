@@ -3,5 +3,5 @@
 --------------------------------------------------------------------------------
 * JUNOS
         * Modified ShowRouteProtocolExtensive:
-                * Updated regex pattern <p11> to accommodate various outputs.
+                * Added key "metric2" into the schema.
         
