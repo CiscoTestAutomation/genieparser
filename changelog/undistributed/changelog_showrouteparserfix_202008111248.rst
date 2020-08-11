@@ -3,4 +3,4 @@
 --------------------------------------------------------------------------------
 * Junos
     * Fixed ShowRouteTable
-        * Fixed regex pattern
+        * Fixed regex pattern for r3
