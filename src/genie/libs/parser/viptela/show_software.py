@@ -18,7 +18,7 @@ class ShowSoftwaretabSchema(MetaParser):
     schema = {
         'version':{
             str: {
-                'actve': str,
+                'active': str,
                 'confirmed': str,
                 'default': str,
                 'previous': str,
@@ -51,7 +51,7 @@ class ShowSoftwaretab(ShowSoftwaretabSchema):
                                     header_fields=["VERSION", "ACTIVE", "DEFAULT", "PREVIOUS", "CONFIRMED", "TIMESTAMP"],
                                     label_fields=["version", "active", "default", "previous", "confirmed", "timestamp"],
                                     index=[0])
-            parsed_dict = out.entries
+            return_dict = out.entries
             version_dict ={}
             for keys in return_dict.keys() :
                 dict1={}
