@@ -18,7 +18,7 @@ class ShowCtsRbaclSchema(MetaParser):
                 "ip_protocol_version": str,
                 "refcnt": int,
                 "flag": str,
-                "stale": "FALSE",
+                "stale": bool,
                 Optional(int): {
                     Optional("action"): str,
                     Optional("protocol"): str,
@@ -84,6 +84,11 @@ class ShowCtsRbacl(ShowCtsRbaclSchema):
                 rbacl_value = groups['rbacl_value']
                 if rbacl_value.isdigit():
                     rbacl_value = int(rbacl_value)
+                if rbacl_value == "TRUE" or rbacl_value == "FALSE":
+                    if rbacl_value == "TRUE":
+                        rbacl_value = True
+                    else:
+                        rbacl_value = False
                 if not cts_rbacl_dict.get('cts_rbacl', {}):
                     cts_rbacl_dict['cts_rbacl'] = {}
                 if rbacl_key == 'name':

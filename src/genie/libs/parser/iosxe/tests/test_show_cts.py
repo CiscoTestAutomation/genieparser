@@ -20,7 +20,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -32,7 +32,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 4,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -44,7 +44,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 10,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -56,7 +56,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -68,7 +68,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -80,7 +80,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 14,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -92,7 +92,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -104,7 +104,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -116,7 +116,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4, IPV6",
             "refcnt": 1373,
             "flag": "0xC1000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "deny",
                 "protocol": "ip"
@@ -126,7 +126,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "ip"
@@ -136,7 +136,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp",
@@ -148,7 +148,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -160,7 +160,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 4,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -172,7 +172,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 4,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -184,7 +184,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp",
@@ -196,7 +196,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -208,7 +208,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 222,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp"
@@ -270,7 +270,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -282,7 +282,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp",
@@ -294,7 +294,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -366,7 +366,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -378,7 +378,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 4,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -390,7 +390,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -402,7 +402,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -414,7 +414,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -426,7 +426,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 4,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -438,7 +438,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 4,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -450,7 +450,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -462,7 +462,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -474,7 +474,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -486,7 +486,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -498,7 +498,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -510,7 +510,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp",
@@ -522,7 +522,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -534,7 +534,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -546,7 +546,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -558,7 +558,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -570,7 +570,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -582,7 +582,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -594,7 +594,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -606,7 +606,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -618,7 +618,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -630,7 +630,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -642,7 +642,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -654,7 +654,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -666,7 +666,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -678,7 +678,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -690,7 +690,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -702,7 +702,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -714,7 +714,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 4,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -726,7 +726,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp",
@@ -738,7 +738,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -750,7 +750,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -762,7 +762,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -774,7 +774,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -786,7 +786,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 34,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -798,7 +798,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 5,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -942,7 +942,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -954,7 +954,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -966,7 +966,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp",
@@ -978,7 +978,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -990,7 +990,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1002,7 +1002,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 4,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1014,7 +1014,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1026,7 +1026,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 10,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1038,7 +1038,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1050,7 +1050,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp",
@@ -1062,7 +1062,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1074,7 +1074,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1086,7 +1086,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1098,7 +1098,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 6,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1110,7 +1110,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1122,7 +1122,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 10,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1134,7 +1134,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 4,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1146,7 +1146,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1158,7 +1158,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 6,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1170,7 +1170,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1182,7 +1182,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1194,7 +1194,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1206,7 +1206,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1218,7 +1218,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 10,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1230,7 +1230,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1242,7 +1242,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 3,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1308,7 +1308,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 8,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1320,7 +1320,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 6,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1332,7 +1332,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1344,7 +1344,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "deny",
                 "protocol": "tcp",
@@ -1356,7 +1356,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 4,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp",
@@ -1368,7 +1368,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 25,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp"
@@ -1378,7 +1378,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1390,7 +1390,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1402,7 +1402,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1414,7 +1414,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1426,7 +1426,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 232,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1438,7 +1438,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1450,7 +1450,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp",
@@ -1462,7 +1462,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1474,7 +1474,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1486,7 +1486,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 14,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1498,7 +1498,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 6,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1510,7 +1510,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp",
@@ -1522,7 +1522,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 7,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1570,7 +1570,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 4,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp",
@@ -1582,7 +1582,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1594,7 +1594,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1606,7 +1606,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 4,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp",
@@ -1618,7 +1618,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1630,7 +1630,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 204,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1708,7 +1708,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 4,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1720,7 +1720,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 8,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "deny",
                 "protocol": "ip"
@@ -1730,7 +1730,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1742,7 +1742,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 172,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "icmp"
@@ -1768,7 +1768,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 16,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1780,7 +1780,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 66,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1792,7 +1792,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4, IPV6",
             "refcnt": 14,
             "flag": "0xC1000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "ip"
@@ -1802,7 +1802,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 3,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1814,7 +1814,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 5,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp"
@@ -1856,7 +1856,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1868,7 +1868,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1880,7 +1880,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 230,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1892,7 +1892,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 9,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1904,7 +1904,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp"
@@ -1914,7 +1914,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 18,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp"
@@ -1924,7 +1924,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 12,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp",
@@ -1936,7 +1936,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -1948,7 +1948,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -2026,7 +2026,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 4,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp",
@@ -2038,7 +2038,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp",
@@ -2050,7 +2050,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp",
@@ -2152,7 +2152,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -2164,7 +2164,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -2176,7 +2176,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 4,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp",
@@ -2188,7 +2188,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -2200,7 +2200,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -2212,7 +2212,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp",
@@ -2224,7 +2224,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp",
@@ -2236,7 +2236,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "udp",
@@ -2248,7 +2248,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 4,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -2260,7 +2260,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -2272,7 +2272,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -2284,7 +2284,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
@@ -2296,7 +2296,7 @@ class TestShowCtsRbacl(unittest.TestCase):
             "ip_protocol_version": "IPV4",
             "refcnt": 2,
             "flag": "0x41000000",
-            "stale": "FALSE",
+            "stale": False,
             1: {
                 "action": "permit",
                 "protocol": "tcp",
