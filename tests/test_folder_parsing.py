@@ -58,13 +58,15 @@ class FileBasedTest(aetest.Testcase):
     @aetest.test.loop(operating_system=OPERATING_SYSTEMS)
     def check_os_folder(self, steps, operating_system):
         """Loop through OS's and run appropriate tests."""
-        #    parse_files = get_files(operating_system)
         parse_files = []
+        # Get all of the root level files
         for parse_file in glob.glob(f"../src/genie/libs/parser/{operating_system}/*.py"):
             if parse_file.endswith("__init__.py"):
                 continue
+            # Load all of the classes in each of those files, and search for classes
+            # that have a `cli` method
             _module = importlib.machinery.SourceFileLoader(
-                os.path.basename(parse_file[:-3]), parse_file
+                os.path.basename(parse_file[:-len('.py'])]), parse_file
             ).load_module()
             for name, _class in inspect.getmembers(_module):
 
@@ -91,8 +93,10 @@ class FileBasedTest(aetest.Testcase):
             _class.__name__
         ):
             self.failed(f"No files found in appropriate directory for {_class}")
+        # Look for any files ending with _output.txt, presume the user defined name from that (based 
+        # on truncating that _output.txt suffix) and obtaining expected results and potentially an arguments file
         for user_defined in output_glob:
-            user_test = os.path.basename(user_defined[:-11])
+            user_test = os.path.basename(user_defined[:-len('_output.txt']))
             with steps.start(
                 f"Gold -> {operating_system} -> {_class.__name__} -> {user_test}",
                 continue_=True,
@@ -128,7 +132,7 @@ class FileBasedTest(aetest.Testcase):
                 f"No files found in appropriate directory for {_class} empty file"
             )
         for user_defined in output_glob:
-            user_test = os.path.basename(user_defined[:-11])
+            user_test = os.path.basename(user_defined[:-len('_output.txt'])])
             with steps.start(
                 f"Empty -> {operating_system} -> {_class.__name__} -> {user_test}",
                 continue_=True,
