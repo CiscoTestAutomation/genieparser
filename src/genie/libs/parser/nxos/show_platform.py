@@ -231,7 +231,9 @@ class ShowVersion(ShowVersionSchema):
             # cisco Nexus7000 C7009 (9 Slot) Chassis ("Supervisor Module-2")
             # cisco Nexus 5596 Chassis ("O2 48X10GE/Modular Supervisor")
             p15 = re.compile(r'^\s*cisco +(?P<model>[a-zA-Z0-9\-\s]+)'
-            r'( +\((?P<slot>[0-9]+) Slot\))?( +[C|c]hassis)?( +\(\"(?P<rp>'
+            #r'( +\((?P<slot>[0-9]+) Slot\))?( +[C|c]hassis)?( +\(\"(?P<rp>'
+            r'( +\((?P<slot>[0-9]+) Slot\))?( +[C|c]hassis)( +\(\"(?P<rp>'
+            #r'( +\((?P<slot>[0-9]+) Slot\))? +[C|c]hassis( +\(\"(?P<rp>'
             r'[a-zA-Z0-9\s\-\/\+]+)\"\))?(\s)?$')
             m = p15.match(line)
             if m:
@@ -249,6 +251,31 @@ class ShowVersion(ShowVersionSchema):
                 if 'rp' not in version_dict['platform']['hardware']:
                     version_dict['platform']['hardware']['rp'] = rp
                 continue
+
+            # cisco N9K-C93180YC-EX ("supervisor")
+            p15a = re.compile(r'^\s*cisco +(?P<model>[a-zA-Z0-9\-\s]+)'
+            r'( +\((?P<slot>[0-9]+) Slot\))? +[C|c]hassis( +\(\"(?P<rp>'
+            r'[a-zA-Z0-9\s\-\/\+]+)\"\))?(\s)?$')
+            m = p15.match(line)
+            if m:
+                model = chassis = str(m.groupdict()['model'])
+                slot = str(m.groupdict()['slot'])
+                rp = str(m.groupdict()['rp'])
+
+                if 'model' not in version_dict['platform']['hardware']:
+                    version_dict['platform']['hardware']['model'] = model
+                    version_dict['platform']['hardware']['chassis'] = chassis
+
+                if 'slots' not in version_dict['platform']['hardware']:
+                    version_dict['platform']['hardware']['slots'] = slot
+
+                if 'rp' not in version_dict['platform']['hardware']:
+                    version_dict['platform']['hardware']['rp'] = rp
+                continue
+
+
+
+
 
             # Intel(R) Xeon(R) CPU         with 32938744 kB of memory.
             # Intel(R) Core(TM) i3- CPU @ 2.50GHz with 12345678 kB of memory.
