@@ -2223,7 +2223,7 @@ class ShowRouteAdvertisingProtocolDetailSchema(MetaParser):
                 "nh": {
                     "to": str,
                 },
-                "med": str,
+                Optional("med"): str,
                 "local-preference": str,
                 'as-path': str,
                 "communities": str,
@@ -2268,7 +2268,8 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
                         r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
 
         # * 10.36.255.252/32 (1 entry, 1 announced)
-        p2 = re.compile(r'^(?P<active_tag>\*)? *(?P<rt_destination>[\d\.]+)'
+        # * 2001:3/128 (2 entries, 2 announced)
+        p2 = re.compile(r'^(?P<active_tag>\*)? *(?P<rt_destination>[\d\.:]+)'
                         r'/(?P<rt_prefix_length>\d+)'
                         r' +\((?P<rt_entry_count>\d+) +\S+, +'
                         r'(?P<rt_announced_count>\d+) +announced\)$')
@@ -2294,7 +2295,8 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
 
 
         # Communities: 65151:65109
-        p9 = re.compile(r'^Communities: +(?P<communities>\S+)$')
+        # Communities: 2:2 4:4 no-export
+        p9 = re.compile(r'^Communities: +(?P<communities>[A-Za-z0-9\:\-\s]+)$')
 
         # Flags: Nexthop Change
         p10 = re.compile(r'^Flags: +(?P<flags>.*)$')
