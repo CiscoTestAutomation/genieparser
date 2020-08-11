@@ -69,7 +69,7 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
 
         cts_env_dict = {}
 
-        current_state_capture = re.compile(r"^Current\s+state\s=\s+(?P<state>.*$)", re.MULTILINE)
+        current_state_capture = re.compile(r"^Current\s+state\s=\s+(?P<state>.*$)")
         last_status_capture = re.compile(r"^Last\s+status\s+=\s+(?P<last_status>.*$)", re.MULTILINE)
         # Optional
         tags_capture = re.compile(r"^SGT\s+tag\s+=\s+(?P<sgt_tags>\d+-\d+):(?P<tag_status>\w+)", re.MULTILINE)
