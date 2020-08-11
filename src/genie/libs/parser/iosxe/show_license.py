@@ -58,15 +58,22 @@ class ShowLicense(ShowLicenseSchema):
         else:
             out = output
 
+        # Index 1 Feature: appxk9
         p1 = re.compile(r"Index\s+(?P<id>\d+)\s+Feature:\s+(?P<feature>\S+)", re.MULTILINE)
+        #         Period left: Life time
         p2 = re.compile(r"\s+(?P<period_left>(Life\s+time|Not\s+Activated))", re.MULTILINE)
+        # 	        Period Used: 0  minute  0  second
         p3 = re.compile(r"\s+(?P<period_minutes>\d+)\s+minute\s+(?P<period_seconds>\d+)\s+second", re.MULTILINE)
+        #         License Type: Permanent
         p4 = re.compile(r"\s+(?P<license_type>(Permanent|EvalRightToUse))", re.MULTILINE)
+        #         License State: Active, In Use
         p5 = re.compile(
             r"\s+((?P<count_in_use>\d+)/(?P<count_violation>\d+)\s+\(In-use/Violation\)|(?P<count>\S+))",
             re.MULTILINE
         )
+        #         License Priority: None
         p6 = re.compile(r"\s+(?P<license_priority>\S+)", re.MULTILINE)
+        #         License State: Active, Not in Use, EULA not accepted
         p7 = re.compile(
             r"\s+(?P<license_state>(Active,\s+Not\s+in\s+Use,\s+EULA\s+not\s+accepted|Active,\s+In\s+Use))",
             re.MULTILINE
