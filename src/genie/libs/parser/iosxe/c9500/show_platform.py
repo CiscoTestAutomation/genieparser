@@ -55,7 +55,9 @@ class ShowVersionSchema(MetaParser):
                     'model_rev_num': str,
                     'mb_rev_num': str,
                     'model_num': str,
-                    'system_sn': str,
+                    Optional ('system_sn'): {
+                        Any(): str,
+                    },
                     Optional('mem_size'): {
                         Any(): str,
                     },
