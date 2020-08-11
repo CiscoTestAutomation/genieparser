@@ -402,7 +402,8 @@ class ShowRoute(ShowRouteSchema):
 
         # AS path: (65151 65000) I, validation-state: unverified
         # AS path: I
-        p4 = re.compile(r'AS +path:(?P<as_path>( +\([\S\s]+\))? +\S+)'
+        # AS path: 3 4 I, validation-state: unverified
+        p4 = re.compile(r'AS +path:(?P<as_path>([()\d\s]+ )?\w)'
                         r'(, validation-state: +(?P<validation_state>\S+))?$')
         
         # to table inet.0
