@@ -60,6 +60,9 @@
         * Included extra output case
     * Fixed ShowRouteProtocolExtensive:
         * Updated few keys into Optional
+    * Updated ShowBgpNeighbor:
+        * Added key (is-bgp-running) to handle output as BGP is not running
+
 * IOS
     * Fixed ShowNtpConfig:
         * Added prefered key
