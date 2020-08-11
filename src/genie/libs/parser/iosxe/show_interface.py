@@ -260,11 +260,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                         r'(?P<sub_mtu>\d+))?, +BW +(?P<bandwidth>[0-9]+) +Kbit(\/sec)?'
                         r'(, +RxBW +[0-9]+ +Kbit(\/sec)?)?, +'
                         r'DLY +(?P<delay>[0-9]+) +usec,$')
-        '''
-        p6 = re.compile(r'^MTU +(?P<mtu>\d+) +bytes(, +sub +MTU +'
-                        r'(?P<sub_mtu>\d+))?, +BW +(?P<bandwidth>[0-9]+) +Kbit(\/sec)?, +'
-                        r'DLY +(?P<delay>[0-9]+) +usec,$')
-        '''
 
         # reliability 255/255, txload 1/255, rxload 1/255
         p7 = re.compile(r'^reliability +(?P<reliability>[\d\/]+),'
