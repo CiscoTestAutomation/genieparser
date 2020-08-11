@@ -116,8 +116,9 @@ class ShowRouteTable(ShowRouteTableSchema):
 
         # > to 192.168.220.6 via ge-0/0/1.0
         # > to 192.168.220.6 via ge-0/0/1.0, Push 305550
+        # > to 192.168.220.6 via ge-0/0/1.0, Pop
         r3 = re.compile(r'(?:(?P<best_route>\>*))?\s*to\s+(?P<to>\S+)\s+via\s+'
-                         '(?P<via>[\w\d\/\-\.]+)\,*\s*(?:(?P<mpls_label>\S+\s+\d+))?')
+                         '(?P<via>[\w\d\/\-\.]+)\,*\s*(?:(?P<mpls_label>[\S\s]+))?')
 
         parsed_output = {}
 
