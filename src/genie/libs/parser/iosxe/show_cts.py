@@ -19,24 +19,24 @@ class ShowCtsEnvironmentDataSchema(MetaParser):
           Optional("tag_status"): str,
           Optional("server_list_name"): str,
           Optional("server_count"): int,
-          Optional("servers"): list
-            # {
-            #   Optional("server_ip"): str,
-            #   Optional("port"): int,
-            #   Optional("aid"): str,
-            #   Optional("server_status"): str,
-            #   Optional("auto_test"): str,
-            #   Optional("keywrap_enable"): str,
-            #   Optional("idle_time_mins"): int,
-            #   Optional("dead_time_secs"): int
-            # }
-          ,
-          Optional("security_groups"): list
-            # {
-            #   Optional("sec_group"): str,
-            #   Optional("sec_group_name"): str
-            # }
-          ,
+          Optional("servers"): {
+              Optional(int): {
+                  Optional("server_ip"): str,
+                  Optional("port"): int,
+                  Optional("aid"): str,
+                  Optional("server_status"): str,
+                  Optional("auto_test"): str,
+                  Optional("keywrap_enable"): str,
+                  Optional("idle_time_mins"): int,
+                  Optional("dead_time_secs"): int
+              }
+          },
+          Optional("security_groups"): {
+              Optional(int): {
+                  Optional("sec_group"): str,
+                  Optional("sec_group_name"): str
+              }
+          },
           Optional("env_data_lifetime_secs"): str,
           Optional("last_update"): {
             Optional("date"): str,
@@ -125,7 +125,8 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
 
         server_data = {}
         security_groups = {}
-
+        keywrap_index = 1
+        sec_group_index = 1
         for line in out:
             current_state_match = current_state_capture.match(line)
             if current_state_match:
@@ -184,8 +185,10 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
                     {'auto_test': auto_test, 'keywrap_enable': keywrap_enable, 'idle_time_mins': idle_time_mins,
                      'dead_time_secs': dead_time_secs})
                 if not cts_env_dict['cts_env'].get('servers', {}):
-                    cts_env_dict['cts_env']['servers'] = []
-                cts_env_dict['cts_env']['servers'].append(server_data)
+                    cts_env_dict['cts_env']['servers'] = {}
+                if not cts_env_dict['cts_env']['servers'].get(keywrap_index, {}):
+                    cts_env_dict['cts_env']['servers'][keywrap_index] = server_data
+                keywrap_index = keywrap_index + 1
                 continue
             sec_group_match = sec_group_capture.match(line)
             if sec_group_match:
@@ -194,8 +197,10 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
                 sec_group_name = groups['sec_group_name']
                 sec_groups_data = {'sec_group': sec_group, 'sec_group_name': sec_group_name}
                 if not cts_env_dict['cts_env'].get('security_groups', {}):
-                    cts_env_dict['cts_env']['security_groups'] = []
-                cts_env_dict['cts_env']['security_groups'].append(sec_groups_data)
+                    cts_env_dict['cts_env']['security_groups'] = {}
+                if not cts_env_dict['cts_env']['security_groups'].get(sec_group_index, {}):
+                    cts_env_dict['cts_env']['security_groups'][sec_group_index] = sec_groups_data
+                sec_group_index = sec_group_index + 1
                 continue
             env_data_match = env_data_capture.match(line)
             if env_data_match:
