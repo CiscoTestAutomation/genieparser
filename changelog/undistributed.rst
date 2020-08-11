@@ -10,8 +10,8 @@
 --------------------------------------------------------------------------------
 
 * IOSXE
-    * Added ShowStackwiseVirtual
-        * show stackwise-virtual
+    * Added ShowCtsRbacl
+        * show cts rbacl
 
 --------------------------------------------------------------------------------
                                 Fix
