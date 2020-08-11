@@ -2,14 +2,14 @@ import unittest
 from unittest.mock import Mock
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
-from genie.libs.parser.iosxe.show_cts import ShowCtsRbacl.Py
+from genie.libs.parser.iosxe.show_cts import ShowCtsRbacl
 
 
 # =================================
-# Unit test for 'show cts rbacl.py'
+# Unit test for 'show cts rbacl'
 # =================================
-class TestShowCtsRbacl.Py(unittest.TestCase):
-    """Unit test for 'show cts rbacl.py'"""
+class TestShowCtsRbacl(unittest.TestCase):
+    """Unit test for 'show cts rbacl'"""
 
     maxDiff = None
     empty_output = {'execute.return_value': ''}
@@ -3568,15 +3568,15 @@ RBACL IP Version Supported: IPv4 & IPv6
  
     '''}
 
-    def test_show_cts_rbacl.py_full(self):
+    def test_show_cts_rbacl_full(self):
         self.device = Mock(**self.golden_output1)
-        obj = ShowCtsRbacl.Py(device=self.device)
+        obj = ShowCtsRbacl(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-    def test_show_cts_rbacl.py_empty(self):
+    def test_show_cts_rbacl_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowCtsRbacl.Py(device=self.device)
+        obj = ShowCtsRbacl(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 

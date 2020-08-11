@@ -6,10 +6,10 @@ from genie.metaparser.util.schemaengine import Any, Optional
 
 # ======================
 # Schema for:
-#  * 'show cts rbacl.py'
+#  * 'show cts rbacl'
 # ======================
-class ShowCtsRbacl.PySchema(MetaParser):
-    """Schema for show cts rbacl.py."""
+class ShowCtsRbaclSchema(MetaParser):
+    """Schema for show cts rbacl."""
 
     schema = {
         "cts_rbacl": {
@@ -19,11 +19,11 @@ class ShowCtsRbacl.PySchema(MetaParser):
                 "refcnt": int,
                 "flag": str,
                 "stale": "FALSE",
-                int: {
-                    "action": str,
-                    "protocol": str,
-                    "direction": str,
-                    "port": int
+                Optional(int): {
+                    Optional("action"): str,
+                    Optional("protocol"): str,
+                    Optional("direction"): str,
+                    Optional("port"): int
                 }
             }
         }
@@ -32,12 +32,12 @@ class ShowCtsRbacl.PySchema(MetaParser):
 
 # ======================
 # Parser for:
-#  * 'show cts rbacl.py'
+#  * 'show cts rbacl'
 # ======================
-class ShowCtsRbacl.Py(ShowCtsRbacl.PySchema):
-    """Parser for show cts rbacl.py"""
+class ShowCtsRbacl(ShowCtsRbaclSchema):
+    """Parser for show cts rbacl"""
 
-    cli_command = ['show cts rbacl.py']
+    cli_command = ['show cts rbacl']
 
     def cli(self, output=None):
         if output is None:
