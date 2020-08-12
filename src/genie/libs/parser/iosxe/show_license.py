@@ -104,6 +104,7 @@ class ShowLicense(ShowLicenseSchema):
                     continue
             else:
                 match = p1.match(line_strip)
+                # Index 1 Feature: appxk9
                 groups = match.groupdict()
                 group_id = int(groups['id'])
                 license_dict.update({group_id: {'feature': groups['feature']}})
