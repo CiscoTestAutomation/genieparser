@@ -2269,7 +2269,7 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
 
         # * 10.36.255.252/32 (1 entry, 1 announced)
         # * 2001:3/128 (2 entries, 2 announced)
-        p2 = re.compile(r'^(?P<active_tag>\*)? *(?P<rt_destination>[\d\.:]+)'
+        p2 = re.compile(r'^(?P<active_tag>\*)? *(?P<rt_destination>[A-Fa-f0-9\:\-\.]+)'
                         r'/(?P<rt_prefix_length>\d+)'
                         r' +\((?P<rt_entry_count>\d+) +\S+, +'
                         r'(?P<rt_announced_count>\d+) +announced\)$')
@@ -2296,7 +2296,7 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
 
         # Communities: 65151:65109
         # Communities: 2:2 4:4 no-export
-        p9 = re.compile(r'^Communities: +(?P<communities>[A-Za-z0-9\:\-\s]+)$')
+        p9 = re.compile(r'^Communities: +(?P<communities>[\s\S]+)$')
 
         # Flags: Nexthop Change
         p10 = re.compile(r'^Flags: +(?P<flags>.*)$')
