@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
-from genie.libs.parser.iosxe.show_stackwise_virtual_dual_active_detection import Show_Stackwise_Virtual_Dual_Active_Detection
+from genie.libs.parser.iosxe.show_stackwise import Show_Stackwise_Virtual_Dual_Active_Detection
 
 
 # ============================================================
@@ -14,25 +14,27 @@ class test_show_stackwise_virtual_dual_active_detection(unittest.TestCase):
     maxDiff = None
     empty_output = {'execute.return_value': ''}
     golden_parsed_output1 = {
-    "switches": {
-        1: {
-            "FortyGigabitEthernet1/0/3": {
-                "status": "up"
-            },
-            "FortyGigabitEthernet1/0/4": {
-                "status": "up"
-            }
-        },
-        2: {
-            "FortyGigabitEthernet2/0/3": {
-                "status": "up"
-            },
-            "FortyGigabitEthernet2/0/4": {
-                "status": "up"
+        "dad_port": {
+            "switches": {
+                1: {
+                    "FortyGigabitEthernet1/0/3": {
+                        "status": "up"
+                    },
+                    "FortyGigabitEthernet1/0/4": {
+                        "status": "up"
+                    }
+                },
+                2: {
+                    "FortyGigabitEthernet2/0/3": {
+                        "status": "up"
+                        },
+                    "FortyGigabitEthernet2/0/4": {
+                        "status": "up"
+                        }
+                }
             }
         }
     }
-}
 
     golden_output1 = {'execute.return_value': '''
 Dual-Active-Detection Configuration:

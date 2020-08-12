@@ -12,14 +12,15 @@ class Show_Stackwise_Virtual_Dual_Active_DetectionSchema(MetaParser):
     """Schema for show_stackwise_virtual_dual_active_detection."""
 
     schema = {
-        "switches": {
-            int: {
-                str: {
-                    "status": str
+        "dad_port": {
+            "switches": {
+                int: {
+                    str: {
+                        "status": str
+                    }
                 }
             }
         }
-        
     }
 
 
@@ -30,11 +31,11 @@ class Show_Stackwise_Virtual_Dual_Active_DetectionSchema(MetaParser):
 class Show_Stackwise_Virtual_Dual_Active_Detection(Show_Stackwise_Virtual_Dual_Active_DetectionSchema):
     """Parser for show stackwise-virtual dual-active-detection"""
 
-    cli_command = ['show stackwise-virtual dual-active-detection']
+    cli_command = 'show stackwise-virtual dual-active-detection'
 
     def cli(self, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command[0])
+            out = self.device.execute(self.cli_command)
         else:
             out = output
         dad_dict = {'switches': {}}
@@ -52,8 +53,10 @@ class Show_Stackwise_Virtual_Dual_Active_Detection(Show_Stackwise_Virtual_Dual_A
 
         dad_dict = {}
 
+        # 1       FortyGigabitEthernet1/0/3       up
         switch_id_capture = re.compile(r"^(?P<switch_id>\d+)\s+(?P<dad_port>\S+)\s+(?P<status>(up|down))",
                                          re.MULTILINE)
+        #         FortyGigabitEthernet1/0/4       up
         port_capture = re.compile(r"^\s+(?P<dad_port>\S+)\s+(?P<status>(up|down))", re.MULTILINE)
 
         # Remove unwanted lines from raw text
@@ -73,15 +76,18 @@ class Show_Stackwise_Virtual_Dual_Active_Detection(Show_Stackwise_Virtual_Dual_A
 
         for line in out:
             match = switch_id_capture.match(line)
-            if not dad_dict.get('switches'):
-                dad_dict['switches'] = {}
+            # 1       FortyGigabitEthernet1/0/3       up
+            if not dad_dict.get('dad_port'):
+                dad_dict['dad_port'] = {}
+            if not dad_dict['dad_port'].get('switches'):
+                dad_dict['dad_port']['switches'] = {}
             if match:
                 groups = match.groupdict()
                 switch_id = int(groups['switch_id'])
-                dad_dict['switches'].update({switch_id: {groups['dad_port']: {'status': groups['status']}}})
+                dad_dict['dad_port']['switches'].update({switch_id: {groups['dad_port']: {'status': groups['status']}}})
             port_match = port_capture.match(line)
+            #         FortyGigabitEthernet1/0/4       up
             if port_match:
                 groups = port_match.groupdict()
-                dad_dict['switches'][switch_id].update({groups['dad_port']: {'status': groups['status']}})
-
+                dad_dict['dad_port']['switches'][switch_id].update({groups['dad_port']: {'status': groups['status']}})
         return dad_dict
