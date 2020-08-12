@@ -384,7 +384,7 @@ class ShowSslProxyStatisticsSchema(MetaParser):
 
 class ShowSslProxyStatistics(ShowSslProxyStatisticsSchema):
 
-    """ Parser for "show sslproxy statistics" """
+    """ Parser for show sslproxy statistics"""
 
     cli_command = "show sslproxy statistics"
 

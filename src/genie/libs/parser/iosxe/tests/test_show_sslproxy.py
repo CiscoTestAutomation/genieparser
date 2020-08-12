@@ -8,7 +8,8 @@ from pyats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # Parser
-from genie.libs.parser.iosxe.show_sslproxy import ShowSslproxyStatus, ShowSslProxyStatistics
+from genie.libs.parser.iosxe.show_sslproxy import (ShowSslproxyStatus,
+                                                   ShowSslProxyStatistics)
 
 
 # ============================================
