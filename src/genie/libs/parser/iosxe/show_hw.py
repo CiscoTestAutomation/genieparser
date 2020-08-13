@@ -1,4 +1,4 @@
-''' show_hw_module_status.py
+''' show_hw.py
 IOSXE parsers for the following show commands:
     * show hw_module subslot {subslot} transceiver {transceiver} status
 '''
@@ -14,21 +14,21 @@ from genie.metaparser import MetaParser
 
 # ==========================
 # Schema for:
-#  * 'show_hw_module_status'
+#  * 'show hw module status'
 # ==========================
 class Show_Hw_Module_StatusSchema(MetaParser):
-    """Schema for show_hw_module_status."""
+    """Schema for show hw module status."""
 
     schema = {
     "transceiver_status": {
         "slot_id": int,
         "subslot": int,
-        "port_id": 0,
-        "module_temperature": str,
-        "supply_voltage_mVolts": str,
+        "port_id": int,
+        "module_temperature": float,
+        "supply_voltage_mVolts": float,
         "bias_current_uAmps": int,
-        "tx_power_dBm": str,
-        "optical_power_dBm": str
+        "tx_power_dBm": float,
+        "optical_power_dBm": float
     }
 }
 
@@ -51,20 +51,21 @@ class Show_Hw_Module_Status(Show_Hw_Module_StatusSchema):
             out = output
 
         p1 = re.compile(
+            # The Transceiver in slot 2 subslot 1 port 1 is disabled.
             r"The\s+Transceiver\s+in\s+slot\s(?P<slot_id>\d+)"
             r"\s+subslot\s+(?P<subslot_id>\d+)"
             r"\s+port\s+(?P<port_id>\d+)\s+is\s+"
-            r"(?P<status>(enabled|disabled))",
-            re.MULTILINE)
-        p2 = re.compile(r"\s+(?P<module_temperature>\S+)\s+C", re.MULTILINE)
-        p3 = re.compile(r"\s+(?P<supply_voltage_mVolts>\d+\.\d+)",
-                        re.MULTILINE)
-        p4 = re.compile(r"\s+(?P<bias_current_uAmps>\d+)\s+uAmps",
-                        re.MULTILINE)
-        p5 = re.compile(r"\s+(?P<tx_power_dBm>\S+)\s+dBm",
-                        re.MULTILINE)
-        p6 = re.compile(r"\s+(?P<optical_power_dBm>\S+)\s+dBm",
-                        re.MULTILINE)
+            r"(?P<status>(enabled|disabled))")
+        #   Module temperature                        = +28.625 C
+        p2 = re.compile(r"\s+(?P<module_temperature>\S+)\s+C")
+        #   Transceiver Tx supply voltage             = 3252.5 mVolts
+        p3 = re.compile(r"\s+(?P<supply_voltage_mVolts>\d+\.\d+)")
+        #   Transceiver Tx bias current               = 6706 uAmps
+        p4 = re.compile(r"\s+(?P<bias_current_uAmps>\d+)\s+uAmps")
+        #   Transceiver Tx power                      = -2.7 dBm
+        p5 = re.compile(r"\s+(?P<tx_power_dBm>\S+)\s+dBm")
+        #   Transceiver Rx optical power              = -2.1 dBm
+        p6 = re.compile(r"\s+(?P<optical_power_dBm>\S+)\s+dBm")
 
         # initial variables
         transceiver_dict = {}
@@ -109,6 +110,11 @@ class Show_Hw_Module_Status(Show_Hw_Module_StatusSchema):
                         continue
                     if v.isdigit():
                         v = int(v)
+                    else:
+                        try:
+                            v = float(v)
+                        except ValueError:
+                            continue
                     transceiver_dict['transceiver_status'].update({k: v})
         if transceiver_dict:
             return transceiver_dict

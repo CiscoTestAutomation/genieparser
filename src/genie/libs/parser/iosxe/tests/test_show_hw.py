@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
-from genie.libs.parser.iosxe.show_hw_module_status import Show_Hw_Module_Status
+from genie.libs.parser.iosxe.show_hw import Show_Hw_Module_Status
 
 
 # =====================================
@@ -18,11 +18,11 @@ class test_show_hw_module_status(unittest.TestCase):
             "slot_id": 0,
             "subslot": 1,
             "port_id": 0,
-            "module_temperature": "+28.750",
-            "supply_voltage_mVolts": "3252.5",
+            "module_temperature": +28.750,
+            "supply_voltage_mVolts": 3252.5,
             "bias_current_uAmps": 6706,
-            "tx_power_dBm": "-2.7",
-            "optical_power_dBm": "-2.1"
+            "tx_power_dBm": -2.7,
+            "optical_power_dBm": -2.1
         }
     }
 
