@@ -2269,7 +2269,7 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
 
         # * 10.36.255.252/32 (1 entry, 1 announced)
         # * 2001:3/128 (2 entries, 2 announced)
-        p2 = re.compile(r'^(?P<active_tag>\*)? *(?P<rt_destination>[A-Fa-f0-9\:\-\.]+)'
+        p2 = re.compile(r'^(?P<active_tag>\*)? *(?P<rt_destination>[\s\S]+)'
                         r'/(?P<rt_prefix_length>\d+)'
                         r' +\((?P<rt_entry_count>\d+) +\S+, +'
                         r'(?P<rt_announced_count>\d+) +announced\)$')
