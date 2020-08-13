@@ -15,6 +15,7 @@ JUNOS parsers for the following commands:
     * show route advertising-protocol {protocol} {ip_address} {route}
     * show route advertising-protocol {protocol} {ip_address} {route} detail
     * show route forwarding-table summary
+    * show route forwarding-table label {label}
     * show route summary
     * show route {route} extensive
     * show route extensive
@@ -2378,5 +2379,139 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
                 group = m.groupdict()
                 rt_entry_dict.update({'flags': group['flags']})
                 continue
+
+        return ret_dict
+
+class ShowRouteForwardingTableLabelSchema(MetaParser):
+    """ Schema for:
+        * show route forwarding-table label {label}
+    """
+
+
+    def validate_rt_table_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('Route table is not a list')
+
+        def validate_rt_entry_list(value):
+            if not isinstance(value, list):
+                raise SchemaTypeError('Route entry is not a list')
+
+            rt_entry = Schema({
+                                "rt-destination": str,
+                                "destination-type": str,
+                                "route-reference-count": str,
+                                "nh":{
+                                    Optional("to"): str,
+                                    "nh-type": str,
+                                    "nh-index": str,
+                                    "nh-reference-count": str,
+                                    Optional("nh-lb-label"): str,
+                                    Optional("via"): str,
+                                }
+                            })
+            
+            for item in value:
+                rt_entry.validate(item)
+            return value
+
+
+        rt_table = Schema({
+                        "table-name": str,
+                        "address-family": str,
+                        Optional("enabled-protocols"): str,
+                        "rt-entry": Use(validate_rt_entry_list)
+                    })
+
+        for item in value:
+            rt_table.validate(item)
+        return value
+
+    # Main schema
+    schema = {
+            "forwarding-table-information":{
+                "route-table": Use(validate_rt_table_list)
+            }
+        }
+
+class ShowRouteForwardingTableLabel(ShowRouteForwardingTableLabelSchema):
+    """ Schema for:
+        * show route forwarding-table label {label}
+    """
+
+    cli_command = 'show route forwarding-table label {label}'
+    def cli(self, label, output=None):
+        if not output:
+            out = self.device.execute(
+                self.cli_command.format(label=label))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Routing table: default.mpls
+        # Routing table: __mpls-oam__.mpls
+        p1 = re.compile(r'^Routing +table: +(?P<table_name>\S+)$')
+
+        # MPLS:
+        p2 = re.compile(r'^(?P<address_family>[^\s:]+):$')
+
+        # Enabled protocols: Bridging, Single VLAN, Dual VLAN,
+        p3 = re.compile(r'^Enabled +protocols: +(?P<enabled_protocols>.*)$')
+
+        # Destination        Type RtRef Next hop           Type Index    NhRef Netif
+        p4 = re.compile(r'^Destination +Type +RtRef +Next hop +Type Index  +NhRef +Netif$')
+
+        # 16                 user     0 10.169.14.158    Pop        578     2 ge-0/0/0.0
+        # 16(S=0)            user     0 10.169.14.158    Pop        579     2 ge-0/0/0.0
+        # 16(S=0) user 0 2001:AE Pop 579 2 ge-0/0/0.0
+        # default            perm     0                    dscd      535     1
+        p5 = re.compile(r'^(?P<rt_destination>\S+) +(?P<destination_type>\S+) +'
+                        r'(?P<route_reference_count>\d+) +(?P<to>[\d\.|\d\:a-fA-F]+)? +'
+                        r'(?P<nh_type>\S+) +(?P<nh_index>\d+) +'
+                        r'(?P<nh_reference_count>\d+)( +)?(?P<via>\S+)?$')
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                route_table_list = ret_dict.setdefault(
+                    'forwarding-table-information', {}).setdefault('route-table', [])
+                route_table_dict = {}
+                route_table_list.append(route_table_dict)
+                route_table_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                route_table_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                route_table_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            m = p4.match(line)
+            if m:
+                continue
+
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                route_entry_list = route_table_dict.setdefault('rt-entry', [])
+                route_entry_dict = {}
+
+                route_entry_dict['rt-destination'] = group.pop('rt_destination')
+                route_entry_dict['destination-type'] = group.pop('destination_type')
+                route_entry_dict['route-reference-count'] = group.pop('route_reference_count')
+
+                route_entry_dict['nh'] = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+
+                route_entry_list.append(route_entry_dict)
 
         return ret_dict
