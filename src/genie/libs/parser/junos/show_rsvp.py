@@ -146,7 +146,7 @@ class ShowRSVPNeighborDetailSchema(MetaParser):
                 "rsvp-neighbor-count": str,
                 "rsvp-neighbor": Use(validate_neighbor_list)
             }
-        }
+       	}
 
 class ShowRSVPNeighborDetail(ShowRSVPNeighborDetailSchema):
     """ Parser for:
