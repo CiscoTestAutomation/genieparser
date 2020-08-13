@@ -1279,7 +1279,8 @@ class ShowBgpNeighborSchema(MetaParser):
             entry_schema.validate(item)
         return value
 
-    schema = {"bgp-information": {"bgp-peer": Use(validate_bgp_peer_list)}}
+    schema = {"bgp-information": {"bgp-peer": Use(validate_bgp_peer_list),
+                                  Optional('is-bgp-running'): bool}}
 
 
 class ShowBgpNeighbor(ShowBgpNeighborSchema):
@@ -1467,6 +1468,8 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
         p51 = re.compile(
             r'^Output +Queue\[(?P<number>\d+)\]: +(?P<count>\d+) +\((?P<table_name>\S+), +(?P<rib_adv_nlri>\S+)\)$'
         )
+        # BGP is not running
+        p52 = re.compile(r'^BGP +is +not +running+$')
 
         ret_dict = {}
 
@@ -2012,6 +2015,14 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
                     key = key.replace('_', '-')
                     entry[key] = value
                 entry_list.append(entry)
+                continue
+
+            # BGP is not running
+            m = p52.match(line)
+            if m:
+                entry = ret_dict.setdefault('bgp-information', {})
+                entry.setdefault('bgp-peer', [])
+                entry['is-bgp-running'] = False
                 continue
 
         return ret_dict
