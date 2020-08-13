@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
-from genie.libs.parser.iosxe.show_cts_sxp_connections_brief import Show_Cts_Sxp_Connections_Brief
+from genie.libs.parser.iosxe.show_cts import Show_Cts_Sxp_Connections_Brief
 
 
 # ==============================================

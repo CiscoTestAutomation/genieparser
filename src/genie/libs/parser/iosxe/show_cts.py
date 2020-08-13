@@ -39,12 +39,14 @@ class Show_Cts_Sxp_Connections_BriefSchema(MetaParser):
 
 # ===================================
 # Parser for:
-#  * 'show_cts_sxp_connections_brief'
+#  * 'show cts sxp connections brief'
+#  * 'Parser for show cts sxp connections vrf {vrf} brief'
 # ===================================
 class Show_Cts_Sxp_Connections_Brief(Show_Cts_Sxp_Connections_BriefSchema):
-    """Parser for show_cts_sxp_connections_brief"""
+    """Parser for show cts sxp connections brief"""
+    """Parser for show cts sxp connections vrf {vrf} brief"""
 
-    cli_command = ['show cts sxp connections brief']
+    cli_command = ['show cts sxp connections brief', 'show cts sxp connections vrf {vrf} brief']
 
     def cli(self, output=None):
         if output is None:
@@ -87,21 +89,34 @@ class Show_Cts_Sxp_Connections_Brief(Show_Cts_Sxp_Connections_BriefSchema):
         #
         # Total num of SXP Connections = 16
 
-        p1 = re.compile(r"\s(?P<sxp_status>(Disabled|Enabled))", re.MULTILINE)
-        p2 = re.compile(r"\s+(?P<highest_version>\d+)", re.MULTILINE)
-        p3 = re.compile(r"\s+(?P<default_pw>(Not\s+Set|Set))", re.MULTILINE)
-        p4 = re.compile(r"\s+(?P<key_chain>(Not\s+Set|Set))", re.MULTILINE)
-        p5 = re.compile(r"\s+(?P<key_chain_name>(Not\s+Applicable|\S+))", re.MULTILINE)
-        p6 = re.compile(r"\s+(?P<source_ip>(Not\s+Set|\d+\.\d+\.\d+\.\d+))", re.MULTILINE)
-        p7 = re.compile(r"\s+(?P<conn_retry>\d+)", re.MULTILINE)
-        p8 = re.compile(r"\s+(?P<reconcile_secs>\d+)", re.MULTILINE)
-        p9 = re.compile(r"\s+(?P<seq_export>(Not\s+Set|\S+))", re.MULTILINE)
-        p10 = re.compile(r"\s+(?P<seq_import>(Not\s+Set|\S+))", re.MULTILINE)
-        p11 = re.compile(r"Retry\s+open\s+timer\s+is\s+(?P<retry_timer>(not\s+running|running))", re.MULTILINE)
+        #  SXP              : Enabled
+        p1 = re.compile(r"\s(?P<sxp_status>(Disabled|Enabled))")
+        #  Highest Version Supported: 4
+        p2 = re.compile(r"\s+(?P<highest_version>\d+)")
+        #  Default Password : Set
+        p3 = re.compile(r"\s+(?P<default_pw>(Not\s+Set|Set))")
+        #  Default Key-Chain: Not Set
+        p4 = re.compile(r"\s+(?P<key_chain>(Not\s+Set|Set))")
+        #  Default Source IP: 192.168.2.24
+        p5 = re.compile(r"\s+(?P<key_chain_name>(Not\s+Applicable|\S+))")
+        #  Default Source IP: 192.168.2.24
+        p6 = re.compile(r"\s+(?P<source_ip>(Not\s+Set|\d+\.\d+\.\d+\.\d+))")
+        # Connection retry open period: 120 secs
+        p7 = re.compile(r"\s+(?P<conn_retry>\d+)")
+        # Reconcile period: 120 secs
+        p8 = re.compile(r"\s+(?P<reconcile_secs>\d+)")
+        # Peer-Sequence traverse limit for export: Not Set
+        p9 = re.compile(r"\s+(?P<seq_export>(Not\s+Set|\S+))")
+        # Peer-Sequence traverse limit for import: Not Set
+        p10 = re.compile(r"\s+(?P<seq_import>(Not\s+Set|\S+))")
+        # Retry open timer is not running
+        p11 = re.compile(r"Retry\s+open\s+timer\s+is\s+(?P<retry_timer>(not\s+running|running))")
+        # 10.100.123.12   192.168.2.24   On                                                   44:18:58:47 (dd:hr:mm:sec)
         p12 = re.compile(
-            r"(?P<peer_ip>\d+\.\d+\.\d+\.\d+)\s+(?P<source_ip>\d+\.\d+\.\d+\.\d+)\s+(?P<conn_status>\S+)\s+(?P<duration>\d+:\d+:\d+:\d+)",
-            re.MULTILINE)
+            r"(?P<peer_ip>\d+\.\d+\.\d+\.\d+)\s+(?P<source_ip>\d+\.\d+\.\d+\.\d+)\s+(?P<conn_status>\S+)\s+(?P<duration>\d+:\d+:\d+:\d+)")
 
+        # This regex map will be used to split the captured line using ':' as the delimeter
+        # if it starts with this string, we will use this regex pattern.
         regex_map = {
             "SXP": p1,
             "Highest Version Supported": p2,
@@ -134,13 +149,16 @@ class Show_Cts_Sxp_Connections_Brief(Show_Cts_Sxp_Connections_BriefSchema):
 
         for line in out:
             line_strip = line.strip()
+            # ':' Will match lines with a colon and will use regex match and assign Key Value based on match.
             if ": " in line:
                 try:
                     data_type, value = line_strip.split(':', 1)
                     regex = regex_map.get(data_type.strip())
                 except ValueError:
                     continue
+            # Retry open is a one off match that doesn't have a colon.
             elif "Retry open" in line:
+                # Retry open timer is not running
                 match = p11.match(line_strip)
                 if match:
                     groups = match.groupdict()
@@ -151,7 +169,9 @@ class Show_Cts_Sxp_Connections_Brief(Show_Cts_Sxp_Connections_BriefSchema):
                     sxp_dict['sxp_connections'].update({"status": {}})
                 sxp_dict["sxp_connections"]['status'].update({'retry_timer': retry_timer})
                 continue
+            # All other lines in the output should be p12 and captures peer_ip, source_ip, conn_status, and duration
             else:
+                # 10.100.123.12   192.168.2.24   On                                                   44:18:58:47 (dd:hr:mm:sec)
                 match = p12.match(line_strip)
                 if match:
                     groups = match.groupdict()
@@ -170,8 +190,9 @@ class Show_Cts_Sxp_Connections_Brief(Show_Cts_Sxp_Connections_BriefSchema):
                             'duration': duration
                         }})
                 continue
+            # After all captures are completed, if a regex match exists, assign a key/value to the root dict key.
             if regex:
-                match = regex.match((value))
+                match = regex.match(value)
                 if match:
                     groups = match.groupdict()
                     for k, v in groups.items():
