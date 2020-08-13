@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
-from genie.libs.parser.iosxe.show_class_map import ShowClassMap
+from genie.libs.parser.iosxe.show_class import ShowClassMap
 
 
 # ==============================
