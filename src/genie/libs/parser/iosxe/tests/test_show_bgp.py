@@ -22672,6 +22672,30 @@ class TestShowBgpAllNeighborsPolicy(unittest.TestCase):
 
         '''}
 
+    golden_parsed_output4 = {
+        'vrf': {
+            'LABDR_HoC_AZS_Transit': {
+                'neighbor': {
+                    '10.251.15.5': {
+                        'address_family': {
+                            'vpnv4 unicast': {
+                                'nbr_af_route_map_name_in': 'HoC_AZSPREFIXES_in',
+                                'nbr_af_route_map_name_out': 'HoC_LOCALPREFIXES_out',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output4 = {'execute.return_value': '''
+        LABDR-ISR-1# show bgp all neighbors 10.251.15.5 policy
+        Neighbor: 10.251.15.5, Address-Family: VPNv4 Unicast (LABDR_HoC_AZS_Transit)
+          Locally configured policies:
+            route-map HoC_AZSPREFIXES_in in
+            route-map HoC_LOCALPREFIXES_out out
+    '''}
+
     def test_show_bgp_all_neighbors_policy_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -22692,6 +22716,13 @@ class TestShowBgpAllNeighborsPolicy(unittest.TestCase):
         obj = ShowBgpAllNeighborsPolicy(device=self.device)
         parsed_output = obj.parse(neighbor='10.4.6.6')
         self.assertEqual(parsed_output,self.golden_parsed_output3)
+    
+    def test_show_bgp_all_neighbors_policy_golden4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output4)
+        obj = ShowBgpAllNeighborsPolicy(device=self.device)
+        parsed_output = obj.parse(neighbor='10.251.15.5')
+        self.assertEqual(parsed_output,self.golden_parsed_output4)
 
     def test_show_bgp_all_neighbors_policy_empty(self):
         self.device = Mock(**self.empty_output)

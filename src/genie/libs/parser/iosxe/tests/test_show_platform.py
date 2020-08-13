@@ -6,39 +6,43 @@ from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                              SchemaMissingKeyError
-from genie.libs.parser.iosxe.show_platform import ShowVersion,\
-                                                  Dir,\
-                                                  ShowBootvar,\
-                                                  ShowRedundancy,\
-                                                  ShowRedundancyStates,\
-                                                  ShowInventory,\
-                                                  ShowPlatform, ShowBoot, \
-                                                  ShowSwitchDetail, \
-                                                  ShowSwitch, \
-                                                  ShowModule, \
-                                                  ShowPlatformSoftwareStatusControl, \
-                                                  ShowPlatformSoftwareMemoryCallsite, \
-                                                  ShowPlatformSoftwareMemoryBacktrace, \
-                                                  ShowPlatformSoftwareSlotActiveMonitorMem, \
-                                                  ShowProcessesCpuSorted, \
-                                                  ShowProcessesCpuPlatform, \
-                                                  ShowEnvironment, \
-                                                  ShowProcessesCpu, \
-                                                  ShowVersionRp, \
-                                                  ShowPlatformHardware, \
-                                                  ShowPlatformHardwarePlim, \
-                                                  ShowPlatformHardwareQfpBqsOpmMapping, \
-                                                  ShowPlatformHardwareQfpBqsIpmMapping, \
-                                                  ShowPlatformHardwareSerdes, \
-                                                  ShowPlatformHardwareSerdesInternal, \
-                                                  ShowPlatformPower, \
-                                                  ShowPlatformHardwareQfpBqsStatisticsChannelAll, \
-                                                  ShowPlatformHardwareQfpInterfaceIfnameStatistics, \
-                                                  ShowPlatformHardwareQfpStatisticsDrop, \
-                                                  ShowProcessesCpuHistory, \
-                                                  ShowProcessesMemory, \
-                                                  ShowProcessesMemorySorted, \
-                                                  ShowPlatformIntegrity
+from genie.libs.parser.iosxe.show_platform import (
+    ShowVersion,
+    Dir,
+    ShowBootvar,
+    ShowRedundancy,
+    ShowRedundancyStates,
+    ShowInventory,
+    ShowPlatform,
+    ShowBoot,
+    ShowSwitchDetail,
+    ShowSwitch,
+    ShowModule,
+    ShowPlatformSoftwareStatusControl,
+    ShowPlatformSoftwareMemoryCallsite,
+    ShowPlatformSoftwareMemoryBacktrace,
+    ShowPlatformSoftwareSlotActiveMonitorMem,
+    ShowProcessesCpuSorted,
+    ShowProcessesCpuPlatform,
+    ShowEnvironment,
+    ShowProcessesCpu,
+    ShowVersionRp,
+    ShowPlatformHardware,
+    ShowPlatformHardwarePlim,
+    ShowPlatformHardwareQfpBqsOpmMapping,
+    ShowPlatformHardwareQfpBqsIpmMapping,
+    ShowPlatformHardwareSerdes,
+    ShowPlatformHardwareSerdesInternal,
+    ShowPlatformPower,
+    ShowPlatformHardwareQfpBqsStatisticsChannelAll,
+    ShowPlatformHardwareQfpInterfaceIfnameStatistics,
+    ShowPlatformHardwareQfpStatisticsDrop,
+    ShowProcessesCpuHistory,
+    ShowProcessesMemory,
+    ShowProcessesMemorySorted,
+    ShowPlatformIntegrity,
+    ShowPlatformHardwareQfpActiveFeatureAppqoe,
+    ShowPlatformHardwareQfpActiveDatapathUtilSum)
 
 # ============================
 # Unit test for 'show bootvar'
@@ -1715,7 +1719,7 @@ class TestShowVersion(unittest.TestCase):
         11161600K bytes of Bootflash at bootflash:.
         1638400K bytes of Crash Files at crashinfo:.
 
-        Base Ethernet MAC Address          : 1c:2b:d4:cc:7f:fd
+        Base Ethernet MAC Address          : 1c:2b:d4:ff:4c:ca
         Motherboard Assembly Number        : 1111
         Motherboard Serial Number          : CAT1111L41F
         Model Revision Number              : V02
@@ -21068,5 +21072,190 @@ class TestShowPlatformIntegrity(unittest.TestCase):
         parsed_output = version_obj.yang(output=self.golden_output_c9300_xml)
         self.assertEqual(parsed_output, self.golden_parsed_output_c9300_xml)
 
+
+class TestShowPlatformHardwareQfpActiveFeatureAppqoe(unittest.TestCase):
+    maxDiff = None
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': """
+        show platform hardware qfp active feature appqoe stats all
+        APPQOE Feature Statistics:
+        Global:
+               ip-non-tcp-pkts: 0
+               not-enabled: 0
+               cft_handle_pkt: 0
+               sdvt_divert_req_fail: 0
+               syn_policer_rate: 800
+           SDVT Global stats:
+             AppNAV registration: 1
+             within SDVT syn policer limit: 266004
+        SN Index [0 (Green)]
+           SDVT Count stats:
+             decaps: 679143
+             encaps: 743013
+             packets unmarked in ingress: 502868
+             Expired Connections: 64609
+             Idle timed-out persistent Connections: 50409
+             decaps: Processed control messages from SN: 14200
+             decaps: delete requests received total: 14200
+               decaps: delete - protocol decision: 14200
+           SDVT Packet stats:
+             Divert packets/bytes: 743013/43313261
+             Reinject packets/bytes: 679010/503129551
+           SDVT Drop Cause stats:
+           SDVT Errors stats:
+        SN Index [Default]
+           SDVT Count stats:
+           SDVT Packet stats:
+           SDVT Drop Cause stats:
+           SDVT Errors stats:
+        """
+                     }
+
+    golden_parsed_output = {
+        'feature': {
+            'appqoe': {
+                'global': {
+                    'cft_handle_pkt': 0,
+                    'ip_non_tcp_pkts': 0,
+                    'not_enabled': 0,
+                    'sdvt_divert_req_fail': 0,
+                    'sdvt_global_stats': {
+                        'appnav_registration': 1,
+                        'within_sdvt_syn_policer_limit': 266004
+                    },
+                    'syn_policer_rate': 800
+                },
+                'sn_index': {
+                    '0 (Green)': {
+                        'sdvt_count_stats': {
+                            'decap_messages': {
+                                'delete_requests_recieved': 14200,
+                                'deleted_protocol_decision': 14200,
+                                'processed_control_messages': 14200
+                            },
+                            'decaps': 679143,
+                            'encaps': 743013,
+                            'expired_connections': 64609,
+                            'idle_timed_out_persistent_connections': 50409,
+                            'packets_unmarked_in_ingress': 502868
+                        },
+                        'sdvt_drop_cause_stats': {},
+                        'sdvt_errors_stats': {},
+                        'sdvt_packet_stats': {
+                            'divert': {
+                                'bytes': 43313261,
+                                'packets': 743013
+                            },
+                            'reinject': {
+                                'bytes': 503129551,
+                                'packets': 679010
+                            }
+                        }
+                    },
+                    'Default': {
+                        'sdvt_count_stats': {},
+                        'sdvt_drop_cause_stats': {},
+                        'sdvt_errors_stats': {},
+                        'sdvt_packet_stats': {}
+                    }
+                }
+            }
+        }
+    }
+
+    def test_show_platform_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowPlatformHardwareQfpActiveFeatureAppqoe(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_platform_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowPlatformHardwareQfpActiveFeatureAppqoe(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+
+class TestShowPlatformHardwareQfpActiveDatapathUtilSum(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+                            'cpp': {
+                                '0': {
+                                'Input': {
+                                    'pps': {
+                                    '5_secs': 2,
+                                    '1_min': 2,
+                                    '5_min': 1,
+                                    '60_min': 0
+                                    },
+                                    'bps': {
+                                    '5_secs': 2928,
+                                    '1_min': 1856,
+                                    '5_min': 1056,
+                                    '60_min': 88
+                                    }
+                                },
+                                'Output': {
+                                    'pps': {
+                                    '5_secs': 593,
+                                    '1_min': 596,
+                                    '5_min': 494,
+                                    '60_min': 41
+                                    },
+                                    'bps': {
+                                    '5_secs': 1190056,
+                                    '1_min': 1206976,
+                                    '5_min': 921624,
+                                    '60_min': 76792
+                                    }
+                                },
+                                'Processing': {
+                                    'pct': {
+                                    '5_secs': 0,
+                                    '1_min': 0,
+                                    '5_min': 0,
+                                    '60_min': 0
+                                    }
+                                }
+                                }
+                            }
+                        }
+    
+
+    golden_output = {'execute.return_value': '''\
+        Router#show platform hardware qfp active datapath utilization summary
+           CPP 0:                     5 secs        1 min        5 min       60 min
+            Input:     Total (pps)            2            2            1            0
+                            (bps)         2928         1856         1056           88
+            Output:    Total (pps)          593          596          494           41
+                            (bps)      1190056      1206976       921624        76792
+            Processing: Load (pct)            0            0            0            0      
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowPlatformHardwareQfpActiveDatapathUtilSum(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()  
+
+    def test_golden(self):
+        #self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowPlatformHardwareQfpActiveDatapathUtilSum(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
 if __name__ == '__main__':
     unittest.main()
+
+
+

@@ -1,9 +1,6 @@
-* Please follow the template we introduced in NOVEMBER.md file.
-* Every parser need to be added under the corresponding feature.
-
 | Module                  | Version       |
 | ------------------------|:-------------:|
-| ``genie.libs.parser``   |               |
+| ``genie.libs.parser``   |    20.7       |
 
 --------------------------------------------------------------------------------
                                 New
@@ -31,12 +28,27 @@
         * show rsvp session
     * Added ShowRSVPNeighbor
         * show rsvp neighbor
+    * Added ShowLdpDatabaseSessionIpaddress
+        * show ldp database session ipaddress
+    * Added ShowLdpNeighbor
+        * show ldp neighbor
     * Added ShowRSVPNeighborDetail
         * show rsvp neighbor detail
+    * Added ShowOspfDatabaseOpaqueArea
+        * show ospf database opaque-area
     * Added ShowLDPInterface
         * show ldp interface {interface}
     * Added ShowLDPInterfaceDetail
         * show ldp interface {interface} detail
+    * Added PingMplsRsvp
+        * ping mpls rsvp {rspv}
+    * Added TracerouteNoResolve
+        * traceroute {ipaddress} no-resolve
+    * Added Ping
+        * ping {addr} ttl {ttl} count {count} wait {wait}
+* IOSXE
+    * Added ShowPlatformHardwareQfpActiveFeatureAppqoe
+        * show platform hardware qfp active feature appqoe stats all
 
 --------------------------------------------------------------------------------
                                 Fix
@@ -79,6 +91,8 @@
         * Optional key issue resolved
         * Regex modified to support more output
         * 'show interfaces extensive {interface}' changed to 'show interfaces {interface} extensive'
+    * Updated TracerouteNoResolve
+        * Change key 'hops' into Optional
 * IOSXE
     * Updated ShowCdpNeighbors
         * Modified regex to support different output
@@ -108,3 +122,4 @@
         * Modified to support default as instance name
     * Updated ShowInterfaces:
         * Added more regex patterns to support various outputs.
+

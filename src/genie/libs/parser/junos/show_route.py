@@ -3,6 +3,7 @@
 JUNOS parsers for the following commands:
     * show route table {table}
     * show route table {table} {prefix}
+    * show route table {table} label-switched-path {name}
     * show route
     * show route protocol {protocol} extensive
     * show route protocol {protocol} table {table} extensive
@@ -115,8 +116,9 @@ class ShowRouteTable(ShowRouteTableSchema):
 
         # > to 192.168.220.6 via ge-0/0/1.0
         # > to 192.168.220.6 via ge-0/0/1.0, Push 305550
+        # > to 192.168.220.6 via ge-0/0/1.0, Pop
         r3 = re.compile(r'(?:(?P<best_route>\>*))?\s*to\s+(?P<to>\S+)\s+via\s+'
-                         '(?P<via>[\w\d\/\-\.]+)\,*\s*(?:(?P<mpls_label>\S+\s+\d+))?')
+                         '(?P<via>[\w\d\/\-\.]+)\,*\s*(?:(?P<mpls_label>[\S\s]+))?')
 
         parsed_output = {}
 
@@ -401,7 +403,8 @@ class ShowRoute(ShowRouteSchema):
 
         # AS path: (65151 65000) I, validation-state: unverified
         # AS path: I
-        p4 = re.compile(r'AS +path:(?P<as_path>( +\([\S\s]+\))? +\S+)'
+        # AS path: 3 4 I, validation-state: unverified
+        p4 = re.compile(r'AS +path:(?P<as_path>([()\d\s]+ )?\w)'
                         r'(, validation-state: +(?P<validation_state>\S+))?$')
         
         # to table inet.0
@@ -581,6 +584,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                                     "announce-bits": str,
                                     "announce-tasks": str,
                                     "as-path": str,
+                                    "cluster-list": str,
                                     "bgp-path-attributes": {
                                         "attr-as-path-effective": {
                                             "aspath-effective-string": str,
@@ -592,6 +596,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                                     "last-active": str,
                                     "local-as": str,
                                     "metric": str,
+                                    "metric2": str,
                                     "nh": {
                                         Optional("@junos:indent"): str,
                                         "label-element": str,
@@ -613,6 +618,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                                     "nh-index": str,
                                     "nh-kernel-id": str,
                                     "nh-reference-count": str,
+                                    "gateway": str,
                                     "nh-type": str,
                                     "preference": str,
                                     "preference2": str,
@@ -741,6 +747,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                     Optional("announce-bits"): str,
                     Optional("announce-tasks"): str,
                     Optional("as-path"): str,
+                    Optional("cluster-list"): str,
                     Optional("bgp-path-attributes"): {
                         "attr-as-path-effective": {
                             "aspath-effective-string": str,
@@ -752,11 +759,13 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                     Optional("last-active"): str,
                     Optional("local-as"): str,
                     Optional("metric"): str,
+                    Optional("metric2"): str,
                     Optional("nh"): Use(validate_nh_list),
                     "nh-address": str,
                     Optional("nh-index"): str,
                     Optional("nh-kernel-id"): str,
                     "nh-reference-count": str,
+                    Optional("gateway"): str,
                     Optional("nh-type"): str,
                     "preference": str,
                     Optional("preference2"): str,
@@ -898,6 +907,9 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         # Next-hop reference count: 458
         p7 = re.compile(r'^Next-hop +reference +count: +(?P<nh_reference_count>\d+)$')
 
+        # Source: 2.2.2.2
+        p7_1 = re.compile(r'^Source: +(?P<gateway>\S+)$')
+
         # Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
         # Nexthop: 10.169.14.121 via ge-0/0/1.0
         p8 = re.compile(r'^(?P<nh_string>Next *hop):( +(?P<to>\S+))? +via +(?P<via>\S+)'
@@ -915,7 +927,10 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         # Age: 3w2d 4:43:35   Metric: 101 
         # Age: 3:07:25    Metric: 200
         # Age: 29w6d 21:42:46
-        p11 = re.compile(r'^Age:\s+(?P<age>\w+(\s+\S+)?)(\s+Metric:\s+(?P<metric>\d+))?$')
+        p11 = re.compile(r'^Age:\s+(?P<age>(\w+(\s+\S+)?)|[\d:]+)(\s+Metric:\s+(?P<metric>\d+))?$')
+
+        # Age: 12 Metric2: 50
+        p11_2 = re.compile(r'^Age:\s+(?P<age>(\w+(\s+\S+)?)|[\d:]+)(\s+Metric2:\s+(?P<metric2>\d+))?$')
 
         # Validation State: unverified 
         p12 = re.compile(r'^Validation +State: +(?P<validation_state>\S+)$')
@@ -1004,6 +1019,9 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         # Node path count: 1
         # Forwarding nexthops: 1
         p35 = re.compile(r'^(Node +path +count: +)|(Forwarding +nexthops: +)[\S\s]+$')
+
+        # Cluster list:  2.2.2.2 4.4.4.4
+        p36 = re.compile(r'^Cluster +list: +(?P<cluster_list>[\S\s]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1109,6 +1127,13 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 rt_entry_dict.update({'nh-reference-count': group['nh_reference_count']})
                 continue
 
+            # Source: 2.2.2.2
+            m = p7_1.match(line)
+            if m:
+                group = m.groupdict()
+                rt_entry_dict.update({'gateway': group['gateway']})
+                continue
+
             # Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
             m = p8.match(line)
             if m:
@@ -1182,6 +1207,17 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 if metric:
                     rt_entry_dict.update({'metric': metric})
                 continue
+
+            # Age: 12 Metric2: 50
+            m = p11_2.match(line)
+            if m:
+                group = m.groupdict()
+                age_dict = rt_entry_dict.setdefault('age', {})
+                age_dict.update({'#text': group['age']})
+                metric2 = group['metric2']
+                if metric2:
+                    rt_entry_dict.update({'metric2': metric2})
+                continue            
 
             # Validation State: unverified 
             m = p12.match(line)
@@ -1402,6 +1438,13 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 proto_output = '{}{}\n'.format(proto_output, line)
                 protocol_nh_dict.update({'output': proto_output})
                 continue
+
+            # Cluster list:  2.2.2.2 4.4.4.4
+            m = p36.match(line)
+            if m:
+                group = m.groupdict()
+                rt_entry_dict.update({'cluster-list': group['cluster_list']})
+                continue
         
         return ret_dict
     
@@ -1586,8 +1629,8 @@ class ShowRouteReceiveProtocolSchema(MetaParser):
                 "rt-entry": {
                     Optional("active-tag"): str,
                     "as-path": str,
-                    "local-preference": str,
-                    "med": str,
+                    Optional("local-preference"): str,
+                    Optional("med"): str,
                     "nh": {
                         "to": str
                     },
@@ -1647,9 +1690,12 @@ class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
 
         # * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
         # 10.220.0.0/16           10.189.5.253         12003   120        (65151 65000) I
+        # * 10.4.1.1/32              Self                                    I
+        # * 10.36.3.3/32              Self                                    2 I        
         p2 = re.compile(r'^((?P<active_tag>\*) +)?(?P<rt_destination>\S+) +'
-                        r'(?P<to>\S+) +(?P<med>\d+) +(?P<local_preference>\d+) +'
-                        r'(?P<as_path>\([\S\s]+\) +\w+)$')
+                        r'(?P<to>\S+) +((?P<med>\d+) +(?P<local_preference>\d+) +)?'
+                        r'(?P<as_path>(\([\S\s]+\) +\w+)|((\d\s)?\w))$')
+                        
 
         for line in out.splitlines():
             line = line.strip()
@@ -1735,8 +1781,8 @@ class ShowRouteAdvertisingProtocolSchema(MetaParser):
                 "active-tag": str,
                 "as-path": str,
                 "bgp-metric-flags": str,
-                "local-preference": str,
-                "med": str,
+                Optional("local-preference"): str,
+                Optional("med"): str,
                 "nh": {
                     "to": str
                 },
@@ -1800,9 +1846,11 @@ class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
                         r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
 
         # * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
-        p2 = re.compile(r'^(?P<active_tag>\*) +(?P<rt_destination>\S+) +'
-                        r'(?P<to>\S+) +(?P<med>\d+) +(?P<local_preference>\d+) +'
-                        r'(?P<as_path>\([\S\s]+\) +\w+)$')
+        # * 10.4.1.1/32              Self                                    I
+        # * 10.36.3.3/32              Self                                    2 I
+        p2 = re.compile(r'(?P<active_tag>\*) +(?P<rt_destination>\S+)'
+                        r' +(?P<to>\S+)( +(?P<med>\d+) +(?P<local_preference>\d+))? '
+                        r'+(?P<as_path>(\(([\S\s]+\)) +\w+)|((\d\s)?\w))')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1820,16 +1868,22 @@ class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
+
                 rt_list = route_table_dict.setdefault('rt', [])
                 rt_dict = {'rt-destination': group['rt_destination']}
                 rt_entry_dict = rt_dict.setdefault('rt-entry', {})
                 keys = ['active_tag', 'as_path', 'local_preference', 'med']
+
                 for key in keys:
-                    rt_entry_dict.update({key.replace('_', '-'): group[key]})
+                    if group[key]:
+                        rt_entry_dict.update({key.replace('_', '-'): group[key]})
+
                 nh_dict = rt_entry_dict.setdefault('nh', {})
                 nh_dict.update({'to': group['to']})
+
                 rt_entry_dict.update({'bgp-metric-flags': 'Nexthop Change'})
                 rt_entry_dict.update({'protocol-name': protocol.upper()})
+
                 rt_list.append(rt_dict)
 
         return ret_dict
@@ -2467,9 +2521,10 @@ class ShowRouteForwardingTableLabel(ShowRouteForwardingTableLabelSchema):
         # 16(S=0)            user     0 10.169.14.158    Pop        579     2 ge-0/0/0.0
         # 16(S=0) user 0 2001:AE Pop 579 2 ge-0/0/0.0
         # default            perm     0                    dscd      535     1
+        # 575                user     0 203.181.106.218   Swap 526      590     2 ge-0/0/1.0
         p5 = re.compile(r'^(?P<rt_destination>\S+) +(?P<destination_type>\S+) +'
                         r'(?P<route_reference_count>\d+) +(?P<to>[\d\.|\d\:a-fA-F]+)? +'
-                        r'(?P<nh_type>\S+) +(?P<nh_index>\d+) +'
+                        r'(?P<nh_type>\S+( \S+)?) +(?P<nh_index>\d+) +'
                         r'(?P<nh_reference_count>\d+)( +)?(?P<via>\S+)?$')
 
 
@@ -2515,5 +2570,158 @@ class ShowRouteForwardingTableLabel(ShowRouteForwardingTableLabelSchema):
                 route_entry_dict['nh'] = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
 
                 route_entry_list.append(route_entry_dict)
+
+        return ret_dict
+
+
+class ShowRouteTableLabelSwitchedNameSchema(MetaParser):
+    """ Schema for:
+        * show route table {table} label-switched-path {name}
+    """
+
+    def validate_rt_schema(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('rt schema is not a list')
+
+        def validate_rt_entry_schema(value):
+            if not isinstance(value, list):
+                raise SchemaTypeError('rt entry schema is not a list')
+
+            def validate_nh_schema(value):
+                if not isinstance(value, list):
+                    raise SchemaTypeError('nh schema is not a list')
+            
+                nh_schema = Schema({
+                            Optional("selected-next-hop"): bool,
+                            "to": str,
+                            "via": str,
+                            "lsp-name": str,
+                        })
+            
+                for item in value:
+                    nh_schema.validate(item)
+                return value
+        
+            rt_entry_schema = Schema({
+                        Optional("active-tag"): str,
+                        Optional("current-active"): str,
+                        Optional("last-active"): str,
+                        "protocol-name": str,
+                        "preference": str,
+                        "preference2": str,
+                        "age": {
+                            '#text': str,
+                            Optional('@junos:seconds'): str,
+                        },
+                        "metric": str,
+                        "nh": Use(validate_nh_schema)
+                    })
+        
+            for item in value:
+                rt_entry_schema.validate(item)
+            return value
+    
+        rt_schema = Schema({
+                    "rt-destination": str,
+                    "rt-entry": Use(validate_rt_entry_schema)
+                })
+    
+        for item in value:
+            rt_schema.validate(item)
+        return value
+
+    schema = {
+            "route-information": {
+                "route-table": {
+                    "table-name": str,
+                    "destination-count": str,
+                    "total-route-count": str,
+                    "active-route-count": str,
+                    "holddown-route-count": str,
+                    "hidden-route-count": str,
+                    "rt": Use(validate_rt_schema)
+                }
+            }
+        }
+
+class ShowRouteTableLabelSwitchedName(ShowRouteTableLabelSwitchedNameSchema):
+    """ Parser for:
+        * show route table {table} label-switched-path {name}
+    """
+
+    cli_command = ['show route table {table} label-switched-path {name}']
+
+    def cli(self, table, name, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command[0].format(
+                table=table,
+                name=name
+            ))
+        else:
+            out = output
+        
+        ret_dict = {}
+
+        # mpls.0: 36 destinations, 36 routes (36 active, 0 holddown, 0 hidden)
+        p1 = re.compile(r'^(?P<table_name>[^\s:]+): +(?P<destination_count>\d+) +'
+                        r'destinations, +(?P<total_route_count>\d+) +routes +'
+                        r'\((?P<active_route_count>\d+) +active, +'
+                        r'(?P<holddown_route_count>\d+) +holddown, +'
+                        r'(?P<hidden_route_count>\d+) +hidden\)$')
+
+        # 46                 *[RSVP/7/1] 00:10:22, metric 1
+        p2 = re.compile(r'^(?P<rt_destination>\S+) +(?P<active_tag>\*)?'
+                        r'\[(?P<protocol_name>[^\s/]+)/(?P<preference>\d+)/(?P<preference2>\d+)\] +'
+                        r'(?P<age>[\d:]+), +metric +(?P<metric>\d+)$')
+
+        # >  to 203.181.106.218 via ge-0/0/1.1, label-switched-path test_lsp_01
+        p3 = re.compile(r'^(?P<selected_next_hop>\> +)?to +(?P<to>\S+) +via +'
+                        r'(?P<via>[^\s,]+), +label-switched-path +(?P<lsp_name>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # mpls.0: 36 destinations, 36 routes (36 active, 0 holddown, 0 hidden)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                route_table_dict = ret_dict.setdefault('route-information', {}).setdefault('route-table', {})
+                route_table_dict.update(
+                    {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                )
+
+            # 46                 *[RSVP/7/1] 00:10:22, metric 1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                rt_list = route_table_dict.setdefault('rt', [])
+                rt_dict = {
+                    'rt-destination': group.pop('rt_destination')
+                }
+                rt_entry_list = rt_dict.setdefault('rt-entry', [])
+                rt_entry_dict = {
+                    'age': {'#text': group.pop('age')}
+                }
+                rt_entry_dict.update(
+                    {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                )
+                rt_entry_list.append(rt_entry_dict)
+                rt_list.append(rt_dict)
+
+
+            # >  to 203.181.106.218 via ge-0/0/1.1, label-switched-path test_lsp_01
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                nh_list = rt_entry_dict.setdefault('nh', [])
+                nh_dict = {
+                    'selected-next-hop': True if group.pop('selected_next_hop', None) else False
+                }
+                nh_dict.update(
+                    {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                )
+                nh_list.append(nh_dict)
+
 
         return ret_dict

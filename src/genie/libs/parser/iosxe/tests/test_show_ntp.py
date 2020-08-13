@@ -227,6 +227,20 @@ class test_show_ntp_config(unittest.TestCase):
                                 'type': 'server',
                                 'vrf': 'default'}
                         }
+                    },
+                    '10.2.1.1': {
+                        'isconfigured': {
+                            'True': {
+                                'address': '10.2.1.1',
+                                'isconfigured': True}
+                        },
+                        'type': {
+                            'server': {
+                                'address': '10.2.1.1',
+                                'type': 'server',
+                                'vrf': 'default',
+                                'preferred': True}
+                        }
                     }
                 }
             }
@@ -238,6 +252,7 @@ class test_show_ntp_config(unittest.TestCase):
         ntp server 10.4.1.1
         ntp server 10.16.2.2
         ntp server vrf VRF1 10.64.4.4
+        ntp server 10.2.1.1 prefer
     '''
     }
 
