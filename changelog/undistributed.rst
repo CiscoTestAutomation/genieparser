@@ -12,6 +12,8 @@
 * IOSXE
     * Added ShowStackwiseVirtual
         * show stackwise-virtual
+    * Added ShowClassMap
+        * show class-map
 
 --------------------------------------------------------------------------------
                                 Fix
