@@ -1,6 +1,6 @@
 ''' show_license.py
 
-IOS parsers for the following show commands:
+IOSXE parsers for the following show commands:
     * show license
 '''
 
@@ -67,10 +67,7 @@ class ShowLicense(ShowLicenseSchema):
         #         License Type: Permanent
         p4 = re.compile(r"\s+(?P<license_type>(Permanent|EvalRightToUse))")
         #         License State: Active, In Use
-        p5 = re.compile(
-            r"\s+((?P<count_in_use>\d+)/(?P<count_violation>\d+)\s+\(In-use/Violation\)|(?P<count>\S+))",
-            re.MULTILINE
-        )
+        p5 = re.compile(r"\s+((?P<count_in_use>\d+)/(?P<count_violation>\d+)\s+\(In-use/Violation\)|(?P<count>\S+))")
         #         License Priority: None
         p6 = re.compile(r"\s+(?P<license_priority>\S+)")
         #         License State: Active, Not in Use, EULA not accepted
