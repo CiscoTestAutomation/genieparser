@@ -1,0 +1,11 @@
+
+ciscoasa# show context
+Context Name      Class                Interfaces           Mode         URL
+pod1             default              Vlan100,Vlan200      Routed       disk0:/pod-context/pod1
+pod2             111                  Vlan300,Vlan400      Routed       disk0:/pod-context/pod2
+*admin            default              Vlan1000,Vlan1001,   Routed       disk0:/pod-context/admin.cfg
+                                        Vlan1030,Vlan1031,
+                                        Vlan1050,Vlan1051,
+                                        Vlan1082,Vlan1083...
+Total active Security Contexts: 3
+        

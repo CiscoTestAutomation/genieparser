@@ -14,6 +14,8 @@
         * show stackwise-virtual
     * Added ShowCtsPacs
         * show cts pacs
+    * Added ShowClassMap
+        * show class-map
 
 --------------------------------------------------------------------------------
                                 Fix
