@@ -14,6 +14,8 @@
         * show stackwise-virtual
     * Added Show_Hw_Module_Status
         * show hw_module subslot {subslot} transceiver {transceiver} status
+    * Added ShowClassMap
+        * show class-map
 
 --------------------------------------------------------------------------------
                                 Fix
