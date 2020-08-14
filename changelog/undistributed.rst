@@ -10,6 +10,8 @@
 --------------------------------------------------------------------------------
 
 * IOSXE
+    * Added ShowStackwiseVirtual
+        * show stackwise-virtual
     * Added ShowCtsPacs
         * show cts pacs
 
