@@ -116,8 +116,9 @@ class ShowRouteTable(ShowRouteTableSchema):
 
         # > to 192.168.220.6 via ge-0/0/1.0
         # > to 192.168.220.6 via ge-0/0/1.0, Push 305550
+        # > to 192.168.220.6 via ge-0/0/1.0, Pop
         r3 = re.compile(r'(?:(?P<best_route>\>*))?\s*to\s+(?P<to>\S+)\s+via\s+'
-                         '(?P<via>[\w\d\/\-\.]+)\,*\s*(?:(?P<mpls_label>\S+\s+\d+))?')
+                         '(?P<via>[\w\d\/\-\.]+)\,*\s*(?:(?P<mpls_label>[\S\s]+))?')
 
         parsed_output = {}
 
@@ -402,7 +403,8 @@ class ShowRoute(ShowRouteSchema):
 
         # AS path: (65151 65000) I, validation-state: unverified
         # AS path: I
-        p4 = re.compile(r'AS +path:(?P<as_path>( +\([\S\s]+\))? +\S+)'
+        # AS path: 3 4 I, validation-state: unverified
+        p4 = re.compile(r'AS +path:(?P<as_path>([()\d\s]+ )?\w)'
                         r'(, validation-state: +(?P<validation_state>\S+))?$')
         
         # to table inet.0
@@ -594,6 +596,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                                     "last-active": str,
                                     "local-as": str,
                                     "metric": str,
+                                    "metric2": str,
                                     "nh": {
                                         Optional("@junos:indent"): str,
                                         "label-element": str,
@@ -756,6 +759,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                     Optional("last-active"): str,
                     Optional("local-as"): str,
                     Optional("metric"): str,
+                    Optional("metric2"): str,
                     Optional("nh"): Use(validate_nh_list),
                     "nh-address": str,
                     Optional("nh-index"): str,
@@ -923,7 +927,10 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         # Age: 3w2d 4:43:35   Metric: 101 
         # Age: 3:07:25    Metric: 200
         # Age: 29w6d 21:42:46
-        p11 = re.compile(r'^Age:\s+(?P<age>\w+(\s+\S+)?)(\s+Metric:\s+(?P<metric>\d+))?$')
+        p11 = re.compile(r'^Age:\s+(?P<age>(\w+(\s+\S+)?)|[\d:]+)(\s+Metric:\s+(?P<metric>\d+))?$')
+
+        # Age: 12 Metric2: 50
+        p11_2 = re.compile(r'^Age:\s+(?P<age>(\w+(\s+\S+)?)|[\d:]+)(\s+Metric2:\s+(?P<metric2>\d+))?$')
 
         # Validation State: unverified 
         p12 = re.compile(r'^Validation +State: +(?P<validation_state>\S+)$')
@@ -1200,6 +1207,17 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 if metric:
                     rt_entry_dict.update({'metric': metric})
                 continue
+
+            # Age: 12 Metric2: 50
+            m = p11_2.match(line)
+            if m:
+                group = m.groupdict()
+                age_dict = rt_entry_dict.setdefault('age', {})
+                age_dict.update({'#text': group['age']})
+                metric2 = group['metric2']
+                if metric2:
+                    rt_entry_dict.update({'metric2': metric2})
+                continue            
 
             # Validation State: unverified 
             m = p12.match(line)
@@ -2259,7 +2277,7 @@ class ShowRouteAdvertisingProtocolDetailSchema(MetaParser):
                 "nh": {
                     "to": str,
                 },
-                "med": str,
+                Optional("med"): str,
                 "local-preference": str,
                 'as-path': str,
                 "communities": str,
@@ -2304,7 +2322,8 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
                         r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
 
         # * 10.36.255.252/32 (1 entry, 1 announced)
-        p2 = re.compile(r'^(?P<active_tag>\*)? *(?P<rt_destination>[\d\.]+)'
+        # * 2001:3/128 (2 entries, 2 announced)
+        p2 = re.compile(r'^(?P<active_tag>\*)? *(?P<rt_destination>[\s\S]+)'
                         r'/(?P<rt_prefix_length>\d+)'
                         r' +\((?P<rt_entry_count>\d+) +\S+, +'
                         r'(?P<rt_announced_count>\d+) +announced\)$')
@@ -2330,7 +2349,8 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
 
 
         # Communities: 65151:65109
-        p9 = re.compile(r'^Communities: +(?P<communities>\S+)$')
+        # Communities: 2:2 4:4 no-export
+        p9 = re.compile(r'^Communities: +(?P<communities>[\s\S]+)$')
 
         # Flags: Nexthop Change
         p10 = re.compile(r'^Flags: +(?P<flags>.*)$')
