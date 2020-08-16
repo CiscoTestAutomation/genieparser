@@ -3,7 +3,6 @@ import re
 
 # Genie
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
 
 class ShowSdwanUtdEngineSchema(MetaParser):
@@ -13,8 +12,10 @@ class ShowSdwanUtdEngineSchema(MetaParser):
         'profile': str,
         'status': str,
         'reason': str,
+        'memory_usage': float,
+        'memory_status': str,
         Optional('engine_id'): {
-            Any(): {
+            str: {
                 'id': str,
                 'running': str,
                 'status': str,
@@ -43,7 +44,7 @@ class ShowSdwanUtdEngine(ShowSdwanUtdEngineSchema):
         # utd-oper-data utd-engine-status reason ""
         # utd-oper-data utd-engine-status memory-usage 11.3
         # utd-oper-data utd-engine-status memory-status utd-oper-status-green
-        p1 = re.compile(r'utd-oper-data utd-engine-status +(?P<key>[\w]+) +(?P<value>[\s\S]+)')
+        p1 = re.compile(r'utd-oper-data utd-engine-status +(?P<key>[\S]+) +(?P<value>[\s\S]+)')
 
         # ID  RUNNING  STATUS                 REASON
         # 1   true     utd-oper-status-green 
@@ -64,7 +65,12 @@ class ShowSdwanUtdEngine(ShowSdwanUtdEngineSchema):
             if m:
                 groups = m.groupdict()
                 key = groups['key'].replace('-', '_').replace(' ', '_').lower()
-                parsed_dict.update({key: groups['value']})
+                value = groups['value']
+                if "memory-usage" in groups['key']:
+                    key = groups['key'].replace('-', '_').lower()
+                    value = float(groups['value'])
+
+                parsed_dict.update({key: value})
                 continue
 
             # ID  RUNNING  STATUS                 REASON
@@ -75,8 +81,7 @@ class ShowSdwanUtdEngine(ShowSdwanUtdEngineSchema):
                 group = m.groupdict()
                 id_dict = group['id']
 
-                parsed_dict.setdefault("engine_id", {}).setdefault(id_dict, {})
-                connection_dict = parsed_dict["engine_id"][id_dict]
+                connection_dict = parsed_dict.setdefault("engine_id", {}).setdefault(id_dict, {})
                 keys = ['id', 'running', 'status', 'reason']
                 for k in keys:
                     connection_dict[k] = group[k]
@@ -90,27 +95,27 @@ class ShowUtdEngineStandardStatusSchema(MetaParser):
         'engine_version': str,
         'profile': str,
         'system_memory': {
-            'usage': str,
+            'usage_percentage': float,
             'status': str
             },
         Optional('number_of_engines'): int,
         Optional('engine_id'): {
-            Any(): {
-                    'engine': str,
-                    'running_status': str,
-                    'health': str,
-                    'reason': str
-                    }
+            str: {
+                'engine': str,
+                'running_status': str,
+                'health': str,
+                'reason': str
+                }
             },
         'overall_system_status': str,
         'signature_update_status': {
-            'current signature package version': str,
-            'last update status': str,
-            'last successful update time': str,
-            'last failed update time': str,
-            'last failed update reason': str,
-            'next update scheduled at': str,
-            'current status': str
+            'current_signature_package_version': str,
+            'last_update_status': str,
+            'last_successful_update_time': str,
+            'last_failed_update_time': str,
+            'last_failed_update_reason': str,
+            'next_update_scheduled_at': str,
+            'current_status': str
             }
         }
 
@@ -188,8 +193,7 @@ class ShowUtdEngineStandardStatus(ShowUtdEngineStandardStatusSchema):
             if m:
                 group = m.groupdict()
                 id_dict = group['engine']
-                parsed_dict.setdefault("engine_id", {}).setdefault(id_dict, {})
-                utd_engine_dict = parsed_dict["engine_id"][id_dict]
+                utd_engine_dict = parsed_dict.setdefault("engine_id", {}).setdefault(id_dict, {})
                 keys = ['engine', 'running_status', 'health', 'reason']
                 for k in keys:
                     utd_engine_dict[k] = group[k]
@@ -218,7 +222,12 @@ class ShowUtdEngineStandardStatus(ShowUtdEngineStandardStatusSchema):
             m = p5.match(line)
             if m:
                 groups = m.groupdict()
-                key = groups['key'].replace('-', '_').lower()
-                last_dict_ptr.update({key: groups['value']})
+                key = groups['key'].replace('-', '_').replace(' ', '_').lower()
+                value = groups['value']
+                if "Usage" in groups['key']:
+                    key = groups['key'].replace('-', '_').lower().replace('usage', 'usage_percentage')
+                    value = float(groups['value'].strip('%'))
+
+                last_dict_ptr.update({key: value})
         
         return parsed_dict

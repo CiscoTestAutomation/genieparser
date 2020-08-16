@@ -38,6 +38,8 @@ class TestShowSdwanUtdEngine(unittest.TestCase):
     'profile': 'Cloud-Medium',
     'status': 'utd-oper-status-green',
     'reason': '""',
+    'memory_usage': 11.3,
+    'memory_status': 'utd-oper-status-green',
     'engine_id': {
         '1': {
             'id': '1',
@@ -107,7 +109,7 @@ class TestShowUtdEngineStandardStatus(unittest.TestCase):
         'engine_version': '1.0.4_SV2.9.13.0_XE17.3',
         'profile': 'Cloud-Medium',
         'system_memory': {
-            'usage': '8.80 %',
+            'usage_percentage': 8.8,
             'status': 'Green'
             },
         'number_of_engines': 2,
@@ -127,13 +129,13 @@ class TestShowUtdEngineStandardStatus(unittest.TestCase):
         },
         'overall_system_status': 'Green',
         'signature_update_status': {
-            'current signature package version': '29.0.c',
-            'last update status': 'None',
-            'last successful update time': 'None',
-            'last failed update time': 'None',
-            'last failed update reason': 'None',
-            'next update scheduled at': 'None',
-            'current status': 'Idle'
+            'current_signature_package_version': '29.0.c',
+            'last_update_status': 'None',
+            'last_successful_update_time': 'None',
+            'last_failed_update_time': 'None',
+            'last_failed_update_reason': 'None',
+            'next_update_scheduled_at': 'None',
+            'current_status': 'Idle'
         }
     }
 
