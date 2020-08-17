@@ -1635,7 +1635,6 @@ class ShowCores(ShowCoresSchema):
         ret_dict = {}
 
         # 1    27      1         bgp              8083      2020-08-16 16:16:25
-        # 1    27      2         bgp              8083      2020-08-17 12:25:12
         p1 = re.compile(
             r'^(\s+)?(?P<vdc>\d+)\s+(?P<module>\d+)\s+(?P<instance>\d+)\s+(?P<process_name>\S+)\s+(?P<pid>\d+)\s+(?P<date>.*)'
         )
