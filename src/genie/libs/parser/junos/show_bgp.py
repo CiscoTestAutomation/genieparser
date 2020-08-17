@@ -85,7 +85,6 @@ class ShowBgpGroupBriefSchema(MetaParser):
         }
     """
     def validate_bgp_group_list(value):
-        import pdb; pdb.set_trace()
         if not isinstance(value, list):
             raise SchemaError('bgp-rib is not a list')
 
