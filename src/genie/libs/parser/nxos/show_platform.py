@@ -6,6 +6,7 @@ NXOS parser class for below commands:
         show processes cpu | include <include>
         show processes memory
         show processes memory | include <include>
+        show cores
 """
 import re
 import xmltodict
@@ -15,6 +16,7 @@ try:
 except Exception:
     pass
 
+from genie import parsergen
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional, Or, And, Default, Use
 
@@ -1599,5 +1601,62 @@ class ShowProcessesCpu(ShowProcessesCpuSchema):
             if m:
                 ret_dict.update({k: int(v) for k, v in m.groupdict().items()})
                 continue
+
+        return ret_dict
+
+
+class ShowCoresSchema(MetaParser):
+    """Schema for show cores"""
+
+    schema = {
+        Optional('date'): {
+            str: {
+                'pid': {
+                    int: {
+                        'vdc': int,
+                        'module': int,
+                        'instance': int,
+                        'process_name': str,
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowCores(ShowCoresSchema):
+    """Schema for show cores"""
+
+    cli_command = 'show cores'
+
+    def cli(self, output=None):
+
+        out = self.device.execute(
+            self.cli_command) if output is None else output
+        # initial return dictionary
+        ret_dict = {}
+
+        # 1    27      1         bgp              8083      2020-08-16 16:16:25
+        # 1    27      2         bgp              8083      2020-08-17 12:25:12
+        p1 = re.compile(
+            r'^(\s+)?(?P<vdc>\d+)\s+(?P<module>\d+)\s+(?P<instance>\d+)\s+(?P<process_name>\S+)\s+(?P<pid>\d+)\s+(?P<date>.*)'
+        )
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 1    27      1         bgp              8083      2020-08-16 16:16:25
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                date = group.pop('date')
+                pid = int(group.pop('pid'))
+                ret_dict.setdefault('date',
+                                    {}).setdefault(date, {}).setdefault(
+                                        'pid', {}).setdefault(pid, {})
+                for key, value in group.items():
+                    ret_dict['date'][date]['pid'][pid][key] = value if key in [
+                        'process_name'
+                    ] else int(value)
 
         return ret_dict
