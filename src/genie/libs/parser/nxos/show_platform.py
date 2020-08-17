@@ -9,14 +9,12 @@ NXOS parser class for below commands:
         show cores
 """
 import re
-import xmltodict
 
 try:
     from pyats import tcl
 except Exception:
     pass
 
-from genie import parsergen
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional, Or, And, Default, Use
 
