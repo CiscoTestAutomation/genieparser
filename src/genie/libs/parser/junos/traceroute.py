@@ -8,6 +8,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any,
         Optional, Use, Schema)
 
@@ -38,7 +39,7 @@ class TracerouteNoResolveSchema(MetaParser):
     def validate_hops_list(value):
         # Pass hops list of dict in value
         if not isinstance(value, list):
-            raise Exception('hops is not a list')
+            raise SchemaError('hops is not a list')
         # Create hop Schema
         hop_schema = Schema({
                        "hop-number": str,

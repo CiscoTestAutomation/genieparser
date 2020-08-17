@@ -8,6 +8,7 @@ JunOs parsers for the following show commands:
 import re
 
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any,
         Optional, Use, Schema)
 
@@ -278,7 +279,7 @@ class ShowKrtQueueSchema(MetaParser):
     def validate_krt_queue_list(value):
         # Pass ospf3-interface list as value
         if not isinstance(value, list):
-            raise Exception('ospf-interface is not a list')
+            raise SchemaError('ospf-interface is not a list')
         krt_queue_schema = Schema({
                 "krtq-queue-length": str,
                 "krtq-type": str

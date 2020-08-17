@@ -14,6 +14,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any, Optional, Use, Schema)
 
 
@@ -86,11 +87,11 @@ class ShowBgpGroupBriefSchema(MetaParser):
     def validate_bgp_group_list(value):
         import pdb; pdb.set_trace()
         if not isinstance(value, list):
-            raise Exception('bgp-rib is not a list')
+            raise SchemaError('bgp-rib is not a list')
 
         def validate_bgp_rib(value):
             if not isinstance(value, list):
-                raise Exception('bgp-rib is not a list')
+                raise SchemaError('bgp-rib is not a list')
             bgp_rib_schema = Schema({
                 'accepted-prefix-count': str,
                 'active-prefix-count': str,
@@ -144,7 +145,7 @@ class ShowBgpGroupBriefSchema(MetaParser):
 
     def validate_bgp_info_bgp_rib_list(value):
         if not isinstance(value, list):
-            raise Exception('bgp-information bgp-rib is not a list')
+            raise SchemaError('bgp-information bgp-rib is not a list')
         bgp_rib_list_schema = Schema({
             Optional("@junos:style"):
             str,
@@ -835,7 +836,7 @@ class ShowBgpSummarySchema(MetaParser):
     """
     def validate_bgp_rib_list(value):
         if not isinstance(value, list):
-            raise Exception('bgp-rib is not a list')
+            raise SchemaError('bgp-rib is not a list')
         bgp_rib_schema = Schema({
             Optional("accepted-external-prefix-count"): str,
             Optional("accepted-internal-prefix-count"): str,
@@ -863,11 +864,11 @@ class ShowBgpSummarySchema(MetaParser):
 
     def validate_bgp_peer_list(value):
         if not isinstance(value, list):
-            raise Exception('bgp-peer is not a list')
+            raise SchemaError('bgp-peer is not a list')
 
         def validate_bgp_peer_rib_list(value):
             if not isinstance(value, list):
-                raise Exception('bgp-rib of bgp-peer is not a list')
+                raise SchemaError('bgp-rib of bgp-peer is not a list')
             bgp_peer_rib_schema = Schema({
                 'accepted-prefix-count': str,
                 'active-prefix-count': str,
@@ -1134,7 +1135,7 @@ class ShowBgpNeighborSchema(MetaParser):
     def validate_bgp_peer_list(value):
         def validate_bgp_output_queue(value):
             if not isinstance(value, list):
-                raise Exception('bgp-peer is not a list')
+                raise SchemaError('bgp-peer is not a list')
             bgp_output_queue_schema = Schema({
                 "count": str,
                 "number": str,
@@ -1147,7 +1148,7 @@ class ShowBgpNeighborSchema(MetaParser):
 
         def validate_bgp_error(value):
             if not isinstance(value, list):
-                raise Exception('bgp-error is not a list')
+                raise SchemaError('bgp-error is not a list')
             bgp_error_schema = Schema({
                 "name": str,
                 "receive-count": str,
@@ -1159,7 +1160,7 @@ class ShowBgpNeighborSchema(MetaParser):
 
         def validate_bgp_rib(value):
             if not isinstance(value, list):
-                raise Exception('bgp-rib is not a list')
+                raise SchemaError('bgp-rib is not a list')
             bgp_rib_schema = Schema({
                 "accepted-prefix-count": str,
                 "active-prefix-count": str,
@@ -1176,7 +1177,7 @@ class ShowBgpNeighborSchema(MetaParser):
             return value
 
         if not isinstance(value, list):
-            raise Exception('bgp-peer is not a list')
+            raise SchemaError('bgp-peer is not a list')
         entry_schema = Schema({
             "bgp-option-information": {
                 "bgp-options": str,

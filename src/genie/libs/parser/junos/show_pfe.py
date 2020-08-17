@@ -11,6 +11,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any, Optional, Use,
                                                 Schema)
 
@@ -842,7 +843,7 @@ class ShowPfeRouteSummarySchema(MetaParser):
     """
     def validate_route_table_data(value):
         if not isinstance(value, list):
-            raise Exception('validate_route_table_data is not a list')
+            raise SchemaError('validate_route_table_data is not a list')
         entry_schema = Schema({'index': str, 'routes': str, 'size': str})
         # Validate each dictionary in list
         for item in value:

@@ -36,6 +36,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any, Optional, Use,
                                                 Schema, Or)
 
@@ -411,7 +412,7 @@ class ShowOspfNeighborSchema(MetaParser):
     '''
     def validate_neighbor_list(value):
         if not isinstance(value, list):
-            raise Exception('ospf-neighbor is not a list')
+            raise SchemaError('ospf-neighbor is not a list')
         neighbor_schema = Schema({
             'neighbor-address': str,
             'interface-name': str,
@@ -524,7 +525,7 @@ class ShowOspfDatabaseSchema(MetaParser):
     '''
     def validate_neighbor_database_list(value):
         if not isinstance(value, list):
-            raise Exception('ospf-neighbor is not a list')
+            raise SchemaError('ospf-neighbor is not a list')
         neighbor_schema = Schema({
             "advertising-router": str,
             "age": str,
@@ -637,7 +638,7 @@ class ShowOspfDatabaseSummarySchema(MetaParser):
     '''
     def validate_neighbor_database_summary_list(value):
         if not isinstance(value, list):
-            raise Exception('ospf-database-summary is not a list')
+            raise SchemaError('ospf-database-summary is not a list')
         neighbor_schema = Schema({
             Optional("@external-heading"): str,
             Optional("ospf-area"): Or(list, str),
@@ -831,7 +832,7 @@ class ShowOspfDatabaseExternalExtensiveSchema(MetaParser):
 } """
     def validate_neighbor_database_external_extensive_list(value):
         if not isinstance(value, list):
-            raise Exception('ospf-database is not a list')
+            raise SchemaError('ospf-database is not a list')
         neighbor_schema = Schema({
             Optional("@external-heading"): str,
             Optional("@heading"): str,
@@ -1571,11 +1572,11 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetailSchema(MetaParser):
     }'''
     def validate_ospf_database(value):
         if not isinstance(value, list):
-            raise Exception('ospf-database is not a list')
+            raise SchemaError('ospf-database is not a list')
 
         def validate_ospf_link(value):
             if not isinstance(value, list):
-                raise Exception('ospf-link is not a list')
+                raise SchemaError('ospf-link is not a list')
             ospf_link_schema = Schema({
                 "link-data": str,
                 "link-id": str,
@@ -1590,7 +1591,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetailSchema(MetaParser):
 
         def validate_ospf_lsa_topology_link(value):
             if not isinstance(value, list):
-                raise Exception('ospf-lsa-topology-link is not a list')
+                raise SchemaError('ospf-lsa-topology-link is not a list')
             ospf_lsa_topology_ink_schema = Schema({
                 "link-type-name":
                 str,
@@ -1607,7 +1608,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetailSchema(MetaParser):
 
         def validate_ospf_lsa_topology_list(value):
             if not isinstance(value, list):
-                raise Exception('ospf-lsa is not a list')
+                raise SchemaError('ospf-lsa is not a list')
             ospf_lsa_schema = Schema({
                 "link-type-name": str,
                 "ospf-lsa-topology-link-metric": str,
@@ -2250,11 +2251,11 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
     }'''
     def validate_ospf_database(value):
         if not isinstance(value, list):
-            raise Exception('ospf-database is not a list')
+            raise SchemaError('ospf-database is not a list')
 
         def validate_ospf_link(value):
             if not isinstance(value, list):
-                raise Exception('ospf-link is not a list')
+                raise SchemaError('ospf-link is not a list')
             ospf_link_schema = Schema({
                 "link-data": str,
                 "link-id": str,
@@ -2269,7 +2270,7 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
 
         def validate_ospf_lsa_topology_link(value):
             if not isinstance(value, list):
-                raise Exception('ospf-lsa-topology-link is not a list')
+                raise SchemaError('ospf-lsa-topology-link is not a list')
             ospf_lsa_topology_ink_schema = Schema({
                 "link-type-name":
                 str,
@@ -3302,7 +3303,7 @@ class ShowOspfNeighborExtensiveSchema(MetaParser):
     def validate_ospf_neighbor_list(value):
         def validate_adjacency_labels_list(value):
             if not isinstance(value, list):
-                raise Exception('adjacency labels is not a list')
+                raise SchemaError('adjacency labels is not a list')
             adjacency_labels_schema = Schema(
                 {
                     'label': str,
@@ -3314,7 +3315,7 @@ class ShowOspfNeighborExtensiveSchema(MetaParser):
             return value
 
         if not isinstance(value, list):
-            raise Exception('ospf-neighbor is not a list')
+            raise SchemaError('ospf-neighbor is not a list')
         ospf_lsa_topology_ink_schema = Schema({
             "activity-timer": str,
             Optional("adj-sid-list"): {
@@ -3479,7 +3480,7 @@ class ShowOspfInterfaceExtensiveSchema(MetaParser):
     """
     def validate_ospf_interface_list(value):
         if not isinstance(value, list):
-            raise Exception('ospf-interface is not a list')
+            raise SchemaError('ospf-interface is not a list')
         neighbor_schema = Schema({
             "address-mask": str,
             "adj-count": str,
@@ -3770,7 +3771,7 @@ class ShowOspfRouteBriefSchema(MetaParser):
     """
     def validate_ospf_route_entry_list(value):
         if not isinstance(value, list):
-            raise Exception('ospf-route-entry is not a list')
+            raise SchemaError('ospf-route-entry is not a list')
         ospf_route_schema = Schema({
             "address-prefix": str,
             "interface-cost": str,
@@ -3797,7 +3798,7 @@ class ShowOspfRouteBriefSchema(MetaParser):
 
     def validate_ospf_route_list(value):
         if not isinstance(value, list):
-            raise Exception('ospf-route is not a list')
+            raise SchemaError('ospf-route is not a list')
         ospf_route_schema = Schema({
             "ospf-route-entry":
             Use(ShowOspfRouteBriefSchema.validate_ospf_route_entry_list)
@@ -3963,7 +3964,7 @@ class ShowOspfDatabaseNetworkLsaidDetailSchema(MetaParser):
     } """
     def validate_ospf_lsa_topology_list(value):
         if not isinstance(value, list):
-            raise Exception('ospf-lsa is not a list')
+            raise SchemaError('ospf-lsa is not a list')
         ospf_lsa_schema = Schema({
             "link-type-name": str,
             "ospf-lsa-topology-link-metric": str,
@@ -4203,7 +4204,7 @@ class ShowOspfRouteNetworkExtensiveSchema(MetaParser):
 
     def validate_ospf_route_list(value):
         if not isinstance(value, list):
-            raise Exception('ospf-route is not a list')
+            raise SchemaError('ospf-route is not a list')
         ospf_route_schema = Schema({
             "ospf-route-entry": {
                 "address-prefix": str,
@@ -4356,7 +4357,7 @@ class ShowOspfDatabaseOpaqueAreaSchema(MetaParser):
     def validate_ospf_database_entry(ospf_db_list):
         ''' Validates each entry in ospf-database '''
         if not isinstance(ospf_db_list, list):
-            raise Exception('ospf-database is not a list')
+            raise SchemaError('ospf-database is not a list')
         
         ospf_db_entry_schema = Schema({
             Optional("@heading"): str,

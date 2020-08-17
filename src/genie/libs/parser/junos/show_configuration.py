@@ -9,6 +9,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema
 
 
@@ -125,7 +126,7 @@ class ShowConfigurationProtocolsMplsPathSchema(MetaParser):
 
     def validate_path_list_schema(value):
         if not isinstance(value, list):
-            raise Exception('path list schema is not a list')
+            raise SchemaError('path list schema is not a list')
     
         path_list_schema = Schema({
             'name': str,

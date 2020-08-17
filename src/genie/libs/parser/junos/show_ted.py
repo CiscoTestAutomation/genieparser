@@ -11,6 +11,7 @@ import re
 
 # metaparser
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use
 
 
@@ -388,7 +389,7 @@ class ShowTedDatabaseIpAddressSchema(MetaParser):
     def validate_ted_link(val):
         ''' Validates each value in ted link '''
         if not isinstance(val, list):
-            raise Exception('ted link is not a list')
+            raise SchemaError('ted link is not a list')
         
         ted_link_schema = Schema({
             "ted-link-local-address": str,

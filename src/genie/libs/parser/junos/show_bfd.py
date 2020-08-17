@@ -8,6 +8,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema
 
 
@@ -17,7 +18,7 @@ class ShowBFDSessionSchema(MetaParser):
     """
     def validate_bfd_session(value):
         if not isinstance(value, list):
-            raise Exception('BFD Session not a list')
+            raise SchemaError('BFD Session not a list')
 
         bfd_session = Schema({
             "session-neighbor": str,

@@ -9,6 +9,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any, 
         Optional, Use, Schema)
 
@@ -35,7 +36,7 @@ class ShowArpSchema(MetaParser):
     def validate_arp_table_entry_list(value):
         # Pass arp-entry list of dict in value
         if not isinstance(value, list):
-            raise Exception('arp-table-entry is not a list')
+            raise SchemaError('arp-table-entry is not a list')
         # Create Arp Entry Schema
         entry_schema = Schema({
             "arp-table-entry-flags": str,
@@ -142,7 +143,7 @@ class ShowArpNoResolveSchema(MetaParser):
     def validate_arp_table_entry_list(value):
         # Pass arp-entry list of dict in value
         if not isinstance(value, list):
-            raise Exception('arp-table-entry is not a list')
+            raise SchemaError('arp-table-entry is not a list')
         # Create Arp Entry Schema
         entry_schema = Schema({
             "arp-table-entry-flags": str,
