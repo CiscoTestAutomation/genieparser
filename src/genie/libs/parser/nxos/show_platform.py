@@ -1607,7 +1607,7 @@ class ShowCoresSchema(MetaParser):
     """Schema for show cores"""
 
     schema = {
-        Optional('date'): {
+        'date': {
             str: {
                 'pid': {
                     int: {
