@@ -1,0 +1,282 @@
+
+        ------------------------------------------------
+        Chassis id: 10.10.191.112
+        Port id: 7018.deff.50a4
+        Port Description: IP Phone
+        System Name - not advertised
+        
+        System Description:
+        IP Phone, Firmware:90234AP
+        
+        Time remaining: 170 seconds
+        System Capabilities: B,T
+        Enabled Capabilities: B,T
+        Management Addresses - not advertised
+        Auto Negotiation - supported, enabled
+        Physical media capabilities:
+            100base-TX(FD)
+            100base-TX(HD)
+            10base-T(FD)
+            10base-T(HD)
+        Media Attachment Unit type: 16
+        Vlan ID: - not advertised
+        
+        MED Information:
+        
+            MED Codes:
+                  (NP) Network Policy, (LI) Location Identification
+                  (PS) Power Source Entity, (PD) Power Device
+                  (IN) Inventory
+        
+            F/W revision: 90234AP
+            Manufacturer: Phone-05
+            Model: 1220 IP Deskphone
+            Capabilities: NP, LI, PD, IN
+            Device type: Endpoint Class III
+            Network Policy(Voice): VLAN 210, tagged, Layer-2 priority: 5, DSCP: 46
+            Network Policy(Voice Signal): VLAN 210, tagged, Layer-2 priority: 0, DSCP: 0
+            PD device, Power source: Unknown, Power Priority: High, Wattage: 6.0
+            Location - not advertised
+        
+        ------------------------------------------------
+        Chassis id: 10.10.191.104
+        Port id: 7018.deff.584d
+        Port Description: IP Phone
+        System Name - not advertised
+        
+        System Description:
+        IP Phone, Firmware:90234AP
+        
+        Time remaining: 165 seconds
+        System Capabilities: B,T
+        Enabled Capabilities: B,T
+        Management Addresses - not advertised
+        Auto Negotiation - supported, enabled
+        Physical media capabilities:
+            100base-TX(FD)
+            100base-TX(HD)
+            10base-T(FD)
+            10base-T(HD)
+        Media Attachment Unit type: 16
+        Vlan ID: - not advertised
+        
+        MED Information:
+        
+            MED Codes:
+                  (NP) Network Policy, (LI) Location Identification
+                  (PS) Power Source Entity, (PD) Power Device
+                  (IN) Inventory
+        
+            F/W revision: 90234AP
+            Manufacturer: Phone-05
+            Model: 1220 IP Deskphone
+            Capabilities: NP, LI, PD, IN
+            Device type: Endpoint Class III
+            Network Policy(Voice): VLAN 210, tagged, Layer-2 priority: 5, DSCP: 46
+            Network Policy(Voice Signal): VLAN 210, tagged, Layer-2 priority: 0, DSCP: 0
+            PD device, Power source: Unknown, Power Priority: High, Wattage: 6.0
+            Location - not advertised
+        
+        ------------------------------------------------
+        Chassis id: 10.10.191.93
+        Port id: fca8.41ff.f37c
+        Port Description: IP Phone
+        System Name - not advertised
+        
+        System Description:
+        IP Phone, Firmware:90234AP
+        
+        Time remaining: 158 seconds
+        System Capabilities: B,T
+        Enabled Capabilities: B,T
+        Management Addresses - not advertised
+        Auto Negotiation - supported, enabled
+        Physical media capabilities:
+            100base-TX(FD)
+            100base-TX(HD)
+            10base-T(FD)
+            10base-T(HD)
+        Media Attachment Unit type: 16
+        Vlan ID: - not advertised
+        
+        MED Information:
+        
+            MED Codes:
+                  (NP) Network Policy, (LI) Location Identification
+                  (PS) Power Source Entity, (PD) Power Device
+                  (IN) Inventory
+        
+            F/W revision: 90234AP
+            Manufacturer: Phone-05
+            Model: 1220 IP Deskphone
+            Capabilities: NP, LI, PD, IN
+            Device type: Endpoint Class III
+            Network Policy(Voice): VLAN 210, tagged, Layer-2 priority: 5, DSCP: 46
+            Network Policy(Voice Signal): VLAN 210, tagged, Layer-2 priority: 0, DSCP: 0
+            PD device, Power source: Unknown, Power Priority: High, Wattage: 6.0
+            Location - not advertised
+        
+        ------------------------------------------------
+        Chassis id: 10.10.191.91
+        Port id: 7052.c5ff.4647
+        Port Description: IP Phone
+        System Name - not advertised
+        
+        System Description:
+        IP Phone, Firmware:90234AP
+        
+        Time remaining: 151 seconds
+        System Capabilities: B,T
+        Enabled Capabilities: B,T
+        Management Addresses - not advertised
+        Auto Negotiation - supported, enabled
+        Physical media capabilities:
+            100base-TX(FD)
+            100base-TX(HD)
+            10base-T(FD)
+            10base-T(HD)
+        Media Attachment Unit type: 16
+        Vlan ID: - not advertised
+        
+        MED Information:
+        
+            MED Codes:
+                  (NP) Network Policy, (LI) Location Identification
+                  (PS) Power Source Entity, (PD) Power Device
+                  (IN) Inventory
+        
+            F/W revision: 90234AP
+            Manufacturer: Phone-05
+            Model: 1220 IP Deskphone
+            Capabilities: NP, LI, PD, IN
+            Device type: Endpoint Class III
+            Network Policy(Voice): VLAN 210, tagged, Layer-2 priority: 5, DSCP: 46
+            Network Policy(Voice Signal): VLAN 210, tagged, Layer-2 priority: 0, DSCP: 0
+            PD device, Power source: Unknown, Power Priority: High, Wattage: 6.0
+            Location - not advertised
+        
+        ------------------------------------------------
+        Chassis id: 00ff.c8ff.3b7f
+        Port id: Gi0/0/0
+        Port Description: -X- router
+        System Name: router
+        
+        System Description:
+        Cisco IOS Software, ASR920 Software (PPC_LINUX_IOSD-UNIVERSALK9_NPE-M), Version 15.6(2)SP4, RELEASE SOFTWARE (fc4)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2018 by Cisco Systems, Inc.
+        Compiled Mon 19-Mar-18 22:59 by mcpre
+        
+        Time remaining: 90 seconds
+        System Capabilities: B,R
+        Enabled Capabilities: R
+        Management Addresses:
+            IP: 10.10.4.30
+        Auto Negotiation - not supported
+        Physical media capabilities - not advertised
+        Media Attachment Unit type - not advertised
+        Vlan ID: - not advertised
+        
+        ------------------------------------------------
+        Chassis id: 10.10.191.107
+        Port id: 7018.deff.572d
+        Port Description: IP Phone
+        System Name - not advertised
+        
+        System Description:
+        IP Phone, Firmware:90234AP
+        
+        Time remaining: 154 seconds
+        System Capabilities: B,T
+        Enabled Capabilities: B,T
+        Management Addresses - not advertised
+        Auto Negotiation - supported, enabled
+        Physical media capabilities:
+            100base-TX(FD)
+            100base-TX(HD)
+            10base-T(FD)
+            10base-T(HD)
+        Media Attachment Unit type: 16
+        Vlan ID: - not advertised
+        
+        MED Information:
+        
+            MED Codes:
+                  (NP) Network Policy, (LI) Location Identification
+                  (PS) Power Source Entity, (PD) Power Device
+                  (IN) Inventory
+        
+            F/W revision: 90234AP
+            Manufacturer: Phone-05
+            Model: 1220 IP Deskphone
+            Capabilities: NP, LI, PD, IN
+            Device type: Endpoint Class III
+            Network Policy(Voice): VLAN 210, tagged, Layer-2 priority: 5, DSCP: 46
+            Network Policy(Voice Signal): VLAN 210, tagged, Layer-2 priority: 0, DSCP: 0
+            PD device, Power source: Unknown, Power Priority: High, Wattage: 6.0
+            Location - not advertised
+        
+        ------------------------------------------------
+        Chassis id: d89e.f3ff.58fe
+        Port id: d89e.f3ff.58fe
+        Port Description - not advertised
+        System Name - not advertised
+        System Description - not advertised
+        
+        Time remaining: 2845 seconds
+        System Capabilities - not advertised
+        Enabled Capabilities - not advertised
+        Management Addresses - not advertised
+        Auto Negotiation - supported, enabled
+        Physical media capabilities:
+            1000baseT(FD)
+        Media Attachment Unit type - not advertised
+        Vlan ID: - not advertised
+        
+        MED Information:
+        
+            MED Codes:
+                  (NP) Network Policy, (LI) Location Identification
+                  (PS) Power Source Entity, (PD) Power Device
+                  (IN) Inventory
+        
+            Inventory information - not advertised
+            Capabilities:
+            Device type: Endpoint Class I
+            Network Policies - not advertised
+            Power requirements - not advertised
+            Location - not advertised
+        
+        ------------------------------------------------
+        Chassis id: 6400.6aff.7d09
+        Port id: 6400.6aff.7d09
+        Port Description - not advertised
+        System Name - not advertised
+        System Description - not advertised
+        
+        Time remaining: 3500 seconds
+        System Capabilities - not advertised
+        Enabled Capabilities - not advertised
+        Management Addresses - not advertised
+        Auto Negotiation - supported, enabled
+        Physical media capabilities:
+            1000baseT(FD)
+        Media Attachment Unit type - not advertised
+        Vlan ID: - not advertised
+        
+        MED Information:
+        
+            MED Codes:
+                  (NP) Network Policy, (LI) Location Identification
+                  (PS) Power Source Entity, (PD) Power Device
+                  (IN) Inventory
+        
+            Inventory information - not advertised
+            Capabilities:
+            Device type: Endpoint Class I
+            Network Policies - not advertised
+            Power requirements - not advertised
+            Location - not advertised
+                
+        Total entries displayed: 8
+        

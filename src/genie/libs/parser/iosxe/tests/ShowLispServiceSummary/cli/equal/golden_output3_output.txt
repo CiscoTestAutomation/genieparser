@@ -1,0 +1,27 @@
+
+        OTT-LISP-C3K-3-xTR1#show lisp all service ethernet summary
+        =================================================
+        Output for router lisp 0
+        =================================================
+        Router-lisp ID:   0
+        Instance count:   69
+        Key: DB - Local EID Database entry count (@ - RLOC check pending
+                                                  * - RLOC consistency problem),
+             DB no route - Local EID DB entries with no matching RIB route,
+             Cache - Remote EID mapping cache size, IID - Instance ID,
+             Role - Configured Role
+
+                              Interface    DB  DB no  Cache Incom Cache
+        EID VRF name             (.IID)  size  route   size plete  Idle Role
+                                LISP0.1     2      0      4  0.0%  100% NONE
+                                LISP0.2     2      0      0    0%    0% NONE
+
+        Number of eid-tables:                                 2
+        Total number of database entries:                     4 (inactive 0)
+        Maximum database entries:                          5120
+        EID-tables with inconsistent locators:                0
+        Total number of map-cache entries:                    4
+        Maximum map-cache entries:                         5120
+        EID-tables with incomplete map-cache entries:         0
+        EID-tables pending map-cache update to FIB:           0
+        

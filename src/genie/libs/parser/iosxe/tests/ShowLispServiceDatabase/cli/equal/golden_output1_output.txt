@@ -1,0 +1,12 @@
+
+        202-XTR#show lisp all instance-id 101 ipv4 database  
+        =====================================================
+        Output for router lisp 0
+        =====================================================
+        LISP ETR IPv4 Mapping Database for EID-table vrf red (IID 101), LSBs: 0x1
+        Entries total 1, no-route 0, inactive 0
+
+        192.168.0.0/24, locator-set RLOC
+          Locator  Pri/Wgt  Source     State
+          10.16.2.2 50/50   cfg-intf   site-self, reachable
+        

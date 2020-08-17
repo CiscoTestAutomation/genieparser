@@ -1,0 +1,21 @@
+    Router# show mpls ldp discovery all
+
+     Local LDP Identifier:
+         10.66.12.12:0
+         Discovery Sources:
+         Interfaces:
+             ATM1/1/0.1 (tdp):xmit/recv
+                 TDP Id:10.229.11.11:0
+     VRF vpn1:Local LDP Identifier:
+         10.94.0.2:0
+         Discovery Sources:
+         Interfaces:
+             ATM3/0/0.1 (ldp):xmit/recv
+                 LDP Id:10.19.14.14:0
+     VRF vpn2:Local LDP Identifier:
+         10.64.0.2:0
+         Discovery Sources:
+         Interfaces:
+             ATM3/0/0.2 (ldp):xmit/recv
+                 LDP Id:10.19.14.14:0
+    

@@ -1391,7 +1391,6 @@ class test_show_spanning_tree_detail(unittest.TestCase):
         self.dev_c3850 = Mock(**self.golden_output_pvst)
         obj = ShowSpanningTreeDetail(device=self.dev_c3850)
         parsed_output = obj.parse()
-
         self.assertEqual(parsed_output,self.golden_parsed_output_pvst)    
 
     def test_golden_rapid_pvst(self):

@@ -1,0 +1,11 @@
+
+        starfleet-1#show boot
+        BOOT variable = bootflash:cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200421_032634.SSA.bin;
+        Configuration Register is 0x102
+        MANUAL_BOOT variable = no
+        BAUD variable = 9600
+        ENABLE_BREAK variable does not exist
+        BOOTMODE variable does not exist
+        IPXE_TIMEOUT variable does not exist
+        CONFIG_FILE variable =
+        

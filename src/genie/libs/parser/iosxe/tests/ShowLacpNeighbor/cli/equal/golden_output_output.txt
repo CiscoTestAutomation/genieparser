@@ -1,0 +1,21 @@
+
+    sr1000v-2#show lacp neighbor
+    Flags:  S - Device is requesting Slow LACPDUs
+            F - Device is requesting Fast LACPDUs
+            A - Device is in Active mode       P - Device is in Passive mode
+
+    Channel group 1 neighbors
+
+                      LACP port                        Admin  Oper   Port    Port
+    Port      Flags   Priority  Dev ID          Age    key    Key    Number  State
+    Gi2       SA      32768     001e.49ff.a3e6  25s    0x0    0x1    0x1     0x3D
+    Gi3       SA      32768     001e.49ff.a3e6  19s    0x0    0x1    0x1     0x3D
+
+    Channel group 2 neighbors
+
+                      LACP port                        Admin  Oper   Port    Port
+    Port      Flags   Priority  Dev ID          Age    key    Key    Number  State
+    Gi4       SP      32768     001e.49ff.a3e6  15s    0x0    0x2    0x1     0x3C
+    Gi5       SP      32768     001e.49ff.a3e6   1s    0x0    0x2    0x1     0x3C
+    Gi6       SP      32768     001e.49ff.a3e6   0s    0x0    0x2    0x1     0x3C
+    

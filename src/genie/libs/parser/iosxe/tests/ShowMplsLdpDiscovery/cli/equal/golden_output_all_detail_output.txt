@@ -1,0 +1,27 @@
+
+    Router#show mpls ldp discovery all detail
+    Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
+    Time source is NTP, 16:10:10.682 EST Tue Nov 8 2016
+     Local LDP Identifier:
+        10.169.197.254:0
+        Discovery Sources:
+        Interfaces:
+            GigabitEthernet0/0/0 (ldp): xmit/recv
+                Enabled: Interface config
+                Hello interval: 5000 ms; Transport IP addr: 10.169.197.254
+                LDP Id: 10.169.197.252:0
+                  Src IP addr: 10.169.197.93; Transport IP addr: 10.169.197.252
+                  Hold time: 15 sec; Proposed local/peer: 15/15 sec
+                  Reachable via 10.169.197.252/32
+                  Password: not required, none, in use
+                Clients: IPv4, mLDP
+            GigabitEthernet0/0/2 (ldp): xmit/recv
+                Enabled: Interface config
+                Hello interval: 5000 ms; Transport IP addr: 10.169.197.254
+                LDP Id: 10.169.197.253:0
+                  Src IP addr: 10.169.197.97; Transport IP addr: 10.169.197.253
+                  Hold time: 15 sec; Proposed local/peer: 15/15 sec
+                  Reachable via 10.169.197.253/32
+                  Password: not required, none, in use
+                Clients: IPv4, mLDP
+    

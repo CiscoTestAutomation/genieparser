@@ -141,24 +141,12 @@ class test_show_ip_vrf(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-    def test_empty1(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowIpVrf(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf='VRF1')
-
     def test_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowIpVrf(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
-
-    def test_empty2(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowIpVrf(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf='Mgmt-intf')
 
     def test_golden2(self):
         self.device = Mock(**self.golden_output2)
@@ -490,24 +478,12 @@ class test_show_ip_vrf_detail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-    def test_empty1(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowIpVrfDetail(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf='Mgmt-intf')
-
     def test_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowIpVrfDetail(device=self.device)
         parsed_output = obj.parse(vrf='Mgmt-intf')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
-
-    def test_empty2(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowIpVrfDetail(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf='VRF1')
 
     def test_golden2(self):
         self.maxDiff = None

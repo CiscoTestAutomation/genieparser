@@ -1,0 +1,9 @@
+        LLDP traffic statistics:
+          Total frames out: 20372
+          Total entries aged: 34
+          Total frames in: 13315
+          Total frames received in error: 0
+          Total frames discarded: 14
+          Total TLVs discarded: 0
+          Total TLVs unrecognized: 0
+    

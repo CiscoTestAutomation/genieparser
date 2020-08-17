@@ -1,0 +1,26 @@
+
+    
+    NAME: "Chassis", DESCR: "Cisco isr9000 Series Chassis"
+    PID: C8300-1N1S-6G , VID: V00 , SN: FDO2319A1RM
+
+    NAME: "Fan Tray", DESCR: "Cisco C8300 1RU Fan Assembly"
+    PID: C8300-FAN-1R , VID: , SN:
+
+    NAME: "module 0", DESCR: "Cisco isr9000 series Unknown Module"
+    PID: C8300-1N1S-6G , VID: , SN:
+
+    NAME: "NIM subslot 0/0", DESCR: "Front Panel 6 ports Gigabitethernet Module"
+    PID: 4x1G-2xSFP , VID: V01 , SN:
+
+    NAME: "module 1", DESCR: "Cisco C-SM-NIM-ADPT SM to NIM adapter"
+    PID: C-SM-NIM-ADPT , VID: V01 , SN: FDO23370TB8
+
+    NAME: "NIM subslot 1/0", DESCR: "NIM-8MFT-T1/E1 - T1/E1 Serial Module"
+    PID: NIM-8MFT-T1/E1 , VID: V04 , SN: FOC21032R9L
+
+    NAME: "module R0", DESCR: "Cisco isr9000 Series Route Processor"
+    PID: C8300-1N1S-6G , VID: V00 , SN: FDO231403QN
+
+    NAME: "module F0", DESCR: "Cisco isr9000 Series Forwarding Processor"
+    PID: C8300-1N1S-6G , VID: , SN:
+    

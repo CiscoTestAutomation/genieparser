@@ -1,0 +1,34 @@
+            VTP Version capable             : 1 to 3
+            VTP version running             : 3
+            VTP Domain Name                 : 
+            VTP Pruning Mode                : Disabled
+            VTP Traps Generation            : Disabled
+            Device ID                       : 3820.56ff.c7a2
+            
+            Feature VLAN:
+            --------------
+            VTP Operating Mode                : Primary Server
+            Number of existing VLANs          : 100
+            Number of existing extended VLANs : 0
+            Maximum VLANs supported locally   : 4096
+            Configuration Revision            : 2
+            Primary ID                        : 3820.56ff.c7a2
+            Primary Description               : SW1
+            MD5 digest                        : 0xC2 0x3C 0x1A 0x2C 0x1C 0x48 0x7D 0xFC 
+                                                0x6B 0x17 0x15 0x87 0x92 0xC7 0x70 0x25 
+            
+            
+            Feature MST:
+            --------------
+            VTP Operating Mode                : Server
+            Configuration Revision            : 0
+            Primary ID                        : 0000.0000.0000
+            Primary Description               : 
+            MD5 digest                        : 
+            
+            
+            Feature UNKNOWN:
+            --------------
+            VTP Operating Mode                : Transparent
+
+        

@@ -1,0 +1,21 @@
+
+    asr104#show redundancy states 
+           my state = 13 -ACTIVE 
+         peer state = 8  -STANDBY HOT 
+               Mode = Duplex
+               Unit = Primary
+            Unit ID = 48
+
+    Redundancy Mode (Operational) = sso
+    Redundancy Mode (Configured)  = sso
+    Redundancy State              = sso
+         Maintenance Mode = Disabled
+        Manual Swact = enabled
+     Communications = Up
+
+       client count = 76
+     client_notification_TMR = 30000 milliseconds
+               RF debug mask = 0x0   
+
+    asr104#
+    

@@ -1,0 +1,12 @@
+    R1_csr1kv#show l2vpn vfi
+    Legend: RT=Route-target, S=Split-horizon, Y=Yes, N=No
+
+    VFI name: vfi-sample, state: up, type: multipoint, signaling: LDP
+      VPN ID: 2000
+      Bridge-Domain 30 attachment circuits:
+      Pseudo-port interface: pseudowire100004
+      Interface          Peer Address     VC ID        S
+      pseudowire3        10.64.4.4        14           Y
+      pseudowire2        10.36.3.3        13           Y
+      pseudowire1        10.16.2.2        12           Y
+    

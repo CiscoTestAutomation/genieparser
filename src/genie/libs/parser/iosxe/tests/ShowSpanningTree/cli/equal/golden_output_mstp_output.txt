@@ -1,0 +1,36 @@
+        MST0
+          Spanning tree enabled protocol mstp
+          Root ID    Priority    32768
+                     Address     3820.56ff.e15b
+                     Cost        20000
+                     Port        5 (GigabitEthernet1/0/5)
+                     Hello Time  10 sec  Max Age 35 sec  Forward Delay 30 sec
+
+          Bridge ID  Priority    32768  (priority 32768 sys-id-ext 0)
+                     Address     ecbd.1dff.5f89
+                     Hello Time   7 sec  Max Age 12 sec  Forward Delay 15 sec
+
+        Interface           Role Sts Cost      Prio.Nbr Type
+        ------------------- ---- --- --------- -------- --------------------------------
+        Gi1/0/5             Root FWD 20000     128.5    P2p Bound(RSTP) 
+        Po14                Desg BKN*6660      128.2390 P2p Bound(PVST) *PVST_Inc 
+        Po24                Desg FWD 6660      128.2400 P2p Bound(PVST) 
+
+
+                  
+        MST10     
+          Spanning tree enabled protocol mstp
+          Root ID    Priority    61450
+                     Address     ecbd.1dff.5f89
+                     This bridge is the root
+                     Hello Time  10 sec  Max Age 35 sec  Forward Delay 30 sec
+                  
+          Bridge ID  Priority    61450  (priority 61440 sys-id-ext 10)
+                     Address     ecbd.1dff.5f89
+                     Hello Time   7 sec  Max Age 12 sec  Forward Delay 15 sec
+                  
+        Interface           Role Sts Cost      Prio.Nbr Type
+        ------------------- ---- --- --------- -------- --------------------------------
+        Gi1/0/5             Mstr FWD 20000     128.5    P2p Bound(RSTP) 
+        Po14                Desg BKN*6660      128.2390 P2p Bound(PVST) *PVST_Inc 
+    

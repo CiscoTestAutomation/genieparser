@@ -1,0 +1,42 @@
+
+        Router#show lacp neighbor detail
+        Load for five secs: 5%/1%; one minute: 6%; five minutes: 7%
+        Time source is NTP, 20:56:57.454 EST Fri Nov 11 2016
+
+        Flags:  S - Device is requesting Slow LACPDUs 
+                F - Device is requesting Fast LACPDUs
+                A - Device is in Active mode       P - Device is in Passive mode     
+
+        Channel group 1 neighbors
+
+        Partner's information:
+
+                  Partner               Partner                     Partner
+        Port           System ID             Port Number     Age         Flags
+        Gi0/0/1         00127,6487.88ff.68ef  0x2              18s        FA
+
+                  LACP Partner         Partner         Partner
+                  Port Priority        Oper Key        Port State
+                  100                  0x1             0x3F
+
+                  Port State Flags Decode:
+                  Activity:   Timeout:   Aggregation:   Synchronization:
+                  Active      Short      Yes            Yes
+
+                  Collecting:   Distributing:   Defaulted:   Expired:
+                  Yes           Yes             No           No 
+                  Partner               Partner                     Partner
+        Port           System ID             Port Number     Age         Flags
+        Gi0/0/7         00127,6487.88ff.68ef  0x1               0s        FA
+
+                  LACP Partner         Partner         Partner
+                  Port Priority        Oper Key        Port State
+                  200                  0x1             0xF 
+
+                  Port State Flags Decode:
+                  Activity:   Timeout:   Aggregation:   Synchronization:
+                  Active      Short      Yes            Yes
+
+                  Collecting:   Distributing:   Defaulted:   Expired:
+                  No            No              No           No 
+        

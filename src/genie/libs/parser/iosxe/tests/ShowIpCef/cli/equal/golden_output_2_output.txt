@@ -1,0 +1,7 @@
+    PE1#show ip cef 10.169.197.104
+    Load for five secs: 2%/0%; one minute: 5%; five minutes: 4%
+    Time source is NTP, 17:33:18.269 EST Fri Apr 5 2019
+    10.169.197.104/30
+             nexthop 10.169.197.93 TenGigabitEthernet0/2/0 label 22-(local:2043)
+
+          

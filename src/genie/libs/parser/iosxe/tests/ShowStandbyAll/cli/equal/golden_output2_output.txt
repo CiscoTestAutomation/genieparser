@@ -1,0 +1,29 @@
+
+        GigabitEthernet1/0/1.100 - Group 0 (version 2)
+          State is Active
+            8 state changes, last state change 1w0d
+            Track object 1 (unknown)
+          Virtual IP address is 192.168.1.254
+          Active virtual MAC address is 0000.0cff.909f (MAC In Use)
+            Local virtual MAC address is 0000.0cff.909f (v2 default)
+          Hello time 5 sec, hold time 20 sec
+            Next hello sent in 2.848 secs
+          Authentication MD5, key-chain "5"
+          Preemption enabled, delay min 5 secs, reload 10 secs, sync 20 secs
+          Active router is local
+          Standby router is 192.168.1.2, priority 100 (expires in 10.624 sec)
+          Priority 100 (default 100)
+          Group name is "hsrp-Gi1/0/1-0" (default)
+        GigabitEthernet1/0/1.200 - Group 10
+          State is Disabled
+          Virtual IP address is unknown
+          Active virtual MAC address is unknown (MAC Not In Use)
+            Local virtual MAC address is 0000.0cff.b311 (v1 default)
+          Hello time 3 sec, hold time 10 sec
+          Authentication MD5, key-chain "cisco123"
+          Preemption enabled
+          Active router is unknown
+          Standby router is unknown
+          Priority 110 (configured 110)
+          Group name is "hsrp-Gi1/0/2-10" (default)
+        

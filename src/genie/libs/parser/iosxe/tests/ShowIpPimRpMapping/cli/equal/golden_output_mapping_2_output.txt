@@ -1,0 +1,9 @@
+
+    R1_xe#show ip pim vrf VRF1 rp mapping
+        PIM Group-to-RP Mappings
+
+        Group(s): 224.0.0.0/4, Static
+            RP: 10.1.5.5 (?)
+        Acl: STATIC_RP_V4, Static-Override
+            RP: 192.168.151.1 (?)
+    

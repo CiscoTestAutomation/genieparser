@@ -1,0 +1,8 @@
+
+    show access-lists
+    Standard IP access list 1
+        10 deny   10.9.3.4 log (18 matches)
+        20 permit any (58 matches)
+    Extended IP access list meraki-fqdn-dns
+    ntc-pod19-csrv#
+    

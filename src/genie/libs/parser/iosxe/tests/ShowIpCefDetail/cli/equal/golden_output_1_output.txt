@@ -1,0 +1,14 @@
+
+        PE1#show ip cef 10.16.2.2 detail
+        10.16.2.2/32, epoch 2, per-destination sharing
+          sr local label info: global/16002 [0x1B]
+          nexthop 10.0.0.5 GigabitEthernet2 label [16002|16002]-(local:16002)
+            repair: attached-nexthop 10.0.0.9 GigabitEthernet3
+          nexthop 10.0.0.9 GigabitEthernet3 label [16002|16002]-(local:16002)
+            repair: attached-nexthop 10.0.0.25 GigabitEthernet5
+          nexthop 10.0.0.13 GigabitEthernet4 label [16002|16002]-(local:16002)
+            repair: attached-nexthop 10.0.0.5 GigabitEthernet2
+          nexthop 10.0.0.25 GigabitEthernet5 label [16002|16002]-(local:16002)
+            repair: attached-nexthop 10.0.0.13 GigabitEthernet4
+        PE1# 
+        

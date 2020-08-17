@@ -1,0 +1,13 @@
+        Switch/Stack Mac Address : aaaa.ddff.dddd
+                                                   H/W   Current
+        Switch#  Role   Mac Address     Priority Version  State 
+        ----------------------------------------------------------
+        *1       Master aaaa.ddff.dddd     15     4       Ready            
+         2       Member aaaa.ddff.dddd     1      4       Ready                      
+        
+                 Stack Port Status             Neighbors     
+        Switch#  Port 1     Port 2           Port 1   Port 2 
+        --------------------------------------------------------
+          1        Ok         Ok                2        5 
+          2        Ok         Ok                3        1 
+            

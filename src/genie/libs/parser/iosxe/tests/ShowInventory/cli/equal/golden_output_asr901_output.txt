@@ -1,0 +1,23 @@
+
+        Router#show inventory
+        NAME: "Chassis", DESCR: "Cisco ASR920 Series - 24GE and 4-10GE- Modular PSU and IM"
+        PID: ASR-920-24SZ-IM   , VID: V01  , SN: CAT1902V19M
+
+        NAME: "subslot 0/0 transceiver 26", DESCR: "SFP+ 10GBASE-LR"
+        PID: SFP-10G-LR          , VID: CSCO , SN: CD180456291     
+
+        NAME: "subslot 0/0 transceiver 27", DESCR: "SFP+ 10GBASE-LR"
+        PID: SFP-10G-LR          , VID: CSCO , SN: CD180456292     
+
+        NAME: "IM subslot 0/1", DESCR: "ASR 900 Combo 4 port DS3 12 DS1 and 4 OCx"
+        PID: A900-IMA3G-IMSG   , VID: V01  , SN: FOC2204PAP1
+
+        NAME: "subslot 0/1 transceiver 16", DESCR: "Dual-Rate OC3/12 IR-1"
+        PID: ONS-SI-622-I1       , VID: A    , SN: ECL133706C3     
+
+        NAME: "Power Supply Module 0", DESCR: "ASR 920 250W DC Power Supply"
+        PID: ASR-920-PWR-D     , VID: V01  , SN: ART1832F11X
+
+        NAME: "Fan Tray", DESCR: "ASR 920 Fan tray"
+        PID: ASR-920-FAN-M     , VID: V01  , SN: CAT1903V028
+        

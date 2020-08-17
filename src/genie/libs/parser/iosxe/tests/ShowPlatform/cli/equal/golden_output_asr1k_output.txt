@@ -1,0 +1,30 @@
+        Chassis type: ASR1006             
+
+        Slot      Type                State                 Insert time (ago) 
+        --------- ------------------- --------------------- ----------------- 
+        0         ASR1000-SIP40       ok                    00:33:53      
+         0/0      SPA-1XCHSTM1/OC3    ok                    2d00h         
+         0/1      SPA-2XT3/E3         ok                    2d00h         
+         0/2      SPA-1XOC48POS/RPR   ok                    2d00h         
+         0/3      SPA-5X1GE-V2        ok                    2d00h        
+        1         ASR1000-2T+20X1GE   ok                    2d00h         
+         1/0      BUILT-IN-2T+20X1GE  ok                    2d00h         
+        2         ASR1000-6TGE        ok                    2d00h         
+         2/0      BUILT-IN-6TGE       ok                    2d00h         
+        4                             unknown               2d00h         
+        R0        ASR1000-RP2         ok, active            00:33:53      
+        R1        ASR1000-RP2         ok, standby           00:33:53      
+        F0        ASR1000-ESP20       ok, active            00:33:53      
+        P0        ASR1006-PWR-AC      ok                    00:33:18      
+        P1        ASR1006-PWR-AC      ps, fail              00:33:17      
+
+        Slot      CPLD Version        Firmware Version                        
+        --------- ------------------- --------------------------------------- 
+        0         00200800            16.2(1r)                            
+        1         14011701            16.3(2r)                            
+        2         14011701            16.3(2r)                            
+        4         N/A                 N/A      
+        R0        10021901            16.2(1r)                            
+        R1        14111801            16.2(1r)                            
+        F0        08041102            16.2(1r)        
+        

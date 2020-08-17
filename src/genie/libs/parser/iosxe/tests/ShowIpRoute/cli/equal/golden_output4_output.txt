@@ -1,0 +1,33 @@
+
+        Router#show ip route
+        Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+               D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area 
+               N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+               E1 - OSPF external type 1, E2 - OSPF external type 2
+               i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+               ia - IS-IS inter area, * - candidate default, U - per-user static route
+               o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
+               a - application route
+               + - replicated route, % - next hop override, p - overrides from PfR
+
+        Gateway of last resort is 10.12.7.37 to network 0.0.0.0
+
+        i*L1  0.0.0.0/0 [115/100] via 10.12.7.37, 3w6d, Vlan101
+                        [115/100] via 10.12.7.33, 3w6d, Vlan100
+              10.0.0.0/8 is variably subnetted, 14 subnets, 2 masks
+        i ia     10.12.6.1/32 [115/200] via 10.12.7.33, 1w1d, Vlan100
+        i L1     10.12.6.2/32 [115/100] via 10.12.7.33, 6w0d, Vlan100
+        i L1     10.12.6.3/32 [115/100] via 10.12.7.37, 3w6d, Vlan101
+        i L1     10.12.6.4/32 [115/50] via 10.12.7.33, 6w0d, Vlan100
+        i L1     10.12.6.7/32 [115/50] via 10.12.7.37, 3w6d, Vlan101
+        C        10.12.6.9/32 is directly connected, Loopback0
+        i ia     10.12.6.10/32 [115/200] via 10.12.7.33, 2w1d, Vlan100
+        i ia     10.12.6.13/32 [115/250] via 10.12.7.33, 2w1d, Vlan100
+        i ia     10.12.6.14/32 [115/300] via 10.12.7.37, 2w1d, Vlan101
+                                [115/300] via 10.12.7.33, 2w1d, Vlan100
+        i ia     10.12.6.15/32 [115/250] via 10.12.7.37, 2w1d, Vlan101
+        C        10.12.7.32/30 is directly connected, Vlan100
+        L        10.12.7.34/32 is directly connected, Vlan100
+        C        10.12.7.36/30 is directly connected, Vlan101
+        L        10.12.7.38/32 is directly connected, Vlan101
+        

@@ -342,9 +342,9 @@ class TestShowMacAddressTable(unittest.TestCase):
 class TestShowMacAddressTable2(unittest.TestCase):
     dev1 = Device(name='empty')
     dev_c3850 = Device(name='c3850')
-    empty_output = {'execute.return_value': '      '}
+    empty_output_2 = {'execute.return_value': '      '}
 
-    golden_parsed_output = {
+    golden_parsed_output_2 = {
         "mac_table": {
             "vlans": {
                   '100': {
@@ -554,7 +554,7 @@ class TestShowMacAddressTable2(unittest.TestCase):
         "total_mac_addresses": 8
     }
 
-    golden_output = {'execute.return_value': '''\
+    golden_output_2 = {'execute.return_value': '''\
       show mac address-table
       Legend: * - primary entry
               age - seconds since last seen
@@ -579,17 +579,17 @@ class TestShowMacAddressTable2(unittest.TestCase):
     }
 
     def test_empty(self):
-        self.dev1 = Mock(**self.empty_output)
+        self.dev1 = Mock(**self.empty_output_2)
         obj = ShowMacAddressTable(device=self.dev1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_golden(self):
         self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output)
+        self.dev_c3850 = Mock(**self.golden_output_2)
         obj = ShowMacAddressTable(device=self.dev_c3850)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 
 class TestShowMacAddressTableAgingTime(unittest.TestCase):

@@ -1,0 +1,14 @@
+
+        PE1#show ip ospf 65109 segment-routing local-block
+ 
+            OSPF Router with ID (10.4.1.1) (Process ID 65109)
+ 
+        OSPF Segment Routing Local Blocks in Area 8
+         
+          Router ID        SR Capable   SRLB Base   SRLB Range 
+        --------------------------------------------------------
+         *10.4.1.1          Yes          15000       1000       
+          10.16.2.2          Yes          15000       1000       
+         
+        PE1#
+    

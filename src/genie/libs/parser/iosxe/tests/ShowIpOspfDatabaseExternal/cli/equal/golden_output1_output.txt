@@ -1,0 +1,25 @@
+
+        R1_ospf_xe#show ip ospf database external 
+
+            OSPF Router with ID (10.4.1.1) (Process ID 1)
+
+                Type-5 AS External Link States
+
+          LS age: 1595
+          Options: (No TOS-capability, DC, Upward)
+          LS Type: AS External Link
+          Link State ID: 10.94.44.44 (External Network Number )
+          Advertising Router: 10.64.4.4
+          LS Seq Number: 80000001
+          Checksum: 0x7F60
+          Length: 36
+          Network Mask: /32
+                Metric Type: 2 (Larger than any link state path)
+                MTID: 0 
+                Metric: 20 
+                Forward Address: 0.0.0.0
+                External Route Tag: 0
+
+
+                    OSPF Router with ID (10.229.11.11) (Process ID 2)
+        

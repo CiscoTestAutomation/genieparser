@@ -1,0 +1,7 @@
+    Router# show mpls interfaces all
+
+    Interface              IP            Tunnel   Operational
+    GigabitEthernet6/0     Yes (ldp)     No       Yes
+    VRF vpn1:
+    Ethernet3/1            No            No       Yes
+    

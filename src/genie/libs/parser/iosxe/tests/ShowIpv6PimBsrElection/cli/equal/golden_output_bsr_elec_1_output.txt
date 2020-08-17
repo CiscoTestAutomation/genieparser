@@ -1,0 +1,15 @@
+
+            R1_xe#show ipv6 pim vrf VRF1 bsr election
+            PIMv2 BSR information
+
+            BSR Election Information
+              Scope Range List: ff00::/8
+              This system is the Bootstrap Router (BSR)
+                 BSR Address: 2001:DB8:1:5::1
+                 Uptime: 00:08:39, BSR Priority: 0, Hash mask length: 126
+                 RPF: FE80::5054:FF:FEC3:D71C,GigabitEthernet3
+                 BS Timer: 00:00:22
+              This system is candidate BSR
+                  Candidate BSR address: 2001:DB8:1:5::1, priority: 0, hash mask length: 126
+
+            

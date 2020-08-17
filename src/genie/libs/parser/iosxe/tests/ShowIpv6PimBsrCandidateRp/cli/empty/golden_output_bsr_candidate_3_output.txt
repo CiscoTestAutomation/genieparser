@@ -1,0 +1,4 @@
+
+            R2_iosv#show ipv6 pim vrf VRF1 bsr candidate-rp
+            %VPN Routing instance VRF1 does not exist. Create first
+            

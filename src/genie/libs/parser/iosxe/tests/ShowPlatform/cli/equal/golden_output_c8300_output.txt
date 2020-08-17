@@ -1,0 +1,22 @@
+        Radium-Ultima#sh platform
+        Chassis type: C8300-1N1S-4G2X
+         
+        Slot      Type                State                 Insert time (ago)
+        --------- ------------------- --------------------- -----------------
+        0         C8300-1N1S-4G2X     ok                    1w5d         
+         0/0      4x1G-2xSFP+         ok                    1w5d         
+         0/1      NIMX-M-1TE-SFP      ok                    1w5d         
+        1         C8300-1N1S-4G2X     ok                    1w5d         
+        R0        C8300-1N1S-4G2X     ok, active            1w5d         
+        F0        C8300-1N1S-4G2X     ok, active            1w5d         
+        P0        PWR-4430-AC         ok                    1w5d         
+        P1        Unknown             empty                 never        
+        P2        ACS-4450-FANASSY    ok                    1w5d         
+         
+        Slot      CPLD Version        Firmware Version                       
+        --------- ------------------- ---------------------------------------
+        0         19041222            20190618                           
+        1         19041222            20190618                           
+        R0        19041222            20190618                           
+        F0        19041222            20190618      
+    

@@ -1,0 +1,12 @@
+
+        Service Instance ID: 100
+        L2 ACL (inbound): test-acl
+        Associated Interface: Gig3/0/1
+        Associated EVC: test
+        L2protocol drop
+        CEVlans:
+        Interface Dot1q Tunnel Ethertype: 0x8100
+        State: Up
+        L2 ACL permit count: 10255
+        L2 ACL deny count: 53
+        

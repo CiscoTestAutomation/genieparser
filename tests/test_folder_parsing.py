@@ -16,8 +16,23 @@ from pyats.topology import Device
 
 # This is the list of Classes that currently have no testing. It was found during the process
 # of converting to folder based testing strategy
-CLASS_SKIP = {"asa": {"ShowVpnSessiondbSuper": True}}
+CLASS_SKIP = {"asa": {"ShowVpnSessiondbSuper": True}, "iosxe": {"ShowPimNeighbor": True, "ShowIpInterfaceBrief": True, 
+"ShowIpInterfaceBriefPipeVlan": True, "ShowBfdSessions": True, "ShowBfdSessions_viptela": True, "ShowBfdSummary": True,
+"ShowDot1x": True, "ShowEnvironmentAll": True, "ShowControlConnections_viptela": True, "ShowControlConnections": True,
+"ShowEigrpNeighborsSuperParser": True, "ShowIpEigrpNeighborsDetailSuperParser": True, "ShowIpOspfInterface": True,
+"ShowIpOspfNeighborDetail": True, "ShowIpOspfShamLinks": True, "ShowIpOspfVirtualLinks": True,
+"ShowIpOspfMplsTrafficEngLink": True, "ShowIpOspfDatabaseOpaqueAreaTypeExtLink": True,
+"ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter": True, "ShowIpOspfDatabaseOpaqueAreaTypeExtLinkSelfOriginate": True,
+"ShowIpOspfDatabaseTypeParser": True, "ShowIpOspfLinksParser": True, "ShowIpRouteDistributor": True,
+"ShowIpv6RouteDistributor": True, "ShowControlLocalProperties_viptela": True, "ShowControlLocalProperties": True,
+"ShowVrfDetailSuperParser": True, "ShowBgp": True, "ShowBgpAllNeighborsRoutesSuperParser": True,
+"ShowBgpDetailSuperParser": True, "ShowBgpNeighborSuperParser": True, "ShowBgpNeighborsAdvertisedRoutesSuperParser": True,
+"ShowBgpNeighborsReceivedRoutes": True, "ShowBgpNeighborsReceivedRoutesSuperParser": True, "ShowBgpNeighborsRoutes": True,
+"ShowBgpSummarySuperParser": True, "ShowBgpSuperParser": True, "ShowIpBgpAllNeighborsAdvertisedRoutes": True,
+"ShowIpBgpAllNeighborsReceivedRoutes": True, "ShowIpBgpNeighborsReceivedRoutes": True, "ShowIpBgpNeighborsRoutes": True,
+"ShowIpBgpRouteDistributer": True, "ShowPolicyMapTypeSuperParser": True}}
 
+EMPTY_SKIP = {"iosxe": {"ShowVersion": True }}
 
 def read_from_file(file_path):
     """Helper function to read from a file."""
@@ -41,7 +56,7 @@ def read_python_file(file_path):
 def get_operating_systems():
     """Helper Script to get operating systems."""
     # Update and fix as more OS's converted to folder baed tests
-    return ["asa"]
+    return ["iosxe"]
     # operating_system = []
     # for folder in os.listdir("./"):
     #    if os.path.islink("./" + folder):
@@ -71,6 +86,8 @@ class FileBasedTest(aetest.Testcase):
             for name, _class in inspect.getmembers(_module):
 
                 if hasattr(_class, "cli"):
+                    #if name != 'ShowLispServiceMapCache':
+                    #    continue
                     with steps.start(f"{operating_system} -> {name}") as class_step:
                         with class_step.start(
                             f"Test Golden -> {operating_system} -> {name}",
@@ -118,6 +135,7 @@ class FileBasedTest(aetest.Testcase):
                 device = Mock(**golden_output)
                 obj = _class(device=device)
                 parsed_output = obj.parse(**arguments)
+                #print(parsed_output)
                 assert parsed_output == golden_parsed_output
 
     def test_empty(self, steps, _class, operating_system, token=None):
@@ -125,9 +143,7 @@ class FileBasedTest(aetest.Testcase):
 
         folder_root = f"{operating_system}/{_class.__name__}/cli/empty"
         output_glob = glob.glob(f"{folder_root}/*_output.txt")
-        if len(output_glob) == 0 and not CLASS_SKIP.get(operating_system, {}).get(
-            _class.__name__
-        ):
+        if len(output_glob) == 0 and not CLASS_SKIP.get(operating_system, {}).get(_class.__name__) and not EMPTY_SKIP.get(operating_system, {}).get(_class.__name__):
             self.failed(
                 f"No files found in appropriate directory for {_class} empty file"
             )

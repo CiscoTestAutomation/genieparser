@@ -2108,6 +2108,180 @@ Directory of bootflash:/
 1940303872 bytes total (1036210176 bytes free)
 '''}
 
+
+    golden_parsed_output_asr1k_2 = {
+                                    'dir': {
+                                        'dir': 'bootflash:/',
+                                        'bootflash:/': {
+                                            'bytes_free': '1036210176',
+                                            'bytes_total': '1940303872',
+                                            'files': {
+                                                'lost+found': {
+                                                    'index': '11',
+                                                    'permissions': 'drwx',
+                                                    'size': '16384',
+                                                    'last_modified_date': 'Nov 25 2016 19:32:53 -07:00',
+                                                },
+                                                'ds_stats.txt': {
+                                                    'index': '12',
+                                                    'permissions': '-rw-',
+                                                    'size': '0',
+                                                    'last_modified_date': 'Dec 13 2016 11:36:36 -07:00',
+                                                },
+                                                '.prst_sync': {
+                                                    'index': '104417',
+                                                    'permissions': 'drwx',
+                                                    'size': '4096',
+                                                    'last_modified_date': 'Apr 10 2017 09:09:11 -07:00',
+                                                },
+                                                '.rollback_timer': {
+                                                    'index': '80321',
+                                                    'permissions': 'drwx',
+                                                    'size': '4096',
+                                                    'last_modified_date': 'Nov 25 2016 19:40:38 -07:00',
+                                                },
+                                                '.installer': {
+                                                    'index': '64257',
+                                                    'permissions': 'drwx',
+                                                    'size': '4096',
+                                                    'last_modified_date': 'Nov 25 2016 19:41:02 -07:00',
+                                                },
+                                                'virtual-instance-stby-sync': {
+                                                    'index': '48193',
+                                                    'permissions': 'drwx',
+                                                    'size': '4096',
+                                                    'last_modified_date': 'Nov 25 2016 19:41:14 -07:00',
+                                                },
+                                                'onep': {
+                                                    'index': '8033',
+                                                    'permissions': 'drwx',
+                                                    'size': '4096',
+                                                    'last_modified_date': 'Nov 25 2016 18:42:07 -07:00',
+                                                },
+                                                'pnp-tech-time': {
+                                                    'index': '13',
+                                                    'permissions': '-rw-',
+                                                    'size': '35',
+                                                    'last_modified_date': 'Apr 10 2017 09:11:45 -07:00',
+                                                },
+                                                'pnp-tech-discovery-summary': {
+                                                    'index': '14',
+                                                    'permissions': '-rw-',
+                                                    'size': '19957',
+                                                    'last_modified_date': 'Apr 10 2017 09:13:55 -07:00',
+                                                },
+                                                'aaa1': {
+                                                    'index': '15',
+                                                    'permissions': '-rw-',
+                                                    'size': '24970',
+                                                    'last_modified_date': 'Dec 13 2016 12:07:18 -07:00',
+                                                },
+                                                'crashinfo_RP_00_00_20170203-155749-PDT': {
+                                                    'index': '16',
+                                                    'permissions': '-rw-',
+                                                    'size': '177449',
+                                                    'last_modified_date': 'Feb 3 2017 15:57:50 -07:00',
+                                                },
+                                                'crashinfo_RP_00_00_20170206-122158-PDT': {
+                                                    'index': '17',
+                                                    'permissions': '-rw-',
+                                                    'size': '168196',
+                                                    'last_modified_date': 'Feb 6 2017 12:21:59 -07:00',
+                                                },
+                                                'crashinfo_RP_00_00_20170206-172530-PDT': {
+                                                    'index': '18',
+                                                    'permissions': '-rw-',
+                                                    'size': '163081',
+                                                    'last_modified_date': 'Feb 6 2017 17:25:31 -07:00',
+                                                },
+                                                'crashinfo_RP_00_00_20170207-133017-PDT': {
+                                                    'index': '19',
+                                                    'permissions': '-rw-',
+                                                    'size': '160713',
+                                                    'last_modified_date': 'Feb 7 2017 13:30:18 -07:00',
+                                                },
+                                                'crashinfo_RP_00_00_20170208-180855-PDT': {
+                                                    'index': '20',
+                                                    'permissions': '-rw-',
+                                                    'size': '177276',
+                                                    'last_modified_date': 'Feb 8 2017 18:08:56 -07:00',
+                                                },
+                                                'crashinfo_RP_00_00_20170210-120312-PDT': {
+                                                    'index': '21',
+                                                    'permissions': '-rw-',
+                                                    'size': '160725',
+                                                    'last_modified_date': 'Feb 10 2017 12:03:13 -07:00',
+                                                },
+                                                'crashinfo_RP_00_00_20170210-163201-PDT': {
+                                                    'index': '22',
+                                                    'permissions': '-rw-',
+                                                    'size': '163143',
+                                                    'last_modified_date': 'Feb 10 2017 16:32:02 -07:00',
+                                                },
+                                                'crashinfo_RP_00_00_20170213-112420-PDT': {
+                                                    'index': '23',
+                                                    'permissions': '-rw-',
+                                                    'size': '168245',
+                                                    'last_modified_date': 'Feb 13 2017 11:24:21 -07:00',
+                                                },
+                                                'testimage': {
+                                                    'index': '24',
+                                                    'permissions': '-rw-',
+                                                    'size': '794609595',
+                                                    'last_modified_date': 'Feb 17 2017 11:50:21 -07:00',
+                                                },
+                                                'crashinfo_RP_00_00_20170307-043013-PDT': {
+                                                    'index': '25',
+                                                    'permissions': '-rw-',
+                                                    'size': '167767',
+                                                    'last_modified_date': 'Mar 7 2017 04:30:14 -07:00',
+                                                },
+                                                'crashinfo_RP_00_00_20170307-165741-PDT': {
+                                                    'index': '28',
+                                                    'permissions': '-rw-',
+                                                    'size': '163152',
+                                                    'last_modified_date': 'Mar 7 2017 16:57:42 -07:00',
+                                                },
+                                                'kak1': {
+                                                    'index': '37',
+                                                    'permissions': '-rw-',
+                                                    'size': '25189',
+                                                    'last_modified_date': 'Dec 14 2016 09:15:37 -07:00',
+                                                },
+                                            }
+                                        }
+                                    }
+                                }
+
+    golden_output_asr1k_2 = {'execute.return_value': '''\
+Directory of bootflash:/
+
+   11  drwx            16384  Nov 25 2016 19:32:53 -07:00  lost+found
+   12  -rw-                0  Dec 13 2016 11:36:36 -07:00  ds_stats.txt
+104417  drwx             4096  Apr 10 2017 09:09:11 -07:00  .prst_sync
+80321  drwx             4096  Nov 25 2016 19:40:38 -07:00  .rollback_timer
+64257  drwx             4096  Nov 25 2016 19:41:02 -07:00  .installer
+48193  drwx             4096  Nov 25 2016 19:41:14 -07:00  virtual-instance-stby-sync
+ 8033  drwx             4096  Nov 25 2016 18:42:07 -07:00  onep
+   13  -rw-               35  Apr 10 2017 09:11:45 -07:00  pnp-tech-time
+   14  -rw-            19957  Apr 10 2017 09:13:55 -07:00  pnp-tech-discovery-summary
+   15  -rw-            24970  Dec 13 2016 12:07:18 -07:00  aaa1
+   16  -rw-           177449   Feb 3 2017 15:57:50 -07:00  crashinfo_RP_00_00_20170203-155749-PDT
+   17  -rw-           168196   Feb 6 2017 12:21:59 -07:00  crashinfo_RP_00_00_20170206-122158-PDT
+   18  -rw-           163081   Feb 6 2017 17:25:31 -07:00  crashinfo_RP_00_00_20170206-172530-PDT
+   19  -rw-           160713   Feb 7 2017 13:30:18 -07:00  crashinfo_RP_00_00_20170207-133017-PDT
+   20  -rw-           177276   Feb 8 2017 18:08:56 -07:00  crashinfo_RP_00_00_20170208-180855-PDT
+   21  -rw-           160725  Feb 10 2017 12:03:13 -07:00  crashinfo_RP_00_00_20170210-120312-PDT
+   22  -rw-           163143  Feb 10 2017 16:32:02 -07:00  crashinfo_RP_00_00_20170210-163201-PDT
+   23  -rw-           168245  Feb 13 2017 11:24:21 -07:00  crashinfo_RP_00_00_20170213-112420-PDT
+   24  -rw-        794609595  Feb 17 2017 11:50:21 -07:00  testimage
+   25  -rw-           167767   Mar 7 2017 04:30:14 -07:00  crashinfo_RP_00_00_20170307-043013-PDT
+   28  -rw-           163152   Mar 7 2017 16:57:42 -07:00  crashinfo_RP_00_00_20170307-165741-PDT
+   37  -rw-            25189  Dec 14 2016 09:15:37 -07:00  kak1
+
+1940303872 bytes total (1036210176 bytes free)
+'''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         dir_obj = Dir(device=self.dev1)
@@ -2117,7 +2291,6 @@ Directory of bootflash:/
     def test_semi_empty(self):
         self.dev2 = Mock(**self.semi_empty_output)
         dir_obj = Dir(device=self.dev2)
-        # with self.assertRaises(SchemaMissingKeyError):
         with self.assertRaises(Exception):
             parsed_output = dir_obj.parse()
 
@@ -2137,10 +2310,10 @@ Directory of bootflash:/
 
     def test_golden_asr1k_with_arg(self):
         self.maxDiff = None
-        self.dev_asr1k = Mock(**self.golden_output_asr1k)
+        self.dev_asr1k = Mock(**self.golden_output_asr1k_2)
         dir_obj = Dir(device=self.dev_asr1k)
         parsed_output = dir_obj.parse(directory='bootflash:/')
-        self.assertEqual(parsed_output, self.golden_parsed_output_asr1k)
+        self.assertEqual(parsed_output, self.golden_parsed_output_asr1k_2)
 
 
 class TestShowRedundancy(unittest.TestCase):
@@ -5283,12 +5456,6 @@ class TestShowBoot(unittest.TestCase):
         obj = ShowBoot(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2900)
-
-    def test_golden_cat9k_1(self):
-        self.dev_cat9k = Mock(**self.golden_output_cat9k_1)
-        obj = ShowBoot(device=self.dev_cat9k)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_cat9k_1)
 
     def test_golden_cat9k_1(self):
         self.dev_cat9k = Mock(**self.golden_output_cat9k_1)
@@ -20179,7 +20346,7 @@ class TestShowPlatformHardwareQfpBqsStatisticsChannelAll(unittest.TestCase):
         parsed_output = platform_obj.parse(status='active', slot='0', iotype='opm')
         self.assertEqual(parsed_output,self.golden_parsed_output_active_opm)
 
-class ShowPlatformHardwareQfpInterface(unittest.TestCase):
+class TestShowPlatformHardwareQfpInterface(unittest.TestCase):
 
     device = Device(name='aDevice')
 
@@ -20888,7 +21055,7 @@ class TestShowProcessMemorySorted(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        platform_obj = ShowProcessesMemory(device=self.device)
+        platform_obj = ShowProcessesMemorySorted(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = platform_obj.parse()    
 
@@ -21064,12 +21231,7 @@ class TestShowPlatformIntegrity(unittest.TestCase):
         version_obj = ShowPlatformIntegrity(device=self.dev_c9300)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_c9300)
-    
-    def test_golden_c9300_xml(self):
-        self.maxDiff = None
-        version_obj = ShowPlatformIntegrity(device=None)
-        parsed_output = version_obj.yang(output=self.golden_output_c9300_xml)
-        self.assertEqual(parsed_output, self.golden_parsed_output_c9300_xml)
+
 
 
 class TestShowPlatformHardwareQfpActiveFeatureAppqoe(unittest.TestCase):

@@ -1,0 +1,8 @@
+        [2019-04-11 11:02:15,834] +++ PE1: executing command 'traceroute www.xyz.com' +++
+        traceroute www.xyz.com
+        Type escape sequence to abort.
+        Tracing the route to www.xyz.com (10.4.1.1)
+        VRF info: (vrf in name/id, vrf out name/id)
+          1 10.10.10.10 1 msec 1 msec * 
+        PE1#
+        

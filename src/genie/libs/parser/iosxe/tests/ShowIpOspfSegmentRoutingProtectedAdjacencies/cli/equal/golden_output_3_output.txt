@@ -1,0 +1,10 @@
+
+    show ip ospf segment-routing protected-adjacencies
+    Load for five secs: 0%/0%; one minute: 1%; five minutes: 1%
+    Time source is NTP, 15:31:18.236 EST Thu Oct 31 2019
+                OSPF Router with ID (10.16.2.2) (Process ID 65109)
+                              Area with ID (8)
+    Neighbor ID     Interface          Address         Adj-Sid      Backup Nexthop  Backup Interface  
+    --------------- ------------------ --------------- ------------ --------------- ------------------
+    10.4.1.1         Gi0/1/6            10.16.2.2          17          
+    

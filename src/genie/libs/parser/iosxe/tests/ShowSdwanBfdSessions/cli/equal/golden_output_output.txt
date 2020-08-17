@@ -1,0 +1,10 @@
+
+    # show bfd sessions
+                                        SOURCE TLOC      REMOTE TLOC                       DST PUBLIC       DST PUBLIC         DETECT      TX                              
+    SYSTEM IP        SITE ID  STATE       COLOR            COLOR            SOURCE IP        IP               PORT        ENCAP  MULTIPLIER  INTERVAL(msec)  UPTIME        TRANSITIONS
+    -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    172.16.241.1     30001001 up          mpls             mpls             172.16.189.2    172.16.171.2       12346       ipsec  20          1000           0:01:46:50      0           
+    172.16.241.1     30001001 up          private1         mpls             172.16.16.2    172.16.171.2       12346       ipsec  20          1000           0:01:46:51      0           
+    172.16.241.2     30001002 up          mpls             mpls             172.16.189.2    172.16.34.2       12346       ipsec  20          1000           0:01:41:27      2           
+    172.16.241.2     30001002 up          private1         mpls             172.16.16.2    172.16.34.2       12346       ipsec  20          1000           0:01:41:28      2         
+    

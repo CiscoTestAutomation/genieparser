@@ -1,0 +1,22 @@
+        Load for five secs: 5%1%; one minute: 6%; five minutes: 7%
+        Time source is NTP, 21:20:36.100 EST Fri Nov 11 2016
+        Number of clients registered: 16
+
+        Application         ID      Num of Subblocks
+        VRRS                200     0
+        ARP Backup          201     0
+        DHCPD               202     0
+        ARP HA              203     99789
+        ASR1000-RP SPA Ether204     0
+        VRRS_L3CTRL         205     0
+        IP ARP Adj Conn ID  206     0
+        IP ARP Probe        207     0
+        ip arp retry        208     0
+        IP Mobility         209     0
+        IP Subscriber       210     0
+        RG IM               211     0
+        B2B NAT             212     0
+        MANET INFRA ARP     213     0
+        IP ARP Adjacency    214     99791
+        IP ARP VLAN ID      215     99791
+        

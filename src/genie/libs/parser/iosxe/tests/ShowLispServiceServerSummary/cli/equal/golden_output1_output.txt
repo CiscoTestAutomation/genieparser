@@ -1,0 +1,17 @@
+
+        204-MSMR#show lisp all instance-id 101 ipv4 server summary 
+        =====================================================
+        Output for router lisp 0
+        =====================================================
+                             -----------  IPv4 ----------- 
+         Site name            Configured Registered Incons
+        xtr1_1                        1          1      0
+        xtr2                          1          1      0
+
+        Number of configured sites:                     2
+        Number of registered sites:                     2
+        Sites with inconsistent registrations:          0
+        IPv4
+          Number of configured EID prefixes:            2
+          Number of registered EID prefixes:            2
+        

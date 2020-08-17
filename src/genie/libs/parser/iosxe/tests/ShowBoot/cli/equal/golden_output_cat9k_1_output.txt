@@ -1,0 +1,13 @@
+
+        show boot
+        BOOT variable = tftp://192.168.121.25//auto/tftptest-blr/latest//cat9k_iosxe.BLD_V173_THROTTLE_LATEST_20200428_021754.SSA.bin;bootflash:/cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20200429_051305.SSA_starfleet-1.bin;
+        Configuration Register is 0x102
+        MANUAL_BOOT variable = no
+        BAUD variable = 9600
+        ENABLE_BREAK variable does not exist
+        BOOTMODE variable does not exist
+        IPXE_TIMEOUT variable does not exist
+        CONFIG_FILE variable =
+
+        starfleet-1#
+        

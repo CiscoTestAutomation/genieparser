@@ -1,0 +1,21 @@
+
+    IPv6 Routing Table - VRF1 - 104 entries
+    Codes: C - Connected, L - Local, S - Static, U - Per-user Static route
+           B - BGP, R - RIP, H - NHRP, I1 - ISIS L1
+           I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP
+           EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination
+           NDr - Redirect, O - OSPF Intra, OI - OSPF Inter, OE1 - OSPF ext 1
+           OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1, ON2 - OSPF NSSA ext 2
+           la - LISP alt, lr - LISP site-registrations, ld - LISP dyn-eid
+           a - Application
+    O   2001:db8:100::/64 [110/1]
+         via FE80::211:1FF:FE00:1, GigabitEthernet0/0/2.100
+          Last updated 09:42:39 06 December 2017
+    O   2001:db8:100:1::/64 [110/1]
+         via FE80::211:1FF:FE00:1, GigabitEthernet0/0/2.100
+          Last updated 09:42:39 06 December 2017
+    O   2001:db8:100:4::/64 [110/1]
+         via FE80::211:1FF:FE00:1, GigabitEthernet0/0/2.100
+          Last updated 09:42:39 06 December 2017
+
+       

@@ -180,10 +180,10 @@ class test_show_ipv6_neighborrs(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
     def test_show_ipv6_neighbors_vrf_golden4(self):
-        self.device = Mock(**self.golden_output3)
+        self.device = Mock(**self.golden_output4)
         obj = ShowIpv6Neighbors(device=self.device)
         parsed_output = obj.parse(vrf='VRF1', interface='Gi3.420')
-        self.assertEqual(parsed_output, self.golden_parsed_output3)
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
 
 
 class test_show_ipv6_neighbors_detail(unittest.TestCase):

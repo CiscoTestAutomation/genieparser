@@ -1,0 +1,28 @@
+
+    R1_iosv#show ipv6 route updated
+    IPv6 Routing Table - default - 23 entries
+    Codes: C - Connected, L - Local, S - Static, U - Per-user Static route
+           B - BGP, HA - Home Agent, MR - Mobile Router, R - RIP
+           H - NHRP, I1 - ISIS L1, I2 - ISIS L2, IA - ISIS interarea
+           IS - ISIS summary, D - EIGRP, EX - EIGRP external, NM - NEMO
+           ND - ND Default, NDp - ND Prefix, DCE - Destination, NDr - Redirect
+           O - OSPF Intra, OI - OSPF Inter, OE1 - OSPF ext 1, OE2 - OSPF ext 2
+           ON1 - OSPF NSSA ext 1, ON2 - OSPF NSSA ext 2, la - LISP alt
+           lr - LISP site-registrations, ld - LISP dyn-eid, a - Application
+    LC  2001:1:1:1::1/128 [0/0]
+         via Loopback0, receive
+          Last updated 22:55:51 04 December 2017
+    S   2001:2:2:2::2/128 [1/0]
+         via 2001:10:1:2::2, GigabitEthernet0/0
+          Last updated 22:57:07 04 December 2017
+         via 2001:20:1:2::2, GigabitEthernet0/1
+          Last updated 22:57:23 04 December 2017
+    S   2001:3:3:3::3/128 [1/0]
+         via GigabitEthernet0/2, directly connected
+          Last updated 22:57:34 04 December 2017
+         via GigabitEthernet0/3, directly connected
+          Last updated 22:57:43 04 December 2017
+    B   2001:db8:400:1::/64 [200/1]
+        via 192.168.51.1%default, indirectly connected
+        Last updated 09:43:27 06 December 2017
+    

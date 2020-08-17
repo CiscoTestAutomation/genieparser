@@ -961,14 +961,14 @@ class TestShowIpRoute(unittest.TestCase):
         self.device = Mock(**self.golden_output6)
         route_map_obj = ShowIpv6Route(device=self.device)
         parsed_output = route_map_obj.parse()
-        self.assertDictEqual(parsed_output, self.golden_parsed_output6)
+        self.assertEqual(parsed_output, self.golden_parsed_output6)
 
     def test_golden7(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output7)
         route_map_obj = ShowIpv6Route(device=self.device)
         parsed_output = route_map_obj.parse()
-        self.assertDictEqual(parsed_output, self.golden_parsed_output7)
+        self.assertEqual(parsed_output, self.golden_parsed_output7)
 
 
 ###################################################
@@ -1262,6 +1262,51 @@ class TestShowIpRouteWord(unittest.TestCase):
         "total_prefixes": 1
     }
 
+    golden_output_with_route_2 = {'execute.return_value': '''
+        show ip route 192.168.154.0
+        Routing entry for 192.168.154.0/24
+          Known via "eigrp 1", distance 130, metric 10880, type internal
+          Redistributing via eigrp 1
+          Last update from 192.168.151.2 on Vlan101, 2w3d ago
+          Routing Descriptor Blocks:
+          * 192.168.151.2, from 192.168.151.2, 2w3d ago, via Vlan101
+              Route metric is 10880, traffic share count is 1
+    '''}
+
+    golden_parsed_output_with_route_2 = {
+        "entry": {
+            "192.168.154.0/24": {
+               "mask": "24",
+               "type": "internal",
+               "known_via": "eigrp 1",
+               "ip": "192.168.154.0",
+               "redist_via": "eigrp",
+               "distance": "130",
+               "metric": "10880",
+               "redist_via_tag": "1",
+               "update": {
+                    "age": "2w3d",
+                    "interface": "Vlan101",
+                    "from": "192.168.151.2"
+               },
+               "paths": {
+                    1: {
+                         "age": "2w3d",
+                         "interface": "Vlan101",
+                         "from": "192.168.151.2",
+                         "metric": "10880",
+                         "share_count": "1",
+                         "nexthop": "192.168.151.2",
+                         "prefer_non_rib_labels": False,
+                         "merge_labels": False
+                    }
+                }
+            }
+        },
+        "total_prefixes": 1
+    }
+
+
     golden_output_2 = {'execute.return_value': '''
         PE1#show ip route 10.16.2.2
         Routing entry for 10.16.2.2/32
@@ -1549,10 +1594,10 @@ class TestShowIpRouteWord(unittest.TestCase):
 
     def test_golden2(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output_with_route)
+        self.device = Mock(**self.golden_output_with_route_2)
         obj = ShowIpRouteWord(device=self.device)
         parsed_output = obj.parse(route='192.168.154.0')
-        self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
+        self.assertEqual(parsed_output,self.golden_parsed_output_with_route_2)
 
     def test_golden_2(self):
         self.maxDiff = None

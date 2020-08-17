@@ -1,0 +1,12 @@
+
+    R1_iosv#show ipv6 static vrf VRF1 detail
+    IPv6 Static routes Table - VRF1
+    Codes: * - installed in RIB, u/m - Unicast/Multicast only
+           U - Per-user Static route
+           N - ND Static route
+           M - MIP Static route
+           P - DHCP-PD Static route
+           R - RHI Static route
+    *   2001:2:2:2::2/128 via Null0, distance 2
+    *   2001:3:3:3::3/128 via Null0, distance 3
+    

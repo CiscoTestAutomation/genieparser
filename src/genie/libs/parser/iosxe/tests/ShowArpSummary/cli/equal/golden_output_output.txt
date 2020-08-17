@@ -1,0 +1,12 @@
+        Total number of entries in the ARP table: 100409.
+        Total number of Dynamic ARP entries: 100204.
+        Total number of Incomplete ARP entries: 0.
+        Total number of Interface ARP entries: 205.
+        Total number of Static ARP entries: 0.
+        Total number of Alias ARP entries: 0.
+        Total number of Simple Application ARP entries: 0.
+        Interface           Entry Count
+        GigabitEthernet0        4
+        Te0/2/0                 1
+        Gi0/0/1.1143            3
+        

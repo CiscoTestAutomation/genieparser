@@ -22,7 +22,7 @@ from genie.libs.parser.iosxe.traceroute import Traceroute
 class TestTraceroute(unittest.TestCase):
 
     device = Device(name='aDevice')
-    empty_output = ''
+    empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
         'traceroute': {
@@ -129,7 +129,7 @@ class TestTraceroute(unittest.TestCase):
                     }}}
         },
     }
-    golden_output1 = '''\
+    golden_output1 = {'execute.return_value': '''\
         router#traceroute 172.16.166.253 numeric timeout 1 probe 3 ttl 1 15 source 10.36.255.248 
         Type escape sequence to abort. 
         Tracing the route to 172.16.166.253 
@@ -143,7 +143,7 @@ class TestTraceroute(unittest.TestCase):
           7 172.31.166.10 92 msec 51 msec 148 msec
           8 10.1.1.2 (red/1001, blue/2001)
           9 10.2.1.2 (red/1001, blue/2001)
-        '''
+        '''}
 
     golden_parsed_output2 = {
         'traceroute': {
@@ -186,7 +186,7 @@ class TestTraceroute(unittest.TestCase):
             },
         },
     }
-    golden_output2 = '''\
+    golden_output2 = {'execute.return_value': '''\
         router#traceroute mpls ipv4 172.31.165.220 255.255.255.255
         Tracing MPLS Label Switched Path to 172.31.165.220/32, timeout is 2 seconds
 
@@ -203,7 +203,7 @@ class TestTraceroute(unittest.TestCase):
           0 192.168.197.94 MRU 1552 [Labels: 1015 Exp: 0]
         L 1 192.168.197.93 MRU 1552 [Labels: implicit-null Exp: 0] 1 ms
         ! 2 192.168.197.102 1 ms
-        '''
+        '''}
 
     golden_parsed_output3 = {
         'traceroute': {
@@ -223,7 +223,7 @@ class TestTraceroute(unittest.TestCase):
             },
         },
     }
-    golden_output3 = '''\
+    golden_output3 = {'execute.return_value': '''\
         [2019-04-11 11:02:15,834] +++ PE1: executing command 'traceroute www.xyz.com' +++
         traceroute www.xyz.com
         Type escape sequence to abort.
@@ -231,7 +231,7 @@ class TestTraceroute(unittest.TestCase):
         VRF info: (vrf in name/id, vrf out name/id)
           1 10.10.10.10 1 msec 1 msec * 
         PE1#
-        '''
+        '''}
 
     golden_parsed_output4 = {
         'traceroute': {
@@ -261,7 +261,7 @@ class TestTraceroute(unittest.TestCase):
             },
         },
     }
-    golden_output4 = '''
+    golden_output4 = {'execute.return_value': '''
         traceroute vrf CE1test 172.16.51.1
         Type escape sequence to abort.
         Tracing the route to 172.16.51.1
@@ -272,7 +272,7 @@ class TestTraceroute(unittest.TestCase):
         2 10.1.2.6 148 msec
             10.1.1.6 120 msec
             10.1.2.6 132 msec
-    '''
+    '''}
 
     golden_parsed_output5 = {
         'traceroute': {
@@ -334,7 +334,7 @@ class TestTraceroute(unittest.TestCase):
             },
         },
     }
-    golden_output5 = '''
+    golden_output5 = {'execute.return_value': '''
         traceroute vrf MG501 192.168.1.1 numeric    
         Type escape sequence to abort.
         Tracing the route to 192.168.1.1
@@ -343,7 +343,7 @@ class TestTraceroute(unittest.TestCase):
         2 10.169.14.129 [MPLS: Labels 16062/16063/39 Exp 0] 3 msec 1 msec 1 msec
         3 10.169.14.34 [MPLS: Labels 16063/39 Exp 0] 3 msec 1 msec 2 msec
         4 192.168.1.1 2 msec *  2 msec
-    '''
+    '''}
 
     golden_parsed_output6 = {
         'traceroute': {
@@ -376,14 +376,14 @@ class TestTraceroute(unittest.TestCase):
             },
         },
     }
-    golden_output6 = '''
+    golden_output6 = {'execute.return_value': '''
         traceroute 10.151.22.22
         Type escape sequence to abort.
         Tracing the route to 10.151.22.22
         VRF info: (vrf in name/id, vrf out name/id)
         1 10.0.0.5 [MPLS: Label 16022 Exp 0] 307 msec 10 msec 2 msec
         2 10.0.0.18 351 msec *  8 msec
-    '''
+    '''}
 
     golden_parsed_output7 = {
         "traceroute": {
@@ -456,7 +456,7 @@ class TestTraceroute(unittest.TestCase):
             }
         }
     }
-    golden_output7 = '''
+    golden_output7 = {'execute.return_value': '''
         traceroute vrf MG501
         Protocol [ip]: 
         Target IP address: 192.168.1.1
@@ -480,7 +480,7 @@ class TestTraceroute(unittest.TestCase):
             10.169.14.121 [MPLS: Labels 16063/459 Exp 0] 3 msec
           4 10.169.14.158 [MPLS: Labels 16063/459 Exp 0] 2 msec 3 msec 3 msec
           5 192.168.1.1 3 msec *  3 msec
-    '''
+    '''}
 
     golden_parsed_output8 = {
         'traceroute': {
@@ -550,7 +550,7 @@ class TestTraceroute(unittest.TestCase):
             },
         },
     }
-    golden_output8 = '''
+    golden_output8 = {'execute.return_value': '''
         traceroute
         Protocol [ip]: 
         Target IP address: 192.168.100.252
@@ -574,59 +574,60 @@ class TestTraceroute(unittest.TestCase):
           4 10.174.135.94 36 msec 7 msec 2 msec
           5  *  * 
             192.168.100.18 [AS 2516] 2 msec
-    '''
+    '''}
 
     def test_traceroute_empty(self):
+        self.device = Mock(**self.empty_output)
         obj = Traceroute(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(output=self.empty_output)
+            parsed_output = obj.parse()
 
     def test_traceroute_golden1(self):
-        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
         obj = Traceroute(device=self.device)
-        parsed_output = obj.parse(output=self.golden_output1)
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_traceroute_golden2(self):
-        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
         obj = Traceroute(device=self.device)
-        parsed_output = obj.parse(output=self.golden_output2)
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_traceroute_golden3(self):
-        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
         obj = Traceroute(device=self.device)
-        parsed_output = obj.parse(output=self.golden_output3)
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
     def test_traceroute_golden4(self):
-        self.maxDiff = None
+        self.device = Mock(**self.golden_output4)
         obj = Traceroute(device=self.device)
-        parsed_output = obj.parse(output=self.golden_output4)
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
 
     def test_traceroute_golden5(self):
-        self.maxDiff = None
+        self.device = Mock(**self.golden_output5)
         obj = Traceroute(device=self.device)
-        parsed_output = obj.parse(output=self.golden_output5)
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output5)
 
     def test_traceroute_golden6(self):
-        self.maxDiff = None
+        self.device = Mock(**self.golden_output6)
         obj = Traceroute(device=self.device)
-        parsed_output = obj.parse(output=self.golden_output6)
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output6)
 
     def test_traceroute_golden7(self):
-        self.maxDiff = None
+        self.device = Mock(**self.golden_output7)
         obj = Traceroute(device=self.device)
-        parsed_output = obj.parse(output=self.golden_output7)
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output7)
 
     def test_traceroute_golden8(self):
-        self.maxDiff = None
+        self.device = Mock(**self.golden_output8)
         obj = Traceroute(device=self.device)
-        parsed_output = obj.parse(output=self.golden_output8)
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output8)
 
 if __name__ == '__main__':

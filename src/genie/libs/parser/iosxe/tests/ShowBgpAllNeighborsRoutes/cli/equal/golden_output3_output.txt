@@ -1,0 +1,44 @@
+
+        R4# show bgp all neighbors 10.4.6.6 routes 
+
+        For address family: IPv4 Unicast
+        BGP table version is 773961, local router ID is 10.94.44.44
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+        *>e10.169.1.0/24        10.4.6.6              2219                     0 300 33299 51178 47751 {27016} e
+        *>e10.169.2.0/24        10.4.6.6              2219                     0 300 33299 51178 47751 {27016} e
+        *>e10.169.3.0/24        10.4.6.6              2219                     0 300 33299 51178 47751 {27016} e
+        *>e10.169.4.0/24        10.4.6.6              2219                     0 300 33299 51178 47751 {27016} e
+        *>e10.169.5.0/24        10.4.6.6              2219                     0 300 33299 51178 47751 {27016} e
+
+        For address family: IPv4 Multicast
+
+        For address family: IPv6 Unicast
+        BGP table version is 256033, local router ID is 10.94.44.44
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+
+        For address family: IPv6 Multicast
+
+        For address family: VPNv4 Unicast
+
+        For address family: VPNv6 Unicast
+
+        For address family: IPv4 MDT
+
+        For address family: IPv6 Label Unicast
+
+        For address family: L2VPN VPLS
+
+        For address family: IPv4 MVPN
+
+        For address family: IPv6 MVPN
+
+        For address family: IPv4 Label Unicast
+        

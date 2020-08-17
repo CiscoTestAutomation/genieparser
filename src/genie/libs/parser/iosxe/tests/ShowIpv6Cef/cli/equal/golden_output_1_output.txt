@@ -1,0 +1,20 @@
+
+    R2#show ipv6 cef
+    ::/0
+      no route
+    ::/127
+      discard
+    2001:DB8:1:2::/64
+      attached to GigabitEthernet2.100
+    2001:DB8:1:2::1/128
+      nexthop 2001:DB8:1:2::1 GigabitEthernet2.100
+    2001:DB8:1:2::2/128
+      receive for GigabitEthernet2.100
+    2001:DB8:1:3::/64
+      nexthop FE80::F816:3EFF:FE86:1D6D GigabitEthernet2.100
+      nexthop FE80::F816:3EFF:FEF3:7B32 GigabitEthernet3.100
+    2001:DB8:2:3::/64
+      attached to GigabitEthernet3.100
+    2001:DB8:64::4:5:0/112
+      nexthop 10.2.3.3 FastEthernet1/0/0 label 17 21
+    

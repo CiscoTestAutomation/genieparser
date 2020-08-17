@@ -1,0 +1,16 @@
+
+        Router Self-Signed Certificate
+          Status: Available
+          Certificate Serial Number (hex): 01
+          Certificate Usage: General Purpose
+          Issuer:
+            cn=IOS-Self-Signed-Certificate-4146203551
+          Subject:
+            Name: IOS-Self-Signed-Certificate-4146203551
+            cn=IOS-Self-Signed-Certificate-4146203551
+          Validity Date:
+            start date: 21:37:27 UTC Apr 23 2018
+            end   date: 00:00:00 UTC Jan 1 2020
+          Associated Trustpoints: TP-self-signed-4146203551
+          Storage: nvram:IOS-Self-Sig#1.cer
+        

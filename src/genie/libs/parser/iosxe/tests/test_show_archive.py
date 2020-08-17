@@ -99,6 +99,54 @@ class test_show_archive_config_differences(unittest.TestCase):
         '''
     }
 
+    golden_parsed_output_2 = {
+        'diff': [
+            '+hostname Router',
+            '-hostname Test4', 
+            '-archive', 
+            '-path bootflash:config', 
+            '-maximum 14', 
+            '-time-period 2'
+        ]
+    }
+    
+    golden_output_2 = {'execute.return_value': '''\
+        Load for five secs: 14%/0%; one minute: 13%; five minutes: 19%
+        Time source is NTP, 11:58:48.301 EST Fri Oct 14 2016
+        !Contextual Config Diffs:
+        +hostname Router
+        -hostname Test4
+        -archive
+        -path bootflash:config
+        -maximum 14
+        -time-period 2
+        '''
+    }
+
+    golden_parsed_output_3 = {
+        'diff': [
+            '+hostname Router',
+            '-hostname Test4', 
+            '-archive', 
+            '-path bootflash:config', 
+            '-maximum 14', 
+            '-time-period 2'
+        ]
+    }
+    
+    golden_output_3 = {'execute.return_value': '''\
+        Load for five secs: 14%/0%; one minute: 13%; five minutes: 19%
+        Time source is NTP, 11:58:48.301 EST Fri Oct 14 2016
+        !Contextual Config Diffs:
+        +hostname Router
+        -hostname Test4
+        -archive
+        -path bootflash:config
+        -maximum 14
+        -time-period 2
+        '''
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowArchiveConfigDifferences(device=self.device)
@@ -114,17 +162,17 @@ class test_show_archive_config_differences(unittest.TestCase):
     
     # Test case for 'show archive config differences {fileA}'
     def test_golden_one_file(self):
-        self.device = Mock(**self.golden_output)
+        self.device = Mock(**self.golden_output_2)
         obj = ShowArchiveConfigDifferences(device=self.device)
         parsed_output = obj.parse(fileA='file1.txt')
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
     # Test case for 'show archive config differences {fileA} {fileB}'
     def test_golden_two_files(self):
-        self.device = Mock(**self.golden_output)
+        self.device = Mock(**self.golden_output_3)
         obj = ShowArchiveConfigDifferences(device=self.device)
         parsed_output = obj.parse(fileA='file1.txt', fileB='file2.txt')
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 #=====================================================
 # Unit test for the following commands:

@@ -758,11 +758,6 @@ class TestShowVrfDetail(unittest.TestCase):
         parsed_output = obj.parse(vrf='GENIE')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
-    def test_empty1(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowVrfDetail(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf='Mgmt-intf')
 
     def test_golden_3(self):
         self.maxDiff = None

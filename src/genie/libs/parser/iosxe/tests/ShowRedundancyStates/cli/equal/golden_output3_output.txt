@@ -1,0 +1,16 @@
+
+    show redundancy states
+    my state = 13 -ACTIVE 
+    peer state = 1  -DISABLED 
+    Mode = Simplex
+    Unit = Primary
+    Unit ID = 48
+    Redundancy Mode (Operational) = Non-redundant
+    Redundancy Mode (Configured)  = sso
+    Redundancy State              = Non Redundant
+    Manual Swact = disabled (system is simplex (no peer unit))
+    Communications = Down      Reason: Simplex mode
+    client count = 84
+    client_notification_TMR = 30000 milliseconds
+    RF debug mask = 0x0   
+    

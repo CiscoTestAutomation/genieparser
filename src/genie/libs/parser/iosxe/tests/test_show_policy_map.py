@@ -4118,8 +4118,7 @@ class test_show_policy_map_type(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output10)
         obj = ShowPolicyMapInterfaceOutput(device=self.device)
-        parsed_output = obj.parse(interface='gigabitEthernet 0/1/1',
-                                  class_name='class-default')
+        parsed_output = obj.parse(interface='gigabitEthernet 0/1/1', class_name='class-default')
         self.assertEqual(parsed_output, self.golden_parsed_output10)
 
     def test_show_policy_map_interface_output_full2(self):
@@ -4151,8 +4150,7 @@ class test_show_policy_map_type(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output12)
         obj = ShowPolicyMapInterfaceInput(device=self.device)
-        parsed_output = obj.parse(interface='gigabitEthernet 0/1/4',
-                                  class_name='class-default')
+        parsed_output = obj.parse(interface='gigabitEthernet 0/1/4',class_name='class-default')
         self.assertEqual(parsed_output, self.golden_parsed_output12)
 
     def test_show_policy_map_interface_input_full2(self):

@@ -1,0 +1,38 @@
+        VLAN0200
+          Spanning tree enabled protocol rstp
+          Root ID    Priority    24776
+                     Address     58bf.eaff.e5b6
+                     Cost        3
+                     Port        2390 (Port-channel14)
+                     Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+          Bridge ID  Priority    28872  (priority 28672 sys-id-ext 200)
+                     Address     ecbd.1dff.5f89
+                     Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+                     Aging Time  300 sec
+
+        Interface           Role Sts Cost      Prio.Nbr Type
+        ------------------- ---- --- --------- -------- --------------------------------
+        Gi1/0/5             Desg FWD 4         128.5    P2p Peer(STP) 
+        Po14                Root FWD 3         128.2390 P2p 
+
+
+                  
+        VLAN0201
+          Spanning tree enabled protocol rstp
+          Root ID    Priority    24777
+                     Address     58bf.eaff.e5b6
+                     Cost        3
+                     Port        2390 (Port-channel14)
+                     Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+          Bridge ID  Priority    28873  (priority 28672 sys-id-ext 201)
+                     Address     ecbd.1dff.5f89
+                     Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+                     Aging Time  300 sec
+
+        Interface           Role Sts Cost      Prio.Nbr Type
+        ------------------- ---- --- --------- -------- --------------------------------
+        Gi1/0/5             Desg FWD 4         128.5    P2p Peer(STP) 
+        Po14                Root FWD 3         128.2390 P2p 
+    

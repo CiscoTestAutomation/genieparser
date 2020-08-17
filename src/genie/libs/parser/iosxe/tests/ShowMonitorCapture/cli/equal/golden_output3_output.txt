@@ -1,0 +1,25 @@
+
+        SWITCH#show monitor capture mycap
+        Status Information for Capture mycap
+          Target Type: 
+           Interface: GigabitEthernet1/0/3, Direction: both
+           Status : Inactive
+          Filter Details: 
+           IPv4 
+            Source IP:  any
+            Destination IP:  any
+           Protocol: any
+          Buffer Details: 
+           Buffer Type: LINEAR (default)
+          File Details: 
+           Associated file name: flash:mycap.pcap
+           Total size of files(in MB): 5
+           Number of files in ring: 2
+           Size of buffer(in MB): 10
+          Limit Details: 
+           Number of Packets to capture: 0 (no limit)
+           Packet Capture duration: 0 (no limit)
+           Packet Size to capture: 0 (no limit)
+           Packets per second: 0 (no limit)
+           Packet sampling rate: 0 (no sampling)
+        

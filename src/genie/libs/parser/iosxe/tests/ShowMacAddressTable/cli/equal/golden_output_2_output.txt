@@ -1,0 +1,21 @@
+      show mac address-table
+      Legend: * - primary entry
+              age - seconds since last seen
+              n/a - not available
+
+        vlan   mac address     type    learn     age              ports
+      ------+----------------+--------+-----+----------+--------------------------
+      *  100  11aa.22ff.ee88    static  No           -   Router
+      *  101  44dd.eeff.55bb   dynamic  Yes         10   Gi1/40
+      *  102  aa11.bbff.ee55    static  Yes          -   Gi1/2,Gi1/4,Gi1/5,Gi1/6
+                                                         Gi1/9,Gi1/10,Gi1/11,Gi1/12
+                                                         Router,Switch
+      *  200  dd44.55ff.55ee    static  Yes          -   Te1/1,Te1/2,Te1/4,Te1/8
+      300  11aa.22ff.ee88    static  No           -   Router
+      301  11aa.22ff.ee88    static  No           -   Drop
+      *  ---  0000.0000.0000    static  No           -   Router
+      *  400  0000.0000.0000    static  No           -   vPC Peer-Link
+                                                        Router
+                                                       
+              Total Mac Addresses for this criterion: 8
+    

@@ -1,0 +1,10 @@
+        Available:1170.0(w)  Used:212.2(w)  Remaining:957.8(w)
+        
+        Interface Admin  Oper       Power   Device              Class Max
+                                    (Watts)                            
+        --------- ------ ---------- ------- ------------------- ----- ----
+        Gi0/1     auto   off        0.0     n/a                 n/a   30.0 
+        Gi0/2     auto   on         6.4     IP Phone 8945       2     30.0 
+        Gi0/3     auto   on         6.4     IP Phone 8845       2     30.0 
+        Gi0/4     auto   off        0.0     n/a                 n/a   30.0 
+    

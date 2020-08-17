@@ -1,0 +1,14 @@
+
+        Router#show monitor session 1
+
+        Session 1
+        ---------
+        Type: ERSPAN Source Session
+        Status: Admin Enabled
+        Source Subinterfaces:
+            Both: Gi2/2/0.100
+        Filter Access-Group: 100
+        Destination IP Address : 10.12.12.2
+        Destination ERSPAN ID  : 10
+        Origin IP Address: 10.12.12.1
+        
