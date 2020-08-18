@@ -2776,7 +2776,7 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
                            '(?P<mac_address>[\w\.]+) +'
                            '(?P<priority>\d+) +'
                            '(?P<hw_ver>\w+)? +'
-                           '(?P<state>[\w\s]+)$')
+                           '(?P<state>[\w\s-]+)$')
 
         #          Stack Port Status             Neighbors
         # Switch#  Port 1     Port 2           Port 1   Port 2
