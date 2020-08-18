@@ -12,6 +12,8 @@
 * IOSXE
     * Added Show_Cts_Sxp_Connections_Brief
         * show show cts sxp connections brief
+    * Added ShowLicense
+        * show license
     * Added ShowStackwiseVirtual
         * show stackwise-virtual
     * Added ShowCtsPacs
