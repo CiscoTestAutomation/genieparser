@@ -6,7 +6,6 @@
 --------------------------------------------------------------------------------
 * NXOS
     * Modified ShowLldpTraffic:
-      * Added keys 'total_flap_count'
-      * Changed key 'total_flap_count' to Optional
+      * Added optional key 'total_flap_count'
 
         
