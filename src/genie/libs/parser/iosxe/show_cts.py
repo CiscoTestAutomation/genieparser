@@ -13,6 +13,7 @@ class Show_Cts_Sxp_Connections_BriefSchema(MetaParser):
 
     schema = {
     "sxp_connections": {
+        "total_sxp_connections": int,
         "status": {
             "sxp_status": str,
             "highest_version": int,
@@ -23,8 +24,8 @@ class Show_Cts_Sxp_Connections_BriefSchema(MetaParser):
             "conn_retry": int,
             "reconcile_secs": int,
             "retry_timer": str,
-            "seq_export": str,
-            "seq_import":str
+            "peer_sequence_traverse_limit_for_export": str,
+            "peer_sequence_traverse_limit_for_import":str
         },
         Optional("sxp_peers"): {
             str: {
@@ -106,14 +107,16 @@ class Show_Cts_Sxp_Connections_Brief(Show_Cts_Sxp_Connections_BriefSchema):
         # Reconcile period: 120 secs
         p8 = re.compile(r"\s+(?P<reconcile_secs>\d+)")
         # Peer-Sequence traverse limit for export: Not Set
-        p9 = re.compile(r"\s+(?P<seq_export>(Not\s+Set|\S+))")
+        p9 = re.compile(r"\s+(?P<peer_sequence_traverse_limit_for_export>(Not\s+Set|\S+))")
         # Peer-Sequence traverse limit for import: Not Set
-        p10 = re.compile(r"\s+(?P<seq_import>(Not\s+Set|\S+))")
+        p10 = re.compile(r"\s+(?P<peer_sequence_traverse_limit_for_import>(Not\s+Set|\S+))")
         # Retry open timer is not running
         p11 = re.compile(r"Retry\s+open\s+timer\s+is\s+(?P<retry_timer>(not\s+running|running))")
         # 10.100.123.12   192.168.2.24   On                                                   44:18:58:47 (dd:hr:mm:sec)
         p12 = re.compile(
             r"(?P<peer_ip>\d+\.\d+\.\d+\.\d+)\s+(?P<source_ip>\d+\.\d+\.\d+\.\d+)\s+(?P<conn_status>\S+)\s+(?P<duration>\d+:\d+:\d+:\d+)")
+        # Total num of SXP Connections = 16
+        p13 = re.compile(r"^Total\s+num\s+of\s+SXP\s+Connections\s+=\s+(?P<total_sxp_connections>\d+)")
 
         # This regex map will be used to split the captured line using ':' as the delimeter
         # if it starts with this string, we will use this regex pattern.
@@ -169,6 +172,14 @@ class Show_Cts_Sxp_Connections_Brief(Show_Cts_Sxp_Connections_BriefSchema):
                 if not sxp_dict['sxp_connections'].get('status'):
                     sxp_dict['sxp_connections'].update({"status": {}})
                 sxp_dict["sxp_connections"]['status'].update({'retry_timer': retry_timer})
+                continue
+            elif "Total num of SXP Connections" in line:
+                # Total num of SXP Connections = 16
+                match = p13.match(line_strip)
+                if match:
+                    groups = match.groupdict()
+                    total_sxp_connections = int(groups['total_sxp_connections'])
+                sxp_dict["sxp_connections"]['total_sxp_connections'] = total_sxp_connections
                 continue
             # All other lines in the output should be p12 and captures peer_ip, source_ip, conn_status, and duration
             else:
