@@ -3,7 +3,6 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 
-
 # ==================
 # Schema for:
 #  * 'show cts pacs'
@@ -149,3 +148,138 @@ class ShowCtsPacs(ShowCtsPacsSchema):
                 continue
         return cts_pacs_dict
 
+
+
+# =================================
+# Schema for:
+#  * 'show cts role-based counters'
+# =================================
+class ShowCtsRoleBasedCountersSchema(MetaParser):
+    """Schema for show cts role-based counters."""
+
+    schema = {
+        "cts_rb_count": {
+            int: {
+                "src_group": Any(),
+                "dst_group": Any(),
+                "sw_denied_count": int,
+                "hw_denied_count": int,
+                "sw_permit_count": int,
+                "hw_permit_count": int,
+                "sw_monitor_count": int,
+                "hw_monitor_count": int
+            }
+        }
+    }
+
+
+# =================================
+# Parser for:
+#  * 'show cts role-based counters'
+# =================================
+class ShowCtsRoleBasedCounters(ShowCtsRoleBasedCountersSchema):
+    """Parser for show cts role-based counters"""
+
+    cli_command = 'show cts role-based counters'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        cts_rb_count_dict = {}
+        # Role-based IPv4 counters
+        # From    To      SW-Denied  HW-Denied  SW-Permitt HW-Permitt SW-Monitor HW-Monitor
+        # *       *       0          0          2          30802626587 0          0
+        # 2       0       0          4794060    0          0          0          0
+        # 7       0       0          0          0          0          0          0
+        # 99      0       0          0          0          0          0          0
+        # 100     0       0          0          0          0          0          0
+        # 103     0       0          0          0          0          0          0
+        # 104     0       0          0          0          0          0          0
+        # 2       2       0          4          0          0          0          0
+        # 7       2       0          0          0          0          0          0
+        # 99      2       0          0          0          0          0          0
+        # 100     2       0          0          0          0          0          0
+        # 103     2       0          0          0          0          0          0
+        # 104     2       0          0          0          0          0          0
+        # 2       3       0          0          0          0          0          0
+        # 7       3       0          0          0          0          0          0
+        # 99      3       0          0          0          0          0          0
+        # 100     3       0          0          0          0          0          0
+        # 103     3       0          0          0          0          0          0
+        # 104     3       0          0          0          0          0          0
+        # 2       5       0          0          0          0          0          0
+        # 7       5       0          0          0          0          0          0
+        # 99      5       0          0          0          0          0          0
+        # 100     5       0          0          0          0          0          0
+        # 104     5       0          0          0          0          0          0
+        # 2       6       0          0          0          0          0          0
+        # 7       6       0          0          0          0          0          0
+        # 99      6       0          0          0          0          0          0
+        # 100     6       0          0          0          0          0          0
+        # 103     6       0          0          0          0          0          0
+        # 104     6       0          0          0          0          0          0
+        # 2       10      0          113596     0          0          0          0
+        # 7       10      0          0          0          0          0          0
+        # 2       3003    0          490980     0          8594929    0          0
+        # 7       3003    0          0          0          0          0          0
+        # 99      3003    0          0          0          0          0          0
+        # 100     3003    0          0          0          0          0          0
+        # 102     3003    0          0          0          0          0          0
+        # 103     3003    0          0          0          0          0          0
+        # 104     3003    0          0          0          0          0          0
+        # 2       3004    0          1055       0          0          0          0
+        # 7       3004    0          0          0          0          0          0
+        # 99      3004    0          0          0          0          0          0
+        # 100     3004    0          0          0          0          0          0
+        # 102     3004    0          0          0          0          0          0
+        # 103     3004    0          0          0          0          0          0
+        # 104     3004    0          0          0          0          0          0
+        # 2       3005    0          73         0          58         0          0
+
+        # *       *       0          0          2          30802626587 0          0
+        rb_counters_capture = re.compile(r"^(?P<src_group>(\d+|\*))\s+(?P<dst_group>(\d+|\*))\s+"
+                                         r"(?P<sw_denied_count>\d+)\s+(?P<hw_denied_count>\d+)\s+"
+                                         r"(?P<sw_permit_count>\d+)\s+(?P<hw_permit_count>\d+)\s+"
+                                         r"(?P<sw_monitor_count>\d+)\s+(?P<hw_monitor_count>\d+)")
+
+        remove_lines = ('Role-based IPv4 counters', 'From')
+
+        # Remove unwanted lines from raw text
+        def filter_lines(raw_output, remove_lines):
+            # Remove empty lines
+            clean_lines = list(filter(None, raw_output.splitlines()))
+            rendered_lines = []
+            for clean_line in clean_lines:
+                clean_line_strip = clean_line.strip()
+                # print(clean_line)
+                # Remove lines unwanted lines from list of "remove_lines"
+                if not clean_line_strip.startswith(remove_lines):
+                    rendered_lines.append(clean_line_strip)
+            return rendered_lines
+
+        out = filter_lines(raw_output=out, remove_lines=remove_lines)
+
+        rb_count_index = 1
+        rb_count_data = {}
+
+        for line in out:
+            # *       *       0          0          2          30802626587 0          0
+            if rb_counters_capture.match(line):
+                rb_counters_match = rb_counters_capture.match(line)
+                groups = rb_counters_match.groupdict()
+                if not cts_rb_count_dict.get('cts_rb_count', {}):
+                    cts_rb_count_dict['cts_rb_count'] = {}
+                if not cts_rb_count_dict['cts_rb_count'].get(rb_count_index, {}):
+                    cts_rb_count_dict['cts_rb_count'][rb_count_index] = {}
+                for k, v in groups.items():
+                    if v.isdigit():
+                        v = int(v)
+                    rb_count_data.update({k: v})
+                cts_rb_count_dict['cts_rb_count'][rb_count_index].update(rb_count_data)
+                rb_count_index = rb_count_index + 1
+                continue
+
+        return cts_rb_count_dict
