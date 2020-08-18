@@ -1347,7 +1347,7 @@ class ShowCtsRbacl(ShowCtsRbaclSchema):
             #   refcnt = 2
             #   flag   = 0x41000000
             #   stale  = FALSE
-            if rbacl_capture.match(line):
+            elif rbacl_capture.match(line):
                 groups = rbacl_capture.match(line).groupdict()
                 rbacl_key = groups['rbacl_key'].strip().lower().replace(' ', '_')
                 rbacl_value = groups['rbacl_value']
@@ -1368,7 +1368,7 @@ class ShowCtsRbacl(ShowCtsRbaclSchema):
                     cts_rbacl_dict['cts_rbacl'][rbacl_name].update({rbacl_key: rbacl_value})
                 continue
             #     permit tcp dst eq 13131
-            if rbacl_ace_capture.match(line):
+            elif rbacl_ace_capture.match(line):
                 groups = rbacl_ace_capture.match(line).groupdict()
                 ace_group_dict = {}
                 if groups['action']:
