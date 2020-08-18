@@ -10,10 +10,14 @@
 --------------------------------------------------------------------------------
 
 * IOSXE
+    * Added ShowLicense
+        * show license
     * Added ShowStackwiseVirtual
         * show stackwise-virtual
     * Added Show_Hw_Module_Status
         * show hw_module subslot {subslot} transceiver {transceiver} status
+    * Added ShowCtsPacs
+        * show cts pacs
     * Added ShowClassMap
         * show class-map
 
