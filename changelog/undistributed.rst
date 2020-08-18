@@ -10,10 +10,14 @@
 --------------------------------------------------------------------------------
 
 * IOSXE
+    * Added ShowLicense
+        * show license
     * Added ShowStackwiseVirtual
         * show stackwise-virtual
     * Added Show_Stackwise_Virtual_Dual_Active_Detection
         * show stackwise-virtual dual-active-detection
+    * Added ShowCtsPacs
+        * show cts pacs
     * Added ShowClassMap
         * show class-map
 
