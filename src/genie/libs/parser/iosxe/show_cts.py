@@ -1,7 +1,7 @@
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Or
 
 # ==================
 # Schema for:
@@ -160,8 +160,8 @@ class ShowCtsRoleBasedCountersSchema(MetaParser):
     schema = {
         "cts_rb_count": {
             int: {
-                "src_group": Any(),
-                "dst_group": Any(),
+                "src_group": Or(str, int),
+                "dst_group": Or(str, int),
                 "sw_denied_count": int,
                 "hw_denied_count": int,
                 "sw_permit_count": int,
