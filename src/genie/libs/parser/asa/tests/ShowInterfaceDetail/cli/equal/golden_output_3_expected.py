@@ -1,0 +1,157 @@
+expected_output = {
+    "interfaces": {
+        "Vlan300": {
+            "interface_state": True,
+            "config_status": True,
+            "name": "admin-out",
+            "link_status": True,
+            "line_protocol": True,
+            "mac_address": "aa11.bbff.ee55",
+            "mtu": 1500,
+            "ipv4": {"10.10.1.1": {"ip": "10.10.1.1"}},
+            "subnet": "255.255.255.0",
+            "traffic_statistics": {
+                "packets_input": 889007666,
+                "bytes_input": 785740327549,
+                "packets_output": 621453837,
+                "bytes_output": 428046938178,
+                "packets_dropped": 2988535,
+            },
+            "control_point_states": {
+                "interface": {
+                    "interface_number": 5,
+                    "interface_config_status": "active",
+                    "interface_state": "active",
+                },
+                "Vlan300": {
+                    "interface_vlan_config_status": "active",
+                    "interface_vlan_state": "UP",
+                },
+            },
+        },
+        "Vlan400": {
+            "interface_state": True,
+            "config_status": True,
+            "name": "pod10-in",
+            "link_status": True,
+            "line_protocol": True,
+            "mac_address": "aa11.bbff.ee55",
+            "mtu": 1500,
+            "ipv4": {"10.10.1.1": {"ip": "10.10.1.1"}},
+            "subnet": "255.255.255.0",
+            "traffic_statistics": {
+                "packets_input": 1286035,
+                "bytes_input": 100030768,
+                "packets_output": 1,
+                "bytes_output": 28,
+                "packets_dropped": 1285569,
+            },
+            "control_point_states": {
+                "interface": {
+                    "interface_number": 105,
+                    "interface_config_status": "active",
+                    "interface_state": "active",
+                },
+                "Vlan400": {
+                    "interface_vlan_config_status": "active",
+                    "interface_vlan_state": "UP",
+                },
+            },
+        },
+        "Vlan500": {
+            "interface_state": True,
+            "config_status": False,
+            "name": "",
+            "link_status": True,
+            "line_protocol": True,
+            "config_issue": "nameif",
+        },
+        "Vlan600": {
+            "interface_state": True,
+            "config_status": True,
+            "name": "adminTEST",
+            "link_status": True,
+            "line_protocol": True,
+            "mac_address": "aa11.bbff.ee55",
+            "mtu": 1500,
+            "ipv4": {"10.10.1.1": {"ip": "10.10.1.1"}},
+            "subnet": "255.255.255.0",
+            "traffic_statistics": {
+                "packets_input": 1212307,
+                "bytes_input": 96880666,
+                "packets_output": 1,
+                "bytes_output": 28,
+                "packets_dropped": 1212268,
+            },
+            "control_point_states": {
+                "interface": {
+                    "interface_number": 507,
+                    "interface_config_status": "active",
+                    "interface_state": "active",
+                },
+                "Vlan600": {
+                    "interface_vlan_config_status": "active",
+                    "interface_vlan_state": "UP",
+                },
+            },
+        },
+        "Vlan700": {
+            "interface_state": True,
+            "config_status": True,
+            "name": "pod1",
+            "link_status": True,
+            "line_protocol": True,
+            "mac_address": "aa11.bbff.ee55",
+            "mtu": 1500,
+            "ipv4": {"10.10.1.1": {"ip": "10.10.1.1"}},
+            "subnet": "255.255.255.0",
+            "traffic_statistics": {
+                "packets_input": 7299914,
+                "bytes_input": 6411442725,
+                "packets_output": 2862092,
+                "bytes_output": 118819269,
+                "packets_dropped": 1288374,
+            },
+            "control_point_states": {
+                "interface": {
+                    "interface_number": 508,
+                    "interface_config_status": "active",
+                    "interface_state": "active",
+                },
+                "Vlan700": {
+                    "interface_vlan_config_status": "active",
+                    "interface_vlan_state": "UP",
+                },
+            },
+        },
+        "Vlan1600": {
+            "interface_state": False,
+            "config_status": True,
+            "name": "pod249",
+            "link_status": False,
+            "line_protocol": False,
+            "mac_address": "aa11.bbff.ee55",
+            "mtu": 1500,
+            "ipv4": {"10.10.1.1": {"ip": "10.10.1.1"}},
+            "subnet": "255.255.255.0",
+            "traffic_statistics": {
+                "packets_input": 0,
+                "bytes_input": 0,
+                "packets_output": 0,
+                "bytes_output": 0,
+                "packets_dropped": 0,
+            },
+            "control_point_states": {
+                "interface": {
+                    "interface_number": 757,
+                    "interface_config_status": "active",
+                    "interface_state": "not active",
+                },
+                "Vlan1600": {
+                    "interface_vlan_config_status": "not active",
+                    "interface_vlan_state": "DOWN",
+                },
+            },
+        },
+    }
+}
