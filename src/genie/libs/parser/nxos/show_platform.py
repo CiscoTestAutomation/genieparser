@@ -1648,12 +1648,15 @@ class ShowCores(ShowCoresSchema):
                 group = m.groupdict()
                 date = group.pop('date')
                 pid = int(group.pop('pid'))
-                ret_dict.setdefault('date',
-                                    {}).setdefault(date, {}).setdefault(
-                                        'pid', {}).setdefault(pid, {})
+
+                pid_dict = ret_dict.setdefault('date', {}).setdefault(date, {}).setdefault('pid', {}).setdefault(pid, {})
+
                 for key, value in group.items():
-                    ret_dict['date'][date]['pid'][pid][key] = value if key in [
-                        'process_name'
-                    ] else int(value)
+                  try:
+                    value = int(value)
+                  except:
+                    pass
+
+                  pid_dict.update({key: value})
 
         return ret_dict
