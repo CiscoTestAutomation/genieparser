@@ -1,0 +1,13 @@
+
+        ---------------------------------------------------------------------------
+        VPN Session Summary                                                        
+        ---------------------------------------------------------------------------
+                                    Active : Cumulative : Peak Concur : Inactive
+                                    ----------------------------------------------
+        IKEv1 IPsec/L2TP IPsec       :      2 :          2 :           2
+        Load Balancing(Encryption)   :      0 :          6 :           1
+        ---------------------------------------------------------------------------
+        Total Active and Inactive    :      2             Total Cumulative :      8
+        Device Total VPN Capacity    :    250
+        Device Load                  :     1%
+          
