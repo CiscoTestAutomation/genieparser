@@ -2,8 +2,7 @@ import unittest
 from unittest.mock import Mock
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
-<<<<<<< HEAD
-from genie.libs.parser.iosxe.show_cts import ShowCtsPacs
+from genie.libs.parser.iosxe.show_cts import ShowCtsPacs, ShowCtsEnvironmentData
 
 
 # =============================
@@ -11,21 +10,10 @@ from genie.libs.parser.iosxe.show_cts import ShowCtsPacs
 # =============================
 class TestShowCtsPacs(unittest.TestCase):
     """Unit test for 'show cts pacs'"""
-=======
-from genie.libs.parser.iosxe.show_cts import ShowCtsEnvironmentData
-
-
-# =========================================
-# Unit test for 'show cts environment-data'
-# =========================================
-class TestShowCtsEnvironmentData(unittest.TestCase):
-    """Unit test for 'show cts environment-data'"""
->>>>>>> 2782ffbb0bdc99dd454a0475d1d1da426ffd3ca9
 
     maxDiff = None
     empty_output = {'execute.return_value': ''}
     golden_parsed_output1 = {
-<<<<<<< HEAD
         "aid": "1100E046659D4275B644BF946EFA49CD",
         "pac_info": {
             "aid": "1100E046659D4275B644BF946EFA49CD",
@@ -60,8 +48,18 @@ Refresh timer is set for 6w3d
     def test_show_cts_pacs_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowCtsPacs(device=self.device)
-=======
-        "cts_env": {
+
+
+# =========================================
+# Unit test for 'show cts environment-data'
+# =========================================
+class TestShowCtsEnvironmentData(unittest.TestCase):
+    """Unit test for 'show cts environment-data'"""
+
+    maxDiff = None
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output1 = {
+    "cts_env": {
             "current_state": "COMPLETE",
             "last_status": "Successful",
             "sgt_tags": "0-16",
@@ -209,7 +207,6 @@ State Machine is running
     def test_show_cts_environment_data_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowCtsEnvironmentData(device=self.device)
->>>>>>> 2782ffbb0bdc99dd454a0475d1d1da426ffd3ca9
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 

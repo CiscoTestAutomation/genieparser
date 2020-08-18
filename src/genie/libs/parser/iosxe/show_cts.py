@@ -70,6 +70,20 @@ class ShowCtsPacs(ShowCtsPacsSchema):
 
         remove_lines = ('PAC-Info:')
 
+        # Remove unwanted lines from raw text
+        def filter_lines(raw_output, remove_lines):
+            # Remove empty lines
+            clean_lines = list(filter(None, raw_output.splitlines()))
+            rendered_lines = []
+            for clean_line in clean_lines:
+                clean_line_strip = clean_line.strip()
+                # print(clean_line)
+                # Remove lines unwanted lines from list of "remove_lines"
+                if not clean_line_strip.startswith(remove_lines):
+                    rendered_lines.append(clean_line_strip)
+            return rendered_lines
+
+        out = filter_lines(raw_output=out, remove_lines=remove_lines)
 
         for line in out:
             # AID: 1100E046659D4275B644BF946EFA49CD
@@ -110,6 +124,13 @@ class ShowCtsPacs(ShowCtsPacsSchema):
             credential_lifetime_match = credential_lifetime_capture.match(line)
             if credential_lifetime_match:
                 groups = credential_lifetime_match.groupdict()
+                time = groups['time']
+                time_zone = groups['time_zone']
+                day = groups['day']
+                month = groups['month']
+                date = groups['date']
+                year = groups['year']
+                full_date = f"{day}, {month}/{date}/{year}"
                 cts_pacs_dict['pac_info']['credential_lifetime'] = full_date
                 continue
             # PAC - Opaque: 000200B80003000100040010207FCE2A590A44BA0DE959740A348AF00006009C00030100F57E4D71BDE3BD2850B2B63C92E18122000000135EDA996F00093A805A004010F4EDAF81FB6900D03013E907ED81BFB83EE273B8E563BE48DC16B2E9164B1AA6711281937B734E8C449280FCEAF4BE668545B5A55BE20C6346C42AFFCA87FFDDA0AC6A480F9AEE147541EE51FB67CDE0580FD8A746978C78C2CB9E7855BB1667469896AB18902424344AC094B3162EF09488CDB0D6A95139
@@ -126,6 +147,7 @@ class ShowCtsPacs(ShowCtsPacsSchema):
                 refresh_timer = groups['refresh_timer']
                 cts_pacs_dict['refresh_timer'] = refresh_timer
                 continue
+
         return cts_pacs_dict
 
 
