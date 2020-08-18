@@ -1319,10 +1319,22 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
         )
         # Last Error: None
         p7 = re.compile(r'^Last +Error: +(?P<last_error>[\S\s]+)$')
+
         # Export: [ v4_pyats_NO-DEFAULT ] Import: [ 11 ]
         p8 = re.compile(
             r'^Export: +\[ +(?P<export_policy>\S+) +\] +Import: +\[ +(?P<import_policy>\S+) +\]$'
         )
+
+        # Export: [ v4_pyats_NO-DEFAULT ]
+        p8_1 = re.compile(
+            r'^Export: +\[ +(?P<export_policy>\S+) +\]$'
+        )
+
+        # Import: [ as-path-limit ]
+        p8_2 = re.compile(
+            r'^Import: +\[ +(?P<import_policy>\S+) +\]$'
+        )
+
         # Options: <Preference LocalAddress HoldTime LogUpDown Cluster PeerAS Refresh Confed>
         # Options: <GracefulShutdownRcv>
         p9 = re.compile(r'^Options: +<(?P<options>[\S\s]+)>$')
@@ -1557,6 +1569,28 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
 
             # Export: [ v4_pyats_NO-DEFAULT ] Import: [ 11 ]
             m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict["bgp-information"]["bgp-peer"][-1]
+                entry = entry.setdefault("bgp-option-information", {})
+                for key, value in group.items():
+                    key = key.replace('_', '-')
+                    entry[key] = value
+                continue
+
+            # Export: [ v4_pyats_NO-DEFAULT ]
+            m = p8_1.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict["bgp-information"]["bgp-peer"][-1]
+                entry = entry.setdefault("bgp-option-information", {})
+                for key, value in group.items():
+                    key = key.replace('_', '-')
+                    entry[key] = value
+                continue
+
+            # Import: [ as-path-limit ]
+            m = p8_2.match(line)
             if m:
                 group = m.groupdict()
                 entry = ret_dict["bgp-information"]["bgp-peer"][-1]
