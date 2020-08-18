@@ -216,35 +216,74 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
             out = output
 
         cts_env_dict = {}
+        # CTS Environment Data
+        # ====================
+        # Current state = COMPLETE
+        # Last status = Successful
+        # Local Device SGT:
+        #   SGT tag = 0-16:Unknown
+        # Server List Info:
+        # Installed list: CTSServerList1-0089, 4 server(s):
+        #  *Server: 10.1.100.4, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        #           Status = ALIVE
+        #           auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        #  *Server: 10.1.100.5, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        #           Status = ALIVE
+        #           auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        #  *Server: 10.1.100.6, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        #           Status = ALIVE
+        #           auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        #  *Server: 10.1.100.6, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        #           Status = ALIVE
+        #           auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        # Security Group Name Table:
+        #     0-15:Unit0
+        #     2-12:Unit1
+        #     3-10:Unit2
+        #     4-11:Device11
+        #     3215-08:K2
+        #     9999-06:Q1
+        #     68-10:North
+        #     5016-00:Quarantine
+        #     8000-00:TEST_8000
+        # Environment Data Lifetime = 86400 secs
+        # Last update time = 20:04:42 PDT Tue Jul 21 2020
+        # Env-data expires in   0:00:46:51 (dd:hr:mm:sec)
+        # Env-data refreshes in 0:00:46:51 (dd:hr:mm:sec)
+        # Cache data applied           = NONE
+        # State Machine is running
 
+        # Current state = COMPLETE
         current_state_capture = re.compile(r"^Current\s+state\s=\s+(?P<state>.*$)")
+        # Last status = Successful
         last_status_capture = re.compile(r"^Last\s+status\s+=\s+(?P<last_status>.*$)")
-        # Optional
+        #   SGT tag = 0-16:Unknown
         tags_capture = re.compile(r"^SGT\s+tag\s+=\s+(?P<sgt_tags>\d+-\d+):(?P<tag_status>\w+)")
-        # Optional
+        # Installed list: CTSServerList1-0089, 4 server(s):
         server_list_capture = re.compile(
             r"^Installed\s+list:\s+(?P<server_list_name>\S+),\s+(?P<server_count>\d+)\s+server\(s\):", re.MULTILINE)
-        # Optional
+        #  *Server: 10.1.100.4, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
         servers_capture = re.compile(
             r"^(\*|)Server:\s+(?P<server_ip>\d+\.\d+\.\d+\.\d+),\s+port\s+(?P<port>\d+),\s+A-ID\s+(?P<aid>\S+)")
-        # Optional
+        #           Status = ALIVE
         server_status_capture = re.compile(r"^Status\s+=\s+(?P<server_status>\S+)")
-        # Optional
+        #           auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
         keywrap_capture = re.compile(
             r"^auto-test\s+=\s+(?P<auto_test>(TRUE|FALSE)),\s+keywrap-enable\s+=\s+(?P<keywrap_enable>(TRUE|FALSE)),\s+idle-time\s+=\s+(?P<idle_time_mins>\d+)\s+mins,\s+deadtime\s+=\s+(?P<dead_time_secs>\d+)\s+secs")
-        # Optional
+        #     0-15:Unit0
         sec_group_capture = re.compile(r"^(?P<sec_group>\S+):(?P<sec_group_name>\S+)")
-        # Optional
+        # Environment Data Lifetime = 86400 secs
         env_data_capture = re.compile(r"^Environment\s+Data\s+Lifetime\s+=\s+(?P<env_data_lifetime_secs>\d+)\s+secs")
-        # Optional
+        # Last update time = 20:04:42 PDT Tue Jul 21 2020
         last_update_capture = re.compile(
             r"^Last\s+update\s+time\s+=\s+(?P<time>\d+:\d+:\d+)\s+(?P<time_zone>\w+)\s+(?P<day>\S+)\s+(?P<month>\S+)\s+(?P<date>\d+)\s+(?P<year>\d+)")
-        # Optional
+        # Env-data expires in   0:00:46:51 (dd:hr:mm:sec)
         expiration_capture = re.compile(r"^Env-data\s+expires\s+in\s+(?P<expiration>\d+:\d+:\d+:\d+)\s+\S+")
-        # Optional
+        # Env-data refreshes in 0:00:46:51 (dd:hr:mm:sec)
         refresh_capture = re.compile(r"^Env-data\s+refreshes\s+in\s+(?P<refresh>\d+:\d+:\d+:\d+)\s+\S+")
+        # State Machine is running
         state_machine_capture = re.compile(r"^State\s+Machine\s+is\s+(?P<state_machine_status>\S+)")
-        # Optional
+        # Retry_timer (60 secs) is not running
         retry_capture = re.compile(
             r"^Retry_timer\s+\((?P<retry_timer_secs>\d+)\s+secs\)\s+is\s+(?P<retry_timer_status>.*$)")
 
@@ -271,6 +310,7 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
         keywrap_index = 1
         sec_group_index = 1
         for line in out:
+            # Current state = COMPLETE
             current_state_match = current_state_capture.match(line)
             if current_state_match:
                 groups = current_state_match.groupdict()
@@ -279,12 +319,14 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
                     cts_env_dict['cts_env'] = {}
                 cts_env_dict['cts_env']['current_state'] = current_state
                 continue
+            # Last status = Successful
             last_status_match = last_status_capture.match(line)
             if last_status_match:
                 groups = last_status_match.groupdict()
                 last_status = groups['last_status']
                 cts_env_dict['cts_env']['last_status'] = last_status
                 continue
+            #   SGT tag = 0-16:Unknown
             tags_match = tags_capture.match(line)
             if tags_match:
                 groups = tags_match.groupdict()
@@ -293,6 +335,7 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
                 cts_env_dict['cts_env']['sgt_tags'] = sgt_tags
                 cts_env_dict['cts_env']['tag_status'] = tag_status
                 continue
+            # Installed list: CTSServerList1-0089, 4 server(s):
             server_list_match = server_list_capture.match(line)
             if server_list_match:
                 groups = server_list_match.groupdict()
@@ -301,6 +344,7 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
                 cts_env_dict['cts_env']['server_list_name'] = server_list_name
                 cts_env_dict['cts_env']['server_count'] = server_count
                 continue
+            #  *Server: 10.1.100.4, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
             servers_match = servers_capture.match(line)
             if servers_match:
                 groups = servers_match.groupdict()
@@ -309,6 +353,7 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
                 aid = groups['aid']
                 server_data = {'server_ip': server_ip, 'port': port, 'aid': aid}
                 continue
+            #           Status = ALIVE
             server_status_match = server_status_capture.match(line)
             if server_status_match:
                 groups = server_status_match.groupdict()
@@ -317,6 +362,7 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
                 if not cts_env_dict['cts_env'].get('servers', {}):
                     cts_env_dict['cts_env']['servers'] = []
                 continue
+            #           auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
             keywrap_match = keywrap_capture.match(line)
             if keywrap_match:
                 groups = keywrap_match.groupdict()
@@ -333,6 +379,7 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
                     cts_env_dict['cts_env']['servers'][keywrap_index] = server_data
                 keywrap_index = keywrap_index + 1
                 continue
+            #     0-15:Unit0
             sec_group_match = sec_group_capture.match(line)
             if sec_group_match:
                 groups = sec_group_match.groupdict()
@@ -345,6 +392,7 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
                     cts_env_dict['cts_env']['security_groups'][sec_group_index] = sec_groups_data
                 sec_group_index = sec_group_index + 1
                 continue
+            # Environment Data Lifetime = 86400 secs
             env_data_match = env_data_capture.match(line)
             if env_data_match:
                 groups = env_data_match.groupdict()
@@ -355,6 +403,7 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
                     env_data_lifetime_secs = groups['env_data_lifetime_secs']
                     cts_env_dict['cts_env']['env_data_lifetime_secs'] = env_data_lifetime_secs
                 continue
+            # Last update time = 20:04:42 PDT Tue Jul 21 2020
             last_update_match = last_update_capture.match(line)
             if last_update_match:
                 groups = last_update_match.groupdict()
@@ -368,24 +417,28 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
                 cts_env_dict['cts_env'].update(
                     {'last_update': {'date': full_date, 'time': time, 'time_zone': time_zone}})
                 continue
+            # Env-data expires in   0:00:46:51 (dd:hr:mm:sec)
             expiration_match = expiration_capture.match(line)
             if expiration_match:
                 groups = expiration_match.groupdict()
                 expiration = groups['expiration']
                 cts_env_dict['cts_env']['expiration'] = expiration
                 continue
+            # Env-data refreshes in 0:00:46:51 (dd:hr:mm:sec)
             refresh_match = refresh_capture.match(line)
             if refresh_match:
                 groups = refresh_match.groupdict()
                 refresh = groups['refresh']
                 cts_env_dict['cts_env']['refresh'] = refresh
                 continue
+            # State Machine is running
             state_machine_match = state_machine_capture.match(line)
             if state_machine_match:
                 groups = state_machine_match.groupdict()
                 state_machine_status = groups['state_machine_status']
                 cts_env_dict['cts_env']['state_machine_status'] = state_machine_status
                 continue
+            # Retry_timer (60 secs) is not running
             retry_match = retry_capture.match(line)
             if retry_match:
                 groups = retry_match.groupdict()
