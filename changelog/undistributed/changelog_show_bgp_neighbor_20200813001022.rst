@@ -6,5 +6,10 @@
 --------------------------------------------------------------------------------
 * JUNOS
     * Modified ShowBgpNeighborSchema:
-      * show bgp neighbor 
-        * Changed fields to Optional
+      * Changed the follow to Optional:
+        * 'bgp-options2'
+        * 'bgp-options-extended'
+        * 'gshut-recv-local-preference'
+        * 'peer-cfg-rti'
+        * 'peer-fwd-rti'
+        * 'peer-group'
