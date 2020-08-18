@@ -1,24 +1,24 @@
-     
-        ------------------------------------------------
-        Local Intf: Gi1/0/32
-        Chassis id: FE80::EC22:9A75:BBC7:71AF
-        Port id: 222
-        Port Description: Description
-        System Name - not advertised
-        
-        System Description: 
-        {"SN":"SN-NR","Owner":"OWNER"}
-        
-        Time remaining: 92 seconds
-        System Capabilities - not advertised
-        Enabled Capabilities - not advertised
-        Management Addresses:
-            IPV6: 0000:0000:0000:0000:0000:ffff:7f00:0001
-        Auto Negotiation - not supported
-        Physical media capabilities - not advertised
-        Media Attachment Unit type - not advertised
-        Vlan ID: - not advertised
-        
-        
-        Total entries displayed: 1
+
+------------------------------------------------
+Local Intf: Gi1/0/32
+Chassis id: FE80::EC22:9A75:BBC7:71AF
+Port id: 222
+Port Description: Description
+System Name - not advertised
+
+System Description: 
+{"SN":"SN-NR","Owner":"OWNER"}
+
+Time remaining: 92 seconds
+System Capabilities - not advertised
+Enabled Capabilities - not advertised
+Management Addresses:
+    IPV6: 0000:0000:0000:0000:0000:ffff:7f00:0001
+Auto Negotiation - not supported
+Physical media capabilities - not advertised
+Media Attachment Unit type - not advertised
+Vlan ID: - not advertised
+
+
+Total entries displayed: 1
     

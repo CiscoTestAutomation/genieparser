@@ -1,42 +1,41 @@
-     
-        ------------------------------------------------
-        Local Intf: Gi1/0/17
-        Chassis id: 127.0.0.2
-        Port id: c81f.77ff.dddd
-        Port Description - not advertised
-        System Name: TestName
-        System Description - not advertised
-        
-        Time remaining: 104 seconds
-        System Capabilities: B,T
-        Enabled Capabilities: B,T
-        Management Addresses:
-            IP: 127.0.0.2
-            OID:
-                10.16.6.1.4.1.6810.195.69.2.0.
-        Auto Negotiation - not supported
-        Physical media capabilities - not advertised
-        Media Attachment Unit type: 30
-        Vlan ID: - not advertised
-        
-        MED Information:
-        
-            MED Codes:
-                  (NP) Network Policy, (LI) Location Identification
-                  (PS) Power Source Entity, (PD) Power Device
-                  (IN) Inventory
-        
-            H/W revision: 9611GD02C
-            S/W revision: 6.6604
-            Serial number: 12389WET87
-            Manufacturer: Avaya
-            Model: 9611
-            Capabilities: NP, PD, IN
-            Device type: Endpoint Class III
-            Network Policy(Voice): VLAN 66, tagged, Layer-2 priority: 5, DSCP: 46
-            Power requirements - not advertised
-            Location - not advertised
-        
-        
-        Total entries displayed: 1
-        
+
+------------------------------------------------
+Local Intf: Gi1/0/17
+Chassis id: 127.0.0.2
+Port id: c81f.77ff.dddd
+Port Description - not advertised
+System Name: TestName
+System Description - not advertised
+
+Time remaining: 104 seconds
+System Capabilities: B,T
+Enabled Capabilities: B,T
+Management Addresses:
+    IP: 127.0.0.2
+    OID:
+        10.16.6.1.4.1.6810.195.69.2.0.
+Auto Negotiation - not supported
+Physical media capabilities - not advertised
+Media Attachment Unit type: 30
+Vlan ID: - not advertised
+
+MED Information:
+
+    MED Codes:
+            (NP) Network Policy, (LI) Location Identification
+            (PS) Power Source Entity, (PD) Power Device
+            (IN) Inventory
+
+    H/W revision: 9611GD02C
+    S/W revision: 6.6604
+    Serial number: 12389WET87
+    Manufacturer: Avaya
+    Model: 9611
+    Capabilities: NP, PD, IN
+    Device type: Endpoint Class III
+    Network Policy(Voice): VLAN 66, tagged, Layer-2 priority: 5, DSCP: 46
+    Power requirements - not advertised
+    Location - not advertised
+
+
+Total entries displayed: 1
