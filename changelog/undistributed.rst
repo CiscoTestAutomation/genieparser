@@ -16,6 +16,8 @@
         * show cts pacs
     * Added ShowClassMap
         * show class-map
+    * Added ShowApRfProfileSummary
+        * show ap rf-profile summary
 
 --------------------------------------------------------------------------------
                                 Fix
