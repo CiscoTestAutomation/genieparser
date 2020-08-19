@@ -1,4 +1,4 @@
-    R1#sh ip cef 192.168.4.1
-    192.168.4.1/32
-        attached to GigabitEthernet3.100
+R1#sh ip cef 192.168.4.1
+192.168.4.1/32
+    attached to GigabitEthernet3.100
           

@@ -1,62 +1,62 @@
 
-        Vlan211 is up, line protocol is up
-        IPv6 is enabled, link-local address is FE80::257:D2FF:FE28:1A71 
-        No Virtual link-local address(es):
-        Stateless address autoconfig enabled
-        Global unicast address(es):
-          2001:10::14:1, subnet is 2001:10::14:0/112 
-            valid lifetime 2591911 preferred lifetime 604711
-        Joined group address(es):
-          FF02::1
-          FF02::1:FF14:1
-          FF02::1:FF28:1A71
-        MTU is 1500 bytes
-        ICMP error messages limited to one every 100 milliseconds
-        ICMP redirects are enabled
-        ICMP unreachables are sent
-        ND DAD is enabled, number of DAD attempts: 1
-        ND reachable time is 30000 milliseconds (using 30000)
-        ND NS retransmit interval is 1000 milliseconds
+Vlan211 is up, line protocol is up
+IPv6 is enabled, link-local address is FE80::257:D2FF:FE28:1A71 
+No Virtual link-local address(es):
+Stateless address autoconfig enabled
+Global unicast address(es):
+  2001:10::14:1, subnet is 2001:10::14:0/112 
+    valid lifetime 2591911 preferred lifetime 604711
+Joined group address(es):
+  FF02::1
+  FF02::1:FF14:1
+  FF02::1:FF28:1A71
+MTU is 1500 bytes
+ICMP error messages limited to one every 100 milliseconds
+ICMP redirects are enabled
+ICMP unreachables are sent
+ND DAD is enabled, number of DAD attempts: 1
+ND reachable time is 30000 milliseconds (using 30000)
+ND NS retransmit interval is 1000 milliseconds
 
-        GigabitEthernet1/0/1 is administratively down, line protocol is down
-        IPv6 is tentative, link-local address is FE80::257:D2FF:FEFF:428C [TEN]
-        No Virtual link-local address(es):
-        Description: desc
-        Global unicast address(es):
-          2001:db8:400::1, subnet is 2001:db8:400::/126 [TEN]
-          2001:DB8:1:1::1, subnet is 2001:DB8:1:1::/64 [TEN]
-          2001:DB8:2:2::2, subnet is 2001:DB8:2:2::/64 [TEN]
-          2001:DB8:3:3::3, subnet is 2001:DB8:3:3::/64 [ANY/TEN]
-          2001:DB8:4:4:257:D2FF:FEFF:428C, subnet is 2001:DB8:4:4::/64 [EUI/TEN]
-        Joined group address(es):
-          FF02::1
-        MTU is 1500 bytes
-        ICMP error messages limited to one every 100 milliseconds
-        ICMP redirects are enabled
-        ICMP unreachables are sent
-        ND DAD is enabled, number of DAD attempts: 1
-        ND reachable time is 30000 milliseconds (using 30000)
-        ND NS retransmit interval is 1000 milliseconds
+GigabitEthernet1/0/1 is administratively down, line protocol is down
+IPv6 is tentative, link-local address is FE80::257:D2FF:FEFF:428C [TEN]
+No Virtual link-local address(es):
+Description: desc
+Global unicast address(es):
+  2001:db8:400::1, subnet is 2001:db8:400::/126 [TEN]
+  2001:DB8:1:1::1, subnet is 2001:DB8:1:1::/64 [TEN]
+  2001:DB8:2:2::2, subnet is 2001:DB8:2:2::/64 [TEN]
+  2001:DB8:3:3::3, subnet is 2001:DB8:3:3::/64 [ANY/TEN]
+  2001:DB8:4:4:257:D2FF:FEFF:428C, subnet is 2001:DB8:4:4::/64 [EUI/TEN]
+Joined group address(es):
+  FF02::1
+MTU is 1500 bytes
+ICMP error messages limited to one every 100 milliseconds
+ICMP redirects are enabled
+ICMP unreachables are sent
+ND DAD is enabled, number of DAD attempts: 1
+ND reachable time is 30000 milliseconds (using 30000)
+ND NS retransmit interval is 1000 milliseconds
 
-        GigabitEthernet3 is up, line protocol is up
-          IPv6 is enabled, link-local address is FE80::5054:FF:FE1E:4F2 
-          No Virtual link-local address(es):
-          Interface is unnumbered. Using address of Loopback0
-          No global unicast address is configured
-          Joined group address(es):
-            FF02::1
-            FF02::2
-            FF02::1:FF1E:4F2
-          MTU is 1500 bytes
-          ICMP error messages limited to one every 100 milliseconds
-          ICMP redirects are enabled
-          ICMP unreachables are sent
-          ND DAD is enabled, number of DAD attempts: 1
-          ND reachable time is 30000 milliseconds (using 30000)
-          ND advertised reachable time is 0 (unspecified)
-          ND advertised retransmit interval is 0 (unspecified)
-          ND router advertisements are sent every 200 seconds
-          ND router advertisements live for 1800 seconds
-          ND advertised default router preference is Medium
-          Hosts use stateless autoconfig for addresses.
+GigabitEthernet3 is up, line protocol is up
+  IPv6 is enabled, link-local address is FE80::5054:FF:FE1E:4F2 
+  No Virtual link-local address(es):
+  Interface is unnumbered. Using address of Loopback0
+  No global unicast address is configured
+  Joined group address(es):
+    FF02::1
+    FF02::2
+    FF02::1:FF1E:4F2
+  MTU is 1500 bytes
+  ICMP error messages limited to one every 100 milliseconds
+  ICMP redirects are enabled
+  ICMP unreachables are sent
+  ND DAD is enabled, number of DAD attempts: 1
+  ND reachable time is 30000 milliseconds (using 30000)
+  ND advertised reachable time is 0 (unspecified)
+  ND advertised retransmit interval is 0 (unspecified)
+  ND router advertisements are sent every 200 seconds
+  ND router advertisements live for 1800 seconds
+  ND advertised default router preference is Medium
+  Hosts use stateless autoconfig for addresses.
     

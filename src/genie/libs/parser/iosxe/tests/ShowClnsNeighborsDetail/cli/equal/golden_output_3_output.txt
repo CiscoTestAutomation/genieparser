@@ -1,39 +1,39 @@
 
-        Tag test:
-        System Id       Interface     SNPA                State  Holdtime  Type Protocol
-        R2_xr           Gi2.115       fa16.3eff.9418      Up     26        L1L2 M-ISIS
-          Area Address(es): 49.0001
-          IP Address(es):  10.12.115.2*
-          IPv6 Address(es): FE80::F816:3EFF:FEFF:9418
-          Uptime: 3d21h
-          NSF capable
-          Topology: IPv4, IPv6
-          Interface name: GigabitEthernet2.115
-        R3_nx           Gi3.115       5e00.80ff.0209      Up     29        L1L2 M-ISIS
-          Area Address(es): 49.0001
-          IP Address(es):  10.13.115.3*
-          IPv6 Address(es): FE80::5C00:80FF:FEFF:209
-          Uptime: 3d21h
-          NSF capable
-          Topology: IPv4, IPv6
-          Interface name: GigabitEthernet3.115
+Tag test:
+System Id       Interface     SNPA                State  Holdtime  Type Protocol
+R2_xr           Gi2.115       fa16.3eff.9418      Up     26        L1L2 M-ISIS
+  Area Address(es): 49.0001
+  IP Address(es):  10.12.115.2*
+  IPv6 Address(es): FE80::F816:3EFF:FEFF:9418
+  Uptime: 3d21h
+  NSF capable
+  Topology: IPv4, IPv6
+  Interface name: GigabitEthernet2.115
+R3_nx           Gi3.115       5e00.80ff.0209      Up     29        L1L2 M-ISIS
+  Area Address(es): 49.0001
+  IP Address(es):  10.13.115.3*
+  IPv6 Address(es): FE80::5C00:80FF:FEFF:209
+  Uptime: 3d21h
+  NSF capable
+  Topology: IPv4, IPv6
+  Interface name: GigabitEthernet3.115
 
-        Tag test1:
-        System Id       Interface     SNPA                State  Holdtime  Type Protocol
-        2222.22ff.4444  Gi2.415       fa16.3eff.9418      Init   29        L1L2 M-ISIS
-          Area Address(es): 49.0001
-          IP Address(es):  10.12.115.2*
-          IPv6 Address(es): FE80::F816:3EFF:FEFF:9418
-          Uptime: 3d21h
-          NSF capable
-          Topology: IPv4, IPv6
-          Interface name: GigabitEthernet2.415
-        R3_nx           Gi3.415       5e00.80ff.0209      Up     29        L1L2 M-ISIS
-          Area Address(es): 49.0001
-          IP Address(es):  10.13.115.3*
-          IPv6 Address(es): FE80::5C00:80FF:FEFF:209
-          Uptime: 3d21h
-          NSF capable
-          Topology: IPv4, IPv6
-          Interface name: GigabitEthernet3.415
+Tag test1:
+System Id       Interface     SNPA                State  Holdtime  Type Protocol
+2222.22ff.4444  Gi2.415       fa16.3eff.9418      Init   29        L1L2 M-ISIS
+  Area Address(es): 49.0001
+  IP Address(es):  10.12.115.2*
+  IPv6 Address(es): FE80::F816:3EFF:FEFF:9418
+  Uptime: 3d21h
+  NSF capable
+  Topology: IPv4, IPv6
+  Interface name: GigabitEthernet2.415
+R3_nx           Gi3.415       5e00.80ff.0209      Up     29        L1L2 M-ISIS
+  Area Address(es): 49.0001
+  IP Address(es):  10.13.115.3*
+  IPv6 Address(es): FE80::5C00:80FF:FEFF:209
+  Uptime: 3d21h
+  NSF capable
+  Topology: IPv4, IPv6
+  Interface name: GigabitEthernet3.415
     

@@ -1,74 +1,74 @@
 
-        Router#show ip bgp l2vpn vpls all
-        Load for five secs: 2%/0%; one minute: 12%; five minutes: 8%
-        Time source is NTP, 15:53:21.642 EST Sun Jun 6 2016
+Router#show ip bgp l2vpn vpls all
+Load for five secs: 2%/0%; one minute: 12%; five minutes: 8%
+Time source is NTP, 15:53:21.642 EST Sun Jun 6 2016
 
-        BGP table version is 1841, local router ID is 10.169.197.254
-        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
-                      r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
-                      x best-external, a additional-path, c RIB-compressed, 
-        Origin codes: i - IGP, e - EGP, ? - incomplete
-        RPKI validation codes: V valid, I invalid, N Not found
+BGP table version is 1841, local router ID is 10.169.197.254
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
+              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
+              x best-external, a additional-path, c RIB-compressed, 
+Origin codes: i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
 
-             Network          Next Hop            Metric LocPrf Weight Path
-        Route Distinguisher: 100:1051
-         *>  100:1051:VEID-2:Blk-1/136
-                               0.0.0.0                            32768 ?
-        Route Distinguisher: 100:1052
-         *>  100:1052:VEID-2:Blk-1/136
-                               0.0.0.0                            32768 ?
-        Route Distinguisher: 100:1053
-         *>  100:1053:VEID-2:Blk-1/136
-                               0.0.0.0                            32768 ?
-        Route Distinguisher: 100:1054
-         *>  100:1054:VEID-2:Blk-1/136
-                               0.0.0.0                            32768 ?
-        Route Distinguisher: 100:1055
-         *>  100:1055:VEID-2:Blk-1/136
-                               0.0.0.0                            32768 ?
-        Route Distinguisher: 100:1056
-         *>  100:1056:VEID-2:Blk-1/136
-                               0.0.0.0                            32768 ?
-        Route Distinguisher: 100:1057
-         *>  100:1057:VEID-2:Blk-1/136
-                               0.0.0.0                            32768 ?
-        Route Distinguisher: 100:1058
-         *>  100:1058:VEID-2:Blk-1/136
-                               0.0.0.0                            32768 ?
-        Route Distinguisher: 100:1059
-         *>  100:1059:VEID-2:Blk-1/136
-                               0.0.0.0                            32768 ?
-        Route Distinguisher: 100:1060
-         *>  100:1060:VEID-2:Blk-1/136
-                               0.0.0.0                            32768 ?
-        Route Distinguisher: 100:1061
-         *>  100:1061:VEID-2:Blk-1/136
-                               0.0.0.0                            32768 ?
-        Route Distinguisher: 100:1062
-         *>  100:1062:VEID-2:Blk-1/136
-                               0.0.0.0                            32768 ?
-        Route Distinguisher: 100:1063
-         *>  100:1063:VEID-2:Blk-1/136
-                               0.0.0.0                            32768 ?
-        Route Distinguisher: 100:1064
-         *>  100:1064:VEID-2:Blk-1/136
-                               0.0.0.0                            32768 ?
-        Route Distinguisher: 100:1065
-         *>  100:1065:VEID-2:Blk-1/136
-                               0.0.0.0                            32768 ?
-        Route Distinguisher: 100:1066
-         *>  100:1066:VEID-2:Blk-1/136
-                               0.0.0.0                            32768 ?
-        Route Distinguisher: 100:1067
-         *>  100:1067:VEID-2:Blk-1/136
-                               0.0.0.0                            32768 ?
-        Route Distinguisher: 100:1068
-         *>  100:1068:VEID-2:Blk-1/136
-                               0.0.0.0                            32768 ?
-        Route Distinguisher: 100:1069
-         *>  100:1069:VEID-2:Blk-1/136
-                               0.0.0.0                            32768 ?
-        Route Distinguisher: 100:1070
-         *>  100:1070:VEID-2:Blk-1/136
-                               0.0.0.0                            32768 ?
+     Network          Next Hop            Metric LocPrf Weight Path
+Route Distinguisher: 100:1051
+ *>  100:1051:VEID-2:Blk-1/136
+                       0.0.0.0                            32768 ?
+Route Distinguisher: 100:1052
+ *>  100:1052:VEID-2:Blk-1/136
+                       0.0.0.0                            32768 ?
+Route Distinguisher: 100:1053
+ *>  100:1053:VEID-2:Blk-1/136
+                       0.0.0.0                            32768 ?
+Route Distinguisher: 100:1054
+ *>  100:1054:VEID-2:Blk-1/136
+                       0.0.0.0                            32768 ?
+Route Distinguisher: 100:1055
+ *>  100:1055:VEID-2:Blk-1/136
+                       0.0.0.0                            32768 ?
+Route Distinguisher: 100:1056
+ *>  100:1056:VEID-2:Blk-1/136
+                       0.0.0.0                            32768 ?
+Route Distinguisher: 100:1057
+ *>  100:1057:VEID-2:Blk-1/136
+                       0.0.0.0                            32768 ?
+Route Distinguisher: 100:1058
+ *>  100:1058:VEID-2:Blk-1/136
+                       0.0.0.0                            32768 ?
+Route Distinguisher: 100:1059
+ *>  100:1059:VEID-2:Blk-1/136
+                       0.0.0.0                            32768 ?
+Route Distinguisher: 100:1060
+ *>  100:1060:VEID-2:Blk-1/136
+                       0.0.0.0                            32768 ?
+Route Distinguisher: 100:1061
+ *>  100:1061:VEID-2:Blk-1/136
+                       0.0.0.0                            32768 ?
+Route Distinguisher: 100:1062
+ *>  100:1062:VEID-2:Blk-1/136
+                       0.0.0.0                            32768 ?
+Route Distinguisher: 100:1063
+ *>  100:1063:VEID-2:Blk-1/136
+                       0.0.0.0                            32768 ?
+Route Distinguisher: 100:1064
+ *>  100:1064:VEID-2:Blk-1/136
+                       0.0.0.0                            32768 ?
+Route Distinguisher: 100:1065
+ *>  100:1065:VEID-2:Blk-1/136
+                       0.0.0.0                            32768 ?
+Route Distinguisher: 100:1066
+ *>  100:1066:VEID-2:Blk-1/136
+                       0.0.0.0                            32768 ?
+Route Distinguisher: 100:1067
+ *>  100:1067:VEID-2:Blk-1/136
+                       0.0.0.0                            32768 ?
+Route Distinguisher: 100:1068
+ *>  100:1068:VEID-2:Blk-1/136
+                       0.0.0.0                            32768 ?
+Route Distinguisher: 100:1069
+ *>  100:1069:VEID-2:Blk-1/136
+                       0.0.0.0                            32768 ?
+Route Distinguisher: 100:1070
+ *>  100:1070:VEID-2:Blk-1/136
+                       0.0.0.0                            32768 ?
         

@@ -1,5 +1,5 @@
 
-        R1_xe#show ip vrf Mgmt-intf
-        Name                             Default RD            Interfaces
-        Mgmt-intf                        <not set>             Gi1
+R1_xe#show ip vrf Mgmt-intf
+Name                             Default RD            Interfaces
+Mgmt-intf                        <not set>             Gi1
     

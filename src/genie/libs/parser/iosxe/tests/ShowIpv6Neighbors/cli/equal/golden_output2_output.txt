@@ -1,9 +1,9 @@
 
-        csr1kv-1#show ipv6 neighbors vrf vrf1
-        IPv6 Address                              Age Link-layer Addr State Interface
-        2001:db8:888c:1::2                                 0 fa16.3eff.1b7b  REACH Gi3
-        2001:db8:c8d1:1::11                                - bbbb.beff.bcbc  REACH Gi3
-        FE80::F816:3EFF:FEFF:1B7B                   0 fa16.3eff.1b7b  REACH Gi3
-        2001:db8:c8d1:1::3                                 0 5e01.c0ff.0209  REACH Gi5
-        FE80::5C01:C0FF:FEFF:209                      1 5e01.c0ff.0209  STALE Gi5
+csr1kv-1#show ipv6 neighbors vrf vrf1
+IPv6 Address                              Age Link-layer Addr State Interface
+2001:db8:888c:1::2                                 0 fa16.3eff.1b7b  REACH Gi3
+2001:db8:c8d1:1::11                                - bbbb.beff.bcbc  REACH Gi3
+FE80::F816:3EFF:FEFF:1B7B                   0 fa16.3eff.1b7b  REACH Gi3
+2001:db8:c8d1:1::3                                 0 5e01.c0ff.0209  REACH Gi5
+FE80::5C01:C0FF:FEFF:209                      1 5e01.c0ff.0209  STALE Gi5
     

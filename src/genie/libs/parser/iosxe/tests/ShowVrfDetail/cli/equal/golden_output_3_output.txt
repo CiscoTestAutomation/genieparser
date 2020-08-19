@@ -1,74 +1,74 @@
 
-        VRF GENIE-BACKUP (VRF Id = 12); default RD 50998:106; default VPNID <not set>
-        Description: VPN for CHRH (Backup network)
-        New CLI format, supports multiple address-families
-        Flags: 0x180C
-        Interfaces:
-            BD106
-        Address family ipv4 unicast (Table ID = 0xC):
-        Flags: 0x0
-        Export VPN route-target communities
-            RT:50998:1               RT:50998:106
-        Import VPN route-target communities
-            RT:50998:106             RT:50998:4094
-        No import route-map
-        No global export route-map
-        No export route-map
-        VRF label distribution protocol: not configured
-        VRF label allocation mode: per-prefix
-        Address family ipv6 unicast not active
-        Address family ipv4 multicast not active
-        Address family ipv6 multicast not active
+VRF GENIE-BACKUP (VRF Id = 12); default RD 50998:106; default VPNID <not set>
+Description: VPN for CHRH (Backup network)
+New CLI format, supports multiple address-families
+Flags: 0x180C
+Interfaces:
+    BD106
+Address family ipv4 unicast (Table ID = 0xC):
+Flags: 0x0
+Export VPN route-target communities
+    RT:50998:1               RT:50998:106
+Import VPN route-target communities
+    RT:50998:106             RT:50998:4094
+No import route-map
+No global export route-map
+No export route-map
+VRF label distribution protocol: not configured
+VRF label allocation mode: per-prefix
+Address family ipv6 unicast not active
+Address family ipv4 multicast not active
+Address family ipv6 multicast not active
 
-        VRF GENIE-LAB (VRF Id = 76); default RD 50998:11; default VPNID <not set>
-        Description: VPN for Internet Direct Link Out (Internal FW)
-        New CLI format, supports multiple address-families
-        Flags: 0x180C
-        Interfaces:
-            Te0/1/1.11               vr92                     vr110
-        Address family ipv4 unicast (Table ID = 0x4C):
-        Flags: 0x0
-        Export VPN route-target communities
-            RT:50998:11
-        Import VPN route-target communities
-            RT:50998:11
-        No import route-map
-        No global export route-map
-        No export route-map
-        VRF label distribution protocol: not configured
-        VRF label allocation mode: per-prefix
-        Address family ipv6 unicast (Table ID = 0x1E000003):
-        Flags: 0x0
-        Export VPN route-target communities
-            RT:50998:11
-        Import VPN route-target communities
-            RT:50998:11
-        No import route-map
-        No global export route-map
-        No export route-map
-        VRF label distribution protocol: not configured
-        VRF label allocation mode: per-prefix
-        Address family ipv4 multicast not active
-        Address family ipv6 multicast not active
+VRF GENIE-LAB (VRF Id = 76); default RD 50998:11; default VPNID <not set>
+Description: VPN for Internet Direct Link Out (Internal FW)
+New CLI format, supports multiple address-families
+Flags: 0x180C
+Interfaces:
+    Te0/1/1.11               vr92                     vr110
+Address family ipv4 unicast (Table ID = 0x4C):
+Flags: 0x0
+Export VPN route-target communities
+    RT:50998:11
+Import VPN route-target communities
+    RT:50998:11
+No import route-map
+No global export route-map
+No export route-map
+VRF label distribution protocol: not configured
+VRF label allocation mode: per-prefix
+Address family ipv6 unicast (Table ID = 0x1E000003):
+Flags: 0x0
+Export VPN route-target communities
+    RT:50998:11
+Import VPN route-target communities
+    RT:50998:11
+No import route-map
+No global export route-map
+No export route-map
+VRF label distribution protocol: not configured
+VRF label allocation mode: per-prefix
+Address family ipv4 multicast not active
+Address family ipv6 multicast not active
 
-        VRF GENIE-PROD (VRF Id = 17); default RD 50998:110; default VPNID <not set>
-        Description: VPN for Dame Blanche
-        New CLI format, supports multiple address-families
-        Flags: 0x180C
-        Interfaces:
-            Gi0/0/0.110              Te0/1/2.1042             vl110
-        Address family ipv4 unicast (Table ID = 0x11):
-        Flags: 0x0
-        Export VPN route-target communities
-            RT:50998:1               RT:50998:110
-        Import VPN route-target communities
-            RT:50998:4094            RT:50998:110
-        No import route-map
-        No global export route-map
-        No export route-map
-        VRF label distribution protocol: not configured
-        VRF label allocation mode: per-prefix
-        Address family ipv6 unicast not active
-        Address family ipv4 multicast not active
-        Address family ipv6 multicast not active
+VRF GENIE-PROD (VRF Id = 17); default RD 50998:110; default VPNID <not set>
+Description: VPN for Dame Blanche
+New CLI format, supports multiple address-families
+Flags: 0x180C
+Interfaces:
+    Gi0/0/0.110              Te0/1/2.1042             vl110
+Address family ipv4 unicast (Table ID = 0x11):
+Flags: 0x0
+Export VPN route-target communities
+    RT:50998:1               RT:50998:110
+Import VPN route-target communities
+    RT:50998:4094            RT:50998:110
+No import route-map
+No global export route-map
+No export route-map
+VRF label distribution protocol: not configured
+VRF label allocation mode: per-prefix
+Address family ipv6 unicast not active
+Address family ipv4 multicast not active
+Address family ipv6 multicast not active
     

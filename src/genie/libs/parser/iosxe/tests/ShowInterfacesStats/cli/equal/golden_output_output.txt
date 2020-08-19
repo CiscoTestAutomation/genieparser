@@ -1,29 +1,29 @@
 
-        Router#show interface stats
-        Load for five secs: 5%/1%; one minute: 8%; five minutes: 9%
-        Time source is NTP, 07:38:10.599 EST Thu Sep 8 2016
+Router#show interface stats
+Load for five secs: 5%/1%; one minute: 8%; five minutes: 9%
+Time source is NTP, 07:38:10.599 EST Thu Sep 8 2016
 
-        GigabitEthernet0/0
-                  Switching path    Pkts In   Chars In   Pkts Out  Chars Out
-                       Processor          0          0        225      77625
-                     Route cache          0          0          0          0
-          Multi-Processor Fwding        950     221250        500      57000
-                           Total        950     221250        725     134625
-        GigabitEthernet0/1
-                  Switching path    Pkts In   Chars In   Pkts Out  Chars Out
-                       Processor          1         60        226      77685
-                     Route cache          0          0          0          0
-          Multi-Processor Fwding        500      57000        500      57000
-                           Total        501      57060        726     134685
-        GigabitEthernet0/2
-                  Switching path    Pkts In   Chars In   Pkts Out  Chars Out
-                       Processor          1         60        226      77685
-                     Route cache          0          0          0          0
-          Multi-Processor Fwding          0          0          0          0
-                           Total          1         60        226      77685
-        FastEthernet1/0
-                  Switching path    Pkts In   Chars In   Pkts Out  Chars Out
-                       Processor      34015    5331012       1579     158190
-                     Route cache          0          0          0          0
-                           Total      34015    5331012       1579     158190
+GigabitEthernet0/0
+          Switching path    Pkts In   Chars In   Pkts Out  Chars Out
+               Processor          0          0        225      77625
+             Route cache          0          0          0          0
+  Multi-Processor Fwding        950     221250        500      57000
+                   Total        950     221250        725     134625
+GigabitEthernet0/1
+          Switching path    Pkts In   Chars In   Pkts Out  Chars Out
+               Processor          1         60        226      77685
+             Route cache          0          0          0          0
+  Multi-Processor Fwding        500      57000        500      57000
+                   Total        501      57060        726     134685
+GigabitEthernet0/2
+          Switching path    Pkts In   Chars In   Pkts Out  Chars Out
+               Processor          1         60        226      77685
+             Route cache          0          0          0          0
+  Multi-Processor Fwding          0          0          0          0
+                   Total          1         60        226      77685
+FastEthernet1/0
+          Switching path    Pkts In   Chars In   Pkts Out  Chars Out
+               Processor      34015    5331012       1579     158190
+             Route cache          0          0          0          0
+                   Total      34015    5331012       1579     158190
     

@@ -1,54 +1,54 @@
 
 
-        Service Instance ID: 100
-        Service Instance Type: Static
-        Description: Fiber Connexion to XXX-111-1111
-        Associated Interface: TenGigabitEthernet0/1
-        Associated EVC:
-        L2protocol drop
-        CE-Vlans:
-        Encapsulation: dot1q 19 vlan protocol type 0x8100 second-dot1q 149 vlan protocol type 0x8100
-        Rewrite: ingress tag pop 2 symmetric
-        Interface Dot1q Tunnel Ethertype: 0x8100
-        State: Up
-        EFP Statistics:
-           Pkts In   Bytes In   Pkts Out  Bytes Out
-          36279507 3955205745   42299716 20480433984
-        EFP Microblocks:
-        ****************
-        Microblock type: Bridge-domain
-        Bridge-domain: 129
+Service Instance ID: 100
+Service Instance Type: Static
+Description: Fiber Connexion to XXX-111-1111
+Associated Interface: TenGigabitEthernet0/1
+Associated EVC:
+L2protocol drop
+CE-Vlans:
+Encapsulation: dot1q 19 vlan protocol type 0x8100 second-dot1q 149 vlan protocol type 0x8100
+Rewrite: ingress tag pop 2 symmetric
+Interface Dot1q Tunnel Ethertype: 0x8100
+State: Up
+EFP Statistics:
+   Pkts In   Bytes In   Pkts Out  Bytes Out
+  36279507 3955205745   42299716 20480433984
+EFP Microblocks:
+****************
+Microblock type: Bridge-domain
+Bridge-domain: 129
 
-        Microblock type: L2Mcast
-        L2 Multicast GID: 54
+Microblock type: L2Mcast
+L2 Multicast GID: 54
 
-        Microblock type: dhcp_snoop
-        L2 Multicast GID: 54
+Microblock type: dhcp_snoop
+L2 Multicast GID: 54
 
 
-        Service Instance ID: 2000
-        Service Instance Type: Static
-        Description: Fiber Connexion (Layer 2) to XXX-200-2222
-        Associated Interface: TenGigabitEthernet0/1
-        Associated EVC:
-        L2protocol drop
-        CE-Vlans:
-        Encapsulation: dot1q 21 vlan protocol type 0x8100 second-dot1q 1-123,150-5000 vlan protocol type 0x8100
-        Rewrite: ingress tag pop 1 symmetric
-        Interface Dot1q Tunnel Ethertype: 0x8100
-        State: Up
-        EFP Statistics:
-           Pkts In   Bytes In   Pkts Out  Bytes Out
-         356008885 51800659418  533687182 229082305074
-        EFP Microblocks:
-        ****************
-        Microblock type: Bridge-domain
-        Bridge-domain: 200
+Service Instance ID: 2000
+Service Instance Type: Static
+Description: Fiber Connexion (Layer 2) to XXX-200-2222
+Associated Interface: TenGigabitEthernet0/1
+Associated EVC:
+L2protocol drop
+CE-Vlans:
+Encapsulation: dot1q 21 vlan protocol type 0x8100 second-dot1q 1-123,150-5000 vlan protocol type 0x8100
+Rewrite: ingress tag pop 1 symmetric
+Interface Dot1q Tunnel Ethertype: 0x8100
+State: Up
+EFP Statistics:
+   Pkts In   Bytes In   Pkts Out  Bytes Out
+ 356008885 51800659418  533687182 229082305074
+EFP Microblocks:
+****************
+Microblock type: Bridge-domain
+Bridge-domain: 200
 
-        Microblock type: L2Mcast
-        L2 Multicast GID: 58
+Microblock type: L2Mcast
+L2 Multicast GID: 58
 
-        Microblock type: dhcp_snoop
-        L2 Multicast GID: 58
+Microblock type: dhcp_snoop
+L2 Multicast GID: 58
 
     

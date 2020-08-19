@@ -1,11 +1,11 @@
 
-        show boot
-        BOOT variable = tftp://10.1.0.41/cat9k_iosxe.16.12.03a.SPA.bin
-        Configuration Register is 0x102
-        MANUAL_BOOT variable = yes
-        BAUD variable = 9600
-        ENABLE_BREAK variable does not exist
-        BOOTMODE variable does not exist
-        IPXE_TIMEOUT variable does not exist
-        CONFIG_FILE variable =
+show boot
+BOOT variable = tftp://10.1.0.41/cat9k_iosxe.16.12.03a.SPA.bin
+Configuration Register is 0x102
+MANUAL_BOOT variable = yes
+BAUD variable = 9600
+ENABLE_BREAK variable does not exist
+BOOTMODE variable does not exist
+IPXE_TIMEOUT variable does not exist
+CONFIG_FILE variable =
         

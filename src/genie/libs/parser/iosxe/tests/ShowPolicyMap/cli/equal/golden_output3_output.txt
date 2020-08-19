@@ -1,31 +1,31 @@
 
-        Router# show policy-map
-        Policy Map parent-policy
-            Class class-default
-            police cir 50000 bc 3000 be 3000
-            conform-color hipri-conform
-            conform-action transmit
-            exceed-action transmit
-            violate-action drop
-            service-policy child-policy
-        Policy Map police
-            Class prec1
-                priority level 1 20000 (kb/s)
-            Class prec2
-                bandwidth 20000 (kb/s)
-            Class class-default
-                bandwidth 20000 (kb/s)
-        Policy Map child-policy
-            Class user1-acl-child
-                police cir 10000 bc 1500
-                conform-action set-qos-transmit 5
-                exceed-action drop
-            Class user2-acl-child
-                police cir 20000 bc 1500
-                conform-action set-qos-transmit 5
-                exceed-action drop
-            Class class-default
-                police cir 50000 bc 1500
-                conform-action transmit 
-                exceed-action drop
+Router# show policy-map
+Policy Map parent-policy
+    Class class-default
+    police cir 50000 bc 3000 be 3000
+    conform-color hipri-conform
+    conform-action transmit
+    exceed-action transmit
+    violate-action drop
+    service-policy child-policy
+Policy Map police
+    Class prec1
+        priority level 1 20000 (kb/s)
+    Class prec2
+        bandwidth 20000 (kb/s)
+    Class class-default
+        bandwidth 20000 (kb/s)
+Policy Map child-policy
+    Class user1-acl-child
+        police cir 10000 bc 1500
+        conform-action set-qos-transmit 5
+        exceed-action drop
+    Class user2-acl-child
+        police cir 20000 bc 1500
+        conform-action set-qos-transmit 5
+        exceed-action drop
+    Class class-default
+        police cir 50000 bc 1500
+        conform-action transmit 
+        exceed-action drop
     

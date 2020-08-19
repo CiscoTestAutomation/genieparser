@@ -1,9 +1,9 @@
-        Dot1x Authenticator Port Statistics for GigabitEthernet0/1
-        --------------------------------------------
-        RxStart = 580   RxLogoff = 0    RxResp = 880    RxRespID = 887
-        RxInvalid = 0   RxLenErr = 0    RxTotal = 2349
+Dot1x Authenticator Port Statistics for GigabitEthernet0/1
+--------------------------------------------
+RxStart = 580   RxLogoff = 0    RxResp = 880    RxRespID = 887
+RxInvalid = 0   RxLenErr = 0    RxTotal = 2349
 
-        TxReq = 1760    TxReqID = 890   TxTotal = 2650
+TxReq = 1760    TxReqID = 890   TxTotal = 2650
 
-        RxVersion = 3   LastRxSrcMAC = fa16.3eff.4f27
+RxVersion = 3   LastRxSrcMAC = fa16.3eff.4f27
     

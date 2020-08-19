@@ -1,9 +1,9 @@
 
-        show clns is-neighbors detail
+show clns is-neighbors detail
 
-        Tag test:
-        System Id       Interface     State  Type Priority  Circuit Id         Format
+Tag test:
+System Id       Interface     State  Type Priority  Circuit Id         Format
 
-        Tag test1:
-        System Id       Interface     State  Type Priority  Circuit Id         Format
+Tag test1:
+System Id       Interface     State  Type Priority  Circuit Id         Format
     

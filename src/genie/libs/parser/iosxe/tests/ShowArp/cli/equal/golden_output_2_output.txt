@@ -1,11 +1,11 @@
 
-        PE1#show arp
-        Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
-        Time source is NTP, 00:41:33.830 EST Thu Jun 20 2019
+PE1#show arp
+Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
+Time source is NTP, 00:41:33.830 EST Thu Jun 20 2019
 
-        Protocol  Address          Age (min)  Hardware Addr   Type   Interface
-        Internet  10.169.197.93          -   fa16.3eff.b7ad  ARPA  
-        Internet  10.169.197.94          -   fa16.3eff.aae1  ARPA   GigabitEthernet2
-        Internet  10.169.197.97         18   fa16.3eff.45a8  ARPA   GigabitEthernet4
-        Internet  10.169.197.98          -   fa16.3eff.9dca  ARPA   GigabitEthernet4  
+Protocol  Address          Age (min)  Hardware Addr   Type   Interface
+Internet  10.169.197.93          -   fa16.3eff.b7ad  ARPA  
+Internet  10.169.197.94          -   fa16.3eff.aae1  ARPA   GigabitEthernet2
+Internet  10.169.197.97         18   fa16.3eff.45a8  ARPA   GigabitEthernet4
+Internet  10.169.197.98          -   fa16.3eff.9dca  ARPA   GigabitEthernet4  
     

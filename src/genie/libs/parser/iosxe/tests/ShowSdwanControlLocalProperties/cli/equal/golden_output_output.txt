@@ -1,40 +1,40 @@
 
-        vEdge# show control local-properties
-        personality                  vedge
-        organization-name            Cisco, Inc.
-        certificate-status           Installed
-        root-ca-chain-status         Installed
+vEdge# show control local-properties
+personality                  vedge
+organization-name            Cisco, Inc.
+certificate-status           Installed
+root-ca-chain-status         Installed
 
-        certificate-validity         Valid
-        certificate-not-valid-before Dec 15 18:06:59 2016 GMT
-        certificate-not-valid-after  Dec 15 18:06:59 2017 GMT
+certificate-validity         Valid
+certificate-not-valid-before Dec 15 18:06:59 2016 GMT
+certificate-not-valid-after  Dec 15 18:06:59 2017 GMT
 
-        dns-name                     10.0.12.26
-        site-id                      100
-        domain-id                    1
-        protocol                     dtls
-        tls-port                     0
-        system-ip                    172.16.255.11
-        chassis-num/unique-id        b5887dd3-3d70-4987-a3a4-6e06c1d64a8c
-        serial-num                   12345714
-        vsmart-list-version          0
-        keygen-interval              1:00:00:00
-        retry-interval               0:00:00:19
-        no-activity-exp-interval     0:00:00:12
-        dns-cache-ttl                0:00:02:00
-        port-hopped                  TRUE
-        time-since-last-port-hop     0:00:43:16
-        number-vbond-peers           0
-        number-active-wan-interfaces 1
+dns-name                     10.0.12.26
+site-id                      100
+domain-id                    1
+protocol                     dtls
+tls-port                     0
+system-ip                    172.16.255.11
+chassis-num/unique-id        b5887dd3-3d70-4987-a3a4-6e06c1d64a8c
+serial-num                   12345714
+vsmart-list-version          0
+keygen-interval              1:00:00:00
+retry-interval               0:00:00:19
+no-activity-exp-interval     0:00:00:12
+dns-cache-ttl                0:00:02:00
+port-hopped                  TRUE
+time-since-last-port-hop     0:00:43:16
+number-vbond-peers           0
+number-active-wan-interfaces 1
 
-        NAT TYPE: E -- indicates End-point independent mapping
-                A -- indicates Address-port dependent mapping
-                N -- indicates Not learned
-                Note: Requires minimum two vbonds to learn the NAT type
-                                                                                                                                                                                            VM
-                   PUBLIC          PUBLIC PRIVATE         PRIVATE                                 PRIVATE                             MAX     CONTROL/            LAST         SPI TIME   NAT  CON
-        INTERFACE  IPv4            PORT   IPv4            IPv6                                    PORT    VS/VM COLOR           STATE CNTRL   STUN         LR/LB  CONNECTION   REMAINING  TYPE PRF
-        ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        ge0/0      10.1.15.15      12426  10.1.15.15      ::                                      12426    0/0  lte              up    2      no/yes/no   No/No  0:00:00:16   0:11:26:41  E    5
-        ge0/3      10.0.20.15      12406  10.0.20.15      ::                                      12406    0/0  3g               up    2      no/yes/no   No/No  0:00:00:13   0:11:26:45  N    5    
+NAT TYPE: E -- indicates End-point independent mapping
+        A -- indicates Address-port dependent mapping
+        N -- indicates Not learned
+        Note: Requires minimum two vbonds to learn the NAT type
+                                                                                                                                                                                    VM
+           PUBLIC          PUBLIC PRIVATE         PRIVATE                                 PRIVATE                             MAX     CONTROL/            LAST         SPI TIME   NAT  CON
+INTERFACE  IPv4            PORT   IPv4            IPv6                                    PORT    VS/VM COLOR           STATE CNTRL   STUN         LR/LB  CONNECTION   REMAINING  TYPE PRF
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ge0/0      10.1.15.15      12426  10.1.15.15      ::                                      12426    0/0  lte              up    2      no/yes/no   No/No  0:00:00:16   0:11:26:41  E    5
+ge0/3      10.0.20.15      12406  10.0.20.15      ::                                      12406    0/0  3g               up    2      no/yes/no   No/No  0:00:00:13   0:11:26:45  N    5    
     

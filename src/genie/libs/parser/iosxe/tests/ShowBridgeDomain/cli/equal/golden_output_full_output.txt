@@ -1,29 +1,29 @@
-        Router#show bridge-domain
-        Load for five secs: 55%/0%; one minute: 15%; five minutes: 10%
-        Time source is NTP, 20:29:29.871 EST Fri Nov 11 2016
+Router#show bridge-domain
+Load for five secs: 55%/0%; one minute: 15%; five minutes: 10%
+Time source is NTP, 20:29:29.871 EST Fri Nov 11 2016
 
-        Bridge-domain 2051 (2 ports in all)
-        State: UP                    Mac learning: Enabled
-        Aging-Timer: 3600 second(s)
-            vfi VPLS-2051 neighbor 10.120.202.64 2051
-        1 ports belonging to split-horizon group 0
-            Port-channel1 service instance 2051 (split-horizon)
-           AED MAC address    Policy  Tag       Age  Pseudoport
-           0   0000.A0FF.0027 forward dynamic   3142 Port-channel1.EFP2051
-           0   0000.A0FF.00BF forward dynamic   3125 Port-channel1.EFP2051
-           0   0000.A0FF.013A forward dynamic   3137 Port-channel1.EFP2051
-           0   0000.A0FF.010F forward dynamic   3133 Port-channel1.EFP2051
-           0   0000.57FF.6D9E forward dynamic   3153 VPLS-2051.10200e6
-           0   0000.A0FF.0097 forward dynamic   3153 Port-channel1.EFP2051
-           0   0000.A0FF.010C forward dynamic   3133 Port-channel1.EFP2051
+Bridge-domain 2051 (2 ports in all)
+State: UP                    Mac learning: Enabled
+Aging-Timer: 3600 second(s)
+    vfi VPLS-2051 neighbor 10.120.202.64 2051
+1 ports belonging to split-horizon group 0
+    Port-channel1 service instance 2051 (split-horizon)
+   AED MAC address    Policy  Tag       Age  Pseudoport
+   0   0000.A0FF.0027 forward dynamic   3142 Port-channel1.EFP2051
+   0   0000.A0FF.00BF forward dynamic   3125 Port-channel1.EFP2051
+   0   0000.A0FF.013A forward dynamic   3137 Port-channel1.EFP2051
+   0   0000.A0FF.010F forward dynamic   3133 Port-channel1.EFP2051
+   0   0000.57FF.6D9E forward dynamic   3153 VPLS-2051.10200e6
+   0   0000.A0FF.0097 forward dynamic   3153 Port-channel1.EFP2051
+   0   0000.A0FF.010C forward dynamic   3133 Port-channel1.EFP2051
 
-        Bridge-domain 2052 (2 ports in all)
-        State: UP                    Mac learning: Enabled
-        Aging-Timer: 3600 second(s)
-            vfi VPLS-2052 neighbor 10.120.202.64 2052
-        1 ports belonging to split-horizon group 0
-            Port-channel1 service instance 2052 (split-horizon)
-           AED MAC address    Policy  Tag       Age  Pseudoport
-           0   0000.A0FF.0015 forward dynamic   3141 Port-channel1.EFP2052
-           0   0000.A0FF.002C forward dynamic   3143 Port-channel1.EFP2052
+Bridge-domain 2052 (2 ports in all)
+State: UP                    Mac learning: Enabled
+Aging-Timer: 3600 second(s)
+    vfi VPLS-2052 neighbor 10.120.202.64 2052
+1 ports belonging to split-horizon group 0
+    Port-channel1 service instance 2052 (split-horizon)
+   AED MAC address    Policy  Tag       Age  Pseudoport
+   0   0000.A0FF.0015 forward dynamic   3141 Port-channel1.EFP2052
+   0   0000.A0FF.002C forward dynamic   3143 Port-channel1.EFP2052
     

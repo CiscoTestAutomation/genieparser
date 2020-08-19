@@ -1,101 +1,101 @@
-        Flags: L - Local, U - User, SG - Static Group, VG - Virtual Group,
-               SS - Static Source, VS - Virtual Source,
-               Ac - Group accounted towards access control limit
+Flags: L - Local, U - User, SG - Static Group, VG - Virtual Group,
+       SS - Static Source, VS - Virtual Source,
+       Ac - Group accounted towards access control limit
 
-        Interface:        GigabitEthernet1
-        Group:                239.1.1.1
-        Flags:                L U 
-        Uptime:                00:05:06
-        Group mode:        INCLUDE
-        Last reporter:        10.1.2.1
-        Source list is empty
+Interface:        GigabitEthernet1
+Group:                239.1.1.1
+Flags:                L U 
+Uptime:                00:05:06
+Group mode:        INCLUDE
+Last reporter:        10.1.2.1
+Source list is empty
 
-        Interface:        GigabitEthernet1
-        Group:                239.3.3.3
-        Flags:                L 
-        Uptime:                00:05:06
-        Group mode:        INCLUDE
-        Last reporter:        10.1.2.1
-        Group source list: (C - Cisco Src Report, U - URD, R - Remote, S - Static,
-                            V - Virtual, M - SSM Mapping, L - Local,
-                            Ac - Channel accounted towards access control limit)
-          Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          10.4.1.1         00:05:06  stopped   stopped   Yes  L
+Interface:        GigabitEthernet1
+Group:                239.3.3.3
+Flags:                L 
+Uptime:                00:05:06
+Group mode:        INCLUDE
+Last reporter:        10.1.2.1
+Group source list: (C - Cisco Src Report, U - URD, R - Remote, S - Static,
+                    V - Virtual, M - SSM Mapping, L - Local,
+                    Ac - Channel accounted towards access control limit)
+  Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
+  10.4.1.1         00:05:06  stopped   stopped   Yes  L
 
-        Interface:        GigabitEthernet1
-        Group:                239.2.2.2
-        Flags:                L U 
-        Uptime:                00:05:06
-        Group mode:        INCLUDE
-        Last reporter:        10.1.2.1
-        Source list is empty
+Interface:        GigabitEthernet1
+Group:                239.2.2.2
+Flags:                L U 
+Uptime:                00:05:06
+Group mode:        INCLUDE
+Last reporter:        10.1.2.1
+Source list is empty
 
-        Interface:        GigabitEthernet1
-        Group:                239.5.5.5
-        Flags:                SG 
-        Uptime:                00:05:06
-        Group mode:        INCLUDE
-        Last reporter:        0.0.0.0
-        Source list is empty
+Interface:        GigabitEthernet1
+Group:                239.5.5.5
+Flags:                SG 
+Uptime:                00:05:06
+Group mode:        INCLUDE
+Last reporter:        0.0.0.0
+Source list is empty
 
-        Interface:        GigabitEthernet1
-        Group:                239.4.4.4
-        Flags:                L 
-        Uptime:                00:05:06
-        Group mode:        INCLUDE
-        Last reporter:        10.1.2.1
-        Group source list: (C - Cisco Src Report, U - URD, R - Remote, S - Static,
-                            V - Virtual, M - SSM Mapping, L - Local,
-                            Ac - Channel accounted towards access control limit)
-          Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          10.4.1.2         00:05:06  stopped   stopped   Yes  L
+Interface:        GigabitEthernet1
+Group:                239.4.4.4
+Flags:                L 
+Uptime:                00:05:06
+Group mode:        INCLUDE
+Last reporter:        10.1.2.1
+Group source list: (C - Cisco Src Report, U - URD, R - Remote, S - Static,
+                    V - Virtual, M - SSM Mapping, L - Local,
+                    Ac - Channel accounted towards access control limit)
+  Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
+  10.4.1.2         00:05:06  stopped   stopped   Yes  L
 
-        Interface:        GigabitEthernet1
-        Group:                239.7.7.7
-        Flags:                SS 
-        Uptime:                00:05:06
-        Group mode:        INCLUDE
-        Last reporter:        0.0.0.0
-        Group source list: (C - Cisco Src Report, U - URD, R - Remote, S - Static,
-                            V - Virtual, M - SSM Mapping, L - Local,
-                            Ac - Channel accounted towards access control limit)
-          Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          10.16.2.1        00:05:06  stopped   stopped   Yes  S
+Interface:        GigabitEthernet1
+Group:                239.7.7.7
+Flags:                SS 
+Uptime:                00:05:06
+Group mode:        INCLUDE
+Last reporter:        0.0.0.0
+Group source list: (C - Cisco Src Report, U - URD, R - Remote, S - Static,
+                    V - Virtual, M - SSM Mapping, L - Local,
+                    Ac - Channel accounted towards access control limit)
+  Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
+  10.16.2.1        00:05:06  stopped   stopped   Yes  S
 
-        Interface:        GigabitEthernet1
-        Group:                239.6.6.6
-        Flags:                SG 
-        Uptime:                00:05:06
-        Group mode:        INCLUDE
-        Last reporter:        0.0.0.0
-        Source list is empty
+Interface:        GigabitEthernet1
+Group:                239.6.6.6
+Flags:                SG 
+Uptime:                00:05:06
+Group mode:        INCLUDE
+Last reporter:        0.0.0.0
+Source list is empty
 
-        Interface:        GigabitEthernet1
-        Group:                239.9.9.9
-        Flags:                Ac 
-        Uptime:                00:23:15
-        Group mode:        EXCLUDE (Expires: 00:06:06)
-        Last reporter:        10.1.2.2
-        Source list is empty
+Interface:        GigabitEthernet1
+Group:                239.9.9.9
+Flags:                Ac 
+Uptime:                00:23:15
+Group mode:        EXCLUDE (Expires: 00:06:06)
+Last reporter:        10.1.2.2
+Source list is empty
 
-        Interface:        GigabitEthernet1
-        Group:                239.8.8.8
-        Flags:                SS 
-        Uptime:                00:05:06
-        Group mode:        INCLUDE
-        Last reporter:        0.0.0.0
-        Group source list: (C - Cisco Src Report, U - URD, R - Remote, S - Static,
-                            V - Virtual, M - SSM Mapping, L - Local,
-                            Ac - Channel accounted towards access control limit)
-          Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          10.16.2.1        00:05:06  stopped   stopped   Yes  S
-          10.16.2.2        00:05:06  stopped   stopped   Yes  S
+Interface:        GigabitEthernet1
+Group:                239.8.8.8
+Flags:                SS 
+Uptime:                00:05:06
+Group mode:        INCLUDE
+Last reporter:        0.0.0.0
+Group source list: (C - Cisco Src Report, U - URD, R - Remote, S - Static,
+                    V - Virtual, M - SSM Mapping, L - Local,
+                    Ac - Channel accounted towards access control limit)
+  Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
+  10.16.2.1        00:05:06  stopped   stopped   Yes  S
+  10.16.2.2        00:05:06  stopped   stopped   Yes  S
 
-        Interface:        GigabitEthernet1
-        Group:                224.0.1.40
-        Flags:                L U 
-        Uptime:                00:25:33
-        Group mode:        INCLUDE
-        Last reporter:        10.1.2.1
-        Source list is empty
+Interface:        GigabitEthernet1
+Group:                224.0.1.40
+Flags:                L U 
+Uptime:                00:25:33
+Group mode:        INCLUDE
+Last reporter:        10.1.2.1
+Source list is empty
     

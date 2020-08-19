@@ -1,12 +1,12 @@
 
-        R1#show ip eigrp vrf VRF1 neighbors detail 
-        EIGRP-IPv4 VR(foo) Address-Family Neighbors for AS(1) VRF(VRF1)
-        H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq
-                                                   (sec)         (ms)       Cnt Num
-        0   10.1.2.2                Gi3                      11 00:01:03    2   100  0  2
-        Version 23.0/2.0, Retrans: 0, Retries: 0
-        Topology-ids from peer - 0 
-        Topologies advertised to peer:   base
+R1#show ip eigrp vrf VRF1 neighbors detail 
+EIGRP-IPv4 VR(foo) Address-Family Neighbors for AS(1) VRF(VRF1)
+H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq
+                                           (sec)         (ms)       Cnt Num
+0   10.1.2.2                Gi3                      11 00:01:03    2   100  0  2
+Version 23.0/2.0, Retrans: 0, Retries: 0
+Topology-ids from peer - 0 
+Topologies advertised to peer:   base
 
-        Max Nbrs: 0, Current Nbrs: 0
+Max Nbrs: 0, Current Nbrs: 0
     

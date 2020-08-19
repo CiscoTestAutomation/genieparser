@@ -1,12 +1,12 @@
 
-        R1_xe#show ip pim vrf VRF1 bsr-router
-        PIMv2 Bootstrap information
-          BSR address: 10.1.5.5 (?)
-          Uptime:      00:00:26, BSR Priority: 0, Hash mask length: 0
-          Expires:     00:01:45
-          Candidate RP: 10.1.5.1(GigabitEthernet3)
-            Holdtime 150 seconds
-            Advertisement interval 60 seconds
-            Next advertisement in 00:00:27
-            Candidate RP priority : 5
+R1_xe#show ip pim vrf VRF1 bsr-router
+PIMv2 Bootstrap information
+  BSR address: 10.1.5.5 (?)
+  Uptime:      00:00:26, BSR Priority: 0, Hash mask length: 0
+  Expires:     00:01:45
+  Candidate RP: 10.1.5.1(GigabitEthernet3)
+    Holdtime 150 seconds
+    Advertisement interval 60 seconds
+    Next advertisement in 00:00:27
+    Candidate RP priority : 5
     

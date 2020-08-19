@@ -1,21 +1,21 @@
-    Router#show mpls ldp neighbor
-    Load for five secs: 59%/0%; one minute: 11%; five minutes: 7%
-    Time source is NTP, 20:53:42.709 EST Fri Nov 11 2016
-    Peer LDP Ident: 10.169.197.252:0; Local LDP Ident 10.169.197.254:0
-        TCP connection: 10.169.197.252.646 - 10.169.197.254.20170
-        State: Oper; Msgs sent/rcvd: 851/852; Downstream
-        Up time: 04:50:30
-        LDP discovery sources:
-          GigabitEthernet0/0/0, Src IP addr: 10.169.197.93
-        Addresses bound to peer LDP Ident:
-          10.169.197.252 10.120.202.49    10.169.197.101 10.16.190.254
-          10.169.197.93
-    Peer LDP Ident: 10.169.197.253:0; Local LDP Ident 10.169.197.254:0
-        TCP connection: 10.169.197.253.646 - 10.169.197.254.42450
-        State: Oper; Msgs sent/rcvd: 858/306; Downstream
-        Up time: 04:50:30
-        LDP discovery sources:
-          GigabitEthernet0/0/2, Src IP addr: 10.169.197.97
-        Addresses bound to peer LDP Ident:
-          10.186.1.2        10.120.202.57    10.169.197.97
+Router#show mpls ldp neighbor
+Load for five secs: 59%/0%; one minute: 11%; five minutes: 7%
+Time source is NTP, 20:53:42.709 EST Fri Nov 11 2016
+Peer LDP Ident: 10.169.197.252:0; Local LDP Ident 10.169.197.254:0
+    TCP connection: 10.169.197.252.646 - 10.169.197.254.20170
+    State: Oper; Msgs sent/rcvd: 851/852; Downstream
+    Up time: 04:50:30
+    LDP discovery sources:
+      GigabitEthernet0/0/0, Src IP addr: 10.169.197.93
+    Addresses bound to peer LDP Ident:
+      10.169.197.252 10.120.202.49    10.169.197.101 10.16.190.254
+      10.169.197.93
+Peer LDP Ident: 10.169.197.253:0; Local LDP Ident 10.169.197.254:0
+    TCP connection: 10.169.197.253.646 - 10.169.197.254.42450
+    State: Oper; Msgs sent/rcvd: 858/306; Downstream
+    Up time: 04:50:30
+    LDP discovery sources:
+      GigabitEthernet0/0/2, Src IP addr: 10.169.197.97
+    Addresses bound to peer LDP Ident:
+      10.186.1.2        10.120.202.57    10.169.197.97
     

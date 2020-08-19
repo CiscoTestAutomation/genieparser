@@ -1,37 +1,37 @@
-        ErrDisable Reason            Timer Status
-        -----------------            --------------
-        arp-inspection               Disabled
-        bpduguard                    Disabled
-        channel-misconfig (STP)      Disabled
-        dhcp-rate-limit              Disabled
-        dtp-flap                     Disabled
-        gbic-invalid                 Disabled
-        inline-power                 Disabled
-        l2ptguard                    Disabled
-        link-flap                    Disabled
-        mac-limit                    Disabled
-        link-monitor-failure         Disabled
-        loopback                     Disabled
-        oam-remote-failure           Disabled
-        pagp-flap                    Disabled
-        port-mode-failure            Disabled
-        pppoe-ia-rate-limit          Disabled
-        psecure-violation            Disabled
-        security-violation           Disabled
-        sfp-config-mismatch          Disabled
-        storm-control                Disabled
-        udld                         Disabled
-        vmps                         Disabled
-        psp                          Disabled
-        dual-active-recovery         Disabled
-        evc-lite input mapping fa    Disabled
-        Recovery command: "clear     Disabled
+ErrDisable Reason            Timer Status
+-----------------            --------------
+arp-inspection               Disabled
+bpduguard                    Disabled
+channel-misconfig (STP)      Disabled
+dhcp-rate-limit              Disabled
+dtp-flap                     Disabled
+gbic-invalid                 Disabled
+inline-power                 Disabled
+l2ptguard                    Disabled
+link-flap                    Disabled
+mac-limit                    Disabled
+link-monitor-failure         Disabled
+loopback                     Disabled
+oam-remote-failure           Disabled
+pagp-flap                    Disabled
+port-mode-failure            Disabled
+pppoe-ia-rate-limit          Disabled
+psecure-violation            Disabled
+security-violation           Disabled
+sfp-config-mismatch          Disabled
+storm-control                Disabled
+udld                         Disabled
+vmps                         Disabled
+psp                          Disabled
+dual-active-recovery         Disabled
+evc-lite input mapping fa    Disabled
+Recovery command: "clear     Disabled
 
-        Timer interval: 333 seconds
+Timer interval: 333 seconds
 
-        Interfaces that will be enabled at the next timeout:
+Interfaces that will be enabled at the next timeout:
 
-        Interface      Errdisable reason      Time left(sec)
-        ---------    ---------------------    --------------
-          Fa2/4                bpduguard          273
+Interface      Errdisable reason      Time left(sec)
+---------    ---------------------    --------------
+  Fa2/4                bpduguard          273
     

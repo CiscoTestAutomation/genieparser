@@ -1,17 +1,17 @@
 
-        Device# show cdp neighbors detail
-        Device ID: device.cisco.com
-        Entry address(es):
-            IPv6 address: FE80::203:E3FF:FE6A:BF81  (link-local)
-            IPv6 address: 2001:DB8:1000:8A10::C0A8:BC06  (global unicast)
-        Platform: cisco 3640,  Capabilities: Router
-        Interface: Ethernet0/1,  Port ID (outgoing port): Ethernet0/1
-        Holdtime : 160 sec
-        Version :
-        Cisco Internetwork Operating System Software IOS (tm) 3600 Software (C3640-A2IS-M), Version 12.2(25)SEB4, RELE)
-        advertisement version: 2
-        Duplex Mode: half
-        Native VLAN: 42
-        VTP Management Domain: ‘Accounting Group’
+Device# show cdp neighbors detail
+Device ID: device.cisco.com
+Entry address(es):
+    IPv6 address: FE80::203:E3FF:FE6A:BF81  (link-local)
+    IPv6 address: 2001:DB8:1000:8A10::C0A8:BC06  (global unicast)
+Platform: cisco 3640,  Capabilities: Router
+Interface: Ethernet0/1,  Port ID (outgoing port): Ethernet0/1
+Holdtime : 160 sec
+Version :
+Cisco Internetwork Operating System Software IOS (tm) 3600 Software (C3640-A2IS-M), Version 12.2(25)SEB4, RELE)
+advertisement version: 2
+Duplex Mode: half
+Native VLAN: 42
+VTP Management Domain: ‘Accounting Group’
 
     

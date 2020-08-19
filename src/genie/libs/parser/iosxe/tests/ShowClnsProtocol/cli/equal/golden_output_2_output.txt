@@ -1,21 +1,21 @@
 
-        IS-IS Router: <Null Tag> (0x10000)
-          System Id: 0000.00ff.0007.00  IS-Type: level-1
-          Manual area address(es):
-            47.0002
-          Routing for area address(es):
-            47.0002
-          Interfaces supported by IS-IS:
-            GigabitEthernet4 - IP - IPv6
-            GigabitEthernet3 - IP - IPv6
-            GigabitEthernet2 - IP - IPv6
-            Loopback0 - IP - IPv6
-          Redistribute:
-            static (on by default)
-          Distance for L2 CLNS routes: 110
-          RRR level: level-1
-          Generate narrow metrics: none
-          Accept narrow metrics:   none
-          Generate wide metrics:   level-1-2
-          Accept wide metrics:     level-1-2
+IS-IS Router: <Null Tag> (0x10000)
+  System Id: 0000.00ff.0007.00  IS-Type: level-1
+  Manual area address(es):
+    47.0002
+  Routing for area address(es):
+    47.0002
+  Interfaces supported by IS-IS:
+    GigabitEthernet4 - IP - IPv6
+    GigabitEthernet3 - IP - IPv6
+    GigabitEthernet2 - IP - IPv6
+    Loopback0 - IP - IPv6
+  Redistribute:
+    static (on by default)
+  Distance for L2 CLNS routes: 110
+  RRR level: level-1
+  Generate narrow metrics: none
+  Accept narrow metrics:   none
+  Generate wide metrics:   level-1-2
+  Accept wide metrics:     level-1-2
     

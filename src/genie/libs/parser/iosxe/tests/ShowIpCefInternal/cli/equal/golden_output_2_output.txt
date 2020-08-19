@@ -1,47 +1,47 @@
 
-        R1_xe#show ip cef 10.100.5.5 internal
-        Load for five secs: 0%/0%; one minute: 0%; five minutes: 1%
-        Time source is NTP, 01:05:14.418 EST Tue Nov 5 2019
+R1_xe#show ip cef 10.100.5.5 internal
+Load for five secs: 0%/0%; one minute: 0%; five minutes: 1%
+Time source is NTP, 01:05:14.418 EST Tue Nov 5 2019
 
-        10.100.5.5/32, epoch 3, RIB[I], refcnt 6, per-destination sharing
-          sources: RIB, LTE 
-          feature space:
-            IPRM: 0x00028000
-            Broker: linked, distributed at 4th priority
-            LFD: 10.100.5.5/32 2 local labels
-            dflt local label info: global/25 [0x23]
-            sr local label info: global/17000 [0x1B]
-                contains path extension list
-                dflt disposition chain 0x7F2B22651570
-                  label 63300
-                  FRR Primary
-                    <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.19.198.25>
-                dflt label switch chain 0x7F2B22651570
-                  label 63300
-                  FRR Primary
-                    <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.19.198.25>
-                sr disposition chain 0x7F2B22651440
-                  label 17000
-                  FRR Primary
-                    <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.19.198.25>
-                sr label switch chain 0x7F2B22651440
-                  label 17000
-                  FRR Primary
-                    <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.19.198.25>
-          ifnums:
-            GigabitEthernet0/1/6(15): 10.19.198.25
-            GigabitEthernet0/1/7(16): 10.19.198.29
-          path list 7F2B22A8B0A0, 477 locks, per-destination, flags 0x4D [shble, hvsh, rif, hwcn]
-            path 7F2B22A6C220, share 1/1, type attached nexthop, for IPv4, flags [has-rpr]
-              MPLS short path extensions: [rib | prfmfi | lblmrg | srlbl] MOI flags = 0x420 label 63300
-              nexthop 10.19.198.25 GigabitEthernet0/1/6 label [63300|68544](elc)-(local:25), IP adj out of GigabitEthernet0/1/6, addr 10.19.198.25 7F2B21B247D8
-                repair: attached-nexthop 10.19.198.29 GigabitEthernet0/1/7 (7F2B22A6C3C0)
-            path 7F2B22A6C3C0, share 1/1, type attached nexthop, for IPv4, flags [rpr, rpr-only]
-              MPLS short path extensions: [rib | prfmfi | lblmrg | srlbl] MOI flags = 0x1 label 17000
-              nexthop 10.19.198.29 GigabitEthernet0/1/7 label 17000-(local:17000), repair, IP adj out of GigabitEthernet0/1/7, addr 10.19.198.29 7F2B21B24378
-          output chain:
-            label [63300|68544](elc)-(local:25)
-            FRR Primary (0x80007F2B146ED518)
-              <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.19.198.25 7F2B21B245A8>
-              <repair:  TAG adj out of GigabitEthernet0/1/7, addr 10.19.198.29 7F2B21B24148>
+10.100.5.5/32, epoch 3, RIB[I], refcnt 6, per-destination sharing
+  sources: RIB, LTE 
+  feature space:
+    IPRM: 0x00028000
+    Broker: linked, distributed at 4th priority
+    LFD: 10.100.5.5/32 2 local labels
+    dflt local label info: global/25 [0x23]
+    sr local label info: global/17000 [0x1B]
+        contains path extension list
+        dflt disposition chain 0x7F2B22651570
+          label 63300
+          FRR Primary
+            <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.19.198.25>
+        dflt label switch chain 0x7F2B22651570
+          label 63300
+          FRR Primary
+            <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.19.198.25>
+        sr disposition chain 0x7F2B22651440
+          label 17000
+          FRR Primary
+            <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.19.198.25>
+        sr label switch chain 0x7F2B22651440
+          label 17000
+          FRR Primary
+            <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.19.198.25>
+  ifnums:
+    GigabitEthernet0/1/6(15): 10.19.198.25
+    GigabitEthernet0/1/7(16): 10.19.198.29
+  path list 7F2B22A8B0A0, 477 locks, per-destination, flags 0x4D [shble, hvsh, rif, hwcn]
+    path 7F2B22A6C220, share 1/1, type attached nexthop, for IPv4, flags [has-rpr]
+      MPLS short path extensions: [rib | prfmfi | lblmrg | srlbl] MOI flags = 0x420 label 63300
+      nexthop 10.19.198.25 GigabitEthernet0/1/6 label [63300|68544](elc)-(local:25), IP adj out of GigabitEthernet0/1/6, addr 10.19.198.25 7F2B21B247D8
+        repair: attached-nexthop 10.19.198.29 GigabitEthernet0/1/7 (7F2B22A6C3C0)
+    path 7F2B22A6C3C0, share 1/1, type attached nexthop, for IPv4, flags [rpr, rpr-only]
+      MPLS short path extensions: [rib | prfmfi | lblmrg | srlbl] MOI flags = 0x1 label 17000
+      nexthop 10.19.198.29 GigabitEthernet0/1/7 label 17000-(local:17000), repair, IP adj out of GigabitEthernet0/1/7, addr 10.19.198.29 7F2B21B24378
+  output chain:
+    label [63300|68544](elc)-(local:25)
+    FRR Primary (0x80007F2B146ED518)
+      <primary: TAG adj out of GigabitEthernet0/1/6, addr 10.19.198.25 7F2B21B245A8>
+      <repair:  TAG adj out of GigabitEthernet0/1/7, addr 10.19.198.29 7F2B21B24148>
     

@@ -1,5 +1,5 @@
 
-        show environment | include Fan Speed
-        P6    Temp: FC PWM1    Fan Speed 45%    25 Celsius
-        P7    Temp: FC PWM1    Fan Speed 45%    25 Celsius
+show environment | include Fan Speed
+P6    Temp: FC PWM1    Fan Speed 45%    25 Celsius
+P7    Temp: FC PWM1    Fan Speed 45%    25 Celsius
     

@@ -1,19 +1,19 @@
 
-        Device# show ip eigrp neighbors detail
+Device# show ip eigrp neighbors detail
 
-        EIGRP-IPv4 Neighbors for AS(100)
-        H   Address                 Interface       Hold Uptime   SRTT   RTO  Q  Seq
-                                            (sec)         (ms)       Cnt Num
-        0   10.1.2.1                 Et1/0             11 00:00:25   10   200  0  5
-        Version 5.1/3.0, Retrans: 2, Retries: 0, Prefixes: 1
-        Topology-ids from peer - 0
+EIGRP-IPv4 Neighbors for AS(100)
+H   Address                 Interface       Hold Uptime   SRTT   RTO  Q  Seq
+                                    (sec)         (ms)       Cnt Num
+0   10.1.2.1                 Et1/0             11 00:00:25   10   200  0  5
+Version 5.1/3.0, Retrans: 2, Retries: 0, Prefixes: 1
+Topology-ids from peer - 0
 
-        EIGRP-IPv4 Neighbors for AS(100)
-        H   Address                 Interface       Hold Uptime   SRTT   RTO  Q  Seq
-                                            (sec)         (ms)       Cnt Num
-        0   10.1.2.1                 Et1/0             11 00:02:31   12   200  0  6
+EIGRP-IPv4 Neighbors for AS(100)
+H   Address                 Interface       Hold Uptime   SRTT   RTO  Q  Seq
+                                    (sec)         (ms)       Cnt Num
+0   10.1.2.1                 Et1/0             11 00:02:31   12   200  0  6
 
-        Time since Restart 00:01:34
-        Version 5.1/3.0, Retrans: 2, Retries: 0, Prefixes: 1
-        Topology-ids from peer - 0
+Time since Restart 00:01:34
+Version 5.1/3.0, Retrans: 2, Retries: 0, Prefixes: 1
+Topology-ids from peer - 0
     

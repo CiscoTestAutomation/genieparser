@@ -1,37 +1,37 @@
 
-        Certificate
-          Status: Available
-          Certificate Serial Number (hex): 793B572700000003750B
-          Certificate Usage: General Purpose
-          Issuer: 
-            cn=Cisco Manufacturing CA SHA2
-            o=Cisco
-          Subject:
-            Name: WS-C3850-24P-0057D21BC800
-            Serial Number: PID:WS-C3850-24P SN:FCW1947C0GF
-            cn=WS-C3850-24P-0057D21BC800
-            serialNumber=PID:WS-C3850-24P SN:FCW1947C0GF
-          CRL Distribution Points: 
-            http://www.cisco.com/security/pki/crl/cmca2.crl
-          Validity Date: 
-            start date: 00:34:52 UTC Nov 20 2015
-            end   date: 00:44:52 UTC Nov 20 2025
-          Associated Trustpoints: CISCO_IDEVID_SUDI 
+Certificate
+  Status: Available
+  Certificate Serial Number (hex): 793B572700000003750B
+  Certificate Usage: General Purpose
+  Issuer: 
+    cn=Cisco Manufacturing CA SHA2
+    o=Cisco
+  Subject:
+    Name: WS-C3850-24P-0057D21BC800
+    Serial Number: PID:WS-C3850-24P SN:FCW1947C0GF
+    cn=WS-C3850-24P-0057D21BC800
+    serialNumber=PID:WS-C3850-24P SN:FCW1947C0GF
+  CRL Distribution Points: 
+    http://www.cisco.com/security/pki/crl/cmca2.crl
+  Validity Date: 
+    start date: 00:34:52 UTC Nov 20 2015
+    end   date: 00:44:52 UTC Nov 20 2025
+  Associated Trustpoints: CISCO_IDEVID_SUDI 
 
-        CA Certificate
-          Status: Available
-          Certificate Serial Number (hex): 02
-          Certificate Usage: Signature
-          Issuer: 
-            cn=Cisco Root CA M2
-            o=Cisco
-          Subject: 
-            cn=Cisco Manufacturing CA SHA2
-            o=Cisco
-          CRL Distribution Points: 
-            http://www.cisco.com/security/pki/crl/crcam2.crl
-          Validity Date: 
-            start date: 13:50:58 UTC Nov 12 2012
-            end   date: 13:00:17 UTC Nov 12 2037
-          Associated Trustpoints: CISCO_IDEVID_SUDI Trustpool
+CA Certificate
+  Status: Available
+  Certificate Serial Number (hex): 02
+  Certificate Usage: Signature
+  Issuer: 
+    cn=Cisco Root CA M2
+    o=Cisco
+  Subject: 
+    cn=Cisco Manufacturing CA SHA2
+    o=Cisco
+  CRL Distribution Points: 
+    http://www.cisco.com/security/pki/crl/crcam2.crl
+  Validity Date: 
+    start date: 13:50:58 UTC Nov 12 2012
+    end   date: 13:00:17 UTC Nov 12 2037
+  Associated Trustpoints: CISCO_IDEVID_SUDI Trustpool
         

@@ -1,82 +1,82 @@
-        Cisco IOS XE Software, Version 16.06.05
-        Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.5, RELEASE SOFTWARE (fc3)
-        Technical Support: http://www.cisco.com/techsupport
-        Copyright (c) 1986-2018 by Cisco Systems, Inc.
-        Compiled Mon 10-Dec-18 13:10 by mcpre
+Cisco IOS XE Software, Version 16.06.05
+Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.5, RELEASE SOFTWARE (fc3)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2018 by Cisco Systems, Inc.
+Compiled Mon 10-Dec-18 13:10 by mcpre
 
 
-        Cisco IOS-XE software, Copyright (c) 2005-2018 by cisco Systems, Inc.
-        All rights reserved.  Certain components of Cisco IOS-XE software are
-        licensed under the GNU General Public License ("GPL") Version 2.0.  The
-        software code licensed under GPL Version 2.0 is free software that comes
-        with ABSOLUTELY NO WARRANTY.  You can redistribute and/or modify such
-        GPL code under the terms of GPL Version 2.0.  For more details, see the
-        documentation or "License Notice" file accompanying the IOS-XE software,
-        or the applicable URL provided on the flyer accompanying the IOS-XE
-        software.
+Cisco IOS-XE software, Copyright (c) 2005-2018 by cisco Systems, Inc.
+All rights reserved.  Certain components of Cisco IOS-XE software are
+licensed under the GNU General Public License ("GPL") Version 2.0.  The
+software code licensed under GPL Version 2.0 is free software that comes
+with ABSOLUTELY NO WARRANTY.  You can redistribute and/or modify such
+GPL code under the terms of GPL Version 2.0.  For more details, see the
+documentation or "License Notice" file accompanying the IOS-XE software,
+or the applicable URL provided on the flyer accompanying the IOS-XE
+software.
 
 
-        ROM: IOS-XE ROMMON
+ROM: IOS-XE ROMMON
 
-        isr4k uptime is 2 days, 3 hours, 18 minutes
-        Uptime for this control processor is 2 days, 3 hours, 19 minutes
-        System returned to ROM by Reload Command at 07:15:43 UTC Fri Feb 1 2019
-        System restarted at 07:19:15 UTC Fri Feb 1 2019
-        System image file is "bootflash:isr4400-universalk10.115.6.5.SPA.bin"
-        Last reload reason: Reload Command
-
-
-
-        This product contains cryptographic features and is subject to United
-        States and local country laws governing import, export, transfer and
-        use. Delivery of Cisco cryptographic products does not imply
-        third-party authority to import, export, distribute or use encryption.
-        Importers, exporters, distributors and users are responsible for
-        compliance with U.S. and local country laws. By using this product you
-        agree to comply with applicable laws and regulations. If you are unable
-        to comply with U.S. and local laws, return this product immediately.
-
-        A summary of U.S. laws governing Cisco cryptographic products may be found at:
-        http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
-
-        If you require further assistance please contact us by sending email to
-        export@cisco.com.
+isr4k uptime is 2 days, 3 hours, 18 minutes
+Uptime for this control processor is 2 days, 3 hours, 19 minutes
+System returned to ROM by Reload Command at 07:15:43 UTC Fri Feb 1 2019
+System restarted at 07:19:15 UTC Fri Feb 1 2019
+System image file is "bootflash:isr4400-universalk10.115.6.5.SPA.bin"
+Last reload reason: Reload Command
 
 
 
-        Suite License Information for Module:'esg'
+This product contains cryptographic features and is subject to United
+States and local country laws governing import, export, transfer and
+use. Delivery of Cisco cryptographic products does not imply
+third-party authority to import, export, distribute or use encryption.
+Importers, exporters, distributors and users are responsible for
+compliance with U.S. and local country laws. By using this product you
+agree to comply with applicable laws and regulations. If you are unable
+to comply with U.S. and local laws, return this product immediately.
 
-        --------------------------------------------------------------------------------
-        Suite                 Suite Current         Type           Suite Next reboot
-        --------------------------------------------------------------------------------
-        FoundationSuiteK9     None                  None           None
-        securityk9
-        appxk9
+A summary of U.S. laws governing Cisco cryptographic products may be found at:
+http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
 
-        AdvUCSuiteK9          None                  None           None
-        uck9
-        cme-srst
-        cube
+If you require further assistance please contact us by sending email to
+export@cisco.com.
 
 
-        Technology Package License Information:
 
-        -----------------------------------------------------------------
-        Technology    Technology-package           Technology-package
-                      Current       Type           Next reboot
-        ------------------------------------------------------------------
-        appxk9           appxk9           RightToUse       appxk9
-        uck9             None             None             None
-        securityk9       securityk9       RightToUse       securityk9
-        ipbase           ipbasek9         Permanent        ipbasek9
+Suite License Information for Module:'esg'
 
-        cisco ISR4451-X/K9 (2RU) processor with 1795979K/6147K bytes of memory.
-        Processor board ID FGL273610NK
-        1 Virtual Ethernet interface
-        4 Gigabit Ethernet interfaces
-        32768K bytes of non-volatile configuration memory.
-        4194304K bytes of physical memory.
-        7341807K bytes of flash memory at bootflash:.
-        0K bytes of WebUI ODM Files at webui:.
+--------------------------------------------------------------------------------
+Suite                 Suite Current         Type           Suite Next reboot
+--------------------------------------------------------------------------------
+FoundationSuiteK9     None                  None           None
+securityk9
+appxk9
 
-        Configuration register is 0x2102
+AdvUCSuiteK9          None                  None           None
+uck9
+cme-srst
+cube
+
+
+Technology Package License Information:
+
+-----------------------------------------------------------------
+Technology    Technology-package           Technology-package
+              Current       Type           Next reboot
+------------------------------------------------------------------
+appxk9           appxk9           RightToUse       appxk9
+uck9             None             None             None
+securityk9       securityk9       RightToUse       securityk9
+ipbase           ipbasek9         Permanent        ipbasek9
+
+cisco ISR4451-X/K9 (2RU) processor with 1795979K/6147K bytes of memory.
+Processor board ID FGL273610NK
+1 Virtual Ethernet interface
+4 Gigabit Ethernet interfaces
+32768K bytes of non-volatile configuration memory.
+4194304K bytes of physical memory.
+7341807K bytes of flash memory at bootflash:.
+0K bytes of WebUI ODM Files at webui:.
+
+Configuration register is 0x2102

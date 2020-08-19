@@ -1,7 +1,7 @@
 
-        P2#show ip msdp vrf VRF1 sa-cache
-        MSDP Source-Active Cache - 1 entries
-        (10.1.4.15, 225.1.1.1), RP 10.1.100.1, AS ?,00:19:29/00:05:14, Peer 10.1.100.1
-        Learned from peer 10.1.100.1, RPF peer 10.1.100.1, 
-        SAs received: 14, Encapsulated data received: 0
+P2#show ip msdp vrf VRF1 sa-cache
+MSDP Source-Active Cache - 1 entries
+(10.1.4.15, 225.1.1.1), RP 10.1.100.1, AS ?,00:19:29/00:05:14, Peer 10.1.100.1
+Learned from peer 10.1.100.1, RPF peer 10.1.100.1, 
+SAs received: 14, Encapsulated data received: 0
     

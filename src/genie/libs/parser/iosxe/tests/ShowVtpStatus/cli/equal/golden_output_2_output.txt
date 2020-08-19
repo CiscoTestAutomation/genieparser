@@ -1,12 +1,12 @@
-        VTP Version : running VTP1 (VTP2 capable)
-        Configuration Revision : 0
-        Maximum VLANs supported locally : 1005
-        Number of existing VLANs : 100
-        VTP Operating Mode : Transparent
-        VTP Domain Name : <>
-        VTP Pruning Mode : Enabled
-        VTP V2 Mode : Disabled
-        VTP Traps Generation : Enabled
-        MD5 digest : 0x11 0xA1 0xB2 0x77 0x22 0x50 0xC3 0x99
-        Configuration last modified by 0.0.0.0 at 0-0-00 00:00:00
+VTP Version : running VTP1 (VTP2 capable)
+Configuration Revision : 0
+Maximum VLANs supported locally : 1005
+Number of existing VLANs : 100
+VTP Operating Mode : Transparent
+VTP Domain Name : <>
+VTP Pruning Mode : Enabled
+VTP V2 Mode : Disabled
+VTP Traps Generation : Enabled
+MD5 digest : 0x11 0xA1 0xB2 0x77 0x22 0x50 0xC3 0x99
+Configuration last modified by 0.0.0.0 at 0-0-00 00:00:00
     

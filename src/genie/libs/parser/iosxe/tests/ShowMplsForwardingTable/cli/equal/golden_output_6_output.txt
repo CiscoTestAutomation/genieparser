@@ -1,9 +1,9 @@
 
-        show mpls forwarding-table
-        Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
-        Label      Label      or Tunnel Id     Switched      interface
-        24      No Label   10.23.120.0/24   0             Gi2.120    10.12.120.2
-                No Label   10.23.120.0/24   0             Gi3.120    10.13.120.3
-        25      No Label   10.23.120.0/24[V]                                               0             Gi2.420    10.12.120.2
-                No Label   10.23.120.0/24[V]                                               0             Gi3.420    10.13.120.3  
+show mpls forwarding-table
+Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
+Label      Label      or Tunnel Id     Switched      interface
+24      No Label   10.23.120.0/24   0             Gi2.120    10.12.120.2
+        No Label   10.23.120.0/24   0             Gi3.120    10.13.120.3
+25      No Label   10.23.120.0/24[V]                                               0             Gi2.420    10.12.120.2
+        No Label   10.23.120.0/24[V]                                               0             Gi3.420    10.13.120.3  
     

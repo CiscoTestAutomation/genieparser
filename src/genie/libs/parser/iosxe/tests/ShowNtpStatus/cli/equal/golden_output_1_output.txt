@@ -1,10 +1,10 @@
-        R1#show ntp status
-        Clock is synchronized, stratum 1, reference is .LOCL.
-        nominal freq is 250.0000 Hz, actual freq is 250.0000 Hz, precision is 2**10
-        ntp uptime is 1921500 (1/100 of seconds), resolution is 4000
-        reference time is DF9FFBA0.8B020DC8 (15:43:28.543 UTC Wed Nov 21 2018)
-        clock offset is 0.0000 msec, root delay is 0.00 msec
-        root dispersion is 2.31 msec, peer dispersion is 1.20 msec
-        loopfilter state is 'CTRL' (Normal Controlled Loop), drift is 0.000000000 s/s
-        system poll interval is 16, last update was 9 sec ago.
+R1#show ntp status
+Clock is synchronized, stratum 1, reference is .LOCL.
+nominal freq is 250.0000 Hz, actual freq is 250.0000 Hz, precision is 2**10
+ntp uptime is 1921500 (1/100 of seconds), resolution is 4000
+reference time is DF9FFBA0.8B020DC8 (15:43:28.543 UTC Wed Nov 21 2018)
+clock offset is 0.0000 msec, root delay is 0.00 msec
+root dispersion is 2.31 msec, peer dispersion is 1.20 msec
+loopfilter state is 'CTRL' (Normal Controlled Loop), drift is 0.000000000 s/s
+system poll interval is 16, last update was 9 sec ago.
     

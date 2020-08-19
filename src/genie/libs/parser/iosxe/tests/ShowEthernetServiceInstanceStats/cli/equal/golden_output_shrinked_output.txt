@@ -1,6 +1,6 @@
-        1006#show ethernet service instance stats
-        Load for five secs: 1%/0%; one minute: 0%; five minutes: 0%
-        Time source is NTP, 15:44:40.696 EST Fri Nov 11 2016
+1006#show ethernet service instance stats
+Load for five secs: 1%/0%; one minute: 0%; five minutes: 0%
+Time source is NTP, 15:44:40.696 EST Fri Nov 11 2016
 
-        System maximum number of service instances: 32768
+System maximum number of service instances: 32768
     

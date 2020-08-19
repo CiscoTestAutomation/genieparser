@@ -1,59 +1,59 @@
 
-        sr_ve-hkgasr01#show segment-routing traffic-eng policy name maxsid detail
+sr_ve-hkgasr01#show segment-routing traffic-eng policy name maxsid detail
 
-        Name: maxsid (Color: 100 End-point: 10.169.196.241)
-        Status:
-            Admin: up, Operational: up for 06:35:58 (since 09-09 20:19:30.195)
-        Candidate-paths:
-            Preference 200:
-            Explicit: segment-list maxsid (active)
-                Weight: 0, Metric Type: TE
-                16071 [Prefix-SID, 10.189.5.252]
-                16072 [Prefix-SID, 10.189.5.253]
-                16071 [Prefix-SID, 10.189.5.252]
-                16072 [Prefix-SID, 10.189.5.253]
-                16071 [Prefix-SID, 10.189.5.252]
-                16072 [Prefix-SID, 10.189.5.253]
-                16071 [Prefix-SID, 10.189.5.252]
-                16072 [Prefix-SID, 10.189.5.253]
-                16071 [Prefix-SID, 10.189.5.252]
-                16072 [Prefix-SID, 10.189.5.253]
-                16071 [Prefix-SID, 10.189.5.252]
-                16072 [Prefix-SID, 10.189.5.253]
-                16063 [Prefix-SID, 10.169.196.241]
-            Preference 100:
-            Explicit: segment-list test1 (inactive)
-                Weight: 0, Metric Type: TE
-                16072 [Prefix-SID, 10.189.5.253]
-                16052 [Prefix-SID, 10.169.14.241]
-                16062 [Prefix-SID, 10.34.2.251]
-                16063 [Prefix-SID, 10.169.196.241]
-        Attributes:
-            Binding SID: 15001
-            Allocation mode: explicit
-            State: Programmed
-        Forwarding-ID: 65537 (0x1C)
-        Stats:
-            Packets: 2520       Bytes: 397042
+Name: maxsid (Color: 100 End-point: 10.169.196.241)
+Status:
+    Admin: up, Operational: up for 06:35:58 (since 09-09 20:19:30.195)
+Candidate-paths:
+    Preference 200:
+    Explicit: segment-list maxsid (active)
+        Weight: 0, Metric Type: TE
+        16071 [Prefix-SID, 10.189.5.252]
+        16072 [Prefix-SID, 10.189.5.253]
+        16071 [Prefix-SID, 10.189.5.252]
+        16072 [Prefix-SID, 10.189.5.253]
+        16071 [Prefix-SID, 10.189.5.252]
+        16072 [Prefix-SID, 10.189.5.253]
+        16071 [Prefix-SID, 10.189.5.252]
+        16072 [Prefix-SID, 10.189.5.253]
+        16071 [Prefix-SID, 10.189.5.252]
+        16072 [Prefix-SID, 10.189.5.253]
+        16071 [Prefix-SID, 10.189.5.252]
+        16072 [Prefix-SID, 10.189.5.253]
+        16063 [Prefix-SID, 10.169.196.241]
+    Preference 100:
+    Explicit: segment-list test1 (inactive)
+        Weight: 0, Metric Type: TE
+        16072 [Prefix-SID, 10.189.5.253]
+        16052 [Prefix-SID, 10.169.14.241]
+        16062 [Prefix-SID, 10.34.2.251]
+        16063 [Prefix-SID, 10.169.196.241]
+Attributes:
+    Binding SID: 15001
+    Allocation mode: explicit
+    State: Programmed
+Forwarding-ID: 65537 (0x1C)
+Stats:
+    Packets: 2520       Bytes: 397042
 
-        Event history:
-            Timestamp                   Client                  Event type              Context: Value
-            ---------                   ------                  ----------              -------: -----
-            09-09 20:15:58.969          CLI AGENT               Policy created          Name: maxsid
-            09-09 20:16:09.573          CLI AGENT               Set colour              Colour: 100
-            09-09 20:16:09.573          CLI AGENT               Set end point           End-point: 10.169.196.241
-            09-09 20:16:23.728          CLI AGENT               Set explicit path       Path option: maxsid
-            09-09 20:19:30.195          FH Resolution           Policy state UP         Status: PATH RESOLVED
-            09-09 20:19:30.202          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:56:19.877          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:57:51.007          CLI AGENT               Set binding SID         BSID: Binding SID set
-            09-09 21:15:51.840          CLI AGENT               Set explicit path       Path option: test1
-            09-09 21:19:04.452          CLI AGENT               Set explicit path       Path option: test1
-            09-09 21:19:04.454          FH Resolution           Policy state UP         Status: PATH RESOLVED
-            09-09 21:19:04.458          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 21:20:20.811          CLI AGENT               Remove path option      Path option: 300
-            09-09 21:20:20.812          FH Resolution           Policy state UP         Status: PATH RESOLVED
+Event history:
+    Timestamp                   Client                  Event type              Context: Value
+    ---------                   ------                  ----------              -------: -----
+    09-09 20:15:58.969          CLI AGENT               Policy created          Name: maxsid
+    09-09 20:16:09.573          CLI AGENT               Set colour              Colour: 100
+    09-09 20:16:09.573          CLI AGENT               Set end point           End-point: 10.169.196.241
+    09-09 20:16:23.728          CLI AGENT               Set explicit path       Path option: maxsid
+    09-09 20:19:30.195          FH Resolution           Policy state UP         Status: PATH RESOLVED
+    09-09 20:19:30.202          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:56:19.877          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:57:51.007          CLI AGENT               Set binding SID         BSID: Binding SID set
+    09-09 21:15:51.840          CLI AGENT               Set explicit path       Path option: test1
+    09-09 21:19:04.452          CLI AGENT               Set explicit path       Path option: test1
+    09-09 21:19:04.454          FH Resolution           Policy state UP         Status: PATH RESOLVED
+    09-09 21:19:04.458          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 21:20:20.811          CLI AGENT               Remove path option      Path option: 300
+    09-09 21:20:20.812          FH Resolution           Policy state UP         Status: PATH RESOLVED
 
 
-        sr_ve-hkgasr01#
+sr_ve-hkgasr01#
     

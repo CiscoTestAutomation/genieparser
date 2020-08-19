@@ -1,13 +1,13 @@
 
-        Device# show cdp neighbors
+Device# show cdp neighbors
 
-        Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
-                        S - Switch, H - Host, I - IGMP, r - Repeater
+Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
+                S - Switch, H - Host, I - IGMP, r - Repeater
 
-        Device ID        Local Interfce     Holdtme    Capability  Platform  ''
-        Port ID
+Device ID        Local Interfce     Holdtme    Capability  Platform  ''
+Port ID
 
-        R8.cisco.com     Gig 0/0           148              R B                     Gig 0/0
-        R9.cisco.com     Gig 0/0           156              R B                     Gig 0/0
-        device6          Gig 0             157              R S I       C887VA-W-W  Gi 0
+R8.cisco.com     Gig 0/0           148              R B                     Gig 0/0
+R9.cisco.com     Gig 0/0           156              R B                     Gig 0/0
+device6          Gig 0             157              R S I       C887VA-W-W  Gi 0
     

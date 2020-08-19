@@ -1,30 +1,30 @@
-        show platform
+show platform
 
-        Chassis type: C9500-32QC          
-
-
-
-        Slot      Type                State                 Insert time (ago) 
-
-        --------- ------------------- --------------------- ----------------- 
-
-        1         C9500-32QC          ok                    1d18h         
-
-         1/0      C9500-32QC          ok                    1d18h         
-
-        R0        C9500-32QC          ok, active            1d18h         
-
-        P0        C9K-PWR-650WAC-R    ok                    1d18h         
-
-        P2        C9K-T1-FANTRAY      ok                    1d18h         
-
-        P3        C9K-T1-FANTRAY      ok                    1d18h         
+Chassis type: C9500-32QC          
 
 
 
-        Slot      CPLD Version        Firmware Version                        
+Slot      Type                State                 Insert time (ago) 
 
-        --------- ------------------- --------------------------------------- 
+--------- ------------------- --------------------- ----------------- 
 
-        1         19061022            17.1.1[FC2]      
+1         C9500-32QC          ok                    1d18h         
+
+ 1/0      C9500-32QC          ok                    1d18h         
+
+R0        C9500-32QC          ok, active            1d18h         
+
+P0        C9K-PWR-650WAC-R    ok                    1d18h         
+
+P2        C9K-T1-FANTRAY      ok                    1d18h         
+
+P3        C9K-T1-FANTRAY      ok                    1d18h         
+
+
+
+Slot      CPLD Version        Firmware Version                        
+
+--------- ------------------- --------------------------------------- 
+
+1         19061022            17.1.1[FC2]      
     

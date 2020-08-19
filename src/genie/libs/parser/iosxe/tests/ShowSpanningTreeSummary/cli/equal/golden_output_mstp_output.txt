@@ -1,19 +1,19 @@
-        Switch is in mst mode (IEEE Standard)
-        Root bridge for: MST0, MST100
-        EtherChannel misconfig guard is disabled
-        Extended system ID           is enabled
-        Portfast Default             is disabled
-        PortFast BPDU Guard Default  is disabled
-        Portfast BPDU Filter Default is disabled
-        Loopguard Default            is disabled
-        UplinkFast                   is disabled
-        BackboneFast                 is disabled
-        Configured Pathcost method used is short (Operational value is long)
+Switch is in mst mode (IEEE Standard)
+Root bridge for: MST0, MST100
+EtherChannel misconfig guard is disabled
+Extended system ID           is enabled
+Portfast Default             is disabled
+PortFast BPDU Guard Default  is disabled
+Portfast BPDU Filter Default is disabled
+Loopguard Default            is disabled
+UplinkFast                   is disabled
+BackboneFast                 is disabled
+Configured Pathcost method used is short (Operational value is long)
 
-        Name                   Blocking Listening Learning Forwarding STP Active
-        ---------------------- -------- --------- -------- ---------- ----------
-        MST0                         3         0        0          9         12
-        MST100                       3         0        0          1          4
-        ---------------------- -------- --------- -------- ---------- ----------
-        2 msts                       6         0        0         10         16
+Name                   Blocking Listening Learning Forwarding STP Active
+---------------------- -------- --------- -------- ---------- ----------
+MST0                         3         0        0          9         12
+MST100                       3         0        0          1          4
+---------------------- -------- --------- -------- ---------- ----------
+2 msts                       6         0        0         10         16
     

@@ -1,11 +1,11 @@
 
-        Router#sh etherchannel load-balancing
-        Load for five secs: 50%/2%; one minute: 38%; five minutes: 56%
-        Time source is NTP, *16:28:54.625 EST Sat Nov 12 2016
-        EtherChannel Load-Balancing Method: 
-        Global LB Method: flow-based
-        LB Algo type: Source Destination IP
+Router#sh etherchannel load-balancing
+Load for five secs: 50%/2%; one minute: 38%; five minutes: 56%
+Time source is NTP, *16:28:54.625 EST Sat Nov 12 2016
+EtherChannel Load-Balancing Method: 
+Global LB Method: flow-based
+LB Algo type: Source Destination IP
 
-          Port-Channel:                       LB Method
-            Port-channel1                   :  flow-based (Source Destination IP)
+  Port-Channel:                       LB Method
+    Port-channel1                   :  flow-based (Source Destination IP)
     

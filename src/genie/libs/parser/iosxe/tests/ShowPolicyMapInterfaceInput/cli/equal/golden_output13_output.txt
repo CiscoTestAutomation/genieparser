@@ -1,13 +1,13 @@
 
-            Load for five secs: 2%/0%; one minute: 2%; five minutes: 2%
-            Time source is NTP, 17:41:12.649 EST Tue Apr 9 2019
+Load for five secs: 2%/0%; one minute: 2%; five minutes: 2%
+Time source is NTP, 17:41:12.649 EST Tue Apr 9 2019
 
-            GigabitEthernet0/0/1
+GigabitEthernet0/0/1
 
-                Service-policy input: TEST
+    Service-policy input: TEST
 
-                    Class-map: class-default (match-any)
-                        0 packets, 0 bytes
-                        5 minute offered rate 0000 bps, drop rate 0000 bps
-                        Match: any
-            PE1# 
+        Class-map: class-default (match-any)
+            0 packets, 0 bytes
+            5 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: any
+PE1# 

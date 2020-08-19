@@ -1,66 +1,66 @@
-        Router#show platform hardware slot F0 serdes statistics 
-        Load for five secs: 22%/1%; one minute: 8%; five minutes: 9%
-        Time source is NTP, 07:42:08.304 EST Thu Sep 8 2016
-        From Slot R1-Link A
-          Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
-          Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
-          Pkts  Looped: 0          Error: 0         
-          Bytes Looped 0         
-          Qstat count: 0          Flow ctrl count: 3501      
-        To Slot R1-Link A
-          Pkts  High: 0          Low: 0         
+Router#show platform hardware slot F0 serdes statistics 
+Load for five secs: 22%/1%; one minute: 8%; five minutes: 9%
+Time source is NTP, 07:42:08.304 EST Thu Sep 8 2016
+From Slot R1-Link A
+  Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
+  Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
+  Pkts  Looped: 0          Error: 0         
+  Bytes Looped 0         
+  Qstat count: 0          Flow ctrl count: 3501      
+To Slot R1-Link A
+  Pkts  High: 0          Low: 0         
 
-        From Slot R0-Link A
-          Pkts  High: 19461      Low: 2777099    Bad: 0          Dropped: 0         
-          Bytes High: 1614284    Low: 298734735  Bad: 0          Dropped: 0         
-          Pkts  Looped: 0          Error: 0         
-          Bytes Looped 0         
-          Qstat count: 0          Flow ctrl count: 3700      
-        To Slot R0-Link A
-          Pkts  High: 1018101    Low: 1719353   
+From Slot R0-Link A
+  Pkts  High: 19461      Low: 2777099    Bad: 0          Dropped: 0         
+  Bytes High: 1614284    Low: 298734735  Bad: 0          Dropped: 0         
+  Pkts  Looped: 0          Error: 0         
+  Bytes Looped 0         
+  Qstat count: 0          Flow ctrl count: 3700      
+To Slot R0-Link A
+  Pkts  High: 1018101    Low: 1719353   
 
-        From Slot F1-Link A
-          Pkts  High: 0          Low: 518        Bad: 0          Dropped: 0         
-          Bytes High: 0          Low: 18648      Bad: 0          Dropped: 0         
-          Pkts  Looped: 0          Error: 0         
-          Bytes Looped 0         
-          Qstat count: 0          Flow ctrl count: 3680      
-        To Slot F1-Link A
-          Pkts  High: 0          Low: 518       
+From Slot F1-Link A
+  Pkts  High: 0          Low: 518        Bad: 0          Dropped: 0         
+  Bytes High: 0          Low: 18648      Bad: 0          Dropped: 0         
+  Pkts  Looped: 0          Error: 0         
+  Bytes Looped 0         
+  Qstat count: 0          Flow ctrl count: 3680      
+To Slot F1-Link A
+  Pkts  High: 0          Low: 518       
 
-        From Slot 1-Link A
-          Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
-          Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
-          Pkts  Looped: 0          Error: 0         
-          Bytes Looped 0         
-          Qstat count: 294400     Flow ctrl count: 3680      
-        To Slot 1-Link A
-          Pkts  High: 0          Low: 0         
+From Slot 1-Link A
+  Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
+  Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
+  Pkts  Looped: 0          Error: 0         
+  Bytes Looped 0         
+  Qstat count: 294400     Flow ctrl count: 3680      
+To Slot 1-Link A
+  Pkts  High: 0          Low: 0         
 
-        From Slot 0-Link A
-          Pkts  High: 63052      Low: 2703601    Bad: 0          Dropped: 0         
-          Bytes High: 53361379   Low: 199330758  Bad: 0          Dropped: 0         
-          Pkts  Looped: 0          Error: 0         
-          Bytes Looped 0         
-          Qstat count: 331199     Flow ctrl count: 3680      
-        To Slot 0-Link A
-          Pkts  High: 0          Low: 2787636   
+From Slot 0-Link A
+  Pkts  High: 63052      Low: 2703601    Bad: 0          Dropped: 0         
+  Bytes High: 53361379   Low: 199330758  Bad: 0          Dropped: 0         
+  Pkts  Looped: 0          Error: 0         
+  Bytes Looped 0         
+  Qstat count: 331199     Flow ctrl count: 3680      
+To Slot 0-Link A
+  Pkts  High: 0          Low: 2787636   
 
-        From Slot 0-Link B
-          Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
-          Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
-          Pkts  Looped: 0          Error: 0         
-          Bytes Looped 0         
-          Qstat count: 331199     Flow ctrl count: 3680      
-        To Slot 0-Link B
-          Pkts  High: 0          Low: 0         
+From Slot 0-Link B
+  Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
+  Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
+  Pkts  Looped: 0          Error: 0         
+  Bytes Looped 0         
+  Qstat count: 331199     Flow ctrl count: 3680      
+To Slot 0-Link B
+  Pkts  High: 0          Low: 0         
 
-        From Slot 1-Link B
-          Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
-          Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
-          Pkts  Looped: 0          Error: 0         
-          Bytes Looped 0         
-          Qstat count: 0          Flow ctrl count: 3680      
-        To Slot 1-Link B
-          Pkts  High: 0          Low: 0         
+From Slot 1-Link B
+  Pkts  High: 0          Low: 0          Bad: 0          Dropped: 0         
+  Bytes High: 0          Low: 0          Bad: 0          Dropped: 0         
+  Pkts  Looped: 0          Error: 0         
+  Bytes Looped 0         
+  Qstat count: 0          Flow ctrl count: 3680      
+To Slot 1-Link B
+  Pkts  High: 0          Low: 0         
     

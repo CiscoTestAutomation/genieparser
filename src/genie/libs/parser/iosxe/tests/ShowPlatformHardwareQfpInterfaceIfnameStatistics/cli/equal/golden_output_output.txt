@@ -1,42 +1,42 @@
-        Router#show platform hardware qfp active interface if-name gigabitEthernet 0/0/0 statistics
-        Load for five secs: 2%/0%; one minute: 8%; five minutes: 8%
-        Time source is NTP, 07:55:23.913 EST Thu Sep 8 2016
-        Platform Handle 7
-        ----------------------------------------------------------------
-        Receive Stats                             Packets        Octets
-        ----------------------------------------------------------------
-          Ipv4                                       4             306
-          Ipv6                                       0               0
-          Tag                                        0               0
-          McastIpv4                                  0               0
-          McastIpv6                                  0               0
-          FragIpv4                                   0               0
-          FragIpv6                                   0               0
-          ReassIpv4                                  0               0
-          ReassIpv6                                  0               0
-          Other                                      0               0
+Router#show platform hardware qfp active interface if-name gigabitEthernet 0/0/0 statistics
+Load for five secs: 2%/0%; one minute: 8%; five minutes: 8%
+Time source is NTP, 07:55:23.913 EST Thu Sep 8 2016
+Platform Handle 7
+----------------------------------------------------------------
+Receive Stats                             Packets        Octets
+----------------------------------------------------------------
+  Ipv4                                       4             306
+  Ipv6                                       0               0
+  Tag                                        0               0
+  McastIpv4                                  0               0
+  McastIpv6                                  0               0
+  FragIpv4                                   0               0
+  FragIpv6                                   0               0
+  ReassIpv4                                  0               0
+  ReassIpv6                                  0               0
+  Other                                      0               0
 
-        ----------------------------------------------------------------
-        Transmit Stats                            Packets        Octets
-        ----------------------------------------------------------------
-          Ipv4                                       3             246
-          Ipv6                                       0               0
-          Tag                                        1              77
-          McastIpv4                                  0               0
-          McastIpv6                                  0               0
-          FragmentsIpv4                              0               0
-          FragmentsIpv6                              0               0
-          FragmentedIpv4                             0               0
-          FragmentedIpv6                             0               0
-          Other                                      0               0
+----------------------------------------------------------------
+Transmit Stats                            Packets        Octets
+----------------------------------------------------------------
+  Ipv4                                       3             246
+  Ipv6                                       0               0
+  Tag                                        1              77
+  McastIpv4                                  0               0
+  McastIpv6                                  0               0
+  FragmentsIpv4                              0               0
+  FragmentsIpv6                              0               0
+  FragmentedIpv4                             0               0
+  FragmentedIpv6                             0               0
+  Other                                      0               0
 
-        ----------------------------------------------------------------
-        Input Drop Stats                          Packets        Octets
-        ----------------------------------------------------------------
-          Ingress Drop stats are not enabled on this interface
+----------------------------------------------------------------
+Input Drop Stats                          Packets        Octets
+----------------------------------------------------------------
+  Ingress Drop stats are not enabled on this interface
 
-        ----------------------------------------------------------------
-        Output Drop Stats                         Packets        Octets
-        ----------------------------------------------------------------
-          The Egress Drop stats are not enabled on this interface
+----------------------------------------------------------------
+Output Drop Stats                         Packets        Octets
+----------------------------------------------------------------
+  The Egress Drop stats are not enabled on this interface
     

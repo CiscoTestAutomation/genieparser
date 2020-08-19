@@ -1,9 +1,9 @@
 
-        show segment-routing mpls lb assigned-sids
-        Adjacency SID Database
-          C=> In conflict
-          S=> Shared
-          R=> In range
-        SID    STATE PROTOCOL TOPOID   LAN PRO NEIGHBOR INTERFACE
-         12345  R     ISIS     2        N   N   192.168.0.1 Ethernet1
+show segment-routing mpls lb assigned-sids
+Adjacency SID Database
+  C=> In conflict
+  S=> Shared
+  R=> In range
+SID    STATE PROTOCOL TOPOID   LAN PRO NEIGHBOR INTERFACE
+ 12345  R     ISIS     2        N   N   192.168.0.1 Ethernet1
     

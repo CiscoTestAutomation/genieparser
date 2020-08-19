@@ -1,115 +1,115 @@
 
-      TenGigabitEthernet0/0/0
+TenGigabitEthernet0/0/0
 
-        Service-policy output: pm_queuing
+  Service-policy output: pm_queuing
 
-          queue stats for all priority classes:
-            Queueing
-            queue limit 512 packets
-            (queue depth/total drops/no-buffer drops) 0/0/0
-            (pkts output/bytes output) 0/0
+    queue stats for all priority classes:
+      Queueing
+      queue limit 512 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 0/0
 
-          Class-map: cm_dscp_class1 (match-any)
-            0 packets, 0 bytes
-            1 minute offered rate 0000 bps, drop rate 0000 bps
-            Match: ip dscp ef (46)
-            Priority: Strict, b/w exceed drops: 0
-
-
-          Class-map: cm_dscp_att_ncp (match-any)
-            50402030 packets, 4960596805 bytes
-            1 minute offered rate 1000 bps, drop rate 0000 bps
-            Match: ip dscp cs6 (48) cs7 (56)
-            Queueing
-            queue limit 41666 packets
-            (queue depth/total drops/no-buffer drops) 0/0/0
-            (pkts output/bytes output) 21791793/1927911831
-            bandwidth remaining 5%
-
-          Class-map: cm_dscp_class2 (match-any)
-            0 packets, 0 bytes
-            1 minute offered rate 0000 bps, drop rate 0000 bps
-            Match: ip dscp af31 (26) af32 (28)
-            Queueing
-            queue limit 41666 packets
-            (queue depth/total drops/no-buffer drops) 0/0/0
-            (pkts output/bytes output) 0/0
-            bandwidth remaining 25%
-
-          Class-map: cm_dscp_class3 (match-any)
-            25610 packets, 5013442 bytes
-            1 minute offered rate 0000 bps, drop rate 0000 bps
-            Match: ip dscp af21 (18) af22 (20)
-            Queueing
-            queue limit 41666 packets
-            (queue depth/total drops/no-buffer drops) 0/0/0
-            (pkts output/bytes output) 25610/5013442
-            bandwidth remaining 25%
-
-          Class-map: class-default (match-any)
-            195800135 packets, 14147555758 bytes
-            1 minute offered rate 4000 bps, drop rate 0000 bps
-            Match: any
-            Queueing
-            queue limit 41666 packets
-            (queue depth/total drops/no-buffer drops) 0/0/0
-            (pkts output/bytes output) 183412932/9203926787
-            bandwidth remaining 25%
-      TenGigabitEthernet0/0/1
-
-        Service-policy output: pm_queuing
-
-          queue stats for all priority classes:
-            Queueing
-            queue limit 512 packets
-            (queue depth/total drops/no-buffer drops) 0/0/0
-            (pkts output/bytes output) 0/0
-
-          Class-map: cm_dscp_class1 (match-any)
-            0 packets, 0 bytes
-            1 minute offered rate 0000 bps, drop rate 0000 bps
-            Match: ip dscp ef (46)
-            Priority: Strict, b/w exceed drops: 0
+    Class-map: cm_dscp_class1 (match-any)
+      0 packets, 0 bytes
+      1 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: ip dscp ef (46)
+      Priority: Strict, b/w exceed drops: 0
 
 
-          Class-map: cm_dscp_ncp (match-any)
-            23626008 packets, 1937686834 bytes
-            1 minute offered rate 0000 bps, drop rate 0000 bps
-            Match: ip dscp cs6 (48) cs7 (56)
-            Queueing
-            queue limit 13932 packets
-            (queue depth/total drops/no-buffer drops) 0/0/0
-            (pkts output/bytes output) 11439795/960005330
-            bandwidth remaining 5%
+    Class-map: cm_dscp_att_ncp (match-any)
+      50402030 packets, 4960596805 bytes
+      1 minute offered rate 1000 bps, drop rate 0000 bps
+      Match: ip dscp cs6 (48) cs7 (56)
+      Queueing
+      queue limit 41666 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 21791793/1927911831
+      bandwidth remaining 5%
 
-          Class-map: cm_dscp_class2 (match-any)
-            0 packets, 0 bytes
-            1 minute offered rate 0000 bps, drop rate 0000 bps
-            Match: ip dscp af31 (26) af32 (28)
-            Queueing
-            queue limit 13932 packets
-            (queue depth/total drops/no-buffer drops) 0/0/0
-            (pkts output/bytes output) 0/0
-            bandwidth remaining 25%
+    Class-map: cm_dscp_class2 (match-any)
+      0 packets, 0 bytes
+      1 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: ip dscp af31 (26) af32 (28)
+      Queueing
+      queue limit 41666 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 0/0
+      bandwidth remaining 25%
 
-          Class-map: cm_dscp_class3 (match-any)
-            0 packets, 0 bytes
-            1 minute offered rate 0000 bps, drop rate 0000 bps
-            Match: ip dscp af21 (18) af22 (20)
-            Queueing
-            queue limit 13932 packets
-            (queue depth/total drops/no-buffer drops) 0/0/0
-            (pkts output/bytes output) 0/0
-            bandwidth remaining 25%
+    Class-map: cm_dscp_class3 (match-any)
+      25610 packets, 5013442 bytes
+      1 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: ip dscp af21 (18) af22 (20)
+      Queueing
+      queue limit 41666 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 25610/5013442
+      bandwidth remaining 25%
 
-          Class-map: class-default (match-any)
-            3979929 packets, 1589680038 bytes
-            1 minute offered rate 0000 bps, drop rate 0000 bps
-            Match: any
-            Queueing
-            queue limit 13932 packets
-            (queue depth/total drops/no-buffer drops) 0/0/0
-            (pkts output/bytes output) 47152/3617479
-            bandwidth remaining 25%
-      GigabitEthernet0/0/3
+    Class-map: class-default (match-any)
+      195800135 packets, 14147555758 bytes
+      1 minute offered rate 4000 bps, drop rate 0000 bps
+      Match: any
+      Queueing
+      queue limit 41666 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 183412932/9203926787
+      bandwidth remaining 25%
+TenGigabitEthernet0/0/1
+
+  Service-policy output: pm_queuing
+
+    queue stats for all priority classes:
+      Queueing
+      queue limit 512 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 0/0
+
+    Class-map: cm_dscp_class1 (match-any)
+      0 packets, 0 bytes
+      1 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: ip dscp ef (46)
+      Priority: Strict, b/w exceed drops: 0
+
+
+    Class-map: cm_dscp_ncp (match-any)
+      23626008 packets, 1937686834 bytes
+      1 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: ip dscp cs6 (48) cs7 (56)
+      Queueing
+      queue limit 13932 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 11439795/960005330
+      bandwidth remaining 5%
+
+    Class-map: cm_dscp_class2 (match-any)
+      0 packets, 0 bytes
+      1 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: ip dscp af31 (26) af32 (28)
+      Queueing
+      queue limit 13932 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 0/0
+      bandwidth remaining 25%
+
+    Class-map: cm_dscp_class3 (match-any)
+      0 packets, 0 bytes
+      1 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: ip dscp af21 (18) af22 (20)
+      Queueing
+      queue limit 13932 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 0/0
+      bandwidth remaining 25%
+
+    Class-map: class-default (match-any)
+      3979929 packets, 1589680038 bytes
+      1 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: any
+      Queueing
+      queue limit 13932 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 47152/3617479
+      bandwidth remaining 25%
+GigabitEthernet0/0/3
     

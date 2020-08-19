@@ -1,54 +1,54 @@
 
-        Device# show cdp neighbors detail
-        Device ID: R6(9P57K4EJ8CA)
-        Entry address(es):
-          IP address: 172.16.1.203
-        Platform: N9K-9000v,  Capabilities: Router Switch CVTA phone port
-        Interface: GigabitEthernet0/0,  Port ID (outgoing port): mgmt0
-        Holdtime : 133 sec
+Device# show cdp neighbors detail
+Device ID: R6(9P57K4EJ8CA)
+Entry address(es):
+  IP address: 172.16.1.203
+Platform: N9K-9000v,  Capabilities: Router Switch CVTA phone port
+Interface: GigabitEthernet0/0,  Port ID (outgoing port): mgmt0
+Holdtime : 133 sec
 
-        Version :
-        Cisco Nexus Operating System (NX-OS) Software, Version 9.2(1)
+Version :
+Cisco Nexus Operating System (NX-OS) Software, Version 9.2(1)
 
-        advertisement version: 2
-        Duplex: full
-        Management address(es):
-          IP address: 172.16.1.203
+advertisement version: 2
+Duplex: full
+Management address(es):
+  IP address: 172.16.1.203
 
-        -------------------------
-        Device ID: R7(9QBDKB58F76)
-        Entry address(es):
-          IP address: 172.16.1.204
-        Platform: N9K-9000v,  Capabilities: Router Switch CVTA phone port
-        Interface: GigabitEthernet0/0,  Port ID (outgoing port): mgmt0
-        Holdtime : 126 sec
+-------------------------
+Device ID: R7(9QBDKB58F76)
+Entry address(es):
+  IP address: 172.16.1.204
+Platform: N9K-9000v,  Capabilities: Router Switch CVTA phone port
+Interface: GigabitEthernet0/0,  Port ID (outgoing port): mgmt0
+Holdtime : 126 sec
 
-        Version :
-        Cisco Nexus Operating System (NX-OS) Software, Version 9.2(1)
+Version :
+Cisco Nexus Operating System (NX-OS) Software, Version 9.2(1)
 
-        advertisement version: 2
-        Duplex: full
-        Management address(es):
-          IP address: 172.16.1.204
+advertisement version: 2
+Duplex: full
+Management address(es):
+  IP address: 172.16.1.204
 
-        -------------------------
-        Device ID: R5.cisco.com
-        Entry address(es):
-          IP address: 172.16.1.202
-        Platform: Cisco ,  Capabilities: Router Source-Route-Bridge
-        Interface: GigabitEthernet0/0,  Port ID (outgoing port): GigabitEthernet0/0
-        Holdtime : 177 sec
+-------------------------
+Device ID: R5.cisco.com
+Entry address(es):
+  IP address: 172.16.1.202
+Platform: Cisco ,  Capabilities: Router Source-Route-Bridge
+Interface: GigabitEthernet0/0,  Port ID (outgoing port): GigabitEthernet0/0
+Holdtime : 177 sec
 
-        Version :
-        Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)
-        Technical Support: http://www.cisco.com/techsupport
-        Copyright (c) 1986-2018 by Cisco Systems, Inc.
-        Compiled Wed 01-Aug-18 16:45 by prod_rel_team
+Version :
+Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2018 by Cisco Systems, Inc.
+Compiled Wed 01-Aug-18 16:45 by prod_rel_team
 
-        advertisement version: 2
-        Management address(es):
-          IP address: 172.16.1.202
+advertisement version: 2
+Management address(es):
+  IP address: 172.16.1.202
 
 
-        Total cdp entries displayed : 3
+Total cdp entries displayed : 3
     

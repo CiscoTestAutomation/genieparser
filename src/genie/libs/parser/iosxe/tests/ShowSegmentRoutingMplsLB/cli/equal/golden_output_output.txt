@@ -1,5 +1,5 @@
 
-        show segment-routing mpls lb
-        LABEL-MIN  LABEL_MAX  STATE           DEFAULT
-        15000      15999      ENABLED         Yes
+show segment-routing mpls lb
+LABEL-MIN  LABEL_MAX  STATE           DEFAULT
+15000      15999      ENABLED         Yes
     

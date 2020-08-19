@@ -1,11 +1,11 @@
 
-        asr-MIB-1#show bootvar
-        BOOT variable = harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12;
-        CONFIG_FILE variable =
-        BOOTLDR variable does not exist
-        Configuration register is 0x2
+asr-MIB-1#show bootvar
+BOOT variable = harddisk:/ISSUCleanGolden,12;bootflash:12351822-iedge-asr-uut,12;
+CONFIG_FILE variable =
+BOOTLDR variable does not exist
+Configuration register is 0x2
 
-        Standby not ready to show bootvar
+Standby not ready to show bootvar
 
-        asr-MIB-1#
+asr-MIB-1#
         

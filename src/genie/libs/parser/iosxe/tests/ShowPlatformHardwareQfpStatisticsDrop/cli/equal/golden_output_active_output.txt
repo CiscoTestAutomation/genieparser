@@ -1,12 +1,12 @@
-        Router#show platform hardware qfp active statistics drop | exclude _0_
-        Load for five secs: 2%/1%; one minute: 9%; five minutes: 8%
-        Time source is NTP, 07:47:11.317 EST Thu Sep 8 2016
-        -------------------------------------------------------------------------
-        Global Drop Stats                         Packets                  Octets  
-        -------------------------------------------------------------------------
-        Ipv4NoAdj                                       7                     296  
-        Ipv4NoRoute                                   181                    7964  
-        PuntPerCausePolicerDrops                     2003                  184230  
-        UidbNotCfgd                                466391                29312827  
-        UnconfiguredIpv4Fia                             6                     360  
+Router#show platform hardware qfp active statistics drop | exclude _0_
+Load for five secs: 2%/1%; one minute: 9%; five minutes: 8%
+Time source is NTP, 07:47:11.317 EST Thu Sep 8 2016
+-------------------------------------------------------------------------
+Global Drop Stats                         Packets                  Octets  
+-------------------------------------------------------------------------
+Ipv4NoAdj                                       7                     296  
+Ipv4NoRoute                                   181                    7964  
+PuntPerCausePolicerDrops                     2003                  184230  
+UidbNotCfgd                                466391                29312827  
+UnconfiguredIpv4Fia                             6                     360  
     

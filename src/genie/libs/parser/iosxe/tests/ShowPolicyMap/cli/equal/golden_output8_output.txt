@@ -1,9 +1,9 @@
 
-        Router# show policy-map policy1
-            Policy Map policy1
-                Class class1
-                    police cir percent 20 bc 300 ms pir percent 40 be 400 ms
-                        conform-action transmit
-                        exceed-action drop
-                        violate-action drop
+Router# show policy-map policy1
+    Policy Map policy1
+        Class class1
+            police cir percent 20 bc 300 ms pir percent 40 be 400 ms
+                conform-action transmit
+                exceed-action drop
+                violate-action drop
     

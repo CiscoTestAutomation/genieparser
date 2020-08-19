@@ -1,34 +1,34 @@
-        Service Group global statistics:
-          Number of groups:                       5
-          Number of members:                      8005
-        Service Group 1 statistics:
-          Number of Interfaces:                   1
-          Number of members:                      3000
-            Service Instance                      3000
-          Members joined:                         13000
-          Members left:                           10000
-        Service Group 2 statistics:
-          Number of Interfaces:                   1
-          Number of members:                      2000
-            Service Instance                      2000
-          Members joined:                         10000
-          Members left:                           8000
-        Service Group 3 statistics:
-          Number of Interfaces:                   1
-          Number of members:                      3000
-            Service Instance                      3000
-          Members joined:                         9000
-          Members left:                           6000
-        Service Group 10 statistics:
-          Number of Interfaces:                   1
-          Number of members:                      3
-            Service Instance                      3
-          Members joined:                         8003
-          Members left:                           8000
-        Service Group 20 statistics:
-          Number of Interfaces:                   1
-          Number of members:                      2
-            Service Instance                      2
-          Members joined:                         8002
-          Members left:                           8000
+Service Group global statistics:
+  Number of groups:                       5
+  Number of members:                      8005
+Service Group 1 statistics:
+  Number of Interfaces:                   1
+  Number of members:                      3000
+    Service Instance                      3000
+  Members joined:                         13000
+  Members left:                           10000
+Service Group 2 statistics:
+  Number of Interfaces:                   1
+  Number of members:                      2000
+    Service Instance                      2000
+  Members joined:                         10000
+  Members left:                           8000
+Service Group 3 statistics:
+  Number of Interfaces:                   1
+  Number of members:                      3000
+    Service Instance                      3000
+  Members joined:                         9000
+  Members left:                           6000
+Service Group 10 statistics:
+  Number of Interfaces:                   1
+  Number of members:                      3
+    Service Instance                      3
+  Members joined:                         8003
+  Members left:                           8000
+Service Group 20 statistics:
+  Number of Interfaces:                   1
+  Number of members:                      2
+    Service Instance                      2
+  Members joined:                         8002
+  Members left:                           8000
     

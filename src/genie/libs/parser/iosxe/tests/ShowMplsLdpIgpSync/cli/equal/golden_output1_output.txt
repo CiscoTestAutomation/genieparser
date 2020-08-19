@@ -1,23 +1,23 @@
-        show mpls ldp igp sync
+show mpls ldp igp sync
 
-        GigabitEthernet0/0/0:
-            LDP not configured; LDP-IGP Synchronization enabled.
-            Sync status: sync not achieved; peer not reachable.
-            Sync delay time: 0 seconds (0 seconds left)
-            IGP holddown time: infinite.
-            IGP enabled: OSPF 88
-        TenGigabitEthernet0/1/0:
-            LDP configured; LDP-IGP Synchronization enabled.
-            Sync status: sync achieved; peer reachable.
-            Sync delay time: 0 seconds (0 seconds left)
-            IGP holddown time: 1 milliseconds.
-            Peer LDP Ident: 10.169.197.252:0
-            IGP enabled: OSPF 88
-        TenGigabitEthernet0/2/0:
-            LDP configured; LDP-IGP Synchronization enabled.
-            Sync status: sync achieved; peer reachable.
-            Sync delay time: 0 seconds (0 seconds left)
-            IGP holddown time: infinite.
-            Peer LDP Ident: 192.168.36.220:0
-            IGP enabled: OSPF 88
+GigabitEthernet0/0/0:
+    LDP not configured; LDP-IGP Synchronization enabled.
+    Sync status: sync not achieved; peer not reachable.
+    Sync delay time: 0 seconds (0 seconds left)
+    IGP holddown time: infinite.
+    IGP enabled: OSPF 88
+TenGigabitEthernet0/1/0:
+    LDP configured; LDP-IGP Synchronization enabled.
+    Sync status: sync achieved; peer reachable.
+    Sync delay time: 0 seconds (0 seconds left)
+    IGP holddown time: 1 milliseconds.
+    Peer LDP Ident: 10.169.197.252:0
+    IGP enabled: OSPF 88
+TenGigabitEthernet0/2/0:
+    LDP configured; LDP-IGP Synchronization enabled.
+    Sync status: sync achieved; peer reachable.
+    Sync delay time: 0 seconds (0 seconds left)
+    IGP holddown time: infinite.
+    Peer LDP Ident: 192.168.36.220:0
+    IGP enabled: OSPF 88
     

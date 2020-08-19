@@ -1,10 +1,10 @@
 
-        show ip route 192.168.154.0
-        Routing entry for 192.168.154.0/24
-          Known via "eigrp 1", distance 130, metric 10880, type internal
-          Redistributing via eigrp 1
-          Last update from 192.168.151.2 on Vlan101, 2w3d ago
-          Routing Descriptor Blocks:
-          * 192.168.151.2, from 192.168.151.2, 2w3d ago, via Vlan101
-              Route metric is 10880, traffic share count is 1
+show ip route 192.168.154.0
+Routing entry for 192.168.154.0/24
+  Known via "eigrp 1", distance 130, metric 10880, type internal
+  Redistributing via eigrp 1
+  Last update from 192.168.151.2 on Vlan101, 2w3d ago
+  Routing Descriptor Blocks:
+  * 192.168.151.2, from 192.168.151.2, 2w3d ago, via Vlan101
+      Route metric is 10880, traffic share count is 1
     

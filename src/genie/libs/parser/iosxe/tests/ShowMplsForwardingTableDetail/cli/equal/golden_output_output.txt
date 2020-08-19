@@ -1,23 +1,23 @@
-        Router#show mpls forwarding-table vrf L3VPN-0051 detail
-        Load for five secs: 71%/0%; one minute: 11%; five minutes: 9%
-        Time source is NTP, 20:29:27.645 EST Fri Nov 11 2016
+Router#show mpls forwarding-table vrf L3VPN-0051 detail
+Load for five secs: 71%/0%; one minute: 11%; five minutes: 9%
+Time source is NTP, 20:29:27.645 EST Fri Nov 11 2016
 
-        Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
-        Label      Label      or Tunnel Id     Switched      interface
-        9301       No Label   172.16.100.1/32[V]                                                  0             Po1.51     192.168.10.253
-                MAC/Encaps=18/18, MRU=1530, Label Stack{}
-                00002440156384B261CB1480810000330800
-                VPN route: L3VPN-0051
-                No output feature configured
-            Per-destination load-sharing, slots: 0 2 4 6 8 10 12 14
-        2641       No Label   172.16.100.100/32[V]                                                  0             Po1.51     192.168.10.253
-            MAC/Encaps=18/18, MRU=1530, Label Stack{}, via Ls0
-            AABBCC032800AABBCC0325018847 00010000
-            VPN route: L3VPN-0051
-            No output feature configured
-        2642       No Label   192.168.10.0/24[V]                                                  12189672      aggregate/L3VPN-0051
-            MAC/Encaps=0/0, MRU=0, Label Stack{}
-            VPN route: L3VPN-0051
-            No output feature configured
-            Broadcast
+Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
+Label      Label      or Tunnel Id     Switched      interface
+9301       No Label   172.16.100.1/32[V]                                                  0             Po1.51     192.168.10.253
+        MAC/Encaps=18/18, MRU=1530, Label Stack{}
+        00002440156384B261CB1480810000330800
+        VPN route: L3VPN-0051
+        No output feature configured
+    Per-destination load-sharing, slots: 0 2 4 6 8 10 12 14
+2641       No Label   172.16.100.100/32[V]                                                  0             Po1.51     192.168.10.253
+    MAC/Encaps=18/18, MRU=1530, Label Stack{}, via Ls0
+    AABBCC032800AABBCC0325018847 00010000
+    VPN route: L3VPN-0051
+    No output feature configured
+2642       No Label   192.168.10.0/24[V]                                                  12189672      aggregate/L3VPN-0051
+    MAC/Encaps=0/0, MRU=0, Label Stack{}
+    VPN route: L3VPN-0051
+    No output feature configured
+    Broadcast
     

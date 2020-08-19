@@ -1,8 +1,8 @@
 
-        R4_iosv#show bgp all neighbors 10.4.6.6 policy 
-         Neighbor: 10.4.6.6, Address-Family: VPNv4 Unicast
-         Locally configured policies:
-          route-map rmap1 in
-         Neighbor: 10.4.6.6, Address-Family: VPNv6 Unicast
+R4_iosv#show bgp all neighbors 10.4.6.6 policy 
+ Neighbor: 10.4.6.6, Address-Family: VPNv4 Unicast
+ Locally configured policies:
+  route-map rmap1 in
+ Neighbor: 10.4.6.6, Address-Family: VPNv6 Unicast
 
         

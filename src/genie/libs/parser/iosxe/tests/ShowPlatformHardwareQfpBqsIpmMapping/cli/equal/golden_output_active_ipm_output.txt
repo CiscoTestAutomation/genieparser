@@ -1,33 +1,33 @@
-        Router#show platform hardware qfp active bqs 0 ipm mapping 
-        Load for five secs: 29%/1%; one minute: 8%; five minutes: 9%
-        Time source is NTP, 07:42:52.908 EST Thu Sep 8 2016
+Router#show platform hardware qfp active bqs 0 ipm mapping 
+Load for five secs: 29%/1%; one minute: 8%; five minutes: 9%
+Time source is NTP, 07:42:52.908 EST Thu Sep 8 2016
 
-        BQS IPM Channel Mapping
+BQS IPM Channel Mapping
 
-        Chan   Name                Interface      Port     CFIFO
+Chan   Name                Interface      Port     CFIFO
 
-         1     CC3 Low             SPI0           0        1     
-         2     CC3 Hi              SPI0           1        0     
-         3     CC2 Low             SPI0           2        1     
-         4     CC2 Hi              SPI0           3        0     
-         5     CC1 Low             SPI0           4        1     
-         6     CC1 Hi              SPI0           5        0     
-         7     CC0 Low             SPI0           6        1     
-         8     CC0 Hi              SPI0           7        0     
-         9     RP1 Low             SPI0           8        1     
-        10     RP1 Hi              SPI0           9        0     
-        11     RP0 Low             SPI0          10        1     
-        12     RP0 Hi              SPI0          11        0     
-        13     Peer-FP Low         SPI0          12        3     
-        14     Peer-FP Hi          SPI0          13        2     
-        15     Nitrox Low          SPI0          14        1     
-        16     Nitrox Hi           SPI0          15        0     
-        17     HT Pkt Low          HT             0        1     
-        18     HT Pkt Hi           HT             1        0     
-        19     HT IPC Low          HT             2        3     
-        20     HT IPC Hi           HT             3        2     
-        21     CC4 Low             SPI0          16        1     
-        22     CC4 Hi              SPI0          17        0     
-        23     CC5 Low             SPI0          18        1     
-        24     CC5 Hi              SPI0          19        0   
+ 1     CC3 Low             SPI0           0        1     
+ 2     CC3 Hi              SPI0           1        0     
+ 3     CC2 Low             SPI0           2        1     
+ 4     CC2 Hi              SPI0           3        0     
+ 5     CC1 Low             SPI0           4        1     
+ 6     CC1 Hi              SPI0           5        0     
+ 7     CC0 Low             SPI0           6        1     
+ 8     CC0 Hi              SPI0           7        0     
+ 9     RP1 Low             SPI0           8        1     
+10     RP1 Hi              SPI0           9        0     
+11     RP0 Low             SPI0          10        1     
+12     RP0 Hi              SPI0          11        0     
+13     Peer-FP Low         SPI0          12        3     
+14     Peer-FP Hi          SPI0          13        2     
+15     Nitrox Low          SPI0          14        1     
+16     Nitrox Hi           SPI0          15        0     
+17     HT Pkt Low          HT             0        1     
+18     HT Pkt Hi           HT             1        0     
+19     HT IPC Low          HT             2        3     
+20     HT IPC Hi           HT             3        2     
+21     CC4 Low             SPI0          16        1     
+22     CC4 Hi              SPI0          17        0     
+23     CC5 Low             SPI0          18        1     
+24     CC5 Hi              SPI0          19        0   
     

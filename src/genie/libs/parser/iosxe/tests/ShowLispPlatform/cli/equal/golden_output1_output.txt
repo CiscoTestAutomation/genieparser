@@ -1,13 +1,13 @@
 
-        202-XTR#show lisp platform
-        Parallel LISP instance limit:      2000
-        RLOC forwarding support:
-        IPv4 RLOC, local:                 OK
-        IPv6 RLOC, local:                 OK
-        MAC RLOC, local:                  Unsupported
-        IPv4 RLOC, remote:                OK
-        IPv6 RLOC, remote:                OK
-        MAC RLOC, remote:                 Unsupported
-        Latest supported config style:     Service and instance
-        Current config style:              Service and instance
+202-XTR#show lisp platform
+Parallel LISP instance limit:      2000
+RLOC forwarding support:
+IPv4 RLOC, local:                 OK
+IPv6 RLOC, local:                 OK
+MAC RLOC, local:                  Unsupported
+IPv4 RLOC, remote:                OK
+IPv6 RLOC, remote:                OK
+MAC RLOC, remote:                 Unsupported
+Latest supported config style:     Service and instance
+Current config style:              Service and instance
         

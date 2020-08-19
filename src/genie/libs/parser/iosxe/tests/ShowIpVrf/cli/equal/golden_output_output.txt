@@ -1,19 +1,19 @@
 
-        R1_xe#show ip vrf
-        Name                         Default RD            Interfaces
-        Mgmt-intf                    <not set>             Gi1
-        VRF1                         65000:1               Tu1
-                                                           Lo300
-                                                           Gi2.390
-                                                           Gi2.410
-                                                           Gi2.415
-                                                           Gi2.420
-                                                           Gi3.390
-                                                           Gi3.410
-                                                           Gi3.415
-                                                           Gi3.420
-                                                           Tu3
-                                                           Tu4
-                                                           Tu6
-                                                           Tu8 
+R1_xe#show ip vrf
+Name                         Default RD            Interfaces
+Mgmt-intf                    <not set>             Gi1
+VRF1                         65000:1               Tu1
+                                                   Lo300
+                                                   Gi2.390
+                                                   Gi2.410
+                                                   Gi2.415
+                                                   Gi2.420
+                                                   Gi3.390
+                                                   Gi3.410
+                                                   Gi3.415
+                                                   Gi3.420
+                                                   Tu3
+                                                   Tu4
+                                                   Tu6
+                                                   Tu8 
     

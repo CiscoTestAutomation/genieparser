@@ -1,9 +1,9 @@
-        Switch/Stack Mac Address : 689c.e2ff.b9d9 - Local Mac Address
-        Mac persistency wait time: Indefinite
-                                                     H/W   Current
-        Switch#   Role    Mac Address     Priority Version  State 
-        -------------------------------------------------------------------------------------
-        *1       Active   689c.e2ff.b9d9     3      V04     Ready                
-         2       Standby  c800.84ff.7e00     2      V05     Ready                
-         3       Member   c800.84ff.4800     1      V05     Ready 
+Switch/Stack Mac Address : 689c.e2ff.b9d9 - Local Mac Address
+Mac persistency wait time: Indefinite
+                                             H/W   Current
+Switch#   Role    Mac Address     Priority Version  State 
+-------------------------------------------------------------------------------------
+*1       Active   689c.e2ff.b9d9     3      V04     Ready                
+ 2       Standby  c800.84ff.7e00     2      V05     Ready                
+ 3       Member   c800.84ff.4800     1      V05     Ready 
     

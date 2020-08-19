@@ -1,3 +1,3 @@
-        show processes cpu sorted 5min | inc CPU
-        CPU utilization for five seconds: 7%/1%; one minute: 6%; five minutes: 6%
+show processes cpu sorted 5min | inc CPU
+CPU utilization for five seconds: 7%/1%; one minute: 6%; five minutes: 6%
     

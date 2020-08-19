@@ -1,11 +1,11 @@
 
-        PIM Neighbor Table
-        Mode: B - Bidir Capable, DR - Designated Router, N - Default DR Priority,
-              P - Proxy Capable, S - State Refresh Capable, G - GenID Capable,
-              L - DR Load-balancing Capable
-        Neighbor          Interface                Uptime/Expires    Ver   DR
-        Address                                                            Prio/Mode
-        192.168.4.1       Port-channel1.100        4w4d/00:01:40     v2    1 / S P G
-        192.168.205.2     GigabitEthernet0/2/3.100 4w4d/00:01:19     v2    1 / DR B S P G
+PIM Neighbor Table
+Mode: B - Bidir Capable, DR - Designated Router, N - Default DR Priority,
+      P - Proxy Capable, S - State Refresh Capable, G - GenID Capable,
+      L - DR Load-balancing Capable
+Neighbor          Interface                Uptime/Expires    Ver   DR
+Address                                                            Prio/Mode
+192.168.4.1       Port-channel1.100        4w4d/00:01:40     v2    1 / S P G
+192.168.205.2     GigabitEthernet0/2/3.100 4w4d/00:01:19     v2    1 / DR B S P G
     
     

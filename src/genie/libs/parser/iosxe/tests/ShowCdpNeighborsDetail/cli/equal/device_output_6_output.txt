@@ -1,39 +1,39 @@
 
-        Device# show cdp neighbors detail
-        Device ID: e0553d849f1a
-        Entry address(es):
-          IP address: 10.0.0.7
-        Platform: Meraki MV21 Cloud Managed Indoor HD Dom
-        Interface: GigabitEthernet3/0/29,  Port ID (outgoing port): Port 0
-        Holdtime : 145 sec
+Device# show cdp neighbors detail
+Device ID: e0553d849f1a
+Entry address(es):
+  IP address: 10.0.0.7
+Platform: Meraki MV21 Cloud Managed Indoor HD Dom
+Interface: GigabitEthernet3/0/29,  Port ID (outgoing port): Port 0
+Holdtime : 145 sec
 
-        Version :
-        1
+Version :
+1
 
-        advertisement version: 2
-        Power drawn: 0.000 Watts
-        Power request id: 31314, Power management id: 0
-        Power request levels are:15400 0 0 0 0
+advertisement version: 2
+Power drawn: 0.000 Watts
+Power request id: 31314, Power management id: 0
+Power request levels are:15400 0 0 0 0
 
-        -------------------------
-        Device ID: System1
-        Entry address(es):
-          IP address: 10.0.0.8
-        Platform: cisco ISR4351/K9,  Capabilities: Router Switch IGMP
-        Interface: GigabitEthernet1/0/47,  Port ID (outgoing port): GigabitEthernet0/0/2
-        Holdtime : 129 sec
+-------------------------
+Device ID: System1
+Entry address(es):
+  IP address: 10.0.0.8
+Platform: cisco ISR4351/K9,  Capabilities: Router Switch IGMP
+Interface: GigabitEthernet1/0/47,  Port ID (outgoing port): GigabitEthernet0/0/2
+Holdtime : 129 sec
 
-        Version :
-        Cisco IOS Software [Fuji], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.9.4, RELEASE SOFTWARE (fc2)
-        Technical Support: http://www.cisco.com/techsupport
-        Copyright (c) 1986-2019 by Cisco Systems, Inc.
-        Compiled Thu 22-Aug-19 18:09 by mcpre
+Version :
+Cisco IOS Software [Fuji], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.9.4, RELEASE SOFTWARE (fc2)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2019 by Cisco Systems, Inc.
+Compiled Thu 22-Aug-19 18:09 by mcpre
 
-        advertisement version: 2
-        VTP Management Domain: ''
-        Duplex: full
-        Management address(es):
-          IP address: 10.0.0.8
+advertisement version: 2
+VTP Management Domain: ''
+Duplex: full
+Management address(es):
+  IP address: 10.0.0.8
 
-        Total cdp entries displayed : 2
+Total cdp entries displayed : 2
     

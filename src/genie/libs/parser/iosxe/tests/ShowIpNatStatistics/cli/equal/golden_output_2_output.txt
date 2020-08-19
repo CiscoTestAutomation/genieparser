@@ -1,10 +1,10 @@
 
-        C1841#sh ip nat statistics 
-        Total active translations: 3339 (0 static, 3339 dynamic; 3339 extended)
-        Peak translations: 8114, occurred 18:35:17 ago
-        Outside interfaces:
-        FastEthernet0/0
-        Inside interfaces: 
-        FastEthernet0/1
-        Hits: 28658670  Misses: 0
+C1841#sh ip nat statistics 
+Total active translations: 3339 (0 static, 3339 dynamic; 3339 extended)
+Peak translations: 8114, occurred 18:35:17 ago
+Outside interfaces:
+FastEthernet0/0
+Inside interfaces: 
+FastEthernet0/1
+Hits: 28658670  Misses: 0
     

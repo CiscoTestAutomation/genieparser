@@ -1,22 +1,22 @@
 
-        Interface: GigabitEthernet4 QFP: 0.0 if_h: 9 Num Queues/Schedules: 1
-          Queue specifics:
-            Index 0 (Queue ID:0x70, Name: GigabitEthernet4)
-            PARQ Software Control Info:
-              (cache) queue id: 0x00000070, wred: 0xe73cfde0, qlimit (pkts ): 418
-              parent_sid: 0x8d, debug_name: GigabitEthernet4
-              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 65527
-              orig_min  : 0                   ,      min: 105000000           
-              min_qos   : 0                   , min_dflt: 0                   
-              orig_max  : 0                   ,      max: 0                   
-              max_qos   : 0                   , max_dflt: 0                   
-              share     : 1
-              plevel    : 0, priority: 65535
-              defer_obj_refcnt: 0
-            Statistics:
-              tail drops  (bytes): 0                   ,          (packets): 0                   
-              total enqs  (bytes): 108648448           ,          (packets): 1697632             
-              queue_depth (pkts ): 0                   
-              licensed throughput oversubscription drops:
-                          (bytes): 0                   ,          (packets): 0     
+Interface: GigabitEthernet4 QFP: 0.0 if_h: 9 Num Queues/Schedules: 1
+  Queue specifics:
+    Index 0 (Queue ID:0x70, Name: GigabitEthernet4)
+    PARQ Software Control Info:
+      (cache) queue id: 0x00000070, wred: 0xe73cfde0, qlimit (pkts ): 418
+      parent_sid: 0x8d, debug_name: GigabitEthernet4
+      sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 65527
+      orig_min  : 0                   ,      min: 105000000           
+      min_qos   : 0                   , min_dflt: 0                   
+      orig_max  : 0                   ,      max: 0                   
+      max_qos   : 0                   , max_dflt: 0                   
+      share     : 1
+      plevel    : 0, priority: 65535
+      defer_obj_refcnt: 0
+    Statistics:
+      tail drops  (bytes): 0                   ,          (packets): 0                   
+      total enqs  (bytes): 108648448           ,          (packets): 1697632             
+      queue_depth (pkts ): 0                   
+      licensed throughput oversubscription drops:
+                  (bytes): 0                   ,          (packets): 0     
     

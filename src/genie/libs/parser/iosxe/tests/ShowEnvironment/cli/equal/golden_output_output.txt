@@ -1,206 +1,206 @@
-        Router#show environment
-        Load for five secs: 4%/0%; one minute: 8%; five minutes: 6%
-        Time source is NTP, 17:41:24.716 EST Wed Oct 19 2016
+Router#show environment
+Load for five secs: 4%/0%; one minute: 8%; five minutes: 6%
+Time source is NTP, 17:41:24.716 EST Wed Oct 19 2016
 
 
-        Number of Critical alarms:  0
-        Number of Major alarms:     0
-        Number of Minor alarms:     0
+Number of Critical alarms:  0
+Number of Major alarms:     0
+Number of Minor alarms:     0
 
-        Slot    Sensor       Current State       Reading
-        ----    ------       -------------       -------
-         F0    V1: VMA          Normal           1796 mV
-         F0    V1: VMB          Normal           1196 mV
-         F0    V1: VMC          Normal           996 mV
-         F0    V1: VMD          Normal           1044 mV
-         F0    V1: VME          Normal           1020 mV
-         F0    V1: VMF          Normal           1098 mV
-         F0    V1: 12v          Normal           11821 mV
-         F0    V1: VDD          Normal           3295 mV
-         F0    V1: GP1          Normal           908 mV
-         F0    V1: GP2          Normal           771 mV
-         F0    V2: VMA          Normal           3291 mV
-         F0    V2: VMB          Normal           2495 mV
-         F0    V2: VMC          Normal           1499 mV
-         F0    V2: VMD          Normal           1196 mV
-         F0    V2: VME          Normal           1103 mV
-         F0    V2: VMF          Normal           1000 mV
-         F0    V2: 12v          Normal           11748 mV
-         F0    V2: VDD          Normal           3295 mV
-         F0    V2: GP1          Normal           771 mV
-         F0    V2: GP2          Normal           1096 mV
-         F0    Temp: Inlet      Normal           30 Celsius
-         F0    Temp: Pop Die    Normal           43 Celsius
-         F0    Temp: Left Ext   Normal           42 Celsius
-         F0    Temp: HKP Die    Normal           47 Celsius
-         F0    Temp: CPP Rear   Normal           40 Celsius
-         F0    Temp: Olv Die    Normal           38 Celsius
-         F0    Temp: Rght Ext   Normal           37 Celsius
-         F0    Temp: MCH Die    Normal           53 Celsius
-         F0    V3: VMA          Normal           3291 mV
-         F0    V3: VMB          Normal           2495 mV
-         F0    V3: VMC          Normal           1499 mV
-         F0    V3: VMD          Normal           1000 mV
-         F0    V3: 12v          Normal           11850 mV
-         F0    V3: VDD          Normal           3300 mV
-         P0    Vin              Normal           101 V AC
-         P0    Iin              Normal           1 A
-         P0    Vout             Normal           12 V AC
-         P0    Iout             Normal           15 A
-         P0    Temp1            Normal           26 Celsius
-         P0    Temp2            Normal           31 Celsius
-         P0    Temp3            Normal           26 Celsius
-         P1    Vin              Normal           101 V AC
-         P1    Iin              Normal           2 A
-         P1    Vout             Normal           12 V AC
-         P1    Iout             Normal           16 A
-         P1    Temp1            Normal           26 Celsius
-         P1    Temp2            Normal           33 Celsius
-         P1    Temp3            Normal           26 Celsius
-         P6    Temp1            Normal           38 Celsius
-         P6    Temp: FC PWM1    Fan Speed 60%    26 Celsius
-         P7    Temp1            Normal           37 Celsius
-         P7    Temp: FC PWM1    Fan Speed 60%    26 Celsius
-         R0    V1: VMA          Normal           1201 mV
-         R0    V1: VMB          Normal           2495 mV
-         R0    V1: VMC          Normal           3291 mV
-         R0    V1: VMD          Normal           2495 mV
-         R0    V1: VME          Normal           1796 mV
-         R0    V1: VMF          Normal           1528 mV
-         R0    V1: 12v          Normal           11835 mV
-         R0    V1: VDD          Normal           3295 mV
-         R0    V1: GP1          Normal           910 mV
-         R0    V1: GP2          Normal           1198 mV
-         R0    V2: VMA          Normal           1049 mV
-         R0    V2: VMB          Normal           1098 mV
-         R0    V2: VMD          Normal           996 mV
-         R0    V2: VME          Normal           1098 mV
-         R0    V2: VMF          Normal           996 mV
-         R0    V2: 12v          Normal           11850 mV
-         R0    V2: VDD          Normal           3300 mV
-         R0    V2: GP1          Normal           2497 mV
-         R0    V2: GP2          Normal           1196 mV
-         R0    Temp: Outlet     Normal           30 Celsius
-         R0    Temp: CPU AIR    Normal           32 Celsius
-         R0    Temp: Inlet      Normal           26 Celsius
-         R0    Temp: SCBY AIR   Normal           45 Celsius
-         R0    Temp: MCH DIE    Normal           54 Celsius
-         R0    Temp: MCH AIR    Normal           40 Celsius
-         R0    Temp: C2D C0     Normal           35 Celsius
-         R0    Temp: C2D C1     Normal           37 Celsius
-         R1    V1: VMA          Normal           1201 mV
-         R1    V1: VMB          Normal           2495 mV
-         R1    V1: VMC          Normal           3291 mV
-         R1    V1: VMD          Normal           2495 mV
-         R1    V1: VME          Normal           1796 mV
-         R1    V1: VMF          Normal           1528 mV
-         R1    V1: 12v          Normal           11835 mV
-         R1    V1: VDD          Normal           3305 mV
-         R1    V1: GP1          Normal           910 mV
-         R1    V1: GP2          Normal           1198 mV
-         R1    V2: VMA          Normal           1044 mV
-         R1    V2: VMB          Normal           1098 mV
-         R1    V2: VMD          Normal           991 mV
-         R1    V2: VME          Normal           1098 mV
-         R1    V2: VMF          Normal           1000 mV
-         R1    V2: 12v          Normal           11821 mV
-         R1    V2: VDD          Normal           3305 mV
-         R1    V2: GP1          Normal           2497 mV
-         R1    V2: GP2          Normal           1196 mV
-         R1    Temp: Outlet     Normal           30 Celsius
-         R1    Temp: CPU AIR    Normal           32 Celsius
-         R1    Temp: Inlet      Normal           25 Celsius
-         R1    Temp: SCBY AIR   Normal           40 Celsius
-         R1    Temp: MCH DIE    Normal           53 Celsius
-         R1    Temp: MCH AIR    Normal           39 Celsius
-         R1    Temp: C2D C0     Normal           36 Celsius
-         R1    Temp: C2D C1     Normal           33 Celsius
-         0     V1: VMA          Normal           1098 mV
-         0     V1: VMB          Normal           1196 mV
-         0     V1: VMC          Normal           1494 mV
-         0     V1: VMD          Normal           1796 mV
-         0     V1: VME          Normal           2490 mV
-         0     V1: VMF          Normal           3286 mV
-         0     V1: 12v          Normal           11894 mV
-         0     V1: VDD          Normal           3295 mV
-         0     V1: GP1          Normal           749 mV
-         0     V1: GP2          Normal           898 mV
-         0     V2: VMB          Normal           996 mV
-         0     V2: VME          Normal           747 mV
-         0     V2: VMF          Normal           747 mV
-         0     V2: 12v          Normal           11865 mV
-         0     V2: VDD          Normal           3295 mV
-         0     V2: GP2          Normal           747 mV
-         0     Temp: Left       Normal           30 Celsius
-         0     Temp: Center     Normal           37 Celsius
-         0     Temp: Asic1      Normal           50 Celsius
-         0     Temp: Right      Normal           35 Celsius
-         F1    V1: VMA          Normal           1796 mV
-         F1    V1: VMB          Normal           1196 mV
-         F1    V1: VMC          Normal           996 mV
-         F1    V1: VMD          Normal           1049 mV
-         F1    V1: VME          Normal           1035 mV
-         F1    V1: VMF          Normal           1098 mV
-         F1    V1: 12v          Normal           11821 mV
-         F1    V1: VDD          Normal           3295 mV
-         F1    V1: GP1          Normal           903 mV
-         F1    V1: GP2          Normal           769 mV
-         F1    V2: VMA          Normal           3291 mV
-         F1    V2: VMB          Normal           2495 mV
-         F1    V2: VMC          Normal           1499 mV
-         F1    V2: VMD          Normal           1196 mV
-         F1    V2: VME          Normal           1098 mV
-         F1    V2: VMF          Normal           996 mV
-         F1    V2: 12v          Normal           11762 mV
-         F1    V2: VDD          Normal           3295 mV
-         F1    V2: GP1          Normal           771 mV
-         F1    V2: GP2          Normal           1088 mV
-         F1    Temp: Inlet      Normal           31 Celsius
-         F1    Temp: Pop Die    Normal           48 Celsius
-         F1    Temp: Left Ext   Normal           43 Celsius
-         F1    Temp: HKP Die    Normal           52 Celsius
-         F1    Temp: CPP Rear   Normal           46 Celsius
-         F1    Temp: Olv Die    Normal           41 Celsius
-         F1    Temp: Rght Ext   Normal           37 Celsius
-         F1    Temp: MCH Die    Normal           54 Celsius
-         F1    V3: VMA          Normal           3286 mV
-         F1    V3: VMB          Normal           2495 mV
-         F1    V3: VMC          Normal           1494 mV
-         F1    V3: VMD          Normal           996 mV
-         F1    V3: 12v          Normal           11806 mV
-         F1    V3: VDD          Normal           3295 mV
-         1     V1: VMA          Normal           1098 mV
-         1     V1: VMB          Normal           1196 mV
-         1     V1: VMC          Normal           1494 mV
-         1     V1: VMD          Normal           1791 mV
-         1     V1: VME          Normal           2490 mV
-         1     V1: VMF          Normal           3286 mV
-         1     V1: 12v          Normal           11879 mV
-         1     V1: VDD          Normal           3291 mV
-         1     V1: GP1          Normal           747 mV
-         1     V1: GP2          Normal           891 mV
-         1     V2: VMB          Normal           996 mV
-         1     V2: VME          Normal           747 mV
-         1     V2: VMF          Normal           747 mV
-         1     V2: 12v          Normal           11865 mV
-         1     V2: VDD          Normal           3295 mV
-         1     V2: GP2          Normal           749 mV
-         1     Temp: Left       Normal           26 Celsius
-         1     Temp: Center     Normal           29 Celsius
-         1     Temp: Asic1      Normal           38 Celsius
-         1     Temp: Right      Normal           29 Celsius
-         P2    Vin              Normal           101 V AC
-         P2    Iin              Normal           1 A
-         P2    Vout             Normal           12 V AC
-         P2    Iout             Normal           13 A
-         P2    Temp1            Normal           26 Celsius
-         P2    Temp2            Normal           31 Celsius
-         P2    Temp3            Normal           26 Celsius
-         P3    Vin              Normal           100 V AC
-         P3    Iin              Normal           1 A
-         P3    Vout             Normal           12 V AC
-         P3    Iout             Normal           13 A
-         P3    Temp1            Normal           26 Celsius
-         P3    Temp2            Normal           31 Celsius
-         P3    Temp3            Normal           26 Celsius
+Slot    Sensor       Current State       Reading
+----    ------       -------------       -------
+ F0    V1: VMA          Normal           1796 mV
+ F0    V1: VMB          Normal           1196 mV
+ F0    V1: VMC          Normal           996 mV
+ F0    V1: VMD          Normal           1044 mV
+ F0    V1: VME          Normal           1020 mV
+ F0    V1: VMF          Normal           1098 mV
+ F0    V1: 12v          Normal           11821 mV
+ F0    V1: VDD          Normal           3295 mV
+ F0    V1: GP1          Normal           908 mV
+ F0    V1: GP2          Normal           771 mV
+ F0    V2: VMA          Normal           3291 mV
+ F0    V2: VMB          Normal           2495 mV
+ F0    V2: VMC          Normal           1499 mV
+ F0    V2: VMD          Normal           1196 mV
+ F0    V2: VME          Normal           1103 mV
+ F0    V2: VMF          Normal           1000 mV
+ F0    V2: 12v          Normal           11748 mV
+ F0    V2: VDD          Normal           3295 mV
+ F0    V2: GP1          Normal           771 mV
+ F0    V2: GP2          Normal           1096 mV
+ F0    Temp: Inlet      Normal           30 Celsius
+ F0    Temp: Pop Die    Normal           43 Celsius
+ F0    Temp: Left Ext   Normal           42 Celsius
+ F0    Temp: HKP Die    Normal           47 Celsius
+ F0    Temp: CPP Rear   Normal           40 Celsius
+ F0    Temp: Olv Die    Normal           38 Celsius
+ F0    Temp: Rght Ext   Normal           37 Celsius
+ F0    Temp: MCH Die    Normal           53 Celsius
+ F0    V3: VMA          Normal           3291 mV
+ F0    V3: VMB          Normal           2495 mV
+ F0    V3: VMC          Normal           1499 mV
+ F0    V3: VMD          Normal           1000 mV
+ F0    V3: 12v          Normal           11850 mV
+ F0    V3: VDD          Normal           3300 mV
+ P0    Vin              Normal           101 V AC
+ P0    Iin              Normal           1 A
+ P0    Vout             Normal           12 V AC
+ P0    Iout             Normal           15 A
+ P0    Temp1            Normal           26 Celsius
+ P0    Temp2            Normal           31 Celsius
+ P0    Temp3            Normal           26 Celsius
+ P1    Vin              Normal           101 V AC
+ P1    Iin              Normal           2 A
+ P1    Vout             Normal           12 V AC
+ P1    Iout             Normal           16 A
+ P1    Temp1            Normal           26 Celsius
+ P1    Temp2            Normal           33 Celsius
+ P1    Temp3            Normal           26 Celsius
+ P6    Temp1            Normal           38 Celsius
+ P6    Temp: FC PWM1    Fan Speed 60%    26 Celsius
+ P7    Temp1            Normal           37 Celsius
+ P7    Temp: FC PWM1    Fan Speed 60%    26 Celsius
+ R0    V1: VMA          Normal           1201 mV
+ R0    V1: VMB          Normal           2495 mV
+ R0    V1: VMC          Normal           3291 mV
+ R0    V1: VMD          Normal           2495 mV
+ R0    V1: VME          Normal           1796 mV
+ R0    V1: VMF          Normal           1528 mV
+ R0    V1: 12v          Normal           11835 mV
+ R0    V1: VDD          Normal           3295 mV
+ R0    V1: GP1          Normal           910 mV
+ R0    V1: GP2          Normal           1198 mV
+ R0    V2: VMA          Normal           1049 mV
+ R0    V2: VMB          Normal           1098 mV
+ R0    V2: VMD          Normal           996 mV
+ R0    V2: VME          Normal           1098 mV
+ R0    V2: VMF          Normal           996 mV
+ R0    V2: 12v          Normal           11850 mV
+ R0    V2: VDD          Normal           3300 mV
+ R0    V2: GP1          Normal           2497 mV
+ R0    V2: GP2          Normal           1196 mV
+ R0    Temp: Outlet     Normal           30 Celsius
+ R0    Temp: CPU AIR    Normal           32 Celsius
+ R0    Temp: Inlet      Normal           26 Celsius
+ R0    Temp: SCBY AIR   Normal           45 Celsius
+ R0    Temp: MCH DIE    Normal           54 Celsius
+ R0    Temp: MCH AIR    Normal           40 Celsius
+ R0    Temp: C2D C0     Normal           35 Celsius
+ R0    Temp: C2D C1     Normal           37 Celsius
+ R1    V1: VMA          Normal           1201 mV
+ R1    V1: VMB          Normal           2495 mV
+ R1    V1: VMC          Normal           3291 mV
+ R1    V1: VMD          Normal           2495 mV
+ R1    V1: VME          Normal           1796 mV
+ R1    V1: VMF          Normal           1528 mV
+ R1    V1: 12v          Normal           11835 mV
+ R1    V1: VDD          Normal           3305 mV
+ R1    V1: GP1          Normal           910 mV
+ R1    V1: GP2          Normal           1198 mV
+ R1    V2: VMA          Normal           1044 mV
+ R1    V2: VMB          Normal           1098 mV
+ R1    V2: VMD          Normal           991 mV
+ R1    V2: VME          Normal           1098 mV
+ R1    V2: VMF          Normal           1000 mV
+ R1    V2: 12v          Normal           11821 mV
+ R1    V2: VDD          Normal           3305 mV
+ R1    V2: GP1          Normal           2497 mV
+ R1    V2: GP2          Normal           1196 mV
+ R1    Temp: Outlet     Normal           30 Celsius
+ R1    Temp: CPU AIR    Normal           32 Celsius
+ R1    Temp: Inlet      Normal           25 Celsius
+ R1    Temp: SCBY AIR   Normal           40 Celsius
+ R1    Temp: MCH DIE    Normal           53 Celsius
+ R1    Temp: MCH AIR    Normal           39 Celsius
+ R1    Temp: C2D C0     Normal           36 Celsius
+ R1    Temp: C2D C1     Normal           33 Celsius
+ 0     V1: VMA          Normal           1098 mV
+ 0     V1: VMB          Normal           1196 mV
+ 0     V1: VMC          Normal           1494 mV
+ 0     V1: VMD          Normal           1796 mV
+ 0     V1: VME          Normal           2490 mV
+ 0     V1: VMF          Normal           3286 mV
+ 0     V1: 12v          Normal           11894 mV
+ 0     V1: VDD          Normal           3295 mV
+ 0     V1: GP1          Normal           749 mV
+ 0     V1: GP2          Normal           898 mV
+ 0     V2: VMB          Normal           996 mV
+ 0     V2: VME          Normal           747 mV
+ 0     V2: VMF          Normal           747 mV
+ 0     V2: 12v          Normal           11865 mV
+ 0     V2: VDD          Normal           3295 mV
+ 0     V2: GP2          Normal           747 mV
+ 0     Temp: Left       Normal           30 Celsius
+ 0     Temp: Center     Normal           37 Celsius
+ 0     Temp: Asic1      Normal           50 Celsius
+ 0     Temp: Right      Normal           35 Celsius
+ F1    V1: VMA          Normal           1796 mV
+ F1    V1: VMB          Normal           1196 mV
+ F1    V1: VMC          Normal           996 mV
+ F1    V1: VMD          Normal           1049 mV
+ F1    V1: VME          Normal           1035 mV
+ F1    V1: VMF          Normal           1098 mV
+ F1    V1: 12v          Normal           11821 mV
+ F1    V1: VDD          Normal           3295 mV
+ F1    V1: GP1          Normal           903 mV
+ F1    V1: GP2          Normal           769 mV
+ F1    V2: VMA          Normal           3291 mV
+ F1    V2: VMB          Normal           2495 mV
+ F1    V2: VMC          Normal           1499 mV
+ F1    V2: VMD          Normal           1196 mV
+ F1    V2: VME          Normal           1098 mV
+ F1    V2: VMF          Normal           996 mV
+ F1    V2: 12v          Normal           11762 mV
+ F1    V2: VDD          Normal           3295 mV
+ F1    V2: GP1          Normal           771 mV
+ F1    V2: GP2          Normal           1088 mV
+ F1    Temp: Inlet      Normal           31 Celsius
+ F1    Temp: Pop Die    Normal           48 Celsius
+ F1    Temp: Left Ext   Normal           43 Celsius
+ F1    Temp: HKP Die    Normal           52 Celsius
+ F1    Temp: CPP Rear   Normal           46 Celsius
+ F1    Temp: Olv Die    Normal           41 Celsius
+ F1    Temp: Rght Ext   Normal           37 Celsius
+ F1    Temp: MCH Die    Normal           54 Celsius
+ F1    V3: VMA          Normal           3286 mV
+ F1    V3: VMB          Normal           2495 mV
+ F1    V3: VMC          Normal           1494 mV
+ F1    V3: VMD          Normal           996 mV
+ F1    V3: 12v          Normal           11806 mV
+ F1    V3: VDD          Normal           3295 mV
+ 1     V1: VMA          Normal           1098 mV
+ 1     V1: VMB          Normal           1196 mV
+ 1     V1: VMC          Normal           1494 mV
+ 1     V1: VMD          Normal           1791 mV
+ 1     V1: VME          Normal           2490 mV
+ 1     V1: VMF          Normal           3286 mV
+ 1     V1: 12v          Normal           11879 mV
+ 1     V1: VDD          Normal           3291 mV
+ 1     V1: GP1          Normal           747 mV
+ 1     V1: GP2          Normal           891 mV
+ 1     V2: VMB          Normal           996 mV
+ 1     V2: VME          Normal           747 mV
+ 1     V2: VMF          Normal           747 mV
+ 1     V2: 12v          Normal           11865 mV
+ 1     V2: VDD          Normal           3295 mV
+ 1     V2: GP2          Normal           749 mV
+ 1     Temp: Left       Normal           26 Celsius
+ 1     Temp: Center     Normal           29 Celsius
+ 1     Temp: Asic1      Normal           38 Celsius
+ 1     Temp: Right      Normal           29 Celsius
+ P2    Vin              Normal           101 V AC
+ P2    Iin              Normal           1 A
+ P2    Vout             Normal           12 V AC
+ P2    Iout             Normal           13 A
+ P2    Temp1            Normal           26 Celsius
+ P2    Temp2            Normal           31 Celsius
+ P2    Temp3            Normal           26 Celsius
+ P3    Vin              Normal           100 V AC
+ P3    Iin              Normal           1 A
+ P3    Vout             Normal           12 V AC
+ P3    Iout             Normal           13 A
+ P3    Temp1            Normal           26 Celsius
+ P3    Temp2            Normal           31 Celsius
+ P3    Temp3            Normal           26 Celsius
     

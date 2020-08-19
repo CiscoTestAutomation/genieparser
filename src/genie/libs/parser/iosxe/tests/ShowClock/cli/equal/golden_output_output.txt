@@ -1,6 +1,6 @@
-        Router#show clock
-        Load for five secs: 1%/0%; one minute: 2%; five minutes: 3%
-        Time source is NTP, 18:56:04.554 EST Mon Oct 17 2016
+Router#show clock
+Load for five secs: 1%/0%; one minute: 2%; five minutes: 3%
+Time source is NTP, 18:56:04.554 EST Mon Oct 17 2016
 
-        18:56:04.554 EST Mon Oct 17 2016
+18:56:04.554 EST Mon Oct 17 2016
     

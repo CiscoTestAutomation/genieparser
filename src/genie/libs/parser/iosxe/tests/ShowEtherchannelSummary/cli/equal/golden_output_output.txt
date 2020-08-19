@@ -1,28 +1,28 @@
 
-        csr1000v-1#show etherchannel summary
-        Flags:  D - down        P/bndl - bundled in port-channel
-                I - stand-alone s/susp - suspended
-                H - Hot-standby (LACP only)
-                R - Layer3      S - Layer2
-                U - in use      f - failed to allocate aggregator
+csr1000v-1#show etherchannel summary
+Flags:  D - down        P/bndl - bundled in port-channel
+        I - stand-alone s/susp - suspended
+        H - Hot-standby (LACP only)
+        R - Layer3      S - Layer2
+        U - in use      f - failed to allocate aggregator
 
-                M - not in use, minimum links not met
-                u - unsuitable for bundling
-                w - waiting to be aggregated
-                d - default port
-
-
-        Number of channel-groups in use: 2
-        Number of aggregators:           2
-
-        Group  Port-channel  Protocol    Ports
-        ------+-------------+-----------+-----------------------------------------------
-        1	Po1(RU)		LACP	 Gi2(bndl) Gi3(bndl)
-        2	Po2(RU)		LACP	 Gi4(bndl) Gi5(hot-sby) Gi6(bndl)
+        M - not in use, minimum links not met
+        u - unsuitable for bundling
+        w - waiting to be aggregated
+        d - default port
 
 
-        RU - L3 port-channel UP State
-        SU - L2 port-channel UP state
-        P/bndl -  Bundled
-        S/susp  - Suspended
+Number of channel-groups in use: 2
+Number of aggregators:           2
+
+Group  Port-channel  Protocol    Ports
+------+-------------+-----------+-----------------------------------------------
+1	Po1(RU)		LACP	 Gi2(bndl) Gi3(bndl)
+2	Po2(RU)		LACP	 Gi4(bndl) Gi5(hot-sby) Gi6(bndl)
+
+
+RU - L3 port-channel UP State
+SU - L2 port-channel UP state
+P/bndl -  Bundled
+S/susp  - Suspended
     

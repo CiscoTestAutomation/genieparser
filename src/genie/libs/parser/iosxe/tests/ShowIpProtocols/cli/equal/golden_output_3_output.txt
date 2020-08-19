@@ -1,47 +1,47 @@
 
-        show ip protocols
-        *** IP Routing is NSF aware ***
+show ip protocols
+*** IP Routing is NSF aware ***
 
-        Routing Protocol is "application"
-          Sending updates every 0 seconds
-          Invalid after 0 seconds, hold down 0, flushed after 0
-          Outgoing update filter list for all interfaces is not set
-          Incoming update filter list for all interfaces is not set
-          Maximum path: 32
-          Routing for Networks:
-          Routing Information Sources:
-            Gateway         Distance      Last Update
-          Distance: (default is 4)
+Routing Protocol is "application"
+  Sending updates every 0 seconds
+  Invalid after 0 seconds, hold down 0, flushed after 0
+  Outgoing update filter list for all interfaces is not set
+  Incoming update filter list for all interfaces is not set
+  Maximum path: 32
+  Routing for Networks:
+  Routing Information Sources:
+    Gateway         Distance      Last Update
+  Distance: (default is 4)
 
-        Routing Protocol is "isis banana"
-          Outgoing update filter list for all interfaces is not set
-          Incoming update filter list for all interfaces is not set
-          Redistributing: isis banana
-          Address Summarization:
-            None
-          Maximum path: 4
-          Routing for Networks:
-            TenGigabitEthernet0/0/26
-            TenGigabitEthernet0/0/27
-          Passive Interface(s):
-            Loopback0
-          Routing Information Sources:
-            Gateway         Distance      Last Update
-            10.60.6.3            115      05:56:34
-            10.60.6.2            115      05:56:34
-            10.60.6.4            115      05:56:34
-            10.60.6.9            115      05:56:34
-          Distance: (default is 115)
+Routing Protocol is "isis banana"
+  Outgoing update filter list for all interfaces is not set
+  Incoming update filter list for all interfaces is not set
+  Redistributing: isis banana
+  Address Summarization:
+    None
+  Maximum path: 4
+  Routing for Networks:
+    TenGigabitEthernet0/0/26
+    TenGigabitEthernet0/0/27
+  Passive Interface(s):
+    Loopback0
+  Routing Information Sources:
+    Gateway         Distance      Last Update
+    10.60.6.3            115      05:56:34
+    10.60.6.2            115      05:56:34
+    10.60.6.4            115      05:56:34
+    10.60.6.9            115      05:56:34
+  Distance: (default is 115)
 
-        Routing Protocol is "bgp 9999"
-          Outgoing update filter list for all interfaces is not set
-          Incoming update filter list for all interfaces is not set
-          IGP synchronization is disabled
-          Automatic route summarization is disabled
-          Maximum path: 1
-          Routing Information Sources:
-            Gateway         Distance      Last Update
-            10.60.6.3            200      12w5d
-            10.60.6.2            200      14w4d
-          Distance: external 20 internal 200 local 200
+Routing Protocol is "bgp 9999"
+  Outgoing update filter list for all interfaces is not set
+  Incoming update filter list for all interfaces is not set
+  IGP synchronization is disabled
+  Automatic route summarization is disabled
+  Maximum path: 1
+  Routing Information Sources:
+    Gateway         Distance      Last Update
+    10.60.6.3            200      12w5d
+    10.60.6.2            200      14w4d
+  Distance: external 20 internal 200 local 200
         

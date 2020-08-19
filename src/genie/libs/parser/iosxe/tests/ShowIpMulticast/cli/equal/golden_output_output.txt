@@ -1,7 +1,7 @@
-        Multicast Routing: enabled
-        Multicast Multipath: enabled
-        Multicast Route limit: No limit
-        Multicast Fallback group mode: Sparse
-        Number of multicast boundaries configured with filter-autorp option: 0
-        MoFRR: Disabled
+Multicast Routing: enabled
+Multicast Multipath: enabled
+Multicast Route limit: No limit
+Multicast Fallback group mode: Sparse
+Number of multicast boundaries configured with filter-autorp option: 0
+MoFRR: Disabled
     

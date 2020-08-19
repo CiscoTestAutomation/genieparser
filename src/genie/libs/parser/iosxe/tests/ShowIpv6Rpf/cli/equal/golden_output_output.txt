@@ -1,9 +1,9 @@
-        RPF information for 2001:99:99::99
-          RPF interface: GigabitEthernet1
-          RPF neighbor: 2001:99:99::99
-          RPF route/mask: 2001:99:99::99/128
-          RPF type: Mroute
-          RPF recursion count: 0
-          Metric preference: 128
-          Metric: 0
+RPF information for 2001:99:99::99
+  RPF interface: GigabitEthernet1
+  RPF neighbor: 2001:99:99::99
+  RPF route/mask: 2001:99:99::99/128
+  RPF type: Mroute
+  RPF recursion count: 0
+  Metric preference: 128
+  Metric: 0
     

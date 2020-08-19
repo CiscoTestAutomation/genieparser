@@ -1,22 +1,22 @@
-        VLAN0100 is executing the ieee compatible Spanning Tree protocol
-          Bridge Identifier has priority 24576, sysid 100, address 3820.56ff.76db
-          Configured hello time 2, max age 20, forward delay 15
-          We are the root of the spanning tree
-          Topology change flag not set, detected flag not set
-          Number of topology changes 1 last change occurred 00:05:37 ago
-                  from Port-channel12
-          Times:  hold 1, topology change 35, notification 2
-                  hello 2, max age 20, forward delay 15 
-          Timers: hello 0, topology change 0, notification 0, aging 300
+VLAN0100 is executing the ieee compatible Spanning Tree protocol
+  Bridge Identifier has priority 24576, sysid 100, address 3820.56ff.76db
+  Configured hello time 2, max age 20, forward delay 15
+  We are the root of the spanning tree
+  Topology change flag not set, detected flag not set
+  Number of topology changes 1 last change occurred 00:05:37 ago
+          from Port-channel12
+  Times:  hold 1, topology change 35, notification 2
+          hello 2, max age 20, forward delay 15 
+  Timers: hello 0, topology change 0, notification 0, aging 300
 
-         Port 2388 (Port-channel12) of VLAN0100 is designated forwarding 
-           Port path cost 3, Port priority 128, Port Identifier 128.2388.
-           Designated root has priority 24676, address 3820.56ff.76db
-           Designated bridge has priority 24676, address 3820.56ff.76db
-           Designated port id is 128.2388, designated path cost 0
-           Timers: message age 0, forward delay 0, hold 0
-           Number of transitions to forwarding state: 1
-           Link type is point-to-point by default
-           BPDU: sent 183, received 0
+ Port 2388 (Port-channel12) of VLAN0100 is designated forwarding 
+   Port path cost 3, Port priority 128, Port Identifier 128.2388.
+   Designated root has priority 24676, address 3820.56ff.76db
+   Designated bridge has priority 24676, address 3820.56ff.76db
+   Designated port id is 128.2388, designated path cost 0
+   Timers: message age 0, forward delay 0, hold 0
+   Number of transitions to forwarding state: 1
+   Link type is point-to-point by default
+   BPDU: sent 183, received 0
 
     

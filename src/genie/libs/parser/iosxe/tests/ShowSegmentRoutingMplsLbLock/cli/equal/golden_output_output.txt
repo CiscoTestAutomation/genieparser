@@ -1,4 +1,4 @@
 
-        show segment-routing mpls lb lock
-        SR LB (15000, 15999) Lock Users :
+show segment-routing mpls lb lock
+SR LB (15000, 15999) Lock Users :
     

@@ -1,4 +1,4 @@
 
-        Device#show segment-routing mpls state
-        Segment Routing MPLS State : ENABLED
+Device#show segment-routing mpls state
+Segment Routing MPLS State : ENABLED
     

@@ -1,17 +1,17 @@
-        Router#show platform hardware port 0/0/0 plim statistics
-        Interface 0/0/0
-          RX Low Priority
-            RX Pkts      369         Bytes 27789      
-            RX Drop Pkts 0           Bytes 0          
-            RX Err  Pkts 0           Bytes 0          
-          TX Low Priority
-            TX Pkts      1265574622  Bytes 250735325722
-            TX Drop Pkts 0           Bytes 0          
-          RX High Priority
-            RX Pkts      316215      Bytes 327940189  
-            RX Drop Pkts 0           Bytes 0          
-            RX Err  Pkts 0           Bytes 0          
-          TX High Priority
-            TX Pkts      0           Bytes 0          
-            TX Drop Pkts 0           Bytes 0   
+Router#show platform hardware port 0/0/0 plim statistics
+Interface 0/0/0
+  RX Low Priority
+    RX Pkts      369         Bytes 27789      
+    RX Drop Pkts 0           Bytes 0          
+    RX Err  Pkts 0           Bytes 0          
+  TX Low Priority
+    TX Pkts      1265574622  Bytes 250735325722
+    TX Drop Pkts 0           Bytes 0          
+  RX High Priority
+    RX Pkts      316215      Bytes 327940189  
+    RX Drop Pkts 0           Bytes 0          
+    RX Err  Pkts 0           Bytes 0          
+  TX High Priority
+    TX Pkts      0           Bytes 0          
+    TX Drop Pkts 0           Bytes 0   
     

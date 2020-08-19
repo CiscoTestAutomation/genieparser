@@ -1,16 +1,16 @@
 
-         Router# show policy-map pm_hier2_child_0_2
-         Policy Map pm_hier2_child_0_2
-         Class cm_0
-         priority level 1
-         police percent 5 2 ms 0 ms conform-action transmit exceed-action drop violate-action drop
-         queue-limit 77 packets
-         Class cm_1
-         Average Rate Traffic Shaping
-         cir 80%
-         bandwidth remaining ratio 80 
-         Class class-default
-         Average Rate Traffic Shaping
-         cir 50%
-         bandwidth remaining ratio 20 
+Router# show policy-map pm_hier2_child_0_2
+Policy Map pm_hier2_child_0_2
+Class cm_0
+priority level 1
+police percent 5 2 ms 0 ms conform-action transmit exceed-action drop violate-action drop
+queue-limit 77 packets
+Class cm_1
+Average Rate Traffic Shaping
+cir 80%
+bandwidth remaining ratio 80 
+Class class-default
+Average Rate Traffic Shaping
+cir 50%
+bandwidth remaining ratio 20 
     

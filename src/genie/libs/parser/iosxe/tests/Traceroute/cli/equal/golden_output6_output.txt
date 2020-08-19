@@ -1,8 +1,8 @@
 
-        traceroute 10.151.22.22
-        Type escape sequence to abort.
-        Tracing the route to 10.151.22.22
-        VRF info: (vrf in name/id, vrf out name/id)
-        1 10.0.0.5 [MPLS: Label 16022 Exp 0] 307 msec 10 msec 2 msec
-        2 10.0.0.18 351 msec *  8 msec
+traceroute 10.151.22.22
+Type escape sequence to abort.
+Tracing the route to 10.151.22.22
+VRF info: (vrf in name/id, vrf out name/id)
+1 10.0.0.5 [MPLS: Label 16022 Exp 0] 307 msec 10 msec 2 msec
+2 10.0.0.18 351 msec *  8 msec
     

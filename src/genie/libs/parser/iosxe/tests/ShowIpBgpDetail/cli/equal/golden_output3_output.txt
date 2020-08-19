@@ -1,14 +1,14 @@
 
-        BGP routing table entry for 65109:4093:10.229.11.11/32, version 6195
-        Paths: (1 available, best #1, no table)
-        Advertised to update-groups:
-            17         18
-        Refresh Epoch 9
-        65555, (Received from a RR-client)
-            10.169.197.254 (metric 1002) (via default) from 10.169.197.254 (10.169.197.254)
-            Origin incomplete, metric 0, localpref 100, valid, internal, best
-            Community: 62000:1
-            Extended Community: RT:65109:4093
-            mpls labels in/out nolabel/584
-            rx pathid: 0, tx pathid: 0x0
+BGP routing table entry for 65109:4093:10.229.11.11/32, version 6195
+Paths: (1 available, best #1, no table)
+Advertised to update-groups:
+    17         18
+Refresh Epoch 9
+65555, (Received from a RR-client)
+    10.169.197.254 (metric 1002) (via default) from 10.169.197.254 (10.169.197.254)
+    Origin incomplete, metric 0, localpref 100, valid, internal, best
+    Community: 62000:1
+    Extended Community: RT:65109:4093
+    mpls labels in/out nolabel/584
+    rx pathid: 0, tx pathid: 0x0
     

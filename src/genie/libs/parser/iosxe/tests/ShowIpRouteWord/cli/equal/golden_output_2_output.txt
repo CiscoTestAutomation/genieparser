@@ -1,28 +1,28 @@
 
-        PE1#show ip route 10.16.2.2
-        Routing entry for 10.16.2.2/32
-          Known via "ospf 1024", distance 95, metric 4, type intra area
-          Last update from 192.168.0.3 on GigabitEthernet2, 00:00:14 ago
-         SR Incoming Label: 52610
-          Routing Descriptor Blocks:
-          * 192.168.0.1, from 10.16.2.2, 00:00:14 ago, via GigabitEthernet4, merge-labels
-              Route metric is 5, traffic share count is 1
-              MPLS label: 52610
-              MPLS Flags: NSF
-              Repair Path: 192.168.0.2, via GigabitEthernet3
-            192.168.0.2, from 10.16.2.2, 00:00:14 ago, via GigabitEthernet3, prefer-non-rib-labels, merge-labels
-              Route metric is 3, traffic share count is 5
-              MPLS label: 52610
-              MPLS Flags: NSF
-              Repair Path: 192.168.0.4, via GigabitEthernet1
-            192.168.0.3, from 10.16.2.2, 00:00:14 ago, via GigabitEthernet2, prefer-non-rib-labels, merge-labels
-              Route metric is 1, traffic share count is 2
-              MPLS label: 52610
-              MPLS Flags: NSF
-              Repair Path: 192.168.0.1, via GigabitEthernet4
-            192.168.0.4, from 10.16.2.2, 00:00:14 ago, via GigabitEthernet1, prefer-non-rib-labels, merge-labels
-              Route metric is 2, traffic share count is 1
-              MPLS label: 52610
-              MPLS Flags: NSF
-              Repair Path: 192.168.0.3, via GigabitEthernet2
+PE1#show ip route 10.16.2.2
+Routing entry for 10.16.2.2/32
+  Known via "ospf 1024", distance 95, metric 4, type intra area
+  Last update from 192.168.0.3 on GigabitEthernet2, 00:00:14 ago
+ SR Incoming Label: 52610
+  Routing Descriptor Blocks:
+  * 192.168.0.1, from 10.16.2.2, 00:00:14 ago, via GigabitEthernet4, merge-labels
+      Route metric is 5, traffic share count is 1
+      MPLS label: 52610
+      MPLS Flags: NSF
+      Repair Path: 192.168.0.2, via GigabitEthernet3
+    192.168.0.2, from 10.16.2.2, 00:00:14 ago, via GigabitEthernet3, prefer-non-rib-labels, merge-labels
+      Route metric is 3, traffic share count is 5
+      MPLS label: 52610
+      MPLS Flags: NSF
+      Repair Path: 192.168.0.4, via GigabitEthernet1
+    192.168.0.3, from 10.16.2.2, 00:00:14 ago, via GigabitEthernet2, prefer-non-rib-labels, merge-labels
+      Route metric is 1, traffic share count is 2
+      MPLS label: 52610
+      MPLS Flags: NSF
+      Repair Path: 192.168.0.1, via GigabitEthernet4
+    192.168.0.4, from 10.16.2.2, 00:00:14 ago, via GigabitEthernet1, prefer-non-rib-labels, merge-labels
+      Route metric is 2, traffic share count is 1
+      MPLS label: 52610
+      MPLS Flags: NSF
+      Repair Path: 192.168.0.3, via GigabitEthernet2
     

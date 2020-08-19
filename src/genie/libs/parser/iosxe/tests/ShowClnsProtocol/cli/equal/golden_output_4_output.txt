@@ -1,21 +1,21 @@
 
-        #show clns protocol
+#show clns protocol
 
-        IS-IS Router: test
-        System Id: 1111.11ff.2222.00  IS-Type: level-1
-        Manual area address(es):
-                49.0001
-        Routing for area address(es):
-                49.0001
-        Interfaces supported by IS-IS:
-                GigabitEthernet0/1 - IP - IPv6
-                Loopback0 - IP - IPv6
-        Redistribute:
-            static (on by default)
-        Distance for L2 CLNS routes: 110
-        RRR level: none
-        Generate narrow metrics: none
-        Accept narrow metrics:   none
-        Generate wide metrics:   level-1-2
-        Accept wide metrics:     level-1-2
+IS-IS Router: test
+System Id: 1111.11ff.2222.00  IS-Type: level-1
+Manual area address(es):
+        49.0001
+Routing for area address(es):
+        49.0001
+Interfaces supported by IS-IS:
+        GigabitEthernet0/1 - IP - IPv6
+        Loopback0 - IP - IPv6
+Redistribute:
+    static (on by default)
+Distance for L2 CLNS routes: 110
+RRR level: none
+Generate narrow metrics: none
+Accept narrow metrics:   none
+Generate wide metrics:   level-1-2
+Accept wide metrics:     level-1-2
     

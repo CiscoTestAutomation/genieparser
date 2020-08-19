@@ -1,18 +1,18 @@
-        Device# show mpls l2transport vc detail
+Device# show mpls l2transport vc detail
 
-        Local interface: VFI PE1-VPLS-A up
-          Destination address: 10.2.2.2, VC ID: 100, VC status: up
-            Tunnel label: imp-null, next hop point2point
-            Output interface: Se2/0, imposed label stack {18}
-          Create time: 3d15h, last status change time: 1d03h
-          Signaling protocol: LDP, peer 10.2.2.2:0 up
-            MPLS VC labels: local 18, remote 18
-            Group ID: local 0, remote 0
-            MTU: local 1500, remote 1500
-            Remote interface description:
-          Sequencing: receive disabled, send disabled
-          VC statistics:
-            packet totals: receive 0, send 0
-            byte totals:   receive 0, send 0
-            packet drops:  receive 0, send 0
+Local interface: VFI PE1-VPLS-A up
+  Destination address: 10.2.2.2, VC ID: 100, VC status: up
+    Tunnel label: imp-null, next hop point2point
+    Output interface: Se2/0, imposed label stack {18}
+  Create time: 3d15h, last status change time: 1d03h
+  Signaling protocol: LDP, peer 10.2.2.2:0 up
+    MPLS VC labels: local 18, remote 18
+    Group ID: local 0, remote 0
+    MTU: local 1500, remote 1500
+    Remote interface description:
+  Sequencing: receive disabled, send disabled
+  VC statistics:
+    packet totals: receive 0, send 0
+    byte totals:   receive 0, send 0
+    packet drops:  receive 0, send 0
     

@@ -1,26 +1,26 @@
-        show authentication sessions interface GigabitEthernet1/0/12 details
+show authentication sessions interface GigabitEthernet1/0/12 details
 
-                Interface:  GigabitEthernet1/0/12
-                   IIF-ID:  0x1055240000001F6 
-              MAC Address:  0010.00ff.1011
-             IPv6 Address:  Unknown
-             IPv4 Address:  192.0.2.1
-                User-Name:  genie123
-                   Status:  Authorized
-                   Domain:  DATA
-           Oper host mode:  single-host
-         Oper control dir:  both
-          Session timeout:  N/A
-        Common Session ID:  AC14FC0A0000101200E28D62
-          Acct Session ID:  Unknown
-                   Handle:  0xDB003227
-           Current Policy:  dot1x_dvlan_reauth_hm
+        Interface:  GigabitEthernet1/0/12
+           IIF-ID:  0x1055240000001F6 
+      MAC Address:  0010.00ff.1011
+     IPv6 Address:  Unknown
+     IPv4 Address:  192.0.2.1
+        User-Name:  genie123
+           Status:  Authorized
+           Domain:  DATA
+   Oper host mode:  single-host
+ Oper control dir:  both
+  Session timeout:  N/A
+Common Session ID:  AC14FC0A0000101200E28D62
+  Acct Session ID:  Unknown
+           Handle:  0xDB003227
+   Current Policy:  dot1x_dvlan_reauth_hm
 
-        Local Policies:
-                 Template: CRITICAL_VLAN (priority 170)
-               Vlan Group:  Vlan: 100
+Local Policies:
+         Template: CRITICAL_VLAN (priority 170)
+       Vlan Group:  Vlan: 100
 
-        Method status list:
-           Method           State
-           mab              Running
+Method status list:
+   Method           State
+   mab              Running
         

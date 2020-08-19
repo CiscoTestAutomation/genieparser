@@ -1,17 +1,17 @@
 
-        show ip ospf segment-routing sid-database
+show ip ospf segment-routing sid-database
 
-            OSPF Router with ID (10.4.1.1) (Process ID 65109)
+    OSPF Router with ID (10.4.1.1) (Process ID 65109)
 
-        OSPF Segment Routing SIDs
+OSPF Segment Routing SIDs
 
-        Codes: L - local, N - label not programmed,
-            M - mapping-server
+Codes: L - local, N - label not programmed,
+    M - mapping-server
 
-        SID             Prefix              Adv-Rtr-Id       Area-Id  Type      Algo
-        --------------  ------------------  ---------------  -------  --------  ----
-        1       (L)     10.4.1.1/32         10.4.1.1          8        Intra     0
-                        10.4.1.2/32         10.4.1.2          8        Intra     0
-        11              10.4.1.2/32         10.4.1.2          8        Intra     0
-        45      (M)     10.4.1.3/32                                    Unknown   0
+SID             Prefix              Adv-Rtr-Id       Area-Id  Type      Algo
+--------------  ------------------  ---------------  -------  --------  ----
+1       (L)     10.4.1.1/32         10.4.1.1          8        Intra     0
+                10.4.1.2/32         10.4.1.2          8        Intra     0
+11              10.4.1.2/32         10.4.1.2          8        Intra     0
+45      (M)     10.4.1.3/32                                    Unknown   0
     

@@ -1,5 +1,5 @@
 
-      show ip ospf neighbor GigabitEthernet4
-      Neighbor ID     Pri   State           Dead Time   Address         Interface
-      10.16.2.2           0   FULL/  -        00:00:32    10.169.197.97  GigabitEthernet4
+show ip ospf neighbor GigabitEthernet4
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.16.2.2           0   FULL/  -        00:00:32    10.169.197.97  GigabitEthernet4
     

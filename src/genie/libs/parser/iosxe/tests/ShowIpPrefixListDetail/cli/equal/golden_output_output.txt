@@ -1,9 +1,9 @@
-        Prefix-list with the last deletion/insertion: test
-        ip prefix-list test:
-           count: 5, range entries: 4, sequences: 5 - 25, refcount: 2
-           seq 5 permit 10.205.0.0/8 (hit count: 0, refcount: 1)
-           seq 10 permit 10.205.0.0/8 le 16 (hit count: 0, refcount: 0)
-           seq 15 permit 10.21.0.0/8 le 16 (hit count: 0, refcount: 1)
-           seq 20 permit 10.94.0.0/8 ge 24 (hit count: 0, refcount: 2)
-           seq 25 permit 10.169.0.0/8 ge 16 le 24 (hit count: 0, refcount: 3)
+Prefix-list with the last deletion/insertion: test
+ip prefix-list test:
+   count: 5, range entries: 4, sequences: 5 - 25, refcount: 2
+   seq 5 permit 10.205.0.0/8 (hit count: 0, refcount: 1)
+   seq 10 permit 10.205.0.0/8 le 16 (hit count: 0, refcount: 0)
+   seq 15 permit 10.21.0.0/8 le 16 (hit count: 0, refcount: 1)
+   seq 20 permit 10.94.0.0/8 ge 24 (hit count: 0, refcount: 2)
+   seq 25 permit 10.169.0.0/8 ge 16 le 24 (hit count: 0, refcount: 3)
     

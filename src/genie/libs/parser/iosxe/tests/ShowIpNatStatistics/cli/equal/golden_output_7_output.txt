@@ -1,18 +1,18 @@
 
-        Genie#show ip nat statistics 
-        Total active translations: 3001 (1 static, 3000 dynamic; 1500 extended)
-        Outside interfaces:
-        Vlan89
-        Inside interfaces: 
-        Vlan88
-        Hits: 45392  Misses: 0
-        CEF Translated packets: 0, CEF Punted packets: 0
-        Expired translations: 1
-        Dynamic mappings:
-        -- Inside Source
-        [Id: 1] access-list test pool net-208 refcount 3000
-        pool net-208: id 1, netmask 255.255.0.0
-            start 10.55.0.1 end 10.55.100.254
-            type generic, total addresses 25854, allocated 1500 (5%), misses 0
-        longest chain in pool: net-208's addr-hash: 6, average len 5,chains 256/256
+Genie#show ip nat statistics 
+Total active translations: 3001 (1 static, 3000 dynamic; 1500 extended)
+Outside interfaces:
+Vlan89
+Inside interfaces: 
+Vlan88
+Hits: 45392  Misses: 0
+CEF Translated packets: 0, CEF Punted packets: 0
+Expired translations: 1
+Dynamic mappings:
+-- Inside Source
+[Id: 1] access-list test pool net-208 refcount 3000
+pool net-208: id 1, netmask 255.255.0.0
+    start 10.55.0.1 end 10.55.100.254
+    type generic, total addresses 25854, allocated 1500 (5%), misses 0
+longest chain in pool: net-208's addr-hash: 6, average len 5,chains 256/256
     

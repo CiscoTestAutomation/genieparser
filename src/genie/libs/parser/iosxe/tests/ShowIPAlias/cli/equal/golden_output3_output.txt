@@ -1,5 +1,5 @@
 
-        show ip aliases vrf L3VPN-1538
-        Address Type             IP Address      Port
-        Interface                192.168.10.254
+show ip aliases vrf L3VPN-1538
+Address Type             IP Address      Port
+Interface                192.168.10.254
         

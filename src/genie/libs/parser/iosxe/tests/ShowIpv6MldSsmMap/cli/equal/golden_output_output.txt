@@ -1,5 +1,5 @@
-        Group address  : FF35:1::1
-        Group mode ssm : FALSE
-        Database       : STATIC
-        Source list    : 2001:DB8:1:1::1
+Group address  : FF35:1::1
+Group mode ssm : FALSE
+Database       : STATIC
+Source list    : 2001:DB8:1:1::1
     

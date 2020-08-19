@@ -1,6 +1,6 @@
 
-        show ip cef 192.168.100.252
-        192.168.100.252/32
-            nexthop 10.169.196.213 GigabitEthernet0/3/6 label [16051|16051]-(local:16051) 453955-(local:223555)
-                repair: attached-nexthop 10.169.196.217 GigabitEthernet0/3/7
+show ip cef 192.168.100.252
+192.168.100.252/32
+    nexthop 10.169.196.213 GigabitEthernet0/3/6 label [16051|16051]-(local:16051) 453955-(local:223555)
+        repair: attached-nexthop 10.169.196.217 GigabitEthernet0/3/7
     

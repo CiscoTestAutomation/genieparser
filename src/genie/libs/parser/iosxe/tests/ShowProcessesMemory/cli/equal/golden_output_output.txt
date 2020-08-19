@@ -1,14 +1,14 @@
-        Load for five secs: 1%/0%; one minute: 1%; five minutes: 0%
-        Time source is NTP, 21:28:35.662 EST Mon May 11 2020
+Load for five secs: 1%/0%; one minute: 1%; five minutes: 0%
+Time source is NTP, 21:28:35.662 EST Mon May 11 2020
 
-        Processor Pool Total: 10147887840 Used:  485435960 Free: 9662451880
-        reserve P Pool Total:     102404 Used:         88 Free:     102316
-        lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
+Processor Pool Total: 10147887840 Used:  485435960 Free: 9662451880
+reserve P Pool Total:     102404 Used:         88 Free:     102316
+lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
 
-        PID TTY  Allocated      Freed    Holding    Getbufs    Retbufs Process
-        0   0  678985440  347855496  304892096        428    2134314 *Init*
-        0   0        800 4965889216        800         17         17 *Sched*
-        0   0 2675774192 2559881512   43465512       2111        351 *Dead*
-        0   0          0          0    4070880          0          0 *MallocLite*
-        1   0    3415536     879912    2565568          0          0 Chunk Manager
+PID TTY  Allocated      Freed    Holding    Getbufs    Retbufs Process
+0   0  678985440  347855496  304892096        428    2134314 *Init*
+0   0        800 4965889216        800         17         17 *Sched*
+0   0 2675774192 2559881512   43465512       2111        351 *Dead*
+0   0          0          0    4070880          0          0 *MallocLite*
+1   0    3415536     879912    2565568          0          0 Chunk Manager
     

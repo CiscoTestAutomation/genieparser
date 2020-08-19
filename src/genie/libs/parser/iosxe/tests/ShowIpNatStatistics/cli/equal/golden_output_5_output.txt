@@ -1,23 +1,23 @@
 
-        show ip nat statistics
-        Total active translations: 5 (0 static, 5 dynamic; 5 extended)
-        Outside interfaces:
-        GigabitEthernet0/0/1
-        Inside interfaces: 
-        GigabitEthernet0/0/0
-        Hits: 11178  Misses: 8
-        Expired translations: 0
-        Dynamic mappings:
-        -- Inside Source
-        [Id: 1] route-map NAT-MAP pool inside-pool refcount 6
-        pool inside-pool: id 1, netmask 255.255.255.0
-            start 10.49.1.1 end 10.49.1.1
-            type generic, total addresses 1, allocated 1 (100%), misses 0
-        nat-limit statistics:
-        max entry: max allowed 0, used 0, missed 0
-        In-to-out drops: 0  Out-to-in drops: 0
-        Pool stats drop: 0  Mapping stats drop: 0
-        Port block alloc fail: 0
-        IP alias add fail: 0
-        Limit entry add fail: 0
+show ip nat statistics
+Total active translations: 5 (0 static, 5 dynamic; 5 extended)
+Outside interfaces:
+GigabitEthernet0/0/1
+Inside interfaces: 
+GigabitEthernet0/0/0
+Hits: 11178  Misses: 8
+Expired translations: 0
+Dynamic mappings:
+-- Inside Source
+[Id: 1] route-map NAT-MAP pool inside-pool refcount 6
+pool inside-pool: id 1, netmask 255.255.255.0
+    start 10.49.1.1 end 10.49.1.1
+    type generic, total addresses 1, allocated 1 (100%), misses 0
+nat-limit statistics:
+max entry: max allowed 0, used 0, missed 0
+In-to-out drops: 0  Out-to-in drops: 0
+Pool stats drop: 0  Mapping stats drop: 0
+Port block alloc fail: 0
+IP alias add fail: 0
+Limit entry add fail: 0
     

@@ -1,16 +1,16 @@
 
-        show ip ospf fast-reroute ti-lfa
-        OSPF Router with ID (10.4.1.1) (Process ID 65109)
+show ip ospf fast-reroute ti-lfa
+OSPF Router with ID (10.4.1.1) (Process ID 65109)
 
-        OSPF                    IPFRR    SR       TI-LFA      TI-LFA       
-        Object                  enabled  enabled  configured  enabled      
-        --------------------------------------------------------------------
-        Process ID (65109)       no       yes      no          no           
-        Area 8                  no       yes      no          no           
-        Loopback0               no       no       no          no           
-        GigabitEthernet0/1/2    no       yes      no          no           
-        GigabitEthernet0/1/1    no       yes      no          no           
-        GigabitEthernet0/1/0    no       yes      no          no           
-        TenGigabitEthernet0/0/  no       yes      no          no           
-        AS external             no       yes      no          no       
+OSPF                    IPFRR    SR       TI-LFA      TI-LFA       
+Object                  enabled  enabled  configured  enabled      
+--------------------------------------------------------------------
+Process ID (65109)       no       yes      no          no           
+Area 8                  no       yes      no          no           
+Loopback0               no       no       no          no           
+GigabitEthernet0/1/2    no       yes      no          no           
+GigabitEthernet0/1/1    no       yes      no          no           
+GigabitEthernet0/1/0    no       yes      no          no           
+TenGigabitEthernet0/0/  no       yes      no          no           
+AS external             no       yes      no          no       
     

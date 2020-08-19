@@ -1,34 +1,34 @@
 
-        show clns neighbors detail
-        Tag core:
-        System Id       Interface     SNPA                State  Holdtime  Type Protocol
-        Genie3         Te0/2/0       23f1.23ff.7273      Up     28        L1   IS-IS
-        Area Address(es): 01
-        IP Address(es):  10.111.1.0*
-        Uptime: 1w6d
-        NSF capable
-        BFD enabled: (MTID:0, ipv4)
-        Interface name: TenGigabitEthernet0/2/0
-        Genie2         Te0/2/1       34e4.fcff.557d      Up     26        L1   IS-IS
-        Area Address(es): 01
-        IP Address(es):  10.21.1.12*
-        Uptime: 2w0d
-        NSF capable
-        BFD enabled: (MTID:0, ipv4)
-        Interface name: TenGigabitEthernet0/2/1
-        Genie1A     Te0/3/0       234f.23ff.feec      Up     25        L1   IS-IS //missing neighbor, instead RT2 shows in JSON.
-        Area Address(es): 01
-        IP Address(es):  10.94.51.9*
-        Uptime: 2w0d
-        NSF capable
-        BFD enabled: (MTID:0, ipv4)
-        Interface name: TenGigabitEthernet0/3/0
-        Genie1          Gi0/0/7       0230c.22ff.8953      Up     28        L1   IS-IS
-        Area Address(es): 01
-        IP Address(es):  10.166.1.113*
-        Uptime: 2w0d
-        NSF capable
-        BFD enabled: (MTID:0, ipv4)
-        Interface name: GigabitEthernet0/0/7
-        DS_A903#
+show clns neighbors detail
+Tag core:
+System Id       Interface     SNPA                State  Holdtime  Type Protocol
+Genie3         Te0/2/0       23f1.23ff.7273      Up     28        L1   IS-IS
+Area Address(es): 01
+IP Address(es):  10.111.1.0*
+Uptime: 1w6d
+NSF capable
+BFD enabled: (MTID:0, ipv4)
+Interface name: TenGigabitEthernet0/2/0
+Genie2         Te0/2/1       34e4.fcff.557d      Up     26        L1   IS-IS
+Area Address(es): 01
+IP Address(es):  10.21.1.12*
+Uptime: 2w0d
+NSF capable
+BFD enabled: (MTID:0, ipv4)
+Interface name: TenGigabitEthernet0/2/1
+Genie1A     Te0/3/0       234f.23ff.feec      Up     25        L1   IS-IS //missing neighbor, instead RT2 shows in JSON.
+Area Address(es): 01
+IP Address(es):  10.94.51.9*
+Uptime: 2w0d
+NSF capable
+BFD enabled: (MTID:0, ipv4)
+Interface name: TenGigabitEthernet0/3/0
+Genie1          Gi0/0/7       0230c.22ff.8953      Up     28        L1   IS-IS
+Area Address(es): 01
+IP Address(es):  10.166.1.113*
+Uptime: 2w0d
+NSF capable
+BFD enabled: (MTID:0, ipv4)
+Interface name: GigabitEthernet0/0/7
+DS_A903#
     

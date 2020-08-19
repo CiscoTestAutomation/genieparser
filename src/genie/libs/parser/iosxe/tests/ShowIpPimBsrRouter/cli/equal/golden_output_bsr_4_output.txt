@@ -1,12 +1,12 @@
 
-            R4_iosv#show ip pim vrf VRF1 bsr-router
-        PIMv2 Bootstrap information
-          BSR address: 10.4.6.6 (?)
-          Uptime:      4d03h, BSR Priority: 0, Hash mask length: 0
-          Expires:     00:02:00
-          Candidate RP: 10.4.6.4(GigabitEthernet0/2)
-            Holdtime 150 seconds
-            Advertisement interval 60 seconds
-            Next advertisement in 00:00:00
-            Candidate RP priority : 5
+    R4_iosv#show ip pim vrf VRF1 bsr-router
+PIMv2 Bootstrap information
+  BSR address: 10.4.6.6 (?)
+  Uptime:      4d03h, BSR Priority: 0, Hash mask length: 0
+  Expires:     00:02:00
+  Candidate RP: 10.4.6.4(GigabitEthernet0/2)
+    Holdtime 150 seconds
+    Advertisement interval 60 seconds
+    Next advertisement in 00:00:00
+    Candidate RP priority : 5
         

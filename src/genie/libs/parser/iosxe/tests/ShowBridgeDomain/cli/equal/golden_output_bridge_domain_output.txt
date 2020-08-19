@@ -1,31 +1,31 @@
-        Router#show bridge-domain 3051
-        Load for five secs: 10%/1%; one minute: 11%; five minutes: 12%
-        Time source is NTP, 19:54:46.940 EST Wed Nov 2 2016
+Router#show bridge-domain 3051
+Load for five secs: 10%/1%; one minute: 11%; five minutes: 12%
+Time source is NTP, 19:54:46.940 EST Wed Nov 2 2016
 
-        Bridge-domain 3051 (2 ports in all)
-        State: UP                    Mac learning: Enabled
-        Aging-Timer: 3600 second(s)
-            vfi VPLS-3051 neighbor 192.168.36.220 3051
-        1 ports belonging to split-horizon group 0
-            GigabitEthernet0/0/3 service instance 3051 (split-horizon)
-           AED MAC address    Policy  Tag       Age  Pseudoport
-           0   0000.A0FF.00F2 forward dynamic   3438 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.00AA forward dynamic   3430 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.0077 forward dynamic   3426 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.00D0 forward dynamic   3434 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.001F forward dynamic   3416 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.0129 forward dynamic   3443 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.00F6 forward dynamic   3438 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.007B forward dynamic   3426 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.0068 forward dynamic   3424 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.00C5 forward dynamic   3433 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.0087 forward dynamic   3427 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.00F7 forward dynamic   3438 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.0118 forward dynamic   3441 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.0108 forward dynamic   3440 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.007F forward dynamic   3426 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.011C forward dynamic   3442 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.012C forward dynamic   3443 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.0010 forward dynamic   3415 GigabitEthernet0/0/3.EFP3051
-           0   0000.A0FF.000F forward dynamic   3415 GigabitEthernet0/0/3.EFP3051
+Bridge-domain 3051 (2 ports in all)
+State: UP                    Mac learning: Enabled
+Aging-Timer: 3600 second(s)
+    vfi VPLS-3051 neighbor 192.168.36.220 3051
+1 ports belonging to split-horizon group 0
+    GigabitEthernet0/0/3 service instance 3051 (split-horizon)
+   AED MAC address    Policy  Tag       Age  Pseudoport
+   0   0000.A0FF.00F2 forward dynamic   3438 GigabitEthernet0/0/3.EFP3051
+   0   0000.A0FF.00AA forward dynamic   3430 GigabitEthernet0/0/3.EFP3051
+   0   0000.A0FF.0077 forward dynamic   3426 GigabitEthernet0/0/3.EFP3051
+   0   0000.A0FF.00D0 forward dynamic   3434 GigabitEthernet0/0/3.EFP3051
+   0   0000.A0FF.001F forward dynamic   3416 GigabitEthernet0/0/3.EFP3051
+   0   0000.A0FF.0129 forward dynamic   3443 GigabitEthernet0/0/3.EFP3051
+   0   0000.A0FF.00F6 forward dynamic   3438 GigabitEthernet0/0/3.EFP3051
+   0   0000.A0FF.007B forward dynamic   3426 GigabitEthernet0/0/3.EFP3051
+   0   0000.A0FF.0068 forward dynamic   3424 GigabitEthernet0/0/3.EFP3051
+   0   0000.A0FF.00C5 forward dynamic   3433 GigabitEthernet0/0/3.EFP3051
+   0   0000.A0FF.0087 forward dynamic   3427 GigabitEthernet0/0/3.EFP3051
+   0   0000.A0FF.00F7 forward dynamic   3438 GigabitEthernet0/0/3.EFP3051
+   0   0000.A0FF.0118 forward dynamic   3441 GigabitEthernet0/0/3.EFP3051
+   0   0000.A0FF.0108 forward dynamic   3440 GigabitEthernet0/0/3.EFP3051
+   0   0000.A0FF.007F forward dynamic   3426 GigabitEthernet0/0/3.EFP3051
+   0   0000.A0FF.011C forward dynamic   3442 GigabitEthernet0/0/3.EFP3051
+   0   0000.A0FF.012C forward dynamic   3443 GigabitEthernet0/0/3.EFP3051
+   0   0000.A0FF.0010 forward dynamic   3415 GigabitEthernet0/0/3.EFP3051
+   0   0000.A0FF.000F forward dynamic   3415 GigabitEthernet0/0/3.EFP3051
     

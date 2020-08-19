@@ -1,6 +1,6 @@
 
-      Local intf     Local circuit              Dest address    VC ID      Status    
-      -------------  -------------------------- --------------- ---------- ----------
-      Se0/1/0:0       HDLC                        10.0.0.1        101         UP      
+Local intf     Local circuit              Dest address    VC ID      Status    
+-------------  -------------------------- --------------- ---------- ----------
+Se0/1/0:0       HDLC                        10.0.0.1        101         UP      
 
     

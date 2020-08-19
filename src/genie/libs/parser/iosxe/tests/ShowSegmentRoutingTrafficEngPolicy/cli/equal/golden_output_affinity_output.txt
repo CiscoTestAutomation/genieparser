@@ -1,21 +1,21 @@
 
-            show segment-routing traffic-eng policy all
-            Name: test1 (Color: 100 End-point: 10.169.196.241)
-            Status:
-                Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
-            Candidate-paths:
-                Preference 100:
-                    Constraints:
-                        Affinity:
-                            include-all:
-                                green
-                                blue
-                    Dynamic (inactive)
-                        Weight: 0, Metric Type: IGP
-                        Metric Type: IGP, Path Accumulated Metric: 2200
-                        16063 [Prefix-SID, 10.169.196.241]
-            Attributes:
-                Binding SID: 15000
-                Allocation mode: explicit
-                State: Programmed
+show segment-routing traffic-eng policy all
+Name: test1 (Color: 100 End-point: 10.169.196.241)
+Status:
+    Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
+Candidate-paths:
+    Preference 100:
+        Constraints:
+            Affinity:
+                include-all:
+                    green
+                    blue
+        Dynamic (inactive)
+            Weight: 0, Metric Type: IGP
+            Metric Type: IGP, Path Accumulated Metric: 2200
+            16063 [Prefix-SID, 10.169.196.241]
+Attributes:
+    Binding SID: 15000
+    Allocation mode: explicit
+    State: Programmed
         

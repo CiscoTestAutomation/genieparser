@@ -1,342 +1,342 @@
 
-        R1_ospf_xe#show ip ospf database router 
+R1_ospf_xe#show ip ospf database router 
 
-            OSPF Router with ID (10.4.1.1) (Process ID 1)
+    OSPF Router with ID (10.4.1.1) (Process ID 1)
+
+        Router Link States (Area 0)
+
+  LS age: 742
+  Options: (No TOS-capability, DC)
+  LS Type: Router Links
+  Link State ID: 10.4.1.1
+  Advertising Router: 10.4.1.1
+  LS Seq Number: 8000003D
+  Checksum: 0x6228
+  Length: 60
+  Number of Links: 3
+
+    Link connected to: a Stub Network
+     (Link ID) Network/subnet number: 10.4.1.1
+     (Link Data) Network Mask: 255.255.255.255
+      Number of MTID metrics: 2
+       TOS 0 Metrics: 1
+       MTID 32 Metrics: 1
+       MTID 33 Metrics: 1
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.1.2.1
+     (Link Data) Router Interface address: 10.1.2.1
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.1.4.4
+     (Link Data) Router Interface address: 10.1.4.1
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+
+  LS age: 1520
+  Options: (No TOS-capability, No DC)
+  LS Type: Router Links
+  Link State ID: 10.16.2.2
+  Advertising Router: 10.16.2.2
+  LS Seq Number: 80000013
+  Checksum: 0x672A
+  Length: 72
+  Number of Links: 4
+
+    Link connected to: a Stub Network
+     (Link ID) Network/subnet number: 10.16.2.2
+     (Link Data) Network Mask: 255.255.255.255
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.2.3.3
+     (Link Data) Router Interface address: 10.2.3.2
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.2.4.4
+     (Link Data) Router Interface address: 10.2.4.2
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.1.2.1
+     (Link Data) Router Interface address: 10.1.2.2
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+
+  LS age: 235
+  Options: (No TOS-capability, DC)
+  LS Type: Router Links
+  Link State ID: 10.36.3.3
+  Advertising Router: 10.36.3.3
+  LS Seq Number: 80000033
+  Checksum: 0x75F8
+  Length: 60
+  Number of Links: 3
+
+    Link connected to: a Stub Network
+     (Link ID) Network/subnet number: 10.36.3.3
+     (Link Data) Network Mask: 255.255.255.255
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.3.4.4
+     (Link Data) Router Interface address: 10.3.4.3
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.2.3.3
+     (Link Data) Router Interface address: 10.2.3.3
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+
+  LS age: 1486
+  Options: (No TOS-capability, DC)
+  LS Type: Router Links
+  Link State ID: 10.64.4.4
+  Advertising Router: 10.64.4.4
+  LS Seq Number: 80000036
+  Checksum: 0xA57C
+  Length: 72
+  AS Boundary Router
+  Number of Links: 4
+
+    Link connected to: a Stub Network
+     (Link ID) Network/subnet number: 10.64.4.4
+     (Link Data) Network Mask: 255.255.255.255
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.2.4.4
+     (Link Data) Router Interface address: 10.2.4.4
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.3.4.4
+     (Link Data) Router Interface address: 10.3.4.4
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.1.4.4
+     (Link Data) Router Interface address: 10.1.4.4
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+
+
+            OSPF Router with ID (10.229.11.11) (Process ID 2)
+
+                Router Link States (Area 1)
+                  
+  LS age: 1128
+  Options: (No TOS-capability, DC)
+  LS Type: Router Links
+  Link State ID: 10.36.3.3
+  Advertising Router: 10.36.3.3
+  LS Seq Number: 80000035
+  Checksum: 0x5845
+  Length: 36
+  Area Border Router
+  AS Boundary Router
+  Number of Links: 1
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.19.7.7
+     (Link Data) Router Interface address: 10.19.7.3
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+
+  LS age: 651
+  Options: (No TOS-capability, DC)
+  LS Type: Router Links
+  Link State ID: 10.229.11.11
+  Advertising Router: 10.229.11.11
+  LS Seq Number: 8000003E
+  Checksum: 0x9CE3
+  Length: 48
+  Area Border Router
+  AS Boundary Router
+  Number of Links: 2
+
+    Link connected to: another Router (point-to-point)
+     (Link ID) Neighboring Router ID: 10.151.22.22
+     (Link Data) Router Interface address: 0.0.0.14
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 111
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.186.5.1
+     (Link Data) Router Interface address: 10.186.5.1
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+
+  LS age: 480
+  Options: (No TOS-capability, No DC)
+  LS Type: Router Links
+  Link State ID: 10.151.22.22
+  Advertising Router: 10.151.22.22
+  LS Seq Number: 80000019
+  Checksum: 0xC41A
+  Length: 48
+  Area Border Router
+  AS Boundary Router
+  Number of Links: 2
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.229.6.6
+     (Link Data) Router Interface address: 10.229.6.2
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 40
+
+    Link connected to: another Router (point-to-point)
+     (Link ID) Neighboring Router ID: 10.229.11.11
+     (Link Data) Router Interface address: 0.0.0.6
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+                  
+  LS age: 318
+  Options: (No TOS-capability, DC)
+  LS Type: Router Links
+  Link State ID: 10.115.55.55
+  Advertising Router: 10.115.55.55
+  LS Seq Number: 80000037
+  Checksum: 0xE7BC
+  Length: 60
+  Number of Links: 3
+
+    Link connected to: a Stub Network
+     (Link ID) Network/subnet number: 10.115.55.55
+     (Link Data) Network Mask: 255.255.255.255
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.115.6.6
+     (Link Data) Router Interface address: 10.115.6.5
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 30
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.186.5.1
+     (Link Data) Router Interface address: 10.186.5.5
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+
+  LS age: 520
+  Options: (No TOS-capability, DC)
+  LS Type: Router Links
+  Link State ID: 10.84.66.66
+  Advertising Router: 10.84.66.66
+  LS Seq Number: 8000003C
+  Checksum: 0x1282
+  Length: 72
+  Number of Links: 4
+
+    Link connected to: a Stub Network
+     (Link ID) Network/subnet number: 10.84.66.66
+     (Link Data) Network Mask: 255.255.255.255
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.166.7.6
+     (Link Data) Router Interface address: 10.166.7.6
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 30
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.229.6.6
+     (Link Data) Router Interface address: 10.229.6.6
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.115.6.6
+     (Link Data) Router Interface address: 10.115.6.6
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 30
+
+
+  LS age: 288
+  Options: (No TOS-capability, DC)
+  LS Type: Router Links
+  Link State ID: 10.1.77.77
+  Advertising Router: 10.1.77.77
+  LS Seq Number: 80000030
+  Checksum: 0x1379
+  Length: 60
+  Number of Links: 3
+
+    Link connected to: a Stub Network
+     (Link ID) Network/subnet number: 10.1.77.77
+     (Link Data) Network Mask: 255.255.255.255
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.166.7.6
+     (Link Data) Router Interface address: 10.166.7.7
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 30
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.19.7.7
+     (Link Data) Router Interface address: 10.19.7.7
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
+
+
+
+            OSPF Router with ID (10.115.11.11) (Process ID 3)
 
                 Router Link States (Area 0)
 
-          LS age: 742
-          Options: (No TOS-capability, DC)
-          LS Type: Router Links
-          Link State ID: 10.4.1.1
-          Advertising Router: 10.4.1.1
-          LS Seq Number: 8000003D
-          Checksum: 0x6228
-          Length: 60
-          Number of Links: 3
+  LS age: 50
+  Options: (No TOS-capability, DC)
+  LS Type: Router Links
+  Link State ID: 10.115.11.11
+  Advertising Router: 10.115.11.11
+  LS Seq Number: 80000001
+  Checksum: 0x881A
+  Length: 36
+  AS Boundary Router
+  Number of Links: 1
 
-            Link connected to: a Stub Network
-             (Link ID) Network/subnet number: 10.4.1.1
-             (Link Data) Network Mask: 255.255.255.255
-              Number of MTID metrics: 2
-               TOS 0 Metrics: 1
-               MTID 32 Metrics: 1
-               MTID 33 Metrics: 1
-
-            Link connected to: a Transit Network
-             (Link ID) Designated Router address: 10.1.2.1
-             (Link Data) Router Interface address: 10.1.2.1
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-            Link connected to: a Transit Network
-             (Link ID) Designated Router address: 10.1.4.4
-             (Link Data) Router Interface address: 10.1.4.1
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-
-          LS age: 1520
-          Options: (No TOS-capability, No DC)
-          LS Type: Router Links
-          Link State ID: 10.16.2.2
-          Advertising Router: 10.16.2.2
-          LS Seq Number: 80000013
-          Checksum: 0x672A
-          Length: 72
-          Number of Links: 4
-
-            Link connected to: a Stub Network
-             (Link ID) Network/subnet number: 10.16.2.2
-             (Link Data) Network Mask: 255.255.255.255
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-            Link connected to: a Transit Network
-             (Link ID) Designated Router address: 10.2.3.3
-             (Link Data) Router Interface address: 10.2.3.2
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-            Link connected to: a Transit Network
-             (Link ID) Designated Router address: 10.2.4.4
-             (Link Data) Router Interface address: 10.2.4.2
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-            Link connected to: a Transit Network
-             (Link ID) Designated Router address: 10.1.2.1
-             (Link Data) Router Interface address: 10.1.2.2
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-
-          LS age: 235
-          Options: (No TOS-capability, DC)
-          LS Type: Router Links
-          Link State ID: 10.36.3.3
-          Advertising Router: 10.36.3.3
-          LS Seq Number: 80000033
-          Checksum: 0x75F8
-          Length: 60
-          Number of Links: 3
-
-            Link connected to: a Stub Network
-             (Link ID) Network/subnet number: 10.36.3.3
-             (Link Data) Network Mask: 255.255.255.255
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-            Link connected to: a Transit Network
-             (Link ID) Designated Router address: 10.3.4.4
-             (Link Data) Router Interface address: 10.3.4.3
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-            Link connected to: a Transit Network
-             (Link ID) Designated Router address: 10.2.3.3
-             (Link Data) Router Interface address: 10.2.3.3
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-
-          LS age: 1486
-          Options: (No TOS-capability, DC)
-          LS Type: Router Links
-          Link State ID: 10.64.4.4
-          Advertising Router: 10.64.4.4
-          LS Seq Number: 80000036
-          Checksum: 0xA57C
-          Length: 72
-          AS Boundary Router
-          Number of Links: 4
-
-            Link connected to: a Stub Network
-             (Link ID) Network/subnet number: 10.64.4.4
-             (Link Data) Network Mask: 255.255.255.255
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-            Link connected to: a Transit Network
-             (Link ID) Designated Router address: 10.2.4.4
-             (Link Data) Router Interface address: 10.2.4.4
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-            Link connected to: a Transit Network
-             (Link ID) Designated Router address: 10.3.4.4
-             (Link Data) Router Interface address: 10.3.4.4
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-            Link connected to: a Transit Network
-             (Link ID) Designated Router address: 10.1.4.4
-             (Link Data) Router Interface address: 10.1.4.4
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
+    Link connected to: a Stub Network
+     (Link ID) Network/subnet number: 10.115.11.11
+     (Link Data) Network Mask: 255.255.255.255
+      Number of MTID metrics: 0
+       TOS 0 Metrics: 1
 
 
 
-                    OSPF Router with ID (10.229.11.11) (Process ID 2)
+                Router Link States (Area 11)
 
-                        Router Link States (Area 1)
-                  
-          LS age: 1128
-          Options: (No TOS-capability, DC)
-          LS Type: Router Links
-          Link State ID: 10.36.3.3
-          Advertising Router: 10.36.3.3
-          LS Seq Number: 80000035
-          Checksum: 0x5845
-          Length: 36
-          Area Border Router
-          AS Boundary Router
-          Number of Links: 1
-
-            Link connected to: a Transit Network
-             (Link ID) Designated Router address: 10.19.7.7
-             (Link Data) Router Interface address: 10.19.7.3
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-
-          LS age: 651
-          Options: (No TOS-capability, DC)
-          LS Type: Router Links
-          Link State ID: 10.229.11.11
-          Advertising Router: 10.229.11.11
-          LS Seq Number: 8000003E
-          Checksum: 0x9CE3
-          Length: 48
-          Area Border Router
-          AS Boundary Router
-          Number of Links: 2
-
-            Link connected to: another Router (point-to-point)
-             (Link ID) Neighboring Router ID: 10.151.22.22
-             (Link Data) Router Interface address: 0.0.0.14
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 111
-
-            Link connected to: a Transit Network
-             (Link ID) Designated Router address: 10.186.5.1
-             (Link Data) Router Interface address: 10.186.5.1
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-
-          LS age: 480
-          Options: (No TOS-capability, No DC)
-          LS Type: Router Links
-          Link State ID: 10.151.22.22
-          Advertising Router: 10.151.22.22
-          LS Seq Number: 80000019
-          Checksum: 0xC41A
-          Length: 48
-          Area Border Router
-          AS Boundary Router
-          Number of Links: 2
-
-            Link connected to: a Transit Network
-             (Link ID) Designated Router address: 10.229.6.6
-             (Link Data) Router Interface address: 10.229.6.2
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 40
-
-            Link connected to: another Router (point-to-point)
-             (Link ID) Neighboring Router ID: 10.229.11.11
-             (Link Data) Router Interface address: 0.0.0.6
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-                  
-          LS age: 318
-          Options: (No TOS-capability, DC)
-          LS Type: Router Links
-          Link State ID: 10.115.55.55
-          Advertising Router: 10.115.55.55
-          LS Seq Number: 80000037
-          Checksum: 0xE7BC
-          Length: 60
-          Number of Links: 3
-
-            Link connected to: a Stub Network
-             (Link ID) Network/subnet number: 10.115.55.55
-             (Link Data) Network Mask: 255.255.255.255
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-            Link connected to: a Transit Network
-             (Link ID) Designated Router address: 10.115.6.6
-             (Link Data) Router Interface address: 10.115.6.5
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 30
-
-            Link connected to: a Transit Network
-             (Link ID) Designated Router address: 10.186.5.1
-             (Link Data) Router Interface address: 10.186.5.5
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-
-          LS age: 520
-          Options: (No TOS-capability, DC)
-          LS Type: Router Links
-          Link State ID: 10.84.66.66
-          Advertising Router: 10.84.66.66
-          LS Seq Number: 8000003C
-          Checksum: 0x1282
-          Length: 72
-          Number of Links: 4
-
-            Link connected to: a Stub Network
-             (Link ID) Network/subnet number: 10.84.66.66
-             (Link Data) Network Mask: 255.255.255.255
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-            Link connected to: a Transit Network
-             (Link ID) Designated Router address: 10.166.7.6
-             (Link Data) Router Interface address: 10.166.7.6
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 30
-
-            Link connected to: a Transit Network
-             (Link ID) Designated Router address: 10.229.6.6
-             (Link Data) Router Interface address: 10.229.6.6
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-            Link connected to: a Transit Network
-             (Link ID) Designated Router address: 10.115.6.6
-             (Link Data) Router Interface address: 10.115.6.6
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 30
-
-
-          LS age: 288
-          Options: (No TOS-capability, DC)
-          LS Type: Router Links
-          Link State ID: 10.1.77.77
-          Advertising Router: 10.1.77.77
-          LS Seq Number: 80000030
-          Checksum: 0x1379
-          Length: 60
-          Number of Links: 3
-
-            Link connected to: a Stub Network
-             (Link ID) Network/subnet number: 10.1.77.77
-             (Link Data) Network Mask: 255.255.255.255
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-            Link connected to: a Transit Network
-             (Link ID) Designated Router address: 10.166.7.6
-             (Link Data) Router Interface address: 10.166.7.7
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 30
-
-            Link connected to: a Transit Network
-             (Link ID) Designated Router address: 10.19.7.7
-             (Link Data) Router Interface address: 10.19.7.7
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-
-
-                    OSPF Router with ID (10.115.11.11) (Process ID 3)
-
-                        Router Link States (Area 0)
-
-          LS age: 50
-          Options: (No TOS-capability, DC)
-          LS Type: Router Links
-          Link State ID: 10.115.11.11
-          Advertising Router: 10.115.11.11
-          LS Seq Number: 80000001
-          Checksum: 0x881A
-          Length: 36
-          AS Boundary Router
-          Number of Links: 1
-
-            Link connected to: a Stub Network
-             (Link ID) Network/subnet number: 10.115.11.11
-             (Link Data) Network Mask: 255.255.255.255
-              Number of MTID metrics: 0
-               TOS 0 Metrics: 1
-
-
-
-                        Router Link States (Area 11)
-
-          LS age: 8
-          Options: (No TOS-capability, DC)
-          LS Type: Router Links
-          Link State ID: 10.115.11.11
-          Advertising Router: 10.115.11.11
-          LS Seq Number: 80000001
-          Checksum: 0x1D1B
-          Length: 24
-          AS Boundary Router
-          Number of Links: 0
+  LS age: 8
+  Options: (No TOS-capability, DC)
+  LS Type: Router Links
+  Link State ID: 10.115.11.11
+  Advertising Router: 10.115.11.11
+  LS Seq Number: 80000001
+  Checksum: 0x1D1B
+  Length: 24
+  AS Boundary Router
+  Number of Links: 0
         

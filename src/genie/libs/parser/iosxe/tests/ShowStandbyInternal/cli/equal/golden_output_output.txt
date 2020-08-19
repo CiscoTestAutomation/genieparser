@@ -1,25 +1,25 @@
 
-        HSRP common process not running
-          MsgQ size 0, max 0
-        HSRP IPv4 process not running
-        HSRP IPv6 process not running
-        HSRP Timer wheel running
-        HSRP HA capable, v3 to v4 transform disabled
+HSRP common process not running
+  MsgQ size 0, max 0
+HSRP IPv4 process not running
+HSRP IPv6 process not running
+HSRP Timer wheel running
+HSRP HA capable, v3 to v4 transform disabled
 
-        HSRP virtual IP Hash Table (global)
-        103 192.168.1.254                    Gi1/0/1    Grp 0
-        106 192.168.2.254                    Gi1/0/2    Grp 10
+HSRP virtual IP Hash Table (global)
+103 192.168.1.254                    Gi1/0/1    Grp 0
+106 192.168.2.254                    Gi1/0/2    Grp 10
 
-        HSRP virtual IPv6 Hash Table (global)
-        78  2001:DB8:10:1:1::254             Gi1        Grp 20
+HSRP virtual IPv6 Hash Table (global)
+78  2001:DB8:10:1:1::254             Gi1        Grp 20
 
-        HSRP MAC Address Table
-        169 Gi1/0/1 0000.0cff.b30c
-            Gi1/0/1 Grp 5
-        166 Gi2/0/3 0000.0cff.b311
-            Gi2/0/3 Grp 10
-        172 Gi2/0/3 0000.0cff.b307
-            Gi2/0/3 Grp 0
-        173 Gi2/0/3 0000.0cff.b308
-            Gi2/0/3 Grp 1
+HSRP MAC Address Table
+169 Gi1/0/1 0000.0cff.b30c
+    Gi1/0/1 Grp 5
+166 Gi2/0/3 0000.0cff.b311
+    Gi2/0/3 Grp 10
+172 Gi2/0/3 0000.0cff.b307
+    Gi2/0/3 Grp 0
+173 Gi2/0/3 0000.0cff.b308
+    Gi2/0/3 Grp 1
     

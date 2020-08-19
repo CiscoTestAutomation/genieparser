@@ -1,9 +1,9 @@
-        lab-asr-1002# show ip route vrf Mgmt-intf 0.0.0.0
+lab-asr-1002# show ip route vrf Mgmt-intf 0.0.0.0
         
-        Routing Table: Mgmt-intf
-        Routing entry for 0.0.0.0/0, supernet
-        Known via "static", distance 1, metric 0, candidate default path
-        Routing Descriptor Blocks:
-        * 10.255.207.129
-            Route metric is 0, traffic share count is 1
+Routing Table: Mgmt-intf
+Routing entry for 0.0.0.0/0, supernet
+Known via "static", distance 1, metric 0, candidate default path
+Routing Descriptor Blocks:
+* 10.255.207.129
+    Route metric is 0, traffic share count is 1
     

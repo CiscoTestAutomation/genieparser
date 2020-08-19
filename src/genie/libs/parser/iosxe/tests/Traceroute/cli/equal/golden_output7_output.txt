@@ -1,25 +1,25 @@
 
-        traceroute vrf MG501
-        Protocol [ip]: 
-        Target IP address: 192.168.1.1
-        Ingress traceroute [n]: 
-        Source address or interface: 
-        DSCP Value [0]: 
-        Numeric display [n]: y
-        Resolve AS number in (G)lobal table, (V)RF or(N)one [G]: 
-        Timeout in seconds [3]: 
-        Probe count [3]: 
-        Minimum Time to Live [1]: 
-        Maximum Time to Live [30]: 
-        Port Number [33434]: 
-        Loose, Strict, Record, Timestamp, Verbose[none]: 
-        Type escape sequence to abort.
-        Tracing the route to 192.168.1.1
-        VRF info: (vrf in name/id, vrf out name/id)
-          1  *  *  * 
-          2  *  *  * 
-          3  *  * 
-            10.169.14.121 [MPLS: Labels 16063/459 Exp 0] 3 msec
-          4 10.169.14.158 [MPLS: Labels 16063/459 Exp 0] 2 msec 3 msec 3 msec
-          5 192.168.1.1 3 msec *  3 msec
+traceroute vrf MG501
+Protocol [ip]: 
+Target IP address: 192.168.1.1
+Ingress traceroute [n]: 
+Source address or interface: 
+DSCP Value [0]: 
+Numeric display [n]: y
+Resolve AS number in (G)lobal table, (V)RF or(N)one [G]: 
+Timeout in seconds [3]: 
+Probe count [3]: 
+Minimum Time to Live [1]: 
+Maximum Time to Live [30]: 
+Port Number [33434]: 
+Loose, Strict, Record, Timestamp, Verbose[none]: 
+Type escape sequence to abort.
+Tracing the route to 192.168.1.1
+VRF info: (vrf in name/id, vrf out name/id)
+  1  *  *  * 
+  2  *  *  * 
+  3  *  * 
+    10.169.14.121 [MPLS: Labels 16063/459 Exp 0] 3 msec
+  4 10.169.14.158 [MPLS: Labels 16063/459 Exp 0] 2 msec 3 msec 3 msec
+  5 192.168.1.1 3 msec *  3 msec
     

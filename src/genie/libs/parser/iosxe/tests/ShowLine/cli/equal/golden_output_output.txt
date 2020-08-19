@@ -1,28 +1,28 @@
-        Router#show line
-        Load for five secs: 52%/0%; one minute: 37%; five minutes: 33%
-        Time source is NTP, 17:11:11.421 EST Tue Sep 13 2016
+Router#show line
+Load for five secs: 52%/0%; one minute: 37%; five minutes: 33%
+Time source is NTP, 17:11:11.421 EST Tue Sep 13 2016
 
-           Tty Typ     Tx/Rx    A Modem  Roty AccO AccI   Uses   Noise  Overruns   Int
-              0 CTY              -    -      -    -    -      0       2     0/0       -
-              1 AUX   9600/9600  -    -      -    -    -      0       0     0/0       -
-        *     2 VTY              -    -      -    -    -      3       0     0/0       -
-        *     3 VTY              -    -      -    -    -      8       0     0/0       -
-        *     4 VTY              -    -      -    -    -     18       0     0/0       -
-        *     5 VTY              -    -      -    -    -      1       0     0/0       -
-        *     6 VTY              -    -      -    -    -      3       0     0/0       -
-              7 VTY              -    -      -    -    -     10       0     0/0       -
-              8 VTY              -    -      -    -    -      6       0     0/0       -
-        *     9 VTY              -    -      -    -    -      3       0     0/0       -
-             10 VTY              -    -      -    -    -      0       0     0/0       -
-             11 VTY              -    -      -    -    -      0       0     0/0       -
-             12 VTY              -    -      -    -    -      0       0     0/0       -
-             13 VTY              -    -      -    -    -      0       0     0/0       -
-             14 VTY              -    -      -    -    -      0       0     0/0       -
-             15 VTY              -    -      -    -    -      0       0     0/0       -
-             16 VTY              -    -      -    -    -      0       0     0/0       -
-             17 VTY              -    -      -    -    -      0       0     0/0       -
-             18 VTY              -    -      -    -    -      0       0     0/0       -
-             19 VTY              -    -      -    -    -      0       0     0/0       -
-             20 VTY              -    -      -    -    -      0       0     0/0       -
-             21 VTY              -    -      -    -    -      0       0     0/0       -
+   Tty Typ     Tx/Rx    A Modem  Roty AccO AccI   Uses   Noise  Overruns   Int
+      0 CTY              -    -      -    -    -      0       2     0/0       -
+      1 AUX   9600/9600  -    -      -    -    -      0       0     0/0       -
+*     2 VTY              -    -      -    -    -      3       0     0/0       -
+*     3 VTY              -    -      -    -    -      8       0     0/0       -
+*     4 VTY              -    -      -    -    -     18       0     0/0       -
+*     5 VTY              -    -      -    -    -      1       0     0/0       -
+*     6 VTY              -    -      -    -    -      3       0     0/0       -
+      7 VTY              -    -      -    -    -     10       0     0/0       -
+      8 VTY              -    -      -    -    -      6       0     0/0       -
+*     9 VTY              -    -      -    -    -      3       0     0/0       -
+     10 VTY              -    -      -    -    -      0       0     0/0       -
+     11 VTY              -    -      -    -    -      0       0     0/0       -
+     12 VTY              -    -      -    -    -      0       0     0/0       -
+     13 VTY              -    -      -    -    -      0       0     0/0       -
+     14 VTY              -    -      -    -    -      0       0     0/0       -
+     15 VTY              -    -      -    -    -      0       0     0/0       -
+     16 VTY              -    -      -    -    -      0       0     0/0       -
+     17 VTY              -    -      -    -    -      0       0     0/0       -
+     18 VTY              -    -      -    -    -      0       0     0/0       -
+     19 VTY              -    -      -    -    -      0       0     0/0       -
+     20 VTY              -    -      -    -    -      0       0     0/0       -
+     21 VTY              -    -      -    -    -      0       0     0/0       -
     

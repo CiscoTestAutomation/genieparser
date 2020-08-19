@@ -1,20 +1,20 @@
 
-    iosvl2-1#show pagp internal
-    Flags:  S - Device is sending Slow hello.  C - Device is in Consistent state.
-            A - Device is in Auto mode.        d - PAgP is down
-    Timers: H - Hello timer is running.        Q - Quit timer is running.
-            S - Switching timer is running.    I - Interface timer is running.
+iosvl2-1#show pagp internal
+Flags:  S - Device is sending Slow hello.  C - Device is in Consistent state.
+        A - Device is in Auto mode.        d - PAgP is down
+Timers: H - Hello timer is running.        Q - Quit timer is running.
+        S - Switching timer is running.    I - Interface timer is running.
 
-    Channel group 1
-                                    Hello    Partner  PAgP     Learning  Group
-    Port      Flags State   Timers  Interval Count   Priority   Method  Ifindex
-    Gi0/1     SC    U6/S7   H       30s      1        128        Any      8
-    Gi0/2     SC    U6/S7   H       30s      1        128        Any      8
+Channel group 1
+                                Hello    Partner  PAgP     Learning  Group
+Port      Flags State   Timers  Interval Count   Priority   Method  Ifindex
+Gi0/1     SC    U6/S7   H       30s      1        128        Any      8
+Gi0/2     SC    U6/S7   H       30s      1        128        Any      8
 
-    Channel group 2
-                                    Hello    Partner  PAgP     Learning  Group
-    Port      Flags State   Timers  Interval Count   Priority   Method  Ifindex
-    Gi0/3     SC    U6/S7   H       30s      1        128        Any      11
-    Gi1/0     S C    U6/S7   H       30s      1        128        Any      11
-    Gi1/1     S C    U6/S7   H       30s      1        128        Any      11
+Channel group 2
+                                Hello    Partner  PAgP     Learning  Group
+Port      Flags State   Timers  Interval Count   Priority   Method  Ifindex
+Gi0/3     SC    U6/S7   H       30s      1        128        Any      11
+Gi1/0     S C    U6/S7   H       30s      1        128        Any      11
+Gi1/1     S C    U6/S7   H       30s      1        128        Any      11
         

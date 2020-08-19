@@ -1,12 +1,12 @@
 
 
-        Router#show policy-map police-in
-        Load for five secs: 11%/0%; one minute: 4%; five minutes: 4%
-        Time source is NTP, 07:03:58.319 EST Wed Oct 26 2016
+Router#show policy-map police-in
+Load for five secs: 11%/0%; one minute: 4%; five minutes: 4%
+Time source is NTP, 07:03:58.319 EST Wed Oct 26 2016
 
-            Policy Map police-in
-                Class class-default
-                    police cir 445500 bc 83619
-                        conform-action transmit 
-                        exceed-action drop 
+    Policy Map police-in
+        Class class-default
+            police cir 445500 bc 83619
+                conform-action transmit 
+                exceed-action drop 
     

@@ -1,33 +1,33 @@
-        Interface:        GigabitEthernet1
-        Group:                FF15:1::1
-        Uptime:                08:14:15
-        Router mode:        INCLUDE
-        Host mode:        INCLUDE
-        Last reporter:        FE80::5054:FF:FE7C:DC70
-        Group source list:
-        Source Address                          Uptime    Expires   Fwd  Flags
-        2001:DB8:2:2::2                         08:13:22  00:06:42  Yes  Remote Local 2D
-        Interface:        GigabitEthernet1
-        Group:                FF25:2::1
-        Uptime:                08:14:01
-        Router mode:        EXCLUDE (Expires: never)
-        Host mode:        EXCLUDE
-        Last reporter:        FE80::5054:FF:FE7C:DC70
-        Source list is empty
-        Interface:        GigabitEthernet1
-        Group:                FF35:1::1
-        Uptime:                00:42:41
-        Router mode:        INCLUDE
-        Host mode:        INCLUDE
-        Last reporter:        FE80::5054:FF:FE7C:DC70
-        Group source list:
-        Source Address                          Uptime    Expires   Fwd  Flags
-        2001:DB8:3:3::3                         00:42:41  00:06:42  Yes  Remote Local E
-        Interface:        GigabitEthernet1
-        Group:                FF45:1::1
-        Uptime:                00:42:32
-        Router mode:        EXCLUDE (Expires: never)
-        Host mode:        EXCLUDE
-        Last reporter:        FE80::5054:FF:FE7C:DC70
-        Source list is empty
+Interface:        GigabitEthernet1
+Group:                FF15:1::1
+Uptime:                08:14:15
+Router mode:        INCLUDE
+Host mode:        INCLUDE
+Last reporter:        FE80::5054:FF:FE7C:DC70
+Group source list:
+Source Address                          Uptime    Expires   Fwd  Flags
+2001:DB8:2:2::2                         08:13:22  00:06:42  Yes  Remote Local 2D
+Interface:        GigabitEthernet1
+Group:                FF25:2::1
+Uptime:                08:14:01
+Router mode:        EXCLUDE (Expires: never)
+Host mode:        EXCLUDE
+Last reporter:        FE80::5054:FF:FE7C:DC70
+Source list is empty
+Interface:        GigabitEthernet1
+Group:                FF35:1::1
+Uptime:                00:42:41
+Router mode:        INCLUDE
+Host mode:        INCLUDE
+Last reporter:        FE80::5054:FF:FE7C:DC70
+Group source list:
+Source Address                          Uptime    Expires   Fwd  Flags
+2001:DB8:3:3::3                         00:42:41  00:06:42  Yes  Remote Local E
+Interface:        GigabitEthernet1
+Group:                FF45:1::1
+Uptime:                00:42:32
+Router mode:        EXCLUDE (Expires: never)
+Host mode:        EXCLUDE
+Last reporter:        FE80::5054:FF:FE7C:DC70
+Source list is empty
     

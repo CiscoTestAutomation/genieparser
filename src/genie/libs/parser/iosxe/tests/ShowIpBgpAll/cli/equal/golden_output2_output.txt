@@ -1,41 +1,41 @@
 
-        Router#show ip bgp all
-        Load for five secs: 4%/0%; one minute: 5%; five minutes: 4%
-        Time source is NTP, 09:44:45.434 EST Tue Jun 8 2016
-        For address family: IPv4 Unicast
+Router#show ip bgp all
+Load for five secs: 4%/0%; one minute: 5%; five minutes: 4%
+Time source is NTP, 09:44:45.434 EST Tue Jun 8 2016
+For address family: IPv4 Unicast
 
 
-        For address family: VPNv4 Unicast
+For address family: VPNv4 Unicast
 
-        BGP table version is 27013588, local router ID is 10.169.197.254
-        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
-                      r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
-                      x best-external, a additional-path, c RIB-compressed, 
-        Origin codes: i - IGP, e - EGP, ? - incomplete
-        RPKI validation codes: V valid, I invalid, N Not found
+BGP table version is 27013588, local router ID is 10.169.197.254
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
+              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
+              x best-external, a additional-path, c RIB-compressed, 
+Origin codes: i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
 
-             Network          Next Hop            Metric LocPrf Weight Path
-        Route Distinguisher: 5918:50 (default for vrf L3VPN-0050) VRF Router ID 192.168.10.254
-         *>i 172.16.200.1/32  10.13.202.64                  100      0 60000 i
-         *>i 172.16.200.2/32  10.13.202.64                  100      0 60000 i
-         *>i 172.16.200.3/32  10.13.202.64                  100      0 60000 i
-         *>i 172.16.200.4/32  10.13.202.64                  100      0 60000 i
-         *>i 172.16.200.5/32  10.13.202.64                  100      0 60000 i
-         *>i 172.16.200.6/32  10.13.202.64                  100      0 60000 i
-         *>i 172.16.200.7/32  10.13.202.64                  100      0 60000 i
-         *>i 172.16.200.8/32  10.13.202.64                  100      0 60000 i
-         *>i 172.16.200.9/32  10.13.202.64                  100      0 60000 i
-         *>i 172.16.200.10/32 10.13.202.64                  100      0 60000 i
-         *>i 172.16.200.11/32 10.13.202.64                  100      0 60000 i
-         *>i 172.16.200.12/32 10.13.202.64                  100      0 60000 i
-         *>i 172.16.200.13/32 10.13.202.64                  100      0 60000 i
-         *>i 172.16.200.14/32 10.13.202.64                  100      0 60000 i
-         *>i 172.16.200.15/32 10.13.202.64                  100      0 60000 i
-         *>i 172.16.200.16/32 10.13.202.64                  100      0 60000 i
-         *>i 172.16.200.17/32 10.13.202.64                  100      0 60000 i
-         *>i 172.16.200.18/32 10.13.202.64                  100      0 60000 i
-         *>i 172.16.200.19/32 10.13.202.64                  100      0 60000 i
-         *>i 172.16.200.20/32 10.13.202.64                  100      0 60000 i
-         *>i 172.16.200.99/32
-                       10.13.202.64                  100      0 60000 i
+     Network          Next Hop            Metric LocPrf Weight Path
+Route Distinguisher: 5918:50 (default for vrf L3VPN-0050) VRF Router ID 192.168.10.254
+ *>i 172.16.200.1/32  10.13.202.64                  100      0 60000 i
+ *>i 172.16.200.2/32  10.13.202.64                  100      0 60000 i
+ *>i 172.16.200.3/32  10.13.202.64                  100      0 60000 i
+ *>i 172.16.200.4/32  10.13.202.64                  100      0 60000 i
+ *>i 172.16.200.5/32  10.13.202.64                  100      0 60000 i
+ *>i 172.16.200.6/32  10.13.202.64                  100      0 60000 i
+ *>i 172.16.200.7/32  10.13.202.64                  100      0 60000 i
+ *>i 172.16.200.8/32  10.13.202.64                  100      0 60000 i
+ *>i 172.16.200.9/32  10.13.202.64                  100      0 60000 i
+ *>i 172.16.200.10/32 10.13.202.64                  100      0 60000 i
+ *>i 172.16.200.11/32 10.13.202.64                  100      0 60000 i
+ *>i 172.16.200.12/32 10.13.202.64                  100      0 60000 i
+ *>i 172.16.200.13/32 10.13.202.64                  100      0 60000 i
+ *>i 172.16.200.14/32 10.13.202.64                  100      0 60000 i
+ *>i 172.16.200.15/32 10.13.202.64                  100      0 60000 i
+ *>i 172.16.200.16/32 10.13.202.64                  100      0 60000 i
+ *>i 172.16.200.17/32 10.13.202.64                  100      0 60000 i
+ *>i 172.16.200.18/32 10.13.202.64                  100      0 60000 i
+ *>i 172.16.200.19/32 10.13.202.64                  100      0 60000 i
+ *>i 172.16.200.20/32 10.13.202.64                  100      0 60000 i
+ *>i 172.16.200.99/32
+               10.13.202.64                  100      0 60000 i
         

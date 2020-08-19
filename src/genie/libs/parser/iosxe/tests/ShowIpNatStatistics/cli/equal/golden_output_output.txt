@@ -1,26 +1,26 @@
 
-        Device# show ip nat statistics
+Device# show ip nat statistics
 
-        Total active translations: 3 (0 static, 3 dynamic; 3 extended)
-        Outside interfaces:
-        TenGigabitEthernet2/0/0, TenGigabitEthernet2/1/0, TenGigabitEthernet2/2/0
-        TenGigabitEthernet2/3/0
-        Inside interfaces: 
-        TenGigabitEthernet1/0/0, TenGigabitEthernet1/1/0, TenGigabitEthernet1/2/0
-        TenGigabitEthernet1/3/0
-        Hits: 59230465  Misses: 3
-        CEF Translated packets: 0, CEF Punted packets: 0
-        Expired translations: 0
-        Dynamic mappings:
-        -- Inside Source
-        [Id: 1] access-list 102 pool mypool refcount 3
-        pool mypool: netmask 255.255.255.0
-                start 10.5.5.1 end 10.5.5.5
-                type generic, total addresses 5, allocated 1 (20%), misses 0
-        nat-limit statistics:
-        max entry: max allowed 2147483647, used 3, missed 0
-        Pool stats drop: 0  Mapping stats drop: 0
-        Port block alloc fail: 0
-        IP alias add fail: 0
-        Limit entry add fail: 0
+Total active translations: 3 (0 static, 3 dynamic; 3 extended)
+Outside interfaces:
+TenGigabitEthernet2/0/0, TenGigabitEthernet2/1/0, TenGigabitEthernet2/2/0
+TenGigabitEthernet2/3/0
+Inside interfaces: 
+TenGigabitEthernet1/0/0, TenGigabitEthernet1/1/0, TenGigabitEthernet1/2/0
+TenGigabitEthernet1/3/0
+Hits: 59230465  Misses: 3
+CEF Translated packets: 0, CEF Punted packets: 0
+Expired translations: 0
+Dynamic mappings:
+-- Inside Source
+[Id: 1] access-list 102 pool mypool refcount 3
+pool mypool: netmask 255.255.255.0
+        start 10.5.5.1 end 10.5.5.5
+        type generic, total addresses 5, allocated 1 (20%), misses 0
+nat-limit statistics:
+max entry: max allowed 2147483647, used 3, missed 0
+Pool stats drop: 0  Mapping stats drop: 0
+Port block alloc fail: 0
+IP alias add fail: 0
+Limit entry add fail: 0
     

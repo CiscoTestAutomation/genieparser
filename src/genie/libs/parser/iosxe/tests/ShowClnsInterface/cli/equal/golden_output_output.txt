@@ -1,25 +1,25 @@
-        R2#show clns interface
-        GigabitEthernet1 is up, line protocol is up
-          CLNS protocol processing disabled
-        GigabitEthernet2 is up, line protocol is up
-          Checksums enabled, MTU 1497, Encapsulation SAP
-          ERPDUs enabled, min. interval 10 msec.
-          CLNS fast switching enabled
-          CLNS SSE switching disabled
-          DEC compatibility mode OFF for this interface
-          Next ESH/ISH in 20 seconds
-          Routing Protocol: IS-IS (test)
-            Circuit Type: level-1-2
-            Interface number 0x1, local circuit ID 0x1
-            Neighbor Extended Local Circuit ID: 0x0
-            Level-1 Metric: 10, Priority: 64, Circuit ID: R2.01
-            DR ID: R2.01
-            Level-1 IPv6 Metric: 10
-            Number of active level-1 adjacencies: 1
-            Level-2 Metric: 10, Priority: 64, Circuit ID: R2.01
-            DR ID: 0000.0000.0000.00
-            Level-2 IPv6 Metric: 10
-            Number of active level-2 adjacencies: 0
-            Next IS-IS LAN Level-1 Hello in 1 seconds
-            Next IS-IS LAN Level-2 Hello in 645 milliseconds
+R2#show clns interface
+GigabitEthernet1 is up, line protocol is up
+  CLNS protocol processing disabled
+GigabitEthernet2 is up, line protocol is up
+  Checksums enabled, MTU 1497, Encapsulation SAP
+  ERPDUs enabled, min. interval 10 msec.
+  CLNS fast switching enabled
+  CLNS SSE switching disabled
+  DEC compatibility mode OFF for this interface
+  Next ESH/ISH in 20 seconds
+  Routing Protocol: IS-IS (test)
+    Circuit Type: level-1-2
+    Interface number 0x1, local circuit ID 0x1
+    Neighbor Extended Local Circuit ID: 0x0
+    Level-1 Metric: 10, Priority: 64, Circuit ID: R2.01
+    DR ID: R2.01
+    Level-1 IPv6 Metric: 10
+    Number of active level-1 adjacencies: 1
+    Level-2 Metric: 10, Priority: 64, Circuit ID: R2.01
+    DR ID: 0000.0000.0000.00
+    Level-2 IPv6 Metric: 10
+    Number of active level-2 adjacencies: 0
+    Next IS-IS LAN Level-1 Hello in 1 seconds
+    Next IS-IS LAN Level-2 Hello in 645 milliseconds
     

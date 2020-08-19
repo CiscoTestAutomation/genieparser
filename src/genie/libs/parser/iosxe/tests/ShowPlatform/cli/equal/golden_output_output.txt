@@ -1,24 +1,24 @@
-        show platform
-        Chassis type: ISR4331/K9
+show platform
+Chassis type: ISR4331/K9
 
-        Slot      Type                State                 Insert time (ago) 
-        --------- ------------------- --------------------- ----------------- 
-        0         ISR4331/K9          ok                    3w5d          
-         0/0      ISR4331-3x1GE       ok                    3w5d          
-         0/1      NIM-ES2-4           ok                    3w5d          
-         0/2      NIM-ES2-8           ok                    3w5d          
-        1         ISR4331/K9          ok                    3w5d          
-        R0        ISR4331/K9          ok, active            3w5d          
-        F0        ISR4331/K9          ok, active            3w5d          
-        P0        PWR-4330-AC         ok                    3w5d          
-        P2        ACS-4330-FANASSY    ok                    3w5d          
+Slot      Type                State                 Insert time (ago) 
+--------- ------------------- --------------------- ----------------- 
+0         ISR4331/K9          ok                    3w5d          
+ 0/0      ISR4331-3x1GE       ok                    3w5d          
+ 0/1      NIM-ES2-4           ok                    3w5d          
+ 0/2      NIM-ES2-8           ok                    3w5d          
+1         ISR4331/K9          ok                    3w5d          
+R0        ISR4331/K9          ok, active            3w5d          
+F0        ISR4331/K9          ok, active            3w5d          
+P0        PWR-4330-AC         ok                    3w5d          
+P2        ACS-4330-FANASSY    ok                    3w5d          
 
-        Slot      CPLD Version        Firmware Version                        
-        --------- ------------------- --------------------------------------- 
-        0         17100927            16.7(3r)                            
-        1         17100927            16.7(3r)                            
-        R0        17100927            16.7(3r)                            
-        F0        17100927            16.7(3r)                            
+Slot      CPLD Version        Firmware Version                        
+--------- ------------------- --------------------------------------- 
+0         17100927            16.7(3r)                            
+1         17100927            16.7(3r)                            
+R0        17100927            16.7(3r)                            
+F0        17100927            16.7(3r)                            
 
-        c4331a#      
+c4331a#      
     

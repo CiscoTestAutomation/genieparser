@@ -1,19 +1,19 @@
 
-    csr1000v-2#show lacp internal
-    Flags:  S - Device is requesting Slow LACPDUs
-            F - Device is requesting Fast LACPDUs
-            A - Device is in Active mode       P - Device is in Passive mode
+csr1000v-2#show lacp internal
+Flags:  S - Device is requesting Slow LACPDUs
+        F - Device is requesting Fast LACPDUs
+        A - Device is in Active mode       P - Device is in Passive mode
 
-    Channel group 1
-                                LACP port     Admin     Oper    Port        Port
-    Port      Flags   State     Priority      Key       Key     Number      State
-    Gi2       SA      bndl      32768         0x1       0x1     0x1         0x3D
-    Gi3       SA      bndl      32768         0x1       0x1     0x1         0x3D
+Channel group 1
+                            LACP port     Admin     Oper    Port        Port
+Port      Flags   State     Priority      Key       Key     Number      State
+Gi2       SA      bndl      32768         0x1       0x1     0x1         0x3D
+Gi3       SA      bndl      32768         0x1       0x1     0x1         0x3D
 
-    Channel group 2
-                                LACP port     Admin     Oper    Port        Port
-    Port      Flags   State     Priority      Key       Key     Number      State
-    Gi4       SA      bndl      32768         0x2       0x2     0x1         0x3D
-    Gi5       SA      bndl      32768         0x2       0x2     0x1         0x3D
-    Gi6       SA      bndl      32768         0x2       0x2     0x1         0x3D
+Channel group 2
+                            LACP port     Admin     Oper    Port        Port
+Port      Flags   State     Priority      Key       Key     Number      State
+Gi4       SA      bndl      32768         0x2       0x2     0x1         0x3D
+Gi5       SA      bndl      32768         0x2       0x2     0x1         0x3D
+Gi6       SA      bndl      32768         0x2       0x2     0x1         0x3D
     

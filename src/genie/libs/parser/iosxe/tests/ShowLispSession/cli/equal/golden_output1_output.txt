@@ -1,8 +1,8 @@
 
-        204-MSMR#show lisp session
-        Sessions for VRF default, total: 3, established: 3
-        Peer                           State      Up/Down        In/Out    Users
-        10.16.2.2                      Up         00:51:38        8/13     3
-        10.144.6.6                     Up         00:51:53        3/10     1
-        10.1.8.8                       Up         00:52:15        8/13     3
+204-MSMR#show lisp session
+Sessions for VRF default, total: 3, established: 3
+Peer                           State      Up/Down        In/Out    Users
+10.16.2.2                      Up         00:51:38        8/13     3
+10.144.6.6                     Up         00:51:53        3/10     1
+10.1.8.8                       Up         00:52:15        8/13     3
         

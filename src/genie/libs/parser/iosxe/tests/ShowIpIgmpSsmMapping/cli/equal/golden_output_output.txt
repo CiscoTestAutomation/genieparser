@@ -1,5 +1,5 @@
-        Group address: 239.1.1.1
-        Database     : Static
-        Source list  : 10.4.1.1
-                       10.16.2.2
+Group address: 239.1.1.1
+Database     : Static
+Source list  : 10.4.1.1
+               10.16.2.2
     

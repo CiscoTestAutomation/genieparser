@@ -1,17 +1,17 @@
-         Router# show mpls ldp bindings all
+  Router# show mpls ldp bindings all
 
-         lib entry: 10.0.0.0/24, rev 4
-               local binding:  label: imp-null
-               remote binding: lsr: 10.131.0.1:0, label: imp-null
-         lib entry: 10.11.0.0/24, rev 15
-               local binding:  label: imp-null
-               remote binding: lsr: 10.131.0.1:0, label: imp-null
-       VRF vrf1:
-         lib entry: 10.0.0.0/24, rev 6
-               remote binding: lsr: 10.132.0.1:0, label: imp-null
-         lib entry: 10.11.0.0/24, rev 7
-               remote binding: lsr: 10.132.0.1:0, label: imp-null
-         lib entry: 10.12.0.0/24, rev 8
-               local binding:  label: 17
-               remote binding: lsr: 10.132.0.1:0, label: imp-null
+  lib entry: 10.0.0.0/24, rev 4
+        local binding:  label: imp-null
+        remote binding: lsr: 10.131.0.1:0, label: imp-null
+  lib entry: 10.11.0.0/24, rev 15
+        local binding:  label: imp-null
+        remote binding: lsr: 10.131.0.1:0, label: imp-null
+VRF vrf1:
+  lib entry: 10.0.0.0/24, rev 6
+        remote binding: lsr: 10.132.0.1:0, label: imp-null
+  lib entry: 10.11.0.0/24, rev 7
+        remote binding: lsr: 10.132.0.1:0, label: imp-null
+  lib entry: 10.12.0.0/24, rev 8
+        local binding:  label: 17
+        remote binding: lsr: 10.132.0.1:0, label: imp-null
      

@@ -1,19 +1,19 @@
-        Interface          PIM   Nbr   Hello  DR
-                                 Count Intvl  Prior
+Interface          PIM   Nbr   Hello  DR
+                         Count Intvl  Prior
 
-        GigabitEthernet3   on    0     30     1     
-            Address: FE80::5054:FF:FE84:F097
-            DR     : this system
-        Tunnel5            off    0     30     1     
-            Address: FE80::21E:F6FF:FEAC:A600
-            DR     : not elected
-        Tunnel6            off    0     30     1     
-            Address: ::
-            DR     : not elected
-        Tunnel7            off    0     30     1     
-            Address: ::
-            DR     : not elected
-        Loopback1          on    0     30     1     
-            Address: FE80::21E:F6FF:FEAC:A600
-            DR     : this system
+GigabitEthernet3   on    0     30     1     
+    Address: FE80::5054:FF:FE84:F097
+    DR     : this system
+Tunnel5            off    0     30     1     
+    Address: FE80::21E:F6FF:FEAC:A600
+    DR     : not elected
+Tunnel6            off    0     30     1     
+    Address: ::
+    DR     : not elected
+Tunnel7            off    0     30     1     
+    Address: ::
+    DR     : not elected
+Loopback1          on    0     30     1     
+    Address: FE80::21E:F6FF:FEAC:A600
+    DR     : this system
     

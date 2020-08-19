@@ -1,13 +1,13 @@
 
-        show ip aliases default-vrf
-        Address Type             IP Address      Port
-        Interface                10.169.197.94
-        Interface                10.169.197.254
-        Interface                172.16.1.56
-        Interface                192.168.10.254
-        Interface                192.168.10.254
-        Interface                192.168.10.254
-        Interface                192.168.10.254
-        Interface                192.168.10.254
-        Interface                192.168.144.254
+show ip aliases default-vrf
+Address Type             IP Address      Port
+Interface                10.169.197.94
+Interface                10.169.197.254
+Interface                172.16.1.56
+Interface                192.168.10.254
+Interface                192.168.10.254
+Interface                192.168.10.254
+Interface                192.168.10.254
+Interface                192.168.10.254
+Interface                192.168.144.254
         

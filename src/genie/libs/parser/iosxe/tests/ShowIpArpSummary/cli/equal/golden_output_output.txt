@@ -1,4 +1,4 @@
 
-                R1_csr1000v#show ip arp summary 
-                8 IP ARP entries, with 0 of them incomplete
+R1_csr1000v#show ip arp summary 
+8 IP ARP entries, with 0 of them incomplete
         

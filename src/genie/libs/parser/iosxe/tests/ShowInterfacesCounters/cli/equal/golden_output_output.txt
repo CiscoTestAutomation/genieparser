@@ -1,7 +1,7 @@
 
-        Port            InOctets    InUcastPkts    InMcastPkts    InBcastPkts 
-        Gi1/0/1       3161931167       15716712         214513              0 
+Port            InOctets    InUcastPkts    InMcastPkts    InBcastPkts 
+Gi1/0/1       3161931167       15716712         214513              0 
 
-        Port           OutOctets   OutUcastPkts   OutMcastPkts   OutBcastPkts 
-        Gi1/0/1      24884341205      124435064         188396              0
+Port           OutOctets   OutUcastPkts   OutMcastPkts   OutBcastPkts 
+Gi1/0/1      24884341205      124435064         188396              0
     

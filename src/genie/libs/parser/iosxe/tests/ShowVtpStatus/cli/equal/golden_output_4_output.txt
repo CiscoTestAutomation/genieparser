@@ -1,31 +1,31 @@
-        show vtp status
-        VTP Version capable             : 1 to 3
-        VTP version running             : 3
-        VTP Domain Name                 : GENIE
-        VTP Pruning Mode                : Disabled
-        VTP Traps Generation            : Disabled
-        Device ID                       : 02da.30ff.a878
+show vtp status
+VTP Version capable             : 1 to 3
+VTP version running             : 3
+VTP Domain Name                 : GENIE
+VTP Pruning Mode                : Disabled
+VTP Traps Generation            : Disabled
+Device ID                       : 02da.30ff.a878
 
-        Feature VLAN:
-        --------------
-        VTP Operating Mode                : Primary Server
-        Number of existing VLANs          : 40
-        Number of existing extended VLANs : 0
-        Maximum VLANs supported locally   : 2048
-        Configuration Revision            : 25
-        Primary ID                        : 02da.30ff.a878
-        Primary Description               : genie
-        MD5 digest                        : 0x3D 0x05 0xEE 0x1F 0x35 0xCC 0x7C 0x74
-                                            0x41 0x7A 0xB2 0x1F 0xE9 0x77 0x9A 0xCD
-
-
-        Feature MST:
-        --------------
-        VTP Operating Mode                : Transparent
+Feature VLAN:
+--------------
+VTP Operating Mode                : Primary Server
+Number of existing VLANs          : 40
+Number of existing extended VLANs : 0
+Maximum VLANs supported locally   : 2048
+Configuration Revision            : 25
+Primary ID                        : 02da.30ff.a878
+Primary Description               : genie
+MD5 digest                        : 0x3D 0x05 0xEE 0x1F 0x35 0xCC 0x7C 0x74
+                                    0x41 0x7A 0xB2 0x1F 0xE9 0x77 0x9A 0xCD
 
 
-        Feature UNKNOWN:
-        --------------
-        VTP Operating Mode                : Transparent
+Feature MST:
+--------------
+VTP Operating Mode                : Transparent
+
+
+Feature UNKNOWN:
+--------------
+VTP Operating Mode                : Transparent
 
     

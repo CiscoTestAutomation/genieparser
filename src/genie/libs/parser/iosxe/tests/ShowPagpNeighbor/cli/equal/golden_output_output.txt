@@ -1,12 +1,12 @@
 
-        iosvl2-1#show pagp neighbor
-        Flags:  S - Device is sending Slow hello.  C - Device is in Consistent state.
-                A - Device is in Auto mode.        P - Device learns on physical port.
+iosvl2-1#show pagp neighbor
+Flags:  S - Device is sending Slow hello.  C - Device is in Consistent state.
+        A - Device is in Auto mode.        P - Device learns on physical port.
 
-        Channel group 14 neighbors
-                 Partner              Partner          Partner         Partner Group
-        Port      Name                 Device ID        Port       Age  Flags   Cap.
-        Gi1/0/7   R4                   ecbd.1dff.5f89	Gi1/0/7     22s SC	E0001
-        Gi1/0/8   R4                   ecbd.1dff.5f89	Gi1/0/8     16s SC	E0001
-        Gi1/0/9   R4                   ecbd.1dff.5f89	Gi1/0/9     18s SC	E0001
+Channel group 14 neighbors
+         Partner              Partner          Partner         Partner Group
+Port      Name                 Device ID        Port       Age  Flags   Cap.
+Gi1/0/7   R4                   ecbd.1dff.5f89	Gi1/0/7     22s SC	E0001
+Gi1/0/8   R4                   ecbd.1dff.5f89	Gi1/0/8     16s SC	E0001
+Gi1/0/9   R4                   ecbd.1dff.5f89	Gi1/0/9     18s SC	E0001
     

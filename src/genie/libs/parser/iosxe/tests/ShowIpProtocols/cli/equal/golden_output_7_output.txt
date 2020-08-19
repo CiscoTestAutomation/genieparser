@@ -1,69 +1,69 @@
 
-        show ip protocols
-        *** IP Routing is NSF aware ***
+show ip protocols
+*** IP Routing is NSF aware ***
 
-        Routing Protocol is "application"
-          Sending updates every 0 seconds
-          Invalid after 0 seconds, hold down 0, flushed after 0
-          Outgoing update filter list for all interfaces is not set
-          Incoming update filter list for all interfaces is not set
-          Maximum path: 32
-          Routing for Networks:
-          Routing Information Sources:
-            Gateway         Distance      Last Update
-          Distance: (default is 4)
+Routing Protocol is "application"
+  Sending updates every 0 seconds
+  Invalid after 0 seconds, hold down 0, flushed after 0
+  Outgoing update filter list for all interfaces is not set
+  Incoming update filter list for all interfaces is not set
+  Maximum path: 32
+  Routing for Networks:
+  Routing Information Sources:
+    Gateway         Distance      Last Update
+  Distance: (default is 4)
 
-        Routing Protocol is "ospf 1"
-          Outgoing update filter list for all interfaces is not set
-          Incoming update filter list for all interfaces is not set
-          Router ID 192.168.1.179
-          It is an area border and autonomous system boundary router
-         Redistributing External Routes from,
-          Number of areas in this router is 2. 1 normal 0 stub 1 nssa
-          Address Summarization:
-          Maximum path: 4
-          Routing for Networks:
-            192.168.1.0 0.0.0.255 area 0.0.0.0
-            192.168.100.164 0.0.0.3 area 0.0.0.0
-            192.168.100.192 0.0.0.3 area 0.0.0.0
-          Routing on Interfaces Configured Explicitly (Area 0.0.0.0):
-            GigabitEthernet5
-          Routing on Interfaces Configured Explicitly (Area 4):
-            GigabitEthernet7
-          Passive Interface(s):
-            GigabitEthernet3
-            GigabitEthernet4
-            GigabitEthernet8
-            Loopback0
-            VoIP-Null0
-          Routing Information Sources:
-            Gateway         Distance      Last Update
-            192.168.1.177        110      21:33:11
-            192.168.1.176        110      21:32:48
-            192.168.1.178        110      21:36:07
-          Distance: (default is 110)
+Routing Protocol is "ospf 1"
+  Outgoing update filter list for all interfaces is not set
+  Incoming update filter list for all interfaces is not set
+  Router ID 192.168.1.179
+  It is an area border and autonomous system boundary router
+ Redistributing External Routes from,
+  Number of areas in this router is 2. 1 normal 0 stub 1 nssa
+  Address Summarization:
+  Maximum path: 4
+  Routing for Networks:
+    192.168.1.0 0.0.0.255 area 0.0.0.0
+    192.168.100.164 0.0.0.3 area 0.0.0.0
+    192.168.100.192 0.0.0.3 area 0.0.0.0
+  Routing on Interfaces Configured Explicitly (Area 0.0.0.0):
+    GigabitEthernet5
+  Routing on Interfaces Configured Explicitly (Area 4):
+    GigabitEthernet7
+  Passive Interface(s):
+    GigabitEthernet3
+    GigabitEthernet4
+    GigabitEthernet8
+    Loopback0
+    VoIP-Null0
+  Routing Information Sources:
+    Gateway         Distance      Last Update
+    192.168.1.177        110      21:33:11
+    192.168.1.176        110      21:32:48
+    192.168.1.178        110      21:36:07
+  Distance: (default is 110)
 
-        Routing Protocol is "bgp 202926"
-          Outgoing update filter list for all interfaces is not set
-          Incoming update filter list for all interfaces is not set
-          IGP synchronization is disabled
-          Automatic route summarization is disabled
-          Neighbor(s):
-            Address          FiltIn FiltOut DistIn DistOut Weight RouteMap
-            10.0.1.211
-            10.0.1.221
-            10.0.2.212
-            10.0.2.222
-            10.205.188.34
-            10.205.37.149
-            172.16.121.101                                        ACCEPT_SCI_RICHEMONT
-            192.168.1.176                                         INTERNET_EDGE_IN
-            192.168.1.177                                         INTERNET_EDGE_IN
-            192.168.1.178
-          Maximum path: 2
-          Routing Information Sources:
-            Gateway         Distance      Last Update
-            192.168.1.177        200      21:33:06
-            192.168.1.176        200      21:32:43
-            10.0.2.212            20      21:35:39
-          Distance: external 20 internal 200 local 200
+Routing Protocol is "bgp 202926"
+  Outgoing update filter list for all interfaces is not set
+  Incoming update filter list for all interfaces is not set
+  IGP synchronization is disabled
+  Automatic route summarization is disabled
+  Neighbor(s):
+    Address          FiltIn FiltOut DistIn DistOut Weight RouteMap
+    10.0.1.211
+    10.0.1.221
+    10.0.2.212
+    10.0.2.222
+    10.205.188.34
+    10.205.37.149
+    172.16.121.101                                        ACCEPT_SCI_RICHEMONT
+    192.168.1.176                                         INTERNET_EDGE_IN
+    192.168.1.177                                         INTERNET_EDGE_IN
+    192.168.1.178
+  Maximum path: 2
+  Routing Information Sources:
+    Gateway         Distance      Last Update
+    192.168.1.177        200      21:33:06
+    192.168.1.176        200      21:32:43
+    10.0.2.212            20      21:35:39
+  Distance: external 20 internal 200 local 200

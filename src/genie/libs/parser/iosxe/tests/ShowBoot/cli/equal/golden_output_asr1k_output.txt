@@ -1,10 +1,10 @@
-        BOOT variable = bootflash:/asr1000rpx.bin,12;
-        CONFIG_FILE variable = 
-        BOOTLDR variable does not exist
-        Configuration register is 0x2002
+BOOT variable = bootflash:/asr1000rpx.bin,12;
+CONFIG_FILE variable = 
+BOOTLDR variable does not exist
+Configuration register is 0x2002
 
-        Standby BOOT variable = bootflash:/asr1000rpx.bin,12;
-        Standby CONFIG_FILE variable = 
-        Standby BOOTLDR variable does not exist
-        Standby Configuration register is 0x2002
+Standby BOOT variable = bootflash:/asr1000rpx.bin,12;
+Standby CONFIG_FILE variable = 
+Standby BOOTLDR variable does not exist
+Standby Configuration register is 0x2002
     

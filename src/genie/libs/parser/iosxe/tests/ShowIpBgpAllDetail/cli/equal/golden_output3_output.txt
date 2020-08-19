@@ -1,15 +1,15 @@
 
-       BGP routing table entry for 0.0.0.0/0, version 791832
-        Paths: (2 available, best #1, table default, not advertised to EBGP peer)
-        Advertised to update-groups:
-        8
-        65000 65191 1111111002 1111111502 1111111001 1111111505 1111111005 1111111504 222222 333
-        10.4.1.1 from 10.4.1.1 (10.16.2.2)
-        Origin IGP, localpref 150, valid, external, best
-        Community: 65100:106 65100:500 65100:601 65351:1 no-export
-        65000 65191 1111111002 1111111502 1111111001 1111111505 1111111005 1111111504 222222 333, (received-only)
-        10.4.1.1 from 10.4.1.1 (10.16.2.2)
-        Origin IGP, localpref 100, valid, external
-        Community: 65100:106 65100:500 65100:601 65351:1
+BGP routing table entry for 0.0.0.0/0, version 791832
+ Paths: (2 available, best #1, table default, not advertised to EBGP peer)
+ Advertised to update-groups:
+ 8
+ 65000 65191 1111111002 1111111502 1111111001 1111111505 1111111005 1111111504 222222 333
+ 10.4.1.1 from 10.4.1.1 (10.16.2.2)
+ Origin IGP, localpref 150, valid, external, best
+ Community: 65100:106 65100:500 65100:601 65351:1 no-export
+ 65000 65191 1111111002 1111111502 1111111001 1111111505 1111111005 1111111504 222222 333, (received-only)
+ 10.4.1.1 from 10.4.1.1 (10.16.2.2)
+ Origin IGP, localpref 100, valid, external
+ Community: 65100:106 65100:500 65100:601 65351:1
 
     

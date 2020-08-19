@@ -1,51 +1,51 @@
-        R2#show isis database detail
+R2#show isis database detail
 
-        Tag VRF1:
-        IS-IS Level-1 Link State Database:
-        LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd      ATT/P/OL
-        R2.00-00            * 0x00000007   0x8A6D                 403/*         1/0/0
-        Area Address: 49.0001
-        NLPID:        0xCC 0x8E
-        Topology:     IPv4 (0x0)
-                        IPv6 (0x4002 ATT)
-        Hostname: R2
-        IP Address:   10.84.66.66
-        Metric: 10         IP 10.229.7.0/24
-        Metric: 10         IP 10.84.66.66/32
-        IPv6 Address: 2001:DB8:66:66:66::66
-        Metric: 10         IPv6 (MT-IPv6) 2001:DB8:20:2::/64
-        Metric: 10         IPv6 (MT-IPv6) 2001:DB8:66:66:66::66/128
-        IS-IS Level-2 Link State Database:
-        LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd      ATT/P/OL
-        R2.00-00            * 0x00000008   0x621E                1158/*         0/0/0
-        Area Address: 49.0001
-        NLPID:        0xCC 0x8E
-        Topology:     IPv4 (0x0)
-                        IPv6 (0x2)
-        Hostname: R2
-        Metric: 10         IS-Extended R2.01
-        Metric: 10         IS (MT-IPv6) R2.01
-        IP Address:   10.84.66.66
-        Metric: 10         IP 10.229.7.0/24
-        Metric: 10         IP 10.84.66.66/32
-        IPv6 Address: 2001:DB8:66:66:66::66
-        Metric: 10         IPv6 (MT-IPv6) 2001:DB8:20:2::/64
-        Metric: 10         IPv6 (MT-IPv6) 2001:DB8:66:66:66::66/128
-        R2.01-00            * 0x00000002   0x3334                 414/*         0/0/0
-        Metric: 0          IS-Extended R2.00
-        Metric: 0          IS-Extended R7.00
-        R7.00-00              0x00000005   0x056E                 735/1199      0/0/0
-        Area Address: 49.0002
-        NLPID:        0xCC 0x8E
-        Router ID:    10.1.77.77
-        IP Address:   10.1.77.77
-        Topology:     IPv6 (0x2)
-                        IPv4 (0x0)
-        Hostname: R7
-        Metric: 40         IS (MT-IPv6) R2.01
-        Metric: 40         IS-Extended R2.01
-        Metric: 1          IP 10.1.77.77/32
-        Metric: 40         IP 10.229.7.0/24
-        Metric: 1          IPv6 (MT-IPv6) 2001:DB8:77:77:77::77/128
-        Metric: 40         IPv6 (MT-IPv6) 2001:DB8:20:2::/64
+Tag VRF1:
+IS-IS Level-1 Link State Database:
+LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd      ATT/P/OL
+R2.00-00            * 0x00000007   0x8A6D                 403/*         1/0/0
+Area Address: 49.0001
+NLPID:        0xCC 0x8E
+Topology:     IPv4 (0x0)
+                IPv6 (0x4002 ATT)
+Hostname: R2
+IP Address:   10.84.66.66
+Metric: 10         IP 10.229.7.0/24
+Metric: 10         IP 10.84.66.66/32
+IPv6 Address: 2001:DB8:66:66:66::66
+Metric: 10         IPv6 (MT-IPv6) 2001:DB8:20:2::/64
+Metric: 10         IPv6 (MT-IPv6) 2001:DB8:66:66:66::66/128
+IS-IS Level-2 Link State Database:
+LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime/Rcvd      ATT/P/OL
+R2.00-00            * 0x00000008   0x621E                1158/*         0/0/0
+Area Address: 49.0001
+NLPID:        0xCC 0x8E
+Topology:     IPv4 (0x0)
+                IPv6 (0x2)
+Hostname: R2
+Metric: 10         IS-Extended R2.01
+Metric: 10         IS (MT-IPv6) R2.01
+IP Address:   10.84.66.66
+Metric: 10         IP 10.229.7.0/24
+Metric: 10         IP 10.84.66.66/32
+IPv6 Address: 2001:DB8:66:66:66::66
+Metric: 10         IPv6 (MT-IPv6) 2001:DB8:20:2::/64
+Metric: 10         IPv6 (MT-IPv6) 2001:DB8:66:66:66::66/128
+R2.01-00            * 0x00000002   0x3334                 414/*         0/0/0
+Metric: 0          IS-Extended R2.00
+Metric: 0          IS-Extended R7.00
+R7.00-00              0x00000005   0x056E                 735/1199      0/0/0
+Area Address: 49.0002
+NLPID:        0xCC 0x8E
+Router ID:    10.1.77.77
+IP Address:   10.1.77.77
+Topology:     IPv6 (0x2)
+                IPv4 (0x0)
+Hostname: R7
+Metric: 40         IS (MT-IPv6) R2.01
+Metric: 40         IS-Extended R2.01
+Metric: 1          IP 10.1.77.77/32
+Metric: 40         IP 10.229.7.0/24
+Metric: 1          IPv6 (MT-IPv6) 2001:DB8:77:77:77::77/128
+Metric: 40         IPv6 (MT-IPv6) 2001:DB8:20:2::/64
     

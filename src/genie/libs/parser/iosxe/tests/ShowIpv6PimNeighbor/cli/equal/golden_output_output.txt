@@ -1,9 +1,9 @@
 
-        PIM Neighbor Table
-        Mode: B - Bidir Capable, G - GenID Capable
-        Neighbor Address           Interface          Uptime    Expires  Mode DR pri
+PIM Neighbor Table
+Mode: B - Bidir Capable, G - GenID Capable
+Neighbor Address           Interface          Uptime    Expires  Mode DR pri
 
-        FE80::21A:30FF:FE47:6EC1   Port-channel2.100  1d13h     00:01:36 B G     1
-        FE80::21A:30FF:FE47:6EC1   Port-channel2.101  1d13h     00:01:31 B G     1
-        FE80::21A:30FF:FE47:6EC1   Port-channel2.103  1d13h     00:01:31 B G     1    
+FE80::21A:30FF:FE47:6EC1   Port-channel2.100  1d13h     00:01:36 B G     1
+FE80::21A:30FF:FE47:6EC1   Port-channel2.101  1d13h     00:01:31 B G     1
+FE80::21A:30FF:FE47:6EC1   Port-channel2.103  1d13h     00:01:31 B G     1    
     

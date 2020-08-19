@@ -1,32 +1,32 @@
-        Sysauthcontrol                 Enabled
-        Dot1x Protocol Version               3
+Sysauthcontrol                 Enabled
+Dot1x Protocol Version               3
 
-        Dot1x Info for FastEthernet7/1
-        -----------------------------------
-        PAE                       = AUTHENTICATOR
-        PortControl               = AUTO
-        ControlDirection          = Both 
-        HostMode                  = SINGLE_HOST
-        ReAuthentication          = Disabled
-        QuietPeriod               = 60
-        ServerTimeout             = 30
-        SuppTimeout               = 30
-        ReAuthPeriod              = 3600 (Locally configured)
-        ReAuthMax                 = 2
-        MaxReq                    = 2
-        TxPeriod                  = 30
-        RateLimitPeriod           = 0
-        Dot1x Authenticator Client List
-        -------------------------------
-        EAP Method                = MD5
-        Supplicant                = fa16.3eff.c0c3
-        Session ID                = 000000000000000E00110F79
-            Auth SM State         = HELD
-            Auth BEND SM State    = IDLE
+Dot1x Info for FastEthernet7/1
+-----------------------------------
+PAE                       = AUTHENTICATOR
+PortControl               = AUTO
+ControlDirection          = Both 
+HostMode                  = SINGLE_HOST
+ReAuthentication          = Disabled
+QuietPeriod               = 60
+ServerTimeout             = 30
+SuppTimeout               = 30
+ReAuthPeriod              = 3600 (Locally configured)
+ReAuthMax                 = 2
+MaxReq                    = 2
+TxPeriod                  = 30
+RateLimitPeriod           = 0
+Dot1x Authenticator Client List
+-------------------------------
+EAP Method                = MD5
+Supplicant                = fa16.3eff.c0c3
+Session ID                = 000000000000000E00110F79
+    Auth SM State         = HELD
+    Auth BEND SM State    = IDLE
 
-        EAP Method                = MD5
-        Supplicant                = fa16.3eff.40c7
-        Session ID                = 000000000000000C00108250
-            Auth SM State         = AUTHENTICATED
-            Auth BEND SM State    = IDLE
+EAP Method                = MD5
+Supplicant                = fa16.3eff.40c7
+Session ID                = 000000000000000C00108250
+    Auth SM State         = AUTHENTICATED
+    Auth BEND SM State    = IDLE
     

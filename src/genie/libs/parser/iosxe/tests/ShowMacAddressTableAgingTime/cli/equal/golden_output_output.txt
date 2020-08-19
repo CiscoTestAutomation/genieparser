@@ -1,5 +1,5 @@
-        Global Aging Time:    0
-        Vlan    Aging Time
-        ----    ----------
-          10      10
+Global Aging Time:    0
+Vlan    Aging Time
+----    ----------
+  10      10
     

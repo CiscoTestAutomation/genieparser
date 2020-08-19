@@ -1,18 +1,18 @@
 
-        Router  # show monitor session 2
-        Session 2
-        ---------
-        Type                   : Remote Source Session
-        Status                 : Admin Enabled
-        Source Ports           :
-            Both               : Gi0/0/1
-        MTU                    : 1464
-        Session 2
-        ---------
-        Type                   : Remote Destination Session
-        Status                 : Admin Enabled
-        Destination Ports      : Gi0/0/1
-        MTU                    : 1464
-        Source RSPAN VLAN : 100
+Router  # show monitor session 2
+Session 2
+---------
+Type                   : Remote Source Session
+Status                 : Admin Enabled
+Source Ports           :
+    Both               : Gi0/0/1
+MTU                    : 1464
+Session 2
+---------
+Type                   : Remote Destination Session
+Status                 : Admin Enabled
+Destination Ports      : Gi0/0/1
+MTU                    : 1464
+Source RSPAN VLAN : 100
        
         

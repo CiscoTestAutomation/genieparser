@@ -1,39 +1,39 @@
-        Chassis type: ASR1006-X           
+Chassis type: ASR1006-X           
 
-        Slot      Type                State                 Allocation(W) 
-        --------- ------------------- --------------------- ------------- 
-        0         ASR1000-SIP40       ok                    64
-         0/0      SPA-8X1GE-V2        inserted              14
-         0/1      SPA-8X1GE-V2        inserted              14
-         0/2      SPA-1X10GE-L-V2     inserted              17.40
-         0/3      SPA-1X10GE-L-V2     inserted              17.40
-        1         ASR1000-SIP40       ok                    64
-         1/0      SPA-8X1GE-V2        inserted              14
-        R0        ASR1000-RP2         ok, active            105
-        R1        ASR1000-RP2         ok, standby           105
-        F0        ASR1000-ESP40       ok, active            267
-        F1        ASR1000-ESP40       ok, standby           267
-        P6        ASR1000X-FAN        ok                    125        
-        P7        ASR1000X-FAN        ok                    125        
+Slot      Type                State                 Allocation(W) 
+--------- ------------------- --------------------- ------------- 
+0         ASR1000-SIP40       ok                    64
+ 0/0      SPA-8X1GE-V2        inserted              14
+ 0/1      SPA-8X1GE-V2        inserted              14
+ 0/2      SPA-1X10GE-L-V2     inserted              17.40
+ 0/3      SPA-1X10GE-L-V2     inserted              17.40
+1         ASR1000-SIP40       ok                    64
+ 1/0      SPA-8X1GE-V2        inserted              14
+R0        ASR1000-RP2         ok, active            105
+R1        ASR1000-RP2         ok, standby           105
+F0        ASR1000-ESP40       ok, active            267
+F1        ASR1000-ESP40       ok, standby           267
+P6        ASR1000X-FAN        ok                    125        
+P7        ASR1000X-FAN        ok                    125        
 
-        Slot      Type                State                 Capacity (W) Load (W)     
-        --------- ------------------- --------------------- ------------ ------------ 
-        P0        ASR1000X-AC-1100W   ok                    1100         132          
-        P1        ASR1000X-AC-1100W   ok                    1100         204          
-        P2        ASR1000X-AC-1100W   ok                    1100         180          
-        P3        ASR1000X-AC-1100W   ok                    1100         180          
+Slot      Type                State                 Capacity (W) Load (W)     
+--------- ------------------- --------------------- ------------ ------------ 
+P0        ASR1000X-AC-1100W   ok                    1100         132          
+P1        ASR1000X-AC-1100W   ok                    1100         204          
+P2        ASR1000X-AC-1100W   ok                    1100         180          
+P3        ASR1000X-AC-1100W   ok                    1100         180          
 
-        Total load: 696 W, total capacity: 4400 W. Load / Capacity is 15%
+Total load: 696 W, total capacity: 4400 W. Load / Capacity is 15%
 
-        Power capacity:       4400 W
-        Redundant allocation: 0 W
-        Fan allocation:       250 W
-        FRU allocation:       949 W
-        --------------------------------------------
-        Excess Power in Reserve:   3201 W
-        Excess / (Capacity - Redundant) is 72%
+Power capacity:       4400 W
+Redundant allocation: 0 W
+Fan allocation:       250 W
+FRU allocation:       949 W
+--------------------------------------------
+Excess Power in Reserve:   3201 W
+Excess / (Capacity - Redundant) is 72%
 
-        Power Redundancy Mode: nplus1
+Power Redundancy Mode: nplus1
 
-        Power Allocation Status: Sufficient
+Power Allocation Status: Sufficient
     

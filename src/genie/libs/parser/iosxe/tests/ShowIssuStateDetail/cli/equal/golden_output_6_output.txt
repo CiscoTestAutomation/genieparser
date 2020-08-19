@@ -1,11 +1,11 @@
 
-                              Slot = 1
-                      RP State = Active
-                    ISSU State = Init
-                 Boot Variable = bootdisk:,1;
-                Operating Mode = sso
-               Primary Version = N/A
-             Secondary Version = N/A
-               Current Version = bootdisk:s2t54-adventerprisek9-mz.SPA.151-1.SY.bin
-                Variable Store = PrstVbl
+                 Slot = 1
+         RP State = Active
+       ISSU State = Init
+    Boot Variable = bootdisk:,1;
+   Operating Mode = sso
+  Primary Version = N/A
+Secondary Version = N/A
+  Current Version = bootdisk:s2t54-adventerprisek9-mz.SPA.151-1.SY.bin
+   Variable Store = PrstVbl
     

@@ -1,12 +1,12 @@
 
-        show ip ospf 1234 segment-routing global-block
+show ip ospf 1234 segment-routing global-block
  
-                    OSPF Router with ID (10.4.1.1) (Process ID 1234)
+            OSPF Router with ID (10.4.1.1) (Process ID 1234)
          
-        OSPF Segment Routing Global Blocks in Area 3
+OSPF Segment Routing Global Blocks in Area 3
          
-          Router ID:      SR Capable: SR Algorithm: SRGB Base: SRGB Range:  SID/Label:
+  Router ID:      SR Capable: SR Algorithm: SRGB Base: SRGB Range:  SID/Label:
          
-         *10.4.1.1         Yes         SPF,StrictSPF 16000      8000         Label    
-          10.16.2.2         Yes         SPF,StrictSPF 16000      8000         Label  
+ *10.4.1.1         Yes         SPF,StrictSPF 16000      8000         Label    
+  10.16.2.2         Yes         SPF,StrictSPF 16000      8000         Label  
     

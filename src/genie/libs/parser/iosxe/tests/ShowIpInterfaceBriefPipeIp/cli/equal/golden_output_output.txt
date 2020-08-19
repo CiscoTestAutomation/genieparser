@@ -1,4 +1,4 @@
 
-        R1#sh ip int brief | i 10.1.18.80 
-        GigabitEthernet0/0     10.1.18.80      YES manual up                    up   
+R1#sh ip int brief | i 10.1.18.80 
+GigabitEthernet0/0     10.1.18.80      YES manual up                    up   
     

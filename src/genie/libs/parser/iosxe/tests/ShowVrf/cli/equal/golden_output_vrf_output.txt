@@ -1,19 +1,19 @@
 
-        [2019-05-10 06:56:43,272] +++ R1_xe: executing command 'show vrf VRF1' +++
-        show vrf VRF1
-        Name                             Default RD            Protocols   Interfaces
-        VRF1                             65000:1               ipv4,ipv6   Tu1
-                                                                            Lo300
-                                                                            Gi2.390
-                                                                            Gi2.410
-                                                                            Gi2.415
-                                                                            Gi2.420
-                                                                            Gi3.390
-                                                                            Gi3.410
-                                                                            Gi3.415
-                                                                            Tu3
-                                                                            Tu4
-                                                                            Tu6
-                                                                            Tu8
-                                                                            Gi3.420
+[2019-05-10 06:56:43,272] +++ R1_xe: executing command 'show vrf VRF1' +++
+show vrf VRF1
+Name                             Default RD            Protocols   Interfaces
+VRF1                             65000:1               ipv4,ipv6   Tu1
+                                                                    Lo300
+                                                                    Gi2.390
+                                                                    Gi2.410
+                                                                    Gi2.415
+                                                                    Gi2.420
+                                                                    Gi3.390
+                                                                    Gi3.410
+                                                                    Gi3.415
+                                                                    Tu3
+                                                                    Tu4
+                                                                    Tu6
+                                                                    Tu8
+                                                                    Gi3.420
     

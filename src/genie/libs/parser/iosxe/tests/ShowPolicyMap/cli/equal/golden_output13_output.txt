@@ -1,7 +1,7 @@
 
-        Policy Map parent-policy2
-            Class class-default
-              Average Rate Traffic Shaping
-              cir 1000000 (bps) bc 2000000 (bits) be 300000 (bits)
+Policy Map parent-policy2
+    Class class-default
+      Average Rate Traffic Shaping
+      cir 1000000 (bps) bc 2000000 (bits) be 300000 (bits)
 
     

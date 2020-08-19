@@ -1,5 +1,5 @@
-        Tracekey : 1#f8e3c2db7822c04e58ce2bd2fc7e476a   
+Tracekey : 1#f8e3c2db7822c04e58ce2bd2fc7e476a   
 
-                        Head    Total(b)     Used(b)     Free(b)   Lowest(b)  Largest(b)
-        Processor  FF86F21010   856541768   355116128   501425640   499097976   501041348
-         lsmpi_io  FF867C51A8     6295128     6294304         824         824         412
+                Head    Total(b)     Used(b)     Free(b)   Lowest(b)  Largest(b)
+Processor  FF86F21010   856541768   355116128   501425640   499097976   501041348
+ lsmpi_io  FF867C51A8     6295128     6294304         824         824         412

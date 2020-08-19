@@ -1,25 +1,25 @@
-        ##### MST0    vlans mapped:   1-99,201-4094
-        Bridge        address 3820.56ff.e15b  priority      32768 (32768 sysid 0)
-        Root          this switch for the CIST
-        Operational   hello time 10, forward delay 30, max age 35, txholdcount 20
-        Configured    hello time 10, forward delay 30, max age 35, max hops    10
+##### MST0    vlans mapped:   1-99,201-4094
+Bridge        address 3820.56ff.e15b  priority      32768 (32768 sysid 0)
+Root          this switch for the CIST
+Operational   hello time 10, forward delay 30, max age 35, txholdcount 20
+Configured    hello time 10, forward delay 30, max age 35, max hops    10
 
-        GigabitEthernet1/0/23 of MST0 is designated forwarding 
-        Port info             port id         128.23  priority    128  cost       20000
-        Designated root       address 3820.56ff.e15b  priority  32768  cost           0
-        Design. regional root address 3820.56ff.e15b  priority  32768  cost           0
-        Designated bridge     address 3820.56ff.e15b  priority  32768  port id   128.23
-        Timers: message expires in 0 sec, forward delay 0, forward transitions 1
-        Bpdus sent 493, received 0
+GigabitEthernet1/0/23 of MST0 is designated forwarding 
+Port info             port id         128.23  priority    128  cost       20000
+Designated root       address 3820.56ff.e15b  priority  32768  cost           0
+Design. regional root address 3820.56ff.e15b  priority  32768  cost           0
+Designated bridge     address 3820.56ff.e15b  priority  32768  port id   128.23
+Timers: message expires in 0 sec, forward delay 0, forward transitions 1
+Bpdus sent 493, received 0
 
-        ##### MST10   vlans mapped:   100-200
-        Bridge        address 3820.56ff.e15b  priority      61450 (61440 sysid 10)
-        Root          this switch for MST10
+##### MST10   vlans mapped:   100-200
+Bridge        address 3820.56ff.e15b  priority      61450 (61440 sysid 10)
+Root          this switch for MST10
 
-        GigabitEthernet1/0/23 of MST10 is designated forwarding 
-        Port info             port id         128.23  priority    128  cost       20000
-        Designated root       address 3820.56ff.e15b  priority  61450  cost           0
-        Designated bridge     address 3820.56ff.e15b  priority  61450  port id   128.23
-        Timers: message expires in 0 sec, forward delay 0, forward transitions 1
-        Bpdus (MRecords) sent 493, received 0
+GigabitEthernet1/0/23 of MST10 is designated forwarding 
+Port info             port id         128.23  priority    128  cost       20000
+Designated root       address 3820.56ff.e15b  priority  61450  cost           0
+Designated bridge     address 3820.56ff.e15b  priority  61450  port id   128.23
+Timers: message expires in 0 sec, forward delay 0, forward transitions 1
+Bpdus (MRecords) sent 493, received 0
     

@@ -1,16 +1,16 @@
 
-        show flow exporter rest statistics
-        Flow Exporter rest:
-          Packet send statistics (last cleared 00:10:17 ago):
-            Successfully sent:         6                     (410 bytes)
-            Reason not given:          163                   (7820 bytes)
+show flow exporter rest statistics
+Flow Exporter rest:
+  Packet send statistics (last cleared 00:10:17 ago):
+    Successfully sent:         6                     (410 bytes)
+    Reason not given:          163                   (7820 bytes)
 
-          Client send statistics:
-            Client: Flow Monitor Test
-              Records added:           21
-                - sent:                8
-                - failed to send:      13
-              Bytes added:             1260
-                - sent:                145
-                - failed to send:      1115
+  Client send statistics:
+    Client: Flow Monitor Test
+      Records added:           21
+        - sent:                8
+        - failed to send:      13
+      Bytes added:             1260
+        - sent:                145
+        - failed to send:      1115
     

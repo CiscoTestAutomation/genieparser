@@ -1,12 +1,12 @@
 
-        CE1#show ipv6 route
-        IPv6 Routing Table - default - 1 entries
-        Codes: C - Connected, L - Local, S - Static, U - Per-user Static route
-            B - BGP, R - RIP, H - NHRP, I1 - ISIS L1
-            I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP
-            EX - EIGRP external, O - OSPF Intra, OI - OSPF Inter, OE1 - OSPF ext 1
-            OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1, ON2 - OSPF NSSA ext 2
-            ls - LISP site, ld - LISP dyn-EID, a - Application
-        L   FF00::/8 [0/0]
-            via Null0, receive
+CE1#show ipv6 route
+IPv6 Routing Table - default - 1 entries
+Codes: C - Connected, L - Local, S - Static, U - Per-user Static route
+    B - BGP, R - RIP, H - NHRP, I1 - ISIS L1
+    I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP
+    EX - EIGRP external, O - OSPF Intra, OI - OSPF Inter, OE1 - OSPF ext 1
+    OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1, ON2 - OSPF NSSA ext 2
+    ls - LISP site, ld - LISP dyn-EID, a - Application
+L   FF00::/8 [0/0]
+    via Null0, receive
     

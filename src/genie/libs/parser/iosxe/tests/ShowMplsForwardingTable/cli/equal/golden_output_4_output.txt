@@ -1,7 +1,7 @@
 
-        #show mpls forwarding-table 10.151.22.22
-        Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop    
-        Label      Label      or Tunnel Id     Switched      interface              
-        16022      Pop Label  10.151.22.22/32   0             Gi4        10.0.0.13   
-                   Pop Label  10.151.22.22/32   0             Gi5        10.0.0.25    
+#show mpls forwarding-table 10.151.22.22
+Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop    
+Label      Label      or Tunnel Id     Switched      interface              
+16022      Pop Label  10.151.22.22/32   0             Gi4        10.0.0.13   
+           Pop Label  10.151.22.22/32   0             Gi5        10.0.0.25    
     

@@ -1,71 +1,71 @@
-        Module   Available     Used     Remaining
-                  (Watts)     (Watts)    (Watts) 
-        ------   ---------   --------   ---------
-        1          1550.0      147.0      1403.0
-        Interface Admin  Oper       Power   Device              Class Max
-                                    (Watts)                            
-        --------- ------ ---------- ------- ------------------- ----- ----
-        Gi1/0/1   auto   off        0.0     n/a                 n/a   30.0 
-        Gi1/0/2   auto   off        0.0     n/a                 n/a   30.0 
-        Gi1/0/3   auto   off        0.0     n/a                 n/a   30.0 
+Module   Available     Used     Remaining
+          (Watts)     (Watts)    (Watts) 
+------   ---------   --------   ---------
+1          1550.0      147.0      1403.0
+Interface Admin  Oper       Power   Device              Class Max
+                            (Watts)                            
+--------- ------ ---------- ------- ------------------- ----- ----
+Gi1/0/1   auto   off        0.0     n/a                 n/a   30.0 
+Gi1/0/2   auto   off        0.0     n/a                 n/a   30.0 
+Gi1/0/3   auto   off        0.0     n/a                 n/a   30.0 
         
-        Module   Available     Used     Remaining
-                  (Watts)     (Watts)    (Watts) 
-        ------   ---------   --------   ---------
-        2          1550.0      424.7      1125.3
-        Interface Admin  Oper       Power   Device              Class Max
-                                    (Watts)                            
-        --------- ------ ---------- ------- ------------------- ----- ----
-        Gi2/0/1   auto   on         7.1     IP Phone 8845       2     30.0 
-        Gi2/0/2   auto   off        0.0     n/a                 n/a   30.0 
-        Gi2/0/3   auto   on         26.1    AIR-AP2802I-E-K9    4     30.0 
+Module   Available     Used     Remaining
+          (Watts)     (Watts)    (Watts) 
+------   ---------   --------   ---------
+2          1550.0      424.7      1125.3
+Interface Admin  Oper       Power   Device              Class Max
+                            (Watts)                            
+--------- ------ ---------- ------- ------------------- ----- ----
+Gi2/0/1   auto   on         7.1     IP Phone 8845       2     30.0 
+Gi2/0/2   auto   off        0.0     n/a                 n/a   30.0 
+Gi2/0/3   auto   on         26.1    AIR-AP2802I-E-K9    4     30.0 
         
-        Module   Available     Used     Remaining
-                  (Watts)     (Watts)    (Watts) 
-        ------   ---------   --------   ---------
-        3          1550.0      397.4      1152.6
-        Interface Admin  Oper       Power   Device              Class Max
-                                    (Watts)                            
-        --------- ------ ---------- ------- ------------------- ----- ----
-        Gi3/0/1   auto   on         26.1    AIR-AP2802I-E-K9    4     30.0 
-        Gi3/0/2   auto   on         26.1    AIR-AP2802I-E-K9    4     30.0 
+Module   Available     Used     Remaining
+          (Watts)     (Watts)    (Watts) 
+------   ---------   --------   ---------
+3          1550.0      397.4      1152.6
+Interface Admin  Oper       Power   Device              Class Max
+                            (Watts)                            
+--------- ------ ---------- ------- ------------------- ----- ----
+Gi3/0/1   auto   on         26.1    AIR-AP2802I-E-K9    4     30.0 
+Gi3/0/2   auto   on         26.1    AIR-AP2802I-E-K9    4     30.0 
         
-        Module   Available     Used     Remaining
-        Interface Admin  Oper       Power   Device              Class Max
-                                    (Watts)                            
-        --------- ------ ---------- ------- ------------------- ----- ----
-                  (Watts)     (Watts)    (Watts) 
-        ------   ---------   --------   ---------
-        4          1550.0      267.0      1283.0
-        Interface Admin  Oper       Power   Device              Class Max
-                                    (Watts)                            
-        --------- ------ ---------- ------- ------------------- ----- ----
-        Gi4/0/1   auto   off        0.0     n/a                 n/a   30.0 
-        Gi4/0/2   auto   off        0.0     n/a                 n/a   30.0 
-        Gi4/0/3   auto   off        0.0     n/a                 n/a   30.0 
-        Gi4/0/4   auto   on         14.8    IP Phone 8865       4     30.0 
+Module   Available     Used     Remaining
+Interface Admin  Oper       Power   Device              Class Max
+                            (Watts)                            
+--------- ------ ---------- ------- ------------------- ----- ----
+          (Watts)     (Watts)    (Watts) 
+------   ---------   --------   ---------
+4          1550.0      267.0      1283.0
+Interface Admin  Oper       Power   Device              Class Max
+                            (Watts)                            
+--------- ------ ---------- ------- ------------------- ----- ----
+Gi4/0/1   auto   off        0.0     n/a                 n/a   30.0 
+Gi4/0/2   auto   off        0.0     n/a                 n/a   30.0 
+Gi4/0/3   auto   off        0.0     n/a                 n/a   30.0 
+Gi4/0/4   auto   on         14.8    IP Phone 8865       4     30.0 
         
-        Module   Available     Used     Remaining
-                  (Watts)     (Watts)    (Watts) 
-        ------   ---------   --------   ---------
-        5          1550.0       80.6      1469.4
-        Interface Admin  Oper       Power   Device              Class Max
-                                    (Watts)                            
-        --------- ------ ---------- ------- ------------------- ----- ----
-        Gi5/0/1   auto   off        0.0     n/a                 n/a   30.0 
-        Gi5/0/2   auto   off        0.0     n/a                 n/a   30.0 
-        Gi5/0/3   auto   off        0.0     n/a                 n/a   30.0 
-        Gi5/0/4   auto   off        0.0     n/a                 n/a   30.0 
-        Gi5/0/5   auto   off        0.0     n/a                 n/a   30.0 
-        Gi5/0/6   auto   off        0.0     n/a                 n/a   30.0 
-        Interface Admin  Oper       Power   Device              Class Max
-                                    (Watts)                            
-        --------- ------ ---------- ------- ------------------- ----- ----
-        Gi5/0/7   auto   off        0.0     n/a                 n/a   30.0 
-        Gi5/0/8   auto   off        0.0     n/a                 n/a   30.0 
-        Gi5/0/9   auto   off        0.0     n/a                 n/a   30.0 
-        Gi5/0/10  auto   off        0.0     n/a                 n/a   30.0 
-        Gi5/0/11  auto   off        0.0     n/a                 n/a   30.0 
-        Gi5/0/12  auto   off        0.0     n/a                 n/a   30.0 
-        Gi5/0/13  auto   on         15.2    IP Phone 8865       4     30.0 
+Module   Available     Used     Remaining
+          (Watts)     (Watts)    (Watts) 
+------   ---------   --------   ---------
+5          1550.0       80.6      1469.4
+Interface Admin  Oper       Power   Device              Class Max
+                            (Watts)                            
+--------- ------ ---------- ------- ------------------- ----- ----
+Gi5/0/1   auto   off        0.0     n/a                 n/a   30.0 
+Gi5/0/2   auto   off        0.0     n/a                 n/a   30.0 
+Gi5/0/3   auto   off        0.0     n/a                 n/a   30.0 
+Gi5/0/4   auto   off        0.0     n/a                 n/a   30.0 
+Gi5/0/5   auto   off        0.0     n/a                 n/a   30.0 
+Gi5/0/6   auto   off        0.0     n/a                 n/a   30.0 
+Interface Admin  Oper       Power   Device              Class Max
+                            (Watts)                            
+--------- ------ ---------- ------- ------------------- ----- ----
+Gi5/0/7   auto   off        0.0     n/a                 n/a   30.0 
+Gi5/0/8   auto   off        0.0     n/a                 n/a   30.0 
+Gi5/0/9   auto   off        0.0     n/a                 n/a   30.0 
+Gi5/0/10  auto   off        0.0     n/a                 n/a   30.0 
+Gi5/0/11  auto   off        0.0     n/a                 n/a   30.0 
+Gi5/0/12  auto   off        0.0     n/a                 n/a   30.0 
+Gi5/0/13  auto   on         15.2    IP Phone 8865       4     30.0 
        

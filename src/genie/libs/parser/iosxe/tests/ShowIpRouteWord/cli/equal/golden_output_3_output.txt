@@ -1,12 +1,12 @@
-        Routing entry for 0.0.0.0/0, supernet
-            Known via "bgp 65161", distance 20, metric 0, candidate default path
-            Tag 65161, type external
-            Redistributing via ospf 1
-            Last update from 10.101.146.10 2d07h ago
-            Routing Descriptor Blocks:
-            * 10.101.146.10, from 10.101.146.10, 2d07h ago
-                Route metric is 0, traffic share count is 1
-                AS Hops 9
-                Route tag 65161
-                MPLS label: none 
+Routing entry for 0.0.0.0/0, supernet
+    Known via "bgp 65161", distance 20, metric 0, candidate default path
+    Tag 65161, type external
+    Redistributing via ospf 1
+    Last update from 10.101.146.10 2d07h ago
+    Routing Descriptor Blocks:
+    * 10.101.146.10, from 10.101.146.10, 2d07h ago
+        Route metric is 0, traffic share count is 1
+        AS Hops 9
+        Route tag 65161
+        MPLS label: none 
     

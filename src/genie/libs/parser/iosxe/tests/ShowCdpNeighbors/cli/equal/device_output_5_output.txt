@@ -1,11 +1,11 @@
 
-        Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
-                      S - Switch, H - Host, I - IGMP, r - Repeater, P - Phone,
-                      D - Remote, C - CVTA, M - Two-port Mac Relay
+Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
+              S - Switch, H - Host, I - IGMP, r - Repeater, P - Phone,
+              D - Remote, C - CVTA, M - Two-port Mac Relay
 
-        Device ID        Local Intrfce     Holdtme    Capability  Platform  Port ID
-        Device_With_A_Particularly_Long_Name
-                         Gig 1             134             R S C  N9K-9000v Eth 0/0
-        another_device_with_a_long_name
-                         Twe 1/0/3         141              S I   WS-C3850- Ten 1/1/4
+Device ID        Local Intrfce     Holdtme    Capability  Platform  Port ID
+Device_With_A_Particularly_Long_Name
+                 Gig 1             134             R S C  N9K-9000v Eth 0/0
+another_device_with_a_long_name
+                 Twe 1/0/3         141              S I   WS-C3850- Ten 1/1/4
     

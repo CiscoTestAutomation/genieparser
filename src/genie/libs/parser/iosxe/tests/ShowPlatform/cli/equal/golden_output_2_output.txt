@@ -1,18 +1,18 @@
-        Chassis type: ASR1002            
+Chassis type: ASR1002            
          
-        Slot      Type                State                 Insert time (ago)
-        --------- ------------------- --------------------- -----------------
-        0         ASR1002-SIP10       ok                    2y30w        
-         0/0      SPA-2X1GE-V2        ok                    2y30w        
-         0/1      4XGE-BUILT-IN       ok                    2y30w        
-        R0        ASR1002-RP1         ok, active            2y30w        
-        F0        ASR1000-ESP10       ok, active            2y30w        
-        P0        ASR1002-PWR-AC      ok, active            2y30w        
-        P1        ASR1002-PWR-AC      ok                    2y30w        
+Slot      Type                State                 Insert time (ago)
+--------- ------------------- --------------------- -----------------
+0         ASR1002-SIP10       ok                    2y30w        
+ 0/0      SPA-2X1GE-V2        ok                    2y30w        
+ 0/1      4XGE-BUILT-IN       ok                    2y30w        
+R0        ASR1002-RP1         ok, active            2y30w        
+F0        ASR1000-ESP10       ok, active            2y30w        
+P0        ASR1002-PWR-AC      ok, active            2y30w        
+P1        ASR1002-PWR-AC      ok                    2y30w        
          
-        Slot      CPLD Version        Firmware Version                        
-        --------- ------------------- ---------------------------------------
-        0         07123456            16.1(5r)S                          
-        R0        08123456            16.1(5r)S                          
-        F0        09123456            16.1(5r)S    
+Slot      CPLD Version        Firmware Version                        
+--------- ------------------- ---------------------------------------
+0         07123456            16.1(5r)S                          
+R0        08123456            16.1(5r)S                          
+F0        09123456            16.1(5r)S    
     

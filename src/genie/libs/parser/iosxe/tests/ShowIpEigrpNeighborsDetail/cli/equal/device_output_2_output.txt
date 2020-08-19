@@ -1,10 +1,10 @@
 
-        Device# show ip eigrp neighbors detail
+Device# show ip eigrp neighbors detail
 
-        EIGRP-IPv4 VR(foo) Address-Family Neighbors for AS(1)
-        H   Address                 Interface       Hold Uptime   SRTT   RTO  Q  Seq
-                                            (sec)         (ms)       Cnt Num
-        0   192.168.10.1                 Gi2/0       12 00:00:21 1600  5000  0  3
-        Version 8.0/2.0, Retrans: 0, Retries: 0, Prefixes: 1
-        Topology-ids from peer - 0
+EIGRP-IPv4 VR(foo) Address-Family Neighbors for AS(1)
+H   Address                 Interface       Hold Uptime   SRTT   RTO  Q  Seq
+                                    (sec)         (ms)       Cnt Num
+0   192.168.10.1                 Gi2/0       12 00:00:21 1600  5000  0  3
+Version 8.0/2.0, Retrans: 0, Retries: 0, Prefixes: 1
+Topology-ids from peer - 0
     

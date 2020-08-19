@@ -1,39 +1,39 @@
 
-        show ip cef vrf MG501 192.168.1.1 internal
-        Load for five secs: 0%/0%; one minute: 0%; five minutes: 0%
-        Time source is NTP, 01:53:02.138 EST Thu Feb 6 2020
+show ip cef vrf MG501 192.168.1.1 internal
+Load for five secs: 0%/0%; one minute: 0%; five minutes: 0%
+Time source is NTP, 01:53:02.138 EST Thu Feb 6 2020
 
-        192.168.1.0/24, epoch 1, flags [rlbls], RIB[B], refcnt 6, per-destination sharing
-          sources: RIB 
-          feature space:
-            IPRM: 0x00018000
-            Broker: linked, distributed at 3rd priority
-            LFD: 192.168.1.0/24 0 local labels
-                contains path extension list
-          ifnums: (none)
-          path list 7F9C9E8D7A30, 3 locks, per-destination, flags 0x249 [shble, rif, hwcn, bgp]
-            path 7F9C9E900AC8, share 1/1, type recursive, for IPv4, flags [must-be-lbld]
-              MPLS short path extensions: [rib] MOI flags = 0x0 label 362
-              recursive via 15111[Binding-Sid Label:Default] label 362, fib 7F9C9E4ABCA0, 1 terminal fib, bslbl:Default:15111 
-              path list 7F9C9E8D7C10, 3 locks, per-destination, flags 0x249 [shble, rif, hwcn, bgp]
-                  path 7F9C9E9009F8, share 1/1, type attached prefix, for Binding-Sid Label
-                    MPLS short path extensions: [rib | lblmrg | srlbl] MOI flags = 0x0 label implicit-null
-                    attached to Tunnel65536, TAG midchain out of Tunnel65536 7F9C9D301840
-          output chain:
-            label 362
-            label implicit-null
-            TAG midchain out of Tunnel65536 7F9C9D301840
-            label 16063
-            label 16051
-            label 16052
-            label 16051
-            label 16052
-            label 16051
-            label 16052
-            label 16051
-            label 16052
-            label 16051
-            label 16052
-            label 16051
-            TAG adj out of GigabitEthernet0/1/7, addr 10.19.198.29 7F9C9D304A90
+192.168.1.0/24, epoch 1, flags [rlbls], RIB[B], refcnt 6, per-destination sharing
+  sources: RIB 
+  feature space:
+    IPRM: 0x00018000
+    Broker: linked, distributed at 3rd priority
+    LFD: 192.168.1.0/24 0 local labels
+        contains path extension list
+  ifnums: (none)
+  path list 7F9C9E8D7A30, 3 locks, per-destination, flags 0x249 [shble, rif, hwcn, bgp]
+    path 7F9C9E900AC8, share 1/1, type recursive, for IPv4, flags [must-be-lbld]
+      MPLS short path extensions: [rib] MOI flags = 0x0 label 362
+      recursive via 15111[Binding-Sid Label:Default] label 362, fib 7F9C9E4ABCA0, 1 terminal fib, bslbl:Default:15111 
+      path list 7F9C9E8D7C10, 3 locks, per-destination, flags 0x249 [shble, rif, hwcn, bgp]
+          path 7F9C9E9009F8, share 1/1, type attached prefix, for Binding-Sid Label
+            MPLS short path extensions: [rib | lblmrg | srlbl] MOI flags = 0x0 label implicit-null
+            attached to Tunnel65536, TAG midchain out of Tunnel65536 7F9C9D301840
+  output chain:
+    label 362
+    label implicit-null
+    TAG midchain out of Tunnel65536 7F9C9D301840
+    label 16063
+    label 16051
+    label 16052
+    label 16051
+    label 16052
+    label 16051
+    label 16052
+    label 16051
+    label 16052
+    label 16051
+    label 16052
+    label 16051
+    TAG adj out of GigabitEthernet0/1/7, addr 10.19.198.29 7F9C9D304A90
     

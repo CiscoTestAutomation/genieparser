@@ -1,30 +1,30 @@
 
-        R4_iosv#show ip bgp all dampening parameters
-        For address family: IPv4 Unicast
+R4_iosv#show ip bgp all dampening parameters
+For address family: IPv4 Unicast
 
-         dampening 35 200 200 70
-          Half-life time      : 35 mins       Decay Time       : 4200 secs
-          Max suppress penalty:   800         Max suppress time: 70 mins
-          Suppress penalty    :   200         Reuse penalty    : 200
-
-
-        For address family: IPv6 Unicast
-
-        % dampening not enabled for base
-
-        For address family: VPNv4 Unicast
-
-        % dampening not enabled for base
-
-        For vrf: VRF1
-
-         dampening 36 2001 2001 71
-          Half-life time      : 36 mins       Decay Time       : 4240 secs
-          Max suppress penalty:  7850         Max suppress time: 71 mins
-          Suppress penalty    :  2001         Reuse penalty    : 2001
+ dampening 35 200 200 70
+  Half-life time      : 35 mins       Decay Time       : 4200 secs
+  Max suppress penalty:   800         Max suppress time: 70 mins
+  Suppress penalty    :   200         Reuse penalty    : 200
 
 
-        For vrf: VRF2
+For address family: IPv6 Unicast
 
-        % dampening not enabled for vrf VRF2
+% dampening not enabled for base
+
+For address family: VPNv4 Unicast
+
+% dampening not enabled for base
+
+For vrf: VRF1
+
+ dampening 36 2001 2001 71
+  Half-life time      : 36 mins       Decay Time       : 4240 secs
+  Max suppress penalty:  7850         Max suppress time: 71 mins
+  Suppress penalty    :  2001         Reuse penalty    : 2001
+
+
+For vrf: VRF2
+
+% dampening not enabled for vrf VRF2
     

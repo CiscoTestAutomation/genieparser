@@ -1,10 +1,10 @@
 
-        GENIE_c3850_SW#show authentication sessions
-        Interface                MAC Address    Method  Domain  Status Fg  Session
-        ID
-        --------------------------------------------------------------------------------------------
-        Gi1/0/1                  0050.b6ff.7f87 mab     DATA    Auth     0A76060A00000018DD109536
-        Gi1/0/2                  b4a8.b9ff.5cc3 mab     VOICE   Auth     0A76060A0000000D5323681F
+GENIE_c3850_SW#show authentication sessions
+Interface                MAC Address    Method  Domain  Status Fg  Session
+ID
+--------------------------------------------------------------------------------------------
+Gi1/0/1                  0050.b6ff.7f87 mab     DATA    Auth     0A76060A00000018DD109536
+Gi1/0/2                  b4a8.b9ff.5cc3 mab     VOICE   Auth     0A76060A0000000D5323681F
 
-        *Session count = 2*    
+*Session count = 2*    
     

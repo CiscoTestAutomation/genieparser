@@ -1,77 +1,77 @@
-        Router#show platform hardware slot 0 plim statistics internal 
-        0/0, SPA-8X1GE-V2, Online
-          RX IPC Err 0          
-          TX IPC Err 0          
-          RX Spi4 Interrupt Counters
-            Out Of Frame 0          
-            Dip4 Error 0          
-            Disabled 0          
-            Loss Of Sync 0          
-            Sequence Error 0          
-            Burst Error 0          
-            EOP Abort 0          
-            Packet Gap Error 0          
-            Control Word Error 0          
-          TX Spi4 Interrupt Counters
-            Out Of Frame 0          
-            Frame Error 0          
-            FIFO Over Flow 0          
-            Dip2 Error 0          
+Router#show platform hardware slot 0 plim statistics internal 
+0/0, SPA-8X1GE-V2, Online
+  RX IPC Err 0          
+  TX IPC Err 0          
+  RX Spi4 Interrupt Counters
+    Out Of Frame 0          
+    Dip4 Error 0          
+    Disabled 0          
+    Loss Of Sync 0          
+    Sequence Error 0          
+    Burst Error 0          
+    EOP Abort 0          
+    Packet Gap Error 0          
+    Control Word Error 0          
+  TX Spi4 Interrupt Counters
+    Out Of Frame 0          
+    Frame Error 0          
+    FIFO Over Flow 0          
+    Dip2 Error 0          
 
-        0/1, SPA-8X1GE-V2, Online
-          RX IPC Err 0          
-          TX IPC Err 0          
-          RX Spi4 Interrupt Counters
-            Out Of Frame 0          
-            Dip4 Error 0          
-            Disabled 0          
-            Loss Of Sync 0          
-            Sequence Error 0          
-            Burst Error 0          
-            EOP Abort 0          
-            Packet Gap Error 0          
-            Control Word Error 0          
-          TX Spi4 Interrupt Counters
-            Out Of Frame 0          
-            Frame Error 0          
-            FIFO Over Flow 0          
-            Dip2 Error 0          
+0/1, SPA-8X1GE-V2, Online
+  RX IPC Err 0          
+  TX IPC Err 0          
+  RX Spi4 Interrupt Counters
+    Out Of Frame 0          
+    Dip4 Error 0          
+    Disabled 0          
+    Loss Of Sync 0          
+    Sequence Error 0          
+    Burst Error 0          
+    EOP Abort 0          
+    Packet Gap Error 0          
+    Control Word Error 0          
+  TX Spi4 Interrupt Counters
+    Out Of Frame 0          
+    Frame Error 0          
+    FIFO Over Flow 0          
+    Dip2 Error 0          
 
-        0/2, SPA-1XTENGE-XFP-V2, Online
-          RX IPC Err 0          
-          TX IPC Err 0          
-          RX Spi4 Interrupt Counters
-            Out Of Frame 0          
-            Dip4 Error 0          
-            Disabled 0          
-            Loss Of Sync 0          
-            Sequence Error 0          
-            Burst Error 0          
-            EOP Abort 0          
-            Packet Gap Error 0          
-            Control Word Error 0          
-          TX Spi4 Interrupt Counters
-            Out Of Frame 0          
-            Frame Error 0          
-            FIFO Over Flow 0          
-            Dip2 Error 0          
+0/2, SPA-1XTENGE-XFP-V2, Online
+  RX IPC Err 0          
+  TX IPC Err 0          
+  RX Spi4 Interrupt Counters
+    Out Of Frame 0          
+    Dip4 Error 0          
+    Disabled 0          
+    Loss Of Sync 0          
+    Sequence Error 0          
+    Burst Error 0          
+    EOP Abort 0          
+    Packet Gap Error 0          
+    Control Word Error 0          
+  TX Spi4 Interrupt Counters
+    Out Of Frame 0          
+    Frame Error 0          
+    FIFO Over Flow 0          
+    Dip2 Error 0          
 
-        0/3, SPA-1XTENGE-XFP-V2, Online
-          RX IPC Err 0          
-          TX IPC Err 0          
-          RX Spi4 Interrupt Counters
-            Out Of Frame 0          
-            Dip4 Error 0          
-            Disabled 0          
-            Loss Of Sync 0          
-            Sequence Error 0          
-            Burst Error 0          
-            EOP Abort 0          
-            Packet Gap Error 0          
-            Control Word Error 0          
-          TX Spi4 Interrupt Counters
-            Out Of Frame 0          
-            Frame Error 0          
-            FIFO Over Flow 0          
-            Dip2 Error 0    
+0/3, SPA-1XTENGE-XFP-V2, Online
+  RX IPC Err 0          
+  TX IPC Err 0          
+  RX Spi4 Interrupt Counters
+    Out Of Frame 0          
+    Dip4 Error 0          
+    Disabled 0          
+    Loss Of Sync 0          
+    Sequence Error 0          
+    Burst Error 0          
+    EOP Abort 0          
+    Packet Gap Error 0          
+    Control Word Error 0          
+  TX Spi4 Interrupt Counters
+    Out Of Frame 0          
+    Frame Error 0          
+    FIFO Over Flow 0          
+    Dip2 Error 0    
     

@@ -1,8 +1,8 @@
 
-            R3_iosv#show ipv6 pim bsr candidate-rp
-            PIMv2 C-RP information
-              Candidate RP: 2001:3:3:3::3 SM
-                Priority 5, Holdtime 150
-                Advertisement interval 60 seconds
-                Next advertisement in 00:00:48
+R3_iosv#show ipv6 pim bsr candidate-rp
+PIMv2 C-RP information
+  Candidate RP: 2001:3:3:3::3 SM
+    Priority 5, Holdtime 150
+    Advertisement interval 60 seconds
+    Next advertisement in 00:00:48
         

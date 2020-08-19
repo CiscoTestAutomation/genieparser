@@ -1,24 +1,24 @@
 
-    BGP table version is 166, local router ID is 172.16.1.1
+BGP table version is 166, local router ID is 172.16.1.1
 
-    Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
 
-                  r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
+              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
 
-                  x best-external, a additional-path, c RIB-compressed, 
+              x best-external, a additional-path, c RIB-compressed, 
 
-                  t secondary path, L long-lived-stale,
+              t secondary path, L long-lived-stale,
 
-    Origin codes: i - IGP, e - EGP, ? - incomplete
+Origin codes: i - IGP, e - EGP, ? - incomplete
 
-    RPKI validation codes: V valid, I invalid, N Not found
+RPKI validation codes: V valid, I invalid, N Not found
 
 
 
-         Network          Next Hop            Metric LocPrf Weight Path
+     Network          Next Hop            Metric LocPrf Weight Path
 
-    Route Distinguisher: 65000:100 (default for vrf TEST-VPN) VRF Router ID 172.16.1.1
+Route Distinguisher: 65000:100 (default for vrf TEST-VPN) VRF Router ID 172.16.1.1
 
-     *>   192.168.1.0      0.0.0.0                  0         32768 ?
+ *>   192.168.1.0      0.0.0.0                  0         32768 ?
 
     

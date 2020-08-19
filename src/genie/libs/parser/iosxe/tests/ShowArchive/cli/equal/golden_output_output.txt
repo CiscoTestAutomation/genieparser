@@ -1,15 +1,15 @@
-        The maximum archive configurations allowed is 10.
-        There are currently 1 archive configurations saved.
-        The next archive file will be named bootflash:uncfgIntfgigabitethernet0_0_0-<timestamp>-1
-        Archive #  Name
-        1        bootflash:uncfgIntfgigabitethernet0_0_0-Sep-27-15-04-18.414-PDT-0 <- Most Recent
-        2        
-        3        
-        4        
-        5        
-        6        
-        7        
-        8        
-        9        
-        10 
+The maximum archive configurations allowed is 10.
+There are currently 1 archive configurations saved.
+The next archive file will be named bootflash:uncfgIntfgigabitethernet0_0_0-<timestamp>-1
+Archive #  Name
+1        bootflash:uncfgIntfgigabitethernet0_0_0-Sep-27-15-04-18.414-PDT-0 <- Most Recent
+2        
+3        
+4        
+5        
+6        
+7        
+8        
+9        
+10 
     

@@ -1,8 +1,8 @@
 
-        Router# show policy-map parent
-        Policy Map parent
-            Class class-default
-                Average Rate Traffic Shaping
-                cir 10000000 (bps)
-                service-policy child
+Router# show policy-map parent
+Policy Map parent
+    Class class-default
+        Average Rate Traffic Shaping
+        cir 10000000 (bps)
+        service-policy child
     

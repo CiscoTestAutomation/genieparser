@@ -1,19 +1,19 @@
 
-        show segment-routing traffic-eng policy all
-        Name: test_genie_1 (Color: 0 End-point: )
-        Status:
-            Admin: down, Operational: down for 00:00:01 (since 05-18 03:50:08.958)
-        Candidate-paths:
-        Attributes:
-        Name: test_genie_2 (Color: 100 End-point: 10.19.198.239)
-        Status:
-            Admin: down, Operational: down for 00:00:00 (since 05-18 03:50:09.080)
-        Candidate-paths:
-            Preference 100:
-            Dynamic (inactive)
-                Weight: 0, Metric Type: TE
-        Attributes:
-            Binding SID: 257
-            Allocation mode: dynamic
-            State: Programmed
+show segment-routing traffic-eng policy all
+Name: test_genie_1 (Color: 0 End-point: )
+Status:
+    Admin: down, Operational: down for 00:00:01 (since 05-18 03:50:08.958)
+Candidate-paths:
+Attributes:
+Name: test_genie_2 (Color: 100 End-point: 10.19.198.239)
+Status:
+    Admin: down, Operational: down for 00:00:00 (since 05-18 03:50:09.080)
+Candidate-paths:
+    Preference 100:
+    Dynamic (inactive)
+        Weight: 0, Metric Type: TE
+Attributes:
+    Binding SID: 257
+    Allocation mode: dynamic
+    State: Programmed
     

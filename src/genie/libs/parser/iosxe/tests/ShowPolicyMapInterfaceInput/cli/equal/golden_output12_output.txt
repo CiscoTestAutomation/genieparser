@@ -1,20 +1,20 @@
 
-            Load for five secs: 1%/0%; one minute: 3%; five minutes: 3%
-            Time source is NTP, 12:22:26.378 EST Wed Oct 26 2016
+    Load for five secs: 1%/0%; one minute: 3%; five minutes: 3%
+    Time source is NTP, 12:22:26.378 EST Wed Oct 26 2016
 
-            GigabitEthernet0/1/4 
+    GigabitEthernet0/1/4 
 
-                Service-policy input: police-in
+        Service-policy input: police-in
 
-                    Class-map: class-default (match-any)  
-                        0 packets, 0 bytes
-                        5 minute offered rate 0000 bps, drop rate 0000 bps
-                        Match: any 
-                        police:
-                            cir 445500 bps, bc 83619 bytes
-                            conformed 0 packets, 0 bytes; actions:
-                              transmit 
-                            exceeded 0 packets, 0 bytes; actions:
-                              drop 
-                            conformed 0000 bps, exceeded 0000 bps
-        Router#
+            Class-map: class-default (match-any)  
+                0 packets, 0 bytes
+                5 minute offered rate 0000 bps, drop rate 0000 bps
+                Match: any 
+                police:
+                    cir 445500 bps, bc 83619 bytes
+                    conformed 0 packets, 0 bytes; actions:
+                      transmit 
+                    exceeded 0 packets, 0 bytes; actions:
+                      drop 
+                    conformed 0000 bps, exceeded 0000 bps
+Router#

@@ -1,5 +1,5 @@
-        Router#show version RP standby running
-        Load for five secs: 1%/0%; one minute: 24%; five minutes: 43%
-        Time source is NTP, 18:31:45.991 EST Mon Oct 24 2016
-        The standby Route-Processor is currently offline
+Router#show version RP standby running
+Load for five secs: 1%/0%; one minute: 24%; five minutes: 43%
+Time source is NTP, 18:31:45.991 EST Mon Oct 24 2016
+The standby Route-Processor is currently offline
     

@@ -1,71 +1,71 @@
-        show spanning-tree summary
-        Switch is in rapid-pvst mode
-        Root bridge for: VLAN0001, VLAN0115-VLAN0116, VLAN0118-VLAN0119, VLAN0121
-          VLAN0180, VLAN0501-VLAN0503, VLAN0506, VLAN0508-VLAN0518, VLAN0521-VLAN0522
-          VLAN0540, VLAN0601-VLAN0604, VLAN0606, VLAN0701, VLAN0801-VLAN0806
-          VLAN1111-VLAN1116, VLAN1506, VLAN1509, VLAN1601
-        EtherChannel misconfig guard            is enabled
-        Extended system ID                      is enabled
-        Portfast Default                        is disabled
-        Portfast Edge BPDU Guard Default        is disabled
-        Portfast Edge BPDU Filter Default       is disabled
-        Loopguard Default                       is disabled
-        PVST Simulation Default                 is enabled but inactive in rapid-pvst mode
-        Bridge Assurance                        is enabled
-        UplinkFast                              is disabled
-        BackboneFast                            is disabled
-        Pathcost method used                    is short
+show spanning-tree summary
+Switch is in rapid-pvst mode
+Root bridge for: VLAN0001, VLAN0115-VLAN0116, VLAN0118-VLAN0119, VLAN0121
+  VLAN0180, VLAN0501-VLAN0503, VLAN0506, VLAN0508-VLAN0518, VLAN0521-VLAN0522
+  VLAN0540, VLAN0601-VLAN0604, VLAN0606, VLAN0701, VLAN0801-VLAN0806
+  VLAN1111-VLAN1116, VLAN1506, VLAN1509, VLAN1601
+EtherChannel misconfig guard            is enabled
+Extended system ID                      is enabled
+Portfast Default                        is disabled
+Portfast Edge BPDU Guard Default        is disabled
+Portfast Edge BPDU Filter Default       is disabled
+Loopguard Default                       is disabled
+PVST Simulation Default                 is enabled but inactive in rapid-pvst mode
+Bridge Assurance                        is enabled
+UplinkFast                              is disabled
+BackboneFast                            is disabled
+Pathcost method used                    is short
 
-        Name                   Blocking Listening Learning Forwarding STP Active
-        ---------------------- -------- --------- -------- ---------- ----------
-        VLAN0001                     0         0        0          2          2
-        VLAN0115                     0         0        0          1          1
-        VLAN0116                     0         0        0          1          1
-        VLAN0118                     0         0        0          1          1
-        VLAN0119                     0         0        0          1          1
-        VLAN0121                     0         0        0          1          1
-        VLAN0180                     0         0        0          1          1
-        VLAN0501                     0         0        0          1          1
-        VLAN0502                     0         0        0          1          1
-        VLAN0503                     0         0        0          3          3
-        VLAN0506                     0         0        0          1          1
-        VLAN0508                     0         0        0          1          1
-        VLAN0509                     0         0        0          1          1
-        VLAN0510                     0         0        0          1          1
-        VLAN0511                     0         0        0          1          1
-        VLAN0512                     0         0        0          1          1
-        VLAN0513                     0         0        0          1          1
-        VLAN0514                     0         0        0          1          1
-        VLAN0515                     0         0        0          1          1
-        VLAN0516                     0         0        0          1          1
-        VLAN0517                     0         0        0          1          1
-        VLAN0518                     0         0        0          1          1
-        VLAN0521                     0         0        0          1          1
-        VLAN0522                     0         0        0          1          1
-        VLAN0540                     0         0        0          3          3
-        VLAN0601                     0         0        0          1          1
-        VLAN0602                     0         0        0          1          1
-        VLAN0603                     0         0        0          2          2
-        VLAN0604                     0         0        0          1          1
-        VLAN0606                     0         0        0          2          2
-        VLAN0701                     0         0        0          1          1
-        VLAN0801                     0         0        0          1          1
-        VLAN0802                     0         0        0          1          1
-        VLAN0803                     0         0        0          1          1
-        VLAN0804                     0         0        0          1          1
-        VLAN0805                     0         0        0          1          1
-        VLAN0806                     0         0        0          1          1
-        VLAN0916                     0         0        0          2          2
-        VLAN1111                     0         0        0          2          2
-        VLAN1112                     0         0        0          2          2
-        VLAN1113                     0         0        0          2          2
-        VLAN1114                     0         0        0          2          2
-        VLAN1115                     0         0        0          2          2
-        VLAN1116                     0         0        0          2          2
-        VLAN1125                     0         0        0          1          1
-        VLAN1506                     0         0        0          1          1
-        VLAN1509                     0         0        0          1          1
-        VLAN1601                     0         0        0          1          1
-        ---------------------- -------- --------- -------- ---------- ----------
-        48 vlans                     0         0        0         62         62
+Name                   Blocking Listening Learning Forwarding STP Active
+---------------------- -------- --------- -------- ---------- ----------
+VLAN0001                     0         0        0          2          2
+VLAN0115                     0         0        0          1          1
+VLAN0116                     0         0        0          1          1
+VLAN0118                     0         0        0          1          1
+VLAN0119                     0         0        0          1          1
+VLAN0121                     0         0        0          1          1
+VLAN0180                     0         0        0          1          1
+VLAN0501                     0         0        0          1          1
+VLAN0502                     0         0        0          1          1
+VLAN0503                     0         0        0          3          3
+VLAN0506                     0         0        0          1          1
+VLAN0508                     0         0        0          1          1
+VLAN0509                     0         0        0          1          1
+VLAN0510                     0         0        0          1          1
+VLAN0511                     0         0        0          1          1
+VLAN0512                     0         0        0          1          1
+VLAN0513                     0         0        0          1          1
+VLAN0514                     0         0        0          1          1
+VLAN0515                     0         0        0          1          1
+VLAN0516                     0         0        0          1          1
+VLAN0517                     0         0        0          1          1
+VLAN0518                     0         0        0          1          1
+VLAN0521                     0         0        0          1          1
+VLAN0522                     0         0        0          1          1
+VLAN0540                     0         0        0          3          3
+VLAN0601                     0         0        0          1          1
+VLAN0602                     0         0        0          1          1
+VLAN0603                     0         0        0          2          2
+VLAN0604                     0         0        0          1          1
+VLAN0606                     0         0        0          2          2
+VLAN0701                     0         0        0          1          1
+VLAN0801                     0         0        0          1          1
+VLAN0802                     0         0        0          1          1
+VLAN0803                     0         0        0          1          1
+VLAN0804                     0         0        0          1          1
+VLAN0805                     0         0        0          1          1
+VLAN0806                     0         0        0          1          1
+VLAN0916                     0         0        0          2          2
+VLAN1111                     0         0        0          2          2
+VLAN1112                     0         0        0          2          2
+VLAN1113                     0         0        0          2          2
+VLAN1114                     0         0        0          2          2
+VLAN1115                     0         0        0          2          2
+VLAN1116                     0         0        0          2          2
+VLAN1125                     0         0        0          1          1
+VLAN1506                     0         0        0          1          1
+VLAN1509                     0         0        0          1          1
+VLAN1601                     0         0        0          1          1
+---------------------- -------- --------- -------- ---------- ----------
+48 vlans                     0         0        0         62         62
      

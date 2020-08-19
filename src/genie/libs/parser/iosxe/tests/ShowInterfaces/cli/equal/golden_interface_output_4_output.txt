@@ -1,50 +1,50 @@
 
-        GigabitEthernet0/0/0 is up, line protocol is up
-          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.88ff.c119 (bia 1ca1.88ff.c119)
-          Description: Genie to Genie-next for L2 Fiber lines ***
-          MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
-             reliability 255/255, txload 7/255, rxload 2/255
-          Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
-          Keepalive not supported
-          Full Duplex, 1000Mbps, link type is auto, media type is T
-          output flow-control is on, input flow-control is on
-          ARP type: ARPA, ARP Timeout 04:00:00
-          Last input 00:00:00, output 00:00:00, output hang never
-          Last clearing of "show interface" counters never
-          Input queue: 0/375/9483/6181 (size/max/drops/flushes); Total output drops: 85587314
-          Queueing strategy: Class-based queueing
-          Output queue: 0/40 (size/max)
-          5 minute input rate 10684000 bits/sec, 5031 packets/sec
-          5 minute output rate 28954000 bits/sec, 5003 packets/sec
-             37252955968 packets input, 25781698415464 bytes, 0 no buffer
-             Received 110594334 broadcasts (0 IP multicasts)
-             0 runts, 0 giants, 0 throttles
-             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
-             0 watchdog, 1050221981 multicast, 0 pause input
-             35433262342 packets output, 29981591557915 bytes, 0 underruns
-             0 output errors, 0 collisions, 2 interface resets
-             11976504 unknown protocol drops
-             0 babbles, 0 late collision, 0 deferred
-             0 lost carrier, 0 no carrier, 0 pause output
-             0 output buffer failures, 0 output buffers swapped out
-        GigabitEthernet0/0/0.105 is up, line protocol is up
-          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.88ff.c119 (bia 1ca1.88ff.c119)
-          Description: Another Genie L2 connection
-          Internet address is 10.95.2.252/24
-          MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
-             reliability 255/255, txload 7/255, rxload 2/255
-          Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
-          ARP type: ARPA, ARP Timeout 04:00:00
-          Keepalive not supported
-          Last clearing of "show interface" counters never
-        GigabitEthernet0/0/0.1761524 is up, line protocol is up
-          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.88ff.c119 (bia 1ca1.88ff.c119)
-          Description: *** Genie VLAN  ***
-          Internet address is 10.121.113.98/27
-          MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
-             reliability 255/255, txload 7/255, rxload 2/255
-          Encapsulation QinQ Virtual LAN, outer ID  176, inner ID 1524
-          ARP type: ARPA, ARP Timeout 04:00:00
-          Keepalive not supported
-          Last clearing of "show interface" counters never    
+GigabitEthernet0/0/0 is up, line protocol is up
+  Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.88ff.c119 (bia 1ca1.88ff.c119)
+  Description: Genie to Genie-next for L2 Fiber lines ***
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+     reliability 255/255, txload 7/255, rxload 2/255
+  Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
+  Keepalive not supported
+  Full Duplex, 1000Mbps, link type is auto, media type is T
+  output flow-control is on, input flow-control is on
+  ARP type: ARPA, ARP Timeout 04:00:00
+  Last input 00:00:00, output 00:00:00, output hang never
+  Last clearing of "show interface" counters never
+  Input queue: 0/375/9483/6181 (size/max/drops/flushes); Total output drops: 85587314
+  Queueing strategy: Class-based queueing
+  Output queue: 0/40 (size/max)
+  5 minute input rate 10684000 bits/sec, 5031 packets/sec
+  5 minute output rate 28954000 bits/sec, 5003 packets/sec
+     37252955968 packets input, 25781698415464 bytes, 0 no buffer
+     Received 110594334 broadcasts (0 IP multicasts)
+     0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+     0 watchdog, 1050221981 multicast, 0 pause input
+     35433262342 packets output, 29981591557915 bytes, 0 underruns
+     0 output errors, 0 collisions, 2 interface resets
+     11976504 unknown protocol drops
+     0 babbles, 0 late collision, 0 deferred
+     0 lost carrier, 0 no carrier, 0 pause output
+     0 output buffer failures, 0 output buffers swapped out
+GigabitEthernet0/0/0.105 is up, line protocol is up
+  Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.88ff.c119 (bia 1ca1.88ff.c119)
+  Description: Another Genie L2 connection
+  Internet address is 10.95.2.252/24
+  MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
+     reliability 255/255, txload 7/255, rxload 2/255
+  Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
+  ARP type: ARPA, ARP Timeout 04:00:00
+  Keepalive not supported
+  Last clearing of "show interface" counters never
+GigabitEthernet0/0/0.1761524 is up, line protocol is up
+  Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.88ff.c119 (bia 1ca1.88ff.c119)
+  Description: *** Genie VLAN  ***
+  Internet address is 10.121.113.98/27
+  MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
+     reliability 255/255, txload 7/255, rxload 2/255
+  Encapsulation QinQ Virtual LAN, outer ID  176, inner ID 1524
+  ARP type: ARPA, ARP Timeout 04:00:00
+  Keepalive not supported
+  Last clearing of "show interface" counters never    
     

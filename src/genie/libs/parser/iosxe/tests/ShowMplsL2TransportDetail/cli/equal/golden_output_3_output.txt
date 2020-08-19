@@ -1,38 +1,38 @@
-      Local interface: Gi3 up, line protocol up, Ethernet up
-        Destination address: 10.4.1.1, VC ID: 888, VC status: up
-          Output interface: Gi2, imposed label stack {32}
-          Preferred path: not configured  
-          Default path: active
-          Next hop: 10.1.2.1
-        Create time: 00:00:22, last status change time: 00:00:10
-          Last label FSM state change time: 00:00:10
-        Signaling protocol: LDP, peer 10.4.1.1:0 up
-          Targeted Hello: 10.16.2.2(LDP Id) -> 10.4.1.1, LDP is UP
-          Graceful restart: not configured and not enabled
-          Non stop routing: not configured and not enabled
-          Status TLV support (local/remote)   : enabled/supported
-            LDP route watch                   : enabled
-            Label/status state machine        : established, LruRru
-            Last local dataplane   status rcvd: No fault
-            Last BFD dataplane     status rcvd: Not sent
-            Last BFD peer monitor  status rcvd: No fault
-            Last local AC  circuit status rcvd: No fault
-            Last local AC  circuit status sent: No fault
-            Last local PW i/f circ status rcvd: No fault
-            Last local LDP TLV     status sent: No fault
-            Last remote LDP TLV    status rcvd: No fault
-            Last remote LDP ADJ    status rcvd: No fault
-          MPLS VC labels: local 17, remote 32 
-          Group ID: local n/a, remote 0
-          MTU: local 1500, remote 1500
-          Remote interface description: 
-        Sequencing: receive disabled, send disabled
-        Control Word: On (configured: autosense)
-        SSO Descriptor: 10.4.1.1/888, local label: 17
-        Dataplane:
-          SSM segment/switch IDs: 8195/4097 (used), PWID: 1
-        VC statistics:
-          transit packet totals: receive 0, send 0
-          transit byte totals:   receive 0, send 0
-          transit packet drops:  receive 0, seq error 0, send 0
+Local interface: Gi3 up, line protocol up, Ethernet up
+  Destination address: 10.4.1.1, VC ID: 888, VC status: up
+    Output interface: Gi2, imposed label stack {32}
+    Preferred path: not configured  
+    Default path: active
+    Next hop: 10.1.2.1
+  Create time: 00:00:22, last status change time: 00:00:10
+    Last label FSM state change time: 00:00:10
+  Signaling protocol: LDP, peer 10.4.1.1:0 up
+    Targeted Hello: 10.16.2.2(LDP Id) -> 10.4.1.1, LDP is UP
+    Graceful restart: not configured and not enabled
+    Non stop routing: not configured and not enabled
+    Status TLV support (local/remote)   : enabled/supported
+      LDP route watch                   : enabled
+      Label/status state machine        : established, LruRru
+      Last local dataplane   status rcvd: No fault
+      Last BFD dataplane     status rcvd: Not sent
+      Last BFD peer monitor  status rcvd: No fault
+      Last local AC  circuit status rcvd: No fault
+      Last local AC  circuit status sent: No fault
+      Last local PW i/f circ status rcvd: No fault
+      Last local LDP TLV     status sent: No fault
+      Last remote LDP TLV    status rcvd: No fault
+      Last remote LDP ADJ    status rcvd: No fault
+    MPLS VC labels: local 17, remote 32 
+    Group ID: local n/a, remote 0
+    MTU: local 1500, remote 1500
+    Remote interface description: 
+  Sequencing: receive disabled, send disabled
+  Control Word: On (configured: autosense)
+  SSO Descriptor: 10.4.1.1/888, local label: 17
+  Dataplane:
+    SSM segment/switch IDs: 8195/4097 (used), PWID: 1
+  VC statistics:
+    transit packet totals: receive 0, send 0
+    transit byte totals:   receive 0, send 0
+    transit packet drops:  receive 0, seq error 0, send 0
     

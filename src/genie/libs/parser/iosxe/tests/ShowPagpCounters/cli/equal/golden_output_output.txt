@@ -1,17 +1,17 @@
 
-    iosvl2-1#show pagp counters
-          Information         Flush        PAgP
-    Port      Sent    Recv     Sent    Recv    Err Pkts
-    ---------------------------------------------------
-    Channel group: 1
-    Gi0/1     60      52       0       0       0
-    Gi0/2     59      52       0       0       0
+iosvl2-1#show pagp counters
+      Information         Flush        PAgP
+Port      Sent    Recv     Sent    Recv    Err Pkts
+---------------------------------------------------
+Channel group: 1
+Gi0/1     60      52       0       0       0
+Gi0/2     59      52       0       0       0
 
-              Information         Flush        PAgP
-    Port      Sent    Recv     Sent    Recv    Err Pkts
-    ---------------------------------------------------
-    Channel group: 2
-    Gi0/3     21      11       0       0       0
-    Gi1/0     19      11       0       0       0
-    Gi1/1     19      10       0       0       0
+          Information         Flush        PAgP
+Port      Sent    Recv     Sent    Recv    Err Pkts
+---------------------------------------------------
+Channel group: 2
+Gi0/3     21      11       0       0       0
+Gi1/0     19      11       0       0       0
+Gi1/1     19      10       0       0       0
     

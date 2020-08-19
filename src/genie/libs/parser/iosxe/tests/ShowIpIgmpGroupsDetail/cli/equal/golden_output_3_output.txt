@@ -1,72 +1,72 @@
-        Flags: L - Local, U - User, SG - Static Group, VG - Virtual Group,
-               SS - Static Source, VS - Virtual Source,
-               Ac - Group accounted towards access control limit
+Flags: L - Local, U - User, SG - Static Group, VG - Virtual Group,
+       SS - Static Source, VS - Virtual Source,
+       Ac - Group accounted towards access control limit
 
-        Interface:  Vlan211
-        Group:    239.1.1.1
-        Flags:    L U SG 
-        Uptime:   4d11h
-        Group mode: EXCLUDE (Expires: 00:02:29)
-        Last reporter:  192.168.76.1
-        Source list is empty
+Interface:  Vlan211
+Group:    239.1.1.1
+Flags:    L U SG 
+Uptime:   4d11h
+Group mode: EXCLUDE (Expires: 00:02:29)
+Last reporter:  192.168.76.1
+Source list is empty
 
-        Interface:  Vlan211
-        Group:    232.1.1.1
-        Flags:    SSM 
-        Uptime:   1w0d
-        Group mode: INCLUDE
-        Last reporter:  192.168.76.4
-        Group source list: (C - Cisco Src Report, U - URD, R - Remote, S - Static,
-                            V - Virtual, M - SSM Mapping, L - Local,
-                            Ac - Channel accounted towards access control limit)
-          Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
-          192.168.34.2     1w0d      00:02:30  stopped   Yes  R
+Interface:  Vlan211
+Group:    232.1.1.1
+Flags:    SSM 
+Uptime:   1w0d
+Group mode: INCLUDE
+Last reporter:  192.168.76.4
+Group source list: (C - Cisco Src Report, U - URD, R - Remote, S - Static,
+                    V - Virtual, M - SSM Mapping, L - Local,
+                    Ac - Channel accounted towards access control limit)
+  Source Address   Uptime    v3 Exp   CSR Exp   Fwd  Flags
+  192.168.34.2     1w0d      00:02:30  stopped   Yes  R
 
-        Interface:  Vlan210
-        Group:    227.1.1.1
-        Flags:    
-        Uptime:   1w0d
-        Group mode: EXCLUDE (Expires: 00:02:25)
-        Last reporter:  192.168.135.4
-        Source list is empty
+Interface:  Vlan210
+Group:    227.1.1.1
+Flags:    
+Uptime:   1w0d
+Group mode: EXCLUDE (Expires: 00:02:25)
+Last reporter:  192.168.135.4
+Source list is empty
 
-        Interface:  Vlan210
-        Group:    226.1.1.1
-        Flags:    
-        Uptime:   1w0d
-        Group mode: EXCLUDE (Expires: 00:02:22)
-        Last reporter:  192.168.135.4
-        Source list is empty
+Interface:  Vlan210
+Group:    226.1.1.1
+Flags:    
+Uptime:   1w0d
+Group mode: EXCLUDE (Expires: 00:02:22)
+Last reporter:  192.168.135.4
+Source list is empty
 
-        Interface:  Vlan210
-        Group:    225.1.1.1
-        Flags:    
-        Uptime:   1w0d
-        Group mode: EXCLUDE (Expires: 00:02:26)
-        Last reporter:  192.168.135.4
-        Source list is empty
+Interface:  Vlan210
+Group:    225.1.1.1
+Flags:    
+Uptime:   1w0d
+Group mode: EXCLUDE (Expires: 00:02:26)
+Last reporter:  192.168.135.4
+Source list is empty
 
-        Interface:  Vlan211
-        Group:    224.0.1.39
-        Flags:    
-        Uptime:   1w0d
-        Group mode: EXCLUDE (Expires: 00:02:30)
-        Last reporter:  192.168.76.2
-        Source list is empty
+Interface:  Vlan211
+Group:    224.0.1.39
+Flags:    
+Uptime:   1w0d
+Group mode: EXCLUDE (Expires: 00:02:30)
+Last reporter:  192.168.76.2
+Source list is empty
 
-        Interface:  Vlan210
-        Group:    224.0.1.39
-        Flags:    
-        Uptime:   1w0d
-        Group mode: EXCLUDE (Expires: 00:01:29)
-        Last reporter:  192.168.135.2
-        Source list is empty
+Interface:  Vlan210
+Group:    224.0.1.39
+Flags:    
+Uptime:   1w0d
+Group mode: EXCLUDE (Expires: 00:01:29)
+Last reporter:  192.168.135.2
+Source list is empty
 
-        Interface:  Loopback10
-        Group:    224.0.1.40
-        Flags:    L U 
-        Uptime:   1w0d
-        Group mode: EXCLUDE (Expires: 00:02:08)
-        Last reporter:  192.168.151.1
-        Source list is empty
+Interface:  Loopback10
+Group:    224.0.1.40
+Flags:    L U 
+Uptime:   1w0d
+Group mode: EXCLUDE (Expires: 00:02:08)
+Last reporter:  192.168.151.1
+Source list is empty
     

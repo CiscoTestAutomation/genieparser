@@ -1,9 +1,9 @@
 
-        # show ip eigrp vrf VRF1 neighbors
-        EIGRP-IPv4 VR(test) Address-Family Neighbors for AS(100) 
-                   VRF(VRF1)
-        H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq
-                                                           (sec)         (ms)       Cnt Num
-        1   10.12.90.2              Gi2.390                  13 2d10h      24   144  0  8
-        0   10.13.90.3              Gi3.390                  10 2d10h       5   100  0  9
+# show ip eigrp vrf VRF1 neighbors
+EIGRP-IPv4 VR(test) Address-Family Neighbors for AS(100) 
+           VRF(VRF1)
+H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq
+                                                   (sec)         (ms)       Cnt Num
+1   10.12.90.2              Gi2.390                  13 2d10h      24   144  0  8
+0   10.13.90.3              Gi3.390                  10 2d10h       5   100  0  9
     

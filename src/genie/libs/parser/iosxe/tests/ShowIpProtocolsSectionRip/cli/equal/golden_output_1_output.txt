@@ -1,29 +1,29 @@
-        R1#show ip protocols | sec rip
-        Routing Protocol is "rip"
-          Output delay 50 milliseconds between packets
-          Outgoing update filter list for all interfaces is not set
-          Incoming update filter list for all interfaces is not set
-          Incoming routes will have 10 added to metric if on list 21
-          Sending updates every 10 seconds, next due in 8 seconds
-          Invalid after 21 seconds, hold down 22, flushed after 23
-          Default redistribution metric is 3
-          Redistributing: connected, static, rip
-          Neighbor(s):
-            10.1.2.2
-          Default version control: send version 2, receive version 2
-            Interface                           Send  Recv  Triggered RIP  Key-chain
-            GigabitEthernet3.100                2     2          No        1
-          Automatic network summarization is not in effect
-          Address Summarization:
-            172.16.0.0/17 for GigabitEthernet3.100
-          Maximum path: 4
-          Routing for Networks:
-            10.0.0.0
-          Passive Interface(s):
-            GigabitEthernet2.100
-          Routing Information Sources:
-            Gateway         Distance      Last Update
-            10.1.3.3             120      00:00:00
-            10.1.2.2             120      00:00:04
-          Distance: (default is 120)
+R1#show ip protocols | sec rip
+Routing Protocol is "rip"
+  Output delay 50 milliseconds between packets
+  Outgoing update filter list for all interfaces is not set
+  Incoming update filter list for all interfaces is not set
+  Incoming routes will have 10 added to metric if on list 21
+  Sending updates every 10 seconds, next due in 8 seconds
+  Invalid after 21 seconds, hold down 22, flushed after 23
+  Default redistribution metric is 3
+  Redistributing: connected, static, rip
+  Neighbor(s):
+    10.1.2.2
+  Default version control: send version 2, receive version 2
+    Interface                           Send  Recv  Triggered RIP  Key-chain
+    GigabitEthernet3.100                2     2          No        1
+  Automatic network summarization is not in effect
+  Address Summarization:
+    172.16.0.0/17 for GigabitEthernet3.100
+  Maximum path: 4
+  Routing for Networks:
+    10.0.0.0
+  Passive Interface(s):
+    GigabitEthernet2.100
+  Routing Information Sources:
+    Gateway         Distance      Last Update
+    10.1.3.3             120      00:00:00
+    10.1.2.2             120      00:00:04
+  Distance: (default is 120)
     

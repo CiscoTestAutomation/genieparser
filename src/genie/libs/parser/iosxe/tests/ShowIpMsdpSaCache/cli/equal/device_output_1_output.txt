@@ -1,7 +1,7 @@
 
-        Router# show ip msdp sa-cache
-        MSDP Source-Active Cache - 1 entries
-        (10.3.3.18, 225.1.1.1), RP 10.3.100.8, BGP/AS 3, 00:00:10/00:05:49, Peer 10.1.100.4
-        Learned from peer 10.1.100.4, RPF peer 10.1.100.4, 
-        SAs received: 1, Encapsulated data received: 1
+Router# show ip msdp sa-cache
+MSDP Source-Active Cache - 1 entries
+(10.3.3.18, 225.1.1.1), RP 10.3.100.8, BGP/AS 3, 00:00:10/00:05:49, Peer 10.1.100.4
+Learned from peer 10.1.100.4, RPF peer 10.1.100.4, 
+SAs received: 1, Encapsulated data received: 1
     

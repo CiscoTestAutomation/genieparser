@@ -1,44 +1,44 @@
 
-        SW-GENIE#sho boot
-        BOOT path-list      : flash:/c2960x-universalk9-mz.152-4.E8.bin
-        Config file         : flash:/config.text
-        Private Config file : flash:/private-config.text
-        Enable Break        : yes
-        Manual Boot         : no
-        Allow Dev Key         : yes
-        HELPER path-list    : 
-        Auto upgrade        : yes
-        Auto upgrade path   : 
-        Boot optimization   : disabled
-        NVRAM/Config file
-            buffer size:   524288
-        Timeout for Config
-                Download:    0 seconds
-        Config Download 
-            via DHCP:       disabled (next boot: disabled)
-        -------------------
-        Switch 2
-        -------------------
-        BOOT path-list      : flash:/c2960x-universalk9-mz.152-4.E8.bin
-        Config file         : flash:/config.text
-        Private Config file : flash:/private-config.text
-        Enable Break        : yes
-        Manual Boot         : no
-        Allow Dev Key         : yes
-        HELPER path-list    : 
-        Auto upgrade        : no
-        Auto upgrade path   : 
-        -------------------
-        Switch 3
-        -------------------
-        BOOT path-list      : flash:/c2960x-universalk9-mz.152-4.E8.bin
-        Config file         : flash:/config.text
-        Private Config file : flash:/private-config.text
-        Enable Break        : yes
-        Manual Boot         : no
-        Allow Dev Key         : yes
-        HELPER path-list    : 
-        Auto upgrade        : no
-        Auto upgrade path   : 
-        SW-GENIE# 
+SW-GENIE#sho boot
+BOOT path-list      : flash:/c2960x-universalk9-mz.152-4.E8.bin
+Config file         : flash:/config.text
+Private Config file : flash:/private-config.text
+Enable Break        : yes
+Manual Boot         : no
+Allow Dev Key         : yes
+HELPER path-list    : 
+Auto upgrade        : yes
+Auto upgrade path   : 
+Boot optimization   : disabled
+NVRAM/Config file
+    buffer size:   524288
+Timeout for Config
+        Download:    0 seconds
+Config Download 
+    via DHCP:       disabled (next boot: disabled)
+-------------------
+Switch 2
+-------------------
+BOOT path-list      : flash:/c2960x-universalk9-mz.152-4.E8.bin
+Config file         : flash:/config.text
+Private Config file : flash:/private-config.text
+Enable Break        : yes
+Manual Boot         : no
+Allow Dev Key         : yes
+HELPER path-list    : 
+Auto upgrade        : no
+Auto upgrade path   : 
+-------------------
+Switch 3
+-------------------
+BOOT path-list      : flash:/c2960x-universalk9-mz.152-4.E8.bin
+Config file         : flash:/config.text
+Private Config file : flash:/private-config.text
+Enable Break        : yes
+Manual Boot         : no
+Allow Dev Key         : yes
+HELPER path-list    : 
+Auto upgrade        : no
+Auto upgrade path   : 
+SW-GENIE# 
     

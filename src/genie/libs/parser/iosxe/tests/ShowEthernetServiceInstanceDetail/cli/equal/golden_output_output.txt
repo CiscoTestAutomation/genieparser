@@ -1,88 +1,88 @@
-        Router#show ethernet service instance detail
-        Load for five secs: 4%/0%; one minute: 5%; five minutes: 4%
-        Time source is NTP, 16:31:09.701 EST Tue Nov 8 2016
+Router#show ethernet service instance detail
+Load for five secs: 4%/0%; one minute: 5%; five minutes: 4%
+Time source is NTP, 16:31:09.701 EST Tue Nov 8 2016
 
-        Service Instance ID: 2051
-        Service Instance Type: Static
-        Description: xxx
-        Associated Interface: GigabitEthernet0/0/3
-        Associated EVC: 
-        L2protocol drop
-        CE-Vlans:                                                                        
-        Encapsulation: dot1q 2051 vlan protocol type 0x8100
-        Rewrite: egress tag translate 1-to-1 dot1q 2051 vlan-type 0x8100
-        Interface Dot1q Tunnel Ethertype: 0x8100
-        State: Up
-        EFP Statistics:
-           Pkts In   Bytes In   Pkts Out  Bytes Out
-                 0          0          0          0
+Service Instance ID: 2051
+Service Instance Type: Static
+Description: xxx
+Associated Interface: GigabitEthernet0/0/3
+Associated EVC: 
+L2protocol drop
+CE-Vlans:                                                                        
+Encapsulation: dot1q 2051 vlan protocol type 0x8100
+Rewrite: egress tag translate 1-to-1 dot1q 2051 vlan-type 0x8100
+Interface Dot1q Tunnel Ethertype: 0x8100
+State: Up
+EFP Statistics:
+   Pkts In   Bytes In   Pkts Out  Bytes Out
+         0          0          0          0
 
-        Service Instance ID: 2052
-        Service Instance Type: Static
-        Description: xxx
-        Associated Interface: GigabitEthernet0/0/3
-        Associated EVC: 
-        L2protocol drop
-        CE-Vlans:                                                                        
-        Encapsulation: dot1q 2052 vlan protocol type 0x8100
-        Rewrite: egress tag translate 1-to-1 dot1q 2052 vlan-type 0x8100
-        Interface Dot1q Tunnel Ethertype: 0x8100
-        State: Up
-        EFP Statistics:
-           Pkts In   Bytes In   Pkts Out  Bytes Out
-                 0          0          0          0
+Service Instance ID: 2052
+Service Instance Type: Static
+Description: xxx
+Associated Interface: GigabitEthernet0/0/3
+Associated EVC: 
+L2protocol drop
+CE-Vlans:                                                                        
+Encapsulation: dot1q 2052 vlan protocol type 0x8100
+Rewrite: egress tag translate 1-to-1 dot1q 2052 vlan-type 0x8100
+Interface Dot1q Tunnel Ethertype: 0x8100
+State: Up
+EFP Statistics:
+   Pkts In   Bytes In   Pkts Out  Bytes Out
+         0          0          0          0
 
-        Service Instance ID: 2053
-        Service Instance Type: Static
-        Description: xxx
-        Associated Interface: GigabitEthernet0/0/3
-        Associated EVC: 
-        L2protocol drop
-        CE-Vlans:                                                                        
-        Encapsulation: dot1q 2053 vlan protocol type 0x8100
-        Rewrite: egress tag translate 1-to-1 dot1q 2053 vlan-type 0x8100
-        Interface Dot1q Tunnel Ethertype: 0x8100
-        State: Up
-        EFP Statistics:
-           Pkts In   Bytes In   Pkts Out  Bytes Out
-                 0          0          0          0
+Service Instance ID: 2053
+Service Instance Type: Static
+Description: xxx
+Associated Interface: GigabitEthernet0/0/3
+Associated EVC: 
+L2protocol drop
+CE-Vlans:                                                                        
+Encapsulation: dot1q 2053 vlan protocol type 0x8100
+Rewrite: egress tag translate 1-to-1 dot1q 2053 vlan-type 0x8100
+Interface Dot1q Tunnel Ethertype: 0x8100
+State: Up
+EFP Statistics:
+   Pkts In   Bytes In   Pkts Out  Bytes Out
+         0          0          0          0
 
-        Service Instance ID: 2054
-        Service Instance Type: Static
-        Description: xxx
-        Associated Interface: GigabitEthernet0/0/3
-        Associated EVC: 
-        L2protocol drop
-        CE-Vlans:                                                                        
-        Encapsulation: dot1q 2054 vlan protocol type 0x8100
-        Rewrite: egress tag translate 1-to-1 dot1q 2054 vlan-type 0x8100
-        Interface Dot1q Tunnel Ethertype: 0x8100
-        State: Up
-        EFP Statistics:
-           Pkts In   Bytes In   Pkts Out  Bytes Out
-                 0          0          0          0
+Service Instance ID: 2054
+Service Instance Type: Static
+Description: xxx
+Associated Interface: GigabitEthernet0/0/3
+Associated EVC: 
+L2protocol drop
+CE-Vlans:                                                                        
+Encapsulation: dot1q 2054 vlan protocol type 0x8100
+Rewrite: egress tag translate 1-to-1 dot1q 2054 vlan-type 0x8100
+Interface Dot1q Tunnel Ethertype: 0x8100
+State: Up
+EFP Statistics:
+   Pkts In   Bytes In   Pkts Out  Bytes Out
+         0          0          0          0
 
-        Service Instance ID: 2055
-        Service Instance Type: Static
-        Description: xxx
-        Associated Interface: GigabitEthernet0/0/3
-        Associated EVC: 
-        L2protocol drop
-        CE-Vlans:                                                                        
-        Encapsulation: dot1q 2055 vlan protocol type 0x8100
-        Rewrite: egress tag translate 1-to-1 dot1q 2055 vlan-type 0x8100
-        Interface Dot1q Tunnel Ethertype: 0x8100
-        State: Up
-        EFP Statistics:
-           Pkts In   Bytes In   Pkts Out  Bytes Out
-                 0          0          0          0
+Service Instance ID: 2055
+Service Instance Type: Static
+Description: xxx
+Associated Interface: GigabitEthernet0/0/3
+Associated EVC: 
+L2protocol drop
+CE-Vlans:                                                                        
+Encapsulation: dot1q 2055 vlan protocol type 0x8100
+Rewrite: egress tag translate 1-to-1 dot1q 2055 vlan-type 0x8100
+Interface Dot1q Tunnel Ethertype: 0x8100
+State: Up
+EFP Statistics:
+   Pkts In   Bytes In   Pkts Out  Bytes Out
+         0          0          0          0
 
-        Service Instance ID: 400
-        Associated Interface: GigabitEthernet0/0/2
-        Associated EVC: 50
-        CE-Vlans: 30
-        State: AdminDown
-        EFP Statistics:
-           Pkts In   Bytes In   Pkts Out  Bytes Out
-                 0          0          0          0
+Service Instance ID: 400
+Associated Interface: GigabitEthernet0/0/2
+Associated EVC: 50
+CE-Vlans: 30
+State: AdminDown
+EFP Statistics:
+   Pkts In   Bytes In   Pkts Out  Bytes Out
+         0          0          0          0
     

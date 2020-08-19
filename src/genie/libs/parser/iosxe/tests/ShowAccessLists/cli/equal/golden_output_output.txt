@@ -1,28 +1,28 @@
-        Extended IP access list acl_name
-            10 permit ip any any (10031 matches)
-        Extended IP access list ipv4_acl
-            10 permit tcp any any eq www
-            20 permit tcp any any eq 22
-        Extended IP access list test1
-            10 permit pim any any dscp default option 222 log
-            20 permit icmp 0.1.1.1 255.0.0.0 any 10 66
-        Extended IP access list test22
-            10 permit tcp 192.168.1.0 0.0.0.255 host 10.4.1.1 established log
-            20 permit tcp host 10.16.2.2 eq www telnet 443 any precedence network ttl eq 255
-            30 deny ip any any
-            40 permit tcp any range ftp-data bgp any
-        IPv6 access list ipv6_acl
-            permit ipv6 host 2001::1 host 2001:1::2 sequence 20
-            permit tcp any eq www 8443 host 2001:2::2 sequence 30
-            permit ipv6 2001:db8:9:9::3 2001:db8:10:10::4 2001:db8:1:1::1 2001:db8:24:24::6 log sequence 80
-        IPv6 access list preauth_v6 (per-user)
-            permit udp any any eq domain sequence 10
-            permit esp any any dscp cs7 log sequence 20
-            deny ipv6 any any sequence 30
-        Extended MAC access list mac_acl 
-            permit any any
-            deny   any any msdos
-            deny   any any vlan 10
-            permit host 0001.00ff.0235 host 0003.00ff.0306 lsap 0x1 0xD8FE
-            permit any any aarp cos 4 vlan 20
+Extended IP access list acl_name
+    10 permit ip any any (10031 matches)
+Extended IP access list ipv4_acl
+    10 permit tcp any any eq www
+    20 permit tcp any any eq 22
+Extended IP access list test1
+    10 permit pim any any dscp default option 222 log
+    20 permit icmp 0.1.1.1 255.0.0.0 any 10 66
+Extended IP access list test22
+    10 permit tcp 192.168.1.0 0.0.0.255 host 10.4.1.1 established log
+    20 permit tcp host 10.16.2.2 eq www telnet 443 any precedence network ttl eq 255
+    30 deny ip any any
+    40 permit tcp any range ftp-data bgp any
+IPv6 access list ipv6_acl
+    permit ipv6 host 2001::1 host 2001:1::2 sequence 20
+    permit tcp any eq www 8443 host 2001:2::2 sequence 30
+    permit ipv6 2001:db8:9:9::3 2001:db8:10:10::4 2001:db8:1:1::1 2001:db8:24:24::6 log sequence 80
+IPv6 access list preauth_v6 (per-user)
+    permit udp any any eq domain sequence 10
+    permit esp any any dscp cs7 log sequence 20
+    deny ipv6 any any sequence 30
+Extended MAC access list mac_acl 
+    permit any any
+    deny   any any msdos
+    deny   any any vlan 10
+    permit host 0001.00ff.0235 host 0003.00ff.0306 lsap 0x1 0xD8FE
+    permit any any aarp cos 4 vlan 20
     

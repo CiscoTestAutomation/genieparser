@@ -1,16 +1,16 @@
-        Global State Limit : 0 active out of 64000 max
-        GigabitEthernet2 is up, line protocol is up
-          Internet address is FE80::5054:FF:FEDD:BB49/10
-          MLD is enabled on interface
-          Current MLD version is 2
-          MLD query interval is 366 seconds
-          MLD querier timeout is 740 seconds
-          MLD max query response time is 16 seconds
-          Last member query response interval is 1 seconds
-          Interface State Limit : 0 active out of 6400 max
-          MLD activity: 9 joins, 0 leaves
-          MLD querying router is FE80::5054:FF:FEDD:BB49 (this system)
-        Tunnel1 is up, line protocol is up
-          Internet address is FE80::21E:BDFF:FEBA:D000/10
-          MLD is disabled on interface
+Global State Limit : 0 active out of 64000 max
+GigabitEthernet2 is up, line protocol is up
+  Internet address is FE80::5054:FF:FEDD:BB49/10
+  MLD is enabled on interface
+  Current MLD version is 2
+  MLD query interval is 366 seconds
+  MLD querier timeout is 740 seconds
+  MLD max query response time is 16 seconds
+  Last member query response interval is 1 seconds
+  Interface State Limit : 0 active out of 6400 max
+  MLD activity: 9 joins, 0 leaves
+  MLD querying router is FE80::5054:FF:FEDD:BB49 (this system)
+Tunnel1 is up, line protocol is up
+  Internet address is FE80::21E:BDFF:FEBA:D000/10
+  MLD is disabled on interface
     

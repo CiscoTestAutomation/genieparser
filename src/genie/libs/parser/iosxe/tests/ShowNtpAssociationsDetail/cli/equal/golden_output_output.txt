@@ -1,37 +1,37 @@
 
-        Router#show ntp associations detail
-        Load for five secs: 1%/0%; one minute: 3%; five minutes: 4%
-        Time source is NTP, 16:21:12.433 EST Fri Oct 14 2016
+Router#show ntp associations detail
+Load for five secs: 1%/0%; one minute: 3%; five minutes: 4%
+Time source is NTP, 16:21:12.433 EST Fri Oct 14 2016
 
-        192.168.255.254 configured, ipv4, authenticated (' ' reject), insane, invalid, stratum 3
-        ref ID 172.16.255.254, time DBAB02D6.9E354130 (16:08:06.618 EST Fri Oct 14 2016)
-        our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
-        root delay 0.00 msec, root disp 14.52, reach 377, sync dist 28.40
-        delay 0.00 msec, offset 0.0000 msec, dispersion 7.23, jitter 0.97 msec
-        precision 2**10, version 4
-        assoc id 62758, assoc name 192.168.255.254
-        assoc in packets 27, assoc out packets 27, assoc error packets 0
-        org time 00000000.00000000 (09:00:00.000 EST Mon Jan 1 1900)
-        rec time DBAB046D.A8B43B28 (16:14:53.659 EST Fri Oct 14 2016)
-        xmt time DBAB046D.A8B43B28 (16:14:53.659 EST Fri Oct 14 2016)
-        filtdelay =     0.00    1.00    0.00    0.00    0.00    0.00    0.00    0.00
-        filtoffset =    0.00    0.50    0.00    1.00    1.00    1.00    1.00    1.00
-        filterror =     1.95    5.89    9.88   13.89   15.84   17.79   19.74   21.76
-        minpoll = 6, maxpoll = 10
+192.168.255.254 configured, ipv4, authenticated (' ' reject), insane, invalid, stratum 3
+ref ID 172.16.255.254, time DBAB02D6.9E354130 (16:08:06.618 EST Fri Oct 14 2016)
+our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
+root delay 0.00 msec, root disp 14.52, reach 377, sync dist 28.40
+delay 0.00 msec, offset 0.0000 msec, dispersion 7.23, jitter 0.97 msec
+precision 2**10, version 4
+assoc id 62758, assoc name 192.168.255.254
+assoc in packets 27, assoc out packets 27, assoc error packets 0
+org time 00000000.00000000 (09:00:00.000 EST Mon Jan 1 1900)
+rec time DBAB046D.A8B43B28 (16:14:53.659 EST Fri Oct 14 2016)
+xmt time DBAB046D.A8B43B28 (16:14:53.659 EST Fri Oct 14 2016)
+filtdelay =     0.00    1.00    0.00    0.00    0.00    0.00    0.00    0.00
+filtoffset =    0.00    0.50    0.00    1.00    1.00    1.00    1.00    1.00
+filterror =     1.95    5.89    9.88   13.89   15.84   17.79   19.74   21.76
+minpoll = 6, maxpoll = 10
 
-        172.16.255.254 configured, ipv4, authenticated, our_master, sane, valid, stratum 2
-        ref ID 127.127.1.1    , time DBAB05B9.753F7E30 (16:20:25.458 EST Fri Oct 14 2016)
-        our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
-        root delay 0.00 msec, root disp 2.18, reach 177, sync dist 9.47
-        delay 0.00 msec, offset -1.0000 msec, dispersion 5.64, jitter 0.97 msec
-        precision 2**10, version 4
-        assoc id 62756, assoc name 172.16.255.254
-        assoc in packets 38, assoc out packets 50, assoc error packets 0
-        org time 00000000.00000000 (09:00:00.000 EST Mon Jan 1 1900)
-        rec time DBAB05BA.A8B43B28 (16:20:26.659 EST Fri Oct 14 2016)
-        xmt time DBAB05BA.A8B43B28 (16:20:26.659 EST Fri Oct 14 2016)
-        filtdelay =     1.00    1.00    1.00    1.00    0.00    1.00    1.00    0.00
-        filtoffset =   -0.50   -0.50   -0.50   -0.50   -1.00   -0.50   -0.50   -1.00
-        filterror =     1.95    2.88    3.81    4.74    5.08    5.11    7.53    8.46
-        minpoll = 6, maxpoll = 10
+172.16.255.254 configured, ipv4, authenticated, our_master, sane, valid, stratum 2
+ref ID 127.127.1.1    , time DBAB05B9.753F7E30 (16:20:25.458 EST Fri Oct 14 2016)
+our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
+root delay 0.00 msec, root disp 2.18, reach 177, sync dist 9.47
+delay 0.00 msec, offset -1.0000 msec, dispersion 5.64, jitter 0.97 msec
+precision 2**10, version 4
+assoc id 62756, assoc name 172.16.255.254
+assoc in packets 38, assoc out packets 50, assoc error packets 0
+org time 00000000.00000000 (09:00:00.000 EST Mon Jan 1 1900)
+rec time DBAB05BA.A8B43B28 (16:20:26.659 EST Fri Oct 14 2016)
+xmt time DBAB05BA.A8B43B28 (16:20:26.659 EST Fri Oct 14 2016)
+filtdelay =     1.00    1.00    1.00    1.00    0.00    1.00    1.00    0.00
+filtoffset =   -0.50   -0.50   -0.50   -0.50   -1.00   -0.50   -0.50   -1.00
+filterror =     1.95    2.88    3.81    4.74    5.08    5.11    7.53    8.46
+minpoll = 6, maxpoll = 10
     

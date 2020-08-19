@@ -1,15 +1,15 @@
 
-        show policy-map
+show policy-map
 
-        Policy Map policy_4-6-3~6
-            Class class_4-6-3
-            Average Rate Traffic Shaping
-            cir 100000000 (bps) bc 80000000 (bits)
-            Class class_4-6-4~6
-            Average Rate Traffic Shaping
-            cir 100000000 (bps) bc 80000000 (bits) be 60000000 (bits)
-            Class system-cpp-police-sys-data
-            police rate 100 pps
-            conform-action transmit
-            exceed-action drop
+Policy Map policy_4-6-3~6
+    Class class_4-6-3
+    Average Rate Traffic Shaping
+    cir 100000000 (bps) bc 80000000 (bits)
+    Class class_4-6-4~6
+    Average Rate Traffic Shaping
+    cir 100000000 (bps) bc 80000000 (bits) be 60000000 (bits)
+    Class system-cpp-police-sys-data
+    police rate 100 pps
+    conform-action transmit
+    exceed-action drop
     

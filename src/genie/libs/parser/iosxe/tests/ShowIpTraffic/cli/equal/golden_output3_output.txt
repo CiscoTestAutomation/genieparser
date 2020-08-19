@@ -1,78 +1,78 @@
 
-        show ip traffic
-        IP statistics:
-          Rcvd:  2823 total, 2823 local destination
-                 0 format errors, 0 checksum errors, 0 bad hop count
-                 0 unknown protocol, 0 not a gateway
-                 0 security failures, 0 bad options, 0 with options
-          Opts:  0 end, 0 nop, 0 basic security, 0 loose source route
-                 0 timestamp, 0 extended security, 0 record route
-                 0 stream ID, 0 strict source route, 0 alert, 0 cipso, 0 ump
-                 0 other
-          Frags: 0 reassembled, 0 timeouts, 0 couldn't reassemble
-                 0 fragmented, 0 fragments, 0 couldn't fragment
-          Bcast: 0 received, 0 sent
-          Mcast: 78 received, 75 sent
-          Sent:  2799 generated, 0 forwarded
-          Drop:  1 encapsulation failed, 0 unresolved, 0 no adjacency
-                 0 no route, 0 unicast RPF, 0 forced drop
-                 0 options denied
-          Drop:  0 packets with source IP address zero
-          Drop:  0 packets with internal loop back IP address
-                 0 physical broadcast
+show ip traffic
+IP statistics:
+  Rcvd:  2823 total, 2823 local destination
+         0 format errors, 0 checksum errors, 0 bad hop count
+         0 unknown protocol, 0 not a gateway
+         0 security failures, 0 bad options, 0 with options
+  Opts:  0 end, 0 nop, 0 basic security, 0 loose source route
+         0 timestamp, 0 extended security, 0 record route
+         0 stream ID, 0 strict source route, 0 alert, 0 cipso, 0 ump
+         0 other
+  Frags: 0 reassembled, 0 timeouts, 0 couldn't reassemble
+         0 fragmented, 0 fragments, 0 couldn't fragment
+  Bcast: 0 received, 0 sent
+  Mcast: 78 received, 75 sent
+  Sent:  2799 generated, 0 forwarded
+  Drop:  1 encapsulation failed, 0 unresolved, 0 no adjacency
+         0 no route, 0 unicast RPF, 0 forced drop
+         0 options denied
+  Drop:  0 packets with source IP address zero
+  Drop:  0 packets with internal loop back IP address
+         0 physical broadcast
 
-        ICMP statistics:
-          Rcvd: 0 format errors, 0 checksum errors, 0 redirects, 0 unreachable
-                0 echo, 0 echo reply, 0 mask requests, 0 mask replies, 0 quench
-                0 parameter, 0 timestamp, 0 info request, 0 other
-                0 irdp solicitations, 0 irdp advertisements
-          Sent: 0 redirects, 0 unreachable, 0 echo, 0 echo reply
-                0 mask requests, 0 mask replies, 0 quench, 0 timestamp
-                0 info reply, 0 time exceeded, 0 parameter problem
-                0 irdp solicitations, 0 irdp advertisements
+ICMP statistics:
+  Rcvd: 0 format errors, 0 checksum errors, 0 redirects, 0 unreachable
+        0 echo, 0 echo reply, 0 mask requests, 0 mask replies, 0 quench
+        0 parameter, 0 timestamp, 0 info request, 0 other
+        0 irdp solicitations, 0 irdp advertisements
+  Sent: 0 redirects, 0 unreachable, 0 echo, 0 echo reply
+        0 mask requests, 0 mask replies, 0 quench, 0 timestamp
+        0 info reply, 0 time exceeded, 0 parameter problem
+        0 irdp solicitations, 0 irdp advertisements
 
-        TCP statistics:
-          Rcvd: 2739 total, 0 checksum errors, 2 no port
-          Sent: 2718 total
+TCP statistics:
+  Rcvd: 2739 total, 0 checksum errors, 2 no port
+  Sent: 2718 total
 
-        BGP statistics:
-          Rcvd: 0 total, 0 opens, 0 notifications, 0 updates
-                0 keepalives, 0 route-refresh, 0 unrecognized
-          Sent: 0 total, 0 opens, 0 notifications, 0 updates
-                0 keepalives, 0 route-refresh
+BGP statistics:
+  Rcvd: 0 total, 0 opens, 0 notifications, 0 updates
+        0 keepalives, 0 route-refresh, 0 unrecognized
+  Sent: 0 total, 0 opens, 0 notifications, 0 updates
+        0 keepalives, 0 route-refresh
 
-        IP-EIGRP statistics:
-          Rcvd: 0 total
-          Sent: 0 total
+IP-EIGRP statistics:
+  Rcvd: 0 total
+  Sent: 0 total
 
-        PIMv2 statistics: Sent/Received
-          Total: 0/0, 0 checksum errors, 0 format errors
-          Registers: 0/0 (0 non-rp, 0 non-sm-group), Register Stops: 0/0,  Hellos: 0/0
-          Join/Prunes: 0/0, Asserts: 0/0, grafts: 0/0
-          Bootstraps: 0/0, Candidate_RP_Advertisements: 0/0
-          Queue drops: 0
-          State-Refresh: 0/0
+PIMv2 statistics: Sent/Received
+  Total: 0/0, 0 checksum errors, 0 format errors
+  Registers: 0/0 (0 non-rp, 0 non-sm-group), Register Stops: 0/0,  Hellos: 0/0
+  Join/Prunes: 0/0, Asserts: 0/0, grafts: 0/0
+  Bootstraps: 0/0, Candidate_RP_Advertisements: 0/0
+  Queue drops: 0
+  State-Refresh: 0/0
 
-        IGMP statistics: Sent/Received
-          Total: 0/0, Format errors: 0/0, Checksum errors: 0/0
-          Host Queries: 0/0, Host Reports: 0/0, Host Leaves: 0/0 
-          DVMRP: 0/0, PIM: 0/0
-          Queue drops: 0
+IGMP statistics: Sent/Received
+  Total: 0/0, Format errors: 0/0, Checksum errors: 0/0
+  Host Queries: 0/0, Host Reports: 0/0, Host Leaves: 0/0 
+  DVMRP: 0/0, PIM: 0/0
+  Queue drops: 0
 
-        UDP statistics:
-          Rcvd: 0 total, 0 checksum errors, 0 no port
-          Sent: 0 total, 0 forwarded broadcasts
+UDP statistics:
+  Rcvd: 0 total, 0 checksum errors, 0 no port
+  Sent: 0 total, 0 forwarded broadcasts
 
-        OSPF statistics:
-          Rcvd: 84 total, 0 checksum errors
-            74 hello, 3 database desc, 1 link state req
-            5 link state updates, 1 link state acks
+OSPF statistics:
+  Rcvd: 84 total, 0 checksum errors
+    74 hello, 3 database desc, 1 link state req
+    5 link state updates, 1 link state acks
 
-          Sent: 82 total
-            74 hello, 4 database desc, 1 link state req
-            2 link state updates, 2 link state acks
+  Sent: 82 total
+    74 hello, 4 database desc, 1 link state req
+    2 link state updates, 2 link state acks
 
-        ARP statistics:
-          Rcvd: 40 requests, 4 replies, 0 reverse, 0 other
-          Sent: 1 requests, 4 replies (0 proxy), 0 reverse
+ARP statistics:
+  Rcvd: 40 requests, 4 replies, 0 reverse, 0 other
+  Sent: 1 requests, 4 replies (0 proxy), 0 reverse
         

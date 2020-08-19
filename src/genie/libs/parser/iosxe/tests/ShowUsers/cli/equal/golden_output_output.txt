@@ -1,13 +1,13 @@
-        Router#show users
-        Load for five secs: 14%/0%; one minute: 23%; five minutes: 31%
-        Time source is NTP, 16:53:22.622 EST Tue Sep 13 2016
+Router#show users
+Load for five secs: 14%/0%; one minute: 23%; five minutes: 31%
+Time source is NTP, 16:53:22.622 EST Tue Sep 13 2016
 
-            Line       User       Host(s)              Idle       Location
-           2 vty 0     nos        idle                 00:35:32 10.0.0.1
-           3 vty 1     testuser   idle                 00:41:43 10.0.0.2
-        *  4 vty 2     testuser   idle                 00:00:07 10.0.0.3
-           5 vty 3     testuser   idle                 04:20:29 10.0.0.4
-           6 vty 4     user       idle                 00:00:44 10.0.0.5
+    Line       User       Host(s)              Idle       Location
+   2 vty 0     nos        idle                 00:35:32 10.0.0.1
+   3 vty 1     testuser   idle                 00:41:43 10.0.0.2
+*  4 vty 2     testuser   idle                 00:00:07 10.0.0.3
+   5 vty 3     testuser   idle                 04:20:29 10.0.0.4
+   6 vty 4     user       idle                 00:00:44 10.0.0.5
 
-          Interface    User               Mode         Idle     Peer Address
+  Interface    User               Mode         Idle     Peer Address
     

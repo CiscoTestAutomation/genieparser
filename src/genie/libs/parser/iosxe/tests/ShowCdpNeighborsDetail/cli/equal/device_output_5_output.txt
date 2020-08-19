@@ -1,39 +1,39 @@
 
-        Device# show cdp neighbors detail
-        Device ID: R8.cisco.com
-        Entry address(es):
-          IP address: 172.16.1.205
-        Platform: cisco WS_C6506_E,  Capabilities: Router Switch-6506 IGMP
-        Interface: GigabitEthernet1/0/3,  Port ID (outgoing port): GigabitEthernet1/0/3
-        Holdtime : 143 sec
+Device# show cdp neighbors detail
+Device ID: R8.cisco.com
+Entry address(es):
+  IP address: 172.16.1.205
+Platform: cisco WS_C6506_E,  Capabilities: Router Switch-6506 IGMP
+Interface: GigabitEthernet1/0/3,  Port ID (outgoing port): GigabitEthernet1/0/3
+Holdtime : 143 sec
 
-        Version :
-        Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)
-        Technical Support: http://www.cisco.com/techsupport
-        Copyright (c) 1986-2018 by Cisco Systems, Inc.
-        Compiled Wed 01-Aug-18 16:45 by prod_rel_team
+Version :
+Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2018 by Cisco Systems, Inc.
+Compiled Wed 01-Aug-18 16:45 by prod_rel_team
 
-        advertisement version: 2
-        Management address(es):
-          IP address: 172.16.1.205
+advertisement version: 2
+Management address(es):
+  IP address: 172.16.1.205
 
-        -------------------------
-        Device ID: R9.cisco.com
-        Entry address(es):
-          IP address: 172.16.1.206
-        Platform: cisco WS-C6506-E,  Capabilities: Router Switch_6506 IGMP
-        Interface: GigabitEthernet1/2/5,  Port ID (outgoing port): GigabitEthernet1/2/5
-        Holdtime : 151 sec
+-------------------------
+Device ID: R9.cisco.com
+Entry address(es):
+  IP address: 172.16.1.206
+Platform: cisco WS-C6506-E,  Capabilities: Router Switch_6506 IGMP
+Interface: GigabitEthernet1/2/5,  Port ID (outgoing port): GigabitEthernet1/2/5
+Holdtime : 151 sec
 
-        Version :
-        Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)
-        Technical Support: http://www.cisco.com/techsupport
-        Copyright (c) 1986-2018 by Cisco Systems, Inc.
-        Compiled Wed 01-Aug-18 16:45 by prod_rel_team
+Version :
+Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2018 by Cisco Systems, Inc.
+Compiled Wed 01-Aug-18 16:45 by prod_rel_team
 
-        advertisement version: 2
-        Management address(es):
-          IP address: 172.16.1.206
+advertisement version: 2
+Management address(es):
+  IP address: 172.16.1.206
 
-        Total cdp entries displayed : 2
+Total cdp entries displayed : 2
     

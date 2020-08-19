@@ -1,19 +1,19 @@
 
-        Load for five secs: 11%/0%; one minute: 5%; five minutes: 5%
-        Time source is NTP, 22:21:45.748 EST Fri Nov 4 2016
+Load for five secs: 11%/0%; one minute: 5%; five minutes: 5%
+Time source is NTP, 22:21:45.748 EST Fri Nov 4 2016
 
-        GigabitEthernet0/1/1 
+GigabitEthernet0/1/1 
 
-            Service-policy output: shape-out
+    Service-policy output: shape-out
 
-                Class-map: class-default (match-any)  
-                    0 packets, 0 bytes
-                    5 minute offered rate 0000 bps, drop rate 0000 bps
-                    Match: any 
-                    Queueing
-                    queue limit 64 packets
-                    (queue depth/total drops/no-buffer drops) 0/0/0
-                    (pkts output/bytes output) 0/0
-                    shape (average) cir 500000, bc 2000, be 2000
-                    target shape rate 500000
+        Class-map: class-default (match-any)  
+            0 packets, 0 bytes
+            5 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: any 
+            Queueing
+            queue limit 64 packets
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts output/bytes output) 0/0
+            shape (average) cir 500000, bc 2000, be 2000
+            target shape rate 500000
     

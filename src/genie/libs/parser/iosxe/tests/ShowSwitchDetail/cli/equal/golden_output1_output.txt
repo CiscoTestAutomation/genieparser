@@ -1,13 +1,13 @@
-        show switch detail
-        Switch/Stack Mac Address : 00d6.feff.acf0 - Local Mac Address
-        Mac persistency wait time: Indefinite
-                                                    H/W   Current
-        Switch#   Role    Mac Address     Priority Version  State
-        ------------------------------------------------------------
-        *1       Active   00d6.feff.acf0     1      V02     Ready
+show switch detail
+Switch/Stack Mac Address : 00d6.feff.acf0 - Local Mac Address
+Mac persistency wait time: Indefinite
+                                            H/W   Current
+Switch#   Role    Mac Address     Priority Version  State
+------------------------------------------------------------
+*1       Active   00d6.feff.acf0     1      V02     Ready
 
-                Stack Port Status             Neighbors
-        Switch#  Port 1     Port 2           Port 1   Port 2
-        --------------------------------------------------------
-        1       DOWN       DOWN             None     None
+        Stack Port Status             Neighbors
+Switch#  Port 1     Port 2           Port 1   Port 2
+--------------------------------------------------------
+1       DOWN       DOWN             None     None
     

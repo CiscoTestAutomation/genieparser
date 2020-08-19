@@ -1,10 +1,10 @@
-        Service Group global statistics:
-          Number of groups:                       1
-          Number of members:                      2
-        Service Group 1 statistics:
-          Number of Interfaces:                   1
-          Number of members:                      2
-            Sub-interface                         2
-          Members joined:                         103
-          Members left:                           101
+Service Group global statistics:
+  Number of groups:                       1
+  Number of members:                      2
+Service Group 1 statistics:
+  Number of Interfaces:                   1
+  Number of members:                      2
+    Sub-interface                         2
+  Members joined:                         103
+  Members left:                           101
     

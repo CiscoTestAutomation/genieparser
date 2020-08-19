@@ -1,25 +1,25 @@
 
-        GENIE-1(config)# show ip nat translations vrf genie verbose
-        Pro Inside global      Inside local       Outside local      Outside global
-        any ---                ---                10.1.0.2          10.144.0.2
-            Group_id:0   vrf: genie
-            Format(H:M:S) Time-left :0:0:-1
-        any ---                ---                10.1.2.21          120.1.211
-            Group_id:0   vrf: genie
-            Format(H:M:S) Time-left :0:1:38
-        any ---                ---                10.1.2.22          120.1.212
-            Group_id:0   vrf: genie
-            Format(H:M:S) Time-left :0:1:56
-        any ---                ---                10.1.2.23          120.1.213
-            Group_id:0   vrf: genie
-            Format(H:M:S) Time-left :0:1:30
-        any ---                ---                10.1.2.24          120.1.214
-            Group_id:0   vrf: genie
-            Format(H:M:S) Time-left :0:1:54
-        any ---                ---                10.1.2.25          120.1.215
-            Group_id:0   vrf: genie
-            Format(H:M:S) Time-left :0:1:58
-        any ---                ---                10.1.2.26          120.1.216
-            Group_id:0   vrf: genie
-            Format(H:M:S) Time-left :0:1:30
+GENIE-1(config)# show ip nat translations vrf genie verbose
+Pro Inside global      Inside local       Outside local      Outside global
+any ---                ---                10.1.0.2          10.144.0.2
+    Group_id:0   vrf: genie
+    Format(H:M:S) Time-left :0:0:-1
+any ---                ---                10.1.2.21          120.1.211
+    Group_id:0   vrf: genie
+    Format(H:M:S) Time-left :0:1:38
+any ---                ---                10.1.2.22          120.1.212
+    Group_id:0   vrf: genie
+    Format(H:M:S) Time-left :0:1:56
+any ---                ---                10.1.2.23          120.1.213
+    Group_id:0   vrf: genie
+    Format(H:M:S) Time-left :0:1:30
+any ---                ---                10.1.2.24          120.1.214
+    Group_id:0   vrf: genie
+    Format(H:M:S) Time-left :0:1:54
+any ---                ---                10.1.2.25          120.1.215
+    Group_id:0   vrf: genie
+    Format(H:M:S) Time-left :0:1:58
+any ---                ---                10.1.2.26          120.1.216
+    Group_id:0   vrf: genie
+    Format(H:M:S) Time-left :0:1:30
     

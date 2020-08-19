@@ -1,18 +1,18 @@
-        VTP Version capable             : 1 to 3
-        VTP version running             : 1
-        VTP Domain Name                 : 
-        VTP Pruning Mode                : Disabled
-        VTP Traps Generation            : Disabled
-        Device ID                       : 3820.56ff.c7a2
-        Configuration last modified by 192.168.234.1 at 12-5-17 09:35:46
-        Local updater ID is 192.168.234.1 on interface Vl100 (lowest numbered VLAN interface found)
+VTP Version capable             : 1 to 3
+VTP version running             : 1
+VTP Domain Name                 : 
+VTP Pruning Mode                : Disabled
+VTP Traps Generation            : Disabled
+Device ID                       : 3820.56ff.c7a2
+Configuration last modified by 192.168.234.1 at 12-5-17 09:35:46
+Local updater ID is 192.168.234.1 on interface Vl100 (lowest numbered VLAN interface found)
 
-        Feature VLAN:
-        --------------
-        VTP Operating Mode                : Server
-        Maximum VLANs supported locally   : 1005
-        Number of existing VLANs          : 53
-        Configuration Revision            : 55
-        MD5 digest                        : 0x9E 0x35 0x3C 0x74 0xDD 0xE9 0x3D 0x62 
-                                            0xDE 0x2D 0x66 0x67 0x70 0x72 0x55 0x38
+Feature VLAN:
+--------------
+VTP Operating Mode                : Server
+Maximum VLANs supported locally   : 1005
+Number of existing VLANs          : 53
+Configuration Revision            : 55
+MD5 digest                        : 0x9E 0x35 0x3C 0x74 0xDD 0xE9 0x3D 0x62 
+                                    0xDE 0x2D 0x66 0x67 0x70 0x72 0x55 0x38
     

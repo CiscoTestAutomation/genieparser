@@ -1,292 +1,292 @@
 
-        show ip ospf traffic
-
-        Summary traffic statistics for process ID 10000:
-
-        OSPF packets received/sent
-
-        Type          Packets              Bytes
-        RX Invalid    0                    0
-        RX Hello      0                    0
-        RX DB des     0                    0
-        RX LS req     0                    0
-        RX LS upd     0                    0
-        RX LS ack     0                    0
-        RX Total      0                    0
-
-        TX Failed     0                    0
-        TX Hello      0                    0
-        TX DB des     0                    0
-        TX LS req     0                    0
-        TX LS upd     0                    0
-        TX LS ack     0                    0
-        TX Total      0                    0
-
-        OSPF header errors
-        Length 0, Instance ID 0, Checksum 0, Auth Type 0,
-        Version 0, Bad Source 0, No Virtual Link 0,
-        Area Mismatch 0, No Sham Link 0, Self Originated 0,
-        Duplicate ID 0, Hello 0, MTU Mismatch 0,
-        Nbr Ignored 0, LLS 0, Unknown Neighbor 0,
-        Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
-        BFD 0, Test discard 0
-
-        OSPF LSA errors
-        Type 0, Length 0, Data 0, Checksum 0
-
-
-        OSPF statistics:
-        Last clearing of OSPF traffic counters never
-        Rcvd: 204136 total, 0 checksum errors
-                159184 hello, 10240 database desc, 5 link state req
-                31899 link state updates, 2511 link state acks
-        Sent: 281838 total
-                219736 hello, 10540 database desc, 5 link state req
-                33998 link state updates, 17571 link state acks
-
-
-
-                    OSPF Router with ID (10.19.13.14) (Process ID 888)
-
-        OSPF queue statistics for process ID 888:
-
-                        InputQ     UpdateQ    OutputQ
-        Limit            0          200        0
-        Drops            0          0          0
-        Max delay [msec] 3          2          1
-        Max size         4          3          2
-            Invalid        0          0          0
-            Hello          4          0          1
-            DB des         0          0          1
-            LS req         0          0          0
-            LS upd         0          3          0
-            LS ack         0          0          0
-        Current size     0          0          0
-            Invalid        0          0          0
-            Hello          0          0          0
-            DB des         0          0          0
-            LS req         0          0          0
-            LS upd         0          0          0
-            LS ack         0          0          0
-
-
-        Interface statistics:
-
-
-            Interface Tunnel65541
-
-        Last clearing of interface traffic counters never
-
-        OSPF packets received/sent
-        Type          Packets              Bytes
-        RX Invalid    0                    0
-        RX Hello      0                    0
-        RX DB des     0                    0
-        RX LS req     0                    0
-        RX LS upd     0                    0
-        RX LS ack     0                    0
-        RX Total      0                    0
-
-        TX Failed     0                    0
-        TX Hello      62301                5980896
-        TX DB des     0                    0
-        TX LS req     0                    0
-        TX LS upd     0                    0
-        TX LS ack     0                    0
-        TX Total      62301                5980896
-
-        OSPF header errors
-        Length 0, Instance ID 0, Checksum 0, Auth Type 0,
-        Version 0, Bad Source 0, No Virtual Link 0,
-        Area Mismatch 0, No Sham Link 0, Self Originated 0,
-        Duplicate ID 0, Hello 0, MTU Mismatch 0,
-        Nbr Ignored 0, LLS 0, Unknown Neighbor 0,
-        Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
-        BFD 0, Test discard 0
-
-        OSPF LSA errors
-        Type 0, Length 0, Data 0, Checksum 0
-
-
-
-            Interface GigabitEthernet0/1/7
-
-        Last clearing of interface traffic counters never
-
-        OSPF packets received/sent
-        Type          Packets              Bytes
-        RX Invalid    0                    0
-        RX Hello      79715                3826316
-        RX DB des     54                   6708
-        RX LS req     2                    72
-        RX LS upd     16831                2110728
-        RX LS ack     1580                 122140
-        RX Total      98182                6065964
-
-        TX Failed     0                    0
-        TX Hello      73397                7339656
-        TX DB des     59                   72276
-        TX LS req     3                    2052
-        TX LS upd     9359                 1560172
-        TX LS ack     9656                 671164
-        TX Total      92474                9645320
-
-        OSPF header errors
-        Length 0, Instance ID 0, Checksum 0, Auth Type 0,
-        Version 0, Bad Source 0, No Virtual Link 0,
-        Area Mismatch 0, No Sham Link 0, Self Originated 0,
-        Duplicate ID 0, Hello 0, MTU Mismatch 0,
-        Nbr Ignored 9, LLS 0, Unknown Neighbor 0,
-        Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
-        BFD 0, Test discard 0
-
-        OSPF LSA errors
-        Type 0, Length 0, Data 0, Checksum 0
-
-
-
-        Neighbor Statistics for interface GigabitEthernet0/1/7
-
-        Neighbor 10.189.5.253 traffic statistics
-
-        Last clearing of neighbor traffic counters never
-
-        OSPF packets received/sent
-        Type          Packets              Bytes
-        RX Invalid    0                    0
-        RX Hello      70493                3383664
-        RX DB des     3                    1676
-        RX LS req     1                    36
-        RX LS upd     14963                1870388
-        RX LS ack     880                  76140
-        RX Total      86340                5331904
-
-        TX Failed     0                    0
-        TX Hello      1                    100
-        TX DB des     4                    416
-        TX LS req     1                    968
-        TX LS upd     1                    108
-        TX LS ack     134                  9456
-        TX Total      141                  11048
-
-        OSPF header errors
-        Length 0, Instance ID 0, Checksum 0, Auth Type 0,
-        Version 0, Bad Source 0, No Virtual Link 0,
-        Area Mismatch 0, No Sham Link 0, Self Originated 0,
-        Duplicate ID 0, Hello 0, MTU Mismatch 0,
-        Nbr Ignored 0, LLS 0, Unknown Neighbor 0,
-        Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
-        BFD 0, Test discard 0
-
-        OSPF LSA errors
-        Type 0, Length 0, Data 0, Checksum 0
-
-
-
-            Interface GigabitEthernet0/1/6
-
-        Last clearing of interface traffic counters never
-
-        OSPF packets received/sent
-        Type          Packets              Bytes
-        RX Invalid    0                    0
-        RX Hello      79472                3814652
-        RX DB des     10186                331012
-        RX LS req     3                    144
-        RX LS upd     15068                1899928
-        RX LS ack     931                  79064
-        RX Total      105660               6124800
-
-        TX Failed     0                    0
-        TX Hello      72795                7271712
-        TX DB des     10481                15736044
-        TX LS req     2                    1060
-        TX LS upd     24639                3749080
-        TX LS ack     7915                 548980
-        TX Total      115832               27306876
-
-        OSPF header errors
-        Length 0, Instance ID 0, Checksum 0, Auth Type 0,
-        Version 0, Bad Source 0, No Virtual Link 0,
-        Area Mismatch 0, No Sham Link 0, Self Originated 0,
-        Duplicate ID 0, Hello 0, MTU Mismatch 0,
-        Nbr Ignored 2673, LLS 0, Unknown Neighbor 0,
-        Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
-        BFD 0, Test discard 0
-
-        OSPF LSA errors
-        Type 0, Length 0, Data 0, Checksum 0
-
-
-
-        Neighbor Statistics for interface GigabitEthernet0/1/6
-
-        Neighbor 10.189.5.252 traffic statistics
-
-        Last clearing of neighbor traffic counters never
-
-        OSPF packets received/sent
-        Type          Packets              Bytes
-        RX Invalid    0                    0
-        RX Hello      70504                3384192
-        RX DB des     3                    1676
-        RX LS req     1                    36
-        RX LS upd     14809                1866264
-        RX LS ack     877                  76028
-        RX Total      86194                5328196
-
-        TX Failed     0                    0
-        TX Hello      1                    100
-        TX DB des     4                    416
-        TX LS req     1                    968
-        TX LS upd     1                    108
-        TX LS ack     117                  8668
-        TX Total      124                  10260
-
-        OSPF header errors
-        Length 0, Instance ID 0, Checksum 0, Auth Type 0,
-        Version 0, Bad Source 0, No Virtual Link 0,
-        Area Mismatch 0, No Sham Link 0, Self Originated 0,
-        Duplicate ID 0, Hello 0, MTU Mismatch 0,
-        Nbr Ignored 0, LLS 0, Unknown Neighbor 0,
-        Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
-        BFD 0, Test discard 0
-
-        OSPF LSA errors
-        Type 0, Length 0, Data 0, Checksum 0
-
-
-
-        Summary traffic statistics for process ID 888:
-
-        OSPF packets received/sent
-
-        Type          Packets              Bytes
-        RX Invalid    0                    0
-        RX Hello      159187               7640968
-        RX DB des     10240                337720
-        RX LS req     5                    216
-        RX LS upd     31899                4010656
-        RX LS ack     2511                 201204
-        RX Total      203842               12190764
-
-        TX Failed     0                    0
-        TX Hello      208493               20592264
-        TX DB des     10540                15808320
-        TX LS req     5                    3112
-        TX LS upd     33998                5309252
-        TX LS ack     17571                1220144
-        TX Total      270607               42933092
-
-        OSPF header errors
-        Length 0, Instance ID 0, Checksum 0, Auth Type 0,
-        Version 0, Bad Source 0, No Virtual Link 0,
-        Area Mismatch 0, No Sham Link 0, Self Originated 0,
-        Duplicate ID 0, Hello 0, MTU Mismatch 0,
-        Nbr Ignored 2682, LLS 0, Unknown Neighbor 0,
-        Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
-        BFD 0, Test discard 0
-
-        OSPF LSA errors
-        Type 0, Length 0, Data 0, Checksum 0
+show ip ospf traffic
+
+Summary traffic statistics for process ID 10000:
+
+OSPF packets received/sent
+
+Type          Packets              Bytes
+RX Invalid    0                    0
+RX Hello      0                    0
+RX DB des     0                    0
+RX LS req     0                    0
+RX LS upd     0                    0
+RX LS ack     0                    0
+RX Total      0                    0
+
+TX Failed     0                    0
+TX Hello      0                    0
+TX DB des     0                    0
+TX LS req     0                    0
+TX LS upd     0                    0
+TX LS ack     0                    0
+TX Total      0                    0
+
+OSPF header errors
+Length 0, Instance ID 0, Checksum 0, Auth Type 0,
+Version 0, Bad Source 0, No Virtual Link 0,
+Area Mismatch 0, No Sham Link 0, Self Originated 0,
+Duplicate ID 0, Hello 0, MTU Mismatch 0,
+Nbr Ignored 0, LLS 0, Unknown Neighbor 0,
+Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
+BFD 0, Test discard 0
+
+OSPF LSA errors
+Type 0, Length 0, Data 0, Checksum 0
+
+
+OSPF statistics:
+Last clearing of OSPF traffic counters never
+Rcvd: 204136 total, 0 checksum errors
+        159184 hello, 10240 database desc, 5 link state req
+        31899 link state updates, 2511 link state acks
+Sent: 281838 total
+        219736 hello, 10540 database desc, 5 link state req
+        33998 link state updates, 17571 link state acks
+
+
+
+            OSPF Router with ID (10.19.13.14) (Process ID 888)
+
+OSPF queue statistics for process ID 888:
+
+                InputQ     UpdateQ    OutputQ
+Limit            0          200        0
+Drops            0          0          0
+Max delay [msec] 3          2          1
+Max size         4          3          2
+    Invalid        0          0          0
+    Hello          4          0          1
+    DB des         0          0          1
+    LS req         0          0          0
+    LS upd         0          3          0
+    LS ack         0          0          0
+Current size     0          0          0
+    Invalid        0          0          0
+    Hello          0          0          0
+    DB des         0          0          0
+    LS req         0          0          0
+    LS upd         0          0          0
+    LS ack         0          0          0
+
+
+Interface statistics:
+
+
+    Interface Tunnel65541
+
+Last clearing of interface traffic counters never
+
+OSPF packets received/sent
+Type          Packets              Bytes
+RX Invalid    0                    0
+RX Hello      0                    0
+RX DB des     0                    0
+RX LS req     0                    0
+RX LS upd     0                    0
+RX LS ack     0                    0
+RX Total      0                    0
+
+TX Failed     0                    0
+TX Hello      62301                5980896
+TX DB des     0                    0
+TX LS req     0                    0
+TX LS upd     0                    0
+TX LS ack     0                    0
+TX Total      62301                5980896
+
+OSPF header errors
+Length 0, Instance ID 0, Checksum 0, Auth Type 0,
+Version 0, Bad Source 0, No Virtual Link 0,
+Area Mismatch 0, No Sham Link 0, Self Originated 0,
+Duplicate ID 0, Hello 0, MTU Mismatch 0,
+Nbr Ignored 0, LLS 0, Unknown Neighbor 0,
+Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
+BFD 0, Test discard 0
+
+OSPF LSA errors
+Type 0, Length 0, Data 0, Checksum 0
+
+
+
+    Interface GigabitEthernet0/1/7
+
+Last clearing of interface traffic counters never
+
+OSPF packets received/sent
+Type          Packets              Bytes
+RX Invalid    0                    0
+RX Hello      79715                3826316
+RX DB des     54                   6708
+RX LS req     2                    72
+RX LS upd     16831                2110728
+RX LS ack     1580                 122140
+RX Total      98182                6065964
+
+TX Failed     0                    0
+TX Hello      73397                7339656
+TX DB des     59                   72276
+TX LS req     3                    2052
+TX LS upd     9359                 1560172
+TX LS ack     9656                 671164
+TX Total      92474                9645320
+
+OSPF header errors
+Length 0, Instance ID 0, Checksum 0, Auth Type 0,
+Version 0, Bad Source 0, No Virtual Link 0,
+Area Mismatch 0, No Sham Link 0, Self Originated 0,
+Duplicate ID 0, Hello 0, MTU Mismatch 0,
+Nbr Ignored 9, LLS 0, Unknown Neighbor 0,
+Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
+BFD 0, Test discard 0
+
+OSPF LSA errors
+Type 0, Length 0, Data 0, Checksum 0
+
+
+
+Neighbor Statistics for interface GigabitEthernet0/1/7
+
+Neighbor 10.189.5.253 traffic statistics
+
+Last clearing of neighbor traffic counters never
+
+OSPF packets received/sent
+Type          Packets              Bytes
+RX Invalid    0                    0
+RX Hello      70493                3383664
+RX DB des     3                    1676
+RX LS req     1                    36
+RX LS upd     14963                1870388
+RX LS ack     880                  76140
+RX Total      86340                5331904
+
+TX Failed     0                    0
+TX Hello      1                    100
+TX DB des     4                    416
+TX LS req     1                    968
+TX LS upd     1                    108
+TX LS ack     134                  9456
+TX Total      141                  11048
+
+OSPF header errors
+Length 0, Instance ID 0, Checksum 0, Auth Type 0,
+Version 0, Bad Source 0, No Virtual Link 0,
+Area Mismatch 0, No Sham Link 0, Self Originated 0,
+Duplicate ID 0, Hello 0, MTU Mismatch 0,
+Nbr Ignored 0, LLS 0, Unknown Neighbor 0,
+Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
+BFD 0, Test discard 0
+
+OSPF LSA errors
+Type 0, Length 0, Data 0, Checksum 0
+
+
+
+    Interface GigabitEthernet0/1/6
+
+Last clearing of interface traffic counters never
+
+OSPF packets received/sent
+Type          Packets              Bytes
+RX Invalid    0                    0
+RX Hello      79472                3814652
+RX DB des     10186                331012
+RX LS req     3                    144
+RX LS upd     15068                1899928
+RX LS ack     931                  79064
+RX Total      105660               6124800
+
+TX Failed     0                    0
+TX Hello      72795                7271712
+TX DB des     10481                15736044
+TX LS req     2                    1060
+TX LS upd     24639                3749080
+TX LS ack     7915                 548980
+TX Total      115832               27306876
+
+OSPF header errors
+Length 0, Instance ID 0, Checksum 0, Auth Type 0,
+Version 0, Bad Source 0, No Virtual Link 0,
+Area Mismatch 0, No Sham Link 0, Self Originated 0,
+Duplicate ID 0, Hello 0, MTU Mismatch 0,
+Nbr Ignored 2673, LLS 0, Unknown Neighbor 0,
+Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
+BFD 0, Test discard 0
+
+OSPF LSA errors
+Type 0, Length 0, Data 0, Checksum 0
+
+
+
+Neighbor Statistics for interface GigabitEthernet0/1/6
+
+Neighbor 10.189.5.252 traffic statistics
+
+Last clearing of neighbor traffic counters never
+
+OSPF packets received/sent
+Type          Packets              Bytes
+RX Invalid    0                    0
+RX Hello      70504                3384192
+RX DB des     3                    1676
+RX LS req     1                    36
+RX LS upd     14809                1866264
+RX LS ack     877                  76028
+RX Total      86194                5328196
+
+TX Failed     0                    0
+TX Hello      1                    100
+TX DB des     4                    416
+TX LS req     1                    968
+TX LS upd     1                    108
+TX LS ack     117                  8668
+TX Total      124                  10260
+
+OSPF header errors
+Length 0, Instance ID 0, Checksum 0, Auth Type 0,
+Version 0, Bad Source 0, No Virtual Link 0,
+Area Mismatch 0, No Sham Link 0, Self Originated 0,
+Duplicate ID 0, Hello 0, MTU Mismatch 0,
+Nbr Ignored 0, LLS 0, Unknown Neighbor 0,
+Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
+BFD 0, Test discard 0
+
+OSPF LSA errors
+Type 0, Length 0, Data 0, Checksum 0
+
+
+
+Summary traffic statistics for process ID 888:
+
+OSPF packets received/sent
+
+Type          Packets              Bytes
+RX Invalid    0                    0
+RX Hello      159187               7640968
+RX DB des     10240                337720
+RX LS req     5                    216
+RX LS upd     31899                4010656
+RX LS ack     2511                 201204
+RX Total      203842               12190764
+
+TX Failed     0                    0
+TX Hello      208493               20592264
+TX DB des     10540                15808320
+TX LS req     5                    3112
+TX LS upd     33998                5309252
+TX LS ack     17571                1220144
+TX Total      270607               42933092
+
+OSPF header errors
+Length 0, Instance ID 0, Checksum 0, Auth Type 0,
+Version 0, Bad Source 0, No Virtual Link 0,
+Area Mismatch 0, No Sham Link 0, Self Originated 0,
+Duplicate ID 0, Hello 0, MTU Mismatch 0,
+Nbr Ignored 2682, LLS 0, Unknown Neighbor 0,
+Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
+BFD 0, Test discard 0
+
+OSPF LSA errors
+Type 0, Length 0, Data 0, Checksum 0
     

@@ -1,28 +1,28 @@
-        show vtp status
-        VTP Version capable             : 1 to 3
-        VTP version running             : 3
-        VTP Domain Name                 : Domain-Name
-        VTP Pruning Mode                : Enabled
-        VTP Traps Generation            : Enabled
-        Device ID                       : ffff.aaff.aaaa
+show vtp status
+VTP Version capable             : 1 to 3
+VTP version running             : 3
+VTP Domain Name                 : Domain-Name
+VTP Pruning Mode                : Enabled
+VTP Traps Generation            : Enabled
+Device ID                       : ffff.aaff.aaaa
         
-        Feature VLAN:
-        --------------
-        VTP Operating Mode                : Client
-        Number of existing VLANs          : 40
-        Number of existing extended VLANs : 2
-        Configuration Revision            : 13
-        Primary ID                        : 3333.11ff.3333
-        Primary Description               : description
-        MD5 digest                        : 
-        
-        
-        Feature MST:
-        --------------
-        VTP Operating Mode                : Transparent
+Feature VLAN:
+--------------
+VTP Operating Mode                : Client
+Number of existing VLANs          : 40
+Number of existing extended VLANs : 2
+Configuration Revision            : 13
+Primary ID                        : 3333.11ff.3333
+Primary Description               : description
+MD5 digest                        : 
         
         
-        Feature UNKNOWN:
-        --------------
-        VTP Operating Mode                : Transparent
+Feature MST:
+--------------
+VTP Operating Mode                : Transparent
+        
+        
+Feature UNKNOWN:
+--------------
+VTP Operating Mode                : Transparent
         

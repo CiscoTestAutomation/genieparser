@@ -1,6 +1,6 @@
-        Number of Dot1x sessions
-        -------------------------------
-        Authorized Clients        = 0
-        UnAuthorized Clients      = 0
-        Total No of Client        = 0
+Number of Dot1x sessions
+-------------------------------
+Authorized Clients        = 0
+UnAuthorized Clients      = 0
+Total No of Client        = 0
     

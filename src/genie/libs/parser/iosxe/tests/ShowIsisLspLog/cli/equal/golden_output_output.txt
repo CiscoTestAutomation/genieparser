@@ -1,16 +1,16 @@
-    R2#show isis lsp-log
-    Tag VRF1:
+R2#show isis lsp-log
+Tag VRF1:
 
-       Level 1 LSP log
-      When       Count             Interface         Triggers
-    01:13:52        5                            CONFIG OTVINFOCHG
-    00:25:46        1                            ATTACHFLAG
-    00:25:44        2                            ATTACHFLAG IPV6IA
+   Level 1 LSP log
+  When       Count             Interface         Triggers
+01:13:52        5                            CONFIG OTVINFOCHG
+00:25:46        1                            ATTACHFLAG
+00:25:44        2                            ATTACHFLAG IPV6IA
 
-       Level 2 LSP log
-      When       Count             Interface         Triggers
-    01:13:52        5                            CONFIG OTVINFOCHG
-    00:25:46        2         GigabitEthernet4   NEWADJ DIS
-    00:25:45        1         GigabitEthernet4   ADJMTIDCHG
+   Level 2 LSP log
+  When       Count             Interface         Triggers
+01:13:52        5                            CONFIG OTVINFOCHG
+00:25:46        2         GigabitEthernet4   NEWADJ DIS
+00:25:45        1         GigabitEthernet4   ADJMTIDCHG
 
            

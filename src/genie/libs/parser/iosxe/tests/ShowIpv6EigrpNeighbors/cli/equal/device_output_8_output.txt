@@ -1,10 +1,10 @@
 
-        R1_xe#show ipv6 eigrp neighbors 
-        EIGRP-IPv6 VR(test) Address-Family Neighbors for AS(100)
-        H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq
-                                                           (sec)         (ms)       Cnt Num
-        1   Link-local address:     Gi3.90                   11 01:29:00   10   100  0  29
-            FE80::5C00:FF:FE02:7
-        0   Link-local address:     Gi2.90                   14 02:23:03   10   100  0  29
-            FE80::F816:3EFF:FE3D:AC68
+R1_xe#show ipv6 eigrp neighbors 
+EIGRP-IPv6 VR(test) Address-Family Neighbors for AS(100)
+H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq
+                                                   (sec)         (ms)       Cnt Num
+1   Link-local address:     Gi3.90                   11 01:29:00   10   100  0  29
+    FE80::5C00:FF:FE02:7
+0   Link-local address:     Gi2.90                   14 02:23:03   10   100  0  29
+    FE80::F816:3EFF:FE3D:AC68
     

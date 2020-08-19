@@ -1,165 +1,165 @@
 
-      GigabitEthernet0/0/0.2 
+GigabitEthernet0/0/0.2 
       
-        Service-policy output: ABC-DEF-GHI-JKL-MNO123123123
+  Service-policy output: ABC-DEF-GHI-JKL-MNO123123123
       
-          Class-map: class-default (match-any)  
-            0 packets, 0 bytes
-            30 second offered rate 0000 bps, drop rate 0000 bps
-            Match: any 
-            Queueing
-            queue limit 68 packets
-            (queue depth/total drops/no-buffer drops) 0/0/0
-            (pkts output/bytes output) 0/0
-            shape (average) cir 99872000, bc 399488, be 399488
-            target shape rate 99872000
+    Class-map: class-default (match-any)  
+      0 packets, 0 bytes
+      30 second offered rate 0000 bps, drop rate 0000 bps
+      Match: any 
+      Queueing
+      queue limit 68 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 0/0
+      shape (average) cir 99872000, bc 399488, be 399488
+      target shape rate 99872000
       
-            Service-policy : ABC-DEF-OPQ-RST-DYNAMIC5-XYZ123123123
+      Service-policy : ABC-DEF-OPQ-RST-DYNAMIC5-XYZ123123123
       
-              queue stats for all priority classes:
-                Queueing
-                queue limit 512 packets
-                (queue depth/total drops/no-buffer drops) 0/0/0
-                (pkts output/bytes output) 0/0
+        queue stats for all priority classes:
+          Queueing
+          queue limit 512 packets
+          (queue depth/total drops/no-buffer drops) 0/0/0
+          (pkts output/bytes output) 0/0
       
-              Class-map: network-control-XYZ123123123 (match-any)  
-                0 packets, 0 bytes
-                30 second offered rate 0000 bps, drop rate 0000 bps
-                Match: access-group name NETWORK-CONTROL-XYZ123123123
-                Queueing
-                queue limit 64 packets
-                (queue depth/total drops/no-buffer drops) 0/0/0
-                (pkts output/bytes output) 0/0
-                bandwidth 1% (998 kbps)
-                  Exp-weight-constant: 9 (1/512)
-                  Mean queue depth: 0 packets
-                  dscp       Transmitted         Random drop      Tail 
-      drop          Minimum        Maximum     Mark
-                          pkts/bytes            pkts/bytes       
-      pkts/bytes          thresh         thresh     prob
+        Class-map: network-control-XYZ123123123 (match-any)  
+          0 packets, 0 bytes
+          30 second offered rate 0000 bps, drop rate 0000 bps
+          Match: access-group name NETWORK-CONTROL-XYZ123123123
+          Queueing
+          queue limit 64 packets
+          (queue depth/total drops/no-buffer drops) 0/0/0
+          (pkts output/bytes output) 0/0
+          bandwidth 1% (998 kbps)
+            Exp-weight-constant: 9 (1/512)
+            Mean queue depth: 0 packets
+            dscp       Transmitted         Random drop      Tail 
+drop          Minimum        Maximum     Mark
+                    pkts/bytes            pkts/bytes       
+pkts/bytes          thresh         thresh     prob
                   
-                QoS Set
-                  cos 5
-                    Packets marked 0
+          QoS Set
+            cos 5
+              Packets marked 0
       
-              Class-map: realtime-XYZ123123123 (match-any)  
-                0 packets, 0 bytes
-                30 second offered rate 0000 bps, drop rate 0000 bps
-                Match: ip dscp cs4 (32) af41 (34) af42 (36) af43 (38) cs5 (40) ef 
-      (46)
-                Priority: 30% (29961 kbps), burst bytes 749000, b/w exceed drops: 
-      0
+        Class-map: realtime-XYZ123123123 (match-any)  
+          0 packets, 0 bytes
+          30 second offered rate 0000 bps, drop rate 0000 bps
+          Match: ip dscp cs4 (32) af41 (34) af42 (36) af43 (38) cs5 (40) ef 
+(46)
+          Priority: 30% (29961 kbps), burst bytes 749000, b/w exceed drops: 
+0
                 
-                QoS Set
-                  cos 5
-                    Packets marked 0
+          QoS Set
+            cos 5
+              Packets marked 0
       
-              Class-map: interactive3-XYZ123123123 (match-any)  
-                0 packets, 0 bytes
-                30 second offered rate 0000 bps, drop rate 0000 bps
-                Match: ip dscp cs3 (24) af31 (26) af32 (28) af33 (30)
-                Queueing
-                queue limit 64 packets
-                (queue depth/total drops/no-buffer drops) 0/0/0
-                (pkts output/bytes output) 0/0
-                bandwidth 5% (4993 kbps)
-                  Exp-weight-constant: 9 (1/512)
-                  Mean queue depth: 0 packets
-                  dscp       Transmitted         Random drop      Tail 
-      drop          Minimum        Maximum     Mark
-                          pkts/bytes            pkts/bytes       
-      pkts/bytes          thresh         thresh     prob
+        Class-map: interactive3-XYZ123123123 (match-any)  
+          0 packets, 0 bytes
+          30 second offered rate 0000 bps, drop rate 0000 bps
+          Match: ip dscp cs3 (24) af31 (26) af32 (28) af33 (30)
+          Queueing
+          queue limit 64 packets
+          (queue depth/total drops/no-buffer drops) 0/0/0
+          (pkts output/bytes output) 0/0
+          bandwidth 5% (4993 kbps)
+            Exp-weight-constant: 9 (1/512)
+            Mean queue depth: 0 packets
+            dscp       Transmitted         Random drop      Tail 
+drop          Minimum        Maximum     Mark
+                    pkts/bytes            pkts/bytes       
+pkts/bytes          thresh         thresh     prob
                   
-                  cs3            0/0               0/0              
-      0/0                 24            40  1/10
-                  af31           0/0               0/0              
-      0/0                 24            40  1/10
-                  af32           0/0               0/0              
-      0/0                 24            40  1/10
-                  af33           0/0               0/0              
-      0/0                 24            40  1/10
-                QoS Set
-                  cos 5
-                    Packets marked 0
+            cs3            0/0               0/0              
+0/0                 24            40  1/10
+            af31           0/0               0/0              
+0/0                 24            40  1/10
+            af32           0/0               0/0              
+0/0                 24            40  1/10
+            af33           0/0               0/0              
+0/0                 24            40  1/10
+          QoS Set
+            cos 5
+              Packets marked 0
       
-              Class-map: interactive21-XYZ123123123 (match-any)  
-                0 packets, 0 bytes
-                30 second offered rate 0000 bps, drop rate 0000 bps
-                Match: ip dscp cs2 (16) af21 (18) af22 (20) af23 (22)
-                Queueing
-                queue limit 64 packets
-                (queue depth/total drops/no-buffer drops) 0/0/0
-                (pkts output/bytes output) 0/0
-                bandwidth 5% (4993 kbps)
-                  Exp-weight-constant: 9 (1/512)
-                  Mean queue depth: 0 packets
-                  dscp       Transmitted         Random drop      Tail 
-      drop          Minimum        Maximum     Mark
-                          pkts/bytes            pkts/bytes       
-      pkts/bytes          thresh         thresh     prob
+        Class-map: interactive21-XYZ123123123 (match-any)  
+          0 packets, 0 bytes
+          30 second offered rate 0000 bps, drop rate 0000 bps
+          Match: ip dscp cs2 (16) af21 (18) af22 (20) af23 (22)
+          Queueing
+          queue limit 64 packets
+          (queue depth/total drops/no-buffer drops) 0/0/0
+          (pkts output/bytes output) 0/0
+          bandwidth 5% (4993 kbps)
+            Exp-weight-constant: 9 (1/512)
+            Mean queue depth: 0 packets
+            dscp       Transmitted         Random drop      Tail 
+drop          Minimum        Maximum     Mark
+                    pkts/bytes            pkts/bytes       
+pkts/bytes          thresh         thresh     prob
                   
-                  cs2            0/0               0/0              
-      0/0                 24            40  1/10
-                  af21           0/0               0/0              
-      0/0                 24            40  1/10
-                  af22           0/0               0/0              
-      0/0                 24            40  1/10
-                  af23           0/0               0/0              
-      0/0                 24            40  1/10
-                QoS Set
-                  cos 5
-                    Packets marked 0
+            cs2            0/0               0/0              
+0/0                 24            40  1/10
+            af21           0/0               0/0              
+0/0                 24            40  1/10
+            af22           0/0               0/0              
+0/0                 24            40  1/10
+            af23           0/0               0/0              
+0/0                 24            40  1/10
+          QoS Set
+            cos 5
+              Packets marked 0
       
-              Class-map: besteffort-XYZ123123123 (match-any)  
-                0 packets, 0 bytes
-                30 second offered rate 0000 bps, drop rate 0000 bps
-                Match: ip dscp cs1 (8)
-                Queueing
-                queue limit 64 packets
-                (queue depth/total drops/no-buffer drops) 0/0/0
-                (pkts output/bytes output) 0/0
-                bandwidth 1% (998 kbps)
-                  Exp-weight-constant: 9 (1/512)
-                  Mean queue depth: 0 packets
-                  dscp       Transmitted         Random drop      Tail 
-      drop          Minimum        Maximum     Mark
-                          pkts/bytes            pkts/bytes       
-      pkts/bytes          thresh         thresh     prob
+        Class-map: besteffort-XYZ123123123 (match-any)  
+          0 packets, 0 bytes
+          30 second offered rate 0000 bps, drop rate 0000 bps
+          Match: ip dscp cs1 (8)
+          Queueing
+          queue limit 64 packets
+          (queue depth/total drops/no-buffer drops) 0/0/0
+          (pkts output/bytes output) 0/0
+          bandwidth 1% (998 kbps)
+            Exp-weight-constant: 9 (1/512)
+            Mean queue depth: 0 packets
+            dscp       Transmitted         Random drop      Tail 
+drop          Minimum        Maximum     Mark
+                    pkts/bytes            pkts/bytes       
+pkts/bytes          thresh         thresh     prob
                   
-                QoS Set
-                  cos 5
-                    Packets marked 0
+          QoS Set
+            cos 5
+              Packets marked 0
       
-              Class-map: class-default (match-any)  
-                0 packets, 0 bytes
-                30 second offered rate 0000 bps, drop rate 0000 bps
-                Match: any 
-                Queueing
-                queue limit 64 packets
-                (queue depth/total drops/no-buffer drops/flowdrops) 0/0/0/0
-                (pkts output/bytes output) 0/0
-                bandwidth 58% (57925 kbps)
-                  Exp-weight-constant: 9 (1/512)
-                  Mean queue depth: 0 packets
-                  dscp       Transmitted      Random drop      Tail/Flow drop 
-      Minimum Maximum Mark
-                              pkts/bytes       pkts/bytes      pkts/bytes   
-      thresh  thresh  prob
+        Class-map: class-default (match-any)  
+          0 packets, 0 bytes
+          30 second offered rate 0000 bps, drop rate 0000 bps
+          Match: any 
+          Queueing
+          queue limit 64 packets
+          (queue depth/total drops/no-buffer drops/flowdrops) 0/0/0/0
+          (pkts output/bytes output) 0/0
+          bandwidth 58% (57925 kbps)
+            Exp-weight-constant: 9 (1/512)
+            Mean queue depth: 0 packets
+            dscp       Transmitted      Random drop      Tail/Flow drop 
+Minimum Maximum Mark
+                        pkts/bytes       pkts/bytes      pkts/bytes   
+thresh  thresh  prob
                   
-                  default        0/0               0/0              
-      0/0                 24            40  1/10
-                  af11           0/0               0/0              
-      0/0                 24            40  1/10
-                  af12           0/0               0/0              
-      0/0                 24            40  1/10
-                  af13           0/0               0/0              
-      0/0                 24            40  1/10
-                  cs6            0/0               0/0              
-      0/0                 24            40  1/10
-                  cs7            0/0               0/0              
-      0/0                 24            40  1/10
-                QoS Set
-                  cos 5
-                    Packets marked 0
-                Fair-queue: per-flow queue limit 16 packets
+            default        0/0               0/0              
+0/0                 24            40  1/10
+            af11           0/0               0/0              
+0/0                 24            40  1/10
+            af12           0/0               0/0              
+0/0                 24            40  1/10
+            af13           0/0               0/0              
+0/0                 24            40  1/10
+            cs6            0/0               0/0              
+0/0                 24            40  1/10
+            cs7            0/0               0/0              
+0/0                 24            40  1/10
+          QoS Set
+            cos 5
+              Packets marked 0
+          Fair-queue: per-flow queue limit 16 packets
     

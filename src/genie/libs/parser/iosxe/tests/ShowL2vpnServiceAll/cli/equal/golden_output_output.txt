@@ -1,75 +1,75 @@
-        Router#show l2vpn service all
-        Load for five secs: 2%/0%; one minute: 7%; five minutes: 9%
-        Time source is NTP, 20:31:05.928 EST Fri Nov 11 2016
+Router#show l2vpn service all
+Load for five secs: 2%/0%; one minute: 7%; five minutes: 9%
+Time source is NTP, 20:31:05.928 EST Fri Nov 11 2016
 
-        Legend: St=State    XC St=State in the L2VPN Service      Prio=Priority
-                UP=Up       DN=Down            AD=Admin Down      IA=Inactive
-                SB=Standby  HS=Hot Standby     RV=Recovering      NH=No Hardware
-                m=manually selected
+Legend: St=State    XC St=State in the L2VPN Service      Prio=Priority
+        UP=Up       DN=Down            AD=Admin Down      IA=Inactive
+        SB=Standby  HS=Hot Standby     RV=Recovering      NH=No Hardware
+        m=manually selected
 
-          Interface          Group       Encapsulation                   Prio  St  XC St
-          ---------          -----       -------------                   ----  --  -----
-        VPLS name: VPLS-2051, State: UP
-          pw100001                       VPLS-2051(VFI)                  0     UP  UP   
-          pw100214           core_pw     1:2051(MPLS)                    0     UP  UP   
-        VPLS name: VPLS-2052, State: UP
-          pw100002                       VPLS-2052(VFI)                  0     UP  UP   
-          pw100215           core_pw     1:2052(MPLS)                    0     UP  UP   
-        VPLS name: VPLS-2053, State: UP
-          pw100003                       VPLS-2053(VFI)                  0     UP  UP   
-          pw100216           core_pw     1:2053(MPLS)                    0     UP  UP   
-        VPLS name: VPLS-2054, State: UP
-          pw100004                       VPLS-2054(VFI)                  0     UP  UP   
-          pw100217           core_pw     1:2054(MPLS)                    0     UP  UP   
-        VPLS name: VPLS-2055, State: UP
-          pw100005                       VPLS-2055(VFI)                  0     UP  UP   
-          pw100218           core_pw     1:2055(MPLS)                    0     UP  UP   
-        VPLS name: VPLS-2056, State: UP
-          pw100006                       VPLS-2056(VFI)                  0     UP  UP   
-          pw100219           core_pw     1:2056(MPLS)                    0     UP  UP   
-        VPLS name: VPLS-2057, State: UP
-          pw100007                       VPLS-2057(VFI)                  0     UP  UP   
-          pw100220           core_pw     1:2057(MPLS)                    0     UP  UP   
-        VPLS name: VPLS-2058, State: UP
-          pw100008                       VPLS-2058(VFI)                  0     UP  UP   
-          pw100221           core_pw     1:2058(MPLS)                    0     UP  UP   
-        VPLS name: VPLS-2059, State: UP
-          pw100009                       VPLS-2059(VFI)                  0     UP  UP   
-          pw100222           core_pw     1:2059(MPLS)                    0     UP  UP   
-        VPLS name: VPLS-2060, State: UP
-          pw100010                       VPLS-2060(VFI)                  0     UP  UP   
-          pw100223           core_pw     1:2060(MPLS)                    0     UP  UP   
-        VPLS name: VPLS-2061, State: UP
-          pw100011                       VPLS-2061(VFI)                  0     UP  UP   
-          pw100224           core_pw     1:2061(MPLS)                    0     UP  UP   
-        VPLS name: VPLS-2062, State: UP
-          pw100012                       VPLS-2062(VFI)                  0     UP  UP   
-          pw100225           core_pw     1:2062(MPLS)                    0     UP  UP   
-        VPLS name: VPLS-2063, State: UP
-          pw100013                       VPLS-2063(VFI)                  0     UP  UP   
-          pw100226           core_pw     1:2063(MPLS)                    0     UP  UP   
-        VPLS name: VPLS-2064, State: UP
-          pw100014                       VPLS-2064(VFI)                  0     UP  UP   
-          pw100202           core_pw     1:2064(MPLS)                    0     UP  UP   
-        VPLS name: VPLS-2065, State: UP
-          pw100015                       VPLS-2065(VFI)                  0     UP  UP   
-          pw100203           core_pw     1:2065(MPLS)                    0     UP  UP   
-        VPLS name: VPLS-2066, State: UP
-          pw100016                       VPLS-2066(VFI)                  0     UP  UP   
-          pw100204           core_pw     1:2066(MPLS)                    0     UP  UP   
-        VPLS name: VPLS-2067, State: UP
-          pw100017                       VPLS-2067(VFI)                  0     UP  UP   
-          pw100205           core_pw     1:2067(MPLS)                    0     UP  UP   
-        VPLS name: VPLS-2068, State: UP
-          pw100018                       VPLS-2068(VFI)                  0     UP  UP   
-          pw100206           core_pw     1:2068(MPLS)                    0     UP  UP   
-        VPLS name: VPLS-2069, State: UP
-          pw100019                       VPLS-2069(VFI)                  0     UP  UP   
-          pw100207           core_pw     1:2069(MPLS)                    0     UP  UP   
-        VPLS name: VPLS-2070, State: UP
-          pw100020                       VPLS-2070(VFI)                  0     UP  UP   
-          pw100208           core_pw     1:2070(MPLS)                    0     UP  UP   
-        VPLS name: VPLS-2071, State: UP
-          pw100021                       VPLS-2071(VFI)                  0     UP  UP   
-          pw100209           core_pw     1:2071(MPLS)                    0     UP  UP   
+  Interface          Group       Encapsulation                   Prio  St  XC St
+  ---------          -----       -------------                   ----  --  -----
+VPLS name: VPLS-2051, State: UP
+  pw100001                       VPLS-2051(VFI)                  0     UP  UP   
+  pw100214           core_pw     1:2051(MPLS)                    0     UP  UP   
+VPLS name: VPLS-2052, State: UP
+  pw100002                       VPLS-2052(VFI)                  0     UP  UP   
+  pw100215           core_pw     1:2052(MPLS)                    0     UP  UP   
+VPLS name: VPLS-2053, State: UP
+  pw100003                       VPLS-2053(VFI)                  0     UP  UP   
+  pw100216           core_pw     1:2053(MPLS)                    0     UP  UP   
+VPLS name: VPLS-2054, State: UP
+  pw100004                       VPLS-2054(VFI)                  0     UP  UP   
+  pw100217           core_pw     1:2054(MPLS)                    0     UP  UP   
+VPLS name: VPLS-2055, State: UP
+  pw100005                       VPLS-2055(VFI)                  0     UP  UP   
+  pw100218           core_pw     1:2055(MPLS)                    0     UP  UP   
+VPLS name: VPLS-2056, State: UP
+  pw100006                       VPLS-2056(VFI)                  0     UP  UP   
+  pw100219           core_pw     1:2056(MPLS)                    0     UP  UP   
+VPLS name: VPLS-2057, State: UP
+  pw100007                       VPLS-2057(VFI)                  0     UP  UP   
+  pw100220           core_pw     1:2057(MPLS)                    0     UP  UP   
+VPLS name: VPLS-2058, State: UP
+  pw100008                       VPLS-2058(VFI)                  0     UP  UP   
+  pw100221           core_pw     1:2058(MPLS)                    0     UP  UP   
+VPLS name: VPLS-2059, State: UP
+  pw100009                       VPLS-2059(VFI)                  0     UP  UP   
+  pw100222           core_pw     1:2059(MPLS)                    0     UP  UP   
+VPLS name: VPLS-2060, State: UP
+  pw100010                       VPLS-2060(VFI)                  0     UP  UP   
+  pw100223           core_pw     1:2060(MPLS)                    0     UP  UP   
+VPLS name: VPLS-2061, State: UP
+  pw100011                       VPLS-2061(VFI)                  0     UP  UP   
+  pw100224           core_pw     1:2061(MPLS)                    0     UP  UP   
+VPLS name: VPLS-2062, State: UP
+  pw100012                       VPLS-2062(VFI)                  0     UP  UP   
+  pw100225           core_pw     1:2062(MPLS)                    0     UP  UP   
+VPLS name: VPLS-2063, State: UP
+  pw100013                       VPLS-2063(VFI)                  0     UP  UP   
+  pw100226           core_pw     1:2063(MPLS)                    0     UP  UP   
+VPLS name: VPLS-2064, State: UP
+  pw100014                       VPLS-2064(VFI)                  0     UP  UP   
+  pw100202           core_pw     1:2064(MPLS)                    0     UP  UP   
+VPLS name: VPLS-2065, State: UP
+  pw100015                       VPLS-2065(VFI)                  0     UP  UP   
+  pw100203           core_pw     1:2065(MPLS)                    0     UP  UP   
+VPLS name: VPLS-2066, State: UP
+  pw100016                       VPLS-2066(VFI)                  0     UP  UP   
+  pw100204           core_pw     1:2066(MPLS)                    0     UP  UP   
+VPLS name: VPLS-2067, State: UP
+  pw100017                       VPLS-2067(VFI)                  0     UP  UP   
+  pw100205           core_pw     1:2067(MPLS)                    0     UP  UP   
+VPLS name: VPLS-2068, State: UP
+  pw100018                       VPLS-2068(VFI)                  0     UP  UP   
+  pw100206           core_pw     1:2068(MPLS)                    0     UP  UP   
+VPLS name: VPLS-2069, State: UP
+  pw100019                       VPLS-2069(VFI)                  0     UP  UP   
+  pw100207           core_pw     1:2069(MPLS)                    0     UP  UP   
+VPLS name: VPLS-2070, State: UP
+  pw100020                       VPLS-2070(VFI)                  0     UP  UP   
+  pw100208           core_pw     1:2070(MPLS)                    0     UP  UP   
+VPLS name: VPLS-2071, State: UP
+  pw100021                       VPLS-2071(VFI)                  0     UP  UP   
+  pw100209           core_pw     1:2071(MPLS)                    0     UP  UP   
     

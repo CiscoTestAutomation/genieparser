@@ -1,12 +1,12 @@
 
-        Router#show interface gigabitEthernet 0/0/0 stats
-        Load for five secs: 5%/1%; one minute: 8%; five minutes: 9%
-        Time source is NTP, 07:38:10.599 EST Thu Sep 8 2016
+Router#show interface gigabitEthernet 0/0/0 stats
+Load for five secs: 5%/1%; one minute: 8%; five minutes: 9%
+Time source is NTP, 07:38:10.599 EST Thu Sep 8 2016
 
-        GigabitEthernet0/0/0
-                  Switching path    Pkts In   Chars In   Pkts Out  Chars Out
-                       Processor         33       2507         33       2490
-                     Route cache          0          0          0          0
-               Distributed cache      62581   53049894     125156   29719204
-                           Total      62614   53052401     125189   29721694
+GigabitEthernet0/0/0
+          Switching path    Pkts In   Chars In   Pkts Out  Chars Out
+               Processor         33       2507         33       2490
+             Route cache          0          0          0          0
+       Distributed cache      62581   53049894     125156   29719204
+                   Total      62614   53052401     125189   29721694
     

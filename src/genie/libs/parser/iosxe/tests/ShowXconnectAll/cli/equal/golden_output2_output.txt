@@ -1,9 +1,9 @@
 
-        Router# show xconnect all
-        Legend: XC ST=Xconnect State, S1=Segment1 State, S2=Segment2 State
-        UP=Up, DN=Down, AD=Admin Down, IA=Inactive, NH=No Hardware
-        XC ST  Segment 1                         S1 Segment 2                         S2
-        ------+---------------------------------+--+---------------------------------+--
-        UP pri ac   Se6/0:150(FR DLCI)           UP ac   Se8/0:150(FR DLCI)           UP
-        IA sec ac   Se6/0:150(FR DLCI)           UP mpls 10.55.55.3:7151              DN
+Router# show xconnect all
+Legend: XC ST=Xconnect State, S1=Segment1 State, S2=Segment2 State
+UP=Up, DN=Down, AD=Admin Down, IA=Inactive, NH=No Hardware
+XC ST  Segment 1                         S1 Segment 2                         S2
+------+---------------------------------+--+---------------------------------+--
+UP pri ac   Se6/0:150(FR DLCI)           UP ac   Se8/0:150(FR DLCI)           UP
+IA sec ac   Se6/0:150(FR DLCI)           UP mpls 10.55.55.3:7151              DN
     

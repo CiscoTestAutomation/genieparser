@@ -1,10 +1,10 @@
 
-        show ip ospf interface brief
-        Load for five secs: 2%/0%; one minute: 2%; five minutes: 1%
-        Time source is NTP, 01:20:44.789 EST Wed Jul 17 2019
+show ip ospf interface brief
+Load for five secs: 2%/0%; one minute: 2%; five minutes: 1%
+Time source is NTP, 01:20:44.789 EST Wed Jul 17 2019
 
-        Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
-        Lo0          65109  8               10.169.197.254/32 1     LOOP  0/0
-        Gi4          65109  8               10.169.197.98/30  1000  P2P   1/1
-        Gi2          65109  8               10.169.197.94/30  1000  BDR   1/1
+Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+Lo0          65109  8               10.169.197.254/32 1     LOOP  0/0
+Gi4          65109  8               10.169.197.98/30  1000  P2P   1/1
+Gi2          65109  8               10.169.197.94/30  1000  BDR   1/1
     

@@ -1,12 +1,12 @@
 
-        traceroute vrf CE1test 172.16.51.1
-        Type escape sequence to abort.
-        Tracing the route to 172.16.51.1
-        VRF info: (vrf in name/id, vrf out name/id)
-        1  *
-            172.16.51.1 41 msec *
-            *
-        2 10.1.2.6 148 msec
-            10.1.1.6 120 msec
-            10.1.2.6 132 msec
+traceroute vrf CE1test 172.16.51.1
+Type escape sequence to abort.
+Tracing the route to 172.16.51.1
+VRF info: (vrf in name/id, vrf out name/id)
+1  *
+    172.16.51.1 41 msec *
+    *
+2 10.1.2.6 148 msec
+    10.1.1.6 120 msec
+    10.1.2.6 132 msec
     

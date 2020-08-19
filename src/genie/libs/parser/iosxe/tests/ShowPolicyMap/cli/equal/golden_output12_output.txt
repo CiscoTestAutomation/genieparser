@@ -1,25 +1,25 @@
 
-      Policy Map child-policy
-        Class high-priority
-          priority 2000000 (kbps)
-        Class low-priority
-          priority 2000000 (kbps)
-        Class band-policy
-          bandwidth 150000 (kbps)
-        Class test-cir
-          bandwidth 800000 (kbps)
-        Class class-default
-           packet-based wred, exponential weight 4
+Policy Map child-policy
+  Class high-priority
+    priority 2000000 (kbps)
+  Class low-priority
+    priority 2000000 (kbps)
+  Class band-policy
+    bandwidth 150000 (kbps)
+  Class test-cir
+    bandwidth 800000 (kbps)
+  Class class-default
+     packet-based wred, exponential weight 4
     
-          class    min-threshold    max-threshold    mark-probablity
-          ----------------------------------------------------------
-          0       25               50               1/10
-          1       50               70               1/10
-          2       80               100              1/10
-          3       80               100              1/10
-          4       80               100              1/10
-          5       80               100              1/10
-          6       80               100              1/10
-          7       25               50               1/10
-          queue-limit 100 packets
+    class    min-threshold    max-threshold    mark-probablity
+    ----------------------------------------------------------
+    0       25               50               1/10
+    1       50               70               1/10
+    2       80               100              1/10
+    3       80               100              1/10
+    4       80               100              1/10
+    5       80               100              1/10
+    6       80               100              1/10
+    7       25               50               1/10
+    queue-limit 100 packets
     

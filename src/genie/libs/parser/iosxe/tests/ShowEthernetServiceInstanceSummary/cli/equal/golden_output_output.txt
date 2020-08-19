@@ -1,26 +1,26 @@
-        Router#show ethernet service instance summary
-        Load for five secs: 2%/0%; one minute: 5%; five minutes: 4%
-        Time source is NTP, 16:31:09.005 EST Tue Nov 8 2016
+Router#show ethernet service instance summary
+Load for five secs: 2%/0%; one minute: 5%; five minutes: 4%
+Time source is NTP, 16:31:09.005 EST Tue Nov 8 2016
 
-        System summary
-                    Total       Up  AdminDo     Down  ErrorDi  Unknown  Deleted  BdAdmDo  
-        bdomain       201      201        0        0        0        0        0        0  
-        xconnect        0        0        0        0        0        0        0        0  
-        local sw        0        0        0        0        0        0        0        0  
-        other         201      201        0        0        0        0        0        0  
-        all           402      402        0        0        0        0        0        0  
-        Associated interface: GigabitEthernet0/0/3
-                    Total       Up  AdminDo     Down  ErrorDi  Unknown  Deleted  BdAdmDo  
-        bdomain         0        0        0        0        0        0        0        0  
-        xconnect        0        0        0        0        0        0        0        0  
-        local sw        0        0        0        0        0        0        0        0  
-        other         201      201        0        0        0        0        0        0  
-        all           201      201        0        0        0        0        0        0  
-        Associated interface: Port-channel1
-                    Total       Up  AdminDo     Down  ErrorDi  Unknown  Deleted  BdAdmDo  
-        bdomain       201      201        0        0        0        0        0        0  
-        xconnect        0        0        0        0        0        0        0        0  
-        local sw        0        0        0        0        0        0        0        0  
-        other           0        0        0        0        0        0        0        0  
-        all           201      201        0        0        0        0        0        0  
+System summary
+            Total       Up  AdminDo     Down  ErrorDi  Unknown  Deleted  BdAdmDo  
+bdomain       201      201        0        0        0        0        0        0  
+xconnect        0        0        0        0        0        0        0        0  
+local sw        0        0        0        0        0        0        0        0  
+other         201      201        0        0        0        0        0        0  
+all           402      402        0        0        0        0        0        0  
+Associated interface: GigabitEthernet0/0/3
+            Total       Up  AdminDo     Down  ErrorDi  Unknown  Deleted  BdAdmDo  
+bdomain         0        0        0        0        0        0        0        0  
+xconnect        0        0        0        0        0        0        0        0  
+local sw        0        0        0        0        0        0        0        0  
+other         201      201        0        0        0        0        0        0  
+all           201      201        0        0        0        0        0        0  
+Associated interface: Port-channel1
+            Total       Up  AdminDo     Down  ErrorDi  Unknown  Deleted  BdAdmDo  
+bdomain       201      201        0        0        0        0        0        0  
+xconnect        0        0        0        0        0        0        0        0  
+local sw        0        0        0        0        0        0        0        0  
+other           0        0        0        0        0        0        0        0  
+all           201      201        0        0        0        0        0        0  
     

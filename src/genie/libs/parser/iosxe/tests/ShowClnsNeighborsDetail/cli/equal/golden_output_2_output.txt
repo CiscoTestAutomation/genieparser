@@ -1,9 +1,9 @@
 
-        show clns neighbors detail
+show clns neighbors detail
 
-        Tag test:
-        System Id       Interface     SNPA                State  Holdtime  Type Protocol
+Tag test:
+System Id       Interface     SNPA                State  Holdtime  Type Protocol
 
-        Tag test1:
-        System Id       Interface     SNPA                State  Holdtime  Type Protocol
+Tag test1:
+System Id       Interface     SNPA                State  Holdtime  Type Protocol
     

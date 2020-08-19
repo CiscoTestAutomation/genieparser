@@ -1,105 +1,105 @@
 
-        R1_ospf_xe#show ip ospf 
-         Routing Process "ospf 1" with ID 10.4.1.1
-         Start time: 00:23:49.050, Time elapsed: 1d01h
-         Supports only single TOS(TOS0) routes
-         Supports opaque LSA
-         Supports Link-local Signaling (LLS)
-         Supports area transit capability
-         Supports NSSA (compatible with RFC 3101)
-         Supports Database Exchange Summary List Optimization (RFC 5243)
-         Event-log enabled, Maximum number of events: 1000, Mode: cyclic
-         Router is not originating router-LSAs with maximum metric
-         Initial SPF schedule delay 50 msecs
-         Minimum hold time between two consecutive SPFs 200 msecs
-         Maximum wait time between two consecutive SPFs 5000 msecs
-         Incremental-SPF disabled
-         Initial LSA throttle delay 50 msecs
-         Minimum hold time for LSA throttle 200 msecs
-         Maximum wait time for LSA throttle 5000 msecs
-         Minimum LSA arrival 100 msecs
-         LSA group pacing timer 240 secs
-         Interface flood pacing timer 33 msecs
-         Retransmission pacing timer 66 msecs
-         Maximum number of non self-generated LSA allowed 123
-         EXCHANGE/LOADING adjacency limit: initial 300, process maximum 300
-         Number of external LSA 1. Checksum Sum 0x007F60
-         Number of opaque AS LSA 0. Checksum Sum 0x000000
-         Number of DCbitless external and opaque AS LSA 0
-         Number of DoNotAge external and opaque AS LSA 0
-         Number of areas in this router is 1. 1 normal 0 stub 0 nssa
-         Number of areas transit capable is 0
-         External flood list length 0
-         IETF NSF helper support enabled
-         Cisco NSF helper support enabled
-         BFD is enabled in strict mode
-         Reference bandwidth unit is 100 mbps
-            Area BACKBONE(0.0.0.0)
-                Number of interfaces in this area is 3 (1 loopback)
-                Area has RRR enabled
-                Area has no authentication
-                SPF algorithm last executed 00:19:54.849 ago
-                SPF algorithm executed 41 times
-                Area ranges are
-                 10.4.0.0/16 Active(10 - configured) Advertise
-                Number of LSA 19. Checksum Sum 0x07CF20
-                Number of opaque link LSA 0. Checksum Sum 0x000000
-                Number of DCbitless LSA 5
-                Number of indication LSA 0
-                Number of DoNotAge LSA 0
-                Flood list length 0
+R1_ospf_xe#show ip ospf 
+ Routing Process "ospf 1" with ID 10.4.1.1
+ Start time: 00:23:49.050, Time elapsed: 1d01h
+ Supports only single TOS(TOS0) routes
+ Supports opaque LSA
+ Supports Link-local Signaling (LLS)
+ Supports area transit capability
+ Supports NSSA (compatible with RFC 3101)
+ Supports Database Exchange Summary List Optimization (RFC 5243)
+ Event-log enabled, Maximum number of events: 1000, Mode: cyclic
+ Router is not originating router-LSAs with maximum metric
+ Initial SPF schedule delay 50 msecs
+ Minimum hold time between two consecutive SPFs 200 msecs
+ Maximum wait time between two consecutive SPFs 5000 msecs
+ Incremental-SPF disabled
+ Initial LSA throttle delay 50 msecs
+ Minimum hold time for LSA throttle 200 msecs
+ Maximum wait time for LSA throttle 5000 msecs
+ Minimum LSA arrival 100 msecs
+ LSA group pacing timer 240 secs
+ Interface flood pacing timer 33 msecs
+ Retransmission pacing timer 66 msecs
+ Maximum number of non self-generated LSA allowed 123
+ EXCHANGE/LOADING adjacency limit: initial 300, process maximum 300
+ Number of external LSA 1. Checksum Sum 0x007F60
+ Number of opaque AS LSA 0. Checksum Sum 0x000000
+ Number of DCbitless external and opaque AS LSA 0
+ Number of DoNotAge external and opaque AS LSA 0
+ Number of areas in this router is 1. 1 normal 0 stub 0 nssa
+ Number of areas transit capable is 0
+ External flood list length 0
+ IETF NSF helper support enabled
+ Cisco NSF helper support enabled
+ BFD is enabled in strict mode
+ Reference bandwidth unit is 100 mbps
+    Area BACKBONE(0.0.0.0)
+        Number of interfaces in this area is 3 (1 loopback)
+        Area has RRR enabled
+        Area has no authentication
+        SPF algorithm last executed 00:19:54.849 ago
+        SPF algorithm executed 41 times
+        Area ranges are
+         10.4.0.0/16 Active(10 - configured) Advertise
+        Number of LSA 19. Checksum Sum 0x07CF20
+        Number of opaque link LSA 0. Checksum Sum 0x000000
+        Number of DCbitless LSA 5
+        Number of indication LSA 0
+        Number of DoNotAge LSA 0
+        Flood list length 0
 
-         Routing Process "ospf 2" with ID 10.229.11.11
-           Domain ID type 0x0005, value 0.0.0.2
-         Start time: 02:17:25.010, Time elapsed: 23:34:42.224
-         Routing Process is shutdown
-         Supports only single TOS(TOS0) routes
-         Supports opaque LSA
-         Supports Link-local Signaling (LLS)
-         Supports area transit capability
-         Supports NSSA (compatible with RFC 3101)
-         Supports Database Exchange Summary List Optimization (RFC 5243)
-         Connected to MPLS VPN Superbackbone, VRF VRF1
-         Event-log disabled
-         It is an area border and autonomous system boundary router
-         Redistributing External Routes from,
-            bgp 100, includes subnets in redistribution
-         Router is not originating router-LSAs with maximum metric
-         Initial SPF schedule delay 50 msecs
-         Minimum hold time between two consecutive SPFs 200 msecs
-         Maximum wait time between two consecutive SPFs 5000 msecs
-         Incremental-SPF disabled
-         Initial LSA throttle delay 50 msecs
-         Minimum hold time for LSA throttle 200 msecs
-         Maximum wait time for LSA throttle 5000 msecs
-         Minimum LSA arrival 100 msecs
-         LSA group pacing timer 240 secs
-         Interface flood pacing timer 33 msecs
-         Retransmission pacing timer 66 msecs
-         EXCHANGE/LOADING adjacency limit: initial 300, process maximum 300
-         Number of external LSA 0. Checksum Sum 0x000000
-         Number of opaque AS LSA 0. Checksum Sum 0x000000
-         Number of DCbitless external and opaque AS LSA 0
-         Number of DoNotAge external and opaque AS LSA 0
-         Number of areas in this router is 1. 1 normal 0 stub 0 nssa
-         Number of areas transit capable is 0
-         External flood list length 0
-         Non-Stop Routing enabled
-         IETF NSF helper support enabled
-         Cisco NSF helper support enabled
-         Reference bandwidth unit is 100 mbps
-         BFD is enabled
-            Area 1
-                Number of interfaces in this area is 2
-                Area has no authentication
-                SPF algorithm last executed 03:26:37.769 ago
-                SPF algorithm executed 97 times
-                Area ranges are
-                 10.4.1.0/24 Passive Advertise
-                Number of LSA 11. Checksum Sum 0x053FED
-                Number of opaque link LSA 0. Checksum Sum 0x000000
-                Number of DCbitless LSA 1
-                Number of indication LSA 0
-                Number of DoNotAge LSA 0
-                Flood list length 0
+ Routing Process "ospf 2" with ID 10.229.11.11
+   Domain ID type 0x0005, value 0.0.0.2
+ Start time: 02:17:25.010, Time elapsed: 23:34:42.224
+ Routing Process is shutdown
+ Supports only single TOS(TOS0) routes
+ Supports opaque LSA
+ Supports Link-local Signaling (LLS)
+ Supports area transit capability
+ Supports NSSA (compatible with RFC 3101)
+ Supports Database Exchange Summary List Optimization (RFC 5243)
+ Connected to MPLS VPN Superbackbone, VRF VRF1
+ Event-log disabled
+ It is an area border and autonomous system boundary router
+ Redistributing External Routes from,
+    bgp 100, includes subnets in redistribution
+ Router is not originating router-LSAs with maximum metric
+ Initial SPF schedule delay 50 msecs
+ Minimum hold time between two consecutive SPFs 200 msecs
+ Maximum wait time between two consecutive SPFs 5000 msecs
+ Incremental-SPF disabled
+ Initial LSA throttle delay 50 msecs
+ Minimum hold time for LSA throttle 200 msecs
+ Maximum wait time for LSA throttle 5000 msecs
+ Minimum LSA arrival 100 msecs
+ LSA group pacing timer 240 secs
+ Interface flood pacing timer 33 msecs
+ Retransmission pacing timer 66 msecs
+ EXCHANGE/LOADING adjacency limit: initial 300, process maximum 300
+ Number of external LSA 0. Checksum Sum 0x000000
+ Number of opaque AS LSA 0. Checksum Sum 0x000000
+ Number of DCbitless external and opaque AS LSA 0
+ Number of DoNotAge external and opaque AS LSA 0
+ Number of areas in this router is 1. 1 normal 0 stub 0 nssa
+ Number of areas transit capable is 0
+ External flood list length 0
+ Non-Stop Routing enabled
+ IETF NSF helper support enabled
+ Cisco NSF helper support enabled
+ Reference bandwidth unit is 100 mbps
+ BFD is enabled
+    Area 1
+        Number of interfaces in this area is 2
+        Area has no authentication
+        SPF algorithm last executed 03:26:37.769 ago
+        SPF algorithm executed 97 times
+        Area ranges are
+         10.4.1.0/24 Passive Advertise
+        Number of LSA 11. Checksum Sum 0x053FED
+        Number of opaque link LSA 0. Checksum Sum 0x000000
+        Number of DCbitless LSA 1
+        Number of indication LSA 0
+        Number of DoNotAge LSA 0
+        Flood list length 0
         

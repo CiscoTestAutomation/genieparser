@@ -1,6 +1,6 @@
 
-        * implies this system is the DF
-        Interface                RP               DF Winner        Metric     Uptime
-        Tunnel9                  10.186.0.1       0.0.0.0          20         00:00:00
-        Ethernet0/1              10.186.0.1      *10.4.0.4         20         00:00:39   
+* implies this system is the DF
+Interface                RP               DF Winner        Metric     Uptime
+Tunnel9                  10.186.0.1       0.0.0.0          20         00:00:00
+Ethernet0/1              10.186.0.1      *10.4.0.4         20         00:00:39   
     

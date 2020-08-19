@@ -1,7 +1,7 @@
-        Router# show mpls forwarding-table
-        Local  Outgoing    Prefix            Bytes tag  Outgoing   Next Hop
-        tag    tag or VC   or Tunnel Id      switched   interface
-        201    Pop tag     10.18.18.18/32    0          PO1/1/0    point2point
-               2/35        10.18.18.18/32    0          AT4/1/0.1  point2point
-        251    18          10.17.17.17/32    0          PO1/1/0    point2point
+Router# show mpls forwarding-table
+Local  Outgoing    Prefix            Bytes tag  Outgoing   Next Hop
+tag    tag or VC   or Tunnel Id      switched   interface
+201    Pop tag     10.18.18.18/32    0          PO1/1/0    point2point
+       2/35        10.18.18.18/32    0          AT4/1/0.1  point2point
+251    18          10.17.17.17/32    0          PO1/1/0    point2point
     

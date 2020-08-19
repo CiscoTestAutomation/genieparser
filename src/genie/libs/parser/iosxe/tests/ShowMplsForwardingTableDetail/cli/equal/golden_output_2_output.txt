@@ -1,14 +1,14 @@
-        show mpls forwarding-table detail 
-        Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
-        Label      Label      or Tunnel Id     Switched      interface
-        16         16         10.0.0.1 1 [19]  0             Et1/0      10.0.1.30
-                MAC/Encaps=14/18, MRU=1500, Label Stack{16}
-                AABBCC032800AABBCC0325018847 00010000
-                No output feature configured
-            Broadcast
+show mpls forwarding-table detail 
+Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
+Label      Label      or Tunnel Id     Switched      interface
+16         16         10.0.0.1 1 [19]  0             Et1/0      10.0.1.30
+        MAC/Encaps=14/18, MRU=1500, Label Stack{16}
+        AABBCC032800AABBCC0325018847 00010000
+        No output feature configured
+    Broadcast
 
-        Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
-        Label      Label      or Tunnel Id     Switched      interface
-        17         No Label   10.0.0.1 1 [19]  342           aggregate
-            MAC/Encaps=0/0, MRU=0, Label Stack{}, via Ls0
+Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
+Label      Label      or Tunnel Id     Switched      interface
+17         No Label   10.0.0.1 1 [19]  342           aggregate
+    MAC/Encaps=0/0, MRU=0, Label Stack{}, via Ls0
     

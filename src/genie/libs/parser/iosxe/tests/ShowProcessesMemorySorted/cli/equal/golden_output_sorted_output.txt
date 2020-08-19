@@ -1,9 +1,9 @@
-        Processor Pool Total: 1371713468 Used:  314300744 Free: 1057412724
-        reserve P Pool Total:     102404 Used:         88 Free:     102316
-         lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
+Processor Pool Total: 1371713468 Used:  314300744 Free: 1057412724
+reserve P Pool Total:     102404 Used:         88 Free:     102316
+ lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
 
-         PID TTY  Allocated      Freed    Holding    Getbufs    Retbufs Process
-           0   0  300693520   48258952  232782240          0          0 *Init*
-           4   0   22517320     103960   22275464          0          0 RF Slave Main Th
-          82   0  327917232    3336888   15636504          0          0 IOSD ipc task
+ PID TTY  Allocated      Freed    Holding    Getbufs    Retbufs Process
+   0   0  300693520   48258952  232782240          0          0 *Init*
+   4   0   22517320     103960   22275464          0          0 RF Slave Main Th
+  82   0  327917232    3336888   15636504          0          0 IOSD ipc task
     

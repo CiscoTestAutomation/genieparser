@@ -1,17 +1,17 @@
-        router#traceroute mpls ipv4 172.31.165.220 255.255.255.255
-        Tracing MPLS Label Switched Path to 172.31.165.220/32, timeout is 2 seconds
+router#traceroute mpls ipv4 172.31.165.220 255.255.255.255
+Tracing MPLS Label Switched Path to 172.31.165.220/32, timeout is 2 seconds
 
-        Codes: '!' - success, 'Q' - request not sent, '.' - timeout,
-          'L' - labeled output interface, 'B' - unlabeled output interface,
-          'D' - DS Map mismatch, 'F' - no FEC mapping, 'f' - FEC mismatch,
-          'M' - malformed request, 'm' - unsupported tlvs, 'N' - no label entry,
-          'P' - no rx intf label prot, 'p' - premature termination of LSP,
-          'R' - transit router, 'I' - unknown upstream index,
-          'l' - Label switched with FEC change, 'd' - see DDMAP for return code,
-          'X' - unknown return code, 'x' - return code 0
+Codes: '!' - success, 'Q' - request not sent, '.' - timeout,
+  'L' - labeled output interface, 'B' - unlabeled output interface,
+  'D' - DS Map mismatch, 'F' - no FEC mapping, 'f' - FEC mismatch,
+  'M' - malformed request, 'm' - unsupported tlvs, 'N' - no label entry,
+  'P' - no rx intf label prot, 'p' - premature termination of LSP,
+  'R' - transit router, 'I' - unknown upstream index,
+  'l' - Label switched with FEC change, 'd' - see DDMAP for return code,
+  'X' - unknown return code, 'x' - return code 0
 
-        Type escape sequence to abort.
-          0 192.168.197.94 MRU 1552 [Labels: 1015 Exp: 0]
-        L 1 192.168.197.93 MRU 1552 [Labels: implicit-null Exp: 0] 1 ms
-        ! 2 192.168.197.102 1 ms
+Type escape sequence to abort.
+  0 192.168.197.94 MRU 1552 [Labels: 1015 Exp: 0]
+L 1 192.168.197.93 MRU 1552 [Labels: implicit-null Exp: 0] 1 ms
+! 2 192.168.197.102 1 ms
         

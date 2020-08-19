@@ -1,4 +1,4 @@
-        Processor Pool Total: 10147887840 Used:  487331816 Free: 9660556024
-        reserve P Pool Total:     102404 Used:         88 Free:     102316
-        lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
+Processor Pool Total: 10147887840 Used:  487331816 Free: 9660556024
+reserve P Pool Total:     102404 Used:         88 Free:     102316
+lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
     

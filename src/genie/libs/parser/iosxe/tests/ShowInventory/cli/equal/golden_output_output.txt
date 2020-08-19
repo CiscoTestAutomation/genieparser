@@ -1,50 +1,50 @@
 
-        show inventory
-        NAME: "Chassis", DESCR: "Cisco ASR1002-HX Chassis"
-        PID: ASR1002-HX        , VID: V01  , SN: FXS2049Q1P2
+show inventory
+NAME: "Chassis", DESCR: "Cisco ASR1002-HX Chassis"
+PID: ASR1002-HX        , VID: V01  , SN: FXS2049Q1P2
 
-        NAME: "Power Supply Module 0", DESCR: "Cisco 750 Watt AC power supply"
-        PID: ASR1000X-AC-750W  , VID: V01  , SN: POG20517XAE
+NAME: "Power Supply Module 0", DESCR: "Cisco 750 Watt AC power supply"
+PID: ASR1000X-AC-750W  , VID: V01  , SN: POG20517XAE
 
-        NAME: "Power Supply Module 1", DESCR: "Cisco 750 Watt AC power supply"
-        PID: ASR1000X-AC-750W  , VID: V01  , SN: POG20517X06
+NAME: "Power Supply Module 1", DESCR: "Cisco 750 Watt AC power supply"
+PID: ASR1000X-AC-750W  , VID: V01  , SN: POG20517X06
 
-        NAME: "Fan Tray", DESCR: "Cisco ASR1002-HX Fan Tray"
-        PID: ASR1002HX-FAN     , VID:      , SN:
+NAME: "Fan Tray", DESCR: "Cisco ASR1002-HX Fan Tray"
+PID: ASR1002HX-FAN     , VID:      , SN:
 
-        NAME: "module 0", DESCR: "Cisco ASR1002-HX Modular Interface Processor"
-        PID: ASR1002-HX        , VID:      , SN:
+NAME: "module 0", DESCR: "Cisco ASR1002-HX Modular Interface Processor"
+PID: ASR1002-HX        , VID:      , SN:
 
-        NAME: "SPA subslot 0/0", DESCR: "8-port Built-in Gigabit Ethernet Port Adapter"
-        PID: BUILT-IN-EPA-8x1G , VID: N/A  , SN: JAE12345678
+NAME: "SPA subslot 0/0", DESCR: "8-port Built-in Gigabit Ethernet Port Adapter"
+PID: BUILT-IN-EPA-8x1G , VID: N/A  , SN: JAE12345678
 
-        NAME: "subslot 0/0 transceiver 0", DESCR: "GE T"
-        PID: F24-CI-SFP-GE-T   , VID: 1.0  , SN: 1165124049
+NAME: "subslot 0/0 transceiver 0", DESCR: "GE T"
+PID: F24-CI-SFP-GE-T   , VID: 1.0  , SN: 1165124049
 
-        NAME: "subslot 0/0 transceiver 1", DESCR: "GE T"
-        PID: F24-CI-SFP-GE-T   , VID: 1.0  , SN: 1165124050
+NAME: "subslot 0/0 transceiver 1", DESCR: "GE T"
+PID: F24-CI-SFP-GE-T   , VID: 1.0  , SN: 1165124050
 
-        NAME: "subslot 0/0 transceiver 2", DESCR: "GE LX"
-        PID: , VID: 1.0  , SN: 1162722191
+NAME: "subslot 0/0 transceiver 2", DESCR: "GE LX"
+PID: , VID: 1.0  , SN: 1162722191
 
-        NAME: "subslot 0/0 transceiver 3", DESCR: "GE T"
-        PID: F24-CI-SFP-GE-T   , VID: 1.0  , SN: 1165124052
+NAME: "subslot 0/0 transceiver 3", DESCR: "GE T"
+PID: F24-CI-SFP-GE-T   , VID: 1.0  , SN: 1165124052
 
-        NAME: "SPA subslot 0/1", DESCR: "8-port Built-in 10-Gigabit Ethernet Port Adapter"
-        PID: BUILT-IN-EPA-8x10G, VID: N/A  , SN: JAE87654321
+NAME: "SPA subslot 0/1", DESCR: "8-port Built-in 10-Gigabit Ethernet Port Adapter"
+PID: BUILT-IN-EPA-8x10G, VID: N/A  , SN: JAE87654321
 
-        NAME: "subslot 0/1 transceiver 0", DESCR: "SFP+ 10GBASE-LR"
-        PID: SFP-10G-LR          , VID: V02  , SN: 3162917828
+NAME: "subslot 0/1 transceiver 0", DESCR: "SFP+ 10GBASE-LR"
+PID: SFP-10G-LR          , VID: V02  , SN: 3162917828
 
-        NAME: "subslot 0/1 transceiver 1", DESCR: "SFP+ 10GBASE-LR"
-        PID: SFP-10G-LR          , VID: V02  , SN: 3170330174
+NAME: "subslot 0/1 transceiver 1", DESCR: "SFP+ 10GBASE-LR"
+PID: SFP-10G-LR          , VID: V02  , SN: 3170330174
 
-        NAME: "subslot 0/1 transceiver 2", DESCR: "SFP+ 10GBASE-LR"
-        PID: SFP-10G-LR          , VID: V02  , SN: 3170330172
+NAME: "subslot 0/1 transceiver 2", DESCR: "SFP+ 10GBASE-LR"
+PID: SFP-10G-LR          , VID: V02  , SN: 3170330172
 
-        NAME: "module R0", DESCR: "Cisco ASR1002-HX Route Processor"
-        PID: ASR1002-HX        , VID: V01  , SN: JAE21050044
+NAME: "module R0", DESCR: "Cisco ASR1002-HX Route Processor"
+PID: ASR1002-HX        , VID: V01  , SN: JAE21050044
 
-        NAME: "module F0", DESCR: "Cisco ASR1002-HX Embedded Services Processor"
-        PID: ASR1002-HX        , VID:      , SN:
+NAME: "module F0", DESCR: "Cisco ASR1002-HX Embedded Services Processor"
+PID: ASR1002-HX        , VID:      , SN:
     

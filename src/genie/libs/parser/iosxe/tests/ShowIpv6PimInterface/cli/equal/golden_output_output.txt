@@ -1,31 +1,31 @@
-        Interface          PIM   Nbr   Hello  DR
-                                 Count Intvl  Prior
+Interface          PIM   Nbr   Hello  DR
+                         Count Intvl  Prior
 
-        GigabitEthernet1   on    1     30     1     
-            Address: FE80::5054:FF:FE2C:6CDF
-            DR     : FE80::5054:FF:FEAC:64B3
-        GigabitEthernet2   on    0     30     1     
-            Address: FE80::5054:FF:FEBE:8787
-            DR     : this system
-        Tunnel2            off    0     30     1     
-            Address: ::
-            DR     : not elected
-        Tunnel1            off    0     30     1     
-            Address: FE80::21E:F6FF:FEAC:A600
-            DR     : not elected
-        Null0              off    0     30     1     
-            Address: FE80::1
-            DR     : not elected
-        Tunnel3            off    0     30     1     
-            Address: ::
-            DR     : not elected
-        Tunnel4            off    0     30     1     
-            Address: ::
-            DR     : not elected
-        Loopback0          on    0     30     1     
-            Address: FE80::21E:F6FF:FEAC:A600
-            DR     : this system
-        Tunnel0            off    0     30     1     
-            Address: FE80::21E:F6FF:FEAC:A600
-            DR     : not elected
+GigabitEthernet1   on    1     30     1     
+    Address: FE80::5054:FF:FE2C:6CDF
+    DR     : FE80::5054:FF:FEAC:64B3
+GigabitEthernet2   on    0     30     1     
+    Address: FE80::5054:FF:FEBE:8787
+    DR     : this system
+Tunnel2            off    0     30     1     
+    Address: ::
+    DR     : not elected
+Tunnel1            off    0     30     1     
+    Address: FE80::21E:F6FF:FEAC:A600
+    DR     : not elected
+Null0              off    0     30     1     
+    Address: FE80::1
+    DR     : not elected
+Tunnel3            off    0     30     1     
+    Address: ::
+    DR     : not elected
+Tunnel4            off    0     30     1     
+    Address: ::
+    DR     : not elected
+Loopback0          on    0     30     1     
+    Address: FE80::21E:F6FF:FEAC:A600
+    DR     : this system
+Tunnel0            off    0     30     1     
+    Address: FE80::21E:F6FF:FEAC:A600
+    DR     : not elected
     

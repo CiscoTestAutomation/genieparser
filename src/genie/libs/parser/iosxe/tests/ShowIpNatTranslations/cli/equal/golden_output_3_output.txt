@@ -1,23 +1,23 @@
-        Device# show ip nat translations verbose
+Device# show ip nat translations verbose
 
-        Pro  Inside global         Inside local          Outside local         Outside global
-        udp  10.5.5.1:1025          192.0.2.1:4000        ---                   ---
-        create: 02/15/12 11:38:01, use: 02/15/12 11:39:02, timeout: 00:00:00
-        Map-Id(In): 1
-        Mac-Address: 0000.0000.0000    Input-IDB: TenGigabitEthernet1/1/0
-        entry-id: 0x0, use_count:1
+Pro  Inside global         Inside local          Outside local         Outside global
+udp  10.5.5.1:1025          192.0.2.1:4000        ---                   ---
+create: 02/15/12 11:38:01, use: 02/15/12 11:39:02, timeout: 00:00:00
+Map-Id(In): 1
+Mac-Address: 0000.0000.0000    Input-IDB: TenGigabitEthernet1/1/0
+entry-id: 0x0, use_count:1
 
-        udp  10.5.5.1:1024          192.0.2.3:4000        ---                   ---
-        create: 02/15/12 11:38:00, use: 02/15/12 11:39:02, timeout: 00:00:00
-        Map-Id(In): 1
-        Mac-Address: 0000.0000.0000    Input-IDB: TenGigabitEthernet1/1/0
-        entry-id: 0x0, use_count:1
+udp  10.5.5.1:1024          192.0.2.3:4000        ---                   ---
+create: 02/15/12 11:38:00, use: 02/15/12 11:39:02, timeout: 00:00:00
+Map-Id(In): 1
+Mac-Address: 0000.0000.0000    Input-IDB: TenGigabitEthernet1/1/0
+entry-id: 0x0, use_count:1
 
-        udp  10.5.5.1:1026          192.0.2.2:4000        ---                   ---
-        create: 02/15/12 11:38:00, use: 02/15/12 11:39:02, timeout: 00:00:00
-        Map-Id(In): 1
-        Mac-Address: 0000.0000.0000    Input-IDB: TenGigabitEthernet1/1/0
-        entry-id: 0x0, use_count:1
+udp  10.5.5.1:1026          192.0.2.2:4000        ---                   ---
+create: 02/15/12 11:38:00, use: 02/15/12 11:39:02, timeout: 00:00:00
+Map-Id(In): 1
+Mac-Address: 0000.0000.0000    Input-IDB: TenGigabitEthernet1/1/0
+entry-id: 0x0, use_count:1
 
-        Total number of translations: 3
+Total number of translations: 3
     

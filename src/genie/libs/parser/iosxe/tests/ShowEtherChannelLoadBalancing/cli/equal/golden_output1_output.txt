@@ -1,11 +1,11 @@
 
-        P3#show etherchannel load-balancing
-        Load for five secs: 3%/0%; one minute: 4%; five minutes: 2%
-        No time source, *15:30:14.148 UTC Sat Jan 31 1970
-        EtherChannel Load-Balancing Method: 
-        Global LB Method: flow-based
-        LB Algo type: Source Destination IP
+P3#show etherchannel load-balancing
+Load for five secs: 3%/0%; one minute: 4%; five minutes: 2%
+No time source, *15:30:14.148 UTC Sat Jan 31 1970
+EtherChannel Load-Balancing Method: 
+Global LB Method: flow-based
+LB Algo type: Source Destination IP
 
-          Port-Channel:                       LB Method
+  Port-Channel:                       LB Method
 
     

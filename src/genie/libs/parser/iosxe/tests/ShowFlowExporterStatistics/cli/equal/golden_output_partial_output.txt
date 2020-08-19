@@ -1,11 +1,11 @@
 
-        flow exporter statistics
-        Flow Exporter test:
-          Packet send statistics (last cleared 00:12:12 ago):
-            Successfully sent:         0                     (0 bytes)
+flow exporter statistics
+Flow Exporter test:
+  Packet send statistics (last cleared 00:12:12 ago):
+    Successfully sent:         0                     (0 bytes)
          
-          Client send statistics:
-            Client: Flow Monitor Test
-              Records added:           0
-              Bytes added:             0
+  Client send statistics:
+    Client: Flow Monitor Test
+      Records added:           0
+      Bytes added:             0
     

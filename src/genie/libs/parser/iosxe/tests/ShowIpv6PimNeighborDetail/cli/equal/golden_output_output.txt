@@ -1,26 +1,26 @@
 
-        PIM Neighbor Table
-        Mode: B - Bidir Capable, G - GenID Capable
-        Neighbor Address(es)       Interface          Uptime    Expires  Mode DR pri
-        Address-list Hello option included as type 24 and 65001
+PIM Neighbor Table
+Mode: B - Bidir Capable, G - GenID Capable
+Neighbor Address(es)       Interface          Uptime    Expires  Mode DR pri
+Address-list Hello option included as type 24 and 65001
 
-        FE80::21A:30FF:FE47:6EC0   Port-channel1.100  3w3d      00:01:37 B G     1
-        2001::1:1
+FE80::21A:30FF:FE47:6EC0   Port-channel1.100  3w3d      00:01:37 B G     1
+2001::1:1
 
-        FE80::21A:30FF:FE47:6EC0   Port-channel1.101  3w3d      00:01:38 B G     1
-        2001:1::1:1
+FE80::21A:30FF:FE47:6EC0   Port-channel1.101  3w3d      00:01:38 B G     1
+2001:1::1:1
 
-        FE80::21A:30FF:FE47:6E01   Gi0/2/0.100        3w3d      00:01:33 B G     1
-        2001::1
+FE80::21A:30FF:FE47:6E01   Gi0/2/0.100        3w3d      00:01:33 B G     1
+2001::1
 
-        FE80::21A:30FF:FE47:6E01   Gi0/2/0.101        3w3d      00:01:24 B G     1
-        2001:1::1
+FE80::21A:30FF:FE47:6E01   Gi0/2/0.101        3w3d      00:01:24 B G     1
+2001:1::1
 
-        FE80::2D7:8FFF:FECB:8602   Gi0/2/3.100        3w3d      00:01:25 B G  DR 1
-        2001::4:2
+FE80::2D7:8FFF:FECB:8602   Gi0/2/3.100        3w3d      00:01:25 B G  DR 1
+2001::4:2
 
-        FE80::2D7:8FFF:FECB:8602   Gi0/2/3.101        3w3d      00:01:42 B G  DR 1
-        2001:1::4:2
+FE80::2D7:8FFF:FECB:8602   Gi0/2/3.101        3w3d      00:01:42 B G  DR 1
+2001:1::4:2
 
     
     

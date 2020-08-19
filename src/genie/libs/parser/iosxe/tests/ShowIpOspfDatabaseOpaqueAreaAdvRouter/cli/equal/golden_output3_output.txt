@@ -1,270 +1,270 @@
 
-        show ip ospf database opaque-area adv-router 10.4.1.1
+show ip ospf database opaque-area adv-router 10.4.1.1
 
-            OSPF Router with ID (10.4.1.1) (Process ID 65109)
+    OSPF Router with ID (10.4.1.1) (Process ID 65109)
 
-                Type-10 Opaque Area Link States (Area 8)
+        Type-10 Opaque Area Link States (Area 8)
 
-        LS age: 1663
-        Options: (No TOS-capability, DC)
-        LS Type: Opaque Area Link
-        Link State ID: 10.1.0.0
-        Opaque Type: 1 (Traffic Engineering)
-        Opaque ID: 0
-        Advertising Router: 10.4.1.1
-        LS Seq Number: 8000013B
-        Checksum: 0xE00E
-        Length: 28
-        Fragment number : 0
+LS age: 1663
+Options: (No TOS-capability, DC)
+LS Type: Opaque Area Link
+Link State ID: 10.1.0.0
+Opaque Type: 1 (Traffic Engineering)
+Opaque ID: 0
+Advertising Router: 10.4.1.1
+LS Seq Number: 8000013B
+Checksum: 0xE00E
+Length: 28
+Fragment number : 0
 
-            MPLS TE router ID : 10.4.1.1
+    MPLS TE router ID : 10.4.1.1
 
-            Number of Links : 0
+    Number of Links : 0
 
-        LS age: 1663
-        Options: (No TOS-capability, DC)
-        LS Type: Opaque Area Link
-        Link State ID: 10.1.0.3
-        Opaque Type: 1 (Traffic Engineering)
-        Opaque ID: 3
-        Advertising Router: 10.4.1.1
-        LS Seq Number: 8000013B
-        Checksum: 0xFF9E
-        Length: 80
-        Fragment number : 3
+LS age: 1663
+Options: (No TOS-capability, DC)
+LS Type: Opaque Area Link
+Link State ID: 10.1.0.3
+Opaque Type: 1 (Traffic Engineering)
+Opaque ID: 3
+Advertising Router: 10.4.1.1
+LS Seq Number: 8000013B
+Checksum: 0xFF9E
+Length: 80
+Fragment number : 3
 
-            Link connected to Point-to-Point network
-            Link ID : 10.229.11.11
-            Neighbor Address : 10.0.0.9
-            Interface Address : 10.0.0.10
-            Admin Metric : 10
-            Maximum bandwidth : 125000000
-            IGP Metric : 10
+    Link connected to Point-to-Point network
+    Link ID : 10.229.11.11
+    Neighbor Address : 10.0.0.9
+    Interface Address : 10.0.0.10
+    Admin Metric : 10
+    Maximum bandwidth : 125000000
+    IGP Metric : 10
 
-            Number of Links : 1
+    Number of Links : 1
 
-        LS age: 1663
-        Options: (No TOS-capability, DC)
-        LS Type: Opaque Area Link
-        Link State ID: 10.1.0.4
-        Opaque Type: 1 (Traffic Engineering)
-        Opaque ID: 4
-        Advertising Router: 10.4.1.1
-        LS Seq Number: 8000013B
-        Checksum: 0xAE06
-        Length: 80
-        Fragment number : 4
+LS age: 1663
+Options: (No TOS-capability, DC)
+LS Type: Opaque Area Link
+Link State ID: 10.1.0.4
+Opaque Type: 1 (Traffic Engineering)
+Opaque ID: 4
+Advertising Router: 10.4.1.1
+LS Seq Number: 8000013B
+Checksum: 0xAE06
+Length: 80
+Fragment number : 4
 
-            Link connected to Point-to-Point network
-            Link ID : 10.151.22.22
-            Neighbor Address : 10.0.0.13
-            Interface Address : 10.0.0.14
-            Admin Metric : 100
-            Maximum bandwidth : 125000000
-            IGP Metric : 100
+    Link connected to Point-to-Point network
+    Link ID : 10.151.22.22
+    Neighbor Address : 10.0.0.13
+    Interface Address : 10.0.0.14
+    Admin Metric : 100
+    Maximum bandwidth : 125000000
+    IGP Metric : 100
 
-            Number of Links : 1
+    Number of Links : 1
 
-        LS age: 1663
-        Options: (No TOS-capability, DC)
-        LS Type: Opaque Area Link
-        Link State ID: 10.1.0.5
-        Opaque Type: 1 (Traffic Engineering)
-        Opaque ID: 5
-        Advertising Router: 10.4.1.1
-        LS Seq Number: 8000013B
-        Checksum: 0xFE8D
-        Length: 80
-        Fragment number : 5
+LS age: 1663
+Options: (No TOS-capability, DC)
+LS Type: Opaque Area Link
+Link State ID: 10.1.0.5
+Opaque Type: 1 (Traffic Engineering)
+Opaque ID: 5
+Advertising Router: 10.4.1.1
+LS Seq Number: 8000013B
+Checksum: 0xFE8D
+Length: 80
+Fragment number : 5
 
-            Link connected to Point-to-Point network
-            Link ID : 10.151.22.22
-            Neighbor Address : 10.0.0.25
-            Interface Address : 10.0.0.26
-            Admin Metric : 1000
-            Maximum bandwidth : 125000000
-            IGP Metric : 1000
+    Link connected to Point-to-Point network
+    Link ID : 10.151.22.22
+    Neighbor Address : 10.0.0.25
+    Interface Address : 10.0.0.26
+    Admin Metric : 1000
+    Maximum bandwidth : 125000000
+    IGP Metric : 1000
 
-            Number of Links : 1
+    Number of Links : 1
 
-        LS age: 1663
-        Options: (No TOS-capability, DC)
-        LS Type: Opaque Area Link
-        Link State ID: 10.16.0.0
-        Opaque Type: 4 (Router Information)
-        Opaque ID: 0
-        Advertising Router: 10.4.1.1
-        LS Seq Number: 8000013B
-        Checksum: 0x5BC8
-        Length: 76
+LS age: 1663
+Options: (No TOS-capability, DC)
+LS Type: Opaque Area Link
+Link State ID: 10.16.0.0
+Opaque Type: 4 (Router Information)
+Opaque ID: 0
+Advertising Router: 10.4.1.1
+LS Seq Number: 8000013B
+Checksum: 0x5BC8
+Length: 76
 
-            TLV Type: Router Information
-            Length: 4
-            Capabilities:
-            Graceful Restart Helper
-            Stub Router Support
+    TLV Type: Router Information
+    Length: 4
+    Capabilities:
+    Graceful Restart Helper
+    Stub Router Support
 
-            TLV Type: Segment Routing Algorithm
-            Length: 2
-            Algorithm: SPF
-            Algorithm: Strict SPF
+    TLV Type: Segment Routing Algorithm
+    Length: 2
+    Algorithm: SPF
+    Algorithm: Strict SPF
 
-            TLV Type: Segment Routing Range
-            Length: 12
-            Range Size: 8000
+    TLV Type: Segment Routing Range
+    Length: 12
+    Range Size: 8000
 
-            Sub-TLV Type: SID/Label
-            Length: 3
-                Label: 16000
+    Sub-TLV Type: SID/Label
+    Length: 3
+        Label: 16000
 
-            TLV Type: Segment Routing Node MSD
-            Length: 2
-            Sub-type: Node Max Sid Depth, Value: 13
+    TLV Type: Segment Routing Node MSD
+    Length: 2
+    Sub-type: Node Max Sid Depth, Value: 13
 
-            TLV Type: Segment Routing Local Block
-            Length: 12
-            Range Size: 1000
+    TLV Type: Segment Routing Local Block
+    Length: 12
+    Range Size: 1000
 
-            Sub-TLV Type: SID/Label
-            Length: 3
-                Label: 15000
+    Sub-TLV Type: SID/Label
+    Length: 3
+        Label: 15000
 
-        LS age: 1663
-        Options: (No TOS-capability, DC)
-        LS Type: Opaque Area Link
-        Link State ID: 10.49.0.0
-        Opaque Type: 7 (Extended Prefix)
-        Opaque ID: 0
-        Advertising Router: 10.4.1.1
-        LS Seq Number: 80000133
-        Checksum: 0x88DB
-        Length: 44
+LS age: 1663
+Options: (No TOS-capability, DC)
+LS Type: Opaque Area Link
+Link State ID: 10.49.0.0
+Opaque Type: 7 (Extended Prefix)
+Opaque ID: 0
+Advertising Router: 10.4.1.1
+LS Seq Number: 80000133
+Checksum: 0x88DB
+Length: 44
 
-            TLV Type: Extended Prefix
-            Length: 20
-            Prefix    : 10.4.1.1/32
-            AF        : 0
-            Route-type: Intra
-            Flags     : N-bit
+    TLV Type: Extended Prefix
+    Length: 20
+    Prefix    : 10.4.1.1/32
+    AF        : 0
+    Route-type: Intra
+    Flags     : N-bit
 
-            Sub-TLV Type: Prefix SID
-            Length: 8
-                Flags : None
-                MTID  : 0
-                Algo  : SPF
-                SID   : 1
+    Sub-TLV Type: Prefix SID
+    Length: 8
+        Flags : None
+        MTID  : 0
+        Algo  : SPF
+        SID   : 1
 
-        LS age: 1663
-        Options: (No TOS-capability, DC)
-        LS Type: Opaque Area Link
-        Link State ID: 10.64.0.9
-        Opaque Type: 8 (Extended Link)
-        Opaque ID: 9
-        Advertising Router: 10.4.1.1
-        LS Seq Number: 8000013C
-        Checksum: 0xA666
-        Length: 104
+LS age: 1663
+Options: (No TOS-capability, DC)
+LS Type: Opaque Area Link
+Link State ID: 10.64.0.9
+Opaque Type: 8 (Extended Link)
+Opaque ID: 9
+Advertising Router: 10.4.1.1
+LS Seq Number: 8000013C
+Checksum: 0xA666
+Length: 104
 
-            TLV Type: Extended Link
-            Length: 80
-            Link connected to : another Router (point-to-point)
-            (Link ID) Neighboring Router ID: 10.229.11.11
-            (Link Data) Interface IP address: 10.0.0.10
+    TLV Type: Extended Link
+    Length: 80
+    Link connected to : another Router (point-to-point)
+    (Link ID) Neighboring Router ID: 10.229.11.11
+    (Link Data) Interface IP address: 10.0.0.10
 
-            Sub-TLV Type: Adj SID
-            Length : 7
-                Flags  : L-Bit, V-bit
-                MTID   : 0
-                Weight : 0
-                Label  : 18
+    Sub-TLV Type: Adj SID
+    Length : 7
+        Flags  : L-Bit, V-bit
+        MTID   : 0
+        Weight : 0
+        Label  : 18
 
-            Sub-TLV Type: Adj SID
-            Length : 7
-                Flags  : L-Bit, V-bit, B-bit
-                MTID   : 0
-                Weight : 0
-                Label  : 19
+    Sub-TLV Type: Adj SID
+    Length : 7
+        Flags  : L-Bit, V-bit, B-bit
+        MTID   : 0
+        Weight : 0
+        Label  : 19
 
-            Sub-TLV Type: Remote Intf Addr
-                Remote Interface Address   : 10.0.0.9
+    Sub-TLV Type: Remote Intf Addr
+        Remote Interface Address   : 10.0.0.9
 
-            Sub-TLV Type: Local / Remote Intf ID
-                Local Interface ID   : 9
-                Remote Interface ID   : 9
+    Sub-TLV Type: Local / Remote Intf ID
+        Local Interface ID   : 9
+        Remote Interface ID   : 9
 
-        LS age: 1663
-        Options: (No TOS-capability, DC)
-        LS Type: Opaque Area Link
-        Link State ID: 10.64.0.10
-        Opaque Type: 8 (Extended Link)
-        Opaque ID: 10
-        Advertising Router: 10.4.1.1
-        LS Seq Number: 8000013C
-        Checksum: 0xEBE6
-        Length: 104
+LS age: 1663
+Options: (No TOS-capability, DC)
+LS Type: Opaque Area Link
+Link State ID: 10.64.0.10
+Opaque Type: 8 (Extended Link)
+Opaque ID: 10
+Advertising Router: 10.4.1.1
+LS Seq Number: 8000013C
+Checksum: 0xEBE6
+Length: 104
 
-            TLV Type: Extended Link
-            Length: 80
-            Link connected to : another Router (point-to-point)
-            (Link ID) Neighboring Router ID: 10.151.22.22
-            (Link Data) Interface IP address: 10.0.0.14
+    TLV Type: Extended Link
+    Length: 80
+    Link connected to : another Router (point-to-point)
+    (Link ID) Neighboring Router ID: 10.151.22.22
+    (Link Data) Interface IP address: 10.0.0.14
 
-            Sub-TLV Type: Adj SID
-            Length : 7
-                Flags  : L-Bit, V-bit
-                MTID   : 0
-                Weight : 0
-                Label  : 17
+    Sub-TLV Type: Adj SID
+    Length : 7
+        Flags  : L-Bit, V-bit
+        MTID   : 0
+        Weight : 0
+        Label  : 17
 
-            Sub-TLV Type: Adj SID
-            Length : 7
-                Flags  : L-Bit, V-bit, B-bit
-                MTID   : 0
-                Weight : 0
-                Label  : 21
+    Sub-TLV Type: Adj SID
+    Length : 7
+        Flags  : L-Bit, V-bit, B-bit
+        MTID   : 0
+        Weight : 0
+        Label  : 21
 
-            Sub-TLV Type: Remote Intf Addr
-                Remote Interface Address   : 10.0.0.13
+    Sub-TLV Type: Remote Intf Addr
+        Remote Interface Address   : 10.0.0.13
 
-            Sub-TLV Type: Local / Remote Intf ID
-                Local Interface ID   : 10
-                Remote Interface ID   : 8
+    Sub-TLV Type: Local / Remote Intf ID
+        Local Interface ID   : 10
+        Remote Interface ID   : 8
 
-        LS age: 1663
-        Options: (No TOS-capability, DC)
-        LS Type: Opaque Area Link
-        Link State ID: 10.64.0.11
-        Opaque Type: 8 (Extended Link)
-        Opaque ID: 11
-        Advertising Router: 10.4.1.1
-        LS Seq Number: 8000013D
-        Checksum: 0xB8F1
-        Length: 104
+LS age: 1663
+Options: (No TOS-capability, DC)
+LS Type: Opaque Area Link
+Link State ID: 10.64.0.11
+Opaque Type: 8 (Extended Link)
+Opaque ID: 11
+Advertising Router: 10.4.1.1
+LS Seq Number: 8000013D
+Checksum: 0xB8F1
+Length: 104
 
-            TLV Type: Extended Link
-            Length: 80
-            Link connected to : another Router (point-to-point)
-            (Link ID) Neighboring Router ID: 10.151.22.22
-            (Link Data) Interface IP address: 10.0.0.26
+    TLV Type: Extended Link
+    Length: 80
+    Link connected to : another Router (point-to-point)
+    (Link ID) Neighboring Router ID: 10.151.22.22
+    (Link Data) Interface IP address: 10.0.0.26
 
-            Sub-TLV Type: Adj SID
-            Length : 7
-                Flags  : L-Bit, V-bit
-                MTID   : 0
-                Weight : 0
-                Label  : 16
+    Sub-TLV Type: Adj SID
+    Length : 7
+        Flags  : L-Bit, V-bit
+        MTID   : 0
+        Weight : 0
+        Label  : 16
 
-            Sub-TLV Type: Adj SID
-            Length : 7
-                Flags  : L-Bit, V-bit, B-bit
-                MTID   : 0
-                Weight : 0
-                Label  : 20
+    Sub-TLV Type: Adj SID
+    Length : 7
+        Flags  : L-Bit, V-bit, B-bit
+        MTID   : 0
+        Weight : 0
+        Label  : 20
 
-            Sub-TLV Type: Remote Intf Addr
-                Remote Interface Address   : 10.0.0.25
+    Sub-TLV Type: Remote Intf Addr
+        Remote Interface Address   : 10.0.0.25
 
-            Sub-TLV Type: Local / Remote Intf ID
-                Local Interface ID   : 11
-                Remote Interface ID   : 9
+    Sub-TLV Type: Local / Remote Intf ID
+        Local Interface ID   : 11
+        Remote Interface ID   : 9
     

@@ -1,27 +1,27 @@
 
-        show ip bgp vpnv4 rd 65109:10000
-        Load for five secs: 21%/0%; one minute: 23%; five minutes: 32%
-        Time source is NTP, 19:37:31.828 EST Wed Oct 16 2019
+show ip bgp vpnv4 rd 65109:10000
+Load for five secs: 21%/0%; one minute: 23%; five minutes: 32%
+Time source is NTP, 19:37:31.828 EST Wed Oct 16 2019
 
-        BGP table version is 94705143, local router ID is 192.168.9.250
-        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
-                    r RIB-failure, S Stale
-        Origin codes: i - IGP, e - EGP, ? - incomplete
+BGP table version is 94705143, local router ID is 192.168.9.250
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+            r RIB-failure, S Stale
+Origin codes: i - IGP, e - EGP, ? - incomplete
 
-        Network          Next Hop            Metric LocPrf Weight Path
-        Route Distinguisher: 65109:10000
-        *>i10.229.11.11/32   10.19.198.239            0    100      0 1234 60000 ?
-        * i                 10.19.198.239            0    100      0 1234 60000 ?
-        *>i10.225.10.0/24  10.19.198.239            0    100      0 ?
-        * i                 10.19.198.239            0    100      0 ?
-        *>i172.16.0.0/24    10.19.198.239            0    100      0 1234 60000 ?
-        * i                 10.19.198.239            0    100      0 1234 60000 ?
-        *>i172.16.1.0/24    10.19.198.239            0    100      0 1234 60000 ?
-        * i                 10.19.198.239            0    100      0 1234 60000 ?
-        *>i172.16.51.0/24    10.19.198.238            0    100      0 65000 1234 i
-        * i                 10.19.198.238            0    100      0 65000 1234 i
-        *>i172.16.205.0/24    10.19.198.238            0    100      0 65000 1234 i
-        * i                 10.19.198.238            0    100      0 65000 1234 i
-        *>i192.168.136.0/22 10.19.198.239            0    100      0 1234 60000 ?
-        * i                 10.19.198.239            0    100      0 1234 60000 ?
+Network          Next Hop            Metric LocPrf Weight Path
+Route Distinguisher: 65109:10000
+*>i10.229.11.11/32   10.19.198.239            0    100      0 1234 60000 ?
+* i                 10.19.198.239            0    100      0 1234 60000 ?
+*>i10.225.10.0/24  10.19.198.239            0    100      0 ?
+* i                 10.19.198.239            0    100      0 ?
+*>i172.16.0.0/24    10.19.198.239            0    100      0 1234 60000 ?
+* i                 10.19.198.239            0    100      0 1234 60000 ?
+*>i172.16.1.0/24    10.19.198.239            0    100      0 1234 60000 ?
+* i                 10.19.198.239            0    100      0 1234 60000 ?
+*>i172.16.51.0/24    10.19.198.238            0    100      0 65000 1234 i
+* i                 10.19.198.238            0    100      0 65000 1234 i
+*>i172.16.205.0/24    10.19.198.238            0    100      0 65000 1234 i
+* i                 10.19.198.238            0    100      0 65000 1234 i
+*>i192.168.136.0/22 10.19.198.239            0    100      0 1234 60000 ?
+* i                 10.19.198.239            0    100      0 1234 60000 ?
     

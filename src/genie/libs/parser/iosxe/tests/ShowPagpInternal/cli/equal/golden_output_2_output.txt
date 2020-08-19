@@ -1,16 +1,16 @@
 
-    +++ R1: executing command 'show pagp internal' +++
-    show pagp internal
-    Flags:  S - Device is sending Slow hello.  C - Device is in Consistent state.
-            A - Device is in Auto mode.        d - PAgP is down
-    Timers: H - Hello timer is running.        Q - Quit timer is running.
-            S - Switching timer is running.    I - Interface timer is running.
++++ R1: executing command 'show pagp internal' +++
+show pagp internal
+Flags:  S - Device is sending Slow hello.  C - Device is in Consistent state.
+        A - Device is in Auto mode.        d - PAgP is down
+Timers: H - Hello timer is running.        Q - Quit timer is running.
+        S - Switching timer is running.    I - Interface timer is running.
 
-    Channel group 14
-                                      Hello    Partner  PAgP       Learning  Group
-    Port        Flags State   Timers  Interval Count    Priority   Method    Ifindex
-    Gi1/0/7     d     U1/S1           1s       0        128        Any       0
-    Gi1/0/8     d     U1/S1           1s       0        128        Any       0
-    Gi1/0/9     d     U1/S1           1s       0        128        Any       0
-    R1#
+Channel group 14
+                                  Hello    Partner  PAgP       Learning  Group
+Port        Flags State   Timers  Interval Count    Priority   Method    Ifindex
+Gi1/0/7     d     U1/S1           1s       0        128        Any       0
+Gi1/0/8     d     U1/S1           1s       0        128        Any       0
+Gi1/0/9     d     U1/S1           1s       0        128        Any       0
+R1#
     

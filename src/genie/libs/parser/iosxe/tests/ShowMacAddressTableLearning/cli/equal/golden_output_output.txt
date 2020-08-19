@@ -1,2 +1,2 @@
-        Learning disabled on vlans: 10,101-103,105
+Learning disabled on vlans: 10,101-103,105
     

@@ -1,33 +1,33 @@
 
-        show platform hardware qfp active feature appqoe stats all
-        APPQOE Feature Statistics:
-        Global:
-               ip-non-tcp-pkts: 0
-               not-enabled: 0
-               cft_handle_pkt: 0
-               sdvt_divert_req_fail: 0
-               syn_policer_rate: 800
-           SDVT Global stats:
-             AppNAV registration: 1
-             within SDVT syn policer limit: 266004
-        SN Index [0 (Green)]
-           SDVT Count stats:
-             decaps: 679143
-             encaps: 743013
-             packets unmarked in ingress: 502868
-             Expired Connections: 64609
-             Idle timed-out persistent Connections: 50409
-             decaps: Processed control messages from SN: 14200
-             decaps: delete requests received total: 14200
-               decaps: delete - protocol decision: 14200
-           SDVT Packet stats:
-             Divert packets/bytes: 743013/43313261
-             Reinject packets/bytes: 679010/503129551
-           SDVT Drop Cause stats:
-           SDVT Errors stats:
-        SN Index [Default]
-           SDVT Count stats:
-           SDVT Packet stats:
-           SDVT Drop Cause stats:
-           SDVT Errors stats:
+show platform hardware qfp active feature appqoe stats all
+APPQOE Feature Statistics:
+Global:
+       ip-non-tcp-pkts: 0
+       not-enabled: 0
+       cft_handle_pkt: 0
+       sdvt_divert_req_fail: 0
+       syn_policer_rate: 800
+   SDVT Global stats:
+     AppNAV registration: 1
+     within SDVT syn policer limit: 266004
+SN Index [0 (Green)]
+   SDVT Count stats:
+     decaps: 679143
+     encaps: 743013
+     packets unmarked in ingress: 502868
+     Expired Connections: 64609
+     Idle timed-out persistent Connections: 50409
+     decaps: Processed control messages from SN: 14200
+     decaps: delete requests received total: 14200
+       decaps: delete - protocol decision: 14200
+   SDVT Packet stats:
+     Divert packets/bytes: 743013/43313261
+     Reinject packets/bytes: 679010/503129551
+   SDVT Drop Cause stats:
+   SDVT Errors stats:
+SN Index [Default]
+   SDVT Count stats:
+   SDVT Packet stats:
+   SDVT Drop Cause stats:
+   SDVT Errors stats:
         

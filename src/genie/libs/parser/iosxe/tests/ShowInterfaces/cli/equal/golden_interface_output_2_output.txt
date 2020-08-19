@@ -1,38 +1,38 @@
 
-    PE1>show interfaces TenGigabitEthernet 0/2/0  
-    Load for five secs: 3%/0%; one minute: 3%; five minutes: 3%
-    Time source is NTP, 17:32:09.532 EST Tue Apr 23 2019
+PE1>show interfaces TenGigabitEthernet 0/2/0  
+Load for five secs: 3%/0%; one minute: 3%; five minutes: 3%
+Time source is NTP, 17:32:09.532 EST Tue Apr 23 2019
 
-    TenGigabitEthernet0/2/0 is up, line protocol is up 
-      Hardware is SPA-1X10GE-L-V2, address is 006b.f1ff.bef5 (bia 006b.f1ff.bef5)
-      Description: toP
-      Internet address is 10.169.197.94/30
-      MTU 1552 bytes, BW 10000000 Kbit/sec, DLY 10 usec, 
-         reliability 255/255, txload 2/255, rxload 2/255
-      Encapsulation ARPA, loopback not set
-      Keepalive not supported 
-      Full Duplex, 10000Mbps, link type is force-up, media type is 10GBase-SR/SW
-      output flow-control is on, input flow-control is on
-      Asymmetric Carrier-Delay Up Timer is 2 sec
-      Asymmetric Carrier-Delay Down Timer is 10 sec
-      ARP type: ARPA, ARP Timeout 04:00:00
-      Last input 00:07:19, output 03:51:33, output hang never
-      Last clearing of "show interface" counters never
-      Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
-      Queueing strategy: fifo
-      Output queue: 0/40 (size/max)
-      5 minute input rate 79676000 bits/sec, 9999 packets/sec
-      5 minute output rate 79998000 bits/sec, 9999 packets/sec
-         1779405333 packets input, 1772200805652 bytes, 0 no buffer
-         Received 3 broadcasts (0 IP multicasts)
-         0 runts, 0 giants, 0 throttles 
-         0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
-         0 watchdog, 60322 multicast, 0 pause input
-         1791189623 packets output, 1790956453417 bytes, 0 underruns
-         0 output errors, 0 collisions, 2 interface resets
-         291 unknown protocol drops
-         0 babbles, 0 late collision, 0 deferred
-         0 lost carrier, 0 no carrier, 0 pause output
-         0 output buffer failures, 0 output buffers swapped out
-    PE1>
+TenGigabitEthernet0/2/0 is up, line protocol is up 
+  Hardware is SPA-1X10GE-L-V2, address is 006b.f1ff.bef5 (bia 006b.f1ff.bef5)
+  Description: toP
+  Internet address is 10.169.197.94/30
+  MTU 1552 bytes, BW 10000000 Kbit/sec, DLY 10 usec, 
+     reliability 255/255, txload 2/255, rxload 2/255
+  Encapsulation ARPA, loopback not set
+  Keepalive not supported 
+  Full Duplex, 10000Mbps, link type is force-up, media type is 10GBase-SR/SW
+  output flow-control is on, input flow-control is on
+  Asymmetric Carrier-Delay Up Timer is 2 sec
+  Asymmetric Carrier-Delay Down Timer is 10 sec
+  ARP type: ARPA, ARP Timeout 04:00:00
+  Last input 00:07:19, output 03:51:33, output hang never
+  Last clearing of "show interface" counters never
+  Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue: 0/40 (size/max)
+  5 minute input rate 79676000 bits/sec, 9999 packets/sec
+  5 minute output rate 79998000 bits/sec, 9999 packets/sec
+     1779405333 packets input, 1772200805652 bytes, 0 no buffer
+     Received 3 broadcasts (0 IP multicasts)
+     0 runts, 0 giants, 0 throttles 
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+     0 watchdog, 60322 multicast, 0 pause input
+     1791189623 packets output, 1790956453417 bytes, 0 underruns
+     0 output errors, 0 collisions, 2 interface resets
+     291 unknown protocol drops
+     0 babbles, 0 late collision, 0 deferred
+     0 lost carrier, 0 no carrier, 0 pause output
+     0 output buffer failures, 0 output buffers swapped out
+PE1>
     

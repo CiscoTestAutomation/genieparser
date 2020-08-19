@@ -1,39 +1,39 @@
 
-        Interface                      Status         Protocol Description
-        Gi0/0                          up             up       
-        Gi0/1                          up             up       
-        Gi0/2                          up             up       
-        Gi0/2.90                       up             up       
-        Gi0/2.110                      up             up       
-        Gi0/2.115                      up             up       
-        Gi0/2.120                      up             up       
-        Gi0/2.390                      up             up       
-        Gi0/2.410                      up             up       
-        Gi0/2.415                      up             up       
-        Gi0/2.420                      up             up       
-        Gi0/3                          up             up       
-        Gi0/3.90                       up             up       
-        Gi0/3.110                      up             up       
-        Gi0/3.115                      up             up       
-        Gi0/3.120                      up             up       
-        Gi0/3.390                      up             up       
-        Gi0/3.410                      up             up       
-        Gi0/3.415                      up             up       
-        Gi0/3.420                      up             up       
-        Gi1/0                          up             up       
-        Gi1/1                          up             up       
-        Gi1/2                          up             up       
-        Gi1/3                          up             up       
-        Lo0                            up             up       
-        Lo300                          up             up       
-        Po12                           up             up       
-        Po13                           up             up       
-        Tu0                            up             up       Pim Register Tunnel (Encap) for RP 2001:2:2:2::2
-        Tu1                            up             up       Pim Register Tunnel (Encap) for Embedded RP
-        Tu2                            up             up       Pim Register Tunnel (Encap) for RP 10.16.2.2
-        Tu3                            up             up       Pim Register Tunnel (Encap) for RP 10.16.2.2 on VRF VRF1
-        Tu4                            up             up       Pim Register Tunnel (Decap) for RP 10.4.1.1 on VRF VRF1
-        Tu5                            up             up       Pim Register Tunnel (Decap) for RP 10.4.1.1
-        Tu6                            up             up       Pim Register Tunnel (Encap) for RP 10.4.1.1 on VRF VRF1
-        Tu7                            up             up       Pim Register Tunnel (Encap) for RP 10.4.1.1
+Interface                      Status         Protocol Description
+Gi0/0                          up             up       
+Gi0/1                          up             up       
+Gi0/2                          up             up       
+Gi0/2.90                       up             up       
+Gi0/2.110                      up             up       
+Gi0/2.115                      up             up       
+Gi0/2.120                      up             up       
+Gi0/2.390                      up             up       
+Gi0/2.410                      up             up       
+Gi0/2.415                      up             up       
+Gi0/2.420                      up             up       
+Gi0/3                          up             up       
+Gi0/3.90                       up             up       
+Gi0/3.110                      up             up       
+Gi0/3.115                      up             up       
+Gi0/3.120                      up             up       
+Gi0/3.390                      up             up       
+Gi0/3.410                      up             up       
+Gi0/3.415                      up             up       
+Gi0/3.420                      up             up       
+Gi1/0                          up             up       
+Gi1/1                          up             up       
+Gi1/2                          up             up       
+Gi1/3                          up             up       
+Lo0                            up             up       
+Lo300                          up             up       
+Po12                           up             up       
+Po13                           up             up       
+Tu0                            up             up       Pim Register Tunnel (Encap) for RP 2001:2:2:2::2
+Tu1                            up             up       Pim Register Tunnel (Encap) for Embedded RP
+Tu2                            up             up       Pim Register Tunnel (Encap) for RP 10.16.2.2
+Tu3                            up             up       Pim Register Tunnel (Encap) for RP 10.16.2.2 on VRF VRF1
+Tu4                            up             up       Pim Register Tunnel (Decap) for RP 10.4.1.1 on VRF VRF1
+Tu5                            up             up       Pim Register Tunnel (Decap) for RP 10.4.1.1
+Tu6                            up             up       Pim Register Tunnel (Encap) for RP 10.4.1.1 on VRF VRF1
+Tu7                            up             up       Pim Register Tunnel (Encap) for RP 10.4.1.1
     

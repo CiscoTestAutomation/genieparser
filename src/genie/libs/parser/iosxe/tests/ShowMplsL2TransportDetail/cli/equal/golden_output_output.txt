@@ -1,22 +1,22 @@
-        Device# show mpls l2transport vc detail
+Device# show mpls l2transport vc detail
 
-        ip cef distributed
+ip cef distributed
 
-        Local interface: Fa2/1/1.2 up, line protocol up, Eth VLAN 2 up
-          Destination address: 10.2.2.2, VC ID: 1002, VC status: up
-            Preferred path: not configured
-            Default path: active
-            Tunnel label: imp-null, next hop point2point
-            Output interface: Se2/0/2, imposed label stack {16}
-          Create time: 1d00h, last status change time: 1d00h
-          Signaling protocol: LDP, peer 10.2.2.2:0 up
-            MPLS VC labels: local 21, remote 16
-            Group ID: local 0, remote 0
-            MTU: local 1500, remote 1500
-            Remote interface description: "xconnect to PE2"
-          Sequencing: receive disabled, send disabled
-          VC statistics:
-            packet totals: receive 3466, send 12286
-            byte totals:   receive 4322368, send 5040220
-            packet drops:  receive 0, send 0
+Local interface: Fa2/1/1.2 up, line protocol up, Eth VLAN 2 up
+  Destination address: 10.2.2.2, VC ID: 1002, VC status: up
+    Preferred path: not configured
+    Default path: active
+    Tunnel label: imp-null, next hop point2point
+    Output interface: Se2/0/2, imposed label stack {16}
+  Create time: 1d00h, last status change time: 1d00h
+  Signaling protocol: LDP, peer 10.2.2.2:0 up
+    MPLS VC labels: local 21, remote 16
+    Group ID: local 0, remote 0
+    MTU: local 1500, remote 1500
+    Remote interface description: "xconnect to PE2"
+  Sequencing: receive disabled, send disabled
+  VC statistics:
+    packet totals: receive 3466, send 12286
+    byte totals:   receive 4322368, send 5040220
+    packet drops:  receive 0, send 0
     

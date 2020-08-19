@@ -1,4 +1,4 @@
-        show platform software process slot switch active R0 monitor | inc Mem :|Swap:    
-        KiB Mem :  4010000 total,    13580 free,  1530208 used,  2466212 buff/cache
-        KiB Swap:        0 total,        0 free,        0 used.  1779488 avail Mem 
+show platform software process slot switch active R0 monitor | inc Mem :|Swap:    
+KiB Mem :  4010000 total,    13580 free,  1530208 used,  2466212 buff/cache
+KiB Swap:        0 total,        0 free,        0 used.  1779488 avail Mem 
     

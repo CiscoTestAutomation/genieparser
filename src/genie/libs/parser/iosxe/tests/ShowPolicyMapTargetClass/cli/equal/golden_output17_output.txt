@@ -1,30 +1,30 @@
 
-      GigabitEthernet9/5: Service Group 1
+GigabitEthernet9/5: Service Group 1
 
-        Service-policy input: policy1
+  Service-policy input: policy1
 
-          Class-map: class-default (match-any)
-            0 packets, 0 bytes
-            5 minute offered rate 0000 bps, drop rate 0000 bps
-            Match: any
-            police:
-                cir 200000 bps, bc 6250 bytes
-              conformed 0 packets, 0 bytes; actions:
-                transmit
-              exceeded 0 packets, 0 bytes; actions:
-                drop
-              conformed 0000 bps, exceed 0000 bps
+    Class-map: class-default (match-any)
+      0 packets, 0 bytes
+      5 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: any
+      police:
+          cir 200000 bps, bc 6250 bytes
+        conformed 0 packets, 0 bytes; actions:
+          transmit
+        exceeded 0 packets, 0 bytes; actions:
+          drop
+        conformed 0000 bps, exceed 0000 bps
 
-        Service-policy output: policy2
+  Service-policy output: policy2
 
-        Counters last updated 00:00:34 ago
-          Class-map: class-default (match-any)
-            0 packets, 0 bytes
-            5 minute offered rate 0000 bps, drop rate 0000 bps
-            Match: any
-            Queueing
-            queue limit 131072 packets
-            (queue depth/total drops/no-buffer drops) 0/0/0
-            (pkts output/bytes output) 0/0
-            bandwidth remaining ratio 2
+  Counters last updated 00:00:34 ago
+    Class-map: class-default (match-any)
+      0 packets, 0 bytes
+      5 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: any
+      Queueing
+      queue limit 131072 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 0/0
+      bandwidth remaining ratio 2
     

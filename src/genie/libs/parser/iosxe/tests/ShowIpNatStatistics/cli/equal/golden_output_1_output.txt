@@ -1,21 +1,21 @@
 
-        asr1000#sh ip nat statistics 
-        Total active translations: 0 (0 static, 0 dynamic; 0 extended)
-        Outside interfaces:
-        TenGigabitEthernet0/2/0
-        Inside interfaces: 
-        TenGigabitEthernet0/1/0
-        Hits: 3358708  Misses: 11050
-        CEF Translated packets: 0, CEF Punted packets: 0
-        Expired translations: 11013
-        Dynamic mappings:
-        -- Inside Source
-        [Id: 1] access-list test-robot pool test-robot refcount 0
-        pool test-robot: netmask 255.255.255.252
-            start 10.1.1.1 end 10.1.1.1
-            type generic, total addresses 1, allocated 0 (0%), misses 0
-        Pool stats drop: 0  Mapping stats drop: 0
-        Port block alloc fail: 0
-        IP alias add fail: 0
-        Limit entry add fail: 0
+asr1000#sh ip nat statistics 
+Total active translations: 0 (0 static, 0 dynamic; 0 extended)
+Outside interfaces:
+TenGigabitEthernet0/2/0
+Inside interfaces: 
+TenGigabitEthernet0/1/0
+Hits: 3358708  Misses: 11050
+CEF Translated packets: 0, CEF Punted packets: 0
+Expired translations: 11013
+Dynamic mappings:
+-- Inside Source
+[Id: 1] access-list test-robot pool test-robot refcount 0
+pool test-robot: netmask 255.255.255.252
+    start 10.1.1.1 end 10.1.1.1
+    type generic, total addresses 1, allocated 0 (0%), misses 0
+Pool stats drop: 0  Mapping stats drop: 0
+Port block alloc fail: 0
+IP alias add fail: 0
+Limit entry add fail: 0
     

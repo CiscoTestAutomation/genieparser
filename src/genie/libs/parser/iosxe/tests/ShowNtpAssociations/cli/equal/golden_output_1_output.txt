@@ -1,11 +1,11 @@
 
-        R1#show ntp associations
+R1#show ntp associations
 
-          address         ref clock       st   when   poll reach  delay  offset   disp
-        *~127.127.1.1     .LOCL.           0      6     16   377  0.000   0.000  1.204
-         ~10.4.1.1        .INIT.          16      -   1024     0  0.000   0.000 15937.
-         ~10.4.1.1        .INIT.          16      -   1024     0  0.000   0.000 15937.
-         ~10.16.2.2       .INIT.          16      -   1024     0  0.000   0.000 15937.
-         ~10.16.2.2       .INIT.          16      -   1024     0  0.000   0.000 15937.
-         * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured
+  address         ref clock       st   when   poll reach  delay  offset   disp
+*~127.127.1.1     .LOCL.           0      6     16   377  0.000   0.000  1.204
+ ~10.4.1.1        .INIT.          16      -   1024     0  0.000   0.000 15937.
+ ~10.4.1.1        .INIT.          16      -   1024     0  0.000   0.000 15937.
+ ~10.16.2.2       .INIT.          16      -   1024     0  0.000   0.000 15937.
+ ~10.16.2.2       .INIT.          16      -   1024     0  0.000   0.000 15937.
+ * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured
     

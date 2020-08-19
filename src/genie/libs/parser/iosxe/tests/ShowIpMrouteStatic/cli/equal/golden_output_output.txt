@@ -1,3 +1,3 @@
-        Mroute: 172.16.0.0/16, RPF neighbor: 172.30.10.13, distance: 1
-        Mroute: 172.16.1.0/24, RPF neighbor: 172.30.10.13, distance: 1
+Mroute: 172.16.0.0/16, RPF neighbor: 172.30.10.13, distance: 1
+Mroute: 172.16.1.0/24, RPF neighbor: 172.30.10.13, distance: 1
     

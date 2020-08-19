@@ -1,7 +1,7 @@
 
-        Standard IP access list 43
-            10 permit 10.1.0.2 (1168716 matches)
-            20 permit 10.144.0.9
-            30 permit 10.70.10.0, wildcard bits 0.0.10.255
-            40 permit 10.196.0.0, wildcard bits 0.0.255.255 (8353358 matches)
+Standard IP access list 43
+    10 permit 10.1.0.2 (1168716 matches)
+    20 permit 10.144.0.9
+    30 permit 10.70.10.0, wildcard bits 0.0.10.255
+    40 permit 10.196.0.0, wildcard bits 0.0.255.255 (8353358 matches)
     

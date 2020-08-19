@@ -1,29 +1,29 @@
-        Switch is in pvst mode
-        Root bridge for: VLAN0100-VLAN0101, VLAN0405-VLAN0407
-        EtherChannel misconfig guard            is enabled
-        Extended system ID                      is enabled
-        Portfast Default                        is disabled
-        PortFast BPDU Guard Default            is disabled
-        Portfast BPDU Filter Default           is disabled
-        Loopguard Default                      is disabled
-        UplinkFast                              is disabled
-        BackboneFast                            is disabled
-        Configured Pathcost method used is short
+Switch is in pvst mode
+Root bridge for: VLAN0100-VLAN0101, VLAN0405-VLAN0407
+EtherChannel misconfig guard            is enabled
+Extended system ID                      is enabled
+Portfast Default                        is disabled
+PortFast BPDU Guard Default            is disabled
+Portfast BPDU Filter Default           is disabled
+Loopguard Default                      is disabled
+UplinkFast                              is disabled
+BackboneFast                            is disabled
+Configured Pathcost method used is short
 
-        Name                   Blocking Listening Learning Forwarding STP Active
-        ---------------------- -------- --------- -------- ---------- ----------
-        VLAN0100                     0         1        0          0          1
-        VLAN0101                     0         1        0          0          1
+Name                   Blocking Listening Learning Forwarding STP Active
+---------------------- -------- --------- -------- ---------- ----------
+VLAN0100                     0         1        0          0          1
+VLAN0101                     0         1        0          0          1
                   
-        Name                   Blocking Listening Learning Forwarding STP Active
-        ---------------------- -------- --------- -------- ---------- ----------
-        VLAN0405                     0         1        0          0          1
-        VLAN0406                     0         1        0          0          1
+Name                   Blocking Listening Learning Forwarding STP Active
+---------------------- -------- --------- -------- ---------- ----------
+VLAN0405                     0         1        0          0          1
+VLAN0406                     0         1        0          0          1
                   
-        Name                   Blocking Listening Learning Forwarding STP Active
-        ---------------------- -------- --------- -------- ---------- ----------
-        VLAN0407                     0         1        0          0          1
-        ---------------------- -------- --------- -------- ---------- ----------
-        5 vlans                      0         5        0          0          5
+Name                   Blocking Listening Learning Forwarding STP Active
+---------------------- -------- --------- -------- ---------- ----------
+VLAN0407                     0         1        0          0          1
+---------------------- -------- --------- -------- ---------- ----------
+5 vlans                      0         5        0          0          5
 
     

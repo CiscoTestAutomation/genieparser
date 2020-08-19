@@ -1,19 +1,19 @@
 
-        Router# show policy-map
-        Policy Map pol1
-            Class class c1
-        Bandwidth 10 (%)
-        exponential weight 9
-        class   min-threshold(bytes)   max-threshold(bytes)  mark-probability
-        -------------------------------------------------------------------
+Router# show policy-map
+Policy Map pol1
+    Class class c1
+Bandwidth 10 (%)
+exponential weight 9
+class   min-threshold(bytes)   max-threshold(bytes)  mark-probability
+-------------------------------------------------------------------
  
-        0       -                       -                      1/10
-        1       20000                   30000                  1/10
-        2       -                       -                      1/10
-        3       -                       -                      1/10
-        4       -                       -                      1/10
-        5       -                       -                      1/10
-        6       -                       -                      1/10
-        7       -                       -                      1/10
-        rsvp    -                       -                      1/10
+0       -                       -                      1/10
+1       20000                   30000                  1/10
+2       -                       -                      1/10
+3       -                       -                      1/10
+4       -                       -                      1/10
+5       -                       -                      1/10
+6       -                       -                      1/10
+7       -                       -                      1/10
+rsvp    -                       -                      1/10
     

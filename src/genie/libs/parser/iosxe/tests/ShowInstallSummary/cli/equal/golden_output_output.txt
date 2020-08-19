@@ -1,15 +1,15 @@
-        Router#show install summary
-        [ R0 ] Installed Package(s) Information:
-        State (St): I - Inactive, U - Activated & Uncommitted,
-                    C - Activated & Committed, D - Deactivated & Uncommitted
-        --------------------------------------------------------------------------------
-        Type  St   Filename/Version
-        --------------------------------------------------------------------------------
-        SMU   U    bootflash:utah.bm.smu.may15.bin
-        IMG   C    10.69.1.0.66982
+Router#show install summary
+[ R0 ] Installed Package(s) Information:
+State (St): I - Inactive, U - Activated & Uncommitted,
+            C - Activated & Committed, D - Deactivated & Uncommitted
+--------------------------------------------------------------------------------
+Type  St   Filename/Version
+--------------------------------------------------------------------------------
+SMU   U    bootflash:utah.bm.smu.may15.bin
+IMG   C    10.69.1.0.66982
 
-        --------------------------------------------------------------------------------
-        Auto abort timer: active on install_activate, time before rollback - 01:49:42
-        --------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+Auto abort timer: active on install_activate, time before rollback - 01:49:42
+--------------------------------------------------------------------------------
 
         

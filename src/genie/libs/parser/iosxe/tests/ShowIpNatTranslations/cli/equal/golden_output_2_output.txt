@@ -1,7 +1,7 @@
-        Router#show ip nat translations
-        Pro Inside global        Inside local       Outside local      Outside global
-        udp 10.1.7.2:1220  192.168.1.95:1220  10.100.20.100:53    10.100.20.100:53
-        tcp 10.1.7.2:11012 192.168.1.89:11012 10.26.102.100:23    10.26.102.100:23
-        tcp 10.1.7.2:1067  192.168.1.95:1067  10.220.2.25:23    10.220.2.25:23
-        Total number of translations: 3
+Router#show ip nat translations
+Pro Inside global        Inside local       Outside local      Outside global
+udp 10.1.7.2:1220  192.168.1.95:1220  10.100.20.100:53    10.100.20.100:53
+tcp 10.1.7.2:11012 192.168.1.89:11012 10.26.102.100:23    10.26.102.100:23
+tcp 10.1.7.2:1067  192.168.1.95:1067  10.220.2.25:23    10.220.2.25:23
+Total number of translations: 3
     

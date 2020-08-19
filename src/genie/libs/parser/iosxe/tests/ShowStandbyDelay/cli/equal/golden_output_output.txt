@@ -1,4 +1,4 @@
 
-    Interface          Minimum Reload 
-    GigabitEthernet1   99      888   
+Interface          Minimum Reload 
+GigabitEthernet1   99      888   
     

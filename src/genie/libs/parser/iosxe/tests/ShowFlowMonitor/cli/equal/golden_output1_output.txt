@@ -1,18 +1,18 @@
 
-    Device#show flow monitor FLOW-MONITOR-1 cache format table
-    Cache type:                               Normal (Platform cache)
-    Cache size:                                   16
-    Current entries:                               1
-    High Watermark:                                1
+Device#show flow monitor FLOW-MONITOR-1 cache format table
+Cache type:                               Normal (Platform cache)
+Cache size:                                   16
+Current entries:                               1
+High Watermark:                                1
     
-    Flows added:                                   1
-    Flows aged:                                    0
+Flows added:                                   1
+Flows aged:                                    0
     
-    IPV4 SRC ADDR    IPV4 DST ADDR    TRNS SRC PORT  TRNS DST PORT  IP TOS  IP PROT            bytes long             pkts long
-    ===============  ===============  =============  =============  ======  =======  ====================  ====================
-    10.4.1.10         10.4.10.1                    0              0  0xC0         89                   100                     1
-    10.4.1.10         10.4.10.1                    1              1  0xC0         89                   100                     1
-    10.4.1.11         10.4.10.2                    0              0  0xC0         89                   100                     1
+IPV4 SRC ADDR    IPV4 DST ADDR    TRNS SRC PORT  TRNS DST PORT  IP TOS  IP PROT            bytes long             pkts long
+===============  ===============  =============  =============  ======  =======  ====================  ====================
+10.4.1.10         10.4.10.1                    0              0  0xC0         89                   100                     1
+10.4.1.10         10.4.10.1                    1              1  0xC0         89                   100                     1
+10.4.1.11         10.4.10.2                    0              0  0xC0         89                   100                     1
     
-    Device#
+Device#
     

@@ -1,253 +1,253 @@
 
-        R1_ospf_xe#show ip ospf database opaque-area 
+R1_ospf_xe#show ip ospf database opaque-area 
 
-            OSPF Router with ID (10.4.1.1) (Process ID 1)
+    OSPF Router with ID (10.4.1.1) (Process ID 1)
 
-                Type-10 Opaque Area Link States (Area 0)
+        Type-10 Opaque Area Link States (Area 0)
 
-          LS age: 370
-          Options: (No TOS-capability, DC)
-          LS Type: Opaque Area Link
-          Link State ID: 10.1.0.0
-          Opaque Type: 1 (Traffic Engineering)
-          Opaque ID: 0
-          Advertising Router: 10.4.1.1
-          LS Seq Number: 80000002
-          Checksum: 0x56D2
-          Length: 28
-          Fragment number : 0
+  LS age: 370
+  Options: (No TOS-capability, DC)
+  LS Type: Opaque Area Link
+  Link State ID: 10.1.0.0
+  Opaque Type: 1 (Traffic Engineering)
+  Opaque ID: 0
+  Advertising Router: 10.4.1.1
+  LS Seq Number: 80000002
+  Checksum: 0x56D2
+  Length: 28
+  Fragment number : 0
 
-            MPLS TE router ID : 10.4.1.1
+    MPLS TE router ID : 10.4.1.1
 
-            Number of Links : 0
+    Number of Links : 0
 
-          LS age: 1420
-          Options: (No TOS-capability, No DC)
-          LS Type: Opaque Area Link
-          Link State ID: 10.1.0.0
-          Opaque Type: 1 (Traffic Engineering)
-          Opaque ID: 0
-          Advertising Router: 10.16.2.2
-          LS Seq Number: 80000002
-          Checksum: 0x1E21
-          Length: 28
-          Fragment number : 0
+  LS age: 1420
+  Options: (No TOS-capability, No DC)
+  LS Type: Opaque Area Link
+  Link State ID: 10.1.0.0
+  Opaque Type: 1 (Traffic Engineering)
+  Opaque ID: 0
+  Advertising Router: 10.16.2.2
+  LS Seq Number: 80000002
+  Checksum: 0x1E21
+  Length: 28
+  Fragment number : 0
 
-            MPLS TE router ID : 10.16.2.2
+    MPLS TE router ID : 10.16.2.2
 
-            Number of Links : 0
+    Number of Links : 0
 
-          LS age: 123
-          Options: (No TOS-capability, DC)
-          LS Type: Opaque Area Link
-          Link State ID: 10.1.0.0
-          Opaque Type: 1 (Traffic Engineering)
-          Opaque ID: 0
-          Advertising Router: 10.36.3.3
-          LS Seq Number: 80000002
-          Checksum: 0x5EBA
-          Length: 28
-          Fragment number : 0
+  LS age: 123
+  Options: (No TOS-capability, DC)
+  LS Type: Opaque Area Link
+  Link State ID: 10.1.0.0
+  Opaque Type: 1 (Traffic Engineering)
+  Opaque ID: 0
+  Advertising Router: 10.36.3.3
+  LS Seq Number: 80000002
+  Checksum: 0x5EBA
+  Length: 28
+  Fragment number : 0
 
-            MPLS TE router ID : 10.36.3.3
+    MPLS TE router ID : 10.36.3.3
 
-            Number of Links : 0
+    Number of Links : 0
 
-          LS age: 370
-          Options: (No TOS-capability, DC)
-          LS Type: Opaque Area Link
-          Link State ID: 10.1.0.1
-          Opaque Type: 1 (Traffic Engineering)
-          Opaque ID: 1
-          Advertising Router: 10.4.1.1
-          LS Seq Number: 80000002
-          Checksum: 0x6586
-          Length: 124
-          Fragment number : 1
+  LS age: 370
+  Options: (No TOS-capability, DC)
+  LS Type: Opaque Area Link
+  Link State ID: 10.1.0.1
+  Opaque Type: 1 (Traffic Engineering)
+  Opaque ID: 1
+  Advertising Router: 10.4.1.1
+  LS Seq Number: 80000002
+  Checksum: 0x6586
+  Length: 124
+  Fragment number : 1
 
-            Link connected to Broadcast network
-              Link ID : 10.1.4.4
-              Interface Address : 10.1.4.1
-              Admin Metric : 1
-              Maximum bandwidth : 125000000
-              Maximum reservable bandwidth : 93750000
-              Number of Priority : 8
-              Priority 0 : 93750000     Priority 1 : 93750000   
-              Priority 2 : 93750000     Priority 3 : 93750000   
-              Priority 4 : 93750000     Priority 5 : 93750000   
-              Priority 6 : 93750000     Priority 7 : 93750000   
-              Affinity Bit : 0x0
-              IGP Metric : 1
+    Link connected to Broadcast network
+      Link ID : 10.1.4.4
+      Interface Address : 10.1.4.1
+      Admin Metric : 1
+      Maximum bandwidth : 125000000
+      Maximum reservable bandwidth : 93750000
+      Number of Priority : 8
+      Priority 0 : 93750000     Priority 1 : 93750000   
+      Priority 2 : 93750000     Priority 3 : 93750000   
+      Priority 4 : 93750000     Priority 5 : 93750000   
+      Priority 6 : 93750000     Priority 7 : 93750000   
+      Affinity Bit : 0x0
+      IGP Metric : 1
 
-            Number of Links : 1
+    Number of Links : 1
 
-          LS age: 370
-          Options: (No TOS-capability, DC)
-          LS Type: Opaque Area Link
-          Link State ID: 10.1.0.2
-          Opaque Type: 1 (Traffic Engineering)
-          Opaque ID: 2
-          Advertising Router: 10.4.1.1
-          LS Seq Number: 80000002
-          Checksum: 0xB43D
-          Length: 124
-          Fragment number : 2
+  LS age: 370
+  Options: (No TOS-capability, DC)
+  LS Type: Opaque Area Link
+  Link State ID: 10.1.0.2
+  Opaque Type: 1 (Traffic Engineering)
+  Opaque ID: 2
+  Advertising Router: 10.4.1.1
+  LS Seq Number: 80000002
+  Checksum: 0xB43D
+  Length: 124
+  Fragment number : 2
                   
-            Link connected to Broadcast network
-              Link ID : 10.1.2.1
-              Interface Address : 10.1.2.1
-              Admin Metric : 1
-              Maximum bandwidth : 125000000
-              Maximum reservable bandwidth : 93750000
-              Number of Priority : 8
-              Priority 0 : 93750000     Priority 1 : 93750000   
-              Priority 2 : 93750000     Priority 3 : 93750000   
-              Priority 4 : 93750000     Priority 5 : 93750000   
-              Priority 6 : 93750000     Priority 7 : 93750000   
-              Affinity Bit : 0x0
-              IGP Metric : 1
+    Link connected to Broadcast network
+      Link ID : 10.1.2.1
+      Interface Address : 10.1.2.1
+      Admin Metric : 1
+      Maximum bandwidth : 125000000
+      Maximum reservable bandwidth : 93750000
+      Number of Priority : 8
+      Priority 0 : 93750000     Priority 1 : 93750000   
+      Priority 2 : 93750000     Priority 3 : 93750000   
+      Priority 4 : 93750000     Priority 5 : 93750000   
+      Priority 6 : 93750000     Priority 7 : 93750000   
+      Affinity Bit : 0x0
+      IGP Metric : 1
 
-            Number of Links : 1
+    Number of Links : 1
 
-          LS age: 123
-          Options: (No TOS-capability, DC)
-          LS Type: Opaque Area Link
-          Link State ID: 10.1.0.4
-          Opaque Type: 1 (Traffic Engineering)
-          Opaque ID: 4
-          Advertising Router: 10.36.3.3
-          LS Seq Number: 80000002
-          Checksum: 0x915D
-          Length: 160
-          Fragment number : 4
+  LS age: 123
+  Options: (No TOS-capability, DC)
+  LS Type: Opaque Area Link
+  Link State ID: 10.1.0.4
+  Opaque Type: 1 (Traffic Engineering)
+  Opaque ID: 4
+  Advertising Router: 10.36.3.3
+  LS Seq Number: 80000002
+  Checksum: 0x915D
+  Length: 160
+  Fragment number : 4
 
-            Link connected to Broadcast network
-              Link ID : 10.3.4.4
-              Interface Address : 10.3.4.3
-              Admin Metric : 1
-              Maximum bandwidth : 125000000
-              Maximum reservable bandwidth : 93750000
-              Number of Priority : 8
-              Priority 0 : 93750000     Priority 1 : 93750000   
-              Priority 2 : 93750000     Priority 3 : 93750000   
-              Priority 4 : 93750000     Priority 5 : 93750000   
-              Priority 6 : 93750000     Priority 7 : 93750000   
-              Affinity Bit : 0x0
-              IGP Metric : 1
-              Unknown SubTLV type 32771 length 32
+    Link connected to Broadcast network
+      Link ID : 10.3.4.4
+      Interface Address : 10.3.4.3
+      Admin Metric : 1
+      Maximum bandwidth : 125000000
+      Maximum reservable bandwidth : 93750000
+      Number of Priority : 8
+      Priority 0 : 93750000     Priority 1 : 93750000   
+      Priority 2 : 93750000     Priority 3 : 93750000   
+      Priority 4 : 93750000     Priority 5 : 93750000   
+      Priority 6 : 93750000     Priority 7 : 93750000   
+      Affinity Bit : 0x0
+      IGP Metric : 1
+      Unknown SubTLV type 32771 length 32
 
-            Number of Links : 1
+    Number of Links : 1
 
-          LS age: 123
-          Options: (No TOS-capability, DC)
-          LS Type: Opaque Area Link
-          Link State ID: 10.1.0.6
-          Opaque Type: 1 (Traffic Engineering)
-          Opaque ID: 6
-          Advertising Router: 10.36.3.3
-          LS Seq Number: 80000002
-          Checksum: 0x5EC
-          Length: 160
-          Fragment number : 6
+  LS age: 123
+  Options: (No TOS-capability, DC)
+  LS Type: Opaque Area Link
+  Link State ID: 10.1.0.6
+  Opaque Type: 1 (Traffic Engineering)
+  Opaque ID: 6
+  Advertising Router: 10.36.3.3
+  LS Seq Number: 80000002
+  Checksum: 0x5EC
+  Length: 160
+  Fragment number : 6
 
-            Link connected to Broadcast network
-              Link ID : 10.2.3.3
-              Interface Address : 10.2.3.3
-              Admin Metric : 1
-              Maximum bandwidth : 125000000
-              Maximum reservable bandwidth : 93750000
-              Number of Priority : 8
-              Priority 0 : 93750000     Priority 1 : 93750000   
-              Priority 2 : 93750000     Priority 3 : 93750000   
-              Priority 4 : 93750000     Priority 5 : 93750000   
-              Priority 6 : 93750000     Priority 7 : 93750000   
-              Affinity Bit : 0x0
-              IGP Metric : 1
-              Unknown SubTLV type 32771 length 32
+    Link connected to Broadcast network
+      Link ID : 10.2.3.3
+      Interface Address : 10.2.3.3
+      Admin Metric : 1
+      Maximum bandwidth : 125000000
+      Maximum reservable bandwidth : 93750000
+      Number of Priority : 8
+      Priority 0 : 93750000     Priority 1 : 93750000   
+      Priority 2 : 93750000     Priority 3 : 93750000   
+      Priority 4 : 93750000     Priority 5 : 93750000   
+      Priority 6 : 93750000     Priority 7 : 93750000   
+      Affinity Bit : 0x0
+      IGP Metric : 1
+      Unknown SubTLV type 32771 length 32
 
-            Number of Links : 1
+    Number of Links : 1
 
-          LS age: 1010
-          Options: (No TOS-capability, No DC)
-          LS Type: Opaque Area Link
-          Link State ID: 10.1.0.37
-          Opaque Type: 1 (Traffic Engineering)
-          Opaque ID: 37
-          Advertising Router: 10.16.2.2
-          LS Seq Number: 80000003
-          Checksum: 0xE691
-          Length: 116
-          Fragment number : 37
+  LS age: 1010
+  Options: (No TOS-capability, No DC)
+  LS Type: Opaque Area Link
+  Link State ID: 10.1.0.37
+  Opaque Type: 1 (Traffic Engineering)
+  Opaque ID: 37
+  Advertising Router: 10.16.2.2
+  LS Seq Number: 80000003
+  Checksum: 0xE691
+  Length: 116
+  Fragment number : 37
 
-            Link connected to Broadcast network
-              Link ID : 10.2.3.3
-              Interface Address : 10.2.3.2
-              Admin Metric : 1
-              Maximum bandwidth : 125000000
-              Maximum reservable bandwidth : 93750000
-              Number of Priority : 8
-              Priority 0 : 93750000     Priority 1 : 93750000   
-              Priority 2 : 93750000     Priority 3 : 93750000   
-              Priority 4 : 93750000     Priority 5 : 93750000   
-              Priority 6 : 93750000     Priority 7 : 93750000   
-              Affinity Bit : 0x0
+    Link connected to Broadcast network
+      Link ID : 10.2.3.3
+      Interface Address : 10.2.3.2
+      Admin Metric : 1
+      Maximum bandwidth : 125000000
+      Maximum reservable bandwidth : 93750000
+      Number of Priority : 8
+      Priority 0 : 93750000     Priority 1 : 93750000   
+      Priority 2 : 93750000     Priority 3 : 93750000   
+      Priority 4 : 93750000     Priority 5 : 93750000   
+      Priority 6 : 93750000     Priority 7 : 93750000   
+      Affinity Bit : 0x0
 
-            Number of Links : 1
+    Number of Links : 1
 
-          LS age: 1000
-          Options: (No TOS-capability, No DC)
-          LS Type: Opaque Area Link
-          Link State ID: 10.1.0.38
-          Opaque Type: 1 (Traffic Engineering)
-          Opaque ID: 38
-          Advertising Router: 10.16.2.2
-          LS Seq Number: 80000003
-          Checksum: 0x254F
-          Length: 116
-          Fragment number : 38
+  LS age: 1000
+  Options: (No TOS-capability, No DC)
+  LS Type: Opaque Area Link
+  Link State ID: 10.1.0.38
+  Opaque Type: 1 (Traffic Engineering)
+  Opaque ID: 38
+  Advertising Router: 10.16.2.2
+  LS Seq Number: 80000003
+  Checksum: 0x254F
+  Length: 116
+  Fragment number : 38
 
-            Link connected to Broadcast network
-              Link ID : 10.2.4.4
-              Interface Address : 10.2.4.2
-              Admin Metric : 1
-              Maximum bandwidth : 125000000
-              Maximum reservable bandwidth : 93750000
-              Number of Priority : 8
-              Priority 0 : 93750000     Priority 1 : 93750000   
-              Priority 2 : 93750000     Priority 3 : 93750000   
-              Priority 4 : 93750000     Priority 5 : 93750000   
-              Priority 6 : 93750000     Priority 7 : 93750000   
-              Affinity Bit : 0x0
+    Link connected to Broadcast network
+      Link ID : 10.2.4.4
+      Interface Address : 10.2.4.2
+      Admin Metric : 1
+      Maximum bandwidth : 125000000
+      Maximum reservable bandwidth : 93750000
+      Number of Priority : 8
+      Priority 0 : 93750000     Priority 1 : 93750000   
+      Priority 2 : 93750000     Priority 3 : 93750000   
+      Priority 4 : 93750000     Priority 5 : 93750000   
+      Priority 6 : 93750000     Priority 7 : 93750000   
+      Affinity Bit : 0x0
 
-            Number of Links : 1
+    Number of Links : 1
 
-          LS age: 1000
-          Options: (No TOS-capability, No DC)
-          LS Type: Opaque Area Link
-          Link State ID: 10.1.0.39
-          Opaque Type: 1 (Traffic Engineering)
-          Opaque ID: 39
-          Advertising Router: 10.16.2.2
-          LS Seq Number: 80000003
-          Checksum: 0x4438
-          Length: 116
-          Fragment number : 39
+  LS age: 1000
+  Options: (No TOS-capability, No DC)
+  LS Type: Opaque Area Link
+  Link State ID: 10.1.0.39
+  Opaque Type: 1 (Traffic Engineering)
+  Opaque ID: 39
+  Advertising Router: 10.16.2.2
+  LS Seq Number: 80000003
+  Checksum: 0x4438
+  Length: 116
+  Fragment number : 39
 
-            Link connected to Broadcast network
-              Link ID : 10.1.2.1
-              Interface Address : 10.1.2.2
-              Admin Metric : 1
-              Maximum bandwidth : 125000000
-              Maximum reservable bandwidth : 93750000
-              Number of Priority : 8
-              Priority 0 : 93750000     Priority 1 : 93750000   
-              Priority 2 : 93750000     Priority 3 : 93750000   
-              Priority 4 : 93750000     Priority 5 : 93750000   
-              Priority 6 : 93750000     Priority 7 : 93750000   
-              Affinity Bit : 0x0
+    Link connected to Broadcast network
+      Link ID : 10.1.2.1
+      Interface Address : 10.1.2.2
+      Admin Metric : 1
+      Maximum bandwidth : 125000000
+      Maximum reservable bandwidth : 93750000
+      Number of Priority : 8
+      Priority 0 : 93750000     Priority 1 : 93750000   
+      Priority 2 : 93750000     Priority 3 : 93750000   
+      Priority 4 : 93750000     Priority 5 : 93750000   
+      Priority 6 : 93750000     Priority 7 : 93750000   
+      Affinity Bit : 0x0
 
-            Number of Links : 1
+    Number of Links : 1
 
 
-            OSPF Router with ID (10.229.11.11) (Process ID 2)
+    OSPF Router with ID (10.229.11.11) (Process ID 2)
         

@@ -1,11 +1,11 @@
 
-        PE1#show processes cpu | include process
-         100           0           1          0  0.00%  0.00%  0.00%   0 cpf_process_tpQ  
-         189           0           1          0  0.00%  0.00%  0.00%   0 ADJ NSF process  
-         244        2930      365006          8  0.00%  0.00%  0.00%   0 cdp init process 
-         309           0           2          0  0.00%  0.00%  0.00%   0 XDR FOF process  
-         355        9385      712805         13  0.00%  0.00%  0.00%   0 Inspect process  
-         429           0           3          0  0.00%  0.00%  0.00%   0 LDAP process     
-         547         592       73010          8  0.00%  0.00%  0.00%   0 VDC process      
-         615       19084      730005         26  0.00%  0.00%  0.00%   0 SBC main process
+PE1#show processes cpu | include process
+ 100           0           1          0  0.00%  0.00%  0.00%   0 cpf_process_tpQ  
+ 189           0           1          0  0.00%  0.00%  0.00%   0 ADJ NSF process  
+ 244        2930      365006          8  0.00%  0.00%  0.00%   0 cdp init process 
+ 309           0           2          0  0.00%  0.00%  0.00%   0 XDR FOF process  
+ 355        9385      712805         13  0.00%  0.00%  0.00%   0 Inspect process  
+ 429           0           3          0  0.00%  0.00%  0.00%   0 LDAP process     
+ 547         592       73010          8  0.00%  0.00%  0.00%   0 VDC process      
+ 615       19084      730005         26  0.00%  0.00%  0.00%   0 SBC main process
     

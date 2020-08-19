@@ -1,53 +1,53 @@
 
-        Load for five secs: 1%/0%; one minute: 4%; five minutes: 5%
-        Time source is NTP, 14:58:52.473 EST Fri Oct 28 2016
+    Load for five secs: 1%/0%; one minute: 4%; five minutes: 5%
+    Time source is NTP, 14:58:52.473 EST Fri Oct 28 2016
 
-        GigabitEthernet0/0/0 
+    GigabitEthernet0/0/0 
 
-        Service-policy output: CORE-Out
+    Service-policy output: CORE-Out
 
-        Class-map: EXP0 (match-all)  
-            0 packets, 0 bytes
-            5 minute offered rate 0000 bps
-            Match: mpls experimental topmost 0 
+    Class-map: EXP0 (match-all)  
+        0 packets, 0 bytes
+        5 minute offered rate 0000 bps
+        Match: mpls experimental topmost 0 
 
-        Class-map: EXP1 (match-all)  
-            0 packets, 0 bytes
-            5 minute offered rate 0000 bps
-            Match: mpls experimental topmost 1 
+    Class-map: EXP1 (match-all)  
+        0 packets, 0 bytes
+        5 minute offered rate 0000 bps
+        Match: mpls experimental topmost 1 
 
-        Class-map: EXP2 (match-all)  
-            0 packets, 0 bytes
-            5 minute offered rate 0000 bps
-            Match: mpls experimental topmost 2 
+    Class-map: EXP2 (match-all)  
+        0 packets, 0 bytes
+        5 minute offered rate 0000 bps
+        Match: mpls experimental topmost 2 
 
-        Class-map: EXP3 (match-all)  
-            0 packets, 0 bytes
-            5 minute offered rate 0000 bps
-            Match: mpls experimental topmost 3 
+    Class-map: EXP3 (match-all)  
+        0 packets, 0 bytes
+        5 minute offered rate 0000 bps
+        Match: mpls experimental topmost 3 
 
-        Class-map: EXP4 (match-all)  
-            0 packets, 0 bytes
-            5 minute offered rate 0000 bps
-            Match: mpls experimental topmost 4 
+    Class-map: EXP4 (match-all)  
+        0 packets, 0 bytes
+        5 minute offered rate 0000 bps
+        Match: mpls experimental topmost 4 
 
-        Class-map: EXP5 (match-all)  
-            0 packets, 0 bytes
-            5 minute offered rate 0000 bps
-            Match: mpls experimental topmost 5 
+    Class-map: EXP5 (match-all)  
+        0 packets, 0 bytes
+        5 minute offered rate 0000 bps
+        Match: mpls experimental topmost 5 
 
-        Class-map: EXP6 (match-all)  
-            27 packets, 1869 bytes
-            5 minute offered rate 0000 bps
-            Match: mpls experimental topmost 6 
+    Class-map: EXP6 (match-all)  
+        27 packets, 1869 bytes
+        5 minute offered rate 0000 bps
+        Match: mpls experimental topmost 6 
 
-        Class-map: EXP7 (match-all)  
-            0 packets, 0 bytes
-            5 minute offered rate 0000 bps
-            Match: mpls experimental topmost 7 
+    Class-map: EXP7 (match-all)  
+        0 packets, 0 bytes
+        5 minute offered rate 0000 bps
+        Match: mpls experimental topmost 7 
 
-        Class-map: class-default (match-any)  
-            193 packets, 19600 bytes
-            5 minute offered rate 0000 bps, drop rate 0000 bps
-            Match: any 
-    Router#    
+    Class-map: class-default (match-any)  
+        193 packets, 19600 bytes
+        5 minute offered rate 0000 bps, drop rate 0000 bps
+        Match: any 
+Router#    

@@ -1,16 +1,16 @@
 
-        PE1#show mpls forwarding-table
-        Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop   
-        Label      Label      or Tunnel Id     Switched      interface             
-        16         Pop Label  192.168.154.2-A      0             Gi0/1/2    192.168.154.2  
-        17         Pop Label  192.168.4.2-A      0             Gi0/1/1    192.168.4.2  
-        18         Pop Label  192.168.111.2-A      0             Gi0/1/0    192.168.111.2  
-        19         Pop Label  192.168.220.2-A      0             Te0/0/0    192.168.220.2  
-        16002      Pop Label  10.16.2.2/32       0             Te0/0/0    192.168.220.2  
-                   Pop Label  10.16.2.2/32       0             Gi0/1/0    192.168.111.2  
-                   Pop Label  10.16.2.2/32       0             Gi0/1/1    192.168.4.2  
-                   Pop Label  10.16.2.2/32       0             Gi0/1/2    192.168.154.2  
+PE1#show mpls forwarding-table
+Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop   
+Label      Label      or Tunnel Id     Switched      interface             
+16         Pop Label  192.168.154.2-A      0             Gi0/1/2    192.168.154.2  
+17         Pop Label  192.168.4.2-A      0             Gi0/1/1    192.168.4.2  
+18         Pop Label  192.168.111.2-A      0             Gi0/1/0    192.168.111.2  
+19         Pop Label  192.168.220.2-A      0             Te0/0/0    192.168.220.2  
+16002      Pop Label  10.16.2.2/32       0             Te0/0/0    192.168.220.2  
+           Pop Label  10.16.2.2/32       0             Gi0/1/0    192.168.111.2  
+           Pop Label  10.16.2.2/32       0             Gi0/1/1    192.168.4.2  
+           Pop Label  10.16.2.2/32       0             Gi0/1/2    192.168.154.2  
          
-        A  - Adjacency SID
-        PE1#
+A  - Adjacency SID
+PE1#
     

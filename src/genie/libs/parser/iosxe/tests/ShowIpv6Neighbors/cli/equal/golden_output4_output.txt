@@ -1,5 +1,5 @@
 
-        R1_xe#show ipv6 neighbors vrf VRF1 Gi3.420
-        IPv6 Address                              Age Link-layer Addr State Interface
-        FE80::5C00:40FF:FEFF:209                      7 5e00.40ff.0209  STALE Gi3.420
+R1_xe#show ipv6 neighbors vrf VRF1 Gi3.420
+IPv6 Address                              Age Link-layer Addr State Interface
+FE80::5C00:40FF:FEFF:209                      7 5e00.40ff.0209  STALE Gi3.420
     

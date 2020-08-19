@@ -1,6 +1,6 @@
 
-     Loopback8 is up, line protocol is up
-       Internet protocol processing disabled
-     GigabitEthernet15 is down, line protocol is down
-       Internet protocol processing disabled
+Loopback8 is up, line protocol is up
+  Internet protocol processing disabled
+GigabitEthernet15 is down, line protocol is down
+  Internet protocol processing disabled
     

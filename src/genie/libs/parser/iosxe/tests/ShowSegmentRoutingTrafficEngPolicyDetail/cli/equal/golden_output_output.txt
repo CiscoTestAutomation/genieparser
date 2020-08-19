@@ -1,147 +1,147 @@
 
-        sr_ve-hkgasr01#show segment-routing traffic-eng policy all detail
+sr_ve-hkgasr01#show segment-routing traffic-eng policy all detail
 
-        Name: maxsid (Color: 100 End-point: 10.169.196.241)
-        Status:
-            Admin: up, Operational: up for 04:54:31 (since 09-09 20:19:30.195)
-        Candidate-paths:
-            Preference 200:
-            Explicit: segment-list maxsid (active)
-                Weight: 0, Metric Type: TE
-                16071 [Prefix-SID, 10.189.5.252]
-                16072 [Prefix-SID, 10.189.5.253]
-                16071 [Prefix-SID, 10.189.5.252]
-                16072 [Prefix-SID, 10.189.5.253]
-                16071 [Prefix-SID, 10.189.5.252]
-                16072 [Prefix-SID, 10.189.5.253]
-                16071 [Prefix-SID, 10.189.5.252]
-                16072 [Prefix-SID, 10.189.5.253]
-                16071 [Prefix-SID, 10.189.5.252]
-                16072 [Prefix-SID, 10.189.5.253]
-                16071 [Prefix-SID, 10.189.5.252]
-                16072 [Prefix-SID, 10.189.5.253]
-                16063 [Prefix-SID, 10.169.196.241]
-            Preference 100:
-            Explicit: segment-list test1 (inactive)
-                Weight: 0, Metric Type: TE
-                16072 [Prefix-SID, 10.189.5.253]
-                16052 [Prefix-SID, 10.169.14.241]
-                16062 [Prefix-SID, 10.34.2.251]
-                16063 [Prefix-SID, 10.169.196.241]
-        Attributes:
-            Binding SID: 15001
-            Allocation mode: explicit
-            State: Programmed
-        Forwarding-ID: 65537 (0x1C)
-        Stats:
-            Packets: 1878       Bytes: 295606
+Name: maxsid (Color: 100 End-point: 10.169.196.241)
+Status:
+    Admin: up, Operational: up for 04:54:31 (since 09-09 20:19:30.195)
+Candidate-paths:
+    Preference 200:
+    Explicit: segment-list maxsid (active)
+        Weight: 0, Metric Type: TE
+        16071 [Prefix-SID, 10.189.5.252]
+        16072 [Prefix-SID, 10.189.5.253]
+        16071 [Prefix-SID, 10.189.5.252]
+        16072 [Prefix-SID, 10.189.5.253]
+        16071 [Prefix-SID, 10.189.5.252]
+        16072 [Prefix-SID, 10.189.5.253]
+        16071 [Prefix-SID, 10.189.5.252]
+        16072 [Prefix-SID, 10.189.5.253]
+        16071 [Prefix-SID, 10.189.5.252]
+        16072 [Prefix-SID, 10.189.5.253]
+        16071 [Prefix-SID, 10.189.5.252]
+        16072 [Prefix-SID, 10.189.5.253]
+        16063 [Prefix-SID, 10.169.196.241]
+    Preference 100:
+    Explicit: segment-list test1 (inactive)
+        Weight: 0, Metric Type: TE
+        16072 [Prefix-SID, 10.189.5.253]
+        16052 [Prefix-SID, 10.169.14.241]
+        16062 [Prefix-SID, 10.34.2.251]
+        16063 [Prefix-SID, 10.169.196.241]
+Attributes:
+    Binding SID: 15001
+    Allocation mode: explicit
+    State: Programmed
+Forwarding-ID: 65537 (0x1C)
+Stats:
+    Packets: 1878       Bytes: 295606
 
-        Event history:
-            Timestamp                   Client                  Event type              Context: Value
-            ---------                   ------                  ----------              -------: -----
-            09-09 20:15:58.969          CLI AGENT               Policy created          Name: maxsid
-            09-09 20:16:09.573          CLI AGENT               Set colour              Colour: 100
-            09-09 20:16:09.573          CLI AGENT               Set end point           End-point: 10.169.196.241
-            09-09 20:16:23.728          CLI AGENT               Set explicit path       Path option: maxsid
-            09-09 20:19:30.195          FH Resolution           Policy state UP         Status: PATH RESOLVED
-            09-09 20:19:30.202          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:56:19.877          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:57:51.007          CLI AGENT               Set binding SID         BSID: Binding SID set
-            09-09 21:15:51.840          CLI AGENT               Set explicit path       Path option: test1
-            09-09 21:19:04.452          CLI AGENT               Set explicit path       Path option: test1
-            09-09 21:19:04.454          FH Resolution           Policy state UP         Status: PATH RESOLVED
-            09-09 21:19:04.458          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 21:20:20.811          CLI AGENT               Remove path option      Path option: 300
-            09-09 21:20:20.812          FH Resolution           Policy state UP         Status: PATH RESOLVED
+Event history:
+    Timestamp                   Client                  Event type              Context: Value
+    ---------                   ------                  ----------              -------: -----
+    09-09 20:15:58.969          CLI AGENT               Policy created          Name: maxsid
+    09-09 20:16:09.573          CLI AGENT               Set colour              Colour: 100
+    09-09 20:16:09.573          CLI AGENT               Set end point           End-point: 10.169.196.241
+    09-09 20:16:23.728          CLI AGENT               Set explicit path       Path option: maxsid
+    09-09 20:19:30.195          FH Resolution           Policy state UP         Status: PATH RESOLVED
+    09-09 20:19:30.202          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:56:19.877          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:57:51.007          CLI AGENT               Set binding SID         BSID: Binding SID set
+    09-09 21:15:51.840          CLI AGENT               Set explicit path       Path option: test1
+    09-09 21:19:04.452          CLI AGENT               Set explicit path       Path option: test1
+    09-09 21:19:04.454          FH Resolution           Policy state UP         Status: PATH RESOLVED
+    09-09 21:19:04.458          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 21:20:20.811          CLI AGENT               Remove path option      Path option: 300
+    09-09 21:20:20.812          FH Resolution           Policy state UP         Status: PATH RESOLVED
 
-        Name: test1 (Color: 100 End-point: 10.169.196.241)
-        Status:
-            Admin: up, Operational: up for 03:48:03 (since 09-09 21:25:58.933)
-        Candidate-paths:
-            Preference 400:
-            Dynamic (pce) (inactive)
-                Weight: 0, Metric Type: TE
-            Preference 300:
-            Dynamic (active)
-                Weight: 0, Metric Type: TE
-                Metric Type: TE, Path Accumulated Metric: 2115
-                16052 [Prefix-SID, 10.169.14.241]
-                24 [Adjacency-SID, 10.169.14.33 - 10.169.14.34]
-                16063 [Prefix-SID, 10.169.196.241]
-            Preference 200:
-            Explicit: segment-list test1 (inactive)
-                Weight: 0, Metric Type: TE
-                16072 [Prefix-SID, 10.189.5.253]
-                16052 [Prefix-SID, 10.169.14.241]
-                16062 [Prefix-SID, 10.34.2.251]
-                16063 [Prefix-SID, 10.169.196.241]
-            Preference 100:
-            Dynamic (inactive)
-                Weight: 0, Metric Type: TE
-                Metric Type: TE, Path Accumulated Metric: 2115
-                16052 [Prefix-SID, 10.169.14.241]
-                24 [Adjacency-SID, 10.169.14.33 - 10.169.14.34]
-                16063 [Prefix-SID, 10.169.196.241]
-        Attributes:
-            Binding SID: 15000
-            Allocation mode: explicit
-            State: Programmed
-        Forwarding-ID: 65536 (0x18)
-        Stats:
-            Packets: 44         Bytes: 1748
+Name: test1 (Color: 100 End-point: 10.169.196.241)
+Status:
+    Admin: up, Operational: up for 03:48:03 (since 09-09 21:25:58.933)
+Candidate-paths:
+    Preference 400:
+    Dynamic (pce) (inactive)
+        Weight: 0, Metric Type: TE
+    Preference 300:
+    Dynamic (active)
+        Weight: 0, Metric Type: TE
+        Metric Type: TE, Path Accumulated Metric: 2115
+        16052 [Prefix-SID, 10.169.14.241]
+        24 [Adjacency-SID, 10.169.14.33 - 10.169.14.34]
+        16063 [Prefix-SID, 10.169.196.241]
+    Preference 200:
+    Explicit: segment-list test1 (inactive)
+        Weight: 0, Metric Type: TE
+        16072 [Prefix-SID, 10.189.5.253]
+        16052 [Prefix-SID, 10.169.14.241]
+        16062 [Prefix-SID, 10.34.2.251]
+        16063 [Prefix-SID, 10.169.196.241]
+    Preference 100:
+    Dynamic (inactive)
+        Weight: 0, Metric Type: TE
+        Metric Type: TE, Path Accumulated Metric: 2115
+        16052 [Prefix-SID, 10.169.14.241]
+        24 [Adjacency-SID, 10.169.14.33 - 10.169.14.34]
+        16063 [Prefix-SID, 10.169.196.241]
+Attributes:
+    Binding SID: 15000
+    Allocation mode: explicit
+    State: Programmed
+Forwarding-ID: 65536 (0x18)
+Stats:
+    Packets: 44         Bytes: 1748
 
-        Event history:
-            Timestamp                   Client                  Event type              Context: Value
-            ---------                   ------                  ----------              -------: -----
-            08-29 14:51:29.074          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            08-29 14:51:29.099          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            08-29 14:51:29.114          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            08-29 14:51:29.150          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            08-29 14:51:29.199          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            08-29 14:51:29.250          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            08-29 14:51:29.592          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            08-29 14:51:29.733          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            08-29 14:51:29.873          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            08-29 14:51:30.013          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            08-29 14:51:30.162          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            08-29 14:51:33.875          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            08-29 14:51:33.879          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            08-29 14:51:33.919          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            08-29 14:51:33.978          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            08-29 14:51:33.982          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            08-29 14:51:34.724          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            08-29 14:51:35.227          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-03 13:06:47.604          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-03 13:06:47.607          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:15:36.537          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:15:36.541          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:15:36.545          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:15:36.557          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:15:36.571          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:15:36.598          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:15:36.614          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:15:36.629          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:15:36.641          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:15:36.667          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:15:36.698          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:15:36.734          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:15:36.764          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:15:36.789          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:15:36.800          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:15:36.823          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:16:23.743          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:16:23.745          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:19:30.199          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:19:30.205          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 20:50:52.378          CLI AGENT               Set colour              Colour: 200
-            09-09 20:52:04.236          CLI AGENT               Policy ADMIN DOWN       shutdown: test1
-            09-09 20:59:06.432          CLI AGENT               Policy state DOWN       no shutdown: test1
-            09-09 20:59:06.434          FH Resolution           Policy state UP         Status: PATH RESOLVED
-            09-09 20:59:06.442          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-            09-09 21:17:36.909          CLI AGENT               Set colour              Colour: 100
-            09-09 21:18:39.057          CLI AGENT               Policy ADMIN DOWN       shutdown: test1
-            09-09 21:25:58.931          CLI AGENT               Policy state DOWN       no shutdown: test1
-            09-09 21:25:58.933          FH Resolution           Policy state UP         Status: PATH RESOLVED
-            09-09 21:25:58.945          FH Resolution           REOPT triggered         Status: REOPTIMIZED
-        sr_ve-hkgasr01#
+Event history:
+    Timestamp                   Client                  Event type              Context: Value
+    ---------                   ------                  ----------              -------: -----
+    08-29 14:51:29.074          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    08-29 14:51:29.099          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    08-29 14:51:29.114          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    08-29 14:51:29.150          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    08-29 14:51:29.199          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    08-29 14:51:29.250          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    08-29 14:51:29.592          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    08-29 14:51:29.733          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    08-29 14:51:29.873          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    08-29 14:51:30.013          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    08-29 14:51:30.162          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    08-29 14:51:33.875          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    08-29 14:51:33.879          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    08-29 14:51:33.919          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    08-29 14:51:33.978          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    08-29 14:51:33.982          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    08-29 14:51:34.724          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    08-29 14:51:35.227          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-03 13:06:47.604          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-03 13:06:47.607          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:15:36.537          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:15:36.541          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:15:36.545          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:15:36.557          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:15:36.571          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:15:36.598          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:15:36.614          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:15:36.629          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:15:36.641          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:15:36.667          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:15:36.698          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:15:36.734          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:15:36.764          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:15:36.789          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:15:36.800          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:15:36.823          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:16:23.743          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:16:23.745          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:19:30.199          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:19:30.205          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 20:50:52.378          CLI AGENT               Set colour              Colour: 200
+    09-09 20:52:04.236          CLI AGENT               Policy ADMIN DOWN       shutdown: test1
+    09-09 20:59:06.432          CLI AGENT               Policy state DOWN       no shutdown: test1
+    09-09 20:59:06.434          FH Resolution           Policy state UP         Status: PATH RESOLVED
+    09-09 20:59:06.442          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+    09-09 21:17:36.909          CLI AGENT               Set colour              Colour: 100
+    09-09 21:18:39.057          CLI AGENT               Policy ADMIN DOWN       shutdown: test1
+    09-09 21:25:58.931          CLI AGENT               Policy state DOWN       no shutdown: test1
+    09-09 21:25:58.933          FH Resolution           Policy state UP         Status: PATH RESOLVED
+    09-09 21:25:58.945          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+sr_ve-hkgasr01#
     

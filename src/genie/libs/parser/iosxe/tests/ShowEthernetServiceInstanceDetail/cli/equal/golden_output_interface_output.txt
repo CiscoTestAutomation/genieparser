@@ -1,44 +1,44 @@
-        Device# show ethernet service instance interface ethernet 0/0 detail
+Device# show ethernet service instance interface ethernet 0/0 detail
 
-        Service Instance ID: 1
-        Service instance type: L2Context
-        Intiators: unclassified vlan
-        Control policy: ABC
-        Associated Interface: Ethernet0/0
-        Associated EVC:
-        L2protocol drop
-        CE-Vlans:
-        Encapsulation: dot1q 200-300 vlan protocol type 0x8100
-        Interface Dot1q Tunnel Ethertype: 0x8100
-        State: Up
-        EFP Statistics:
-           Pkts In   Bytes In   Pkts Out  Bytes Out
-                 0          0          0          0
+Service Instance ID: 1
+Service instance type: L2Context
+Intiators: unclassified vlan
+Control policy: ABC
+Associated Interface: Ethernet0/0
+Associated EVC:
+L2protocol drop
+CE-Vlans:
+Encapsulation: dot1q 200-300 vlan protocol type 0x8100
+Interface Dot1q Tunnel Ethertype: 0x8100
+State: Up
+EFP Statistics:
+   Pkts In   Bytes In   Pkts Out  Bytes Out
+         0          0          0          0
 
-        Service Instance ID: 2
-        Service instance type: Dynamic
+Service Instance ID: 2
+Service instance type: Dynamic
 
-        Associated Interface: Ethernet0/0
-        Associated EVC:
-        L2protocol drop
-        CE-Vlans: 10-20
-        Encapsulation: dot1q 201 vlan protocol type 0x8100
-        Interface Dot1q Tunnel Ethertype: 0x8100
-        State: Up
-        EFP Statistics:
-           Pkts In   Bytes In   Pkts Out  Bytes Out
-                 0          0          0          0
+Associated Interface: Ethernet0/0
+Associated EVC:
+L2protocol drop
+CE-Vlans: 10-20
+Encapsulation: dot1q 201 vlan protocol type 0x8100
+Interface Dot1q Tunnel Ethertype: 0x8100
+State: Up
+EFP Statistics:
+   Pkts In   Bytes In   Pkts Out  Bytes Out
+         0          0          0          0
 
-        Service Instance ID: 3
-        Service instance type: static
-        Associated Interface: Ethernet0/0
-        Associated EVC:
-        L2protocol drop
-        CE-Vlans: 10-20
-        Encapsulation: dot1q 201 vlan protocol type 0x8100
-        Interface Dot1q Tunnel Ethertype: 0x8100
-        State: Up
-        EFP Statistics:
-           Pkts In   Bytes In   Pkts Out  Bytes Out
-                 0          0          0          0
+Service Instance ID: 3
+Service instance type: static
+Associated Interface: Ethernet0/0
+Associated EVC:
+L2protocol drop
+CE-Vlans: 10-20
+Encapsulation: dot1q 201 vlan protocol type 0x8100
+Interface Dot1q Tunnel Ethertype: 0x8100
+State: Up
+EFP Statistics:
+   Pkts In   Bytes In   Pkts Out  Bytes Out
+         0          0          0          0
     

@@ -1,13 +1,13 @@
-        Sysauthcontrol                 Enabled
-        Dot1x Protocol Version               3
-        Dot1x Info for GigabitEthernet1/0/9
-        --------------------------------------------
-        PAE                       = SUPPLICANT
-        StartPeriod               = 30
-        AuthPeriod                = 30
-        HeldPeriod                = 60
-        MaxStart                  = 3
-        Credentials profile       = switch4
-        EAP profile               = EAP-METH
-        Dot1x Supplicant Client List Empty
+Sysauthcontrol                 Enabled
+Dot1x Protocol Version               3
+Dot1x Info for GigabitEthernet1/0/9
+--------------------------------------------
+PAE                       = SUPPLICANT
+StartPeriod               = 30
+AuthPeriod                = 30
+HeldPeriod                = 60
+MaxStart                  = 3
+Credentials profile       = switch4
+EAP profile               = EAP-METH
+Dot1x Supplicant Client List Empty
     

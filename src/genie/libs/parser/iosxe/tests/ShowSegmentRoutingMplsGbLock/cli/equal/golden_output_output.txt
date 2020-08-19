@@ -1,4 +1,4 @@
 
-        show segment-routing mpls gb lock
-        SR GB (9000, 10000) Lock Users :
+show segment-routing mpls gb lock
+SR GB (9000, 10000) Lock Users :
     

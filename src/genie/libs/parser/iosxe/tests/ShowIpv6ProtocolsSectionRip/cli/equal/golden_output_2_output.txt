@@ -1,10 +1,10 @@
 
-        R1#show ipv6 protocols vrf VRF1 | sec rip
-        IPv6 Routing Protocol is "rip ripng"
-          Interfaces:
-            GigabitEthernet3.200
-            GigabitEthernet2.200
-          Redistribution:
-            Redistributing protocol connected with transparent metric
-            Redistributing protocol static with transparent metric route-map static-to-rip
+R1#show ipv6 protocols vrf VRF1 | sec rip
+IPv6 Routing Protocol is "rip ripng"
+  Interfaces:
+    GigabitEthernet3.200
+    GigabitEthernet2.200
+  Redistribution:
+    Redistributing protocol connected with transparent metric
+    Redistributing protocol static with transparent metric route-map static-to-rip
     

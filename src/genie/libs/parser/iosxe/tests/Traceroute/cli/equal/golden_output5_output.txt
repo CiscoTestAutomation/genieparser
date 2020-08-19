@@ -1,10 +1,10 @@
 
-        traceroute vrf MG501 192.168.1.1 numeric    
-        Type escape sequence to abort.
-        Tracing the route to 192.168.1.1
-        VRF info: (vrf in name/id, vrf out name/id)
-        1 10.19.198.29 [MPLS: Labels 16052/16062/16063/39 Exp 0] 2 msec 2 msec 2 msec
-        2 10.169.14.129 [MPLS: Labels 16062/16063/39 Exp 0] 3 msec 1 msec 1 msec
-        3 10.169.14.34 [MPLS: Labels 16063/39 Exp 0] 3 msec 1 msec 2 msec
-        4 192.168.1.1 2 msec *  2 msec
+traceroute vrf MG501 192.168.1.1 numeric    
+Type escape sequence to abort.
+Tracing the route to 192.168.1.1
+VRF info: (vrf in name/id, vrf out name/id)
+1 10.19.198.29 [MPLS: Labels 16052/16062/16063/39 Exp 0] 2 msec 2 msec 2 msec
+2 10.169.14.129 [MPLS: Labels 16062/16063/39 Exp 0] 3 msec 1 msec 1 msec
+3 10.169.14.34 [MPLS: Labels 16063/39 Exp 0] 3 msec 1 msec 2 msec
+4 192.168.1.1 2 msec *  2 msec
     

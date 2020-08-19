@@ -1,8 +1,8 @@
-        Interface       PAE     Client          Status          
-        --------------------------------------------------------
-        Gi0/1           AUTH    fa16.3eff.4f27  UNAUTHORIZED
-                                fa16.3eff.0cdf  AUTHORIZED
-                        SUPP    fa16.3eff.4f28  UNAUTHORIZED
-                                fa16.3eff.0ce0  AUTHORIZED
+Interface       PAE     Client          Status          
+--------------------------------------------------------
+Gi0/1           AUTH    fa16.3eff.4f27  UNAUTHORIZED
+                        fa16.3eff.0cdf  AUTHORIZED
+                SUPP    fa16.3eff.4f28  UNAUTHORIZED
+                        fa16.3eff.0ce0  AUTHORIZED
 
     

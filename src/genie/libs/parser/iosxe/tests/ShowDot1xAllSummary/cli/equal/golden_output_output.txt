@@ -1,4 +1,4 @@
-        Interface             PAE             Client                         Status 
-        ------------------------------------------------------------------------------------------
-        Fa1                   AUTH             000d.bcff.afcc           AUTHORIZED
+Interface             PAE             Client                         Status 
+------------------------------------------------------------------------------------------
+Fa1                   AUTH             000d.bcff.afcc           AUTHORIZED
     

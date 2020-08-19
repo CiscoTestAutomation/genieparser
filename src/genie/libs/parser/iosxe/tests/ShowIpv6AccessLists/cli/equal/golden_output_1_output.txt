@@ -1,20 +1,20 @@
-        show access-lists
-        Standard IP access list NAT_ACL
-          10 permit 10.2.0.0, wildcard bits 0.0.255.255
-            20 permit 10.2.0.0
-            30 deny   any
-            40 permit 10.196.7.7
-        Standard IP access list NAT_ACL2
-          10 permit 10.2.0.0, wildcard bits 0.0.255.255
-            20 permit 10.196.7.8
-            30 deny   any
-        Extended IP access list PYATS_ACL_TEST
-          10 permit ip host 0.0.0.0 any
-          20 permit ip 192.0.2.0 0.0.0.255 192.168.10.0 0.0.0.255
-          30 deny tcp 10.55.0.0 0.0.0.255 192.168.220.0 0.0.0.255 eq www
-        IPv6 access list PYATS_ACL_TEST_IPv6
-          permit ipv6 2001:DB8::/64 any sequence 10
-          permit esp host 2001:DB8:5::1 any sequence 20
-         permit tcp host 2001:DB8:1::1 eq www any eq bgp sequence 30
-          permit udp any host 2001:DB8:1::1 sequence 40
+show access-lists
+Standard IP access list NAT_ACL
+  10 permit 10.2.0.0, wildcard bits 0.0.255.255
+    20 permit 10.2.0.0
+    30 deny   any
+    40 permit 10.196.7.7
+Standard IP access list NAT_ACL2
+  10 permit 10.2.0.0, wildcard bits 0.0.255.255
+    20 permit 10.196.7.8
+    30 deny   any
+Extended IP access list PYATS_ACL_TEST
+  10 permit ip host 0.0.0.0 any
+  20 permit ip 192.0.2.0 0.0.0.255 192.168.10.0 0.0.0.255
+  30 deny tcp 10.55.0.0 0.0.0.255 192.168.220.0 0.0.0.255 eq www
+IPv6 access list PYATS_ACL_TEST_IPv6
+  permit ipv6 2001:DB8::/64 any sequence 10
+  permit esp host 2001:DB8:5::1 any sequence 20
+ permit tcp host 2001:DB8:1::1 eq www any eq bgp sequence 30
+  permit udp any host 2001:DB8:1::1 sequence 40
     

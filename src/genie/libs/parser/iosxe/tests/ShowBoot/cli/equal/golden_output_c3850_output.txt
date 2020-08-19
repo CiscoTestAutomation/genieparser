@@ -1,13 +1,13 @@
-        ---------------------------
-        Switch 5
-        ---------------------------
-        Current Boot Variables:
-        BOOT variable = flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden;
+---------------------------
+Switch 5
+---------------------------
+Current Boot Variables:
+BOOT variable = flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden;
 
-        Boot Variables on next reload:
-        BOOT variable = flash:ISSUCleanGolden;
-        Manual Boot = yes
-        Enable Break = yes
-        Boot Mode = DEVICE
-        iPXE Timeout = 0
+Boot Variables on next reload:
+BOOT variable = flash:ISSUCleanGolden;
+Manual Boot = yes
+Enable Break = yes
+Boot Mode = DEVICE
+iPXE Timeout = 0
     

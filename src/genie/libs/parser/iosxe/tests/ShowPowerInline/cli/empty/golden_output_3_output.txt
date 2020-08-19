@@ -1,6 +1,6 @@
-        Available:0.0(w)  Used:0.0(w)  Remaining:0.0(w)
+Available:0.0(w)  Used:0.0(w)  Remaining:0.0(w)
 
-        Interface Admin  Oper       Power   Device              Class Max
-                                    (Watts)                            
-        --------- ------ ---------- ------- ------------------- ----- ----
+Interface Admin  Oper       Power   Device              Class Max
+                            (Watts)                            
+--------- ------ ---------- ------- ------------------- ----- ----
     

@@ -1,19 +1,19 @@
-        R2#show clns protocol
-        IS-IS Router: VRF1 (0x10001)
-        System Id: 2222.22ff.4444.00  IS-Type: level-1-2
-        Manual area address(es):
-            49.0001
-        Routing for area address(es):
-            49.0001
-        Interfaces supported by IS-IS:
-            GigabitEthernet4 - IP - IPv6
-            Loopback1 - IP - IPv6
-        Redistribute:
-            static (on by default)
-        Distance for L2 CLNS routes: 110
-        RRR level: none
-        Generate narrow metrics: none
-        Accept narrow metrics:   none
-        Generate wide metrics:   level-1-2
-        Accept wide metrics:     level-1-2
+R2#show clns protocol
+IS-IS Router: VRF1 (0x10001)
+System Id: 2222.22ff.4444.00  IS-Type: level-1-2
+Manual area address(es):
+    49.0001
+Routing for area address(es):
+    49.0001
+Interfaces supported by IS-IS:
+    GigabitEthernet4 - IP - IPv6
+    Loopback1 - IP - IPv6
+Redistribute:
+    static (on by default)
+Distance for L2 CLNS routes: 110
+RRR level: none
+Generate narrow metrics: none
+Accept narrow metrics:   none
+Generate wide metrics:   level-1-2
+Accept wide metrics:     level-1-2
     

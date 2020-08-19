@@ -1,25 +1,25 @@
-       Router#show mpls ldp bindings
-        Load for five secs: 55%/0%; one minute: 15%; five minutes: 10%
-        Time source is NTP, 20:29:28.227 EST Fri Nov 11 2016
+Router#show mpls ldp bindings
+ Load for five secs: 55%/0%; one minute: 15%; five minutes: 10%
+ Time source is NTP, 20:29:28.227 EST Fri Nov 11 2016
 
-          lib entry: 10.186.1.0/24, rev 1028
-                local binding:  label: 2536
-                remote binding: lsr: 10.169.197.252:0, label: 508
-          lib entry: 10.120.202.48/30, rev 1034
-                local binding:  label: 2539
-                remote binding: lsr: 10.169.197.252:0, label: imp-null
-          lib entry: 10.120.202.56/30, rev 1024
-                local binding:  label: 2534
-                remote binding: lsr: 10.169.197.252:0, label: 505
-          lib entry: 10.120.202.64/32, rev 1020
-                local binding:  label: 2532
-                remote binding: lsr: 10.169.197.252:0, label: 506
-                remote binding: lsr: 10.169.197.253:0, label: 399712
-          lib entry: 10.169.197.92/30, rev 2
-                local binding:  label: imp-null
-                remote binding: lsr: 10.169.197.252:0, label: imp-null
-                remote binding: lsr: 10.169.197.253:0, label: 736112
-          lib entry: 10.169.197.96/30, rev 4
-                local binding:  label: imp-null
-                remote binding: lsr: 10.169.197.252:0, label: 1002
+   lib entry: 10.186.1.0/24, rev 1028
+         local binding:  label: 2536
+         remote binding: lsr: 10.169.197.252:0, label: 508
+   lib entry: 10.120.202.48/30, rev 1034
+         local binding:  label: 2539
+         remote binding: lsr: 10.169.197.252:0, label: imp-null
+   lib entry: 10.120.202.56/30, rev 1024
+         local binding:  label: 2534
+         remote binding: lsr: 10.169.197.252:0, label: 505
+   lib entry: 10.120.202.64/32, rev 1020
+         local binding:  label: 2532
+         remote binding: lsr: 10.169.197.252:0, label: 506
+         remote binding: lsr: 10.169.197.253:0, label: 399712
+   lib entry: 10.169.197.92/30, rev 2
+         local binding:  label: imp-null
+         remote binding: lsr: 10.169.197.252:0, label: imp-null
+         remote binding: lsr: 10.169.197.253:0, label: 736112
+   lib entry: 10.169.197.96/30, rev 4
+         local binding:  label: imp-null
+         remote binding: lsr: 10.169.197.252:0, label: 1002
             

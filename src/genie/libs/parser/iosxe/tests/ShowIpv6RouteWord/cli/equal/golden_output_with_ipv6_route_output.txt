@@ -1,10 +1,10 @@
 
-        Routing entry for 2001:db8:400:4::4:1/128
-		  Known via "isis", distance 115, metric 20, type level-2
-		  Route count is 1/1, share count 0
-		  Routing paths:
-		    FE80::EEBD:1DFF:FE09:56C2, Vlan202
-		      From FE80::EEBD:1DFF:FE09:56C2
-		      Last updated 2w4d ago
+    Routing entry for 2001:db8:400:4::4:1/128
+Known via "isis", distance 115, metric 20, type level-2
+Route count is 1/1, share count 0
+Routing paths:
+  FE80::EEBD:1DFF:FE09:56C2, Vlan202
+    From FE80::EEBD:1DFF:FE09:56C2
+    Last updated 2w4d ago
 
     

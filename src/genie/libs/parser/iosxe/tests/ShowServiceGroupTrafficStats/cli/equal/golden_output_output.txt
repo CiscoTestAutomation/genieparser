@@ -1,10 +1,10 @@
 
-        Router# show service-group traffic-stats 
-        Traffic Statistics of service groups:
-          Group     Pks In   Bytes In   Pkts Out  Bytes Out
-              1          1         22          3         62
-              2          0          0          0          0
-              3          0          0          0          0
-             10          0          0          0          0
-             20          0          0          0          0
+Router# show service-group traffic-stats 
+Traffic Statistics of service groups:
+  Group     Pks In   Bytes In   Pkts Out  Bytes Out
+      1          1         22          3         62
+      2          0          0          0          0
+      3          0          0          0          0
+     10          0          0          0          0
+     20          0          0          0          0
     

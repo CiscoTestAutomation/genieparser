@@ -1,11 +1,11 @@
 
-        Router#show policy-map shape-out
-        Load for five secs: 1%/0%; one minute: 4%; five minutes: 4%
-        Time source is NTP, 22:28:37.624 EST Fri Nov 4 2016
+Router#show policy-map shape-out
+Load for five secs: 1%/0%; one minute: 4%; five minutes: 4%
+Time source is NTP, 22:28:37.624 EST Fri Nov 4 2016
 
-            Policy Map shape-out
-                Class class-default
-                    Average Rate Traffic Shaping
-                    cir 1000000 (bps)   
-        Router#	        
+    Policy Map shape-out
+        Class class-default
+            Average Rate Traffic Shaping
+            cir 1000000 (bps)   
+Router#	        
     

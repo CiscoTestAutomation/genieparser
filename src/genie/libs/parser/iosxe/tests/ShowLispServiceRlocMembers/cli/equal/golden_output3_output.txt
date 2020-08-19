@@ -1,39 +1,39 @@
 
-        OTT-LISP-C9K-20-MSMR#show lisp all instance-id * ethernet server rloc members
+OTT-LISP-C9K-20-MSMR#show lisp all instance-id * ethernet server rloc members
 
-        =================================================
-        Output for router lisp 2 instance-id 101
-        =================================================
-        % EID table not enabled for MAC.
+=================================================
+Output for router lisp 2 instance-id 101
+=================================================
+% EID table not enabled for MAC.
 
-        =================================================
-        Output for router lisp 2 instance-id 102
-        =================================================
-        % EID table not enabled for MAC.
+=================================================
+Output for router lisp 2 instance-id 102
+=================================================
+% EID table not enabled for MAC.
 
-        =================================================
-        Output for router lisp 2 instance-id 103
-        =================================================
-        % EID table not enabled for MAC.
+=================================================
+Output for router lisp 2 instance-id 103
+=================================================
+% EID table not enabled for MAC.
 
-        =================================================
-        Output for router lisp 2 instance-id 104
-        =================================================
-        % EID table not enabled for MAC.
+=================================================
+Output for router lisp 2 instance-id 104
+=================================================
+% EID table not enabled for MAC.
 
-        =================================================
-        Output for router lisp 2 instance-id 107
-        =================================================
-        % EID table not enabled for MAC.
+=================================================
+Output for router lisp 2 instance-id 107
+=================================================
+% EID table not enabled for MAC.
 
-        =================================================
-        Output for router lisp 2 instance-id 108
-        =================================================
-        % EID table not enabled for MAC.
+=================================================
+Output for router lisp 2 instance-id 108
+=================================================
+% EID table not enabled for MAC.
 
-        =================================================
-        Output for router lisp 2 instance-id 109
-        =================================================
-        % EID table not enabled for MAC.
+=================================================
+Output for router lisp 2 instance-id 109
+=================================================
+% EID table not enabled for MAC.
 
         

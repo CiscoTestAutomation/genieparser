@@ -1,10 +1,10 @@
 
-        show ipv6 neighbors detail
-        IPv6 Address                              TRLV Age Link-layer Addr State Interface
-        FE80::F816:3EFF:FEFF:F3DC                   0    0 fa16.3eff.f3dc  REACH Gi2.90
-        FE80::F816:3EFF:FEFF:F3DC                   0    0 fa16.3eff.f3dc  REACH Gi2.110
-        FE80::F816:3EFF:FEFF:F3DC                   0    2 fa16.3eff.f3dc  STALE Gi2.115
-        FE80::5C00:C0FF:FEFF:209                      0    0 5e00.c0ff.0209  STALE Gi3.90
-        FE80::5C00:C0FF:FEFF:209                      0    4 5e00.c0ff.0209  STALE Gi3.110
-        FE80::5C00:C0FF:FEFF:209                      0   20 5e00.c0ff.0209  STALE Gi3.115
-        FE80::5C00:C0FF:FEFF:209                      0    5 5e00.c0ff.0209  STALE Gi3.120
+show ipv6 neighbors detail
+IPv6 Address                              TRLV Age Link-layer Addr State Interface
+FE80::F816:3EFF:FEFF:F3DC                   0    0 fa16.3eff.f3dc  REACH Gi2.90
+FE80::F816:3EFF:FEFF:F3DC                   0    0 fa16.3eff.f3dc  REACH Gi2.110
+FE80::F816:3EFF:FEFF:F3DC                   0    2 fa16.3eff.f3dc  STALE Gi2.115
+FE80::5C00:C0FF:FEFF:209                      0    0 5e00.c0ff.0209  STALE Gi3.90
+FE80::5C00:C0FF:FEFF:209                      0    4 5e00.c0ff.0209  STALE Gi3.110
+FE80::5C00:C0FF:FEFF:209                      0   20 5e00.c0ff.0209  STALE Gi3.115
+FE80::5C00:C0FF:FEFF:209                      0    5 5e00.c0ff.0209  STALE Gi3.120

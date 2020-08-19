@@ -1,94 +1,94 @@
 
-        Vlan1 is administratively down, line protocol is down
-        Internet protocol processing disabled
-        Vlan10 is up, line protocol is up
-        Internet address is 10.4.1.1/24
-        Broadcast address is 255.255.255.255
-        Address determined by non-volatile memory
-        MTU is 9154 bytes
-        Helper addresses are 10.1.1.1
-        10.2.2.2
-        10.3.3.3
-        10.4.4.4
-        Directed broadcast forwarding is disabled
-        Outgoing Common access list is not set
-        Outgoing access list is not set
-        Inbound Common access list is not set
-        Inbound access list is not set
-        Proxy ARP is enabled
-        Local Proxy ARP is disabled
-        Security level is default
-        Split horizon is enabled
-        ICMP redirects are always sent
-        ICMP unreachables are always sent
-        ICMP mask replies are never sent
-        IP fast switching is enabled
-        IP Flow switching is disabled
-        IP CEF switching is enabled
-        IP CEF switching turbo vector
-        IP Null turbo vector
-        VPN Routing/Forwarding "user"
-        Associated unicast routing topologies:
-        Topology "base", operation state is UP
-        IP multicast fast switching is enabled
-        IP multicast distributed fast switching is disabled
-        IP route-cache flags are Fast, CEF
-        Router Discovery is disabled
-        IP output packet accounting is disabled
-        IP access violation accounting is disabled
-        TCP/IP header compression is disabled
-        RTP/IP header compression is disabled
-        Probe proxy name replies are disabled
-        Policy routing is disabled
-        Network address translation is disabled
-        BGP Policy Mapping is disabled
-        Input features: MCI Check
-        IPv4 WCCP Redirect outbound is disabled
-        IPv4 WCCP Redirect inbound is disabled
-        IPv4 WCCP Redirect exclude is disabled
-        Vlan11 is up, line protocol is up
-        Internet address is 10.16.2.1/24
-        Broadcast address is 255.255.255.255
-        Address determined by non-volatile memory
-        MTU is 9154 bytes
-        Helper addresses are 10.1.1.1
-        10.2.2.2
-        10.3.3.3
-        10.4.4.4
-        Directed broadcast forwarding is disabled
-        Outgoing Common access list is not set
-        Outgoing access list is not set
-        Inbound Common access list is not set
-        Inbound access list is not set
-        Proxy ARP is enabled
-        Local Proxy ARP is disabled
-        Security level is default
-        Split horizon is enabled
-        ICMP redirects are always sent
-        ICMP unreachables are always sent
-        ICMP mask replies are never sent
-        IP fast switching is enabled
-        IP Flow switching is disabled
-        IP CEF switching is enabled
-        IP CEF switching turbo vector
-        IP Null turbo vector
-        VPN Routing/Forwarding "user"
-        Associated unicast routing topologies:
-        Topology "base", operation state is UP
-        IP multicast fast switching is enabled
-        IP multicast distributed fast switching is disabled
-        IP route-cache flags are Fast, CEF
-        Router Discovery is disabled
-        IP output packet accounting is disabled
-        IP access violation accounting is disabled
-        TCP/IP header compression is disabled
-        RTP/IP header compression is disabled
-        Probe proxy name replies are disabled
-        Policy routing is disabled
-        Network address translation is disabled
-        BGP Policy Mapping is disabled
-        Input features: MCI Check
-        IPv4 WCCP Redirect outbound is disabled
-        IPv4 WCCP Redirect inbound is disabled
-        IPv4 WCCP Redirect exclude is disabled
+Vlan1 is administratively down, line protocol is down
+Internet protocol processing disabled
+Vlan10 is up, line protocol is up
+Internet address is 10.4.1.1/24
+Broadcast address is 255.255.255.255
+Address determined by non-volatile memory
+MTU is 9154 bytes
+Helper addresses are 10.1.1.1
+10.2.2.2
+10.3.3.3
+10.4.4.4
+Directed broadcast forwarding is disabled
+Outgoing Common access list is not set
+Outgoing access list is not set
+Inbound Common access list is not set
+Inbound access list is not set
+Proxy ARP is enabled
+Local Proxy ARP is disabled
+Security level is default
+Split horizon is enabled
+ICMP redirects are always sent
+ICMP unreachables are always sent
+ICMP mask replies are never sent
+IP fast switching is enabled
+IP Flow switching is disabled
+IP CEF switching is enabled
+IP CEF switching turbo vector
+IP Null turbo vector
+VPN Routing/Forwarding "user"
+Associated unicast routing topologies:
+Topology "base", operation state is UP
+IP multicast fast switching is enabled
+IP multicast distributed fast switching is disabled
+IP route-cache flags are Fast, CEF
+Router Discovery is disabled
+IP output packet accounting is disabled
+IP access violation accounting is disabled
+TCP/IP header compression is disabled
+RTP/IP header compression is disabled
+Probe proxy name replies are disabled
+Policy routing is disabled
+Network address translation is disabled
+BGP Policy Mapping is disabled
+Input features: MCI Check
+IPv4 WCCP Redirect outbound is disabled
+IPv4 WCCP Redirect inbound is disabled
+IPv4 WCCP Redirect exclude is disabled
+Vlan11 is up, line protocol is up
+Internet address is 10.16.2.1/24
+Broadcast address is 255.255.255.255
+Address determined by non-volatile memory
+MTU is 9154 bytes
+Helper addresses are 10.1.1.1
+10.2.2.2
+10.3.3.3
+10.4.4.4
+Directed broadcast forwarding is disabled
+Outgoing Common access list is not set
+Outgoing access list is not set
+Inbound Common access list is not set
+Inbound access list is not set
+Proxy ARP is enabled
+Local Proxy ARP is disabled
+Security level is default
+Split horizon is enabled
+ICMP redirects are always sent
+ICMP unreachables are always sent
+ICMP mask replies are never sent
+IP fast switching is enabled
+IP Flow switching is disabled
+IP CEF switching is enabled
+IP CEF switching turbo vector
+IP Null turbo vector
+VPN Routing/Forwarding "user"
+Associated unicast routing topologies:
+Topology "base", operation state is UP
+IP multicast fast switching is enabled
+IP multicast distributed fast switching is disabled
+IP route-cache flags are Fast, CEF
+Router Discovery is disabled
+IP output packet accounting is disabled
+IP access violation accounting is disabled
+TCP/IP header compression is disabled
+RTP/IP header compression is disabled
+Probe proxy name replies are disabled
+Policy routing is disabled
+Network address translation is disabled
+BGP Policy Mapping is disabled
+Input features: MCI Check
+IPv4 WCCP Redirect outbound is disabled
+IPv4 WCCP Redirect inbound is disabled
+IPv4 WCCP Redirect exclude is disabled
     

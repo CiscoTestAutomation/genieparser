@@ -1,9 +1,9 @@
 
-    show users
-        Line       User       Host(s)              Idle       Location
-    *  1 vty 0     developer  idle                 00:00:00 10.24.17.55
+show users
+    Line       User       Host(s)              Idle       Location
+*  1 vty 0     developer  idle                 00:00:00 10.24.17.55
     
-      Interface    User               Mode         Idle     Peer Address
-      unknown      NETCONF(ONEP)      com.cisco.ne 00:00:49
-      unknown      a(ONEP)            com.cisco.sy 00:00:49
+  Interface    User               Mode         Idle     Peer Address
+  unknown      NETCONF(ONEP)      com.cisco.ne 00:00:49
+  unknown      a(ONEP)            com.cisco.sy 00:00:49
     

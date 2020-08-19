@@ -1,8 +1,8 @@
-        Router# show ethernet service instance interface gigabitEthernet 0/0/13 stats
-        Service Instance 1, Interface GigabitEthernet0/0/13
-        Pkts In   Bytes In   Pkts Out  Bytes Out
-               214      15408      97150    6994800
-        Service Instance 2, Interface GigabitEthernet0/0/13
-        Pkts In   Bytes In   Pkts Out  Bytes Out
-               654      6768      9090    34565
+Router# show ethernet service instance interface gigabitEthernet 0/0/13 stats
+Service Instance 1, Interface GigabitEthernet0/0/13
+Pkts In   Bytes In   Pkts Out  Bytes Out
+       214      15408      97150    6994800
+Service Instance 2, Interface GigabitEthernet0/0/13
+Pkts In   Bytes In   Pkts Out  Bytes Out
+       654      6768      9090    34565
     

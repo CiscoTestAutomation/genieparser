@@ -1,8 +1,8 @@
 
-        show ip route 10.13.115.1
-        Routing entry for 10.13.115.1/32
-        Known via "connected", distance 0, metric 0 (connected)
-        Routing Descriptor Blocks:
-        * directly connected, via GigabitEthernet3.115
-            Route metric is 0, traffic share count is 1
+show ip route 10.13.115.1
+Routing entry for 10.13.115.1/32
+Known via "connected", distance 0, metric 0 (connected)
+Routing Descriptor Blocks:
+* directly connected, via GigabitEthernet3.115
+    Route metric is 0, traffic share count is 1
     

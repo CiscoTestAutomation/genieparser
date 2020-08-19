@@ -56,7 +56,7 @@ def read_python_file(file_path):
 def get_operating_systems():
     """Helper Script to get operating systems."""
     # Update and fix as more OS's converted to folder baed tests
-    return ["iosxe"]
+    return ["asa","ios", "iosxe"]
     # operating_system = []
     # for folder in os.listdir("./"):
     #    if os.path.islink("./" + folder):

@@ -1,12 +1,12 @@
 
-        show bootvar
-        BOOT variable = harddisk:/c1100-universalk9.BLD_POLARIS_DEV_LATEST_20200517_102119.SSA.bin,12;harddisk:/genie-iedge-asr-uut,12;
-        CONFIG_FILE variable =
-        BOOTLDR variable does not exist
-        Configuration register is 0x1 (will be 0x2102 at next reload)
+show bootvar
+BOOT variable = harddisk:/c1100-universalk9.BLD_POLARIS_DEV_LATEST_20200517_102119.SSA.bin,12;harddisk:/genie-iedge-asr-uut,12;
+CONFIG_FILE variable =
+BOOTLDR variable does not exist
+Configuration register is 0x1 (will be 0x2102 at next reload)
 
-        Standby BOOT variable = harddisk:/c1100-universalk9.BLD_POLARIS_DEV_LATEST_20200517_102119.SSA.bin,12;harddisk:/genie-iedge-asr-uut,12;
-        Standby CONFIG_FILE variable =
-        Standby BOOTLDR variable does not exist
-        Standby Configuration register is 0x1  (will be 0x2102 at next reload)
+Standby BOOT variable = harddisk:/c1100-universalk9.BLD_POLARIS_DEV_LATEST_20200517_102119.SSA.bin,12;harddisk:/genie-iedge-asr-uut,12;
+Standby CONFIG_FILE variable =
+Standby BOOTLDR variable does not exist
+Standby Configuration register is 0x1  (will be 0x2102 at next reload)
     

@@ -1,15 +1,15 @@
 
-        Total active translations: 0 (0 static, 0 dynamic; 0 extended)
-        Peak translations: 0
-        Outside interfaces:
-        Inside interfaces: 
-        Hits: 0  Misses: 0
-        CEF Translated packets: 0, CEF Punted packets: 0
-        Expired translations: 0
-        Dynamic mappings:
+Total active translations: 0 (0 static, 0 dynamic; 0 extended)
+Peak translations: 0
+Outside interfaces:
+Inside interfaces: 
+Hits: 0  Misses: 0
+CEF Translated packets: 0, CEF Punted packets: 0
+Expired translations: 0
+Dynamic mappings:
 
-        Total doors: 0
-        Appl doors: 0
-        Normal doors: 0
-        Queued Packets: 0
+Total doors: 0
+Appl doors: 0
+Normal doors: 0
+Queued Packets: 0
     

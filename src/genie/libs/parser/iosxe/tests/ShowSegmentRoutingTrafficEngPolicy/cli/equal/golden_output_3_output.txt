@@ -1,32 +1,32 @@
 
-        show segment-routing traffic-eng policy all
-        Name: test1 (Color: 100 End-point: 10.169.196.241)
-        Status:
-            Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
-        Candidate-paths:
-            Preference 400:
-            Dynamic (pce) (inactive)
-                Weight: 0, Metric Type: TE
-            Preference 300:
-            Dynamic (active)
-                Weight: 0, Metric Type: IGP
-                Metric Type: IGP, Path Accumulated Metric: 2200
-                16063 [Prefix-SID, 10.169.196.241]
-                16072 [Prefix-SID, 10.189.5.253 - 10.189.6.253]
-            Preference 200:
-            Explicit: segment-list test1 (inactive)
-                Weight: 0, Metric Type: TE
-                16072 [Prefix-SID, 10.189.5.253 - 10.189.6.253]
-                16052 [Prefix-SID, 10.169.14.241]
-                16062 [Prefix-SID, 10.34.2.251]
-                16063 [Prefix-SID, 10.169.196.241]
-            Preference 100:
-            Dynamic (inactive)
-                Weight: 0, Metric Type: IGP
-                Metric Type: IGP, Path Accumulated Metric: 2200
-                16063
-        Attributes:
-            Binding SID: 15000
-            Allocation mode: explicit
-            State: Programmed
+show segment-routing traffic-eng policy all
+Name: test1 (Color: 100 End-point: 10.169.196.241)
+Status:
+    Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
+Candidate-paths:
+    Preference 400:
+    Dynamic (pce) (inactive)
+        Weight: 0, Metric Type: TE
+    Preference 300:
+    Dynamic (active)
+        Weight: 0, Metric Type: IGP
+        Metric Type: IGP, Path Accumulated Metric: 2200
+        16063 [Prefix-SID, 10.169.196.241]
+        16072 [Prefix-SID, 10.189.5.253 - 10.189.6.253]
+    Preference 200:
+    Explicit: segment-list test1 (inactive)
+        Weight: 0, Metric Type: TE
+        16072 [Prefix-SID, 10.189.5.253 - 10.189.6.253]
+        16052 [Prefix-SID, 10.169.14.241]
+        16062 [Prefix-SID, 10.34.2.251]
+        16063 [Prefix-SID, 10.169.196.241]
+    Preference 100:
+    Dynamic (inactive)
+        Weight: 0, Metric Type: IGP
+        Metric Type: IGP, Path Accumulated Metric: 2200
+        16063
+Attributes:
+    Binding SID: 15000
+    Allocation mode: explicit
+    State: Programmed
     

@@ -1,2 +1,2 @@
-        VTP Password: testing
+VTP Password: testing
     

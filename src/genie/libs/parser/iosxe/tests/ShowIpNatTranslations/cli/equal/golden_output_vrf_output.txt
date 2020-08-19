@@ -1,13 +1,13 @@
 
-        Router# show ip nat translations vrf abc
-        Pro Inside global Inside local Outside local Outside global
-        --- 10.16.2.1 192.168.121.113 --- ---
-        --- 10.16.2.2 192.168.122.49 --- ---
-        --- 10.16.2.11 192.168.11.1 --- ---
-        --- 10.16.2.12 192.168.11.3 --- ---
-        --- 10.16.2.13 172.16.19.20 --- ---
+Router# show ip nat translations vrf abc
+Pro Inside global Inside local Outside local Outside global
+--- 10.16.2.1 192.168.121.113 --- ---
+--- 10.16.2.2 192.168.122.49 --- ---
+--- 10.16.2.11 192.168.11.1 --- ---
+--- 10.16.2.12 192.168.11.3 --- ---
+--- 10.16.2.13 172.16.19.20 --- ---
 
-        Pro Inside global Inside local Outside local Outside global
-        --- 10.16.2.3 192.168.121.113 --- ---
-        --- 10.16.2.4 192.168.22.49 --- ---
+Pro Inside global Inside local Outside local Outside global
+--- 10.16.2.3 192.168.121.113 --- ---
+--- 10.16.2.4 192.168.22.49 --- ---
     

@@ -1,11 +1,11 @@
 
-        vEdge# show control connections
-                                                                                               PEER                                          PEER                                          CONTROLLER 
-        PEER    PEER PEER            SITE       DOMAIN PEER                                    PRIV  PEER                                    PUB                                           GROUP      
-        TYPE    PROT SYSTEM IP       ID         ID     PRIVATE IP                              PORT  PUBLIC IP                               PORT  LOCAL COLOR     PROXY STATE UPTIME      ID         
-        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        vsmart  tls  172.16.255.20   200        1      10.0.12.20                              23556 10.0.12.20                              23556 mpls            No    up     0:00:16:30  0           
-        vsmart  tls  172.16.255.20   200        1      10.0.12.20                              23556 10.0.37.20                              23556 lte             Yes   up     0:00:16:22  0           
-        vsmart  tls  172.16.255.19   300        1      10.0.12.19                              23556 10.0.12.19                              23556 mpls            No    up     0:00:16:30  0           
-        vsmart  tls  172.16.255.19   300        1      10.0.12.19                              23556 10.0.37.19                              23556 lte             Yes   up     0:00:16:22  0        
+vEdge# show control connections
+                                                                                       PEER                                          PEER                                          CONTROLLER 
+PEER    PEER PEER            SITE       DOMAIN PEER                                    PRIV  PEER                                    PUB                                           GROUP      
+TYPE    PROT SYSTEM IP       ID         ID     PRIVATE IP                              PORT  PUBLIC IP                               PORT  LOCAL COLOR     PROXY STATE UPTIME      ID         
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+vsmart  tls  172.16.255.20   200        1      10.0.12.20                              23556 10.0.12.20                              23556 mpls            No    up     0:00:16:30  0           
+vsmart  tls  172.16.255.20   200        1      10.0.12.20                              23556 10.0.37.20                              23556 lte             Yes   up     0:00:16:22  0           
+vsmart  tls  172.16.255.19   300        1      10.0.12.19                              23556 10.0.12.19                              23556 mpls            No    up     0:00:16:30  0           
+vsmart  tls  172.16.255.19   300        1      10.0.12.19                              23556 10.0.37.19                              23556 lte             Yes   up     0:00:16:22  0        
     

@@ -1,40 +1,40 @@
-        Load for five secs: 24%/5%; one minute: 20%; five minutes: 20%
-        Time source is NTP, 07:26:59.359 EDT Tue Aug 27 2019
+Load for five secs: 24%/5%; one minute: 20%; five minutes: 20%
+Time source is NTP, 07:26:59.359 EDT Tue Aug 27 2019
 
-        Dot1x Authenticator Port Statistics for GigabitEthernet2/1
-        --------------------------------------------
-        RxStart = 212   RxLogoff = 237  RxResp = 3147   RxRespID = 287
-        RxInvalid = 0   RxLenErr = 0    RxTotal = 3918
+Dot1x Authenticator Port Statistics for GigabitEthernet2/1
+--------------------------------------------
+RxStart = 212   RxLogoff = 237  RxResp = 3147   RxRespID = 287
+RxInvalid = 0   RxLenErr = 0    RxTotal = 3918
 
-        TxReq = 3391    TxReqID = 1018  TxTotal = 4821
+TxReq = 3391    TxReqID = 1018  TxTotal = 4821
 
-        RxVersion = 1   LastRxSrcMAC = d481.d7ff.4e83
+RxVersion = 1   LastRxSrcMAC = d481.d7ff.4e83
 
-        Dot1x Authenticator Port Statistics for GigabitEthernet2/2
-        --------------------------------------------
-        RxStart = 124   RxLogoff = 71   RxResp = 2307   RxRespID = 220
-        RxInvalid = 0   RxLenErr = 0    RxTotal = 2742
+Dot1x Authenticator Port Statistics for GigabitEthernet2/2
+--------------------------------------------
+RxStart = 124   RxLogoff = 71   RxResp = 2307   RxRespID = 220
+RxInvalid = 0   RxLenErr = 0    RxTotal = 2742
 
-        TxReq = 2480    TxReqID = 525   TxTotal = 3148
+TxReq = 2480    TxReqID = 525   TxTotal = 3148
 
-        RxVersion = 1   LastRxSrcMAC = 2899.faff.cefe
+RxVersion = 1   LastRxSrcMAC = 2899.faff.cefe
 
-        Dot1x Authenticator Port Statistics for GigabitEthernet2/3
-        --------------------------------------------
-        RxStart = 111   RxLogoff = 87   RxResp = 2290   RxRespID = 222
-        RxInvalid = 0   RxLenErr = 0    RxTotal = 2746
+Dot1x Authenticator Port Statistics for GigabitEthernet2/3
+--------------------------------------------
+RxStart = 111   RxLogoff = 87   RxResp = 2290   RxRespID = 222
+RxInvalid = 0   RxLenErr = 0    RxTotal = 2746
 
-        TxReq = 2471    TxReqID = 449   TxTotal = 3057
+TxReq = 2471    TxReqID = 449   TxTotal = 3057
 
-        RxVersion = 1   LastRxSrcMAC = 103a.34ff.be24
+RxVersion = 1   LastRxSrcMAC = 103a.34ff.be24
 
-        Dot1x Authenticator Port Statistics for GigabitEthernet2/4
-        --------------------------------------------
-        RxStart = 125   RxLogoff = 0    RxResp = 2972   RxRespID = 298
-        RxInvalid = 0   RxLenErr = 0    RxTotal = 3441
+Dot1x Authenticator Port Statistics for GigabitEthernet2/4
+--------------------------------------------
+RxStart = 125   RxLogoff = 0    RxResp = 2972   RxRespID = 298
+RxInvalid = 0   RxLenErr = 0    RxTotal = 3441
 
-        TxReq = 3214    TxReqID = 902   TxTotal = 4304
+TxReq = 3214    TxReqID = 902   TxTotal = 4304
 
-        RxVersion = 1   LastRxSrcMAC = 0d01.f8ff.8324
+RxVersion = 1   LastRxSrcMAC = 0d01.f8ff.8324
 
     

@@ -1,31 +1,31 @@
 
-        GENIE_c3850_SW#show authentication sessions interface GigabitEthernet1/0/2
-        detail
-                    Interface:  GigabitEthernet1/0/2
-                    IIF-ID:  0x17B5937E
-                MAC Address:  b4a8.b9ff.5cc3
-                IPv6 Address:  Unknown
-                IPv4 Address:  10.4.1.1
-                    User-Name:  B4-A8-B9-FF-5C-C3
-                    Status:  Authorized
-                    Domain:  VOICE
-            Oper host mode:  multi-auth
-            Oper control dir:  both
-            Session timeout:  N/A
-            Common Session ID:  0A76060A0000000D5323681F
-            Acct Session ID:  0x00000004
-                    Handle:  0x90000003
-            Current Policy:  POLICY_Gi1/0/2
+GENIE_c3850_SW#show authentication sessions interface GigabitEthernet1/0/2
+detail
+            Interface:  GigabitEthernet1/0/2
+            IIF-ID:  0x17B5937E
+        MAC Address:  b4a8.b9ff.5cc3
+        IPv6 Address:  Unknown
+        IPv4 Address:  10.4.1.1
+            User-Name:  B4-A8-B9-FF-5C-C3
+            Status:  Authorized
+            Domain:  VOICE
+    Oper host mode:  multi-auth
+    Oper control dir:  both
+    Session timeout:  N/A
+    Common Session ID:  0A76060A0000000D5323681F
+    Acct Session ID:  0x00000004
+            Handle:  0x90000003
+    Current Policy:  POLICY_Gi1/0/2
 
 
-        Server Policies:
-            *ACS ACL: xGENIEx-Test_ACL_CiscoPhones-e23431ede2*
-            URL Redirect ACL: ACLSWITCH_Redirect_v1
-            URL Redirect: https://cisco.test.com.us:8446/portal/gateway?_sessionId_=
-            ACS ACL: xACSACLx-IP-ACL_MABDefault_V3-5da428a4
+Server Policies:
+    *ACS ACL: xGENIEx-Test_ACL_CiscoPhones-e23431ede2*
+    URL Redirect ACL: ACLSWITCH_Redirect_v1
+    URL Redirect: https://cisco.test.com.us:8446/portal/gateway?_sessionId_=
+    ACS ACL: xACSACLx-IP-ACL_MABDefault_V3-5da428a4
 
-        Method status list:
-            Method           State
-                dot1x           Stopped
-                mab           Authc Success
+Method status list:
+    Method           State
+        dot1x           Stopped
+        mab           Authc Success
     

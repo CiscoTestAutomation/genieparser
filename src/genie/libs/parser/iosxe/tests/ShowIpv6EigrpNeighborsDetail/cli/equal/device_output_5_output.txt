@@ -1,17 +1,17 @@
 
-        R1_xe#show ipv6 eigrp neighbors detail 
-        EIGRP-IPv6 VR(test) Address-Family Neighbors for AS(100)
-        H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq
-                                                           (sec)         (ms)       Cnt Num
-        1   Link-local address:     Gi3.90                   11 01:30:32   10   100  0  29
-            FE80::5C00:FF:FE02:7
-        Version 8.0/1.2, Retrans: 0, Retries: 0, Prefixes: 4
-        Topology-ids from peer - 0 
-        Topologies advertised to peer:   base
+R1_xe#show ipv6 eigrp neighbors detail 
+EIGRP-IPv6 VR(test) Address-Family Neighbors for AS(100)
+H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq
+                                                   (sec)         (ms)       Cnt Num
+1   Link-local address:     Gi3.90                   11 01:30:32   10   100  0  29
+    FE80::5C00:FF:FE02:7
+Version 8.0/1.2, Retrans: 0, Retries: 0, Prefixes: 4
+Topology-ids from peer - 0 
+Topologies advertised to peer:   base
 
-        0   Link-local address:     Gi2.90                   14 02:24:36   10   100  0  29
-            FE80::F816:3EFF:FE3D:AC68
-        Version 3.3/2.0, Retrans: 1, Retries: 0, Prefixes: 4
-        Topology-ids from peer - 0 
-        Topologies advertised to peer:   base
+0   Link-local address:     Gi2.90                   14 02:24:36   10   100  0  29
+    FE80::F816:3EFF:FE3D:AC68
+Version 3.3/2.0, Retrans: 1, Retries: 0, Prefixes: 4
+Topology-ids from peer - 0 
+Topologies advertised to peer:   base
     

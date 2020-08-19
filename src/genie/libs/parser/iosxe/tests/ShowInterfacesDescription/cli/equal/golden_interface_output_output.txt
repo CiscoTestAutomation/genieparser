@@ -1,4 +1,4 @@
 
-        Interface                      Status         Protocol Description
-        GigabitEthernet0/0                          up             up     
+Interface                      Status         Protocol Description
+GigabitEthernet0/0                          up             up     
     

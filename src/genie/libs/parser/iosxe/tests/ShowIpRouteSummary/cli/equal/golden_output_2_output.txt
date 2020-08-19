@@ -1,13 +1,13 @@
 
-        #show ip route vrf VRF-1 summary
-        IP routing table name is VRF-1 (0x27)
-        IP routing table maximum-paths is 32
-        Route Source    Networks    Subnets     Replicates  Overhead    Memory (bytes)
-        application     0           0           0           0           0
-        connected       0           2           0           192         624
-        static          0           0           0           0           0
-        bgp 65000        1           0           0           96          312
-          External: 0 Internal: 1 Local: 0
-        internal        1                                               712
-        Total           2           2           0           288         1648
+#show ip route vrf VRF-1 summary
+IP routing table name is VRF-1 (0x27)
+IP routing table maximum-paths is 32
+Route Source    Networks    Subnets     Replicates  Overhead    Memory (bytes)
+application     0           0           0           0           0
+connected       0           2           0           192         624
+static          0           0           0           0           0
+bgp 65000        1           0           0           96          312
+  External: 0 Internal: 1 Local: 0
+internal        1                                               712
+Total           2           2           0           288         1648
     

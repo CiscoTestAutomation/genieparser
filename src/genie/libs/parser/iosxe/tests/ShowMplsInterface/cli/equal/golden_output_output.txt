@@ -1,4 +1,4 @@
-    PE1#show mpls interfaces
-    Interface              IP            Tunnel   BGP Static Operational
-    GigabitEthernet6       Yes (ldp)     No       No  No     Yes
+PE1#show mpls interfaces
+Interface              IP            Tunnel   BGP Static Operational
+GigabitEthernet6       Yes (ldp)     No       No  No     Yes
     

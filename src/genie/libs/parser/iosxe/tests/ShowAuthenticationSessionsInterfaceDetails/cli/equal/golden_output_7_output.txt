@@ -1,18 +1,18 @@
 
-        Genie_SW#show authentication sessions interface GigabitEthernet1/0/1 details
-        Interface: GigabitEthernet1/0/1
-        IIF-ID: 0x156E4683
-        MAC Address: 0050.b6ff.7f87
-        IPv6 Address: fe80::2119:3248:786b:40db
-        IPv4 Address: 192.168.1.5
-        User-Name: 00-50-B6-FF-7F-87
-        Status: Authorized
-        Domain: DATA
-        Oper host mode: multi-auth
-        Oper control dir: both
-        Session timeout: N/A
-        Common Session ID: 0A76060A00000018DD109536
-        Acct Session ID: 0x0000000f
-        Handle: 0x0f00000e
-        Current Policy: POLICY_Gi1/0/1    
+Genie_SW#show authentication sessions interface GigabitEthernet1/0/1 details
+Interface: GigabitEthernet1/0/1
+IIF-ID: 0x156E4683
+MAC Address: 0050.b6ff.7f87
+IPv6 Address: fe80::2119:3248:786b:40db
+IPv4 Address: 192.168.1.5
+User-Name: 00-50-B6-FF-7F-87
+Status: Authorized
+Domain: DATA
+Oper host mode: multi-auth
+Oper control dir: both
+Session timeout: N/A
+Common Session ID: 0A76060A00000018DD109536
+Acct Session ID: 0x0000000f
+Handle: 0x0f00000e
+Current Policy: POLICY_Gi1/0/1    
     

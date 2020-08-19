@@ -1,26 +1,26 @@
 
-        PE2#show ip bgp all neighbors 10.1.1.1 routes
-        For address family: IPv4 Unicast
+PE2#show ip bgp all neighbors 10.1.1.1 routes
+For address family: IPv4 Unicast
 
-        Total number of prefixes 0
+Total number of prefixes 0
 
-        For address family: VPNv4 Unicast
-        BGP table version is 13, local router ID is 10.5.5.5
-        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
-                      r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
-                      x best-external, a additional-path, c RIB-compressed,
-                      t secondary path, L long-lived-stale,
-        Origin codes: i - IGP, e - EGP, ? - incomplete
-        RPKI validation codes: V valid, I invalid, N Not found
+For address family: VPNv4 Unicast
+BGP table version is 13, local router ID is 10.5.5.5
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
+              x best-external, a additional-path, c RIB-compressed,
+              t secondary path, L long-lived-stale,
+Origin codes: i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
 
-             Network          Next Hop            Metric LocPrf Weight Path
-        Route Distinguisher: 65000:100 (default for vrf VRF100)
-         *>i  192.168.121.0    10.6.6.6                 0    100      0 ?
-         *>i  192.168.122.0    10.6.6.6                 0    100      0 65001 i
-        Route Distinguisher: 65000:200 (default for vrf VRF200)
-         *>i  192.168.221.0    10.6.6.6                 0    100      0 ?
-         *>i  192.168.222.0    10.6.6.6                 0    100      0 65001 i
+     Network          Next Hop            Metric LocPrf Weight Path
+Route Distinguisher: 65000:100 (default for vrf VRF100)
+ *>i  192.168.121.0    10.6.6.6                 0    100      0 ?
+ *>i  192.168.122.0    10.6.6.6                 0    100      0 65001 i
+Route Distinguisher: 65000:200 (default for vrf VRF200)
+ *>i  192.168.221.0    10.6.6.6                 0    100      0 ?
+ *>i  192.168.222.0    10.6.6.6                 0    100      0 65001 i
 
-        Total number of prefixes 4
-        PE2#
+Total number of prefixes 4
+PE2#
         

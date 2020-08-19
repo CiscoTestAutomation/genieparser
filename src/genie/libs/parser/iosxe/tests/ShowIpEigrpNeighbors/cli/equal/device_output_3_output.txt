@@ -1,7 +1,7 @@
 
-        Device# show ip eigrp neighbors
-        H   Address      Interface  Hold  Uptime    SRTT   RTO    Q   Seq
-                                    (sec)           (ms)          Cnt Num
-        2   10.1.1.9     Gi0/0      14    00:02:24  206    5000   0   5
-        1   10.1.2.3     Gi0/1      11    00:20:39  2202   5000   0   5
+Device# show ip eigrp neighbors
+H   Address      Interface  Hold  Uptime    SRTT   RTO    Q   Seq
+                            (sec)           (ms)          Cnt Num
+2   10.1.1.9     Gi0/0      14    00:02:24  206    5000   0   5
+1   10.1.2.3     Gi0/1      11    00:20:39  2202   5000   0   5
     

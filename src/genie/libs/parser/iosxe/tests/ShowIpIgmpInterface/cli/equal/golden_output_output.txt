@@ -1,24 +1,24 @@
-        Global IGMP State Limit : 1 active out of 20 max
-        GigabitEthernet1 is up, line protocol is up
-          Internet address is 10.1.2.1/24
-          IGMP is enabled on interface
-          Current IGMP host version is 3
-          Current IGMP router version is 3
-          IGMP query interval is 133 seconds
-          IGMP configured query interval is 133 seconds
-          IGMP querier timeout is 266 seconds
-          IGMP configured querier timeout is 266 seconds
-          IGMP max query response time is 10 seconds
-          Last member query count is 2
-          Last member query response interval is 100 ms
-          Inbound IGMP access group is test2
-          IGMP activity: 13 joins, 3 leaves
-          Interface IGMP State Limit : 1 active out of 10 max
-          Multicast routing is enabled on interface
-          Multicast TTL threshold is 0
-          Multicast designated router (DR) is 10.1.2.1 (this system)
-          IGMP querying router is 10.1.2.1 (this system)
-          Multicast groups joined by this system (number of users):
-              224.0.1.40(1)  239.4.4.4(1)  239.3.3.3(1)
-              239.2.2.2(1)  239.1.1.1(1)
+Global IGMP State Limit : 1 active out of 20 max
+GigabitEthernet1 is up, line protocol is up
+  Internet address is 10.1.2.1/24
+  IGMP is enabled on interface
+  Current IGMP host version is 3
+  Current IGMP router version is 3
+  IGMP query interval is 133 seconds
+  IGMP configured query interval is 133 seconds
+  IGMP querier timeout is 266 seconds
+  IGMP configured querier timeout is 266 seconds
+  IGMP max query response time is 10 seconds
+  Last member query count is 2
+  Last member query response interval is 100 ms
+  Inbound IGMP access group is test2
+  IGMP activity: 13 joins, 3 leaves
+  Interface IGMP State Limit : 1 active out of 10 max
+  Multicast routing is enabled on interface
+  Multicast TTL threshold is 0
+  Multicast designated router (DR) is 10.1.2.1 (this system)
+  IGMP querying router is 10.1.2.1 (this system)
+  Multicast groups joined by this system (number of users):
+      224.0.1.40(1)  239.4.4.4(1)  239.3.3.3(1)
+      239.2.2.2(1)  239.1.1.1(1)
     

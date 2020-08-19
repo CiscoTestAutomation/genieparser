@@ -1,7 +1,7 @@
-        Prefix-list with the last deletion/insertion: test6
-        ipv6 prefix-list test6:
-           count: 4, range entries: 3, sequences: 5 - 20, refcount: 2
-           seq 5 permit 2001:DB8:1::/64 (hit count: 0, refcount: 1)
-           seq 10 permit 2001:DB8:2::/64 ge 65 (hit count: 0, refcount: 1)
-           seq 15 permit 2001:DB8:3::/64 le 128 (hit count: 0, refcount: 3)
+Prefix-list with the last deletion/insertion: test6
+ipv6 prefix-list test6:
+   count: 4, range entries: 3, sequences: 5 - 20, refcount: 2
+   seq 5 permit 2001:DB8:1::/64 (hit count: 0, refcount: 1)
+   seq 10 permit 2001:DB8:2::/64 ge 65 (hit count: 0, refcount: 1)
+   seq 15 permit 2001:DB8:3::/64 le 128 (hit count: 0, refcount: 3)
     

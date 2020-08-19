@@ -1,40 +1,40 @@
 
-        Device#show flow monitor mon_vrf_1 cache format record
-        Load for five secs: 3%/0%; one minute: 2%; five minutes: 5%
-        Time source is NTP, 16:04:45.275 UTC Wed Nov 6 2019
+Device#show flow monitor mon_vrf_1 cache format record
+Load for five secs: 3%/0%; one minute: 2%; five minutes: 5%
+Time source is NTP, 16:04:45.275 UTC Wed Nov 6 2019
 
-        Cache type:                               Normal (Platform cache)
-        Cache size:                               200000
-        Current entries:                               3
-        High Watermark:                                3
+Cache type:                               Normal (Platform cache)
+Cache size:                               200000
+Current entries:                               3
+High Watermark:                                3
 
-        Flows added:                                  18
-        Flows aged:                                    6
-            - Active timeout      (   100 secs)        0
-            - Inactive timeout    (   100 secs)        0
-            - Event aged                               0
-            - Watermark aged                           6
-            - Emergency aged                           0
+Flows added:                                  18
+Flows aged:                                    6
+    - Active timeout      (   100 secs)        0
+    - Inactive timeout    (   100 secs)        0
+    - Event aged                               0
+    - Watermark aged                           6
+    - Emergency aged                           0
 
-        IP VRF ID INPUT:           0          (DEFAULT)
-        IPV4 SOURCE ADDRESS:       192.168.189.254
-        IPV4 DESTINATION ADDRESS:  192.168.189.253
-        interface input:           Null
-        interface output:          Te0/0/0.1003
-        counter packets:           3
+IP VRF ID INPUT:           0          (DEFAULT)
+IPV4 SOURCE ADDRESS:       192.168.189.254
+IPV4 DESTINATION ADDRESS:  192.168.189.253
+interface input:           Null
+interface output:          Te0/0/0.1003
+counter packets:           3
 
-        IP VRF ID INPUT:           0          (DEFAULT)
-        IPV4 SOURCE ADDRESS:       192.168.16.254
-        IPV4 DESTINATION ADDRESS:  192.168.16.253
-        interface input:           Null
-        interface output:          Te0/0/0.1001
-        counter packets:           4
+IP VRF ID INPUT:           0          (DEFAULT)
+IPV4 SOURCE ADDRESS:       192.168.16.254
+IPV4 DESTINATION ADDRESS:  192.168.16.253
+interface input:           Null
+interface output:          Te0/0/0.1001
+counter packets:           4
 
-        IP VRF ID INPUT:           0          (DEFAULT)
-        IPV4 SOURCE ADDRESS:       192.168.229.254
-        IPV4 DESTINATION ADDRESS:  192.168.229.253
-        interface input:           Null
-        interface output:          Te0/0/0.1002
-        counter packets:           4
-        Device#
+IP VRF ID INPUT:           0          (DEFAULT)
+IPV4 SOURCE ADDRESS:       192.168.229.254
+IPV4 DESTINATION ADDRESS:  192.168.229.253
+interface input:           Null
+interface output:          Te0/0/0.1002
+counter packets:           4
+Device#
     

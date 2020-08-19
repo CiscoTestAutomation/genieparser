@@ -1,6 +1,6 @@
-        show authentication sessions interface GigabitEthernet1/7/35
+show authentication sessions interface GigabitEthernet1/7/35
 
-        Interface Identifier     Method Domain  Status Fg Session ID
-        -----------------------------------------------------------------------------
-        Gi1/7/35  0000.00ff.4444 dot1x  UNKNOWN Auth      141927640000000E0B40EDB0
+Interface Identifier     Method Domain  Status Fg Session ID
+-----------------------------------------------------------------------------
+Gi1/7/35  0000.00ff.4444 dot1x  UNKNOWN Auth      141927640000000E0B40EDB0
     

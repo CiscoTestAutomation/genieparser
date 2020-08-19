@@ -1,8 +1,8 @@
-        Dot1x Supplicant Port Statistics for GigabitEthernet1/0/9
-        --------------------------------------------
-        RxReq = 0       RxInvalid = 0    RxLenErr = 0    RxTotal = 0
+Dot1x Supplicant Port Statistics for GigabitEthernet1/0/9
+--------------------------------------------
+RxReq = 0       RxInvalid = 0    RxLenErr = 0    RxTotal = 0
 
-        TxStart = 3     TxLogoff = 0      TxResp = 0      TxTotal = 3
+TxStart = 3     TxLogoff = 0      TxResp = 0      TxTotal = 3
 
-        RxVersion = 0   LastRxSrcMAC = 0000.0000.0000
+RxVersion = 0   LastRxSrcMAC = 0000.0000.0000
     

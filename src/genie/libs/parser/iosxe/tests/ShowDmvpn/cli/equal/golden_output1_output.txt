@@ -1,27 +1,27 @@
 
-        Legend: Attrb --> S - Static, D - Dynamic, I - Incomplete
-                N - NATed, L - Local, X - No Socket
-                T1 - Route Installed, T2 - Nexthop-override
-                C - CTS Capable
-                # Ent --> Number of NHRP entries with same NBMA peer
-                NHS Status: E --> Expecting Replies, R --> Responding, W --> Waiting
-                UpDn Time --> Up or Down Time for a Tunnel
-        ==========================================================================
+Legend: Attrb --> S - Static, D - Dynamic, I - Incomplete
+        N - NATed, L - Local, X - No Socket
+        T1 - Route Installed, T2 - Nexthop-override
+        C - CTS Capable
+        # Ent --> Number of NHRP entries with same NBMA peer
+        NHS Status: E --> Expecting Replies, R --> Responding, W --> Waiting
+        UpDn Time --> Up or Down Time for a Tunnel
+==========================================================================
 
-        Interface: Tunnel84, IPv4 NHRP Details
-        Type:Spoke, NHRP Peers:1,
+Interface: Tunnel84, IPv4 NHRP Details
+Type:Spoke, NHRP Peers:1,
 
-         # Ent  Peer NBMA Addr Peer Tunnel Add State  UpDn Tm Attrb
-         ----- --------------- --------------- ----- -------- -----
-             1 172.30.84.1          172.29.0.1  NHRP    never    SC
+ # Ent  Peer NBMA Addr Peer Tunnel Add State  UpDn Tm Attrb
+ ----- --------------- --------------- ----- -------- -----
+     1 172.30.84.1          172.29.0.1  NHRP    never    SC
 
-        Interface: Tunnel90, IPv4 NHRP Details        
-        Type:Spoke, NHRP Peers:3,
+Interface: Tunnel90, IPv4 NHRP Details        
+Type:Spoke, NHRP Peers:3,
 
-         # Ent  Peer NBMA Addr Peer Tunnel Add State  UpDn Tm Attrb
-         ----- --------------- --------------- ----- -------- -----
-             1 172.29.0.1          172.30.90.1   IKE     3w5d     S
-             2 172.29.0.2          172.30.90.2    UP    6d12h     S
-                                   172.30.90.25   UP    6d12h     S
-             2 172.29.134.1       172.30.72.72    UP 00:29:40   DT2
-                                  172.30.72.72    UP 00:29:40   DT1
+ # Ent  Peer NBMA Addr Peer Tunnel Add State  UpDn Tm Attrb
+ ----- --------------- --------------- ----- -------- -----
+     1 172.29.0.1          172.30.90.1   IKE     3w5d     S
+     2 172.29.0.2          172.30.90.2    UP    6d12h     S
+                           172.30.90.25   UP    6d12h     S
+     2 172.29.134.1       172.30.72.72    UP 00:29:40   DT2
+                          172.30.72.72    UP 00:29:40   DT1

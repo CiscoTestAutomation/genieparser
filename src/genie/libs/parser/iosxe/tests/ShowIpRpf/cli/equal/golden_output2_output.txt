@@ -1,9 +1,9 @@
-        RPF information for ? (10.1.1.100)
-          RPF interface: Ethernet3/0
-          RPF neighbor: ? (10.1.1.5)
-          RPF route/mask: 10.1.1.0/24
-          RPF type: unicast (rip)
-          RPF recursion count: 0
-          Doing distance-preferred lookups across tables
-          Using Group Based VRF Select, RPF VRF: blue
+RPF information for ? (10.1.1.100)
+  RPF interface: Ethernet3/0
+  RPF neighbor: ? (10.1.1.5)
+  RPF route/mask: 10.1.1.0/24
+  RPF type: unicast (rip)
+  RPF recursion count: 0
+  Doing distance-preferred lookups across tables
+  Using Group Based VRF Select, RPF VRF: blue
     

@@ -1,2 +1,2 @@
-        The VTP password is not configured.
+The VTP password is not configured.
     

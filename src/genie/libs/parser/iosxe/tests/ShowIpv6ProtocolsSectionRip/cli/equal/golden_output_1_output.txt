@@ -1,8 +1,8 @@
-        R1#show ipv6 protocols | sec rip
-        IPv6 Routing Protocol is "rip ripng"
-          Interfaces:
-            GigabitEthernet3.100
-            GigabitEthernet2.100
-          Redistribution:
-            Redistributing protocol static with metric 3
+R1#show ipv6 protocols | sec rip
+IPv6 Routing Protocol is "rip ripng"
+  Interfaces:
+    GigabitEthernet3.100
+    GigabitEthernet2.100
+  Redistribution:
+    Redistributing protocol static with metric 3
     

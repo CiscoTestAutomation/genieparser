@@ -1,12 +1,12 @@
 
-        GENIE#show ip route 192.168.4.10
-        Routing entry for 192.168.4.0/25
-        Known via "static", distance 1, metric 0
-        Tag 113
-        Redistributing via eigrp 10
-        Advertised by eigrp 10 route-map GENIE_INTO_EIGRP
-        Routing Descriptor Blocks:
-        * 10.1.11.9
-            Route metric is 0, traffic share count is 1
-            Route tag 113
+GENIE#show ip route 192.168.4.10
+Routing entry for 192.168.4.0/25
+Known via "static", distance 1, metric 0
+Tag 113
+Redistributing via eigrp 10
+Advertised by eigrp 10 route-map GENIE_INTO_EIGRP
+Routing Descriptor Blocks:
+* 10.1.11.9
+    Route metric is 0, traffic share count is 1
+    Route tag 113
     

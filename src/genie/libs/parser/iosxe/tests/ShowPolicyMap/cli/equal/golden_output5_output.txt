@@ -1,32 +1,32 @@
 
-            Router# show policy-map
-                Policy Map PHB
-                    Class cos1
-                        police cir 200000 bc 8000
-                            conform-action transmit
-                            exceed-action drop
-                        priority
-                    Class cos2
-                        bandwidth 100
-                        bandwidth remaining percent 40
-                    Class cos3
-                        bandwidth 200
-                        bandwidth remaining percent 50
+Router# show policy-map
+    Policy Map PHB
+        Class cos1
+            police cir 200000 bc 8000
+                conform-action transmit
+                exceed-action drop
+            priority
+        Class cos2
+            bandwidth 100
+            bandwidth remaining percent 40
+        Class cos3
+            bandwidth 200
+            bandwidth remaining percent 50
 
-                Policy Map PHB
-                    Class cos1
-                        police cir 200000 bc 8000
-                            conform-action transmit
-                            exceed-action drop
-                        priority
-                    Class cos2
-                        bandwidth 100
-                    Class cos3
-                        bandwidth 200
+    Policy Map PHB
+        Class cos1
+            police cir 200000 bc 8000
+                conform-action transmit
+                exceed-action drop
+            priority
+        Class cos2
+            bandwidth 100
+        Class cos3
+            bandwidth 200
 
-                Policy-map ingress_policy
-                    Class cos3
-                        Set cos 5
-                Policy-map egress policy
-                    Class cos5
-                        Shape average 30m 
+    Policy-map ingress_policy
+        Class cos3
+            Set cos 5
+    Policy-map egress policy
+        Class cos5
+            Shape average 30m 

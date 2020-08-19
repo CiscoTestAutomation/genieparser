@@ -1,9 +1,9 @@
 
-    Load for five secs: 4%/1%; one minute: 4%; five minutes: 2%
-    Time source is hardware calendar, *17:26:56.066 GMT Mon Oct 18 2010
+Load for five secs: 4%/1%; one minute: 4%; five minutes: 2%
+Time source is hardware calendar, *17:26:56.066 GMT Mon Oct 18 2010
 
 
-    Local intf     Local circuit              Dest address    VC ID      Status    
-    -------------  -------------------------- --------------- ---------- ----------
-    VFI auto       VFI                        10.1.1.1        100         UP      
+Local intf     Local circuit              Dest address    VC ID      Status    
+-------------  -------------------------- --------------- ---------- ----------
+VFI auto       VFI                        10.1.1.1        100         UP      
     

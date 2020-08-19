@@ -1,25 +1,25 @@
-        Router#show platform hardware slot 0 plim statistics 
-        0/0, SPA-8X1GE-V2, Online
-          RX Pkts 13543013    Bytes 6378454260 
-          TX Pkts 13689497    Bytes 6258449952 
-          RX IPC Pkts 0           Bytes 0          
-          TX IPC Pkts 0           Bytes 0          
+Router#show platform hardware slot 0 plim statistics 
+0/0, SPA-8X1GE-V2, Online
+  RX Pkts 13543013    Bytes 6378454260 
+  TX Pkts 13689497    Bytes 6258449952 
+  RX IPC Pkts 0           Bytes 0          
+  TX IPC Pkts 0           Bytes 0          
 
-        0/1, SPA-8X1GE-V2, Online
-          RX Pkts 0           Bytes 0          
-          TX Pkts 0           Bytes 0          
-          RX IPC Pkts 0           Bytes 0          
-          TX IPC Pkts 0           Bytes 0          
+0/1, SPA-8X1GE-V2, Online
+  RX Pkts 0           Bytes 0          
+  TX Pkts 0           Bytes 0          
+  RX IPC Pkts 0           Bytes 0          
+  TX IPC Pkts 0           Bytes 0          
 
-        0/2, SPA-1XTENGE-XFP-V2, Online
-          RX Pkts 0           Bytes 0          
-          TX Pkts 0           Bytes 0          
-          RX IPC Pkts 0           Bytes 0          
-          TX IPC Pkts 0           Bytes 0          
+0/2, SPA-1XTENGE-XFP-V2, Online
+  RX Pkts 0           Bytes 0          
+  TX Pkts 0           Bytes 0          
+  RX IPC Pkts 0           Bytes 0          
+  TX IPC Pkts 0           Bytes 0          
 
-        0/3, SPA-1XTENGE-XFP-V2, Online
-          RX Pkts 0           Bytes 0          
-          TX Pkts 0           Bytes 0          
-          RX IPC Pkts 0           Bytes 0          
-          TX IPC Pkts 0           Bytes 0
+0/3, SPA-1XTENGE-XFP-V2, Online
+  RX Pkts 0           Bytes 0          
+  TX Pkts 0           Bytes 0          
+  RX IPC Pkts 0           Bytes 0          
+  TX IPC Pkts 0           Bytes 0
     

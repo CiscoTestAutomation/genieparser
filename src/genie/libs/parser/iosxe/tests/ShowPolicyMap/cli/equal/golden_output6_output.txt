@@ -1,13 +1,13 @@
 
-        Router# show policy-map child
+Router# show policy-map child
 
-        Policy Map child
-            Class voice
-                priority
-                police 8000 9216 0
-                    conform-action transmit
-                    exceed-action drop
-                    violate-action drop
-            Class video
-                bandwidth remaining 80 (%)
+Policy Map child
+    Class voice
+        priority
+        police 8000 9216 0
+            conform-action transmit
+            exceed-action drop
+            violate-action drop
+    Class video
+        bandwidth remaining 80 (%)
         

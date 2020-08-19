@@ -1,11 +1,11 @@
 
-        Router# show policy-map police
-        Policy Map police
-            Class class-default
-                police cir 1000000 bc 31250 pir 2000000 be 31250
-                    conform-action transmit
-                    exceed-action set-prec-transmit 4
-                    exceed-action set-frde-transmit
-                    violate-action set-prec-transmit 2
-                    violate-action set-frde-transmit
+Router# show policy-map police
+Policy Map police
+    Class class-default
+        police cir 1000000 bc 31250 pir 2000000 be 31250
+            conform-action transmit
+            exceed-action set-prec-transmit 4
+            exceed-action set-frde-transmit
+            violate-action set-prec-transmit 2
+            violate-action set-frde-transmit
     

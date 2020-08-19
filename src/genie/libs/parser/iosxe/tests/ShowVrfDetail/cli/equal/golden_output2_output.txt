@@ -1,22 +1,22 @@
 
-        VRF GENIE (VRF Id = 17); default RD 65109:110; default VPNID <not set>
-          Description: VPN for GENIE parser
-          New CLI format, supports multiple address-families
-          Flags: 0x180C
-          Interfaces:
-            Gi0/0/0.110              Te0/1/2.1042             vl110
-        Address family ipv4 unicast (Table ID = 0x11):
-          Flags: 0x0
-          Export VPN route-target communities
-            RT:65109:1               RT:65109:110
-          Import VPN route-target communities
-            RT:65109:4094            RT:65109:110
-          No import route-map
-          No global export route-map
-          No export route-map
-          VRF label distribution protocol: not configured
-          VRF label allocation mode: per-prefix
-        Address family ipv6 unicast not active
-        Address family ipv4 multicast not active
-        Address family ipv6 multicast not active
+VRF GENIE (VRF Id = 17); default RD 65109:110; default VPNID <not set>
+  Description: VPN for GENIE parser
+  New CLI format, supports multiple address-families
+  Flags: 0x180C
+  Interfaces:
+    Gi0/0/0.110              Te0/1/2.1042             vl110
+Address family ipv4 unicast (Table ID = 0x11):
+  Flags: 0x0
+  Export VPN route-target communities
+    RT:65109:1               RT:65109:110
+  Import VPN route-target communities
+    RT:65109:4094            RT:65109:110
+  No import route-map
+  No global export route-map
+  No export route-map
+  VRF label distribution protocol: not configured
+  VRF label allocation mode: per-prefix
+Address family ipv6 unicast not active
+Address family ipv4 multicast not active
+Address family ipv6 multicast not active
     

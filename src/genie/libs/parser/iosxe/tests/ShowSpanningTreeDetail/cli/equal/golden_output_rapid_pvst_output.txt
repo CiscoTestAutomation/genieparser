@@ -1,44 +1,44 @@
-        VLAN0100 is executing the rstp compatible Spanning Tree protocol
-          Bridge Identifier has priority 24576, sysid 100, address 3820.56ff.76db
-          Configured hello time 2, max age 20, forward delay 15, transmit hold-count 6
-          We are the root of the spanning tree
-          Topology change flag set, detected flag not set
-          Number of topology changes 1 last change occurred 00:00:34 ago
-                  from Port-channel12
-          Times:  hold 1, topology change 35, notification 2
-                  hello 2, max age 20, forward delay 15 
-          Timers: hello 0, topology change 0, notification 0, aging 300
+VLAN0100 is executing the rstp compatible Spanning Tree protocol
+  Bridge Identifier has priority 24576, sysid 100, address 3820.56ff.76db
+  Configured hello time 2, max age 20, forward delay 15, transmit hold-count 6
+  We are the root of the spanning tree
+  Topology change flag set, detected flag not set
+  Number of topology changes 1 last change occurred 00:00:34 ago
+          from Port-channel12
+  Times:  hold 1, topology change 35, notification 2
+          hello 2, max age 20, forward delay 15 
+  Timers: hello 0, topology change 0, notification 0, aging 300
 
-         Port 2388 (Port-channel12) of VLAN0100 is designated forwarding 
-           Port path cost 3, Port priority 128, Port Identifier 128.2388.
-           Designated root has priority 24676, address 3820.56ff.76db
-           Designated bridge has priority 24676, address 3820.56ff.76db
-           Designated port id is 128.2388, designated path cost 0
-           Timers: message age 0, forward delay 0, hold 0
-           Number of transitions to forwarding state: 1
-           Link type is point-to-point by default
-           BPDU: sent 34, received 0
+ Port 2388 (Port-channel12) of VLAN0100 is designated forwarding 
+   Port path cost 3, Port priority 128, Port Identifier 128.2388.
+   Designated root has priority 24676, address 3820.56ff.76db
+   Designated bridge has priority 24676, address 3820.56ff.76db
+   Designated port id is 128.2388, designated path cost 0
+   Timers: message age 0, forward delay 0, hold 0
+   Number of transitions to forwarding state: 1
+   Link type is point-to-point by default
+   BPDU: sent 34, received 0
 
-        VLAN0201 is executing the rstp compatible Spanning Tree protocol
-          Bridge Identifier has priority 28672, sysid 201, address ecbd.1dff.5f89
-          Configured hello time 2, max age 20, forward delay 15, transmit hold-count 6
-          Current root has priority 24777, address 58bf.eaff.e5b6
-          Root port is 2390 (Port-channel14), cost of root path is 3
-          Topology change flag set, detected flag not set
-          Number of topology changes 1 last change occurred 00:00:14 ago
-                  from Port-channel14
-          Times:  hold 1, topology change 35, notification 2
-                  hello 2, max age 20, forward delay 15 
-          Timers: hello 0, topology change 21, notification 0, aging 300
+VLAN0201 is executing the rstp compatible Spanning Tree protocol
+  Bridge Identifier has priority 28672, sysid 201, address ecbd.1dff.5f89
+  Configured hello time 2, max age 20, forward delay 15, transmit hold-count 6
+  Current root has priority 24777, address 58bf.eaff.e5b6
+  Root port is 2390 (Port-channel14), cost of root path is 3
+  Topology change flag set, detected flag not set
+  Number of topology changes 1 last change occurred 00:00:14 ago
+          from Port-channel14
+  Times:  hold 1, topology change 35, notification 2
+          hello 2, max age 20, forward delay 15 
+  Timers: hello 0, topology change 21, notification 0, aging 300
 
-         Port 5 (GigabitEthernet1/0/5) of VLAN0201 is designated forwarding 
-           Port path cost 4, Port priority 128, Port Identifier 128.5.
-           Designated root has priority 24777, address 58bf.eaff.e5b6
-           Designated bridge has priority 28873, address ecbd.1dff.5f89
-           Designated port id is 128.5, designated path cost 3
-           Timers: message age 0, forward delay 0, hold 0
-           Number of transitions to forwarding state: 1
-           Link type is point-to-point by default, Peer is STP
-           BPDU: sent 20, received 4
+ Port 5 (GigabitEthernet1/0/5) of VLAN0201 is designated forwarding 
+   Port path cost 4, Port priority 128, Port Identifier 128.5.
+   Designated root has priority 24777, address 58bf.eaff.e5b6
+   Designated bridge has priority 28873, address ecbd.1dff.5f89
+   Designated port id is 128.5, designated path cost 3
+   Timers: message age 0, forward delay 0, hold 0
+   Number of transitions to forwarding state: 1
+   Link type is point-to-point by default, Peer is STP
+   BPDU: sent 20, received 4
 
     

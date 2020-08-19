@@ -1,14 +1,14 @@
 
-    Router#show mpls ldp capabilities all
-    Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
-    Time source is NTP, 16:10:10.481 EST Tue Nov 8 2016
+Router#show mpls ldp capabilities all
+Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
+Time source is NTP, 16:10:10.481 EST Tue Nov 8 2016
 
-    LDP Capabilities - [<description> (<type>)]
-    ---------------------------------------------------------
-        [ICCP (type 0x0405) MajVer 1 MinVer 0]
-        [Dynamic Announcement (0x0506)]
-        [mLDP Point-to-Multipoint (0x0508)]
-        [mLDP Multipoint-to-Multipoint (0x0509)]
-        [Typed Wildcard (0x050B)]
+LDP Capabilities - [<description> (<type>)]
+---------------------------------------------------------
+    [ICCP (type 0x0405) MajVer 1 MinVer 0]
+    [Dynamic Announcement (0x0506)]
+    [mLDP Point-to-Multipoint (0x0508)]
+    [mLDP Multipoint-to-Multipoint (0x0509)]
+    [Typed Wildcard (0x050B)]
 
     

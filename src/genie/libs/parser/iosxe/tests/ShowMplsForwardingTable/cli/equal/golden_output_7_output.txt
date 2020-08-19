@@ -1,6 +1,6 @@
 
-    Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop    
-    Label      Label      or Tunnel Id     Switched      interface              
-    39    [M]  16052      10.169.14.241/32                                              0             Gi0/1/7    10.169.196.217
-    16052 [M]  16052      10.169.14.241/32                                              0             Gi0/1/7    10.169.196.217
+Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop    
+Label      Label      or Tunnel Id     Switched      interface              
+39    [M]  16052      10.169.14.241/32                                              0             Gi0/1/7    10.169.196.217
+16052 [M]  16052      10.169.14.241/32                                              0             Gi0/1/7    10.169.196.217
     

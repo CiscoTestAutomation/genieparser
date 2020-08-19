@@ -1,7 +1,7 @@
 
 
-        Id    Type    Interface                     State     CE-Vlans
-        501   Static  TenGigabitEthernet0/3/0       Up
-        501   Static  TenGigabitEthernet0/1/0       Up 
-        502   Static  TenGigabitEthernet0/3/0       Up
+Id    Type    Interface                     State     CE-Vlans
+501   Static  TenGigabitEthernet0/3/0       Up
+501   Static  TenGigabitEthernet0/1/0       Up 
+502   Static  TenGigabitEthernet0/3/0       Up
     

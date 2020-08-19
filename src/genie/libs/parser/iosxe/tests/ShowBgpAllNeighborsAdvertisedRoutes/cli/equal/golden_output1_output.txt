@@ -1,55 +1,55 @@
 
-        Router#show bgp all neighbors 10.186.0.2 advertised-routes
-        For address family: VPNv4 Unicast
-        BGP table version is 56, local router ID is 10.64.4.4
-        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
-                      r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
-                      x best-external, a additional-path, c RIB-compressed, 
-        Origin codes: i - IGP, e - EGP, ? - incomplete
-        RPKI validation codes: V valid, I invalid, N Not found
+Router#show bgp all neighbors 10.186.0.2 advertised-routes
+For address family: VPNv4 Unicast
+BGP table version is 56, local router ID is 10.64.4.4
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
+              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
+              x best-external, a additional-path, c RIB-compressed, 
+Origin codes: i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
 
-             Network          Next Hop            Metric LocPrf Weight Path
-        Route Distinguisher: 300:1 (default for vrf VRF1) VRF Router ID 10.94.44.44
-         *>  10.169.1.0/24      10.4.6.6              2219             0 300 33299 51178 47751 {27016} e
-         *>  10.169.2.0/24      10.4.6.6              2219             0 300 33299 51178 47751 {27016} e
-         *>  10.169.3.0/24      10.4.6.6              2219             0 300 33299 51178 47751 {27016} e
-         *>  10.169.4.0/24      10.4.6.6              2219             0 300 33299 51178 47751 {27016} e
-         *>  10.169.5.0/24      10.4.6.6              2219             0 300 33299 51178 47751 {27016} e
-        Route Distinguisher: 400:1 (default for vrf VRF2) VRF Router ID 10.94.44.44
-         *>  10.9.2.0/24      10.66.6.6              2219             0 400 33299 51178 47751 {27016} e
-         *>  10.9.3.0/24      10.66.6.6              2219             0 400 33299 51178 47751 {27016} e
-         *>  10.9.4.0/24      10.66.6.6              2219             0 400 33299 51178 47751 {27016} e
-         *>  10.9.5.0/24      10.66.6.6              2219             0 400 33299 51178 47751 {27016} e
-         *>  10.9.6.0/24      10.66.6.6              2219             0 400 33299 51178 47751 {27016} e
+     Network          Next Hop            Metric LocPrf Weight Path
+Route Distinguisher: 300:1 (default for vrf VRF1) VRF Router ID 10.94.44.44
+ *>  10.169.1.0/24      10.4.6.6              2219             0 300 33299 51178 47751 {27016} e
+ *>  10.169.2.0/24      10.4.6.6              2219             0 300 33299 51178 47751 {27016} e
+ *>  10.169.3.0/24      10.4.6.6              2219             0 300 33299 51178 47751 {27016} e
+ *>  10.169.4.0/24      10.4.6.6              2219             0 300 33299 51178 47751 {27016} e
+ *>  10.169.5.0/24      10.4.6.6              2219             0 300 33299 51178 47751 {27016} e
+Route Distinguisher: 400:1 (default for vrf VRF2) VRF Router ID 10.94.44.44
+ *>  10.9.2.0/24      10.66.6.6              2219             0 400 33299 51178 47751 {27016} e
+ *>  10.9.3.0/24      10.66.6.6              2219             0 400 33299 51178 47751 {27016} e
+ *>  10.9.4.0/24      10.66.6.6              2219             0 400 33299 51178 47751 {27016} e
+ *>  10.9.5.0/24      10.66.6.6              2219             0 400 33299 51178 47751 {27016} e
+ *>  10.9.6.0/24      10.66.6.6              2219             0 400 33299 51178 47751 {27016} e
 
-        Total number of prefixes 10 
+Total number of prefixes 10 
 
-        For address family: VPNv6 Unicast
-        BGP table version is 66, local router ID is 10.64.4.4
-        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
-                      r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
-                      x best-external, a additional-path, c RIB-compressed, 
-        Origin codes: i - IGP, e - EGP, ? - incomplete
-        RPKI validation codes: V valid, I invalid, N Not found
+For address family: VPNv6 Unicast
+BGP table version is 66, local router ID is 10.64.4.4
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
+              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
+              x best-external, a additional-path, c RIB-compressed, 
+Origin codes: i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
 
-             Network          Next Hop            Metric LocPrf Weight Path
-        Route Distinguisher: 300:1 (default for vrf VRF1) VRF Router ID 10.94.44.44
-         *>  2001:db8:31b9:121::/64   2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
-         *>  2001:db8:31b9:144::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
-         *>  2001:db8:31b9:169::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
-         *>  2001:db8:31b9:190::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
-         *>  2001:db8:31b9:1b9::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
-        Route Distinguisher: 400:1 (default for vrf VRF2) VRF Router ID 10.94.44.44
-         *>  2001:db8:a69:484::/64   2001:DB8:20:4:6::6
-                                                     2219             0 400 33299 51178 47751 {27016} e
-         *>  2001:db8:a69:4c9::/64 2001:DB8:20:4:6::6
-                                                     2219             0 400 33299 51178 47751 {27016} e
-         *>  2001:db8:a69:510::/64 2001:DB8:20:4:6::6
-                                                     2219             0 400 33299 51178 47751 {27016} e
-         *>  2001:db8:a69:559::/64 2001:DB8:20:4:6::6
-                                                     2219             0 400 33299 51178 47751 {27016} e
-         *>  2001:db8:a69:5a4::/64 2001:DB8:20:4:6::6
-                                                     2219             0 400 33299 51178 47751 {27016} e
+     Network          Next Hop            Metric LocPrf Weight Path
+Route Distinguisher: 300:1 (default for vrf VRF1) VRF Router ID 10.94.44.44
+ *>  2001:db8:31b9:121::/64   2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
+ *>  2001:db8:31b9:144::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
+ *>  2001:db8:31b9:169::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
+ *>  2001:db8:31b9:190::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
+ *>  2001:db8:31b9:1b9::/64 2001:DB8:4:6::6       2219             0 300 33299 51178 47751 {27016} e
+Route Distinguisher: 400:1 (default for vrf VRF2) VRF Router ID 10.94.44.44
+ *>  2001:db8:a69:484::/64   2001:DB8:20:4:6::6
+                                             2219             0 400 33299 51178 47751 {27016} e
+ *>  2001:db8:a69:4c9::/64 2001:DB8:20:4:6::6
+                                             2219             0 400 33299 51178 47751 {27016} e
+ *>  2001:db8:a69:510::/64 2001:DB8:20:4:6::6
+                                             2219             0 400 33299 51178 47751 {27016} e
+ *>  2001:db8:a69:559::/64 2001:DB8:20:4:6::6
+                                             2219             0 400 33299 51178 47751 {27016} e
+ *>  2001:db8:a69:5a4::/64 2001:DB8:20:4:6::6
+                                             2219             0 400 33299 51178 47751 {27016} e
 
-        Total number of prefixes 10
+Total number of prefixes 10
         

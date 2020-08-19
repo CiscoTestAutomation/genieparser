@@ -1,4 +1,4 @@
 
-        show environment | include Fan Speed
-        P6          Temp1        Normal          1791 mV        na
+show environment | include Fan Speed
+P6          Temp1        Normal          1791 mV        na
     

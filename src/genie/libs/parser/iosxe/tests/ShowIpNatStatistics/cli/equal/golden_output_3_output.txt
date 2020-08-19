@@ -1,15 +1,15 @@
 
-        r1#sh ip nat stat
-        Total active translations: 1 (0 static, 1 dynamic; 1 extended)
-        Outside interfaces:
-          Serial0/0
-        Inside interfaces:
-          FastEthernet0/0
-        Hits: 3  Misses: 1
-        CEF Translated packets: 4, CEF Punted packets: 0
-        Expired translations: 0
-        Dynamic mappings:
-        -- Inside Source
-        [Id: 3] access-list 99 interface Serial0/0 refcount 1
-        Queued Packets: 0
+r1#sh ip nat stat
+Total active translations: 1 (0 static, 1 dynamic; 1 extended)
+Outside interfaces:
+  Serial0/0
+Inside interfaces:
+  FastEthernet0/0
+Hits: 3  Misses: 1
+CEF Translated packets: 4, CEF Punted packets: 0
+Expired translations: 0
+Dynamic mappings:
+-- Inside Source
+[Id: 3] access-list 99 interface Serial0/0 refcount 1
+Queued Packets: 0
     

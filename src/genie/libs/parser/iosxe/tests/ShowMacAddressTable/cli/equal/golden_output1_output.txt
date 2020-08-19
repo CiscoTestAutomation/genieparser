@@ -1,17 +1,17 @@
-        show mac address-table vlan 101
+show mac address-table vlan 101
 
-                    Mac Address Table
-        -------------------------------------------
+            Mac Address Table
+-------------------------------------------
 
-        Vlan    Mac Address       Type        Ports
-        ----    -----------       --------    -----
-        101    701f.53ff.4de2    STATIC      Gi2/0/30 
-        101    cc5a.53ff.acc7    STATIC      Vl101 
-        101    cc98.91ff.cbc2    DYNAMIC     Gi1/0/32
-        101    cc98.91ff.e84f    DYNAMIC     Gi1/0/31
-        101    cc98.91ff.e97e    DYNAMIC     Gi1/0/28
-        101    cc98.91ff.09b8    DYNAMIC     Gi1/0/34
-        101    cc98.91ff.0cc4    DYNAMIC     Gi1/0/33
-        101    cc98.91ff.0d94    DYNAMIC     Gi1/0/29
-        Total Mac Addresses for this criterion: 8
+Vlan    Mac Address       Type        Ports
+----    -----------       --------    -----
+101    701f.53ff.4de2    STATIC      Gi2/0/30 
+101    cc5a.53ff.acc7    STATIC      Vl101 
+101    cc98.91ff.cbc2    DYNAMIC     Gi1/0/32
+101    cc98.91ff.e84f    DYNAMIC     Gi1/0/31
+101    cc98.91ff.e97e    DYNAMIC     Gi1/0/28
+101    cc98.91ff.09b8    DYNAMIC     Gi1/0/34
+101    cc98.91ff.0cc4    DYNAMIC     Gi1/0/33
+101    cc98.91ff.0d94    DYNAMIC     Gi1/0/29
+Total Mac Addresses for this criterion: 8
     

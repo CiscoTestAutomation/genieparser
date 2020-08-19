@@ -1,26 +1,26 @@
 
-        show platform hardware qfp active infrastructure bqs queue output default interface TenGigabitEthernet0/0/0
-        Load for five secs: 91%/1%; one minute: 83%; five minutes: 65%
-        Time source is NTP, 18:30:46.284 EST Wed Oct 16 2019
+show platform hardware qfp active infrastructure bqs queue output default interface TenGigabitEthernet0/0/0
+Load for five secs: 91%/1%; one minute: 83%; five minutes: 65%
+Time source is NTP, 18:30:46.284 EST Wed Oct 16 2019
         
-        Interface: TenGigabitEthernet0/0/0 QFP: 0.0 if_h: 7 Num Queues/Schedules: 1
-        Queue specifics:
-            Index 0 (Queue ID:0xcc8, Name: TenGigabitEthernet0/0/0)
-            Software Control Info:
-            (cache) queue id: 0x00000cc8, wred: 0x5218622c, qlimit (bytes): 65625002
-            parent_sid: 0x28194, debug_name: TenGigabitEthernet0/0/0
-            sw_flags: 0x08000011, sw_state: 0x00000801, port_uidb: 262137
-            orig_min  : 0                   ,      min: 1050000000         
-            min_qos   : 0                   , min_dflt: 0                  
-            orig_max  : 0                   ,      max: 0                  
-            max_qos   : 0                   , max_dflt: 0                  
-            share     : 1
-            plevel    : 0, priority: 65535
-            defer_obj_refcnt: 0, cp_ppe_addr: 0x00000000
-            Statistics:
-            tail drops  (bytes): 0                   ,          (packets): 0                  
-            total enqs  (bytes): 19215977960         ,          (packets): 82176494           
-            queue_depth (bytes): 0                  
-            licensed throughput oversubscription drops:
-                        (bytes): 0                   ,          (packets): 0    
+Interface: TenGigabitEthernet0/0/0 QFP: 0.0 if_h: 7 Num Queues/Schedules: 1
+Queue specifics:
+    Index 0 (Queue ID:0xcc8, Name: TenGigabitEthernet0/0/0)
+    Software Control Info:
+    (cache) queue id: 0x00000cc8, wred: 0x5218622c, qlimit (bytes): 65625002
+    parent_sid: 0x28194, debug_name: TenGigabitEthernet0/0/0
+    sw_flags: 0x08000011, sw_state: 0x00000801, port_uidb: 262137
+    orig_min  : 0                   ,      min: 1050000000         
+    min_qos   : 0                   , min_dflt: 0                  
+    orig_max  : 0                   ,      max: 0                  
+    max_qos   : 0                   , max_dflt: 0                  
+    share     : 1
+    plevel    : 0, priority: 65535
+    defer_obj_refcnt: 0, cp_ppe_addr: 0x00000000
+    Statistics:
+    tail drops  (bytes): 0                   ,          (packets): 0                  
+    total enqs  (bytes): 19215977960         ,          (packets): 82176494           
+    queue_depth (bytes): 0                  
+    licensed throughput oversubscription drops:
+                (bytes): 0                   ,          (packets): 0    
     

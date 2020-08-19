@@ -1,5 +1,5 @@
 
-        show ip cef 10.169.196.241 detail
-        0.0.0.0/0, epoch 3, flags [default route handler, default route]
-        no route
+show ip cef 10.169.196.241 detail
+0.0.0.0/0, epoch 3, flags [default route handler, default route]
+no route
     

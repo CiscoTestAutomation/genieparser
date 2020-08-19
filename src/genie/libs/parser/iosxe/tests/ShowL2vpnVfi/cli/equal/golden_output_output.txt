@@ -1,46 +1,46 @@
-        Router#sh l2vpn vfi
-        Load for five secs: 20%/0%; one minute: 5%; five minutes: 5%
-        Time source is NTP, 11:33:13.680 EST Wed Nov 9 2016
+Router#sh l2vpn vfi
+Load for five secs: 20%/0%; one minute: 5%; five minutes: 5%
+Time source is NTP, 11:33:13.680 EST Wed Nov 9 2016
 
-        Legend: RT=Route-target, S=Split-horizon, Y=Yes, N=No
+Legend: RT=Route-target, S=Split-horizon, Y=Yes, N=No
 
-        VFI name: VPLS-2051, state: up, type: multipoint, signaling: BGP
-          VPN ID: 2051, VE-ID: 2, VE-SIZE: 10
-          RD: 65109:2051, RT: 65109:2051, 65109:2051,
-          Bridge-Domain 2051 attachment circuits:
-          Pseudo-port interface: pseudowire100001
-          Interface          Peer Address    VE-ID  Local Label  Remote Label    S
-          pseudowire100202   10.120.202.64   1      16           327810          Y
+VFI name: VPLS-2051, state: up, type: multipoint, signaling: BGP
+  VPN ID: 2051, VE-ID: 2, VE-SIZE: 10
+  RD: 65109:2051, RT: 65109:2051, 65109:2051,
+  Bridge-Domain 2051 attachment circuits:
+  Pseudo-port interface: pseudowire100001
+  Interface          Peer Address    VE-ID  Local Label  Remote Label    S
+  pseudowire100202   10.120.202.64   1      16           327810          Y
 
-        VFI name: VPLS-2052, state: up, type: multipoint, signaling: BGP
-          VPN ID: 2052, VE-ID: 2, VE-SIZE: 10
-          RD: 65109:2052, RT: 65109:2052, 65109:2052,
-          Bridge-Domain 2052 attachment circuits:
-          Pseudo-port interface: pseudowire100002
-          Interface          Peer Address    VE-ID  Local Label  Remote Label    S
-          pseudowire100203   10.120.202.64   1      26           327818          Y
+VFI name: VPLS-2052, state: up, type: multipoint, signaling: BGP
+  VPN ID: 2052, VE-ID: 2, VE-SIZE: 10
+  RD: 65109:2052, RT: 65109:2052, 65109:2052,
+  Bridge-Domain 2052 attachment circuits:
+  Pseudo-port interface: pseudowire100002
+  Interface          Peer Address    VE-ID  Local Label  Remote Label    S
+  pseudowire100203   10.120.202.64   1      26           327818          Y
 
-        VFI name: VPLS-2053, state: up, type: multipoint, signaling: BGP
-          VPN ID: 2053, VE-ID: 2, VE-SIZE: 10
-          RD: 65109:2053, RT: 65109:2053, 65109:2053,
-          Bridge-Domain 2053 attachment circuits:
-          Pseudo-port interface: pseudowire100003
-          Interface          Peer Address    VE-ID  Local Label  Remote Label    S
-          pseudowire100204   10.120.202.64   1      36           327826          Y
+VFI name: VPLS-2053, state: up, type: multipoint, signaling: BGP
+  VPN ID: 2053, VE-ID: 2, VE-SIZE: 10
+  RD: 65109:2053, RT: 65109:2053, 65109:2053,
+  Bridge-Domain 2053 attachment circuits:
+  Pseudo-port interface: pseudowire100003
+  Interface          Peer Address    VE-ID  Local Label  Remote Label    S
+  pseudowire100204   10.120.202.64   1      36           327826          Y
 
-        VFI name: VPLS-2054, state: up, type: multipoint, signaling: BGP
-          VPN ID: 2054, VE-ID: 2, VE-SIZE: 10
-          RD: 65109:2054, RT: 65109:2054, 65109:2054,
-          Bridge-Domain 2054 attachment circuits:
-          Pseudo-port interface: pseudowire100004
-          Interface          Peer Address    VE-ID  Local Label  Remote Label    S
-          pseudowire100205   10.120.202.64   1      46           327834          Y
+VFI name: VPLS-2054, state: up, type: multipoint, signaling: BGP
+  VPN ID: 2054, VE-ID: 2, VE-SIZE: 10
+  RD: 65109:2054, RT: 65109:2054, 65109:2054,
+  Bridge-Domain 2054 attachment circuits:
+  Pseudo-port interface: pseudowire100004
+  Interface          Peer Address    VE-ID  Local Label  Remote Label    S
+  pseudowire100205   10.120.202.64   1      46           327834          Y
 
-        VFI name: VPLS-2055, state: up, type: multipoint, signaling: BGP
-          VPN ID: 2055, VE-ID: 2, VE-SIZE: 10
-          RD: 65109:2055, RT: 65109:2055, 65109:2055,
-          Bridge-Domain 2055 attachment circuits:
-          Pseudo-port interface: pseudowire100005
-          Interface          Peer Address    VE-ID  Local Label  Remote Label    S
-          pseudowire100206   10.120.202.64   1      56           327842          Y
+VFI name: VPLS-2055, state: up, type: multipoint, signaling: BGP
+  VPN ID: 2055, VE-ID: 2, VE-SIZE: 10
+  RD: 65109:2055, RT: 65109:2055, 65109:2055,
+  Bridge-Domain 2055 attachment circuits:
+  Pseudo-port interface: pseudowire100005
+  Interface          Peer Address    VE-ID  Local Label  Remote Label    S
+  pseudowire100206   10.120.202.64   1      56           327842          Y
     

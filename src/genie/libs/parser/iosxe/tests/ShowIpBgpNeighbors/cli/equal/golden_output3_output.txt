@@ -1,159 +1,159 @@
 
-        #show ip bgp link-state link-state neighbors
-        BGP neighbor is 192.168.36.120,  remote AS 65109, internal link
-        BGP version 4, remote router ID 192.168.36.120
-        BGP state = Idle, down for never
-        Configured hold time is 90, keepalive interval is 30 seconds
-        Minimum holdtime from neighbor is 15 seconds
-        Neighbor sessions:
-        1 active, is not multisession capable (disabled)
-        Neighbor capabilities:
-        Route refresh: advertised and received(new)
-        Four-octets ASN Capability: advertised and received
-        Address family VPNv4 Unicast: advertised and received
-        Address family L2VPN Vpls: advertised and received
-        Address family link-state link-state: advertised
-        Graceful Restart Capability: advertised and received
-          Remote Restart timer is 120 seconds
-          Address families advertised by peer:
-            VPNv4 Unicast (was not preserved, L2VPN Vpls (was not preserved
-        Enhanced Refresh Capability: advertised and received
-        Multisession Capability:
-        Stateful switchover support enabled: NO for session 1
-        Message statistics:
-        InQ depth is 0
-        OutQ depth is 0
+#show ip bgp link-state link-state neighbors
+BGP neighbor is 192.168.36.120,  remote AS 65109, internal link
+BGP version 4, remote router ID 192.168.36.120
+BGP state = Idle, down for never
+Configured hold time is 90, keepalive interval is 30 seconds
+Minimum holdtime from neighbor is 15 seconds
+Neighbor sessions:
+1 active, is not multisession capable (disabled)
+Neighbor capabilities:
+Route refresh: advertised and received(new)
+Four-octets ASN Capability: advertised and received
+Address family VPNv4 Unicast: advertised and received
+Address family L2VPN Vpls: advertised and received
+Address family link-state link-state: advertised
+Graceful Restart Capability: advertised and received
+  Remote Restart timer is 120 seconds
+  Address families advertised by peer:
+    VPNv4 Unicast (was not preserved, L2VPN Vpls (was not preserved
+Enhanced Refresh Capability: advertised and received
+Multisession Capability:
+Stateful switchover support enabled: NO for session 1
+Message statistics:
+InQ depth is 0
+OutQ depth is 0
 
+                     Sent       Rcvd
+Opens:                  1          1
+Notifications:          0          0
+Updates:              405       1504
+Keepalives:             4          4
+Route Refresh:          0          0
+Total:                414       1513
+Do log neighbor state changes (via global configuration)
+Default minimum time between advertisement runs is 0 seconds
+
+For address family: VPNv4 Unicast
+Session: 192.168.36.120
+BGP table version 1266, neighbor version 1266/0
+Output queue size : 0
+Index 1, Advertise bit 0
+1 update-group member
+Extended-community attribute sent to this neighbor
+Slow-peer detection is disabled
+Slow-peer split-update-group dynamic is disabled
                              Sent       Rcvd
-        Opens:                  1          1
-        Notifications:          0          0
-        Updates:              405       1504
-        Keepalives:             4          4
-        Route Refresh:          0          0
-        Total:                414       1513
-        Do log neighbor state changes (via global configuration)
-        Default minimum time between advertisement runs is 0 seconds
+Prefix activity:               ----       ----
+Prefixes Current:             201        497 (Consumes 67592 bytes)
+Prefixes Total:               402        497
+Implicit Withdraw:            201          0
+Explicit Withdraw:              0          0
+Used as bestpath:             n/a          0
+Used as multipath:            n/a          0
+Used as secondary:            n/a          0
 
-        For address family: VPNv4 Unicast
-        Session: 192.168.36.120
-        BGP table version 1266, neighbor version 1266/0
-        Output queue size : 0
-        Index 1, Advertise bit 0
-        1 update-group member
-        Extended-community attribute sent to this neighbor
-        Slow-peer detection is disabled
-        Slow-peer split-update-group dynamic is disabled
-                                     Sent       Rcvd
-        Prefix activity:               ----       ----
-        Prefixes Current:             201        497 (Consumes 67592 bytes)
-        Prefixes Total:               402        497
-        Implicit Withdraw:            201          0
-        Explicit Withdraw:              0          0
-        Used as bestpath:             n/a          0
-        Used as multipath:            n/a          0
-        Used as secondary:            n/a          0
+                               Outbound    Inbound
+Local Policy Denied Prefixes:    --------    -------
+ORIGINATOR loop:                    n/a        201
+Bestpath from this peer:            994        n/a
+AF Permit Check:                    497        n/a
+Total:                             1491        201
+Number of NLRIs in the update sent: max 1, min 0
+Last detected as dynamic slow peer: never
+Dynamic slow peer recovered: never
+Refresh Epoch: 2
+Last Sent Refresh Start-of-rib: 00:01:25
+Last Sent Refresh End-of-rib: 00:01:22
+Refresh-Out took 3 seconds
+Last Received Refresh Start-of-rib: 00:01:24
+Last Received Refresh End-of-rib: 00:01:16
+Refresh-In took 8 seconds
+                                   Sent       Rcvd
+    Refresh activity:              ----       ----
+      Refresh Start-of-RIB          1          1
+      Refresh End-of-RIB            1          1
 
-                                       Outbound    Inbound
-        Local Policy Denied Prefixes:    --------    -------
-        ORIGINATOR loop:                    n/a        201
-        Bestpath from this peer:            994        n/a
-        AF Permit Check:                    497        n/a
-        Total:                             1491        201
-        Number of NLRIs in the update sent: max 1, min 0
-        Last detected as dynamic slow peer: never
-        Dynamic slow peer recovered: never
-        Refresh Epoch: 2
-        Last Sent Refresh Start-of-rib: 00:01:25
-        Last Sent Refresh End-of-rib: 00:01:22
-        Refresh-Out took 3 seconds
-        Last Received Refresh Start-of-rib: 00:01:24
-        Last Received Refresh End-of-rib: 00:01:16
-        Refresh-In took 8 seconds
-                                           Sent       Rcvd
-            Refresh activity:              ----       ----
-              Refresh Start-of-RIB          1          1
-              Refresh End-of-RIB            1          1
+For address family: L2VPN Vpls
+Session: 192.168.36.120
+BGP table version 621, neighbor version 621/0
+Output queue size : 0
+Index 1, Advertise bit 0
+1 update-group member
+Extended-community attribute sent to this neighbor
+Suppress LDP signaling protocol
+Slow-peer detection is disabled
+Slow-peer split-update-group dynamic is disabled
+                             Sent       Rcvd
+Prefix activity:               ----       ----
+Prefixes Current:             202        101 (Consumes 14544 bytes)
+Prefixes Total:               404        101
+Implicit Withdraw:            202          0
+Explicit Withdraw:              0          0
+Used as bestpath:             n/a          0
+Used as multipath:            n/a          0
+Used as secondary:            n/a          0
 
-        For address family: L2VPN Vpls
-        Session: 192.168.36.120
-        BGP table version 621, neighbor version 621/0
-        Output queue size : 0
-        Index 1, Advertise bit 0
-        1 update-group member
-        Extended-community attribute sent to this neighbor
-        Suppress LDP signaling protocol
-        Slow-peer detection is disabled
-        Slow-peer split-update-group dynamic is disabled
-                                     Sent       Rcvd
-        Prefix activity:               ----       ----
-        Prefixes Current:             202        101 (Consumes 14544 bytes)
-        Prefixes Total:               404        101
-        Implicit Withdraw:            202          0
-        Explicit Withdraw:              0          0
-        Used as bestpath:             n/a          0
-        Used as multipath:            n/a          0
-        Used as secondary:            n/a          0
+                               Outbound    Inbound
+Local Policy Denied Prefixes:    --------    -------
+ORIGINATOR loop:                    n/a        202
+Bestpath from this peer:            477        n/a
+Total:                              477        202
+Number of NLRIs in the update sent: max 1, min 0
+Last detected as dynamic slow peer: never
+Dynamic slow peer recovered: never
+Refresh Epoch: 2
+Last Sent Refresh Start-of-rib: 00:01:25
+Last Sent Refresh End-of-rib: 00:01:25
+Refresh-Out took 0 seconds
+Last Received Refresh Start-of-rib: 00:01:24
+Last Received Refresh End-of-rib: 00:01:22
+Refresh-In took 2 seconds
+                                   Sent       Rcvd
+    Refresh activity:              ----       ----
+      Refresh Start-of-RIB          1          1
+      Refresh End-of-RIB            1          1
 
-                                       Outbound    Inbound
-        Local Policy Denied Prefixes:    --------    -------
-        ORIGINATOR loop:                    n/a        202
-        Bestpath from this peer:            477        n/a
-        Total:                              477        202
-        Number of NLRIs in the update sent: max 1, min 0
-        Last detected as dynamic slow peer: never
-        Dynamic slow peer recovered: never
-        Refresh Epoch: 2
-        Last Sent Refresh Start-of-rib: 00:01:25
-        Last Sent Refresh End-of-rib: 00:01:25
-        Refresh-Out took 0 seconds
-        Last Received Refresh Start-of-rib: 00:01:24
-        Last Received Refresh End-of-rib: 00:01:22
-        Refresh-In took 2 seconds
-                                           Sent       Rcvd
-            Refresh activity:              ----       ----
-              Refresh Start-of-RIB          1          1
-              Refresh End-of-RIB            1          1
+For address family: link-state link-state
+BGP table version 1, neighbor version 1/0
+Output queue size : 0
+Index 0, Advertise bit 0
+Slow-peer detection is disabled
+Slow-peer split-update-group dynamic is disabled
+                             Sent       Rcvd
+Prefix activity:               ----       ----
+Prefixes Current:               0          0
+Prefixes Total:                 0          0
+Implicit Withdraw:              0          0
+Explicit Withdraw:              0          0
+Used as bestpath:             n/a          0
+Used as multipath:            n/a          0
+Used as secondary:            n/a          0
 
-        For address family: link-state link-state
-        BGP table version 1, neighbor version 1/0
-        Output queue size : 0
-        Index 0, Advertise bit 0
-        Slow-peer detection is disabled
-        Slow-peer split-update-group dynamic is disabled
-                                     Sent       Rcvd
-        Prefix activity:               ----       ----
-        Prefixes Current:               0          0
-        Prefixes Total:                 0          0
-        Implicit Withdraw:              0          0
-        Explicit Withdraw:              0          0
-        Used as bestpath:             n/a          0
-        Used as multipath:            n/a          0
-        Used as secondary:            n/a          0
+                               Outbound    Inbound
+Local Policy Denied Prefixes:    --------    -------
+Total:                                0          0
+Number of NLRIs in the update sent: max 0, min 0
+Last detected as dynamic slow peer: never
+Dynamic slow peer recovered: never
+Refresh Epoch: 1
+Last Sent Refresh Start-of-rib: never
+Last Sent Refresh End-of-rib: never
+Last Received Refresh Start-of-rib: never
+Last Received Refresh End-of-rib: never
+                                   Sent       Rcvd
+    Refresh activity:              ----       ----
+      Refresh Start-of-RIB          0          0
+      Refresh End-of-RIB            0          0
 
-                                       Outbound    Inbound
-        Local Policy Denied Prefixes:    --------    -------
-        Total:                                0          0
-        Number of NLRIs in the update sent: max 0, min 0
-        Last detected as dynamic slow peer: never
-        Dynamic slow peer recovered: never
-        Refresh Epoch: 1
-        Last Sent Refresh Start-of-rib: never
-        Last Sent Refresh End-of-rib: never
-        Last Received Refresh Start-of-rib: never
-        Last Received Refresh End-of-rib: never
-                                           Sent       Rcvd
-            Refresh activity:              ----       ----
-              Refresh Start-of-RIB          0          0
-              Refresh End-of-RIB            0          0
-
-        Address tracking is enabled, the RIB does have a route to 192.168.36.120
-        Route to peer address reachability Up: 1; Down: 0
-        Last notification 1d21h
-        Connections established 2; dropped 1
-        Last reset 00:01:26, due to Capability changed of session 1
-        Interface associated: (none) (peering address NOT in same link)
-        Transport(tcp) path-mtu-discovery is enabled
-        Graceful-Restart is enabled, restart-time 120 seconds, stalepath-time 360 seconds
-        SSO is disabled
-        No active TCP connection
+Address tracking is enabled, the RIB does have a route to 192.168.36.120
+Route to peer address reachability Up: 1; Down: 0
+Last notification 1d21h
+Connections established 2; dropped 1
+Last reset 00:01:26, due to Capability changed of session 1
+Interface associated: (none) (peering address NOT in same link)
+Transport(tcp) path-mtu-discovery is enabled
+Graceful-Restart is enabled, restart-time 120 seconds, stalepath-time 360 seconds
+SSO is disabled
+No active TCP connection
     

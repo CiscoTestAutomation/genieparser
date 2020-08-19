@@ -1,8 +1,8 @@
 
-      Name                             Default RD            Protocols   Interfaces
-      BT-RBG-LAB                       10.116.83.34:99       ipv4        Gi0/0/0
-      Mgmt-intf                        <not set>             ipv4,ipv6   Gi0
-      rb-bcn-lab                       10.116.83.34:1        ipv4,ipv6   Lo9
-                                                                         Te0/0/1
-      test                             10.116.83.34:100      ipv4,ipv6   Lo100
+Name                             Default RD            Protocols   Interfaces
+BT-RBG-LAB                       10.116.83.34:99       ipv4        Gi0/0/0
+Mgmt-intf                        <not set>             ipv4,ipv6   Gi0
+rb-bcn-lab                       10.116.83.34:1        ipv4,ipv6   Lo9
+                                                                   Te0/0/1
+test                             10.116.83.34:100      ipv4,ipv6   Lo100
     

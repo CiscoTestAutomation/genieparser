@@ -1,8 +1,8 @@
-        Device# show ip nat translations
+      Device# show ip nat translations
 
-		Pro  Inside global         Inside local          Outside local         Outside global
-		udp  10.5.5.1:1025          192.0.2.1:4000        ---                   ---
-		udp  10.5.5.1:1024          192.0.2.3:4000        ---                   ---
-        udp  10.5.5.1:1026          192.0.2.2:4000        ---                   ---
-        Total number of translations: 3
+Pro  Inside global         Inside local          Outside local         Outside global
+udp  10.5.5.1:1025          192.0.2.1:4000        ---                   ---
+udp  10.5.5.1:1024          192.0.2.3:4000        ---                   ---
+      udp  10.5.5.1:1026          192.0.2.2:4000        ---                   ---
+      Total number of translations: 3
     

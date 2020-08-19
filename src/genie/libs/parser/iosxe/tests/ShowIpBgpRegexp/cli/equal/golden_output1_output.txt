@@ -1,14 +1,14 @@
 
-        show ip bgp regexp ^$
-        BGP table version is 3, local router ID is 10.4.1.1
-        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
-                    r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
-                    x best-external, a additional-path, c RIB-compressed,
-                    t secondary path, L long-lived-stale,
-        Origin codes: i - IGP, e - EGP, ? - incomplete
-        RPKI validation codes: V valid, I invalid, N Not found
+show ip bgp regexp ^$
+BGP table version is 3, local router ID is 10.4.1.1
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+            r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
+            x best-external, a additional-path, c RIB-compressed,
+            t secondary path, L long-lived-stale,
+Origin codes: i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
 
-            Network          Next Hop            Metric LocPrf Weight Path
-        *>   10.4.1.1/32       0.0.0.0                  0         32768 i
-        r>i  10.16.2.2/32       10.16.2.2                  0    100      0 i
+    Network          Next Hop            Metric LocPrf Weight Path
+*>   10.4.1.1/32       0.0.0.0                  0         32768 i
+r>i  10.16.2.2/32       10.16.2.2                  0    100      0 i
     

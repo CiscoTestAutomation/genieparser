@@ -1,13 +1,13 @@
 
-        PE1#show ip ospf 65109 segment-routing adjacency-sid
+PE1#show ip ospf 65109 segment-routing adjacency-sid
  
-                    OSPF Router with ID (10.4.1.1) (Process ID 65109)
-            Flags: S - Static, D - Dynamic,  P - Protected, U - Unprotected, G - Group, L - Adjacency Lost
+            OSPF Router with ID (10.4.1.1) (Process ID 65109)
+    Flags: S - Static, D - Dynamic,  P - Protected, U - Unprotected, G - Group, L - Adjacency Lost
          
-        Adj-Sid  Neighbor ID     Interface          Neighbor Addr   Flags   Backup Nexthop  Backup Interface 
-        -------- --------------- ------------------ --------------- ------- --------------- ------------------
-        16       10.16.2.2         Gi0/1/2            192.168.154.2       D U   
-        17       10.16.2.2         Gi0/1/1            192.168.4.2       D U   
-        18       10.16.2.2         Gi0/1/0            192.168.111.2       D U   
-        19       10.16.2.2         Te0/0/0            192.168.220.2       D U    
+Adj-Sid  Neighbor ID     Interface          Neighbor Addr   Flags   Backup Nexthop  Backup Interface 
+-------- --------------- ------------------ --------------- ------- --------------- ------------------
+16       10.16.2.2         Gi0/1/2            192.168.154.2       D U   
+17       10.16.2.2         Gi0/1/1            192.168.4.2       D U   
+18       10.16.2.2         Gi0/1/0            192.168.111.2       D U   
+19       10.16.2.2         Te0/0/0            192.168.220.2       D U    
     

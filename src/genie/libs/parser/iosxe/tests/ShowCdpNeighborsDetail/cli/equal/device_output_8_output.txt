@@ -1,24 +1,24 @@
 
-        Device ID: router1
-        Entry address(es): 
-          IP address: 10.0.0.7
-        Platform: Cisco SG300-28 (PID:SRW2024-K9)-VSD,  Capabilities: Switch IGMP 
-        Interface: GigabitEthernet1/0/2,  Port ID (outgoing port): gi25
-        Holdtime : 155 sec
-        Version :
-        10.16.0.62
-        advertisement version: 2
-        Native VLAN: 1
-        Duplex: full
-        -------------------------
-        Device ID: Router02
-        Entry address(es): 
-          IP address: 10.0.0.8
-        Platform: MikroTik,  Capabilities: Router 
-        Interface: GigabitEthernet1/0/3,  Port ID (outgoing port): ether1
-        Holdtime : 90 sec
-        Version :
-        6.40.5 (stable)
-        advertisement version: 1
-        Total cdp entries displayed : 2
+Device ID: router1
+Entry address(es): 
+  IP address: 10.0.0.7
+Platform: Cisco SG300-28 (PID:SRW2024-K9)-VSD,  Capabilities: Switch IGMP 
+Interface: GigabitEthernet1/0/2,  Port ID (outgoing port): gi25
+Holdtime : 155 sec
+Version :
+10.16.0.62
+advertisement version: 2
+Native VLAN: 1
+Duplex: full
+-------------------------
+Device ID: Router02
+Entry address(es): 
+  IP address: 10.0.0.8
+Platform: MikroTik,  Capabilities: Router 
+Interface: GigabitEthernet1/0/3,  Port ID (outgoing port): ether1
+Holdtime : 90 sec
+Version :
+6.40.5 (stable)
+advertisement version: 1
+Total cdp entries displayed : 2
     

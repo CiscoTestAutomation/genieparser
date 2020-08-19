@@ -1,12 +1,12 @@
 
-            R2_iosv#show ip pim bsr-router
-            PIMv2 Bootstrap information
-              BSR address: 10.64.4.4 (?)
-              Uptime:      3d07h, BSR Priority: 0, Hash mask length: 0
-              Next bootstrap message in 00:00:06
-              Candidate RP: 10.16.2.2(Loopback0)
-                Holdtime 150 seconds
-                Advertisement interval 60 seconds
-                Next advertisement in 00:00:26
-                Candidate RP priority : 10
+R2_iosv#show ip pim bsr-router
+PIMv2 Bootstrap information
+  BSR address: 10.64.4.4 (?)
+  Uptime:      3d07h, BSR Priority: 0, Hash mask length: 0
+  Next bootstrap message in 00:00:06
+  Candidate RP: 10.16.2.2(Loopback0)
+    Holdtime 150 seconds
+    Advertisement interval 60 seconds
+    Next advertisement in 00:00:26
+    Candidate RP priority : 10
     

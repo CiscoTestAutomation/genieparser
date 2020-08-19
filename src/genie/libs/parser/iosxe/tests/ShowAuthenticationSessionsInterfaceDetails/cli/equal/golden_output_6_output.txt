@@ -1,40 +1,40 @@
 
-                Switch# show authentication sessions interface gigabitethernet2/0/47
-                    Interface:  GigabitEthernet2/0/47
-                MAC Address:  0001.10ff.1111
-                IP Address:  10.1.2.3
-                    Status:  Authz Success
-                    Domain:  DATA
-            Oper host mode:  multi-host
-            Oper control dir:  both
-                Authorized By:  Guest Vlan
-                Vlan Policy:  20
-            Session timeout:  N/A
-                Idle timeout:  N/A
-            Common Session ID:  0A3462C8000000000002763C
-            Acct Session ID:  0x00000002
-                    Handle:  0x25000000
-        Runnable methods list:
-            Method   State
-            mab      Failed over
-            dot1x    Failed over
-        ----------------------------------------
-                    Interface:  GigabitEthernet2/0/47
-                MAC Address:  0005.5eff.5781
-                IP Address:  10.1.3.5
-                    User-Name:  00055eff5781
-                    Status:  Authz Success
-                    Domain:  VOICE
-            Oper host mode:  multi-domain
-            Oper control dir:  both
-                Authorized By:  Authentication Server
-            Session timeout:  N/A
-                Idle timeout:  N/A
-            Common Session ID:  0A3462C8000000010002A238
-            Acct Session ID:  0x00000003
-                    Handle:  0x91000001
-        Runnable methods list:
-            Method   State
-            mab      Authc Success
-            dot1x    Not run
+        Switch# show authentication sessions interface gigabitethernet2/0/47
+            Interface:  GigabitEthernet2/0/47
+        MAC Address:  0001.10ff.1111
+        IP Address:  10.1.2.3
+            Status:  Authz Success
+            Domain:  DATA
+    Oper host mode:  multi-host
+    Oper control dir:  both
+        Authorized By:  Guest Vlan
+        Vlan Policy:  20
+    Session timeout:  N/A
+        Idle timeout:  N/A
+    Common Session ID:  0A3462C8000000000002763C
+    Acct Session ID:  0x00000002
+            Handle:  0x25000000
+Runnable methods list:
+    Method   State
+    mab      Failed over
+    dot1x    Failed over
+----------------------------------------
+            Interface:  GigabitEthernet2/0/47
+        MAC Address:  0005.5eff.5781
+        IP Address:  10.1.3.5
+            User-Name:  00055eff5781
+            Status:  Authz Success
+            Domain:  VOICE
+    Oper host mode:  multi-domain
+    Oper control dir:  both
+        Authorized By:  Authentication Server
+    Session timeout:  N/A
+        Idle timeout:  N/A
+    Common Session ID:  0A3462C8000000010002A238
+    Acct Session ID:  0x00000003
+            Handle:  0x91000001
+Runnable methods list:
+    Method   State
+    mab      Authc Success
+    dot1x    Not run
     

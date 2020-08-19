@@ -1,9 +1,9 @@
-        Device> show ipv6 access-list
-            IPv6 access list inbound
-                permit tcp any any eq bgp (8 matches) sequence 10
-                permit tcp any any eq telnet (15 matches) sequence 20
-                permit udp any any sequence 30
-            IPv6 access list Virtual-Access2.1#427819008151 (per-user)
-                permit tcp host 2001:DB8:1::32 eq bgp host 2001:DB8:2::32 eq 11000 sequence 1
-                permit tcp host 2001:DB8:1::32 eq telnet host 2001:DB8:2::32 eq 11001 sequence 2
+Device> show ipv6 access-list
+    IPv6 access list inbound
+        permit tcp any any eq bgp (8 matches) sequence 10
+        permit tcp any any eq telnet (15 matches) sequence 20
+        permit udp any any sequence 30
+    IPv6 access list Virtual-Access2.1#427819008151 (per-user)
+        permit tcp host 2001:DB8:1::32 eq bgp host 2001:DB8:2::32 eq 11000 sequence 1
+        permit tcp host 2001:DB8:1::32 eq telnet host 2001:DB8:2::32 eq 11001 sequence 2
     

@@ -1,5 +1,5 @@
 
-        #show issu rollback-timer
-            Rollback Process State = Not in progress
-          Configured Rollback Time = 00:45:00
+#show issu rollback-timer
+    Rollback Process State = Not in progress
+  Configured Rollback Time = 00:45:00
     

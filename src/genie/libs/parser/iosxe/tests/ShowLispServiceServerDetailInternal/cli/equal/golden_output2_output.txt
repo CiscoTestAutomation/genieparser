@@ -1,62 +1,62 @@
 
-        204-MSMR#show lisp all instance-id 101 ipv6 server detail internal 
-        =====================================================
-        Output for router lisp 0
-        =====================================================
-        LISP Site Registration Information
+204-MSMR#show lisp all instance-id 101 ipv6 server detail internal 
+=====================================================
+Output for router lisp 0
+=====================================================
+LISP Site Registration Information
 
-        Site name: provider
-        Allowed configured locators: any
-        Allowed EID-prefixes:
-        Site name: xtr1_1
-        Allowed configured locators: any
-        Allowed EID-prefixes:
+Site name: provider
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_1
+Allowed configured locators: any
+Allowed EID-prefixes:
 
-          EID-prefix: 2001:192:168::/64 instance-id 101 
-            First registered:     00:13:19
-            Last registered:      00:13:19
-            Routing table tag:    0
-            Origin:               Configuration
-            Merge active:         No
-            Proxy reply:          Yes
-            TTL:                  1d00h
-            State:                complete
-            Registration errors:  
-              Authentication failures:   0
-              Allowed locators mismatch: 0
-            ETR 10.16.2.2, last registered 00:13:19, proxy-reply, map-notify
-                         TTL 1d00h, no merge, hash-function sha1, nonce 0xF8845AAB-0x44B8B869
-                         state complete, no security-capability
-                         xTR-ID 0x5B6A0468-0x55E69768-0xD1AE2E61-0x4A082FD5
-                         site-ID unspecified
-                         sourced by reliable transport
-              Locator  Local  State      Pri/Wgt  Scope
-              10.16.2.2 yes   up          50/50   IPv4 none
-        Site name: xtr1_2
-        Allowed configured locators: any
-        Allowed EID-prefixes:
-        Site name: xtr2
-        Allowed configured locators: any
-        Allowed EID-prefixes:
+  EID-prefix: 2001:192:168::/64 instance-id 101 
+    First registered:     00:13:19
+    Last registered:      00:13:19
+    Routing table tag:    0
+    Origin:               Configuration
+    Merge active:         No
+    Proxy reply:          Yes
+    TTL:                  1d00h
+    State:                complete
+    Registration errors:  
+      Authentication failures:   0
+      Allowed locators mismatch: 0
+    ETR 10.16.2.2, last registered 00:13:19, proxy-reply, map-notify
+                 TTL 1d00h, no merge, hash-function sha1, nonce 0xF8845AAB-0x44B8B869
+                 state complete, no security-capability
+                 xTR-ID 0x5B6A0468-0x55E69768-0xD1AE2E61-0x4A082FD5
+                 site-ID unspecified
+                 sourced by reliable transport
+      Locator  Local  State      Pri/Wgt  Scope
+      10.16.2.2 yes   up          50/50   IPv4 none
+Site name: xtr1_2
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr2
+Allowed configured locators: any
+Allowed EID-prefixes:
 
-          EID-prefix: 2001:192:168:9::/64 instance-id 101 
-            First registered:     00:13:19
-            Last registered:      00:13:19
-            Routing table tag:    0
-            Origin:               Configuration
-            Merge active:         No
-            Proxy reply:          Yes
-            TTL:                  1d00h
-            State:                complete
-            Registration errors:  
-              Authentication failures:   0
-              Allowed locators mismatch: 0
-            ETR 10.1.8.8, last registered 00:13:19, proxy-reply, map-notify
-                         TTL 1d00h, no merge, hash-function sha1, nonce 0x90004FBE-0x03D2420E
-                         state complete, no security-capability
-                         xTR-ID 0x6BE732BF-0xD9530F52-0xF9162AA3-0x6283920A
-                         site-ID unspecified
-                         sourced by reliable transport
-              Locator  Local  State      Pri/Wgt  Scope
-              10.1.8.8 yes    up          50/50   IPv4 none
+  EID-prefix: 2001:192:168:9::/64 instance-id 101 
+    First registered:     00:13:19
+    Last registered:      00:13:19
+    Routing table tag:    0
+    Origin:               Configuration
+    Merge active:         No
+    Proxy reply:          Yes
+    TTL:                  1d00h
+    State:                complete
+    Registration errors:  
+      Authentication failures:   0
+      Allowed locators mismatch: 0
+    ETR 10.1.8.8, last registered 00:13:19, proxy-reply, map-notify
+                 TTL 1d00h, no merge, hash-function sha1, nonce 0x90004FBE-0x03D2420E
+                 state complete, no security-capability
+                 xTR-ID 0x6BE732BF-0xD9530F52-0xF9162AA3-0x6283920A
+                 site-ID unspecified
+                 sourced by reliable transport
+      Locator  Local  State      Pri/Wgt  Scope
+      10.1.8.8 yes    up          50/50   IPv4 none
         

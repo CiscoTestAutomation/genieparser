@@ -1,33 +1,33 @@
-        MST0 is executing the mstp compatible Spanning Tree protocol
-          Bridge Identifier has priority 32768, sysid 0, address d8b1.90ff.c889
-          Configured hello time 10, max age 40, forward delay 30, transmit hold-count 20
-          We are the root of the spanning tree
-          Topology change flag not set, detected flag not set
-          Number of topology changes 3 last change occurred 03:09:48 ago
-                  from Port-channel24
-          Times:  hold 1, topology change 70, notification 10
-                  hello 10, max age 40, forward delay 30 
-          Timers: hello 0, topology change 0, notification 0
+MST0 is executing the mstp compatible Spanning Tree protocol
+  Bridge Identifier has priority 32768, sysid 0, address d8b1.90ff.c889
+  Configured hello time 10, max age 40, forward delay 30, transmit hold-count 20
+  We are the root of the spanning tree
+  Topology change flag not set, detected flag not set
+  Number of topology changes 3 last change occurred 03:09:48 ago
+          from Port-channel24
+  Times:  hold 1, topology change 70, notification 10
+          hello 10, max age 40, forward delay 30 
+  Timers: hello 0, topology change 0, notification 0
 
-         Port 2390 (Port-channel14) of MST0 is broken  (PVST Sim. Inconsistent)
-           Port path cost 6660, Port priority 128, Port Identifier 128.2390.
-           Designated root has priority 32768, address d8b1.90ff.c889
-           Designated bridge has priority 32768, address d8b1.90ff.c889
-           Designated port id is 128.2390, designated path cost 0
-           Timers: message age 0, forward delay 0, hold 0
-           Number of transitions to forwarding state: 0
-           Link type is point-to-point by default, Boundary PVST
-           Loop guard is enabled by default on the port
-           BPDU: sent 138231, received 167393
+ Port 2390 (Port-channel14) of MST0 is broken  (PVST Sim. Inconsistent)
+   Port path cost 6660, Port priority 128, Port Identifier 128.2390.
+   Designated root has priority 32768, address d8b1.90ff.c889
+   Designated bridge has priority 32768, address d8b1.90ff.c889
+   Designated port id is 128.2390, designated path cost 0
+   Timers: message age 0, forward delay 0, hold 0
+   Number of transitions to forwarding state: 0
+   Link type is point-to-point by default, Boundary PVST
+   Loop guard is enabled by default on the port
+   BPDU: sent 138231, received 167393
 
-         Port 2400 (Port-channel24) of MST0 is designated forwarding 
-           Port path cost 6660, Port priority 128, Port Identifier 128.2400.
-           Designated root has priority 32768, address d8b1.90ff.c889
-           Designated bridge has priority 32768, address d8b1.90ff.c889
-           Designated port id is 128.2400, designated path cost 0
-           Timers: message age 0, forward delay 0, hold 0
-           Number of transitions to forwarding state: 1
-           Link type is point-to-point by default, Boundary PVST
-           Loop guard is enabled by default on the port
-           BPDU: sent 1099019, received 2191582
+ Port 2400 (Port-channel24) of MST0 is designated forwarding 
+   Port path cost 6660, Port priority 128, Port Identifier 128.2400.
+   Designated root has priority 32768, address d8b1.90ff.c889
+   Designated bridge has priority 32768, address d8b1.90ff.c889
+   Designated port id is 128.2400, designated path cost 0
+   Timers: message age 0, forward delay 0, hold 0
+   Number of transitions to forwarding state: 1
+   Link type is point-to-point by default, Boundary PVST
+   Loop guard is enabled by default on the port
+   BPDU: sent 1099019, received 2191582
     

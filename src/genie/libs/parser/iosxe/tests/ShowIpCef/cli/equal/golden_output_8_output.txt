@@ -1,5 +1,5 @@
 
-        show ip cef 10.169.196.241
-        10.169.196.241/32
-            nexthop 10.0.0.10 GigabitEthernet3 label [16022|16002](elc)-(local:16022)
+show ip cef 10.169.196.241
+10.169.196.241/32
+    nexthop 10.0.0.10 GigabitEthernet3 label [16022|16002](elc)-(local:16022)
     

@@ -1,13 +1,13 @@
 
-        Load for five secs: 4%/0%; one minute: 2%; five minutes: 2%
-        Time source is NTP, 18:05:19.663 EST Tue Apr 9 2019
+Load for five secs: 4%/0%; one minute: 2%; five minutes: 2%
+Time source is NTP, 18:05:19.663 EST Tue Apr 9 2019
 
-        GigabitEthernet0/0/1
+GigabitEthernet0/0/1
 
-            Service-policy input: TEST
+    Service-policy input: TEST
 
-            Service-policy output: TEST2
-        TenGigabitEthernet0/3/0.41
+    Service-policy output: TEST2
+TenGigabitEthernet0/3/0.41
 
-            Service-policy output: VLAN51_QoS
-        PE1# 
+    Service-policy output: VLAN51_QoS
+PE1# 

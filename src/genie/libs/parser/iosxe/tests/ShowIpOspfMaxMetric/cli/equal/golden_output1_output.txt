@@ -1,27 +1,27 @@
 
-        Router#sh ip ospf max-metric
-        Load for five secs: 99%/0%; one minute: 89%; five minutes: 58%
-        Time source is NTP, 17:13:44.700 EST Sat Nov 12 2016
+Router#sh ip ospf max-metric
+Load for five secs: 99%/0%; one minute: 89%; five minutes: 58%
+Time source is NTP, 17:13:44.700 EST Sat Nov 12 2016
 
 
-                    OSPF Router with ID (10.0.187.164) (Process ID 65109)
+            OSPF Router with ID (10.0.187.164) (Process ID 65109)
 
 
-                        Base Topology (MTID 0)
+                Base Topology (MTID 0)
 
-         Start time: 00:01:58.314, Time elapsed: 00:54:43.858
-         Originating router-LSAs with maximum metric
-            Condition: on startup for 5 seconds, State: inactive
-            Advertise summary-LSAs with metric 16711680
-            Unset reason: timer expired, Originated for 5 seconds
-            Unset time: 00:02:03.314, Time elapsed: 00:54:38.858
-
-
-                    OSPF Router with ID (10.4.1.1) (Process ID 1)
+ Start time: 00:01:58.314, Time elapsed: 00:54:43.858
+ Originating router-LSAs with maximum metric
+    Condition: on startup for 5 seconds, State: inactive
+    Advertise summary-LSAs with metric 16711680
+    Unset reason: timer expired, Originated for 5 seconds
+    Unset time: 00:02:03.314, Time elapsed: 00:54:38.858
 
 
-                        Base Topology (MTID 0)
+            OSPF Router with ID (10.4.1.1) (Process ID 1)
 
-         Start time: 00:01:58.313, Time elapsed: 00:54:43.859
-         Router is not originating router-LSAs with maximum metric
+
+                Base Topology (MTID 0)
+
+ Start time: 00:01:58.313, Time elapsed: 00:54:43.859
+ Router is not originating router-LSAs with maximum metric
         

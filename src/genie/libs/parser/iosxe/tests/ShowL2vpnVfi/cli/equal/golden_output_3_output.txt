@@ -1,13 +1,13 @@
-    R1_csr1kv#show l2vpn vfi
-    Legend: RT=Route-target, S=Split-horizon, Y=Yes, N=No
+R1_csr1kv#show l2vpn vfi
+Legend: RT=Route-target, S=Split-horizon, Y=Yes, N=No
 
-    VFI name: vfi-sample, state: up, type: multipoint, signaling: BGP
-      VPN ID: 2000, VE-ID: 1, VE-SIZE: 15 
-      RD: 100:2000, RT: 100:2000, 100:100, 
-      Bridge-Domain 30 attachment circuits:
-      Neighbors connected via pseudowires:
-      Interface          Peer Address    VE-ID  Local Label  Remote Label    S
-      pseudowire100007   10.64.4.4       4      30           24015           Y
-      pseudowire100006   10.36.3.3       3      29           20              Y
-      pseudowire100005   10.16.2.2       2      28           24              Y
+VFI name: vfi-sample, state: up, type: multipoint, signaling: BGP
+  VPN ID: 2000, VE-ID: 1, VE-SIZE: 15 
+  RD: 100:2000, RT: 100:2000, 100:100, 
+  Bridge-Domain 30 attachment circuits:
+  Neighbors connected via pseudowires:
+  Interface          Peer Address    VE-ID  Local Label  Remote Label    S
+  pseudowire100007   10.64.4.4       4      30           24015           Y
+  pseudowire100006   10.36.3.3       3      29           20              Y
+  pseudowire100005   10.16.2.2       2      28           24              Y
     

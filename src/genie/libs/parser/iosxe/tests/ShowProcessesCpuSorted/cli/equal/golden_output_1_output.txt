@@ -1,7 +1,7 @@
 
-        CPU utilization for five seconds: 5%/1%; one minute: 6%; five minutes: 6%
-         PID Runtime(ms)     Invoked      uSecs   5Sec   1Min   5Min TTY Process          
-         152     7962054     6437005       1236  0.31%  0.53%  0.54%   0 PLFM-MGR IPC pro 
-         242     4915791    14602032        336  0.23%  0.31%  0.31%   0 Spanning Tree    
-          32           0           1          0  0.00%  0.00%  0.00%   0 IPC Seat TX Cont
+CPU utilization for five seconds: 5%/1%; one minute: 6%; five minutes: 6%
+ PID Runtime(ms)     Invoked      uSecs   5Sec   1Min   5Min TTY Process          
+ 152     7962054     6437005       1236  0.31%  0.53%  0.54%   0 PLFM-MGR IPC pro 
+ 242     4915791    14602032        336  0.23%  0.31%  0.31%   0 Spanning Tree    
+  32           0           1          0  0.00%  0.00%  0.00%   0 IPC Seat TX Cont
     

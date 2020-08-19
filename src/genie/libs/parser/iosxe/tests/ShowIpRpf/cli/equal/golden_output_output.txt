@@ -1,9 +1,9 @@
-        RPF information for host1 (172.16.10.13)
-          RPF interface: BRI0
-          RPF neighbor: sj1.cisco.com (172.16.121.10)
-          RPF route/mask: 172.16.0.0/255.255.0.0
-          RPF type: unicast
-          RPF recursion count: 0
-          Doing distance-preferred lookups across tables
-          RPF topology: ipv4 multicast base, originated from ipv4 unicast base
+RPF information for host1 (172.16.10.13)
+  RPF interface: BRI0
+  RPF neighbor: sj1.cisco.com (172.16.121.10)
+  RPF route/mask: 172.16.0.0/255.255.0.0
+  RPF type: unicast
+  RPF recursion count: 0
+  Doing distance-preferred lookups across tables
+  RPF topology: ipv4 multicast base, originated from ipv4 unicast base
     

@@ -1,5 +1,5 @@
 
-        show ip ospf segment-routing sid-database
+show ip ospf segment-routing sid-database
 
-            OSPF Router with ID (10.4.1.1) (Process ID 65109)
+    OSPF Router with ID (10.4.1.1) (Process ID 65109)
     

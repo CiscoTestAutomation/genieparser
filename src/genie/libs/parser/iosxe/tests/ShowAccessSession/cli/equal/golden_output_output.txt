@@ -1,6 +1,6 @@
-        Interface                MAC Address    Method  Domain  Status Fg  Session ID
-        --------------------------------------------------------------------------------------------
-        Gi1/0/1                  f4cf.beff.9cb1 dot1x   DATA    Auth        000000000000000BB6FC9EAF
+Interface                MAC Address    Method  Domain  Status Fg  Session ID
+--------------------------------------------------------------------------------------------
+Gi1/0/1                  f4cf.beff.9cb1 dot1x   DATA    Auth        000000000000000BB6FC9EAF
 
-        Session count = 1
+Session count = 1
     

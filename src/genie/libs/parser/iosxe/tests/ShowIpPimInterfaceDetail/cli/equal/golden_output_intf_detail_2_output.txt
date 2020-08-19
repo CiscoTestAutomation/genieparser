@@ -1,24 +1,24 @@
 
-        R1_xe#show ip pim vrf VRF1 interface detail
-        GigabitEthernet3 is up, line protocol is up
-          Internet address is 10.1.5.1/24
-          Multicast switching: fast
-          Multicast packets in/out: 4/0
-          Multicast TTL threshold: 0
-          PIM: enabled
-            PIM version: 2, mode: passive
-            PIM DR: 10.1.5.5
-            PIM neighbor count: 1
-            PIM Hello/Query interval: 30 seconds
-            PIM Hello packets in/out: 6/6
-            PIM J/P interval: 60 seconds
-            PIM State-Refresh processing: enabled
-            PIM State-Refresh origination: disabled
-            PIM NBMA mode: disabled
-            PIM ATM multipoint signalling: disabled
-            PIM domain border: disabled
-            PIM neighbors rpf proxy capable: TRUE
-            PIM BFD: disabled
-            PIM Non-DR-Join: FALSE
-          Multicast Tagswitching: disabled
+R1_xe#show ip pim vrf VRF1 interface detail
+GigabitEthernet3 is up, line protocol is up
+  Internet address is 10.1.5.1/24
+  Multicast switching: fast
+  Multicast packets in/out: 4/0
+  Multicast TTL threshold: 0
+  PIM: enabled
+    PIM version: 2, mode: passive
+    PIM DR: 10.1.5.5
+    PIM neighbor count: 1
+    PIM Hello/Query interval: 30 seconds
+    PIM Hello packets in/out: 6/6
+    PIM J/P interval: 60 seconds
+    PIM State-Refresh processing: enabled
+    PIM State-Refresh origination: disabled
+    PIM NBMA mode: disabled
+    PIM ATM multipoint signalling: disabled
+    PIM domain border: disabled
+    PIM neighbors rpf proxy capable: TRUE
+    PIM BFD: disabled
+    PIM Non-DR-Join: FALSE
+  Multicast Tagswitching: disabled
     

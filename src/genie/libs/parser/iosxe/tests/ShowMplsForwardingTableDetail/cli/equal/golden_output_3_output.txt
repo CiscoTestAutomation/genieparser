@@ -1,8 +1,8 @@
-        PE1# show mpls forwarding-table labels 40 detail
-        Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
-        Label      Label      or Tunnel Id     Switched      interface
-        40         Pop Label  65536/1[TE-Bind] 0             Tu65536    point2point
-                MAC/Encaps=14/26, MRU=1492, Label Stack{16052 16062 16063}, via Gi0/1/7
-                0050568DA282BC16652F3A178847 03EB400003EBE00003EBF000
-                No output feature configured
+PE1# show mpls forwarding-table labels 40 detail
+Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
+Label      Label      or Tunnel Id     Switched      interface
+40         Pop Label  65536/1[TE-Bind] 0             Tu65536    point2point
+        MAC/Encaps=14/26, MRU=1492, Label Stack{16052 16062 16063}, via Gi0/1/7
+        0050568DA282BC16652F3A178847 03EB400003EBE00003EBF000
+        No output feature configured
     

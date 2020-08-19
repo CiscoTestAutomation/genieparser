@@ -1,62 +1,62 @@
 
-        #show clns traffic
-        CLNS:  Time since last clear: never
-        CLNS & ESIS Output: 26509, Input: 934369
-        Dropped Protocol not enabled on interface: 0
-        CLNS Local: 0, Forward: 0
-        CLNS Discards:
-          Hdr Syntax: 0, Checksum: 0, Lifetime: 0, Output cngstn: 0
-          No Route: 0, Discard Route: 0, Dst Unreachable 0, Encaps. Failed: 0
-          NLP Unknown: 0, Not an IS: 0
-        CLNS Options: Packets 0, total 0 , bad 0, GQOS 0, cngstn exprncd 0
-        CLNS Segments:  Segmented: 0, Failed: 0
-        CLNS Broadcasts: sent: 0, rcvd: 0
-        Echos: Rcvd 0 requests, 0 replies
-              Sent 0 requests, 0 replies
-        ESIS(sent/rcvd): ESHs: 0/0, ISHs: 26509/0, RDs: 0/0, QCF: 0/0
-        Tunneling (sent/rcvd): IP: 0/0, IPv6: 0/0
-        Tunneling dropped (rcvd) IP/IPV6:  0
-        ISO-IGRP: Querys (sent/rcvd): 0/0 Updates (sent/rcvd): 0/0
-        ISO-IGRP: Router Hellos: (sent/rcvd): 0/0
-        ISO-IGRP Syntax Errors: 0
+#show clns traffic
+CLNS:  Time since last clear: never
+CLNS & ESIS Output: 26509, Input: 934369
+Dropped Protocol not enabled on interface: 0
+CLNS Local: 0, Forward: 0
+CLNS Discards:
+  Hdr Syntax: 0, Checksum: 0, Lifetime: 0, Output cngstn: 0
+  No Route: 0, Discard Route: 0, Dst Unreachable 0, Encaps. Failed: 0
+  NLP Unknown: 0, Not an IS: 0
+CLNS Options: Packets 0, total 0 , bad 0, GQOS 0, cngstn exprncd 0
+CLNS Segments:  Segmented: 0, Failed: 0
+CLNS Broadcasts: sent: 0, rcvd: 0
+Echos: Rcvd 0 requests, 0 replies
+      Sent 0 requests, 0 replies
+ESIS(sent/rcvd): ESHs: 0/0, ISHs: 26509/0, RDs: 0/0, QCF: 0/0
+Tunneling (sent/rcvd): IP: 0/0, IPv6: 0/0
+Tunneling dropped (rcvd) IP/IPV6:  0
+ISO-IGRP: Querys (sent/rcvd): 0/0 Updates (sent/rcvd): 0/0
+ISO-IGRP: Router Hellos: (sent/rcvd): 0/0
+ISO-IGRP Syntax Errors: 0
 
-        Tag null:
-        IS-IS: Time since last clear: never
-        IS-IS: Level-1 Hellos (sent/rcvd): 1093921/758008
-        IS-IS: PTP Hellos     (sent/rcvd): 0/0
-        IS-IS: Level-1 LSPs sourced (new/refresh): 15/5195
-        IS-IS: Level-1 LSPs flooded (sent/rcvd): 19736/26484
-        IS-IS: LSP Retransmissions: 0
-        IS-IS: Level-1 CSNPs (sent/rcvd): 308588/149877
-        IS-IS: Level-1 PSNPs (sent/rcvd): 0/0
-        IS-IS: Level-1 DR Elections: 9
-        IS-IS: Level-1 SPF Calculations: 1565
-        IS-IS: Level-1 Partial Route Calculations: 4
-        IS-IS: LSP checksum errors received: 0
-        IS-IS: Update process queue depth: 0/200
-        IS-IS: Update process packets dropped: 0
+Tag null:
+IS-IS: Time since last clear: never
+IS-IS: Level-1 Hellos (sent/rcvd): 1093921/758008
+IS-IS: PTP Hellos     (sent/rcvd): 0/0
+IS-IS: Level-1 LSPs sourced (new/refresh): 15/5195
+IS-IS: Level-1 LSPs flooded (sent/rcvd): 19736/26484
+IS-IS: LSP Retransmissions: 0
+IS-IS: Level-1 CSNPs (sent/rcvd): 308588/149877
+IS-IS: Level-1 PSNPs (sent/rcvd): 0/0
+IS-IS: Level-1 DR Elections: 9
+IS-IS: Level-1 SPF Calculations: 1565
+IS-IS: Level-1 Partial Route Calculations: 4
+IS-IS: LSP checksum errors received: 0
+IS-IS: Update process queue depth: 0/200
+IS-IS: Update process packets dropped: 0
 
-        Tag default:
-        IS-IS: Time since last clear: never
-        IS-IS: Level-1 Hellos (sent/rcvd): 0/0
-        IS-IS: Level-2 Hellos (sent/rcvd): 0/0
-        IS-IS: PTP Hellos     (sent/rcvd): 0/0
-        IS-IS: Level-1 LSPs sourced (new/refresh): 0/0
-        IS-IS: Level-2 LSPs sourced (new/refresh): 0/0
-        IS-IS: Level-1 LSPs flooded (sent/rcvd): 0/0
-        IS-IS: Level-2 LSPs flooded (sent/rcvd): 0/0
-        IS-IS: LSP Retransmissions: 0
-        IS-IS: Level-1 CSNPs (sent/rcvd): 0/0
-        IS-IS: Level-2 CSNPs (sent/rcvd): 0/0
-        IS-IS: Level-1 PSNPs (sent/rcvd): 0/0
-        IS-IS: Level-2 PSNPs (sent/rcvd): 0/0
-        IS-IS: Level-1 DR Elections: 0
-        IS-IS: Level-2 DR Elections: 0
-        IS-IS: Level-1 SPF Calculations: 0
-        IS-IS: Level-2 SPF Calculations: 0
-        IS-IS: Level-1 Partial Route Calculations: 0
-        IS-IS: Level-2 Partial Route Calculations: 0
-        IS-IS: LSP checksum errors received: 0
-        IS-IS: Update process queue depth: 0/200
-        IS-IS: Update process packets dropped: 0
+Tag default:
+IS-IS: Time since last clear: never
+IS-IS: Level-1 Hellos (sent/rcvd): 0/0
+IS-IS: Level-2 Hellos (sent/rcvd): 0/0
+IS-IS: PTP Hellos     (sent/rcvd): 0/0
+IS-IS: Level-1 LSPs sourced (new/refresh): 0/0
+IS-IS: Level-2 LSPs sourced (new/refresh): 0/0
+IS-IS: Level-1 LSPs flooded (sent/rcvd): 0/0
+IS-IS: Level-2 LSPs flooded (sent/rcvd): 0/0
+IS-IS: LSP Retransmissions: 0
+IS-IS: Level-1 CSNPs (sent/rcvd): 0/0
+IS-IS: Level-2 CSNPs (sent/rcvd): 0/0
+IS-IS: Level-1 PSNPs (sent/rcvd): 0/0
+IS-IS: Level-2 PSNPs (sent/rcvd): 0/0
+IS-IS: Level-1 DR Elections: 0
+IS-IS: Level-2 DR Elections: 0
+IS-IS: Level-1 SPF Calculations: 0
+IS-IS: Level-2 SPF Calculations: 0
+IS-IS: Level-1 Partial Route Calculations: 0
+IS-IS: Level-2 Partial Route Calculations: 0
+IS-IS: LSP checksum errors received: 0
+IS-IS: Update process queue depth: 0/200
+IS-IS: Update process packets dropped: 0
     

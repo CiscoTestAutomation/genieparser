@@ -1,20 +1,20 @@
-        Switch is in mst mode (IEEE Standard)
-        Root bridge for: MST0
-        Extended system ID                      is enabled
-        Portfast Default                        is disabled
-        Portfast Edge BPDU Guard Default        is disabled
-        Portfast Edge BPDU Filter Default       is disabled
-        Loopguard Default                       is disabled
-        PVST Simulation                         is enabled
-        Bridge Assurance                        is enabled
-        EtherChannel misconfig guard            is enabled
-        UplinkFast                              is disabled
-        BackboneFast                            is disabled
-        Configured Pathcost method used is short (Operational value is long)
+Switch is in mst mode (IEEE Standard)
+Root bridge for: MST0
+Extended system ID                      is enabled
+Portfast Default                        is disabled
+Portfast Edge BPDU Guard Default        is disabled
+Portfast Edge BPDU Filter Default       is disabled
+Loopguard Default                       is disabled
+PVST Simulation                         is enabled
+Bridge Assurance                        is enabled
+EtherChannel misconfig guard            is enabled
+UplinkFast                              is disabled
+BackboneFast                            is disabled
+Configured Pathcost method used is short (Operational value is long)
 
-        Name                   Blocking Listening Learning Forwarding STP Active
-        ---------------------- -------- --------- -------- ---------- ----------
-        MST0                         3         0        0          0          3
-        ---------------------- -------- --------- -------- ---------- ----------
-        1 mst                        3         0        0          0          3
+Name                   Blocking Listening Learning Forwarding STP Active
+---------------------- -------- --------- -------- ---------- ----------
+MST0                         3         0        0          0          3
+---------------------- -------- --------- -------- ---------- ----------
+1 mst                        3         0        0          0          3
     

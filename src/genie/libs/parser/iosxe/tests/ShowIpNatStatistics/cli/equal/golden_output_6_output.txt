@@ -1,29 +1,29 @@
 
-        show ip nat statistics
-        Total active translations: 6 (1 static, 5 dynamic; 5 extended)
-        Outside interfaces:
-        GigabitEthernet0/0/1
-        Inside interfaces: 
-        GigabitEthernet0/0/0
-        Hits: 78230  Misses: 56
-        Expired translations: 0
-        Dynamic mappings:
-        -- Inside Source
-        [Id: 1] route-map NAT-MAP pool inside-pool refcount 6
-        pool inside-pool: id 6, netmask 255.255.255.0
-            start 10.49.1.1 end 10.49.1.1
-            type generic, total addresses 1, allocated 1 (100%), misses 0
-        [Id: 0] route-map STATIC-MAP pool genie-pool refcount 5
-        pool genie-pool: id 5, netmask 255.255.255.0
-            start 10.49.1.1 end 10.49.1.1
-            type generic, total addresses 1, allocated 1 (100%), misses 0
-        [Id: 4] route-map GENIE-MAP
-        [Id: 3] access-list 99 interface Serial0/0 refcount 1
-        nat-limit statistics:
-        max entry: max allowed 0, used 0, missed 0
-        In-to-out drops: 0  Out-to-in drops: 0
-        Pool stats drop: 0  Mapping stats drop: 0
-        Port block alloc fail: 0
-        IP alias add fail: 0
-        Limit entry add fail: 0
+show ip nat statistics
+Total active translations: 6 (1 static, 5 dynamic; 5 extended)
+Outside interfaces:
+GigabitEthernet0/0/1
+Inside interfaces: 
+GigabitEthernet0/0/0
+Hits: 78230  Misses: 56
+Expired translations: 0
+Dynamic mappings:
+-- Inside Source
+[Id: 1] route-map NAT-MAP pool inside-pool refcount 6
+pool inside-pool: id 6, netmask 255.255.255.0
+    start 10.49.1.1 end 10.49.1.1
+    type generic, total addresses 1, allocated 1 (100%), misses 0
+[Id: 0] route-map STATIC-MAP pool genie-pool refcount 5
+pool genie-pool: id 5, netmask 255.255.255.0
+    start 10.49.1.1 end 10.49.1.1
+    type generic, total addresses 1, allocated 1 (100%), misses 0
+[Id: 4] route-map GENIE-MAP
+[Id: 3] access-list 99 interface Serial0/0 refcount 1
+nat-limit statistics:
+max entry: max allowed 0, used 0, missed 0
+In-to-out drops: 0  Out-to-in drops: 0
+Pool stats drop: 0  Mapping stats drop: 0
+Port block alloc fail: 0
+IP alias add fail: 0
+Limit entry add fail: 0
     

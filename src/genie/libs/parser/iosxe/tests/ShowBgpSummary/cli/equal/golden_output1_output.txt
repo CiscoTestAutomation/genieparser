@@ -1,21 +1,21 @@
 
-        Router#show bgp vpnv4 unicast rd 5918:51 summary
-        Load for five secs: 12%/0%; one minute: 8%; five minutes: 6%
-        Time source is NTP, 16:14:07.495 EST Tue Jun 8 2016
-        BGP router identifier 192.168.10.254, local AS number 5918
-        BGP table version is 33086714, main routing table version 33086714
-        3803 network entries using 973568 bytes of memory
-        7504 path entries using 900480 bytes of memory
-        5101/4700 BGP path/bestpath attribute entries using 1346664 bytes of memory
-        502 BGP rrinfo entries using 20080 bytes of memory
-        201 BGP AS-PATH entries using 4824 bytes of memory
-        2303 BGP extended community entries using 60120 bytes of memory
-        0 BGP route-map cache entries using 0 bytes of memory
-        0 BGP filter-list cache entries using 0 bytes of memory
-        BGP using 3305736 total bytes of memory
-        BGP activity 11724891/9708585 prefixes, 23637710/17596802 paths, scan interval 60 secs
+Router#show bgp vpnv4 unicast rd 5918:51 summary
+Load for five secs: 12%/0%; one minute: 8%; five minutes: 6%
+Time source is NTP, 16:14:07.495 EST Tue Jun 8 2016
+BGP router identifier 192.168.10.254, local AS number 5918
+BGP table version is 33086714, main routing table version 33086714
+3803 network entries using 973568 bytes of memory
+7504 path entries using 900480 bytes of memory
+5101/4700 BGP path/bestpath attribute entries using 1346664 bytes of memory
+502 BGP rrinfo entries using 20080 bytes of memory
+201 BGP AS-PATH entries using 4824 bytes of memory
+2303 BGP extended community entries using 60120 bytes of memory
+0 BGP route-map cache entries using 0 bytes of memory
+0 BGP filter-list cache entries using 0 bytes of memory
+BGP using 3305736 total bytes of memory
+BGP activity 11724891/9708585 prefixes, 23637710/17596802 paths, scan interval 60 secs
 
-        Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-        192.168.10.253  4        65555     619     695 33086714    0    0 05:07:45      100
-        Router#
+Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+192.168.10.253  4        65555     619     695 33086714    0    0 05:07:45      100
+Router#
         

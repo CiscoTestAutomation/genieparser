@@ -1,45 +1,45 @@
 
-        show ip bgp neighbors 192.168.10.254
-        BGP neighbor is 192.168.10.254,  remote AS 65109, external link
-        BGP version 4, remote router ID 0.0.0.0
-        BGP state = Idle
-        Last read 00:00:00, last write 00:00:00, hold time is 180, keepalive interval is 60 seconds
-        Configured hold time is 90, keepalive interval is 30 seconds
-        Minimum holdtime from neighbor is 15 seconds
-        Message statistics:
-            InQ depth is 0
-            OutQ depth is 0
+show ip bgp neighbors 192.168.10.254
+BGP neighbor is 192.168.10.254,  remote AS 65109, external link
+BGP version 4, remote router ID 0.0.0.0
+BGP state = Idle
+Last read 00:00:00, last write 00:00:00, hold time is 180, keepalive interval is 60 seconds
+Configured hold time is 90, keepalive interval is 30 seconds
+Minimum holdtime from neighbor is 15 seconds
+Message statistics:
+    InQ depth is 0
+    OutQ depth is 0
+                        Sent       Rcvd
+    Opens:                  0          0
+    Notifications:          0          0
+    Updates:                0          0
+    Keepalives:             0          0
+    Route Refresh:          0          0
+    Total:                  0          0
+Default minimum time between advertisement runs is 30 seconds
+
+For address family: IPv4 Unicast
+BGP table version 1, neighbor version 0/0
+Output queue size: 0
+0 update-group member
+Community attribute sent to this neighbor
+Scheduled for new neighbor index allocation
                                 Sent       Rcvd
-            Opens:                  0          0
-            Notifications:          0          0
-            Updates:                0          0
-            Keepalives:             0          0
-            Route Refresh:          0          0
-            Total:                  0          0
-        Default minimum time between advertisement runs is 30 seconds
+Prefix activity:               ----       ----
+  Prefixes Current:               0          0
+  Prefixes Total:                 0          0
+  Implicit Withdraw:              0          0
+  Explicit Withdraw:              0          0
+  Used as bestpath:             n/a          0
+  Used as multipath:            n/a          0
 
-        For address family: IPv4 Unicast
-        BGP table version 1, neighbor version 0/0
-        Output queue size: 0
-        0 update-group member
-        Community attribute sent to this neighbor
-        Scheduled for new neighbor index allocation
-                                        Sent       Rcvd
-        Prefix activity:               ----       ----
-          Prefixes Current:               0          0
-          Prefixes Total:                 0          0
-          Implicit Withdraw:              0          0
-          Explicit Withdraw:              0          0
-          Used as bestpath:             n/a          0
-          Used as multipath:            n/a          0
+                                Outbound    Inbound
+Local Policy Denied Prefixes:    --------    -------
+  Total:                                0          0
+Number of NLRIs in the update sent: max 0, min 0
 
-                                        Outbound    Inbound
-        Local Policy Denied Prefixes:    --------    -------
-          Total:                                0          0
-        Number of NLRIs in the update sent: max 0, min 0
-
-        Connections established 0; dropped 0
-        Last reset never
-        External BGP neighbor not directly connected.
-        No active TCP connection
+Connections established 0; dropped 0
+Last reset never
+External BGP neighbor not directly connected.
+No active TCP connection
     
