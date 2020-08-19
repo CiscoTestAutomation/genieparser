@@ -14,12 +14,6 @@ from genie.libs.parser.ios.show_routing import (ShowIpRoute,
                                             ShowIpv6RouteUpdated, 
                                             ShowIpRouteSummary)
 
-from genie.libs.parser.iosxe.tests.test_show_routing import \
-                        TestShowIpRoute as test_show_ip_route_iosxe,\
-                        TestShowIpv6RouteUpdated as test_show_ipv6_route_updated_iosxe,\
-                        TestShowIpv6RouteWord as test_show_ipv6_route_word_iosxe,\
-                        TestShowIpRouteSummary as test_show_ip_route_summary_iosxe
-
 # ============================================
 # unit test for 'show ip route'
 # =============================================
@@ -30,7 +24,7 @@ class test_show_ip_route_ios(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output_with_route ={
+    golden_parsed_output_with_route = {
         "entry": {
             "192.168.234.0/24": {
                 "mask": "24",
@@ -89,93 +83,6 @@ class test_show_ip_route_ios(unittest.TestCase):
         obj = ShowIpRouteWord(device=self.device)
         parsed_output = obj.parse(route='192.168.234.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_with_route)
-
-class test_show_ip_route(test_show_ip_route_iosxe):
-
-    def test_empty_1(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowIpRoute(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-    def test_show_ip_route_1(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output_1)
-        obj = ShowIpRoute(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_1)
-
-    def test_show_ip_route_2_with_vrf(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output_2_with_vrf)
-        obj = ShowIpRoute(device=self.device)
-
-        parsed_output = obj.parse(vrf='VRF1')
-        self.assertEqual(parsed_output, self.golden_parsed_output_2_with_vrf)
-
-###################################################
-# unit test for show ipv6 route updated
-####################################################
-class test_show_ipv6_route_updated(test_show_ipv6_route_updated_iosxe):
-
-    def test_empty_1(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowIpv6RouteUpdated(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-    def test_show_ipv6_route_1(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output_1)
-        obj = ShowIpv6RouteUpdated(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_1)
-
-    def test_show_ipv6_route_2(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output_2)
-        obj = ShowIpv6RouteUpdated(device=self.device)
-        parsed_output = obj.parse(vrf='VRF1')
-        self.assertEqual(parsed_output,self.golden_parsed_output_2)
-
-###################################################
-# unit test for show ipv6 route <WROD>
-####################################################
-class test_show_ipv6_route_word(test_show_ipv6_route_word_iosxe):
-    """unit test for show ipv6 route <WORD>"""
-
-    def test_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowIpv6RouteWord(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(route='2001:db8:400:4::4:1')
-
-    def test_golden(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output_with_ipv6_route)
-        obj = ShowIpv6RouteWord(device=self.device)
-        parsed_output = obj.parse(route='2001:db8:400:4::4:1')
-        self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
-
-
-###################################################
-# unit test for show ip route summary
-####################################################
-class test_show_ip_route_summary(test_show_ip_route_summary_iosxe):
-
-    def test_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowIpRouteSummary(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-    def test_golden_1(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output_1)
-        obj = ShowIpRouteSummary(device=self.device)
-        parsed_output = obj.parse(vrf='VRF1')
-        self.assertEqual(parsed_output,self.golden_parsed_output_1)
-
 
 
 if __name__ == '__main__':

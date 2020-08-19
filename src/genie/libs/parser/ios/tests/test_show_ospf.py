@@ -25,24 +25,20 @@ from genie.libs.parser.ios.show_ospf import ShowIpOspf,\
                                    ShowIpOspfMplsLdpInterface,\
                                    ShowIpOspfMplsTrafficEngLink
 
-from genie.libs.parser.iosxe.tests.test_show_ospf import test_show_ip_ospf as test_show_ip_ospf_iosxe,\
-                                                        test_show_ip_ospf_interface as test_show_ip_ospf_interface_iosxe,\
+from genie.libs.parser.iosxe.tests.test_show_ospf import test_show_ip_ospf_interface as test_show_ip_ospf_interface_iosxe,\
                                                         test_show_ip_ospf_neighbor_detail as test_show_ip_ospf_neighbor_detail_iosxe,\
                                                         test_show_ip_ospf_sham_links as test_show_ip_ospf_sham_links_iosxe,\
                                                         test_show_ip_ospf_virtual_links as test_show_ip_ospf_virtual_links_iosxe,\
-                                                        test_show_ip_ospf_database_router as test_show_ip_ospf_database_router_iosxe,\
-                                                        test_show_ip_ospf_database_external as test_show_ip_ospf_database_external_iosxe,\
-                                                        test_show_ip_ospf_database_network as test_show_ip_ospf_database_network_iosxe,\
-                                                        test_show_ip_ospf_database_summary as test_show_ip_ospf_database_summary_iosxe,\
-                                                        test_show_ip_ospf_mpls_traffic_eng_link as test_show_ip_ospf_mpls_traffic_eng_link_iosxe,\
-                                                        test_show_ip_ospf_database_opaque_area as test_show_ip_ospf_database_opaque_area_iosxe,\
-                                                        test_show_ip_ospf_mpls_ldp_interface as test_show_ip_ospf_mpls_ldp_interface_iosxe
+                                                        test_show_ip_ospf_mpls_traffic_eng_link as test_show_ip_ospf_mpls_traffic_eng_link_iosxe
 
 
 # ============================
 # Unit test for 'show ip ospf'
 # ============================
-class test_show_ip_ospf(test_show_ip_ospf_iosxe):
+class test_show_ip_ospf(unittest.TestCase):
+    device = Device(name="aDevice")
+    maxDiff = None
+    empty_output = {'execute.return_value': ''}
     golden_parsed_output_ios = {
     "vrf": {
         "default": {
@@ -273,12 +269,7 @@ class test_show_ip_ospf(test_show_ip_ospf_iosxe):
 
 
 '''}
-    def test_show_ip_ospf_full1(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output1)
-        obj = ShowIpOspf(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
 
     def test_show_ip_ospf_empty(self):
         self.maxDiff = None
@@ -489,126 +480,6 @@ class test_show_ip_ospf_virtual_links(test_show_ip_ospf_virtual_links_iosxe):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = ShowIpOspfVirtualLinks(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-
-# ============================================
-# Unit test for 'show ip ospf database router'
-# ============================================
-class test_show_ip_ospf_database_router(test_show_ip_ospf_database_router_iosxe):
-
-    def test_show_ip_ospf_database_router_full1(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output1)
-        obj = ShowIpOspfDatabaseRouter(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output1)
-
-    def test_show_ip_ospf_database_router_empty(self):
-        self.maxDiff = None
-        self.device = Mock(**self.empty_output)
-        obj = ShowIpOspfDatabaseRouter(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-
-# ==============================================
-# Unit test for 'show ip ospf database external'
-# ==============================================
-class test_show_ip_ospf_database_external(test_show_ip_ospf_database_external_iosxe):
-
-    def test_show_ip_ospf_database_external_full1(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output1)
-        obj = ShowIpOspfDatabaseExternal(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output1)
-
-    def test_show_ip_ospf_database_external_empty(self):
-        self.maxDiff = None
-        self.device = Mock(**self.empty_output)
-        obj = ShowIpOspfDatabaseExternal(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-
-# ==============================================
-# Unit test for 'show ip ospf database netwwork'
-# ==============================================
-class test_show_ip_ospf_database_network(test_show_ip_ospf_database_network_iosxe):
-
-    def test_show_ip_ospf_database_network_full1(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output1)
-        obj = ShowIpOspfDatabaseNetwork(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output1)
-
-    def test_show_ip_ospf_database_network_empty(self):
-        self.maxDiff = None
-        self.device = Mock(**self.empty_output)
-        obj = ShowIpOspfDatabaseNetwork(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-
-# ==============================================
-# Unit test for 'show ip ospf database summary'
-# ==============================================
-class test_show_ip_ospf_database_summary(test_show_ip_ospf_database_summary_iosxe):
-
-    def test_show_ip_ospf_database_summary_full1(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output1)
-        obj = ShowIpOspfDatabaseSummary(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output1)
-
-    def test_show_ip_ospf_database_summary_empty(self):
-        self.maxDiff = None
-        self.device = Mock(**self.empty_output)
-        obj = ShowIpOspfDatabaseSummary(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-
-# =================================================
-# Unit test for 'show ip ospf database opaque-area'
-# =================================================
-class test_show_ip_ospf_database_opaque_area(test_show_ip_ospf_database_opaque_area_iosxe):
-
-    def test_show_ip_ospf_database_opaque_area_full1(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output1)
-        obj = ShowIpOspfDatabaseOpaqueArea(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output1)
-
-    def test_show_ip_ospf_database_opaque_area_empty(self):
-        self.maxDiff = None
-        self.device = Mock(**self.empty_output)
-        obj = ShowIpOspfDatabaseOpaqueArea(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-
-# ===============================================
-# Unit test for 'show ip ospf mpls ldp interface'
-# ===============================================
-class test_show_ip_ospf_mpls_ldp_interface(test_show_ip_ospf_mpls_ldp_interface_iosxe):
-
-    def test_show_ip_ospf_mpls_ldp_interface_full1(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output1)
-        obj = ShowIpOspfMplsLdpInterface(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output1)
-
-    def test_show_ip_ospf_mpls_ldp_interface_empty(self):
-        self.maxDiff = None
-        self.device = Mock(**self.empty_output)
-        obj = ShowIpOspfMplsLdpInterface(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 

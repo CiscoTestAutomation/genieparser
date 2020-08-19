@@ -17,12 +17,6 @@ from genie.libs.parser.ios.show_arp import ShowIpArp, \
                                            ShowArpSummary, \
                                            ShowArp
 
-from genie.libs.parser.iosxe.tests.test_show_arp import test_show_arp_application as \
-                                                 test_show_arp_application_iosxe, \
-                                                 test_show_arp_summary as \
-                                                 test_show_arp_summary_iosxe, \
-                                                 test_show_arp as \
-                                                 test_show_arp_iosxe
 # ============================================
 # Parser for 'show arp [vrf <WORD>] <WROD>'
 # ============================================
@@ -405,7 +399,7 @@ class test_show_ip_traffic(unittest.TestCase):
 # ============================================
 # Unit test for 'show arp'
 # ============================================
-class test_show_arp(test_show_arp_iosxe):
+class test_show_arp(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output_ios = {'execute.return_value': ''}
     golden_output_ios = {'execute.return_value': '''\
@@ -440,24 +434,6 @@ class test_show_arp(test_show_arp_iosxe):
             },
         }
 
-    def test_empty(self):
-        self.device1 = Mock(**self.empty_output)
-        obj = ShowArp(device=self.device1)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-    def test_golden(self):
-        self.device = Mock(**self.golden_output)
-        obj = ShowArp(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
-
-    def test_golden_1(self):
-        self.device = Mock(**self.golden_output_1)
-        obj = ShowArp(device=self.device)
-        parsed_output = obj.parse(vrf='Mgmt-vrf', intf_or_ip='GigabitEthernet0/0')
-        self.assertEqual(parsed_output,self.golden_parsed_output_1)   
-
     def test_empty_ios(self):
         self.device1 = Mock(**self.empty_output_ios)
         obj = ShowArp(device=self.device1)
@@ -471,25 +447,9 @@ class test_show_arp(test_show_arp_iosxe):
         self.assertEqual(parsed_output,self.golden_parsed_output_ios)     
 
 # ============================================
-# unit test for 'show arp application'
-# ============================================
-class test_show_arp_application(test_show_arp_application_iosxe):
-    def test_empty(self):
-          self.device = Mock(**self.empty_output)
-          obj = ShowArpApplication(device=self.device)
-          with self.assertRaises(SchemaEmptyParserError):
-              parsed_output = obj.parse()
-
-    def test_golden(self):
-        self.device = Mock(**self.golden_output)
-        obj = ShowArpApplication(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
-
-# ============================================
 # unit test for 'show arp summary'
 # ============================================
-class test_show_arp_summary(test_show_arp_summary_iosxe):
+class test_show_arp_summary(unittest.TestCase):
 
   device = Device('aDevice')
   empty_output_ios = {'execute.return_value':''}
@@ -541,18 +501,6 @@ class test_show_arp_summary(test_show_arp_summary_iosxe):
       E0BC0/0                       
       '''
   }
-
-  def test_empty(self):
-      self.device = Mock(**self.empty_output)
-      obj = ShowArpSummary(device=self.device)
-      with self.assertRaises(SchemaEmptyParserError):
-          parsed_output = obj.parse()
-
-  def test_golden(self):
-      self.device = Mock(**self.golden_output)
-      obj = ShowArpSummary(device=self.device)
-      parsed_output = obj.parse()
-      self.assertEqual(parsed_output, self.golden_parsed_output)
 
   def test_empty_ios(self):
       self.device = Mock(**self.empty_output_ios)

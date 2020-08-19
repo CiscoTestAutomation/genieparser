@@ -12,16 +12,9 @@ from genie.libs.parser.ios.show_spanning_tree import ShowSpanningTreeDetail, \
                                     ShowSpanningTree, \
                                     ShowSpanningTreeMstConfiguration
 
-from genie.libs.parser.iosxe.tests.test_show_spanning_tree import \
-    test_show_spanning_tree_summary as test_show_spanning_tree_summary_iosxe,\
-    test_show_spanning_tree_mst_configuration as test_show_spanning_tree_mst_configuration_iosxe,\
-    test_show_spanning_tree_detail as test_show_spanning_tree_detail_iosxe,\
-    test_show_spanning_tree_mst_detail as test_show_spanning_tree_mst_detail_iosxe,\
-    test_show_errdisable_recovery as test_show_errdisable_recovery_iosxe,\
-    test_show_spanning_tree as test_show_spanning_tree_iosxe
+class test_show_spanning_tree_summary(unittest.TestCase):   
 
-
-class test_show_spanning_tree_summary(test_show_spanning_tree_summary_iosxe):
+    device = Device(name='aDevice')
 
     golden_parsed_output_ios = {
         "total_statistics": {
@@ -47,18 +40,6 @@ class test_show_spanning_tree_summary(test_show_spanning_tree_summary_iosxe):
                        Total 0        0         0        0          0
             '''
                          }
-    def test_empty(self):
-        self.dev1 = Mock(**self.empty_output)
-        obj = ShowSpanningTreeSummary(device=self.dev1)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-    def test_golden_mst(self):
-        self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output_mstp)
-        obj = ShowSpanningTreeSummary(device=self.dev_c3850)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_mstp)
 
     def test_golden_ios(self):
         self.maxDiff = None
@@ -67,89 +48,9 @@ class test_show_spanning_tree_summary(test_show_spanning_tree_summary_iosxe):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_ios)
 
-    def test_golden_single_mst(self):
-        self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output_mstp_single_mst)
-        obj = ShowSpanningTreeSummary(device=self.dev_c3850)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_mstp_single_mst)
 
-    def test_golden_pvst(self):
-        self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output_pvst)
-        obj = ShowSpanningTreeSummary(device=self.dev_c3850)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_pvst)
-
-    def test_golden_rpvst(self):
-        self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output_rpvst)
-        obj = ShowSpanningTreeSummary(device=self.dev_c3850)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_rpvst)
-
-class test_show_spanning_tree_detail(test_show_spanning_tree_detail_iosxe):
-
-    def test_empty(self):
-        self.dev1 = Mock(**self.empty_output)
-        obj = ShowSpanningTreeDetail(device=self.dev1)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-    def test_golden_mstp(self):
-        self.dev_c3850 = Mock(**self.golden_output_mstp)
-        obj = ShowSpanningTreeDetail(device=self.dev_c3850)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_mstp)
-
-    def test_golden_pvst(self):
-        self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output_pvst)
-        obj = ShowSpanningTreeDetail(device=self.dev_c3850)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_pvst)
-
-    def test_golden_rapid_pvst(self):
-        self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output_rapid_pvst)
-        obj = ShowSpanningTreeDetail(device=self.dev_c3850)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_rapid_pvst)
-
-
-class test_show_spanning_tree_mst_detail(test_show_spanning_tree_mst_detail_iosxe):
-
-    def test_empty(self):
-        self.dev1 = Mock(**self.empty_output)
-        obj = ShowSpanningTreeMstDetail(device=self.dev1)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-    def test_golden(self):
-        self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output)
-        obj = ShowSpanningTreeMstDetail(device=self.dev_c3850)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
-
-
-class test_show_errdisable_recovery(test_show_errdisable_recovery_iosxe):
-
-    def test_empty(self):
-        self.dev1 = Mock(**self.empty_output)
-        obj = ShowErrdisableRecovery(device=self.dev1)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-    def test_golden(self):
-        self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output)
-        obj = ShowErrdisableRecovery(device=self.dev_c3850)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
-
-
-class test_show_spanning_tree(test_show_spanning_tree_iosxe):
+class test_show_spanning_tree(unittest.TestCase):
+    device = Device(name='aDevice')
     golden_parsed_output_vlan = {
         "mstp": {
             "mst_instances": {
@@ -215,25 +116,6 @@ class test_show_spanning_tree(test_show_spanning_tree_iosxe):
         Gi3/8            Root FWD 20000     128.136  P2p
         Po1              Desg FWD 20000     128.833  P2p
         '''}
-    def test_empty(self):
-        self.dev1 = Mock(**self.empty_output)
-        obj = ShowSpanningTree(device=self.dev1)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-    def test_golden_mst(self):
-        self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output_mstp)
-        obj = ShowSpanningTree(device=self.dev_c3850)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_mstp)
-
-    def test_golden_rstp(self):
-        self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output_rstp)
-        obj = ShowSpanningTree(device=self.dev_c3850)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_rstp)
 
     def test_golden_vlan(self):
         self.maxDiff = None
@@ -241,22 +123,6 @@ class test_show_spanning_tree(test_show_spanning_tree_iosxe):
         obj = ShowSpanningTree(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_vlan)
-
-class test_show_spanning_tree_mst_configuration(test_show_spanning_tree_mst_configuration_iosxe):
-
-    def test_empty(self):
-        self.dev1 = Mock(**self.empty_output)
-        obj = ShowSpanningTreeMstConfiguration(device=self.dev1)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-    def test_golden(self):
-        self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output)
-        obj = ShowSpanningTreeMstConfiguration(device=self.dev_c3850)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
-
 
 if __name__ == '__main__':
     unittest.main()

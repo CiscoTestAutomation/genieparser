@@ -7,10 +7,10 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
 from genie.libs.parser.ios.show_acl import ShowAccessLists
 
-from genie.libs.parser.iosxe.tests.test_show_acl import TestShowAccessLists as TestShowAccessListsIosxe
-
-class TestShowAccessLists(TestShowAccessListsIosxe):
+class TestShowAccessLists(unittest.TestCase):
+    device = Device(name="aDevice")
     maxDiff = None
+    empty_output = {'execute.return_value': '      '}
     golden_output_standard = {'execute.return_value': '''\
         Switch# show ip access-lists
         Standard IP access list 1

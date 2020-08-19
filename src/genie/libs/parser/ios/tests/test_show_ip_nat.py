@@ -10,12 +10,9 @@ from genie.metaparser.util.exceptions import (SchemaEmptyParserError,
 from genie.libs.parser.ios.show_ip_nat import (ShowIpNatTranslations,
                                                ShowIpNatStatistics)
 
-from genie.libs.parser.iosxe.tests.test_show_ip_nat import \
-    (TestShowIpNatTranslations as TestShowIpNatTranslationsIosxe,
-    TestShowIpNatStatistics as TestShowIpNatStatisticsIosxe)
 
 
-class TestShowIpNatTranslations(TestShowIpNatStatisticsIosxe):
+class TestShowIpNatTranslations(unittest.TestCase):
     device = Device(name='c3850')
     dev_empty = Device(name='empty')
     empty_output = {'execute.return_value': '  '}
@@ -164,7 +161,7 @@ class TestShowIpNatTranslations(TestShowIpNatStatisticsIosxe):
         self.assertEqual(parsed_output, self.golden_parsed_output_verbose)
 
 
-class TestShowIpNatStatistics(TestShowIpNatStatisticsIosxe):
+class TestShowIpNatStatistics(unittest.TestCase):
 
     device = Device(name='c3850')
     dev_empty = Device(name='empty')
