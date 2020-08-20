@@ -3239,7 +3239,407 @@ class TestShowBgpNeighbor(unittest.TestCase):
         }
     }
 
+    golden_output_1 = {"execute.return_value":"""
+        show bgp neighbor 
+        Peer: 20.0.0.3+64180 AS 30000  Local: 20.0.0.1+179 AS 1    
+        Type: External    State: Established    Flags: <ImportEval Sync>
+        Last State: OpenConfirm   Last Event: RecvKeepAlive
+        Last Error: None
+        Export: [ export2bgp ] 
+        Options: <Preference PeerAS Refresh>
+        Holdtime: 90 Preference: 170
+        Number of flaps: 0
+        Peer ID: 2.2.2.2         Local ID: 1.1.1.1           Active Holdtime: 90
+        Keepalive Interval: 30         Peer index: 0   
+        BFD: disabled, down
+        Local Interface: ge-0/0/1.0                       
+        NLRI for restart configured on peer: inet-unicast
+        NLRI advertised by peer: inet-unicast
+        NLRI for this session: inet-unicast
+        Peer supports Refresh capability (2)
+        Stale routes from peer are kept for: 300
+        Peer does not support Restarter functionality
+        NLRI that restart is negotiated for: inet-unicast
+        NLRI of received end-of-rib markers: inet-unicast
+        NLRI of all end-of-rib markers sent: inet-unicast
+        Peer supports 4 byte AS extension (peer-as 30000)
+        Peer does not support Addpath
+        Table inet.0 Bit: 10000
+            RIB State: BGP restart is complete
+            Send state: in sync
+            Active prefixes:              1
+            Received prefixes:            1
+            Accepted prefixes:            1
+            Suppressed due to damping:    0
+            Advertised prefixes:          2
+        Last traffic (seconds): Received 6    Sent 1    Checked 52  
+        Input messages:  Total 9      Updates 2       Refreshes 0     Octets 244
+        Output messages: Total 10     Updates 2       Refreshes 0     Octets 315
+        Output Queue[0]: 0
 
+        Peer: 30.0.0.2+55323 AS 2      Local: 30.0.0.1+179 AS 1    
+        Type: External    State: Established    Flags: <ImportEval Sync>
+        Last State: OpenConfirm   Last Event: RecvKeepAlive
+        Last Error: None
+        Export: [ export2bgp ] 
+        Options: <Preference PeerAS Refresh>
+        Holdtime: 90 Preference: 170
+        Number of flaps: 0
+        Peer ID: 3.3.3.3         Local ID: 1.1.1.1           Active Holdtime: 90
+        Keepalive Interval: 30         Peer index: 0   
+        BFD: disabled, down
+        Local Interface: ge-0/0/2.0                       
+        NLRI for restart configured on peer: inet-unicast
+        NLRI advertised by peer: inet-unicast
+        NLRI for this session: inet-unicast
+        Peer supports Refresh capability (2)
+        Stale routes from peer are kept for: 300
+        Peer does not support Restarter functionality
+        NLRI that restart is negotiated for: inet-unicast
+        NLRI of received end-of-rib markers: inet-unicast
+        NLRI of all end-of-rib markers sent: inet-unicast
+        Peer supports 4 byte AS extension (peer-as 2)
+        Peer does not support Addpath
+        Table inet.0 Bit: 10001
+            RIB State: BGP restart is complete
+            Send state: in sync
+            Active prefixes:              1
+            Received prefixes:            1
+            Accepted prefixes:            1
+            Suppressed due to damping:    0
+            Advertised prefixes:          2
+        Last traffic (seconds): Received 18   Sent 12   Checked 35  
+        Input messages:  Total 8      Updates 2       Refreshes 0     Octets 225
+        Output messages: Total 9      Updates 2       Refreshes 0     Octets 296
+        Output Queue[0]: 0
+
+        Peer: 2001:20::3+179 AS 30000  Local: 2001:20::1+62643 AS 1    
+        Type: External    State: Established    Flags: <ImportEval Sync>
+        Last State: OpenConfirm   Last Event: RecvKeepAlive
+        Last Error: None
+        Export: [ export2bgp ] 
+        Options: <Preference PeerAS Refresh>
+        Holdtime: 90 Preference: 170
+        Number of flaps: 0
+        Peer ID: 2.2.2.2         Local ID: 1.1.1.1           Active Holdtime: 90
+        Keepalive Interval: 30         Peer index: 0   
+        BFD: disabled, down
+        Local Interface: ge-0/0/1.0                       
+        NLRI for restart configured on peer: inet6-unicast
+        NLRI advertised by peer: inet6-unicast
+        NLRI for this session: inet6-unicast
+        Peer supports Refresh capability (2)
+        Stale routes from peer are kept for: 300
+        Peer does not support Restarter functionality
+        NLRI that restart is negotiated for: inet6-unicast
+        NLRI of received end-of-rib markers: inet6-unicast
+        NLRI of all end-of-rib markers sent: inet6-unicast
+        Peer supports 4 byte AS extension (peer-as 30000)
+        Peer does not support Addpath
+        Table inet6.0 Bit: 20000
+            RIB State: BGP restart is complete
+            Send state: in sync
+            Active prefixes:              1
+            Received prefixes:            1
+            Accepted prefixes:            1
+            Suppressed due to damping:    0
+            Advertised prefixes:          2
+        Last traffic (seconds): Received 15   Sent 10   Checked 29  
+        Input messages:  Total 7      Updates 2       Refreshes 0     Octets 219
+        Output messages: Total 9      Updates 2       Refreshes 0     Octets 395
+        Output Queue[1]: 0
+
+        Peer: 2001:30::2+179 AS 2      Local: 2001:30::1+61370 AS 1    
+        Type: External    State: Established    Flags: <ImportEval Sync>
+        Last State: OpenConfirm   Last Event: RecvKeepAlive
+        Last Error: None
+        Export: [ export2bgp ] 
+        Options: <Preference PeerAS Refresh>
+        Holdtime: 90 Preference: 170
+        Number of flaps: 0
+        Peer ID: 3.3.3.3         Local ID: 1.1.1.1           Active Holdtime: 90
+        Keepalive Interval: 30         Peer index: 0   
+        BFD: disabled, down
+        Local Interface: ge-0/0/2.0                       
+        NLRI for restart configured on peer: inet6-unicast
+        NLRI advertised by peer: inet6-unicast
+        NLRI for this session: inet6-unicast
+        Peer supports Refresh capability (2)
+        Stale routes from peer are kept for: 300
+        Peer does not support Restarter functionality
+        NLRI that restart is negotiated for: inet6-unicast
+        NLRI of received end-of-rib markers: inet6-unicast
+        NLRI of all end-of-rib markers sent: inet6-unicast
+        Peer supports 4 byte AS extension (peer-as 2)
+        Peer does not support Addpath
+        Table inet6.0 Bit: 20001
+            RIB State: BGP restart is complete
+            Send state: in sync
+            Active prefixes:              1
+            Received prefixes:            1
+            Accepted prefixes:            1
+            Suppressed due to damping:    0
+            Advertised prefixes:          2
+        Last traffic (seconds): Received 2    Sent 1    Checked 21  
+        Input messages:  Total 7      Updates 2       Refreshes 0     Octets 219
+        Output messages: Total 9      Updates 2       Refreshes 0     Octets 395
+        Output Queue[1]: 0
+    """
+    }
+
+    golden_parsed_output_1 = {
+        'bgp-information': {
+            'bgp-peer': [{
+                'active-holdtime': '90',
+                'bgp-bfd': {
+                    'bfd-configuration-state': 'disabled',
+                    'bfd-operational-state': 'down'
+                },
+                'bgp-option-information': {
+                    'bgp-options': 'Preference '
+                                    'PeerAS '
+                                    'Refresh',
+                    'export-policy': 'export2bgp',
+                    'holdtime': '90',
+                    'preference': '170'
+                },
+                'bgp-rib': [{
+                    'accepted-prefix-count': '1',
+                    'active-prefix-count': '1',
+                    'advertised-prefix-count': '2',
+                    'bgp-rib-state': 'BGP restart '
+                                        'is complete',
+                    'name': 'inet.0',
+                    'received-prefix-count': '1',
+                    'rib-bit': '10000',
+                    'send-state': 'in sync',
+                    'suppressed-prefix-count': '0'
+                }],
+                'flap-count': '0',
+                'input-messages': '9',
+                'input-octets': '244',
+                'input-refreshes': '0',
+                'input-updates': '2',
+                'last-checked': '52',
+                'last-error': 'None',
+                'last-event': 'RecvKeepAlive',
+                'last-received': '6',
+                'last-sent': '1',
+                'last-state': 'OpenConfirm',
+                'local-address': '20.0.0.1+179',
+                'local-as': '1',
+                'local-id': '1.1.1.1',
+                'nlri-type-peer': 'inet-unicast',
+                'nlri-type-session': 'inet-unicast',
+                'output-messages': '10',
+                'output-octets': '315',
+                'output-refreshes': '0',
+                'output-updates': '2',
+                'peer-4byte-as-capability-advertised': '30000',
+                'peer-addpath-not-supported': True,
+                'peer-address': '20.0.0.3+64180',
+                'peer-as': '30000',
+                'peer-end-of-rib-received': 'inet-unicast',
+                'peer-end-of-rib-sent': 'inet-unicast',
+                'peer-flags': 'ImportEval Sync',
+                'peer-id': '2.2.2.2',
+                'peer-no-restart': True,
+                'peer-refresh-capability': '2',
+                'peer-restart-nlri-configured': 'inet-unicast',
+                'peer-restart-nlri-negotiated': 'inet-unicast',
+                'peer-stale-route-time-configured': '300',
+                'peer-state': 'Established',
+                'peer-type': 'External'
+            },
+            {
+                'active-holdtime': '90',
+                'bgp-bfd': {
+                    'bfd-configuration-state': 'disabled',
+                    'bfd-operational-state': 'down'
+                },
+                'bgp-option-information': {
+                    'bgp-options': 'Preference '
+                                    'PeerAS '
+                                    'Refresh',
+                    'export-policy': 'export2bgp',
+                    'holdtime': '90',
+                    'preference': '170'
+                },
+                'bgp-rib': [{
+                    'accepted-prefix-count': '1',
+                    'active-prefix-count': '1',
+                    'advertised-prefix-count': '2',
+                    'bgp-rib-state': 'BGP restart '
+                                        'is complete',
+                    'name': 'inet.0',
+                    'received-prefix-count': '1',
+                    'rib-bit': '10001',
+                    'send-state': 'in sync',
+                    'suppressed-prefix-count': '0'
+                }],
+                'flap-count': '0',
+                'input-messages': '8',
+                'input-octets': '225',
+                'input-refreshes': '0',
+                'input-updates': '2',
+                'last-checked': '35',
+                'last-error': 'None',
+                'last-event': 'RecvKeepAlive',
+                'last-received': '18',
+                'last-sent': '12',
+                'last-state': 'OpenConfirm',
+                'local-address': '30.0.0.1+179',
+                'local-as': '1',
+                'local-id': '1.1.1.1',
+                'nlri-type-peer': 'inet-unicast',
+                'nlri-type-session': 'inet-unicast',
+                'output-messages': '9',
+                'output-octets': '296',
+                'output-refreshes': '0',
+                'output-updates': '2',
+                'peer-4byte-as-capability-advertised': '2',
+                'peer-addpath-not-supported': True,
+                'peer-address': '30.0.0.2+55323',
+                'peer-as': '2',
+                'peer-end-of-rib-received': 'inet-unicast',
+                'peer-end-of-rib-sent': 'inet-unicast',
+                'peer-flags': 'ImportEval Sync',
+                'peer-id': '3.3.3.3',
+                'peer-no-restart': True,
+                'peer-refresh-capability': '2',
+                'peer-restart-nlri-configured': 'inet-unicast',
+                'peer-restart-nlri-negotiated': 'inet-unicast',
+                'peer-stale-route-time-configured': '300',
+                'peer-state': 'Established',
+                'peer-type': 'External'},
+                {
+                    'active-holdtime': '90',
+                    'bgp-bfd': {
+                        'bfd-configuration-state': 'disabled',
+                        'bfd-operational-state': 'down'
+                    },
+                    'bgp-option-information': {
+                        'bgp-options': 'Preference '
+                                        'PeerAS '
+                                        'Refresh',
+                        'export-policy': 'export2bgp',
+                        'holdtime': '90',
+                        'preference': '170'
+                    },
+                    'bgp-rib': [{
+                        'accepted-prefix-count': '1',
+                        'active-prefix-count': '1',
+                        'advertised-prefix-count': '2',
+                        'bgp-rib-state': 'BGP restart '
+                                            'is complete',
+                        'name': 'inet6.0',
+                        'received-prefix-count': '1',
+                        'rib-bit': '20000',
+                        'send-state': 'in sync',
+                        'suppressed-prefix-count': '0'
+                    }],
+                    'flap-count': '0',
+                    'input-messages': '7',
+                    'input-octets': '219',
+                    'input-refreshes': '0',
+                    'input-updates': '2',
+                    'last-checked': '29',
+                    'last-error': 'None',
+                    'last-event': 'RecvKeepAlive',
+                    'last-received': '15',
+                    'last-sent': '10',
+                    'last-state': 'OpenConfirm',
+                    'local-address': '2001:20::1+62643',
+                    'local-as': '1',
+                    'local-id': '1.1.1.1',
+                    'nlri-type-peer': 'inet6-unicast',
+                    'nlri-type-session': 'inet6-unicast',
+                    'output-messages': '9',
+                    'output-octets': '395',
+                    'output-refreshes': '0',
+                    'output-updates': '2',
+                    'peer-4byte-as-capability-advertised': '30000',
+                    'peer-addpath-not-supported': True,
+                    'peer-address': '2001:20::3+179',
+                    'peer-as': '30000',
+                    'peer-end-of-rib-received': 'inet6-unicast',
+                    'peer-end-of-rib-sent': 'inet6-unicast',
+                    'peer-flags': 'ImportEval Sync',
+                    'peer-id': '2.2.2.2',
+                    'peer-no-restart': True,
+                    'peer-refresh-capability': '2',
+                    'peer-restart-nlri-configured': 'inet6-unicast',
+                    'peer-restart-nlri-negotiated': 'inet6-unicast',
+                    'peer-stale-route-time-configured': '300',
+                    'peer-state': 'Established',
+                    'peer-type': 'External'
+                    },
+                    {
+                        'active-holdtime': '90',
+                        'bgp-bfd': {
+                            'bfd-configuration-state': 'disabled',
+                            'bfd-operational-state': 'down'
+                        },
+                        'bgp-option-information': {
+                            'bgp-options': 'Preference '
+                                            'PeerAS '
+                                            'Refresh',
+                            'export-policy': 'export2bgp',
+                            'holdtime': '90',
+                            'preference': '170'
+                        },
+                        'bgp-rib': [{
+                            'accepted-prefix-count': '1',
+                            'active-prefix-count': '1',
+                            'advertised-prefix-count': '2',
+                            'bgp-rib-state': 'BGP restart '
+                                                'is complete',
+                            'name': 'inet6.0',
+                            'received-prefix-count': '1',
+                            'rib-bit': '20001',
+                            'send-state': 'in sync',
+                            'suppressed-prefix-count': '0'
+                        }],
+                        'flap-count': '0',
+                        'input-messages': '7',
+                        'input-octets': '219',
+                        'input-refreshes': '0',
+                        'input-updates': '2',
+                        'last-checked': '21',
+                        'last-error': 'None',
+                        'last-event': 'RecvKeepAlive',
+                        'last-received': '2',
+                        'last-sent': '1',
+                        'last-state': 'OpenConfirm',
+                        'local-address': '2001:30::1+61370',
+                        'local-as': '1',
+                        'local-id': '1.1.1.1',
+                        'nlri-type-peer': 'inet6-unicast',
+                        'nlri-type-session': 'inet6-unicast',
+                        'output-messages': '9',
+                        'output-octets': '395',
+                        'output-refreshes': '0',
+                        'output-updates': '2',
+                        'peer-4byte-as-capability-advertised': '2',
+                        'peer-addpath-not-supported': True,
+                        'peer-address': '2001:30::2+179',
+                        'peer-as': '2',
+                        'peer-end-of-rib-received': 'inet6-unicast',
+                        'peer-end-of-rib-sent': 'inet6-unicast',
+                        'peer-flags': 'ImportEval Sync',
+                        'peer-id': '3.3.3.3',
+                        'peer-no-restart': True,
+                        'peer-refresh-capability': '2',
+                        'peer-restart-nlri-configured': 'inet6-unicast',
+                        'peer-restart-nlri-negotiated': 'inet6-unicast',
+                        'peer-stale-route-time-configured': '300',
+                        'peer-state': 'Established',
+                        'peer-type': 'External'
+                    }
+                ]
+            }
+        }
+    
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpNeighbor(device=self.device)
@@ -3250,7 +3650,13 @@ class TestShowBgpNeighbor(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowBgpNeighbor(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)      
+        self.assertEqual(parsed_output, self.golden_parsed_output)   
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowBgpNeighbor(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)    
 
 if __name__ == "__main__":
     unittest.main()
