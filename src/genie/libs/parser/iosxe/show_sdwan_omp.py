@@ -19,7 +19,7 @@ class ShowSdwanOmpSummary(ShowOmpSummary_viptela):
     cli_command = 'show sdwan omp summary'
 
     def cli(self, output = None):
-        if output is None:
+        if not output:
             show_output = self.device.execute(self.cli_command)
     
         return super().cli(output = show_output)
@@ -33,7 +33,7 @@ class ShowSdwanOmpPeers(ShowOmpPeers_viptela):
     cli_command = 'show sdwan omp peers'
 
     def cli(self, output = None):
-        if output is None:
+        if not output:
             show_output = self.device.execute(self.cli_command)
     
         return super().cli(output = show_output)
@@ -47,7 +47,7 @@ class ShowSdwanOmpTlocs(ShowOmpTlocs_viptela):
     cli_command = 'show sdwan omp tlocs'
 
     def cli(self, output = None):
-        if output is None:
+        if not output:
             show_output = self.device.execute(self.cli_command)
     
         return super().cli(output = show_output)
@@ -61,7 +61,7 @@ class ShowSdwanOmpTlocPath(ShowOmpTlocPath_viptela):
     cli_command = 'show sdwan omp tloc-paths'
 
     def cli(self, output = None):
-        if output is None:
+        if not output:
             show_output = self.device.execute(self.cli_command)
     
         return super().cli(output = show_output)

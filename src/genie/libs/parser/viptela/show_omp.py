@@ -118,14 +118,15 @@ class ShowOmpTlocPath(ShowOmpTlocPathSchema):
         
         for line in out.splitlines():
             line = line.strip()
-            tloc_hash = parsed_dict.setdefault('tloc_path', {})
-            m = p1.match(line)
 
+            # tloc-paths entries 100.100.100.10 default ipsec
+            m = p1.match(line)
             if m:
                 groups = m.groupdict()
-                tloc_data = tloc_hash.setdefault(groups['ip_add'], {})
-                tloc_data = tloc_data.setdefault('tloc', {})
-                tloc_data = tloc_data.setdefault(groups['tloc'], {})
+                tloc_data = parsed_dict.setdefault('tloc_path', {}).\
+                        setdefault(groups['ip_add'], {}).\
+                        setdefault('tloc', {}).\
+					    setdefault(groups['tloc'], {})
                 tloc_data.update(({'transport' : groups['transport']})) 
 
         return parsed_dict
@@ -176,19 +177,20 @@ class ShowOmpPeers(ShowOmpPeersSchema):
         
         for line in out.splitlines():
             line = line.strip()
-            peer = peer_dict.setdefault('peer', {})
+
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
-                peer_info = peer.setdefault(groups['ip_add'], {})
+                peer_info = peer_dict.setdefault('peer', {}).setdefault(groups['ip_add'], {})
                 peer_info.update({'type': groups['type']})
                 peer_info.update({'domain_id': int(groups['domain_id'])})
                 peer_info.update({'overlay_id': int(groups['overlay_id'])})
                 peer_info.update({'site_id': int(groups['site_id'])})
                 peer_info.update({'state': groups['state']})
-                time_time = peer_info.update({'uptime': groups['uptime']})
+                peer_info.update({'uptime': groups['uptime']})
+                
                 route_dict = peer_info.setdefault('route', {})
-                (recv,install,sent) = groups['route'].split('/')
+                recv,install,sent = groups['route'].split('/')
                 route_dict.update({'recv': int(recv)})
                 route_dict.update({'install': int(install)})
                 route_dict.update({'sent': int(sent)})
@@ -267,21 +269,19 @@ class ShowOmpTlocs(ShowOmpTlocsSchema):
 
         tloc_data= {}
 
-        #tloc entries for 100.100.100.10
-        p1 =  re.compile(r'^tloc entries for +(?P<ip_add>\S+)$')
-        #ipsec
-        p2 = re.compile(r'^(?P<trans>ipsec|gre)$')
-
-        #RECEIVED FROM: 
-        p3 = re.compile(r'^(?P<recv>RECEIVED FROM)\:$')
-        #Attributes: 
-        p4 = re.compile(r'^(?P<attr>\w+)\:$')
-        #default
-        p5 = re.compile(r'^(?P<tloc>[\w\-0-9]+)$')
-        
         # -------------------------------                
         p0= re.compile(r'^[\-]+$')
-
+        #tloc entries for 100.100.100.10
+        p1 =  re.compile(r'^tloc entries for +(?P<ip_add>\S+)$')
+        #RECEIVED FROM: 
+        p2 = re.compile(r'^(?P<recv>RECEIVED FROM)\:$')
+        #ipsec
+        p3 = re.compile(r'^(?P<trans>ipsec|gre)$')
+        #default
+        p4 = re.compile(r'^(?P<tloc>[\w\-0-9]+)$')
+        #Attributes: 
+        p5 = re.compile(r'^(?P<attr>\w+)\:$')
+        
         #peer            0.0.0.0
         #status          C,Red,R
         p6 = re.compile(r'^(?P<key>\S+) +(?P<value>[\S\s]+)$')
@@ -291,11 +291,13 @@ class ShowOmpTlocs(ShowOmpTlocsSchema):
         for line in out.splitlines():
             line = line.strip()
 
+            # ------------------------------- 
             m = p0.match(line)
             if m:
                 groups = m.groupdict()
                 continue
 
+            #tloc entries for 100.100.100.10
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -303,7 +305,8 @@ class ShowOmpTlocs(ShowOmpTlocsSchema):
                 last_dict_ptr = tloc_d
                 continue
 
-            m = p3.match(line)
+            #RECEIVED FROM:
+            m = p2.match(line)
             if m:
                 groups = m.groupdict()
                 recv_fr = groups['recv'].replace(' ','_').lower()
@@ -311,44 +314,44 @@ class ShowOmpTlocs(ShowOmpTlocsSchema):
                 last_dict_ptr = tloc_data_recv
                 continue
             
-            m = p2.match(line)
+            #ipsec
+            m = p3.match(line)
             if m:
                 groups = m.groupdict()
                 tloc_d_color.update({'transport': groups['trans']})
                 continue
 
-            m = p5.match(line)
+            #default
+            m = p4.match(line)
             if m:
                 groups = m.groupdict()
                 tloc = groups['tloc'].replace(' ','_').lower()
-                tloc_d_color = tloc_d.setdefault('tloc', {})
-                tloc_d_color = tloc_d_color.setdefault(tloc, {})
+                tloc_d_color = tloc_d.setdefault('tloc', {}).setdefault(tloc, {})
                 last_dict_ptr = tloc_d_color
                 continue
 
-            m = p4.match(line)
+            #Attributes: 
+            m = p5.match(line)
             if m:
                 groups = m.groupdict()
                 attrs = groups['attr'].replace(' ','_').lower()
                 tloc_data_attr = tloc_data_recv.setdefault(attrs, {})
                 last_dict_ptr = tloc_data_attr
                 continue
-
-        
                 
+            #peer            0.0.0.0
+            #status          C,Red,R
             m = p6.match(line)
             if m:
                 groups = m.groupdict()
                 keys = groups['key'].replace('-','_').replace(' ','_').lower()
-                if 'encap_auth' in keys:
+                if keys in ['encap_auth', 'status']:
                     values = list(groups['value'].split(","))
-                elif keys == 'status':
-                    values = list(groups['value'].split(",")) 
-                elif 'groups' in  keys:
-                    values = groups['value'].replace('[','').replace(']','').replace(' ','')
-                    values = list(values.split(",")) 
-                    values = [int(i) for i in values]
-                elif keys == 'overlay_id' or keys == 'site_id' or keys == 'domain_id':
+                elif keys in ['groups']:
+                    values = groups['value'].replace('[','').replace(']','').replace(' ','') 
+                    values = [int(i) for i in values.split(",")]
+                elif keys in ['overlay_id', 'site_id', 'domain_id']:
+                    #import pdb; pdb.set_trace()
                     if groups['value'].isdigit():
                          values = int(groups['value'])
                     else:
