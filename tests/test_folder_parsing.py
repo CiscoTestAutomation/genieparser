@@ -16,23 +16,92 @@ from pyats.topology import Device
 
 # This is the list of Classes that currently have no testing. It was found during the process
 # of converting to folder based testing strategy
-CLASS_SKIP = {"asa": {"ShowVpnSessiondbSuper": True}, "iosxe": {"ShowPimNeighbor": True, "ShowIpInterfaceBrief": True, 
-"ShowIpInterfaceBriefPipeVlan": True, "ShowBfdSessions": True, "ShowBfdSessions_viptela": True, "ShowBfdSummary": True,
-"ShowDot1x": True, "ShowEnvironmentAll": True, "ShowControlConnections_viptela": True, "ShowControlConnections": True,
-"ShowEigrpNeighborsSuperParser": True, "ShowIpEigrpNeighborsDetailSuperParser": True, "ShowIpOspfInterface": True,
-"ShowIpOspfNeighborDetail": True, "ShowIpOspfShamLinks": True, "ShowIpOspfVirtualLinks": True,
-"ShowIpOspfMplsTrafficEngLink": True, "ShowIpOspfDatabaseOpaqueAreaTypeExtLink": True,
-"ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter": True, "ShowIpOspfDatabaseOpaqueAreaTypeExtLinkSelfOriginate": True,
-"ShowIpOspfDatabaseTypeParser": True, "ShowIpOspfLinksParser": True, "ShowIpRouteDistributor": True,
-"ShowIpv6RouteDistributor": True, "ShowControlLocalProperties_viptela": True, "ShowControlLocalProperties": True,
-"ShowVrfDetailSuperParser": True, "ShowBgp": True, "ShowBgpAllNeighborsRoutesSuperParser": True,
-"ShowBgpDetailSuperParser": True, "ShowBgpNeighborSuperParser": True, "ShowBgpNeighborsAdvertisedRoutesSuperParser": True,
-"ShowBgpNeighborsReceivedRoutes": True, "ShowBgpNeighborsReceivedRoutesSuperParser": True, "ShowBgpNeighborsRoutes": True,
-"ShowBgpSummarySuperParser": True, "ShowBgpSuperParser": True, "ShowIpBgpAllNeighborsAdvertisedRoutes": True,
-"ShowIpBgpAllNeighborsReceivedRoutes": True, "ShowIpBgpNeighborsReceivedRoutes": True, "ShowIpBgpNeighborsRoutes": True,
-"ShowIpBgpRouteDistributer": True, "ShowPolicyMapTypeSuperParser": True}}
+CLASS_SKIP = {
+    "asa": {"ShowVpnSessiondbSuper": True},
+    "iosxe": {
+        "ShowPimNeighbor": True,
+        "ShowIpInterfaceBrief": True,
+        "ShowIpInterfaceBriefPipeVlan": True,
+        "ShowBfdSessions": True,
+        "ShowBfdSessions_viptela": True,
+        "ShowBfdSummary": True,
+        "ShowDot1x": True,
+        "ShowEnvironmentAll": True,
+        "ShowControlConnections_viptela": True,
+        "ShowControlConnections": True,
+        "ShowEigrpNeighborsSuperParser": True,
+        "ShowIpEigrpNeighborsDetailSuperParser": True,
+        "ShowIpOspfInterface": True,
+        "ShowIpOspfNeighborDetail": True,
+        "ShowIpOspfShamLinks": True,
+        "ShowIpOspfVirtualLinks": True,
+        "ShowIpOspfMplsTrafficEngLink": True,
+        "ShowIpOspfDatabaseOpaqueAreaTypeExtLink": True,
+        "ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter": True,
+        "ShowIpOspfDatabaseOpaqueAreaTypeExtLinkSelfOriginate": True,
+        "ShowIpOspfDatabaseTypeParser": True,
+        "ShowIpOspfLinksParser": True,
+        "ShowIpRouteDistributor": True,
+        "ShowIpv6RouteDistributor": True,
+        "ShowControlLocalProperties_viptela": True,
+        "ShowControlLocalProperties": True,
+        "ShowVrfDetailSuperParser": True,
+        "ShowBgp": True,
+        "ShowBgpAllNeighborsRoutesSuperParser": True,
+        "ShowBgpDetailSuperParser": True,
+        "ShowBgpNeighborSuperParser": True,
+        "ShowBgpNeighborsAdvertisedRoutesSuperParser": True,
+        "ShowBgpNeighborsReceivedRoutes": True,
+        "ShowBgpNeighborsReceivedRoutesSuperParser": True,
+        "ShowBgpNeighborsRoutes": True,
+        "ShowBgpSummarySuperParser": True,
+        "ShowBgpSuperParser": True,
+        "ShowIpBgpAllNeighborsAdvertisedRoutes": True,
+        "ShowIpBgpAllNeighborsReceivedRoutes": True,
+        "ShowIpBgpNeighborsReceivedRoutes": True,
+        "ShowIpBgpNeighborsRoutes": True,
+        "ShowIpBgpRouteDistributer": True,
+        "ShowPolicyMapTypeSuperParser": True,
+        "ShowIpLocalPool": True,
+        "ShowInterfaceDetail": True,
+        "ShowInterfaceIpBrief": True,
+        "ShowInterfaceSummary": True,
+        "ShowAuthenticationSessionsInterface": True,
+    },
+    "ios": {
+        "ShowPimNeighbor": True,
+        "ShowInterfacesTrunk": True,
+        "ShowIpInterfaceBrief": True,
+        "ShowIpInterfaceBriefPipeVlan": True,
+        "ShowDot1x": True,
+        "ShowBoot": True,
+        "ShowPagpNeighbor": True,
+        "ShowIpProtocols": True,
+        "ShowIpv6Rpf": True,
+        "ShowIpOspfDatabaseRouter": True,
+        "ShowIpOspfInterface": True,
+        "ShowIpOspfMplsTrafficEngLink": True,
+        "ShowIpOspfNeighborDetail": True,
+        "ShowIpOspfShamLinks": True,
+        "ShowIpOspfVirtualLinks": True,
+        "ShowIpv6Route": True,
+        "ShowIpBgp": True,
+        "ShowMplsLdpNeighbor": True,
+        "ShowInterfaceDetail": True,
+        "ShowInterfaceIpBrief": True,
+        "ShowInterfaceSummary": True,
+    },
+}
 
-EMPTY_SKIP = {"iosxe": {"ShowVersion": True }}
+EMPTY_SKIP = {
+    "iosxe": {"ShowVersion": True},
+    "ios": {
+        "ShowVersion": True,
+        "ShowIpv6EigrpNeighbors": True,
+        "ShowIpv6EigrpNeighborsDetail": True,
+    },
+}
+
 
 def read_from_file(file_path):
     """Helper function to read from a file."""
@@ -56,7 +125,7 @@ def read_python_file(file_path):
 def get_operating_systems():
     """Helper Script to get operating systems."""
     # Update and fix as more OS's converted to folder baed tests
-    return ["asa","ios", "iosxe"]
+    return ["asa", "ios", "iosxe"]
     # operating_system = []
     # for folder in os.listdir("./"):
     #    if os.path.islink("./" + folder):
@@ -75,18 +144,23 @@ class FileBasedTest(aetest.Testcase):
         """Loop through OS's and run appropriate tests."""
         parse_files = []
         # Get all of the root level files
-        for parse_file in glob.glob(f"../src/genie/libs/parser/{operating_system}/*.py"):
+        for parse_file in glob.glob(
+            f"../src/genie/libs/parser/{operating_system}/*.py"
+        ):
             if parse_file.endswith("__init__.py"):
                 continue
             # Load all of the classes in each of those files, and search for classes
             # that have a `cli` method
             _module = importlib.machinery.SourceFileLoader(
-                os.path.basename(parse_file[:-len('.py')]), parse_file
+                os.path.basename(parse_file[: -len(".py")]), parse_file
             ).load_module()
+            start = 0
             for name, _class in inspect.getmembers(_module):
 
-                if hasattr(_class, "cli"):
-                    #if name != 'ShowLispServiceMapCache':
+                if hasattr(_class, "cli") and not name.endswith("_iosxe"):
+                    # if name != 'ShowAuthenticationSessionsInterface':
+                    #    start = 1
+                    # if not start:
                     #    continue
                     with steps.start(f"{operating_system} -> {name}") as class_step:
                         with class_step.start(
@@ -110,10 +184,10 @@ class FileBasedTest(aetest.Testcase):
             _class.__name__
         ):
             self.failed(f"No files found in appropriate directory for {_class}")
-        # Look for any files ending with _output.txt, presume the user defined name from that (based 
+        # Look for any files ending with _output.txt, presume the user defined name from that (based
         # on truncating that _output.txt suffix) and obtaining expected results and potentially an arguments file
         for user_defined in output_glob:
-            user_test = os.path.basename(user_defined[:-len('_output.txt')])
+            user_test = os.path.basename(user_defined[: -len("_output.txt")])
             with steps.start(
                 f"Gold -> {operating_system} -> {_class.__name__} -> {user_test}",
                 continue_=True,
@@ -135,7 +209,7 @@ class FileBasedTest(aetest.Testcase):
                 device = Mock(**golden_output)
                 obj = _class(device=device)
                 parsed_output = obj.parse(**arguments)
-                #print(parsed_output)
+                # print(parsed_output)
                 assert parsed_output == golden_parsed_output
 
     def test_empty(self, steps, _class, operating_system, token=None):
@@ -143,12 +217,16 @@ class FileBasedTest(aetest.Testcase):
 
         folder_root = f"{operating_system}/{_class.__name__}/cli/empty"
         output_glob = glob.glob(f"{folder_root}/*_output.txt")
-        if len(output_glob) == 0 and not CLASS_SKIP.get(operating_system, {}).get(_class.__name__) and not EMPTY_SKIP.get(operating_system, {}).get(_class.__name__):
+        if (
+            len(output_glob) == 0
+            and not CLASS_SKIP.get(operating_system, {}).get(_class.__name__)
+            and not EMPTY_SKIP.get(operating_system, {}).get(_class.__name__)
+        ):
             self.failed(
                 f"No files found in appropriate directory for {_class} empty file"
             )
         for user_defined in output_glob:
-            user_test = os.path.basename(user_defined[:-len('_output.txt')])
+            user_test = os.path.basename(user_defined[: -len("_output.txt")])
             with steps.start(
                 f"Empty -> {operating_system} -> {_class.__name__} -> {user_test}",
                 continue_=True,
