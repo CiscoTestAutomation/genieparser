@@ -102,8 +102,7 @@ class ShowSdwanIpsecInboundConnections(ShowSdwanIpsecInboundConnectionsSchema):
     cli_command = "show sdwan ipsec inbound-connections"
 
     def cli(self, output=None):
-        out = self.device.execute(
-            self.cli_command) if output is None else output
+        out = output if output else self.device.execute(self.cli_command)
         parsed_dict = {}
 
         #77.27.2.2 12346   77.27.8.2 12406   78.78.0.6 biz-internet     78.78.0.9 biz-internet     AES-GCM-256           8
@@ -166,8 +165,7 @@ class ShowSdwanIpsecOutboundConnections(ShowSdwanIpsecOutboundConnectionsSchema
     cli_command = "show sdwan ipsec outbound-connections"
 
     def cli(self, output=None):
-        out = self.device.execute(
-            self.cli_command) if output is None else output
+        out = output if output else self.device.execute(self.cli_command)
         parsed_dict = {}
 
         #77.27.8.2                               12346   77.27.2.2                               12366   271     1438        78.78.0.6        biz-internet     AH_SHA1_HMAC   *****b384  AES-GCM-256           8
@@ -234,11 +232,8 @@ class ShowSdwanIpsecLocalsa(ShowSdwanIpsecLocalsaSchema):
     cli_command = "show sdwan ipsec local-sa {tloc_address}"
 
     def cli(self, tloc_address='', output=None):
-        if output is None:
-            out = self.device.execute(
-                self.cli_command.format(tloc_address=tloc_address))
-        else:
-            out = output
+        out = output if output else self.device.execute(
+            self.cli_command.format(tloc_address=tloc_address))
 
         parsed_dict = {}
 
