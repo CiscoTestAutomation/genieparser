@@ -2,5 +2,5 @@
                                 Fix
 --------------------------------------------------------------------------------
 * IOSXE
-        * Modified ShowSdwanIpsecLocal:
-                * Fixed SyntaxWarning
+    * Modified ShowSdwanIpsecLocal:
+        * Fixed SyntaxWarning
