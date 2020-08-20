@@ -13,6 +13,7 @@ IOSXE parsers for the following show commands:
     * 'show switch detail'
     * 'show switch'
     * 'show environment all'
+    * 'show platform hardware fed switch active fwd-asic resource tcam utilization'
     * 'show module'
 '''
 
@@ -6406,7 +6407,7 @@ class ShowPlatformTcamUtilizationSchema(MetaParser):
                     Any(): {
                         'max_entry': str,
                         'use_entry': str,
-                        'percent': str,
+                        'used_percent': str,
                         'v4': str,
                         'v6': str,
                         'mpls': str,
@@ -6433,79 +6434,109 @@ class ShowPlatformTcamUtilization(ShowPlatformTcamUtilizationSchema):
         ret_dict = {}
 
         # initial regexp pattern
+        # CAM Utilization for ASIC  [0]
         p1 = re.compile(r'CAM +Utilization +for +ASIC  +\[+(?P<asic>(\d+))\]$')
 
+        # Mac Address Table      EM           I       16384       44    0.27%        0        0        0       44
+        # Mac Address Table      TCAM         I        1024       21    2.05%        0        0        0       21
         p2 = re.compile(r'Mac +Address +Table +(?P<subtype>(EM|TCAM)) +'
-                        '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<percent>(\S+))% +'
+                        '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<used_percent>(\S+))% +'
                         '(?P<v4>(\d+)) +(?P<v6>(\d+)) +(?P<mpls>(\d+)) +(?P<other>(\d+))$')
 
+        # L3 Multicast           EM           I       32768        0    0.00%        0        0        0        0
+        # L3 Multicast           TCAM         I        1024       67    6.54%        3       64        0        0
         p3 = re.compile(r'L3 +Multicast +(?P<subtype>(EM|TCAM)) +'
-                        '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<percent>(\S+))% +'
+                        '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<used_percent>(\S+))% +'
                         '(?P<v4>(\d+)) +(?P<v6>(\d+)) +(?P<mpls>(\d+)) +(?P<other>(\d+))$')
 
+        #L2 Multicast           EM           I       16384        0    0.00%        0        0        0        0
+        #L2 Multicast           TCAM         I        1024       11    1.07%        3        8        0        0
         p4 = re.compile(r'L2 +Multicast +(?P<subtype>(EM|TCAM)) +'
-                        '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<percent>(\S+))% +'
+                        '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<used_percent>(\S+))% +'
                         '(?P<v4>(\d+)) +(?P<v6>(\d+)) +(?P<mpls>(\d+)) +(?P<other>(\d+))$')
 
+        #IP Route Table         EM           I       32768       49    0.15%       40        8        1        0
+        #IP Route Table         TCAM         I       65536       51    0.08%       22       26        2        1
         p5 = re.compile(r'IP +Route +Table +(?P<subtype>(EM|TCAM)) +'
-                        '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<percent>(\S+))% +'
+                        '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<used_percent>(\S+))% +'
                         '(?P<v4>(\d+)) +(?P<v6>(\d+)) +(?P<mpls>(\d+)) +(?P<other>(\d+))$')
 
+        #QOS ACL                TCAM         IO      18432       92    0.50%       30       42        0       20
         p6 = re.compile(r'QOS +ACL +(?P<subtype>(EM|TCAM)) +'
-                        '(?P<direction>(IO)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<percent>(\S+))% +'
+                        '(?P<direction>(IO)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<used_percent>(\S+))% +'
                         '(?P<v4>(\d+)) +(?P<v6>(\d+)) +(?P<mpls>(\d+)) +(?P<other>(\d+))$')
 
+        #Security ACL           TCAM         IO      18432      139    0.75%       28       66        0       45
         p7 = re.compile(r'Security +ACL +(?P<subtype>(EM|TCAM)) +'
-                        '(?P<direction>(IO)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<percent>(\S+))% +'
+                        '(?P<direction>(IO)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<used_percent>(\S+))% +'
                         '(?P<v4>(\d+)) +(?P<v6>(\d+)) +(?P<mpls>(\d+)) +(?P<other>(\d+))$')
 
-
+        #PBR ACL                TCAM         I        2048       22    1.07%       16        6        0        0
         p8 = re.compile(r'PBR +ACL +(?P<subtype>(EM|TCAM)) +'
-                        '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<percent>(\S+))% +'
+                        '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<used_percent>(\S+))% +'
                         '(?P<v4>(\d+)) +(?P<v6>(\d+)) +(?P<mpls>(\d+)) +(?P<other>(\d+))$')
 
+        #Netflow ACL            TCAM         I        1024        6    0.59%        2        2        0        2
+        #Netflow ACL            TCAM         O        2048        6    0.29%        2        2        0        2
         p9 = re.compile(r'Netflow +ACL +(?P<subtype>(EM|TCAM)) +'
-                        '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<percent>(\S+))% +'
+                        '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<used_percent>(\S+))% +'
                         '(?P<v4>(\d+)) +(?P<v6>(\d+)) +(?P<mpls>(\d+)) +(?P<other>(\d+))$')
 
+        #Flow SPAN ACL          TCAM         IO       1024       13    1.27%        3        6        0        4
         p10 = re.compile(r'Flow +SPAN +ACL +(?P<subtype>(EM|TCAM)) +'
-                        '(?P<direction>(IO)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<percent>(\S+))% +'
+                        '(?P<direction>(IO)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<used_percent>(\S+))% +'
                         '(?P<v4>(\d+)) +(?P<v6>(\d+)) +(?P<mpls>(\d+)) +(?P<other>(\d+))$')
 
+        #Control Plane          TCAM         I        1024      263   25.68%      114      106        0       43
         p11 = re.compile(r'Control +Plane +(?P<subtype>(EM|TCAM)) +'
-                        '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<percent>(\S+))% +'
+                        '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<used_percent>(\S+))% +'
                         '(?P<v4>(\d+)) +(?P<v6>(\d+)) +(?P<mpls>(\d+)) +(?P<other>(\d+))$')
 
+        #Tunnel Termination     TCAM         I        1024       18    1.76%        8       10        0        0
         p12 = re.compile(r'Tunnel +Termination +(?P<subtype>(EM|TCAM)) +'
-                        '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<percent>(\S+))% +'
+                        '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<used_percent>(\S+))% +'
                         '(?P<v4>(\d+)) +(?P<v6>(\d+)) +(?P<mpls>(\d+)) +(?P<other>(\d+))$')
 
+        #Lisp Inst Mapping      TCAM         I        1024        1    0.10%        0        0        0        1
         p13 = re.compile(r'Lisp +Inst +Mapping +(?P<subtype>(EM|TCAM)) +'
-                        '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<percent>(\S+))% +'
+                        '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<used_percent>(\S+))% +'
                         '(?P<v4>(\d+)) +(?P<v6>(\d+)) +(?P<mpls>(\d+)) +(?P<other>(\d+))$')
 
+
+        #Security Association   TCAM         I         512        4    0.78%        2        2        0        0
+        #Security Association   TCAM         O         512        5    0.98%        0        0        0        5
         p14 = re.compile(r'Security +Association +(?P<subtype>(EM|TCAM)) +'
-                         '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<percent>(\S+))% +'
+                         '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<used_percent>(\S+))% +'
                          '(?P<v4>(\d+)) +(?P<v6>(\d+)) +(?P<mpls>(\d+)) +(?P<other>(\d+))$')
 
+        #CTS Cell Matrix/VPN
+        #Label                  EM           O       16384        0    0.00%        0        0        0        0
+        #CTS Cell Matrix/VPN
+        #Label                  TCAM         O        1024        1    0.10%        0        0        0        1
         p15 = re.compile(r'Label +(?P<subtype>(EM|TCAM)) +'
-                         '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<percent>(\S+))% +'
+                         '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<used_percent>(\S+))% +'
                          '(?P<v4>(\d+)) +(?P<v6>(\d+)) +(?P<mpls>(\d+)) +(?P<other>(\d+))$')
 
+        #Client Table           EM           I        4096        4    0.10%        0        0        0        4
+        #Client Table           TCAM         I         256        0    0.00%        0        0        0        0
         p16 = re.compile(r'Client +Table +(?P<subtype>(EM|TCAM)) +'
-                         '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<percent>(\S+))% +'
+                         '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<used_percent>(\S+))% +'
                          '(?P<v4>(\d+)) +(?P<v6>(\d+)) +(?P<mpls>(\d+)) +(?P<other>(\d+))$')
 
+        #Input Group LE         TCAM         I        1024        0    0.00%        0        0        0        0
         p17 = re.compile(r'Input +Group +LE +(?P<subtype>(EM|TCAM)) +'
-                         '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<percent>(\S+))% +'
+                         '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<used_percent>(\S+))% +'
                          '(?P<v4>(\d+)) +(?P<v6>(\d+)) +(?P<mpls>(\d+)) +(?P<other>(\d+))$')
 
+        #Output Group LE        TCAM         O        1024        0    0.00%        0        0        0        0
         p18 = re.compile(r'Output +Group +LE +(?P<subtype>(EM|TCAM)) +'
-                         '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<percent>(\S+))% +'
+                         '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<used_percent>(\S+))% +'
                          '(?P<v4>(\d+)) +(?P<v6>(\d+)) +(?P<mpls>(\d+)) +(?P<other>(\d+))$')
 
+
+        #Macsec SPD             TCAM         I         256        2    0.78%        0        0        0        2
         p19 = re.compile(r'Macsec +SPD +(?P<subtype>(EM|TCAM)) +'
-                         '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<percent>(\S+))% +'
+                         '(?P<direction>(I|O)) +(?P<max_entry>(\d+)) +(?P<use_entry>(\d+)) +(?P<used_percent>(\S+))% +'
                          '(?P<v4>(\d+)) +(?P<v6>(\d+)) +(?P<mpls>(\d+)) +(?P<other>(\d+))$')
 
         for line in out.splitlines():
@@ -6822,6 +6853,6 @@ class ShowPlatformTcamUtilization(ShowPlatformTcamUtilizationSchema):
                 ret_dict[asic][type][subtype][dir].update({k: v for k, v in group.items()})
                 continue
 
-        return ret_dict
+        return ret_dict 
 
 
