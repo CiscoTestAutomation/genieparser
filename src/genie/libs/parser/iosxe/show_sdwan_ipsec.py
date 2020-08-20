@@ -1,5 +1,5 @@
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any,Optional
+from genie.metaparser.util.schemaengine import Any
 import re
 from collections import OrderedDict
 
@@ -101,13 +101,9 @@ class ShowSdwanIpsecInboundConnections(ShowSdwanIpsecInboundConnectionsSchema):
     cli_command = "show sdwan ipsec inbound-connections"
 
     def cli(self, output=None):
-        if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
-
+        out = self.device.execute(self.cli_command) if output is None else output
         parsed_dict = {}
-        
+
         #77.27.2.2 12346   77.27.8.2 12406   78.78.0.6 biz-internet     78.78.0.9 biz-internet     AES-GCM-256           8            
         p1=re.compile(r"^(?P<source_ip>[\S]+) +(?P<source_port>[\d]+) +"
                       r"(?P<destination_ip>[\S]+) +(?P<destination_port>[\d]+) +"
@@ -153,11 +149,7 @@ class ShowSdwanIpsecOutboundConnections(ShowSdwanIpsecOutboundConnectionsSchema)
     cli_command = "show sdwan ipsec outbound-connections"
 
     def cli(self, output=None):
-        if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
-
+        out = self.device.execute(self.cli_command) if output is None else output
         parsed_dict = {}
 
         #77.27.8.2                               12346   77.27.2.2                               12366   271     1438        78.78.0.6        biz-internet     AH_SHA1_HMAC   *****b384  AES-GCM-256           8            
@@ -215,7 +207,7 @@ class ShowSdwanIpsecLocalsa(ShowSdwanIpsecLocalsaSchema):
             out = output
 
         parsed_dict = {}
-                
+
         #78.78.0.9        biz-internet     259     77.27.8.2        ::                                      12346   *****8d95 
         #78.78.0.9        biz-internet     260     77.27.8.2        ::                                      12346   *****4447
         p1=re.compile(r"^(?P<tloc_address>[\S]+) +(?P<tloc_color>[\S]+) +"
@@ -227,23 +219,13 @@ class ShowSdwanIpsecLocalsa(ShowSdwanIpsecLocalsaSchema):
             line = line.strip()
             m = p1.match(line)
             if m:
-                count = count + 1
+                count += 1
                 groups=m.groupdict()
-                if count is not 2:
+                if count != 2:
                     spi_dict=parsed_dict.setdefault("local_sa", OrderedDict()).setdefault("inbound", OrderedDict())
-                    keys = ["spi","source_ipv4","source_port","source_ipv6","tloc_color","key_hash"]
-                    for k in keys:
-                        if k is "spi" or k is "source_port":
-                            spi_dict[k] = int(groups[k])
-                        else:
-                            spi_dict[k] = groups[k]
                 else:
                     spi_dict=parsed_dict.setdefault("local_sa", OrderedDict()).setdefault("outbound", OrderedDict())
-                    keys = ["spi","source_ipv4","source_port","source_ipv6","tloc_color","key_hash"]
-                    for k in keys:
-                        if k is "spi" or k is "source_port":
-                            spi_dict[k] = int(groups[k])
-                        else:
-                            spi_dict[k] = groups[k]
-
+                keys = ["spi","source_ipv4","source_port","source_ipv6","tloc_color","key_hash"]
+                for k in keys:
+                    spi_dict[k] = int(groups[k]) if k in ["spi", "source_port"] else groups[k]
         return parsed_dict
