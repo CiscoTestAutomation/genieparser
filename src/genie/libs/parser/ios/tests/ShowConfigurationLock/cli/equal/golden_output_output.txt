@@ -1,13 +1,54 @@
-Config Session Lock
+Parser Configure Lock
 ---------------------
-Owner PID   : 578
-TTY number  : 2
-TTY username    : testuser
-User debug info : CLI Session Lock
-Lock Active time (in Sec)   : 17
-Owner PID   : 5781
-TTY number  : 21
-TTY username    : testuser1
-User debug info : CLI Session Lock
-Lock Active time (in Sec)   : 171
+Owner PID : 3
+User : unknown
+TTY : 0
+Type : EXCLUSIVE
+State : LOCKED
+Class : EXPOSED
+Count : 1
+Pending Requests : 0
+User debug info : configure terminal
+
+Parser Configure Lock
+---------------------
+Owner PID : -1
+User : unknown
+TTY : -1
+Type : NO LOCK
+State : FREE
+Class : unknown
+Count : 0
+Pending Requests : 0
+User debug info :
+
+Parser Configure Lock
+------------------------------------------------------
+Owner PID                         : 3
+User                              : unknown
+TTY                               : 0
+Type                              : EXCLUSIVE
+State                             : LOCKED
+Class                             : EXPOSED
+Count                             : 1
+Pending Requests                  : 0
+User debug info                   : configure terminal
+Session idle state                : TRUE
+No of exec cmds getting executed  : 0
+No of exec cmds blocked           : 0
+Config wait for show completion   : FALSE
+Remote ip address                 : Unknown
+Lock active time (in Sec)         : 6
+Lock Expiration timer (in Sec)    : 593
+
+Parser Configure Lock
+Owner PID        :  10
+User             :  User1
+TTY              :  3
+Type             :  EXCLUSIVE
+State            :  LOCKED
+Class            :  Exposed
+Count            :  0
+Pending Requests :  0
+User debug info  :  0
             
