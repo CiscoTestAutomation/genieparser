@@ -6554,7 +6554,7 @@ class ShowPlatformHardwareQfpActiveTcamResourceManagerUsage(ShowPlatformHardware
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
-                key1 = groups['key'].strip().replace(' ','_').lower()
+                key1 = groups['key'].replace(' ','_').lower()
                 feature_dict = ret_dict.setdefault(key1, {})    
                 last_dict_ptr = feature_dict
                 continue
@@ -6579,14 +6579,13 @@ class ShowPlatformHardwareQfpActiveTcamResourceManagerUsage(ShowPlatformHardware
             if m:
                 groups = m.groupdict()
                 name = groups['key'].strip().replace(' ','_').lower()
-                if 'name' in name:
-                    val = groups['value'].strip()
-                elif 'threshold_status' in name:
-                    val = groups['value'].strip()
-                else:
+                val = groups['value'].strip()
+                if name not in ['threshold_status', 'name']:
                     val = int(groups['value'])
+
                 region_hash.update(({name : val}))
                 continue
+
         
         return(ret_dict)
 
@@ -6741,19 +6740,19 @@ class ShowPlatformResources(ShowPlatformResourcesSchema):
             output = self.device.execute(self.cli_command[0])
 
 
-        #RP0 (ok, active) 
-        #RP1 (ok, standby) 
-        #ESP0(ok, active) 
-        #ESP1(ok, standby)   
+        #RP0 (ok, active)                                                                               H 
+        #RP1 (ok, standby)                                                                               H  
+        #ESP0(ok, active)                                                                               H 
+        #ESP1(ok, standby)                                                                               H   
         p1 = re.compile(r'^(?P<type>RP|ESP)(?P<key>[0-9]) ?\((?P<status>\S+)\, +(?P<role>\S+)\) +(?P<state>\S)$')
 
-        #SIP0 
+        #SIP0                                                                                           H 
         p2 = re.compile(r'^SIP(?P<key>[0-9]) +(?P<state>\S)$')
 
         # Control Processor       0.51%                 100%            80%             90%             H    
         p3 = re.compile(r'^Control Processor +(?P<usage>(\d*\.?\d+))\S+ +(?P<max>\d+)\S+ +(?P<warning>\d+)\S+ +(?P<critical>\d+)\S+ +(?P<state>\S)$')
 
-        #QFP
+        #QFP                                                                                           H
         p4 = re.compile(r'^QFP +(?P<state>\S)$')
 
         #CPU Utilization        0.00%                 100%            90%             95%             H    
@@ -6769,34 +6768,23 @@ class ShowPlatformResources(ShowPlatformResourcesSchema):
         for line in output.splitlines():
             line = line.strip()
 
-            #RP0 (ok, active) 
-            #RP1 (ok, standby) 
+            #RP1 (ok, standby)                                                                               H  
+            #ESP0 (ok, active)                                                                               H 
             m = p1.match(line)
-            
+
             if m:
                 groups = m.groupdict()
-                if 'RP' in groups['type']:
-                        if '0' in (groups['key']):
-                            feature_dict = ret_dict.setdefault('rp', {}).setdefault('0', {})
-                            feature_dict.update(({'state': (groups['state'])}))
-                            feature_dict.update(({'role': (groups['role'])}))
-                        else:
-                            feature_dict = ret_dict.setdefault('rp', {}).setdefault('1', {})
-                            feature_dict.update(({'state': (groups['state'])}))
-                            feature_dict.update(({'role': (groups['role'])}))
-                elif 'ESP' in groups['type']:
-                        if '0' in (groups['key']):
-                            feature_dict = ret_dict.setdefault('esp', {}).setdefault('0', {})
-                            feature_dict.update(({'state': (groups['state'])}))
-                            feature_dict.update(({'role': (groups['role'])}))
-                        else:
-                            feature_dict = ret_dict.setdefault('esp', {}).setdefault('1', {})
-                            feature_dict.update(({'state': (groups['state'])}))
-                            feature_dict.update(({'role': (groups['role'])}))
+                type_ = groups['type'].lower()
+                
+                feature_dict = ret_dict.setdefault(type_, {}).setdefault(groups['key'], {})
+                
+                feature_dict.update(({'state': (groups['state'])}))
+                feature_dict.update(({'role': (groups['role'])}))
+                
                 last_dict_ptr1 = feature_dict
                 continue
 
-            #SIP0        
+            #SIP0                                                                                           H      
             m = p2.match(line)
             if m:
                 groups = m.groupdict() 
@@ -6810,21 +6798,21 @@ class ShowPlatformResources(ShowPlatformResourcesSchema):
             if m:
                 groups = m.groupdict() 
                 feature_dict = feature_dict.setdefault('control_processer', {})
-                feature_dict.update(({'usage_perc': float(groups['usage'])}))
-                feature_dict.update(({'max_perc': int(groups['max'])}))
-                feature_dict.update(({'warning_perc': int(groups['warning'])}))
-                feature_dict.update(({'critical_perc': int(groups['critical'])}))
-                feature_dict.update(({'state': (groups['state'])}))
+                feature_dict.update({'usage_perc': float(groups['usage'])})
+                feature_dict.update({'max_perc': int(groups['max'])})
+                feature_dict.update({'warning_perc': int(groups['warning'])})
+                feature_dict.update({'critical_perc': int(groups['critical'])})
+                feature_dict.update({'state': (groups['state'])})
                 last_dict_ptr = feature_dict
                 continue
             
-            #QFP
+            #QFP                                                                                           H
             m = p4.match(line)
             if m:
                 groups = m.groupdict() 
                 feature_dict = last_dict_ptr1
                 feature_dict = feature_dict.setdefault('qfp', {})
-                feature_dict.update(({'state': (groups['state'])}))
+                feature_dict.update({'state': (groups['state'])})
                 last_dict_ptr = feature_dict
                 continue
 
@@ -6835,12 +6823,12 @@ class ShowPlatformResources(ShowPlatformResourcesSchema):
                 feature_dict = last_dict_ptr
                 res1 = groups['resource'].replace(' ','_').replace('(','').replace(')','').lower()
                 feature_dict = feature_dict.setdefault(res1,{})  
-                feature_dict.update(({('usage_' + groups['type'].lower()): int(groups['use_val'])}))
-                feature_dict.update(({'usage_perc': int(groups['val'])}))
-                feature_dict.update(({('max_' + groups['max_type'].lower()): int(groups['max'])}))
-                feature_dict.update(({'warning_perc': int(groups['warning'])}))
-                feature_dict.update(({'critical_perc': int(groups['critical'])}))
-                feature_dict.update(({'state': (groups['state'])}))
+                feature_dict.update({'usage_' + groups['type'].lower(): int(groups['use_val'])})
+                feature_dict.update({'usage_perc': int(groups['val'])})
+                feature_dict.update({'max_' + groups['max_type'].lower(): int(groups['max'])})
+                feature_dict.update({'warning_perc': int(groups['warning'])})
+                feature_dict.update({'critical_perc': int(groups['critical'])})
+                feature_dict.update({'state': (groups['state'])})
                 continue
             
             #TCAM                   16cells(0%)           1048576cells    65%             85%             H    
@@ -6852,10 +6840,10 @@ class ShowPlatformResources(ShowPlatformResourcesSchema):
                 feature_dict = last_dict_ptr
                 res1 = groups['resource'].replace(' ','_').replace('(','').replace(')','').lower()
                 feature_dict = feature_dict.setdefault(res1,{})     
-                feature_dict.update(({'usage_perc': float(groups['usage'])}))
-                feature_dict.update(({'max_perc': int(groups['max'])}))
-                feature_dict.update(({'warning_perc': int(groups['warning'])}))
-                feature_dict.update(({'state': (groups['state'])}))
+                feature_dict.update({'usage_perc': float(groups['usage'])})
+                feature_dict.update({'max_perc': int(groups['max'])})
+                feature_dict.update({'warning_perc': int(groups['warning'])})
+                feature_dict.update({'state': (groups['state'])})
                 continue
 
         return(ret_dict)
