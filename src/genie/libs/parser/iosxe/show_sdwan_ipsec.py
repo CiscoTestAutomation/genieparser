@@ -101,7 +101,7 @@ class ShowSdwanIpsecInboundConnections(ShowSdwanIpsecInboundConnectionsSchema):
 
     cli_command = "show sdwan ipsec inbound-connections"
 
-    def cli(self, output=None):
+    def cli(self, output=''):
         if not output:
             output = self.device.execute(self.cli_command)
         
@@ -166,8 +166,8 @@ class ShowSdwanIpsecOutboundConnections(ShowSdwanIpsecOutboundConnectionsSchema
 
     cli_command = "show sdwan ipsec outbound-connections"
 
-    def cli(self, output=None):
-        if output:
+    def cli(self, output=''):
+        if not output:
             output = self.device.execute(self.cli_command)
 
         parsed_dict = {}
@@ -235,7 +235,7 @@ class ShowSdwanIpsecLocalsa(ShowSdwanIpsecLocalsaSchema):
 
     cli_command = "show sdwan ipsec local-sa {tloc_address}"
 
-    def cli(self, tloc_address='', output=None):
+    def cli(self, tloc_address='', output=''):
         if not output:
             output = self.device.execute(self.cli_command.format(tloc_address=tloc_address))
 
