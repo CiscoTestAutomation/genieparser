@@ -7,6 +7,8 @@ JunOs parsers for the following show commands:
     * show bgp group detail | no-more
     * show bgp group summary
     * show bgp summary
+    * show bgp neighbor
+    * show bgp neighbor {neighbor_address}
 """
 
 # Python
@@ -1286,12 +1288,19 @@ class ShowBgpNeighborSchema(MetaParser):
 class ShowBgpNeighbor(ShowBgpNeighborSchema):
     """ Parser for:
             * show bgp neighbor
+            * show bgp neighbor {neighbor_address}
     """
-    cli_command = 'show bgp neighbor'
+    cli_command = ['show bgp neighbor',
+        'show bgp neighbor {neighbor_address}']
 
-    def cli(self, output=None):
+    def cli(self, neighbor_address=None, output=None):
         if not output:
-            out = self.device.execute(self.cli_command)
+            if neighbor_address:
+                out = self.device.execute(self.cli_command[1].format(
+                    neighbor_address=neighbor_address
+                ))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
