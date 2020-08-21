@@ -56478,42 +56478,7 @@ class TestShowRouteTableLabelSwitchedName(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class TestShowRouteTableLabelSwitchedName(unittest.TestCase):
+class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
     device = Device(name='aDevice')
     maxDiff = None
 
