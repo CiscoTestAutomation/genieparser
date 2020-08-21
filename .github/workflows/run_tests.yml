@@ -34,4 +34,5 @@ jobs:
         make develop
         cd tests
         python -m unittest
+        python test_folder_parsing.py
     
