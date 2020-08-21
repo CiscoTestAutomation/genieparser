@@ -1402,8 +1402,9 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
         p28 = re.compile(
             r'^Peer +does +not +support +Restarter +functionality$')
         # Restart flag received from the peer: Notification
+        # Restart flag received from the peer: Restarting Notification
         p29 = re.compile(
-            r'^Restart +flag +received +from +the +peer: +(?P<peer_restart_flags_received>\S+)$'
+            r'^Restart +flag +received +from +the +peer: +(?P<peer_restart_flags_received>[\S\s]+)$'
         )
         # NLRI that restart is negotiated for: inet-unicast inet-labeled-unicast
         p30 = re.compile(
