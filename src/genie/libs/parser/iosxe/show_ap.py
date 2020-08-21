@@ -43,8 +43,24 @@ class ShowApSummary(ShowApSummarySchema):
             out = output
 
         ap_summary_dict = {}
+        # Number of APs: 149
+        #
+        # AP Name                            Slots    AP Model  Ethernet MAC    Radio MAC       Location                          Country     IP Address                                 State
+        # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        # a121-cap22                       2      9130AXI   a4b2.3291.9b28  2c57.4119.a060  Fab A  UK          10.6.33.106                               Registered
+        # a132-cap15                       2      9130AXI   a4b2.3291.2244  2c57.4120.d2a0  Fab A  UK          10.6.32.146                               Registered
+        # a111-cap27                       2      9130AXI   a4b2.3291.225c  2c57.4120.d360  Fab A  UK          10.6.32.118.                              Registered
+        # a112-cap11                       2      9130AXI   a4b2.3291.22d0  2c57.4120.d700  Fab A  UK          10.6.33.160                               Registered
+        # a112-cap10                       2      9130AXI   a4b2.3291.2420  2c57.4120.b180  Fab A  UK          10.6.33.102                               Registered
+        # a112-cap17                       2      9130AXI   a4b2.3291.2434  2c57.4120.b220  Fab A  UK          10.6.32.203                               Registered
+        # a112-cap14                       2      9130AXI   a4b2.3291.2438  2c57.4120.b240  Fab A  UK          10.6.32.202                               Registered
+        # a122-cap09                       2      9130AXI   a4b2.3291.2450  2c57.4120.b300  Fab A  UK          10.6.33.133                               Registered
+        # a131-cap43                       2      9130AXI   a4b2.3291.2454  2c57.4120.b320  Fab A  UK          10.6.33.93                                Registered
+        # a122-cap08                       2      9130AXI   a4b2.3291.2458  2c57.4120.b340  Fab A  UK          10.6.32.166                               Registered
 
+        # Number of APs: 149
         ap_neighbor_count_capture = re.compile(r"^Number\s+of\s+APs:\s+(?P<ap_neighbor_count>\d+)")
+        # a121-cap22                       2      9130AXI   a4b2.3291.9b28  2c57.4119.a060  Fab A  UK          10.6.33.106                               Registered
         ap_neighbor_info_capture = re.compile(
             r"^(?P<ap_name>\S+)\s+(?P<slots_count>\d+)\s+(?P<ap_model>\S+)\s+(?P<ethernet_mac>\S+)\s+(?P<radio_mac>\S+)(?P<location>.*)\s+(?P<ap_ip_address>\d+\.\d+\.\d+\.\d+)\s+(?P<state>(Registered))")
 
@@ -65,21 +81,6 @@ class ShowApSummary(ShowApSummarySchema):
         out_filter = filter_lines(raw_output=out, remove_lines=remove_lines)
 
         ap_summary_data = {}
-
-        # Number of APs: 149
-        #
-        # AP Name                            Slots    AP Model  Ethernet MAC    Radio MAC       Location                          Country     IP Address                                 State
-        # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        # a121-cap22                       2      9130AXI   a4b2.3291.9b28  2c57.4119.a060  Fab A  UK          10.6.33.106                               Registered
-        # a132-cap15                       2      9130AXI   a4b2.3291.2244  2c57.4120.d2a0  Fab A  UK          10.6.32.146                               Registered
-        # a111-cap27                       2      9130AXI   a4b2.3291.225c  2c57.4120.d360  Fab A  UK          10.6.32.118.                              Registered
-        # a112-cap11                       2      9130AXI   a4b2.3291.22d0  2c57.4120.d700  Fab A  UK          10.6.33.160                               Registered
-        # a112-cap10                       2      9130AXI   a4b2.3291.2420  2c57.4120.b180  Fab A  UK          10.6.33.102                               Registered
-        # a112-cap17                       2      9130AXI   a4b2.3291.2434  2c57.4120.b220  Fab A  UK          10.6.32.203                               Registered
-        # a112-cap14                       2      9130AXI   a4b2.3291.2438  2c57.4120.b240  Fab A  UK          10.6.32.202                               Registered
-        # a122-cap09                       2      9130AXI   a4b2.3291.2450  2c57.4120.b300  Fab A  UK          10.6.33.133                               Registered
-        # a131-cap43                       2      9130AXI   a4b2.3291.2454  2c57.4120.b320  Fab A  UK          10.6.33.93                                Registered
-        # a122-cap08                       2      9130AXI   a4b2.3291.2458  2c57.4120.b340  Fab A  UK          10.6.32.166                               Registered
 
         for line in out_filter:
             # Number of APs: 149
