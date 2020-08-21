@@ -576,6 +576,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                                 "rt-announced-count": str,
                                 "rt-destination": str,
                                 "rt-entry": {
+                                    "accepted": str,
                                     "active-tag": str,
                                     "age": {
                                         "#text": str,
@@ -739,6 +740,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                         protocol_nh_schema.validate(item)
                     return value
                 rt_entry_schema = Schema({
+                    Optional("accepted"): str,
                     Optional("active-tag"): str,
                     Optional("age"): {
                         "#text": str,
@@ -947,6 +949,9 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
 
         # AS path: I 
         p16 = re.compile(r'^(?P<aspath_effective_string>AS +path:) +(?P<attr_value>\S+)$')
+
+        # Accepted Multipath
+        p16_1 = re.compile(r'^Accepted +(?P<accepted>\S+)$')
 
         # KRT in-kernel 0.0.0.0/0 -> {10.169.14.121}
         p17 = re.compile(r'^(?P<text>KRT +in-kernel+[\S\s]+)$')
@@ -1258,6 +1263,13 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 attr_as_path_dict.update({'aspath-effective-string': 
                     group['aspath_effective_string']})
                 attr_as_path_dict.update({'attr-value': group['attr_value']})
+                continue
+
+            # Accepted Multipath
+            m = p16_1.match(line)
+            if m:
+                group = m.groupdict()
+                rt_entry_dict.update({'accepted': group['accepted']})
                 continue
 
             # KRT in-kernel 0.0.0.0/0 -> {10.169.14.121}
