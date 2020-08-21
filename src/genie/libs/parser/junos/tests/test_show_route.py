@@ -56576,6 +56576,8 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
 
     golden_output_2= {'execute.return_value':
         '''
+            show route protocol bgp extensive 2.2.2.2
+            
             inet.0: 1250009 destinations, 1250009 routes (1250009 active, 0 holddown, 0 hidden)
             100.0.0.0/32 (1 entry, 1 announced)
             TSI:
