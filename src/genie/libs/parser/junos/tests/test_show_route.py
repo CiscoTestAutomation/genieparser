@@ -54838,6 +54838,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "announce-bits": "3",
                                     "announce-tasks": "0-KRT 6-BGP_RT_Background 7-Resolve tree 3",
                                     "gateway": "10.169.14.240",
+                                    "local-as": "65171",
+                                    "peer-as": "65151",
                                     "nh": [
                                         {
                                             "nh-string": "Next hop",
@@ -54880,6 +54882,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                 {
                                     "inactive-reason": "IGP metric",
                                     "gateway": "10.189.5.253",
+                                    "local-as": "65171",
+                                    "peer-as": "65171",
                                     "nh": [
                                         {
                                             "label-element": "0xc5cda38",
@@ -55020,6 +55024,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "nh-address": "0xbb68bf4",
                                     "nh-reference-count": "4",
                                     "gateway": "2.2.2.2",
+                                    "local-as": "2",
+                                    "peer-as": "2",
                                     'age': {'#text': '13'},
                                     'metric2': '3',
                                     "nh": [

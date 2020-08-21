@@ -6,3 +6,4 @@
         * Added regex to support more output
     * Modified ShowRouteProtocolExtensive
         * Added regex to support accepted tag
+        * Added regex to support peer-as tag
