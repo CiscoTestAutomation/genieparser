@@ -4,3 +4,5 @@
 * Junos
     * Modified ShowBgpNeighbor
         * Added regex to support more output
+    * Modified ShowRouteProtocolExtensive
+        * Added regex to support accepted tag
