@@ -2278,9 +2278,9 @@ class ShowRouteAdvertisingProtocolDetailSchema(MetaParser):
                     "to": str,
                 },
                 Optional("med"): str,
-                "local-preference": str,
+                Optional("local-preference"): str,
                 'as-path': str,
-                "communities": str,
+                Optional("communities"): str,
                 Optional("flags"): str,
             }
         })
