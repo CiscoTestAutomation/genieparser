@@ -18,7 +18,8 @@ from genie.libs.parser.junos.show_route import (ShowRouteTable,
                                                 ShowRouteForwardingTableSummary,
                                                 ShowRouteForwardingTableLabel,
                                                 ShowRouteReceiveProtocol,
-                                                ShowRouteTableLabelSwitchedName)
+                                                ShowRouteTableLabelSwitchedName,
+                                                ShowRouteProtocolProtocolExtensiveIpaddress)
 
 '''
 Unit test for:
@@ -56475,6 +56476,252 @@ class TestShowRouteTableLabelSwitchedName(unittest.TestCase):
         obj = ShowRouteTableLabelSwitchedName(device=self.device)
         parsed_output = obj.parse(table="mpls.0", name='test_lsp_01')
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class TestShowRouteTableLabelSwitchedName(unittest.TestCase):
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output_1 = {'execute.return_value': '''
+            show route protocol bgp extensive 2.2.2.2
+
+            inet.0: 8 destinations, 8 routes (8 active, 0 holddown, 0 hidden)
+            2.2.2.2/32 (1 entry, 1 announced)
+            TSI:
+            KRT in-kernel 2.2.2.2/32 -> {20.0.0.3}
+                    *BGP    Preference: 170/-101
+                            Next hop type: Router, Next hop index: 604
+                            Address: 0xf991014
+                            Next-hop reference count: 2
+                            Source: 20.0.0.3
+                            Next hop: 20.0.0.3 via ge-0/0/0.0, selected
+                            Session Id: 0xe78
+                            State: <Active Ext>
+                            Local AS:     1 Peer AS: 30000
+                            Age: 7:14:16
+                            Validation State: unverified
+                            Task: BGP_30000.20.0.0.3
+                            Announcement bits (1): 0-KRT
+                            AS path: 30000 I
+                            Accepted
+                            Localpref: 100
+                            Router ID: 2.2.2.2
+    '''}
+
+    golden_parsed_output_1 = {
+            "route-information": {
+                "route-table": {
+                    "active-route-count": "8",
+                    "destination-count": "8",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": {
+                        "rt-announced-count": "1",
+                        "rt-destination": "2.2.2.2",
+                        "rt-entry": {
+                            "active-tag": "*",
+                            "age": {
+                                "#text": "7:14:16"
+                            },
+                            "announce-bits": "1",
+                            "announce-tasks": "0-KRT",
+                            "as-path": "AS path:30000 I",
+                            "bgp-path-attributes": {
+                                "attr-as-path-effective": {
+                                    "aspath-effective-string": "AS path:",
+                                    "attr-value": "30000 I"
+                                }
+                            },
+                            "bgp-rt-flag": "Accepted",
+                            "gateway": "20.0.0.3",
+                            "local-as": "1",
+                            "local-preference": "100",
+                            "nh": {
+                                "nh-string": "Next hop",
+                                "session": "0xe78",
+                                "to": "20.0.0.3",
+                                "via": "ge-0/0/0.0"
+                            },
+                            "nh-address": "0xf991014",
+                            "nh-index": "604",
+                            "nh-reference-count": "2",
+                            "nh-type": "Router",
+                            "peer-as": "30000",
+                            "peer-id": "2.2.2.2",
+                            "preference": "170",
+                            "preference2": "101",
+                            "protocol-name": "BGP",
+                            "rt-entry-state": "Active Ext",
+                            "task-name": "BGP_30000.20.0.0.3",
+                            "validation-state": "unverified"
+                        },
+                        "rt-entry-count": {
+                            "#text": "1"
+                        },
+                        "rt-prefix-length": "32",
+                        "tsi": {
+                            "#text": "KRT in-kernel 2.2.2.2/32 -> {20.0.0.3}"
+                        }
+                    },
+                    "table-name": "inet.0",
+                    "total-route-count": "8"
+                }
+            }
+        }
+
+
+
+
+    golden_output_2= {'execute.return_value':
+        '''
+            inet.0: 1250009 destinations, 1250009 routes (1250009 active, 0 holddown, 0 hidden)
+            100.0.0.0/32 (1 entry, 1 announced)
+            TSI:
+            KRT in-kernel 100.0.0.0/32 -> {60.0.0.2}
+            Page 0 idx 0, (group eBGP_SUT-2 type External) Type 1 val 0x2b47ac54 (adv_entry)
+            Advertised metrics:
+                Nexthop: Self
+                AS path: [1] 2 I
+                Communities:
+            Path 100.0.0.0
+            from 60.0.0.2
+            Vector len 4.  Val: 0
+                    *BGP    Preference: 170/-101
+                            Next hop type: Router, Next hop index: 605
+                            Address: 0x17b226b4
+                            Next-hop reference count: 800002
+                            Source: 60.0.0.2
+                            Next hop: 60.0.0.2 via ge-0/0/2.0, selected
+                            Session Id: 0xf44
+                            State: <Active Ext>
+                            Local AS:     1 Peer AS:     2
+                            Age: 4:32 
+                            Validation State: unverified 
+                            Task: BGP_2.60.0.0.2
+                            Announcement bits (2): 0-KRT 1-BGP_RT_Background 
+                            AS path: 2 I 
+                            Accepted
+                            Localpref: 100
+                            Router ID: 206.26.0.1
+                '''
+    }
+
+    golden_parsed_output_2 = {
+        "route-information": {
+            "route-table": {
+                "active-route-count": "1250009",
+                "destination-count": "1250009",
+                "hidden-route-count": "0",
+                "holddown-route-count": "0",
+                "rt": {
+                    "rt-announced-count": "1",
+                    "rt-destination": "100.0.0.0",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "4:32"
+                        },
+                        "announce-bits": "2",
+                        "announce-tasks": "0-KRT 1-BGP_RT_Background",
+                        "as-path": "AS path:2 I",
+                        "bgp-path-attributes": {
+                            "attr-as-path-effective": {
+                                "aspath-effective-string": "AS path:",
+                                "attr-value": "2 I"
+                            }
+                        },
+                        "bgp-rt-flag": "Accepted",
+                        "gateway": "60.0.0.2",
+                        "local-as": "1",
+                        "local-preference": "100",
+                        "nh": {
+                            "nh-string": "Next hop",
+                            "session": "0xf44",
+                            "to": "60.0.0.2",
+                            "via": "ge-0/0/2.0"
+                        },
+                        "nh-address": "0x17b226b4",
+                        "nh-index": "605",
+                        "nh-reference-count": "800002",
+                        "nh-type": "Router",
+                        "peer-as": "2",
+                        "peer-id": "206.26.0.1",
+                        "preference": "170",
+                        "preference2": "101",
+                        "protocol-name": "BGP",
+                        "rt-entry-state": "Active Ext",
+                        "task-name": "BGP_2.60.0.0.2",
+                        "validation-state": "unverified"
+                    },
+                    "rt-entry-count": {
+                        "#text": "1"
+                    },
+                    "rt-prefix-length": "32",
+                    "tsi": {
+                        "#text": "KRT in-kernel 100.0.0.0/32 -> {60.0.0.2}"
+                    }
+                },
+                "table-name": "inet.0",
+                "total-route-count": "1250009"
+            }
+        }
+    }
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRouteProtocolProtocolExtensiveIpaddress(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(protocol="bgp", ipaddress='2.2.2.2')
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowRouteProtocolProtocolExtensiveIpaddress(device=self.device)
+        parsed_output = obj.parse(protocol="bgp", ipaddress='2.2.2.2')
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowRouteProtocolProtocolExtensiveIpaddress(device=self.device)
+        parsed_output = obj.parse(protocol="bgp", ipaddress='2.2.2.2')
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 if __name__ == '__main__':
     unittest.main()
