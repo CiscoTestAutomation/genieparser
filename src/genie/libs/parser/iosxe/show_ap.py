@@ -14,12 +14,14 @@ class ShowApRfProfileSummarySchema(MetaParser):
     schema = {
         "rf_profile_summary": {
             "rf_profile_count": int,
-            str: {
-                "rf_profile_name": str,
-                "band": str,
-                "description": str,
-                "state": str
+            "rf_profiles": {
+                str: {
+                    "rf_profile_name": str,
+                    "band": str,
+                    "description": str,
+                    "state": str
                 }
+            }
         }
     }
 
@@ -104,9 +106,11 @@ class ShowApRfProfileSummary(ShowApRfProfileSummarySchema):
                     if k == 'rf_profile_name':
                         rf_profile_name = v
                     v = v.strip()
-                    rf_profile_summary_dict['rf_profile_summary'][rf_profile_name] = {}
+                    if not rf_profile_summary_dict['rf_profile_summary'].get('rf_profiles', {}):
+                           rf_profile_summary_dict['rf_profile_summary']['rf_profiles'] = {}
+                    rf_profile_summary_dict['rf_profile_summary']['rf_profiles'][rf_profile_name] = {}
                     rf_profile_data.update({k: v})
-                rf_profile_summary_dict['rf_profile_summary'][rf_profile_name].update(rf_profile_data)
+                rf_profile_summary_dict['rf_profile_summary']['rf_profiles'][rf_profile_name].update(rf_profile_data)
                 rf_profile_data = {}
                 continue
 
