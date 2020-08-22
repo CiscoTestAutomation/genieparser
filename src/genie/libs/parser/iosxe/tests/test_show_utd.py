@@ -41,14 +41,12 @@ class TestShowSdwanUtdEngine(unittest.TestCase):
     'memory_usage': 11.3,
     'memory_status': 'utd-oper-status-green',
     'engine_id': {
-        '1': {
-            'id': '1',
+         1: {
             'running': 'true',
             'status': 'utd-oper-status-green',
             'reason': ''
             },
-        '2': {
-            'id': '2',
+         2: {
             'running': 'true',
             'status': 'utd-oper-status-green',
             'reason': ''
@@ -114,14 +112,12 @@ class TestShowUtdEngineStandardStatus(unittest.TestCase):
             },
         'number_of_engines': 2,
         'engine_id': {
-            'Engine(#1)': {
-            'engine': 'Engine(#1)',
+            1: {
             'running_status': 'Yes',
             'health': 'Green',
             'reason': 'None'
             },
-            'Engine(#2)': {
-            'engine': 'Engine(#2)',
+            2: {
             'running_status': 'Yes',
             'health': 'Green',
             'reason': 'None'

@@ -15,8 +15,7 @@ class ShowSdwanUtdEngineSchema(MetaParser):
         'memory_usage': float,
         'memory_status': str,
         Optional('engine_id'): {
-            str: {
-                'id': str,
+            int: {
                 'running': str,
                 'status': str,
                 'reason': str
@@ -79,10 +78,10 @@ class ShowSdwanUtdEngine(ShowSdwanUtdEngineSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                id_dict = group['id']
+                id_dict = int(group['id'])
 
                 connection_dict = parsed_dict.setdefault("engine_id", {}).setdefault(id_dict, {})
-                keys = ['id', 'running', 'status', 'reason']
+                keys = ['running', 'status', 'reason']
                 for k in keys:
                     connection_dict[k] = group[k]
 
@@ -100,8 +99,7 @@ class ShowUtdEngineStandardStatusSchema(MetaParser):
             },
         Optional('number_of_engines'): int,
         Optional('engine_id'): {
-            str: {
-                'engine': str,
+            int: {
                 'running_status': str,
                 'health': str,
                 'reason': str
@@ -192,9 +190,9 @@ class ShowUtdEngineStandardStatus(ShowUtdEngineStandardStatusSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                id_dict = group['engine']
+                id_dict = int(group['engine'].strip(')').strip('Engine(#'))
                 utd_engine_dict = parsed_dict.setdefault("engine_id", {}).setdefault(id_dict, {})
-                keys = ['engine', 'running_status', 'health', 'reason']
+                keys = ['running_status', 'health', 'reason']
                 for k in keys:
                     utd_engine_dict[k] = group[k]
                 continue
