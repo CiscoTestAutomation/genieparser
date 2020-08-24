@@ -15,8 +15,8 @@ import re
 
 # metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.exceptions import SchemaTypeError
-from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use, SchemaTypeError, Or
+from pyats.utils.exceptions import SchemaError
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use, Or
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -194,7 +194,7 @@ class ShowInterfacesDescriptionsSchema(MetaParser):
     """
     def validate_physical_interface_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('physical-interface is not a list')
+            raise SchemaError('physical-interface is not a list')
         entry_schema = Schema(
             {
                 "admin-status": str,
@@ -408,21 +408,21 @@ class ShowInterfacesSchema(MetaParser):
     def verify_physical_interface_list(value):
         # Pass physical-interface list of dict in value
         if not isinstance(value, list):
-            raise SchemaTypeError('physical interface is not a list')
+            raise SchemaError('physical interface is not a list')
         def verify_logical_interface_list(value):
             # Pass address-family list of dict in value
             if not isinstance(value, list):
-                raise SchemaTypeError('logical-interface is not a list')
+                raise SchemaError('logical-interface is not a list')
 
             def verify_address_family_list(value):
                 # Pass address-family list of dict in value
                 if not isinstance(value, list):
-                    raise SchemaTypeError('address-family is not a list')
+                    raise SchemaError('address-family is not a list')
 
                 def verify_interface_address_list(value):
                     # Pass physical-interface list of dict in value
                     if not isinstance(value, list) and not isinstance(value, dict):
-                        raise SchemaTypeError('interface-address is not a list/dict')
+                        raise SchemaError('interface-address is not a list/dict')
 
                     interface_address_schema = Schema({
                         Optional("ifa-broadcast"): str,
@@ -534,7 +534,7 @@ class ShowInterfacesSchema(MetaParser):
         def verify_queue_list(value):
             # Pass address-family list of dict in value
             if not isinstance(value, list):
-                raise SchemaTypeError('queue is not a list')
+                raise SchemaError('queue is not a list')
             
             queue_schema = Schema({
                 "queue-counters-queued-packets": str,
@@ -1819,19 +1819,19 @@ class ShowInterfacesStatisticsSchema(MetaParser):
 
     def validate_physical_interface_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('physical-interface is not a list')
+            raise SchemaError('physical-interface is not a list')
 
         def validate_logical_interface_list(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('logical-interface is not a list')
+                raise SchemaError('logical-interface is not a list')
 
             def validate_address_family_list(value):
                 if not isinstance(value, list):
-                    raise SchemaTypeError('address-family is not a list')
+                    raise SchemaError('address-family is not a list')
 
                 def validate_interface_address_list(value):
                     if not isinstance(value, list):
-                        raise SchemaTypeError('interface-address is not a list')
+                        raise SchemaError('interface-address is not a list')
 
                     interface_address_schema = Schema ({
                             "ifa-flags": {
@@ -2391,7 +2391,7 @@ class ShowInterfacesPolicersInterfaceSchema(MetaParser):
     def validate_policer_information_list(value):
         # Pass ospf3-interface list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('policer-information is not a list')
+            raise SchemaError('policer-information is not a list')
         policer_information_schema = Schema({
             "policer-family": str,
             "policer-input": str,
@@ -2406,7 +2406,7 @@ class ShowInterfacesPolicersInterfaceSchema(MetaParser):
     def validate_logical_interface_list(value):
         # Pass ospf3-interface list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('logical-interface is not a list')
+            raise SchemaError('logical-interface is not a list')
         logical_interface_schema = Schema({
             "admin-status": str,
             "name": str,
@@ -2422,7 +2422,7 @@ class ShowInterfacesPolicersInterfaceSchema(MetaParser):
     def validate_physical_interface_list(value):
         # Pass ospf3-interface list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('physical-interface is not a list')
+            raise SchemaError('physical-interface is not a list')
         physical_interface_schema = Schema({
             "admin-status": str,
             "logical-interface": Use(ShowInterfacesPolicersInterface.validate_logical_interface_list),
@@ -2544,7 +2544,7 @@ class ShowInterfacesQueueSchema(MetaParser):
     """
     def validate_queue(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('queue is not a list')
+            raise SchemaError('queue is not a list')
         queue_schema = Schema(
             {
                 "forwarding-class-name": str,
