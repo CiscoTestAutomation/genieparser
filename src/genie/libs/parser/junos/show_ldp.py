@@ -891,7 +891,6 @@ class ShowLDPInterface(ShowLDPInterfaceSchema):
 
         return ret_dict
 
-
 class ShowLDPInterfaceDetail(ShowLDPInterface):
     cli_command = 'show ldp interface {interface} detail'
     def cli(self, interface, output=None):
