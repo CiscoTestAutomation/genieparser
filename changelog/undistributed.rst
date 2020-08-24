@@ -14,6 +14,8 @@
         * show license
     * Added ShowStackwiseVirtual
         * show stackwise-virtual
+    * Added ShowHwModuleStatus
+        * show hw_module subslot {subslot} transceiver {transceiver} status
     * Added Show_Stackwise_Virtual_Dual_Active_Detection
         * show stackwise-virtual dual-active-detection
     * Added ShowCtsPacs
