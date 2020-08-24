@@ -1,6 +1,6 @@
 ''' show_hw.py
 IOSXE parsers for the following show commands:
-    * show hw_module subslot {subslot} transceiver {transceiver} status
+    * show hw module subslot {subslot} transceiver {transceiver} status
 '''
 
 import re
@@ -14,10 +14,10 @@ from genie.metaparser import MetaParser
 
 # ==========================
 # Schema for:
-#  * 'show hw module status'
+#  * 'show hw module subslot {subslot} transceiver {transceiver} status'
 # ==========================
-class Show_Hw_Module_StatusSchema(MetaParser):
-    """Schema for show hw module status."""
+class ShowHwModuleStatusSchema(MetaParser):
+    """Schema for show hw module subslot {subslot} transceiver {transceiver} status."""
 
     schema = {
     "transceiver_status": {
@@ -35,18 +35,16 @@ class Show_Hw_Module_StatusSchema(MetaParser):
 
 # ==========================
 # Parser for:
-#  * 'show_hw_module_status'
+#  * 'show hw module subslot {subslot} transceiver {transceiver} status'
 # ==========================
-class Show_Hw_Module_Status(Show_Hw_Module_StatusSchema):
-    """Parser for show_hw_module_status"""
+class ShowHwModuleStatus(ShowHwModuleStatusSchema):
+    """Parser for show hw module subslot {subslot} transceiver {transceiver} status"""
 
-    cli_command = [
-        'show hw_module subslot {subslot} transceiver {transceiver} status'
-    ]
+    cli_command = 'show hw_module subslot {subslot} transceiver {transceiver} status'
 
     def cli(self, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command[0])
+            out = self.device.execute(self.cli_command)
         else:
             out = output
 

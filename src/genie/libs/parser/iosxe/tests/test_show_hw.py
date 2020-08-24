@@ -2,14 +2,14 @@ import unittest
 from unittest.mock import Mock
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
-from genie.libs.parser.iosxe.show_hw import Show_Hw_Module_Status
+from genie.libs.parser.iosxe.show_hw import ShowHwModuleStatus
 
 
 # =====================================
-# Unit test for 'show_hw_module_status'
+# Unit test for 'show hw module status'
 # =====================================
-class test_show_hw_module_status(unittest.TestCase):
-    """Unit test for 'show_hw_module_status'"""
+class TestShowHwModuleStatus(unittest.TestCase):
+    """Unit test for 'show hw module status'"""
 
     maxDiff = None
     empty_output = {'execute.return_value': ''}
@@ -37,13 +37,13 @@ The Transceiver in slot 0 subslot 1 port 0 is enabled.
 
     def test_show_hw_module_status_full(self):
         self.device = Mock(**self.golden_output1)
-        obj = Show_Hw_Module_Status(device=self.device)
+        obj = ShowHwModuleStatus(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_show_hw_module_status_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = Show_Hw_Module_Status(device=self.device)
+        obj = ShowHwModuleStatus(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
