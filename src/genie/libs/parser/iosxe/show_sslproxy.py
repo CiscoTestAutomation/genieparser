@@ -9,7 +9,7 @@ class ShowSslproxyStatusSchema(MetaParser):
     ''' Schema for show sslproxy status'''
     schema = {
         'configuration': {
-            'ca_cert_bundle': str,
+            Optional('ca_cert_bundle'): str,
             'ca_tp_label': str,
             'cert_lifetime': int,
             'ec_key_type': str,
