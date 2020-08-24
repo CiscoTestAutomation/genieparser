@@ -1,5 +1,5 @@
 import re
-
+import json
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 
@@ -14,119 +14,119 @@ class ShowApConfigGeneralSchema(MetaParser):
     schema = {
         "ap_config_general_info": {
             str: {
-                "cisco_ap_identifier": str,
-                "country_code": str,
-                "regulatory_domain_allowed_by_country": str,
-                "ap_country_code": str,
-                "slot_0": str,
-                "slot_1": str,
-                "mac_address": str,
-                "ip_address_configuration": str,
-                "ip_address": str,
-                "ip_netmask": str,
-                "gateway_ip_address": str,
-                "fallback_ip_address_being_used": str,
-                "domain": str,
-                "name_server": str,
-                "capwap_path_mtu": int,
-                "capwap_active_window_size": int,
-                "telnet_state": str,
-                "cpu_type": str,
-                "memory_type": str,
-                "memory_size": str,
-                "ssh_state": str,
-                "cisco_ap_location": str,
-                "site_tag_name": str,
-                "rf_tag_name": str,
-                "policy_tag_name": str,
-                "ap_join_profile": str,
-                "flex_profile": str,
-                "ap_filter_name": str,
-                "primary_cisco_controller_name": str,
-                "primary_cisco_controller_ip_address": str,
-                "secondary_cisco_controller_name": str,
-                "secondary_cisco_controller_ip_address": str,
-                "tertiary_cisco_controller_name": str,
-                "tertiary_cisco_controller_ip_address": str,
-                "administrative_state": str,
-                "operation_state": str,
-                "nat_external_ip_address": str,
-                "ap_certificate_type": str,
-                "ap_mode": str,
-                "ap_vlan_tagging_state": str,
-                "ap_vlan_tag": int,
-                "capwap_preferred_mode": str,
-                "capwap_udp_lite": str,
-                "ap_submode": str,
-                "office_extend_mode": str,
-                "dhcp_server": str,
-                "remote_ap_debug": str,
-                "logging_trap_severity_level": str,
-                "logging_syslog_facility": str,
-                "software_version": str,
-                "boot_version": str,
-                "mini_ios_version": str,
-                "stats_reporting_period": int,
-                "led_state": str,
-                "led_flash_state": str,
-                "led_flash_timer": int,
-                "mdns_group_id": int,
-                "mdns_rule_name": str,
-                "poe_pre_standard_switch": str,
-                "poe_power_injector_mac_address": str,
-                "power_type/mode": str,
-                "number_of_slots": int,
-                "ap_model": str,
-                "ios_version": str,
-                "reset_button": str,
-                "ap_serial_number": str,
-                "management_frame_validation": str,
-                "management_frame_protection": str,
-                "ap_user_name": str,
-                "ap_802.1x_user_mode": str,
-                "ap_802.1x_user_name": str,
-                "cisco_ap_system_logging_host": str,
-                "cisco_ap_secured_logging_tls_mode": str,
-                "ap_up_time": str,
-                "ap_capwap_up_time": str,
-                "join_date_and_time": str,
-                "join_taken_time": str,
-                "join_priority": int,
-                "ap_link_latency": str,
-                "ap_lag_configuration_status": str,
-                "lag_support_for_ap": str,
-                "rogue_detection": str,
-                "rogue_containment_auto_rate": str,
-                "rogue_containment_of_standalone_flexconnect_aps": str,
-                "rogue_detection_report_interval": int,
-                "rogue_ap_minimum_rssi": float,
-                "rogue_ap_minimum_transient_time": int,
-                "ap_tcp_mss_adjust": str,
-                "ap_tcp_mss_size": int,
-                "ap_ipv6_tcp_mss_adjust": str,
-                "ap_ipv6_tcp_mss_size": int,
-                "hyperlocation_admin_status": str,
-                "retransmit_count": int,
-                "retransmit_interval": int,
-                "fabric_status": str,
-                "fips_status": str,
-                "wlancc_status": str,
-                "usb_module_type": str,
-                "usb_module_state": str,
-                "usb_operational_state": str,
-                "usb_override": str,
-                "gas_rate_limit_admin_status": str,
-                "wpa3_capability": str,
-                "ewc_ap_capability": str,
-                "awips_capability": str,
-                "proxy_hostname": str,
-                "proxy_port": str,
-                "proxy_no_proxy_list": str,
-                "grpc_server_status": str,
-                "unencrypted_data_keep_alive": str,
-                "local_dhcp_server": str,
-                "traffic_distribution_statistics_capability": str,
-                "dual_dfs_statistics": str
+                Optional("cisco_ap_identifier"): str,
+                Optional("country_code"): str,
+                Optional("regulatory_domain_allowed_by_country"): str,
+                Optional("ap_country_code"): str,
+                Optional("slot_0"): str,
+                Optional("slot_1"): str,
+                Optional("mac_address"): str,
+                Optional("ip_address_configuration"): str,
+                Optional("ip_address"): str,
+                Optional("ip_netmask"): str,
+                Optional("gateway_ip_address"): str,
+                Optional("fallback_ip_address_being_used"): str,
+                Optional("domain"): str,
+                Optional("name_server"): str,
+                Optional("capwap_path_mtu"): int,
+                Optional("capwap_active_window_size"): int,
+                Optional("telnet_state"): str,
+                Optional("cpu_type"): str,
+                Optional("memory_type"): str,
+                Optional("memory_size"): str,
+                Optional("ssh_state"): str,
+                Optional("cisco_ap_location"): str,
+                Optional("site_tag_name"): str,
+                Optional("rf_tag_name"): str,
+                Optional("policy_tag_name"): str,
+                Optional("ap_join_profile"): str,
+                Optional("flex_profile"): str,
+                Optional("ap_filter_name"): str,
+                Optional("primary_cisco_controller_name"): str,
+                Optional("primary_cisco_controller_ip_address"): str,
+                Optional("secondary_cisco_controller_name"): str,
+                Optional("secondary_cisco_controller_ip_address"): str,
+                Optional("tertiary_cisco_controller_name"): str,
+                Optional("tertiary_cisco_controller_ip_address"): str,
+                Optional("administrative_state"): str,
+                Optional("operation_state"): str,
+                Optional("nat_external_ip_address"): str,
+                Optional("ap_certificate_type"): str,
+                Optional("ap_mode"): str,
+                Optional("ap_vlan_tagging_state"): str,
+                Optional("ap_vlan_tag"): int,
+                Optional("capwap_preferred_mode"): str,
+                Optional("capwap_udp_lite"): str,
+                Optional("ap_submode"): str,
+                Optional("office_extend_mode"): str,
+                Optional("dhcp_server"): str,
+                Optional("remote_ap_debug"): str,
+                Optional("logging_trap_severity_level"): str,
+                Optional("logging_syslog_facility"): str,
+                Optional("software_version"): str,
+                Optional("boot_version"): str,
+                Optional("mini_ios_version"): str,
+                Optional("stats_reporting_period"): int,
+                Optional("led_state"): str,
+                Optional("led_flash_state"): str,
+                Optional("led_flash_timer"): int,
+                Optional("mdns_group_id"): int,
+                Optional("mdns_rule_name"): str,
+                Optional("poe_pre_standard_switch"): str,
+                Optional("poe_power_injector_mac_address"): str,
+                Optional("power_type_mode"): str,
+                Optional("number_of_slots"): int,
+                Optional("ap_model"): str,
+                Optional("ios_version"): str,
+                Optional("reset_button"): str,
+                Optional("ap_serial_number"): str,
+                Optional("management_frame_validation"): str,
+                Optional("management_frame_protection"): str,
+                Optional("ap_user_name"): str,
+                Optional("ap_802_1x_user_mode"): str,
+                Optional("ap_802_1x_user_name"): str,
+                Optional("cisco_ap_system_logging_host"): str,
+                Optional("cisco_ap_secured_logging_tls_mode"): str,
+                Optional("ap_up_time"): str,
+                Optional("ap_capwap_up_time"): str,
+                Optional("join_date_and_time"): str,
+                Optional("join_taken_time"): str,
+                Optional("join_priority"): int,
+                Optional("ap_link_latency"): str,
+                Optional("ap_lag_configuration_status"): str,
+                Optional("lag_support_for_ap"): str,
+                Optional("rogue_detection"): str,
+                Optional("rogue_containment_auto_rate"): str,
+                Optional("rogue_containment_of_standalone_flexconnect_aps"): str,
+                Optional("rogue_detection_report_interval"): int,
+                Optional("rogue_ap_minimum_rssi"): float,
+                Optional("rogue_ap_minimum_transient_time"): int,
+                Optional("ap_tcp_mss_adjust"): str,
+                Optional("ap_tcp_mss_size"): int,
+                Optional("ap_ipv6_tcp_mss_adjust"): str,
+                Optional("ap_ipv6_tcp_mss_size"): int,
+                Optional("hyperlocation_admin_status"): str,
+                Optional("retransmit_count"): int,
+                Optional("retransmit_interval"): int,
+                Optional("fabric_status"): str,
+                Optional("fips_status"): str,
+                Optional("wlancc_status"): str,
+                Optional("usb_module_type"): str,
+                Optional("usb_module_state"): str,
+                Optional("usb_operational_state"): str,
+                Optional("usb_override"): str,
+                Optional("gas_rate_limit_admin_status"): str,
+                Optional("wpa3_capability"): str,
+                Optional("ewc_ap_capability"): str,
+                Optional("awips_capability"): str,
+                Optional("proxy_hostname"): str,
+                Optional("proxy_port"): str,
+                Optional("proxy_no_proxy_list"): str,
+                Optional("grpc_server_status"): str,
+                Optional("unencrypted_data_keep_alive"): str,
+                Optional("local_dhcp_server"): str,
+                Optional("traffic_distribution_statistics_capability"): str,
+                Optional("dual_dfs_statistics"): str
             }
         }
     }
@@ -267,366 +267,277 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
 # Traffic Distribution Statistics Capability      : Enabled
 # Dual DFS Statistics                             : Disabled
 #
-# Cisco AP Name   : b8-01-cap2
-# =================================================
-#
-# Cisco AP Identifier                             : 70b3.1736.220e
-# Country Code                                    : IN
-# Regulatory Domain Allowed by Country            : 802.11bg:-A   802.11a:-DN
-# AP Country Code                                 : IN  - India
-# AP Regulatory Domain
-#   Slot 0                                        : -D
-#   Slot 1                                        : -D
-# MAC Address                                     : 70b3.1788.aaaa
-# IP Address Configuration                        : DHCP
-# IP Address                                      : 10.10.5.22
-# IP Netmask                                      : 255.255.254.0
-# Gateway IP Address                              : 10.10.5.1
-# Fallback IP Address Being Used                  :
-# Domain                                          :
-# Name Server                                     :
-# CAPWAP Path MTU                                 : 1485
-# Capwap Active Window Size                       : 1
-# Telnet State                                    : Disabled
-# CPU Type                                        :  ARMv7 Processor rev 1 (v7l)
-# Memory Type                                     : DDR3
-# Memory Size                                     : 1028096 KB
-# SSH State                                       : Enabled
-# Cisco AP Location                               : default location
-# Site Tag Name                                   : b8
-# RF Tag Name                                     : Custom-RF
-# Policy Tag Name                                 : b8_policy_tag
-# AP join Profile                                 : APG_bgl8
-# Flex Profile                                    : default-flex-profile
-# AP Filter name                                  : b8
-# Primary Cisco Controller Name                   : b17-wl-ewlc1
-# Primary Cisco Controller IP Address             : 10.6.4.17
-# Secondary Cisco Controller Name                 : b7-wl-wlc3
-# Secondary Cisco Controller IP Address           : 10.6.4.16
-# Tertiary Cisco Controller Name                  : b1-wl-wlc3
-# Tertiary Cisco Controller IP Address            : 10.6.4.12
-# Administrative State                            : Enabled
-# Operation State                                 : Registered
-# NAT External IP Address                         : 10.10.5.22
-# AP Certificate type                             : Manufacturer Installed Certificate
-# AP Mode                                         : Local
-# AP VLAN tagging state                           : Disabled
-# AP VLAN tag                                     : 0
-# CAPWAP Preferred mode                           : IPv4
-# CAPWAP UDP-Lite                                 : Not Configured
-# AP Submode                                      : Not Configured
-# Office Extend Mode                              : Disabled
-# Dhcp Server                                     : Disabled
-# Remote AP Debug                                 : Disabled
-# Logging Trap Severity Level                     : information
-# Logging Syslog facility                         : kern
-# Software Version                                : 17.3.1.9
-# Boot Version                                    : 1.1.2.4
-# Mini IOS Version                                : 0.0.0.0
-# Stats Reporting Period                          : 0
-# LED State                                       : Enabled
-# LED Flash State                                 : Enabled
-# LED Flash Timer                                 : 0
-# MDNS Group Id                                   : 0
-# MDNS Rule Name                                  :
-# PoE Pre-Standard Switch                         : Disabled
-# PoE Power Injector MAC Address                  : Disabled
-# Power Type/Mode                                 : PoE/Full Power
-# Number of Slots                                 : 3
-# AP Model                                        : AIR-AP4800-D-K9
-# IOS Version                                     : 17.3.1.9
-# Reset Button                                    : Disabled
-# AP Serial Number                                : FGL2AA4BA78Z
-# Management Frame Validation                     : Capable
-# Management Frame Protection                     : Capable
-# AP User Name                                    : admin
-# AP 802.1X User Mode                             : Global
-# AP 802.1X User Name                             : Not Configured
-# Cisco AP System Logging Host                    : 10.16.19.6
-# Cisco AP Secured Logging TLS mode               : Disabled
-# AP Up Time                                      : 3 days 9 hours 44 minutes 17 seconds
-# AP CAPWAP Up Time                               : 3 days 9 hours 37 minutes 16 seconds
-# Join Date and Time                              : 08/14/2020 19:48:13
-# Join Taken Time                                 : 7 minutes 0 second
-# Join Priority                                   : 1
-# AP Link Latency                                 : Disable
-# AP Lag Configuration Status                     : Disabled
-# Lag Support for AP                              : Yes
-# Rogue Detection                                 : Enabled
-# Rogue Containment auto-rate                     : Disabled
-# Rogue Containment of standalone flexconnect APs : Disabled
-# Rogue Detection Report Interval                 : 10
-# Rogue AP minimum RSSI                           : -70
-# Rogue AP minimum transient time                 : 0
-# AP TCP MSS Adjust                               : Enabled
-# AP TCP MSS Size                                 : 1250
-# AP IPv6 TCP MSS Adjust                          : Enabled
-# AP IPv6 TCP MSS Size                            : 1250
-# Hyperlocation Admin Status                      : Disabled
-# Retransmit count                                : 5
-# Retransmit interval                             : 3
-# Fabric status                                   : Disabled
-# FIPS status                                     : Disabled
-# WLANCC status                                   : Disabled
-# USB Module Type                                 : USB Module
-# USB Module State                                : Enabled
-# USB Operational State                           : Disabled
-# USB Override                                    : Disabled
-# GAS rate limit Admin status                     : Disabled
-# WPA3 Capability                                 : Enabled
-# EWC-AP Capability                               : Disabled
-# AWIPS Capability                                : Enabled
-# Proxy Hostname                                  : Not Configured
-# Proxy Port                                      : Not Configured
-# Proxy NO_PROXY list                             : Not Configured
-# GRPC server status                              : Disabled
-# Unencrypted Data Keep Alive                     : Enabled
-# Local DHCP Server                               : Disabled
-# Traffic Distribution Statistics Capability      : Enabled
-# Dual DFS Statistics                             : Disabled
-#
-#
-# Cisco AP Name   : b8-1-cap3
-# =================================================
-#
-# Cisco AP Identifier                             : f4db.e2b4.2046
-# Country Code                                    : IN
-# Regulatory Domain Allowed by Country            : 802.11bg:-A   802.11a:-DN
-# AP Country Code                                 : IN  - India
-# AP Regulatory Domain
-#   Slot 0                                        : -D
-#   Slot 1                                        : -D
-# MAC Address                                     : f4db.6e83.e878
-# IP Address Configuration                        : DHCP
-# IP Address                                      : 10.10.55.12
-# IP Netmask                                      : 255.255.254.0
-# Gateway IP Address                              : 10.105.54.1
-# Fallback IP Address Being Used                  :
-# Domain                                          :
-# Name Server                                     :
-# CAPWAP Path MTU                                 : 1485
-# Capwap Active Window Size                       : 1
-# Telnet State                                    : Disabled
-# CPU Type                                        :  ARMv7 Processor rev 1 (v7l)
-# Memory Type                                     : DDR3
-# Memory Size                                     : 1028096 KB
-# SSH State                                       : Enabled
-# Cisco AP Location                               : default location
-# Site Tag Name                                   : b8
-# RF Tag Name                                     : Custom-RF
-# Policy Tag Name                                 : b8_policy_tag
-# AP join Profile                                 : APG_b8
-# Flex Profile                                    : default-flex-profile
-# AP Filter name                                  : b8
-# Primary Cisco Controller Name                   : b7-wl-ewlc1
-# Primary Cisco Controller IP Address             : 10.6.4.17
-# Secondary Cisco Controller Name                 : b7-wl-wlc3
-# Secondary Cisco Controller IP Address           : 10.6.4.16
-# Tertiary Cisco Controller Name                  : b3-wl-wlc3
-# Tertiary Cisco Controller IP Address            : 10.64.7.12
-# Administrative State                            : Enabled
-# Operation State                                 : Registered
-# NAT External IP Address                         : 10.10.5.18
-# AP Certificate type                             : Manufacturer Installed Certificate
-# AP Mode                                         : Local
-# AP VLAN tagging state                           : Disabled
-# AP VLAN tag                                     : 0
-# CAPWAP Preferred mode                           : IPv4
-# CAPWAP UDP-Lite                                 : Not Configured
-# AP Submode                                      : Not Configured
-# Office Extend Mode                              : Disabled
-# Dhcp Server                                     : Disabled
-# Remote AP Debug                                 : Disabled
-# Logging Trap Severity Level                     : information
-# Logging Syslog facility                         : kern
-# Software Version                                : 17.3.1.9
-# Boot Version                                    : 1.1.2.4
-# Mini IOS Version                                : 0.0.0.0
-# Stats Reporting Period                          : 0
-# LED State                                       : Enabled
-# LED Flash State                                 : Enabled
-# LED Flash Timer                                 : 0
-# MDNS Group Id                                   : 0
-# MDNS Rule Name                                  :
-# PoE Pre-Standard Switch                         : Disabled
-# PoE Power Injector MAC Address                  : Disabled
-# Power Type/Mode                                 : PoE/Full Power
-# Number of Slots                                 : 3
-# AP Model                                        : AIR-AP4800-D-K9
-# IOS Version                                     : 17.3.1.9
-# Reset Button                                    : Disabled
-# AP Serial Number                                : FGL2302A7AZ
-# Management Frame Validation                     : Capable
-# Management Frame Protection                     : Capable
-# AP User Name                                    : admin
-# AP 802.1X User Mode                             : Global
-# AP 802.1X User Name                             : Not Configured
-# Cisco AP System Logging Host                    : 10.16.12.6
-# Cisco AP Secured Logging TLS mode               : Disabled
-# AP Up Time                                      : 3 days 9 hours 44 minutes 17 seconds
-# AP CAPWAP Up Time                               : 3 days 9 hours 39 minutes 22 seconds
-# Join Date and Time                              : 08/14/2020 19:46:07
-# Join Taken Time                                 : 4 minutes 54 seconds
-# Join Priority                                   : 1
-# AP Link Latency                                 : Disable
-# AP Lag Configuration Status                     : Disabled
-# Lag Support for AP                              : Yes
-# Rogue Detection                                 : Enabled
-# Rogue Containment auto-rate                     : Disabled
-# Rogue Containment of standalone flexconnect APs : Disabled
-# Rogue Detection Report Interval                 : 10
-# Rogue AP minimum RSSI                           : -70
-# Rogue AP minimum transient time                 : 0
-# AP TCP MSS Adjust                               : Enabled
-# AP TCP MSS Size                                 : 1250
-# AP IPv6 TCP MSS Adjust                          : Enabled
-# AP IPv6 TCP MSS Size                            : 1250
-# Hyperlocation Admin Status                      : Disabled
-# Retransmit count                                : 5
-# Retransmit interval                             : 3
-# Fabric status                                   : Disabled
-# FIPS status                                     : Disabled
-# WLANCC status                                   : Disabled
-# USB Module Type                                 : USB Module
-# USB Module State                                : Enabled
-# USB Operational State                           : Disabled
-# USB Override                                    : Disabled
-# GAS rate limit Admin status                     : Disabled
-# WPA3 Capability                                 : Enabled
-# EWC-AP Capability                               : Disabled
-# AWIPS Capability                                : Enabled
-# Proxy Hostname                                  : Not Configured
-# Proxy Port                                      : Not Configured
-# Proxy NO_PROXY list                             : Not Configured
-# GRPC server status                              : Disabled
-# Unencrypted Data Keep Alive                     : Enabled
-# Local DHCP Server                               : Disabled
-# Traffic Distribution Statistics Capability      : Enabled
-# Dual DFS Statistics                             : Disabled
-#
-# Cisco AP Name   : b8-1-cap4
-# =================================================
-#
-# Cisco AP Identifier                             : 70b3.1745.2750
-# Country Code                                    : IN
-# Regulatory Domain Allowed by Country            : 802.11bg:-A   802.11a:-DN
-# AP Country Code                                 : IN  - India
-# AP Regulatory Domain
-#   Slot 0                                        : -A
-#   Slot 1                                        : -D
-# MAC Address                                     : 70b3.1728.b7a8
-# IP Address Configuration                        : DHCP
-# IP Address                                      : 10.10.5.17
-# IP Netmask                                      : 255.255.254.0
-# Gateway IP Address                              : 10.10.5.1
-# Fallback IP Address Being Used                  :
-# Domain                                          :
-# Name Server                                     :
-# CAPWAP Path MTU                                 : 1485
-# Capwap Active Window Size                       : 1
-# Telnet State                                    : Disabled
-# CPU Type                                        :  ARMv7 Processor rev 1 (v7l)
-# Memory Type                                     : DDR3
-# Memory Size                                     : 1028096 KB
-# SSH State                                       : Enabled
-# Cisco AP Location                               : default location
-# Site Tag Name                                   : b8
-# RF Tag Name                                     : Custom-RF
-# Policy Tag Name                                 : b8_policy_tag
-# AP join Profile                                 : APG_b8
-# Flex Profile                                    : default-flex-profile
-# AP Filter name                                  : b8
-# Primary Cisco Controller Name                   : b7-wl-ewlc1
-# Primary Cisco Controller IP Address             : 10.6.4.17
-# Secondary Cisco Controller Name                 : b7-wl-wlc3
-# Secondary Cisco Controller IP Address           : 10.6.4.16
-# Tertiary Cisco Controller Name                  : b3-wl-wlc3
-# Tertiary Cisco Controller IP Address            : 10.6.7.72
-# Administrative State                            : Enabled
-# Operation State                                 : Registered
-# NAT External IP Address                         : 10.10.5.73
-# AP Certificate type                             : Manufacturer Installed Certificate
-# AP Mode                                         : Local
-# AP VLAN tagging state                           : Disabled
-# AP VLAN tag                                     : 0
-# CAPWAP Preferred mode                           : IPv4
-# CAPWAP UDP-Lite                                 : Not Configured
-# AP Submode                                      : Not Configured
-# Office Extend Mode                              : Disabled
-# Dhcp Server                                     : Disabled
-# Remote AP Debug                                 : Disabled
-# Logging Trap Severity Level                     : information
-# Logging Syslog facility                         : kern
-# Software Version                                : 17.3.1.9
-# Boot Version                                    : 1.1.2.4
-# Mini IOS Version                                : 0.0.0.0
-# Stats Reporting Period                          : 0
-# LED State                                       : Enabled
-# LED Flash State                                 : Enabled
-# LED Flash Timer                                 : 0
-# MDNS Group Id                                   : 0
-# MDNS Rule Name                                  :
-# PoE Pre-Standard Switch                         : Disabled
-# PoE Power Injector MAC Address                  : Disabled
-# Power Type/Mode                                 : PoE/Full Power
-# Number of Slots                                 : 3
-# AP Model                                        : AIR-AP4800-D-K9
-# IOS Version                                     : 17.3.1.9
-# Reset Button                                    : Disabled
-# AP Serial Number                                : FGL342A0082
-# Management Frame Validation                     : Capable
-# Management Frame Protection                     : Capable
-# AP User Name                                    : admin
-# AP 802.1X User Mode                             : Global
-# AP 802.1X User Name                             : Not Configured
-# Cisco AP System Logging Host                    : 10.10.12.6
-# Cisco AP Secured Logging TLS mode               : Disabled
-# AP Up Time                                      : 3 days 9 hours 44 minutes 21 seconds
-# AP CAPWAP Up Time                               : 3 days 9 hours 39 minutes 30 seconds
-# Join Date and Time                              : 08/14/2020 19:45:59
-# Join Taken Time                                 : 4 minutes 50 seconds
-# Join Priority                                   : 1
-# AP Link Latency                                 : Disable
-# AP Lag Configuration Status                     : Disabled
-# Lag Support for AP                              : Yes
-# Rogue Detection                                 : Enabled
-# Rogue Containment auto-rate                     : Disabled
-# Rogue Containment of standalone flexconnect APs : Disabled
-# Rogue Detection Report Interval                 : 10
-# Rogue AP minimum RSSI                           : -70
-# Rogue AP minimum transient time                 : 0
-# AP TCP MSS Adjust                               : Enabled
-# AP TCP MSS Size                                 : 1250
-# AP IPv6 TCP MSS Adjust                          : Enabled
-# AP IPv6 TCP MSS Size                            : 1250
-# Hyperlocation Admin Status                      : Disabled
-# Retransmit count                                : 5
-# Retransmit interval                             : 3
-# Fabric status                                   : Disabled
-# FIPS status                                     : Disabled
-# WLANCC status                                   : Disabled
-# USB Module Type                                 : USB Module
-# USB Module State                                : Enabled
-# USB Operational State                           : Disabled
-# USB Override                                    : Disabled
-# GAS rate limit Admin status                     : Disabled
-# WPA3 Capability                                 : Enabled
-# EWC-AP Capability                               : Disabled
-# AWIPS Capability                                : Enabled
-# Proxy Hostname                                  : Not Configured
-# Proxy Port                                      : Not Configured
-# Proxy NO_PROXY list                             : Not Configured
-# GRPC server status                              : Disabled
-# Unencrypted Data Keep Alive                     : Enabled
-# Local DHCP Server                               : Disabled
-# Traffic Distribution Statistics Capability      : Enabled
-# Dual DFS Statistics                             : Disabled
 
-        regex_patterns = {
-            'ap_config_general': re.compile(r"^(?P<key>.*)\s+:(?P<value>.*)$")
-        }
+#
+
+        # Cisco AP Name   : bg-1-cap1
+        cisco_ap_name_capture = re.compile(r"^Cisco AP Name\s+:\s+(?P<cisco_ap_name>.*)$")
+        # Cisco AP Identifier                             : 70b3.d278.e03e
+        cisco_ap_identifier_capture = re.compile(r"^Cisco AP Identifier\s+:\s+(?P<cisco_ap_identifier>.*)$")
+        # Country Code                                    : IN
+        country_code_capture = re.compile(r"^Country Code\s+:\s+(?P<country_code>.*)$")
+        # Regulatory Domain Allowed by Country            : 802.11bg:-A   802.11a:-DN
+        regulatory_domain_allowed_by_country_capture = re.compile(
+            r"^Regulatory Domain Allowed by Country\s+:\s+(?P<regulatory_domain_allowed_by_country>.*)$")
+        # AP Country Code                                 : IN  - India
+        ap_country_code_capture = re.compile(r"^AP Country Code\s+:\s+(?P<ap_country_code>.*)$")
+        # Slot 0                                        : -A
+        slot_0_capture = re.compile(r"^Slot 0\s+:\s+(?P<slot_0>.*)$")
+        # Slot 1                                        : -D
+        slot_1_capture = re.compile(r"^Slot 1\s+:\s+(?P<slot_1>.*)$")
+        # MAC Address                                     : 70b3.1711.acbb
+        mac_address_capture = re.compile(r"^MAC Address\s+:\s+(?P<mac_address>.*)$")
+        # IP Address Configuration                        : DHCP
+        ip_address_configuration_capture = re.compile(
+            r"^IP Address Configuration\s+:\s+(?P<ip_address_configuration>.*)$")
+        # IP Address                                      : 10.10.5.14
+        ip_address_capture = re.compile(r"^IP Address\s+:\s+(?P<ip_address>.*)$")
+        # IP Netmask                                      : 255.255.254.0
+        ip_netmask_capture = re.compile(r"^IP Netmask\s+:\s+(?P<ip_netmask>.*)$")
+        # Gateway IP Address                              : 10.10.5.1
+        gateway_ip_address_capture = re.compile(r"^Gateway IP Address\s+:\s+(?P<gateway_ip_address>.*)$")
+        # Fallback IP Address Being Used                  :
+        fallback_ip_address_being_used_capture = re.compile(
+            r"^Fallback IP Address Being Used\s+:\s+(?P<fallback_ip_address_being_used>.*)$")
+        # Domain                                          :
+        domain_capture = re.compile(r"^Domain\s+:\s+(?P<domain>.*)$")
+        # Name Server                                     :
+        name_server_capture = re.compile(r"^Name Server\s+:\s+(?P<name_server>.*)$")
+        # CAPWAP Path MTU                                 : 1485
+        capwap_path_mtu_capture = re.compile(r"^CAPWAP Path MTU\s+:\s+(?P<capwap_path_mtu>.*)$")
+        # Capwap Active Window Size                       : 1
+        capwap_active_window_size_capture = re.compile(
+            r"^Capwap Active Window Size\s+:\s+(?P<capwap_active_window_size>.*)$")
+        # Telnet State                                    : Disabled
+        telnet_state_capture = re.compile(r"^Telnet State\s+:\s+(?P<telnet_state>.*)$")
+        # CPU Type                                        :  ARMv7 Processor rev 1 (v7l)
+        cpu_type_capture = re.compile(r"^CPU Type\s+:\s+(?P<cpu_type>.*)$")
+        # Memory Type                                     : DDR3
+        memory_type_capture = re.compile(r"^Memory Type\s+:\s+(?P<memory_type>.*)$")
+        # Memory Size                                     : 1028096 KB
+        memory_size_capture = re.compile(r"^Memory Size\s+:\s+(?P<memory_size>.*)$")
+        # SSH State                                       : Enabled
+        ssh_state_capture = re.compile(r"^SSH State\s+:\s+(?P<ssh_state>.*)$")
+        # Cisco AP Location                               : default location
+        cisco_ap_location_capture = re.compile(r"^Cisco AP Location\s+:\s+(?P<cisco_ap_location>.*)$")
+        # Site Tag Name                                   : b8
+        site_tag_name_capture = re.compile(r"^Site Tag Name\s+:\s+(?P<site_tag_name>.*)$")
+        # RF Tag Name                                     : Custom-RF
+        rf_tag_name_capture = re.compile(r"^RF Tag Name\s+:\s+(?P<rf_tag_name>.*)$")
+        # Policy Tag Name                                 : b1_policy_tag
+        policy_tag_name_capture = re.compile(r"^Policy Tag Name\s+:\s+(?P<policy_tag_name>.*)$")
+        # AP join Profile                                 : APG_b18
+        ap_join_profile_capture = re.compile(r"^AP join Profile\s+:\s+(?P<ap_join_profile>.*)$")
+        # Flex Profile                                    : default-flex-profile
+        flex_profile_capture = re.compile(r"^Flex Profile\s+:\s+(?P<flex_profile>.*)$")
+        # AP Filter name                                  : b8
+        ap_filter_name_capture = re.compile(r"^AP Filter name\s+:\s+(?P<ap_filter_name>.*)$")
+        # Primary Cisco Controller Name                   : b7-wl-ewlc1
+        primary_cisco_controller_name_capture = re.compile(
+            r"^Primary Cisco Controller Name\s+:\s+(?P<primary_cisco_controller_name>.*)$")
+        # Primary Cisco Controller IP Address             : 10.6.4.17
+        primary_cisco_controller_ip_address_capture = re.compile(
+            r"^Primary Cisco Controller IP Address\s+:\s+(?P<primary_cisco_controller_ip_address>.*)$")
+        # Secondary Cisco Controller Name                 : b8-wl-wlc3
+        secondary_cisco_controller_name_capture = re.compile(
+            r"^Secondary Cisco Controller Name\s+:\s+(?P<secondary_cisco_controller_name>.*)$")
+        # Secondary Cisco Controller IP Address           : 10.6.7.16
+        secondary_cisco_controller_ip_address_capture = re.compile(
+            r"^Secondary Cisco Controller IP Address\s+:\s+(?P<secondary_cisco_controller_ip_address>.*)$")
+        # Tertiary Cisco Controller Name                  : b3-wl-wlc3
+        tertiary_cisco_controller_name_capture = re.compile(
+            r"^Tertiary Cisco Controller Name\s+:\s+(?P<tertiary_cisco_controller_name>.*)$")
+        # Tertiary Cisco Controller IP Address            : 10.6.4.17
+        tertiary_cisco_controller_ip_address_capture = re.compile(
+            r"^Tertiary Cisco Controller IP Address\s+:\s+(?P<tertiary_cisco_controller_ip_address>.*)$")
+        # Administrative State                            : Enabled
+        administrative_state_capture = re.compile(r"^Administrative State\s+:\s+(?P<administrative_state>.*)$")
+        # Operation State                                 : Registered
+        operation_state_capture = re.compile(r"^Operation State\s+:\s+(?P<operation_state>.*)$")
+        # NAT External IP Address                         : 10.10.5.12
+        nat_external_ip_address_capture = re.compile(r"^NAT External IP Address\s+:\s+(?P<nat_external_ip_address>.*)$")
+        # AP Certificate type                             : Manufacturer Installed Certificate
+        ap_certificate_type_capture = re.compile(r"^AP Certificate type\s+:\s+(?P<ap_certificate_type>.*)$")
+        # AP Mode                                         : Local
+        ap_mode_capture = re.compile(r"^AP Mode\s+:\s+(?P<ap_mode>.*)$")
+        # AP VLAN tagging state                           : Disabled
+        ap_vlan_tagging_state_capture = re.compile(r"^AP VLAN tagging state\s+:\s+(?P<ap_vlan_tagging_state>.*)$")
+        # AP VLAN tag                                     : 0
+        ap_vlan_tag_capture = re.compile(r"^AP VLAN tag\s+:\s+(?P<ap_vlan_tag>.*)$")
+        # CAPWAP Preferred mode                           : IPv4
+        capwap_preferred_mode_capture = re.compile(r"^CAPWAP Preferred mode\s+:\s+(?P<capwap_preferred_mode>.*)$")
+        # CAPWAP UDP-Lite                                 : Not Configured
+        capwap_udp_lite_capture = re.compile(r"^CAPWAP UDP-Lite\s+:\s+(?P<capwap_udp_lite>.*)$")
+        # AP Submode                                      : Not Configured
+        ap_submode_capture = re.compile(r"^AP Submode\s+:\s+(?P<ap_submode>.*)$")
+        # Office Extend Mode                              : Disabled
+        office_extend_mode_capture = re.compile(r"^Office Extend Mode\s+:\s+(?P<office_extend_mode>.*)$")
+        # Dhcp Server                                     : Disabled
+        dhcp_server_capture = re.compile(r"^Dhcp Server\s+:\s+(?P<dhcp_server>.*)$")
+        # Remote AP Debug                                 : Disabled
+        remote_ap_debug_capture = re.compile(r"^Remote AP Debug\s+:\s+(?P<remote_ap_debug>.*)$")
+        # Logging Trap Severity Level                     : information
+        logging_trap_severity_level_capture = re.compile(
+            r"^Logging Trap Severity Level\s+:\s+(?P<logging_trap_severity_level>.*)$")
+        # Logging Syslog facility                         : kern
+        logging_syslog_facility_capture = re.compile(r"^Logging Syslog facility\s+:\s+(?P<logging_syslog_facility>.*)$")
+        # Software Version                                : 17.3.1.9
+        software_version_capture = re.compile(r"^Software Version\s+:\s+(?P<software_version>.*)$")
+        # Boot Version                                    : 1.1.2.4
+        boot_version_capture = re.compile(r"^Boot Version\s+:\s+(?P<boot_version>.*)$")
+        # Mini IOS Version                                : 0.0.0.0
+        mini_ios_version_capture = re.compile(r"^Mini IOS Version\s+:\s+(?P<mini_ios_version>.*)$")
+        # Stats Reporting Period                          : 0
+        stats_reporting_period_capture = re.compile(r"^Stats Reporting Period\s+:\s+(?P<stats_reporting_period>.*)$")
+        # LED State                                       : Enabled
+        led_state_capture = re.compile(r"^LED State\s+:\s+(?P<led_state>.*)$")
+        # LED Flash State                                 : Enabled
+        led_flash_state_capture = re.compile(r"^LED Flash State\s+:\s+(?P<led_flash_state>.*)$")
+        # LED Flash Timer                                 : 0
+        led_flash_timer_capture = re.compile(r"^LED Flash Timer\s+:\s+(?P<led_flash_timer>.*)$")
+        # MDNS Group Id                                   : 0
+        mdns_group_id_capture = re.compile(r"^MDNS Group Id\s+:\s+(?P<mdns_group_id>.*)$")
+        # MDNS Rule Name                                  :
+        mdns_rule_name_capture = re.compile(r"^MDNS Rule Name\s+:\s+(?P<mdns_rule_name>.*)$")
+        # PoE Pre-Standard Switch                         : Disabled
+        poe_pre_standard_switch_capture = re.compile(r"^PoE Pre-Standard Switch\s+:\s+(?P<poe_pre_standard_switch>.*)$")
+        # PoE Power Injector MAC Address                  : Disabled
+        poe_power_injector_mac_address_capture = re.compile(
+            r"^PoE Power Injector MAC Address\s+:\s+(?P<poe_power_injector_mac_address>.*)$")
+        # Power Type/Mode                                 : PoE/Full Power
+        power_type_mode_capture = re.compile(r"^Power Type/Mode\s+:\s+(?P<power_type_mode>.*)$")
+        # Number of Slots                                 : 3
+        number_of_slots_capture = re.compile(r"^Number of Slots\s+:\s+(?P<number_of_slots>.*)$")
+        # AP Model                                        : AIR-AP4800-D-K9
+        ap_model_capture = re.compile(r"^AP Model\s+:\s+(?P<ap_model>.*)$")
+        # IOS Version                                     : 17.3.1.9
+        ios_version_capture = re.compile(r"^IOS Version\s+:\s+(?P<ios_version>.*)$")
+        # Reset Button                                    : Disabled
+        reset_button_capture = re.compile(r"^Reset Button\s+:\s+(?P<reset_button>.*)$")
+        # AP Serial Number                                : FGL2102AZZZ
+        ap_serial_number_capture = re.compile(r"^AP Serial Number\s+:\s+(?P<ap_serial_number>.*)$")
+        # Management Frame Validation                     : Capable
+        management_frame_validation_capture = re.compile(
+            r"^Management Frame Validation\s+:\s+(?P<management_frame_validation>.*)$")
+        # Management Frame Protection                     : Capable
+        management_frame_protection_capture = re.compile(
+            r"^Management Frame Protection\s+:\s+(?P<management_frame_protection>.*)$")
+        # AP User Name                                    : admin
+        ap_user_name_capture = re.compile(r"^AP User Name\s+:\s+(?P<ap_user_name>.*)$")
+        # AP 802.1X User Mode                             : Global
+        ap_802_1x_user_mode_capture = re.compile(r"^AP 802.1X User Mode\s+:\s+(?P<ap_802_1x_user_mode>.*)$")
+        # AP 802.1X User Name                             : Not Configured
+        ap_802_1x_user_name_capture = re.compile(r"^AP 802.1X User Name\s+:\s+(?P<ap_802_1x_user_name>.*)$")
+        # Cisco AP System Logging Host                    : 10.16.19.6
+        cisco_ap_system_logging_host_capture = re.compile(
+            r"^Cisco AP System Logging Host\s+:\s+(?P<cisco_ap_system_logging_host>.*)$")
+        # Cisco AP Secured Logging TLS mode               : Disabled
+        cisco_ap_secured_logging_tls_mode_capture = re.compile(
+            r"^Cisco AP Secured Logging TLS mode\s+:\s+(?P<cisco_ap_secured_logging_tls_mode>.*)$")
+        # AP Up Time                                      : 3 days 9 hours 44 minutes 18 seconds
+        ap_up_time_capture = re.compile(r"^AP Up Time\s+:\s+(?P<ap_up_time>.*)$")
+        # AP CAPWAP Up Time                               : 3 days 9 hours 37 minutes 20 seconds
+        ap_capwap_up_time_capture = re.compile(r"^AP CAPWAP Up Time\s+:\s+(?P<ap_capwap_up_time>.*)$")
+        # Join Date and Time                              : 08/14/2020 19:48:09
+        join_date_and_time_capture = re.compile(r"^Join Date and Time\s+:\s+(?P<join_date_and_time>.*)$")
+        # Join Taken Time                                 : 6 minutes 57 seconds
+        join_taken_time_capture = re.compile(r"^Join Taken Time\s+:\s+(?P<join_taken_time>.*)$")
+        # Join Priority                                   : 1
+        join_priority_capture = re.compile(r"^Join Priority\s+:\s+(?P<join_priority>.*)$")
+        # AP Link Latency                                 : Disable
+        ap_link_latency_capture = re.compile(r"^AP Link Latency\s+:\s+(?P<ap_link_latency>.*)$")
+        # AP Lag Configuration Status                     : Disabled
+        ap_lag_configuration_status_capture = re.compile(
+            r"^AP Lag Configuration Status\s+:\s+(?P<ap_lag_configuration_status>.*)$")
+        # Lag Support for AP                              : Yes
+        lag_support_for_ap_capture = re.compile(r"^Lag Support for AP\s+:\s+(?P<lag_support_for_ap>.*)$")
+        # Rogue Detection                                 : Enabled
+        rogue_detection_capture = re.compile(r"^Rogue Detection\s+:\s+(?P<rogue_detection>.*)$")
+        # Rogue Containment auto-rate                     : Disabled
+        rogue_containment_auto_rate_capture = re.compile(
+            r"^Rogue Containment auto-rate\s+:\s+(?P<rogue_containment_auto_rate>.*)$")
+        # Rogue Containment of standalone flexconnect APs : Disabled
+        rogue_containment_of_standalone_flexconnect_aps_capture = re.compile(
+            r"^Rogue Containment of standalone flexconnect APs\s+:\s+(?P<rogue_containment_of_standalone_flexconnect_aps>.*)$")
+        # Rogue Detection Report Interval                 : 10
+        rogue_detection_report_interval_capture = re.compile(
+            r"^Rogue Detection Report Interval\s+:\s+(?P<rogue_detection_report_interval>.*)$")
+        # Rogue AP minimum RSSI                           : -70
+        rogue_ap_minimum_rssi_capture = re.compile(r"^Rogue AP minimum RSSI\s+:\s+(?P<rogue_ap_minimum_rssi>.*)$")
+        # Rogue AP minimum transient time                 : 0
+        rogue_ap_minimum_transient_time_capture = re.compile(
+            r"^Rogue AP minimum transient time\s+:\s+(?P<rogue_ap_minimum_transient_time>.*)$")
+        # AP TCP MSS Adjust                               : Enabled
+        ap_tcp_mss_adjust_capture = re.compile(r"^AP TCP MSS Adjust\s+:\s+(?P<ap_tcp_mss_adjust>.*)$")
+        # AP TCP MSS Size                                 : 1250
+        ap_tcp_mss_size_capture = re.compile(r"^AP TCP MSS Size\s+:\s+(?P<ap_tcp_mss_size>.*)$")
+        # AP IPv6 TCP MSS Adjust                          : Enabled
+        ap_ipv6_tcp_mss_adjust_capture = re.compile(r"^AP IPv6 TCP MSS Adjust\s+:\s+(?P<ap_ipv6_tcp_mss_adjust>.*)$")
+        # AP IPv6 TCP MSS Size                            : 1250
+        ap_ipv6_tcp_mss_size_capture = re.compile(r"^AP IPv6 TCP MSS Size\s+:\s+(?P<ap_ipv6_tcp_mss_size>.*)$")
+        # Hyperlocation Admin Status                      : Disabled
+        hyperlocation_admin_status_capture = re.compile(
+            r"^Hyperlocation Admin Status\s+:\s+(?P<hyperlocation_admin_status>.*)$")
+        # Retransmit count                                : 5
+        retransmit_count_capture = re.compile(r"^Retransmit count\s+:\s+(?P<retransmit_count>.*)$")
+        # Retransmit interval                             : 3
+        retransmit_interval_capture = re.compile(r"^Retransmit interval\s+:\s+(?P<retransmit_interval>.*)$")
+        # Fabric status                                   : Disabled
+        fabric_status_capture = re.compile(r"^Fabric status\s+:\s+(?P<fabric_status>.*)$")
+        # FIPS status                                     : Disabled
+        fips_status_capture = re.compile(r"^FIPS status\s+:\s+(?P<fips_status>.*)$")
+        # WLANCC status                                   : Disabled
+        wlancc_status_capture = re.compile(r"^WLANCC status\s+:\s+(?P<wlancc_status>.*)$")
+        # USB Module Type                                 : USB Module
+        usb_module_type_capture = re.compile(r"^USB Module Type\s+:\s+(?P<usb_module_type>.*)$")
+        # USB Module State                                : Enabled
+        usb_module_state_capture = re.compile(r"^USB Module State\s+:\s+(?P<usb_module_state>.*)$")
+        # USB Operational State                           : Disabled
+        usb_operational_state_capture = re.compile(r"^USB Operational State\s+:\s+(?P<usb_operational_state>.*)$")
+        # USB Override                                    : Disabled
+        usb_override_capture = re.compile(r"^USB Override\s+:\s+(?P<usb_override>.*)$")
+        # GAS rate limit Admin status                     : Disabled
+        gas_rate_limit_admin_status_capture = re.compile(
+            r"^GAS rate limit Admin status\s+:\s+(?P<gas_rate_limit_admin_status>.*)$")
+        # WPA3 Capability                                 : Enabled
+        wpa3_capability_capture = re.compile(r"^WPA3 Capability\s+:\s+(?P<wpa3_capability>.*)$")
+        # EWC-AP Capability                               : Disabled
+        ewc_ap_capability_capture = re.compile(r"^EWC-AP Capability\s+:\s+(?P<ewc_ap_capability>.*)$")
+        # AWIPS Capability                                : Enabled
+        awips_capability_capture = re.compile(r"^AWIPS Capability\s+:\s+(?P<awips_capability>.*)$")
+        # Proxy Hostname                                  : Not Configured
+        proxy_hostname_capture = re.compile(r"^Proxy Hostname\s+:\s+(?P<proxy_hostname>.*)$")
+        # Proxy Port                                      : Not Configured
+        proxy_port_capture = re.compile(r"^Proxy Port\s+:\s+(?P<proxy_port>.*)$")
+        # Proxy NO_PROXY list                             : Not Configured
+        proxy_no_proxy_list_capture = re.compile(r"^Proxy NO_PROXY list\s+:\s+(?P<proxy_no_proxy_list>.*)$")
+        # GRPC server status                              : Disabled
+        grpc_server_status_capture = re.compile(r"^GRPC server status\s+:\s+(?P<grpc_server_status>.*)$")
+        # Unencrypted Data Keep Alive                     : Enabled
+        unencrypted_data_keep_alive_capture = re.compile(
+            r"^Unencrypted Data Keep Alive\s+:\s+(?P<unencrypted_data_keep_alive>.*)$")
+        # Local DHCP Server                               : Disabled
+        local_dhcp_server_capture = re.compile(r"^Local DHCP Server\s+:\s+(?P<local_dhcp_server>.*)$")
+        # Traffic Distribution Statistics Capability      : Enabled
+        traffic_distribution_statistics_capability_capture = re.compile(
+            r"^Traffic Distribution Statistics Capability\s+:\s+(?P<traffic_distribution_statistics_capability>.*)$")
+        # Dual DFS Statistics                             : Disabled
+        dual_dfs_statistics_capture = re.compile(r"^Dual DFS Statistics\s+:\s+(?P<dual_dfs_statistics>.*)$")
 
         remove_lines = ('====', 'AP Regulatory')
+
+        def change_data_type(value):
+            if value.isdigit():
+                value = value.strip()
+                value = int(value)
+            else:
+                try:
+                    # Change strings to float if possible
+                    value = float(value)
+                except ValueError:
+                    # if the value is not an int or float, leave it as a string.
+                    pass
+            return value
 
         # Remove unwanted lines from raw text
         def filter_lines(raw_output, remove_lines):
@@ -640,44 +551,891 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                     rendered_lines.append(clean_line_strip)
             return rendered_lines
 
-        def match_regex(line, regex_patterns):
-            groups = {}
-            for capture, pattern in regex_patterns.items():
-                if pattern.match(line):
-                    match = pattern.match(line)
-                    groups = match.groupdict()
-            return groups
 
         out_filter = filter_lines(raw_output=out, remove_lines=remove_lines)
         ap_name_key = ''
 
         for line in out_filter:
-            # This output will capture the key values with the ':' as the delimeter
-            captured_groups = match_regex(line=line, regex_patterns=regex_patterns)
-            if captured_groups:
-                # Normalize the key to replace spaces and hyphens with underscores
-                k = captured_groups['key'].strip().replace(' ', '_').replace('-', '_').lower()
-                v = captured_groups['value'].strip()
-                # Change strings to integers if possible
-                if v.isdigit():
-                    v = int(v)
-                else:
-                    try:
-                        # Change strings to float if possible
-                        v = float(v)
-                    except ValueError:
-                        # if the value is not an int or float, leave it as a string.
-                        pass
-                # if there was a match, captured_groups should be populated with the groups.
-                if captured_groups:
-                    if not ap_config_general_dict.get('ap_config_general_info', {}):
-                        ap_config_general_dict['ap_config_general_info'] = {}
-                    # define the cisco_ap_name as the main key
-                    if k == 'cisco_ap_name':
-                        ap_name_key = v
-                        ap_config_general_dict['ap_config_general_info'][ap_name_key] = {}
-                    else:
-                        ap_config_general_dict['ap_config_general_info'][ap_name_key].update({k: v})
-
+            # Cisco AP Name   : bg-1-cap1
+            if cisco_ap_name_capture.match(line):
+                cisco_ap_name_match = cisco_ap_name_capture.match(line)
+                groups = cisco_ap_name_match.groupdict()
+                cisco_ap_name = groups['cisco_ap_name']
+                ap_name_key = cisco_ap_name
+                if not ap_config_general_dict.get('ap_config_general_info', {}):
+                    ap_config_general_dict['ap_config_general_info'] = {}
+                ap_config_general_dict['ap_config_general_info'].update({ap_name_key: {}})
+            # Cisco AP Identifier                             : 70b3.d278.e03e
+            elif cisco_ap_identifier_capture.match(line):
+                cisco_ap_identifier_match = cisco_ap_identifier_capture.match(line)
+                groups = cisco_ap_identifier_match.groupdict()
+                cisco_ap_identifier = groups['cisco_ap_identifier']
+                cisco_ap_identifier = change_data_type(value=cisco_ap_identifier)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'cisco_ap_identifier': cisco_ap_identifier})
+            # Country Code                                    : IN
+            elif country_code_capture.match(line):
+                country_code_match = country_code_capture.match(line)
+                groups = country_code_match.groupdict()
+                country_code = groups['country_code']
+                country_code = change_data_type(value=country_code)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'country_code': country_code})
+            # Regulatory Domain Allowed by Country            : 802.11bg:-A   802.11a:-DN
+            elif regulatory_domain_allowed_by_country_capture.match(line):
+                regulatory_domain_allowed_by_country_match = regulatory_domain_allowed_by_country_capture.match(line)
+                groups = regulatory_domain_allowed_by_country_match.groupdict()
+                regulatory_domain_allowed_by_country = groups['regulatory_domain_allowed_by_country']
+                regulatory_domain_allowed_by_country = change_data_type(value=regulatory_domain_allowed_by_country)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'regulatory_domain_allowed_by_country': regulatory_domain_allowed_by_country})
+            # AP Country Code                                 : IN  - India
+            elif ap_country_code_capture.match(line):
+                ap_country_code_match = ap_country_code_capture.match(line)
+                groups = ap_country_code_match.groupdict()
+                ap_country_code = groups['ap_country_code']
+                ap_country_code = change_data_type(value=ap_country_code)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'ap_country_code': ap_country_code})
+            # Slot 0                                        : -A
+            elif slot_0_capture.match(line):
+                slot_0_match = slot_0_capture.match(line)
+                groups = slot_0_match.groupdict()
+                slot_0 = groups['slot_0']
+                slot_0 = change_data_type(value=slot_0)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'slot_0': slot_0})
+            # Slot 1                                        : -D
+            elif slot_1_capture.match(line):
+                slot_1_match = slot_1_capture.match(line)
+                groups = slot_1_match.groupdict()
+                slot_1 = groups['slot_1']
+                slot_1 = change_data_type(value=slot_1)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'slot_1': slot_1})
+            # MAC Address                                     : 70b3.1711.acbb
+            elif mac_address_capture.match(line):
+                mac_address_match = mac_address_capture.match(line)
+                groups = mac_address_match.groupdict()
+                mac_address = groups['mac_address']
+                mac_address = change_data_type(value=mac_address)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'mac_address': mac_address})
+            # IP Address Configuration                        : DHCP
+            elif ip_address_configuration_capture.match(line):
+                ip_address_configuration_match = ip_address_configuration_capture.match(line)
+                groups = ip_address_configuration_match.groupdict()
+                ip_address_configuration = groups['ip_address_configuration']
+                ip_address_configuration = change_data_type(value=ip_address_configuration)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'ip_address_configuration': ip_address_configuration})
+            # IP Address                                      : 10.10.5.14
+            elif ip_address_capture.match(line):
+                ip_address_match = ip_address_capture.match(line)
+                groups = ip_address_match.groupdict()
+                ip_address = groups['ip_address']
+                ip_address = change_data_type(value=ip_address)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ip_address': ip_address})
+            # IP Netmask                                      : 255.255.254.0
+            elif ip_netmask_capture.match(line):
+                ip_netmask_match = ip_netmask_capture.match(line)
+                groups = ip_netmask_match.groupdict()
+                ip_netmask = groups['ip_netmask']
+                ip_netmask = change_data_type(value=ip_netmask)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ip_netmask': ip_netmask})
+            # Gateway IP Address                              : 10.10.5.1
+            elif gateway_ip_address_capture.match(line):
+                gateway_ip_address_match = gateway_ip_address_capture.match(line)
+                groups = gateway_ip_address_match.groupdict()
+                gateway_ip_address = groups['gateway_ip_address']
+                gateway_ip_address = change_data_type(value=gateway_ip_address)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'gateway_ip_address': gateway_ip_address})
+            # Fallback IP Address Being Used                  :
+            elif fallback_ip_address_being_used_capture.match(line):
+                fallback_ip_address_being_used_match = fallback_ip_address_being_used_capture.match(line)
+                groups = fallback_ip_address_being_used_match.groupdict()
+                fallback_ip_address_being_used = groups['fallback_ip_address_being_used']
+                fallback_ip_address_being_used = change_data_type(value=fallback_ip_address_being_used)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'fallback_ip_address_being_used': fallback_ip_address_being_used})
+            # Domain                                          :
+            elif domain_capture.match(line):
+                domain_match = domain_capture.match(line)
+                groups = domain_match.groupdict()
+                domain = groups['domain']
+                domain = change_data_type(value=domain)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'domain': domain})
+            # Name Server                                     :
+            elif name_server_capture.match(line):
+                name_server_match = name_server_capture.match(line)
+                groups = name_server_match.groupdict()
+                name_server = groups['name_server']
+                name_server = change_data_type(value=name_server)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'name_server': name_server})
+            # CAPWAP Path MTU                                 : 1485
+            elif capwap_path_mtu_capture.match(line):
+                capwap_path_mtu_match = capwap_path_mtu_capture.match(line)
+                groups = capwap_path_mtu_match.groupdict()
+                capwap_path_mtu = groups['capwap_path_mtu']
+                capwap_path_mtu = change_data_type(value=capwap_path_mtu)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'capwap_path_mtu': capwap_path_mtu})
+            # Capwap Active Window Size                       : 1
+            elif capwap_active_window_size_capture.match(line):
+                capwap_active_window_size_match = capwap_active_window_size_capture.match(line)
+                groups = capwap_active_window_size_match.groupdict()
+                capwap_active_window_size = groups['capwap_active_window_size']
+                capwap_active_window_size = change_data_type(value=capwap_active_window_size)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'capwap_active_window_size': capwap_active_window_size})
+            # Telnet State                                    : Disabled
+            elif telnet_state_capture.match(line):
+                telnet_state_match = telnet_state_capture.match(line)
+                groups = telnet_state_match.groupdict()
+                telnet_state = groups['telnet_state']
+                telnet_state = change_data_type(value=telnet_state)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'telnet_state': telnet_state})
+            # CPU Type                                        :  ARMv7 Processor rev 1 (v7l)
+            elif cpu_type_capture.match(line):
+                cpu_type_match = cpu_type_capture.match(line)
+                groups = cpu_type_match.groupdict()
+                cpu_type = groups['cpu_type']
+                cpu_type = change_data_type(value=cpu_type)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'cpu_type': cpu_type})
+            # Memory Type                                     : DDR3
+            elif memory_type_capture.match(line):
+                memory_type_match = memory_type_capture.match(line)
+                groups = memory_type_match.groupdict()
+                memory_type = groups['memory_type']
+                memory_type = change_data_type(value=memory_type)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'memory_type': memory_type})
+            # Memory Size                                     : 1028096 KB
+            elif memory_size_capture.match(line):
+                memory_size_match = memory_size_capture.match(line)
+                groups = memory_size_match.groupdict()
+                memory_size = groups['memory_size']
+                memory_size = change_data_type(value=memory_size)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'memory_size': memory_size})
+            # SSH State                                       : Enabled
+            elif ssh_state_capture.match(line):
+                ssh_state_match = ssh_state_capture.match(line)
+                groups = ssh_state_match.groupdict()
+                ssh_state = groups['ssh_state']
+                ssh_state = change_data_type(value=ssh_state)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ssh_state': ssh_state})
+            # Cisco AP Location                               : default location
+            elif cisco_ap_location_capture.match(line):
+                cisco_ap_location_match = cisco_ap_location_capture.match(line)
+                groups = cisco_ap_location_match.groupdict()
+                cisco_ap_location = groups['cisco_ap_location']
+                cisco_ap_location = change_data_type(value=cisco_ap_location)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'cisco_ap_location': cisco_ap_location})
+            # Site Tag Name                                   : b8
+            elif site_tag_name_capture.match(line):
+                site_tag_name_match = site_tag_name_capture.match(line)
+                groups = site_tag_name_match.groupdict()
+                site_tag_name = groups['site_tag_name']
+                site_tag_name = change_data_type(value=site_tag_name)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'site_tag_name': site_tag_name})
+            # RF Tag Name                                     : Custom-RF
+            elif rf_tag_name_capture.match(line):
+                rf_tag_name_match = rf_tag_name_capture.match(line)
+                groups = rf_tag_name_match.groupdict()
+                rf_tag_name = groups['rf_tag_name']
+                rf_tag_name = change_data_type(value=rf_tag_name)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'rf_tag_name': rf_tag_name})
+            # Policy Tag Name                                 : b1_policy_tag
+            elif policy_tag_name_capture.match(line):
+                policy_tag_name_match = policy_tag_name_capture.match(line)
+                groups = policy_tag_name_match.groupdict()
+                policy_tag_name = groups['policy_tag_name']
+                policy_tag_name = change_data_type(value=policy_tag_name)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'policy_tag_name': policy_tag_name})
+            # AP join Profile                                 : APG_b18
+            elif ap_join_profile_capture.match(line):
+                ap_join_profile_match = ap_join_profile_capture.match(line)
+                groups = ap_join_profile_match.groupdict()
+                ap_join_profile = groups['ap_join_profile']
+                ap_join_profile = change_data_type(value=ap_join_profile)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'ap_join_profile': ap_join_profile})
+            # Flex Profile                                    : default-flex-profile
+            elif flex_profile_capture.match(line):
+                flex_profile_match = flex_profile_capture.match(line)
+                groups = flex_profile_match.groupdict()
+                flex_profile = groups['flex_profile']
+                flex_profile = change_data_type(value=flex_profile)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'flex_profile': flex_profile})
+            # AP Filter name                                  : b8
+            elif ap_filter_name_capture.match(line):
+                ap_filter_name_match = ap_filter_name_capture.match(line)
+                groups = ap_filter_name_match.groupdict()
+                ap_filter_name = groups['ap_filter_name']
+                ap_filter_name = change_data_type(value=ap_filter_name)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ap_filter_name': ap_filter_name})
+            # Primary Cisco Controller Name                   : b7-wl-ewlc1
+            elif primary_cisco_controller_name_capture.match(line):
+                primary_cisco_controller_name_match = primary_cisco_controller_name_capture.match(line)
+                groups = primary_cisco_controller_name_match.groupdict()
+                primary_cisco_controller_name = groups['primary_cisco_controller_name']
+                primary_cisco_controller_name = change_data_type(value=primary_cisco_controller_name)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'primary_cisco_controller_name': primary_cisco_controller_name})
+            # Primary Cisco Controller IP Address             : 10.6.4.17
+            elif primary_cisco_controller_ip_address_capture.match(line):
+                primary_cisco_controller_ip_address_match = primary_cisco_controller_ip_address_capture.match(line)
+                groups = primary_cisco_controller_ip_address_match.groupdict()
+                primary_cisco_controller_ip_address = groups['primary_cisco_controller_ip_address']
+                primary_cisco_controller_ip_address = change_data_type(value=primary_cisco_controller_ip_address)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'primary_cisco_controller_ip_address': primary_cisco_controller_ip_address})
+            # Secondary Cisco Controller Name                 : b8-wl-wlc3
+            elif secondary_cisco_controller_name_capture.match(line):
+                secondary_cisco_controller_name_match = secondary_cisco_controller_name_capture.match(line)
+                groups = secondary_cisco_controller_name_match.groupdict()
+                secondary_cisco_controller_name = groups['secondary_cisco_controller_name']
+                secondary_cisco_controller_name = change_data_type(value=secondary_cisco_controller_name)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'secondary_cisco_controller_name': secondary_cisco_controller_name})
+            # Secondary Cisco Controller IP Address           : 10.6.7.16
+            elif secondary_cisco_controller_ip_address_capture.match(line):
+                secondary_cisco_controller_ip_address_match = secondary_cisco_controller_ip_address_capture.match(line)
+                groups = secondary_cisco_controller_ip_address_match.groupdict()
+                secondary_cisco_controller_ip_address = groups['secondary_cisco_controller_ip_address']
+                secondary_cisco_controller_ip_address = change_data_type(value=secondary_cisco_controller_ip_address)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'secondary_cisco_controller_ip_address': secondary_cisco_controller_ip_address})
+            # Tertiary Cisco Controller Name                  : b3-wl-wlc3
+            elif tertiary_cisco_controller_name_capture.match(line):
+                tertiary_cisco_controller_name_match = tertiary_cisco_controller_name_capture.match(line)
+                groups = tertiary_cisco_controller_name_match.groupdict()
+                tertiary_cisco_controller_name = groups['tertiary_cisco_controller_name']
+                tertiary_cisco_controller_name = change_data_type(value=tertiary_cisco_controller_name)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'tertiary_cisco_controller_name': tertiary_cisco_controller_name})
+            # Tertiary Cisco Controller IP Address            : 10.6.4.17
+            elif tertiary_cisco_controller_ip_address_capture.match(line):
+                tertiary_cisco_controller_ip_address_match = tertiary_cisco_controller_ip_address_capture.match(line)
+                groups = tertiary_cisco_controller_ip_address_match.groupdict()
+                tertiary_cisco_controller_ip_address = groups['tertiary_cisco_controller_ip_address']
+                tertiary_cisco_controller_ip_address = change_data_type(value=tertiary_cisco_controller_ip_address)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'tertiary_cisco_controller_ip_address': tertiary_cisco_controller_ip_address})
+            # Administrative State                            : Enabled
+            elif administrative_state_capture.match(line):
+                administrative_state_match = administrative_state_capture.match(line)
+                groups = administrative_state_match.groupdict()
+                administrative_state = groups['administrative_state']
+                administrative_state = change_data_type(value=administrative_state)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'administrative_state': administrative_state})
+            # Operation State                                 : Registered
+            elif operation_state_capture.match(line):
+                operation_state_match = operation_state_capture.match(line)
+                groups = operation_state_match.groupdict()
+                operation_state = groups['operation_state']
+                operation_state = change_data_type(value=operation_state)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'operation_state': operation_state})
+            # NAT External IP Address                         : 10.10.5.12
+            elif nat_external_ip_address_capture.match(line):
+                nat_external_ip_address_match = nat_external_ip_address_capture.match(line)
+                groups = nat_external_ip_address_match.groupdict()
+                nat_external_ip_address = groups['nat_external_ip_address']
+                nat_external_ip_address = change_data_type(value=nat_external_ip_address)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'nat_external_ip_address': nat_external_ip_address})
+            # AP Certificate type                             : Manufacturer Installed Certificate
+            elif ap_certificate_type_capture.match(line):
+                ap_certificate_type_match = ap_certificate_type_capture.match(line)
+                groups = ap_certificate_type_match.groupdict()
+                ap_certificate_type = groups['ap_certificate_type']
+                ap_certificate_type = change_data_type(value=ap_certificate_type)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'ap_certificate_type': ap_certificate_type})
+            # AP Mode                                         : Local
+            elif ap_mode_capture.match(line):
+                ap_mode_match = ap_mode_capture.match(line)
+                groups = ap_mode_match.groupdict()
+                ap_mode = groups['ap_mode']
+                ap_mode = change_data_type(value=ap_mode)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ap_mode': ap_mode})
+            # AP VLAN tagging state                           : Disabled
+            elif ap_vlan_tagging_state_capture.match(line):
+                ap_vlan_tagging_state_match = ap_vlan_tagging_state_capture.match(line)
+                groups = ap_vlan_tagging_state_match.groupdict()
+                ap_vlan_tagging_state = groups['ap_vlan_tagging_state']
+                ap_vlan_tagging_state = change_data_type(value=ap_vlan_tagging_state)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'ap_vlan_tagging_state': ap_vlan_tagging_state})
+            # AP VLAN tag                                     : 0
+            elif ap_vlan_tag_capture.match(line):
+                ap_vlan_tag_match = ap_vlan_tag_capture.match(line)
+                groups = ap_vlan_tag_match.groupdict()
+                ap_vlan_tag = groups['ap_vlan_tag']
+                ap_vlan_tag = change_data_type(value=ap_vlan_tag)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ap_vlan_tag': ap_vlan_tag})
+            # CAPWAP Preferred mode                           : IPv4
+            elif capwap_preferred_mode_capture.match(line):
+                capwap_preferred_mode_match = capwap_preferred_mode_capture.match(line)
+                groups = capwap_preferred_mode_match.groupdict()
+                capwap_preferred_mode = groups['capwap_preferred_mode']
+                capwap_preferred_mode = change_data_type(value=capwap_preferred_mode)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'capwap_preferred_mode': capwap_preferred_mode})
+            # CAPWAP UDP-Lite                                 : Not Configured
+            elif capwap_udp_lite_capture.match(line):
+                capwap_udp_lite_match = capwap_udp_lite_capture.match(line)
+                groups = capwap_udp_lite_match.groupdict()
+                capwap_udp_lite = groups['capwap_udp_lite']
+                capwap_udp_lite = change_data_type(value=capwap_udp_lite)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'capwap_udp_lite': capwap_udp_lite})
+            # AP Submode                                      : Not Configured
+            elif ap_submode_capture.match(line):
+                ap_submode_match = ap_submode_capture.match(line)
+                groups = ap_submode_match.groupdict()
+                ap_submode = groups['ap_submode']
+                ap_submode = change_data_type(value=ap_submode)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ap_submode': ap_submode})
+            # Office Extend Mode                              : Disabled
+            elif office_extend_mode_capture.match(line):
+                office_extend_mode_match = office_extend_mode_capture.match(line)
+                groups = office_extend_mode_match.groupdict()
+                office_extend_mode = groups['office_extend_mode']
+                office_extend_mode = change_data_type(value=office_extend_mode)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'office_extend_mode': office_extend_mode})
+            # Dhcp Server                                     : Disabled
+            elif dhcp_server_capture.match(line):
+                dhcp_server_match = dhcp_server_capture.match(line)
+                groups = dhcp_server_match.groupdict()
+                dhcp_server = groups['dhcp_server']
+                dhcp_server = change_data_type(value=dhcp_server)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'dhcp_server': dhcp_server})
+            # Remote AP Debug                                 : Disabled
+            elif remote_ap_debug_capture.match(line):
+                remote_ap_debug_match = remote_ap_debug_capture.match(line)
+                groups = remote_ap_debug_match.groupdict()
+                remote_ap_debug = groups['remote_ap_debug']
+                remote_ap_debug = change_data_type(value=remote_ap_debug)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'remote_ap_debug': remote_ap_debug})
+            # Logging Trap Severity Level                     : information
+            elif logging_trap_severity_level_capture.match(line):
+                logging_trap_severity_level_match = logging_trap_severity_level_capture.match(line)
+                groups = logging_trap_severity_level_match.groupdict()
+                logging_trap_severity_level = groups['logging_trap_severity_level']
+                logging_trap_severity_level = change_data_type(value=logging_trap_severity_level)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'logging_trap_severity_level': logging_trap_severity_level})
+            # Logging Syslog facility                         : kern
+            elif logging_syslog_facility_capture.match(line):
+                logging_syslog_facility_match = logging_syslog_facility_capture.match(line)
+                groups = logging_syslog_facility_match.groupdict()
+                logging_syslog_facility = groups['logging_syslog_facility']
+                logging_syslog_facility = change_data_type(value=logging_syslog_facility)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'logging_syslog_facility': logging_syslog_facility})
+            # Software Version                                : 17.3.1.9
+            elif software_version_capture.match(line):
+                software_version_match = software_version_capture.match(line)
+                groups = software_version_match.groupdict()
+                software_version = groups['software_version']
+                software_version = change_data_type(value=software_version)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'software_version': software_version})
+            # Boot Version                                    : 1.1.2.4
+            elif boot_version_capture.match(line):
+                boot_version_match = boot_version_capture.match(line)
+                groups = boot_version_match.groupdict()
+                boot_version = groups['boot_version']
+                boot_version = change_data_type(value=boot_version)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'boot_version': boot_version})
+            # Mini IOS Version                                : 0.0.0.0
+            elif mini_ios_version_capture.match(line):
+                mini_ios_version_match = mini_ios_version_capture.match(line)
+                groups = mini_ios_version_match.groupdict()
+                mini_ios_version = groups['mini_ios_version']
+                mini_ios_version = change_data_type(value=mini_ios_version)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'mini_ios_version': mini_ios_version})
+            # Stats Reporting Period                          : 0
+            elif stats_reporting_period_capture.match(line):
+                stats_reporting_period_match = stats_reporting_period_capture.match(line)
+                groups = stats_reporting_period_match.groupdict()
+                stats_reporting_period = groups['stats_reporting_period']
+                stats_reporting_period = change_data_type(value=stats_reporting_period)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'stats_reporting_period': stats_reporting_period})
+            # LED State                                       : Enabled
+            elif led_state_capture.match(line):
+                led_state_match = led_state_capture.match(line)
+                groups = led_state_match.groupdict()
+                led_state = groups['led_state']
+                led_state = change_data_type(value=led_state)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'led_state': led_state})
+            # LED Flash State                                 : Enabled
+            elif led_flash_state_capture.match(line):
+                led_flash_state_match = led_flash_state_capture.match(line)
+                groups = led_flash_state_match.groupdict()
+                led_flash_state = groups['led_flash_state']
+                led_flash_state = change_data_type(value=led_flash_state)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'led_flash_state': led_flash_state})
+            # LED Flash Timer                                 : 0
+            elif led_flash_timer_capture.match(line):
+                led_flash_timer_match = led_flash_timer_capture.match(line)
+                groups = led_flash_timer_match.groupdict()
+                led_flash_timer = groups['led_flash_timer']
+                led_flash_timer = change_data_type(value=led_flash_timer)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'led_flash_timer': led_flash_timer})
+            # MDNS Group Id                                   : 0
+            elif mdns_group_id_capture.match(line):
+                mdns_group_id_match = mdns_group_id_capture.match(line)
+                groups = mdns_group_id_match.groupdict()
+                mdns_group_id = groups['mdns_group_id']
+                mdns_group_id = change_data_type(value=mdns_group_id)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'mdns_group_id': mdns_group_id})
+            # MDNS Rule Name                                  :
+            elif mdns_rule_name_capture.match(line):
+                mdns_rule_name_match = mdns_rule_name_capture.match(line)
+                groups = mdns_rule_name_match.groupdict()
+                mdns_rule_name = groups['mdns_rule_name']
+                mdns_rule_name = change_data_type(value=mdns_rule_name)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'mdns_rule_name': mdns_rule_name})
+            # PoE Pre-Standard Switch                         : Disabled
+            elif poe_pre_standard_switch_capture.match(line):
+                poe_pre_standard_switch_match = poe_pre_standard_switch_capture.match(line)
+                groups = poe_pre_standard_switch_match.groupdict()
+                poe_pre_standard_switch = groups['poe_pre_standard_switch']
+                poe_pre_standard_switch = change_data_type(value=poe_pre_standard_switch)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'poe_pre_standard_switch': poe_pre_standard_switch})
+            # PoE Power Injector MAC Address                  : Disabled
+            elif poe_power_injector_mac_address_capture.match(line):
+                poe_power_injector_mac_address_match = poe_power_injector_mac_address_capture.match(line)
+                groups = poe_power_injector_mac_address_match.groupdict()
+                poe_power_injector_mac_address = groups['poe_power_injector_mac_address']
+                poe_power_injector_mac_address = change_data_type(value=poe_power_injector_mac_address)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'poe_power_injector_mac_address': poe_power_injector_mac_address})
+            # Power Type/Mode                                 : PoE/Full Power
+            elif power_type_mode_capture.match(line):
+                power_type_mode_match = power_type_mode_capture.match(line)
+                groups = power_type_mode_match.groupdict()
+                power_type_mode = groups['power_type_mode']
+                power_type_mode = change_data_type(value=power_type_mode)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'power_type_mode': power_type_mode})
+            # Number of Slots                                 : 3
+            elif number_of_slots_capture.match(line):
+                number_of_slots_match = number_of_slots_capture.match(line)
+                groups = number_of_slots_match.groupdict()
+                number_of_slots = groups['number_of_slots']
+                number_of_slots = change_data_type(value=number_of_slots)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'number_of_slots': number_of_slots})
+            # AP Model                                        : AIR-AP4800-D-K9
+            elif ap_model_capture.match(line):
+                ap_model_match = ap_model_capture.match(line)
+                groups = ap_model_match.groupdict()
+                ap_model = groups['ap_model']
+                ap_model = change_data_type(value=ap_model)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ap_model': ap_model})
+            # IOS Version                                     : 17.3.1.9
+            elif ios_version_capture.match(line):
+                ios_version_match = ios_version_capture.match(line)
+                groups = ios_version_match.groupdict()
+                ios_version = groups['ios_version']
+                ios_version = change_data_type(value=ios_version)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ios_version': ios_version})
+            # Reset Button                                    : Disabled
+            elif reset_button_capture.match(line):
+                reset_button_match = reset_button_capture.match(line)
+                groups = reset_button_match.groupdict()
+                reset_button = groups['reset_button']
+                reset_button = change_data_type(value=reset_button)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'reset_button': reset_button})
+            # AP Serial Number                                : FGL2102AZZZ
+            elif ap_serial_number_capture.match(line):
+                ap_serial_number_match = ap_serial_number_capture.match(line)
+                groups = ap_serial_number_match.groupdict()
+                ap_serial_number = groups['ap_serial_number']
+                ap_serial_number = change_data_type(value=ap_serial_number)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'ap_serial_number': ap_serial_number})
+            # Management Frame Validation                     : Capable
+            elif management_frame_validation_capture.match(line):
+                management_frame_validation_match = management_frame_validation_capture.match(line)
+                groups = management_frame_validation_match.groupdict()
+                management_frame_validation = groups['management_frame_validation']
+                management_frame_validation = change_data_type(value=management_frame_validation)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'management_frame_validation': management_frame_validation})
+            # Management Frame Protection                     : Capable
+            elif management_frame_protection_capture.match(line):
+                management_frame_protection_match = management_frame_protection_capture.match(line)
+                groups = management_frame_protection_match.groupdict()
+                management_frame_protection = groups['management_frame_protection']
+                management_frame_protection = change_data_type(value=management_frame_protection)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'management_frame_protection': management_frame_protection})
+            # AP User Name                                    : admin
+            elif ap_user_name_capture.match(line):
+                ap_user_name_match = ap_user_name_capture.match(line)
+                groups = ap_user_name_match.groupdict()
+                ap_user_name = groups['ap_user_name']
+                ap_user_name = change_data_type(value=ap_user_name)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ap_user_name': ap_user_name})
+            # AP 802.1X User Mode                             : Global
+            elif ap_802_1x_user_mode_capture.match(line):
+                ap_802_1x_user_mode_match = ap_802_1x_user_mode_capture.match(line)
+                groups = ap_802_1x_user_mode_match.groupdict()
+                ap_802_1x_user_mode = groups['ap_802_1x_user_mode']
+                ap_802_1x_user_mode = change_data_type(value=ap_802_1x_user_mode)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'ap_802_1x_user_mode': ap_802_1x_user_mode})
+            # AP 802.1X User Name                             : Not Configured
+            elif ap_802_1x_user_name_capture.match(line):
+                ap_802_1x_user_name_match = ap_802_1x_user_name_capture.match(line)
+                groups = ap_802_1x_user_name_match.groupdict()
+                ap_802_1x_user_name = groups['ap_802_1x_user_name']
+                ap_802_1x_user_name = change_data_type(value=ap_802_1x_user_name)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'ap_802_1x_user_name': ap_802_1x_user_name})
+            # Cisco AP System Logging Host                    : 10.16.19.6
+            elif cisco_ap_system_logging_host_capture.match(line):
+                cisco_ap_system_logging_host_match = cisco_ap_system_logging_host_capture.match(line)
+                groups = cisco_ap_system_logging_host_match.groupdict()
+                cisco_ap_system_logging_host = groups['cisco_ap_system_logging_host']
+                cisco_ap_system_logging_host = change_data_type(value=cisco_ap_system_logging_host)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'cisco_ap_system_logging_host': cisco_ap_system_logging_host})
+            # Cisco AP Secured Logging TLS mode               : Disabled
+            elif cisco_ap_secured_logging_tls_mode_capture.match(line):
+                cisco_ap_secured_logging_tls_mode_match = cisco_ap_secured_logging_tls_mode_capture.match(line)
+                groups = cisco_ap_secured_logging_tls_mode_match.groupdict()
+                cisco_ap_secured_logging_tls_mode = groups['cisco_ap_secured_logging_tls_mode']
+                cisco_ap_secured_logging_tls_mode = change_data_type(value=cisco_ap_secured_logging_tls_mode)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'cisco_ap_secured_logging_tls_mode': cisco_ap_secured_logging_tls_mode})
+            # AP Up Time                                      : 3 days 9 hours 44 minutes 18 seconds
+            elif ap_up_time_capture.match(line):
+                ap_up_time_match = ap_up_time_capture.match(line)
+                groups = ap_up_time_match.groupdict()
+                ap_up_time = groups['ap_up_time']
+                ap_up_time = change_data_type(value=ap_up_time)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ap_up_time': ap_up_time})
+            # AP CAPWAP Up Time                               : 3 days 9 hours 37 minutes 20 seconds
+            elif ap_capwap_up_time_capture.match(line):
+                ap_capwap_up_time_match = ap_capwap_up_time_capture.match(line)
+                groups = ap_capwap_up_time_match.groupdict()
+                ap_capwap_up_time = groups['ap_capwap_up_time']
+                ap_capwap_up_time = change_data_type(value=ap_capwap_up_time)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'ap_capwap_up_time': ap_capwap_up_time})
+            # Join Date and Time                              : 08/14/2020 19:48:09
+            elif join_date_and_time_capture.match(line):
+                join_date_and_time_match = join_date_and_time_capture.match(line)
+                groups = join_date_and_time_match.groupdict()
+                join_date_and_time = groups['join_date_and_time']
+                join_date_and_time = change_data_type(value=join_date_and_time)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'join_date_and_time': join_date_and_time})
+            # Join Taken Time                                 : 6 minutes 57 seconds
+            elif join_taken_time_capture.match(line):
+                join_taken_time_match = join_taken_time_capture.match(line)
+                groups = join_taken_time_match.groupdict()
+                join_taken_time = groups['join_taken_time']
+                join_taken_time = change_data_type(value=join_taken_time)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'join_taken_time': join_taken_time})
+            # Join Priority                                   : 1
+            elif join_priority_capture.match(line):
+                join_priority_match = join_priority_capture.match(line)
+                groups = join_priority_match.groupdict()
+                join_priority = groups['join_priority']
+                join_priority = change_data_type(value=join_priority)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'join_priority': join_priority})
+            # AP Link Latency                                 : Disable
+            elif ap_link_latency_capture.match(line):
+                ap_link_latency_match = ap_link_latency_capture.match(line)
+                groups = ap_link_latency_match.groupdict()
+                ap_link_latency = groups['ap_link_latency']
+                ap_link_latency = change_data_type(value=ap_link_latency)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'ap_link_latency': ap_link_latency})
+            # AP Lag Configuration Status                     : Disabled
+            elif ap_lag_configuration_status_capture.match(line):
+                ap_lag_configuration_status_match = ap_lag_configuration_status_capture.match(line)
+                groups = ap_lag_configuration_status_match.groupdict()
+                ap_lag_configuration_status = groups['ap_lag_configuration_status']
+                ap_lag_configuration_status = change_data_type(value=ap_lag_configuration_status)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'ap_lag_configuration_status': ap_lag_configuration_status})
+            # Lag Support for AP                              : Yes
+            elif lag_support_for_ap_capture.match(line):
+                lag_support_for_ap_match = lag_support_for_ap_capture.match(line)
+                groups = lag_support_for_ap_match.groupdict()
+                lag_support_for_ap = groups['lag_support_for_ap']
+                lag_support_for_ap = change_data_type(value=lag_support_for_ap)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'lag_support_for_ap': lag_support_for_ap})
+            # Rogue Detection                                 : Enabled
+            elif rogue_detection_capture.match(line):
+                rogue_detection_match = rogue_detection_capture.match(line)
+                groups = rogue_detection_match.groupdict()
+                rogue_detection = groups['rogue_detection']
+                rogue_detection = change_data_type(value=rogue_detection)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'rogue_detection': rogue_detection})
+            # Rogue Containment auto-rate                     : Disabled
+            elif rogue_containment_auto_rate_capture.match(line):
+                rogue_containment_auto_rate_match = rogue_containment_auto_rate_capture.match(line)
+                groups = rogue_containment_auto_rate_match.groupdict()
+                rogue_containment_auto_rate = groups['rogue_containment_auto_rate']
+                rogue_containment_auto_rate = change_data_type(value=rogue_containment_auto_rate)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'rogue_containment_auto_rate': rogue_containment_auto_rate})
+            # Rogue Containment of standalone flexconnect APs : Disabled
+            elif rogue_containment_of_standalone_flexconnect_aps_capture.match(line):
+                rogue_containment_of_standalone_flexconnect_aps_match = rogue_containment_of_standalone_flexconnect_aps_capture.match(
+                    line)
+                groups = rogue_containment_of_standalone_flexconnect_aps_match.groupdict()
+                rogue_containment_of_standalone_flexconnect_aps = groups[
+                    'rogue_containment_of_standalone_flexconnect_aps']
+                rogue_containment_of_standalone_flexconnect_aps = change_data_type(
+                    value=rogue_containment_of_standalone_flexconnect_aps)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({
+                                                                                         'rogue_containment_of_standalone_flexconnect_aps': rogue_containment_of_standalone_flexconnect_aps})
+            # Rogue Detection Report Interval                 : 10
+            elif rogue_detection_report_interval_capture.match(line):
+                rogue_detection_report_interval_match = rogue_detection_report_interval_capture.match(line)
+                groups = rogue_detection_report_interval_match.groupdict()
+                rogue_detection_report_interval = groups['rogue_detection_report_interval']
+                rogue_detection_report_interval = change_data_type(value=rogue_detection_report_interval)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'rogue_detection_report_interval': rogue_detection_report_interval})
+            # Rogue AP minimum RSSI                           : -70
+            elif rogue_ap_minimum_rssi_capture.match(line):
+                rogue_ap_minimum_rssi_match = rogue_ap_minimum_rssi_capture.match(line)
+                groups = rogue_ap_minimum_rssi_match.groupdict()
+                rogue_ap_minimum_rssi = groups['rogue_ap_minimum_rssi']
+                rogue_ap_minimum_rssi = change_data_type(value=rogue_ap_minimum_rssi)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'rogue_ap_minimum_rssi': rogue_ap_minimum_rssi})
+            # Rogue AP minimum transient time                 : 0
+            elif rogue_ap_minimum_transient_time_capture.match(line):
+                rogue_ap_minimum_transient_time_match = rogue_ap_minimum_transient_time_capture.match(line)
+                groups = rogue_ap_minimum_transient_time_match.groupdict()
+                rogue_ap_minimum_transient_time = groups['rogue_ap_minimum_transient_time']
+                rogue_ap_minimum_transient_time = change_data_type(value=rogue_ap_minimum_transient_time)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'rogue_ap_minimum_transient_time': rogue_ap_minimum_transient_time})
+            # AP TCP MSS Adjust                               : Enabled
+            elif ap_tcp_mss_adjust_capture.match(line):
+                ap_tcp_mss_adjust_match = ap_tcp_mss_adjust_capture.match(line)
+                groups = ap_tcp_mss_adjust_match.groupdict()
+                ap_tcp_mss_adjust = groups['ap_tcp_mss_adjust']
+                ap_tcp_mss_adjust = change_data_type(value=ap_tcp_mss_adjust)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'ap_tcp_mss_adjust': ap_tcp_mss_adjust})
+            # AP TCP MSS Size                                 : 1250
+            elif ap_tcp_mss_size_capture.match(line):
+                ap_tcp_mss_size_match = ap_tcp_mss_size_capture.match(line)
+                groups = ap_tcp_mss_size_match.groupdict()
+                ap_tcp_mss_size = groups['ap_tcp_mss_size']
+                ap_tcp_mss_size = change_data_type(value=ap_tcp_mss_size)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'ap_tcp_mss_size': ap_tcp_mss_size})
+            # AP IPv6 TCP MSS Adjust                          : Enabled
+            elif ap_ipv6_tcp_mss_adjust_capture.match(line):
+                ap_ipv6_tcp_mss_adjust_match = ap_ipv6_tcp_mss_adjust_capture.match(line)
+                groups = ap_ipv6_tcp_mss_adjust_match.groupdict()
+                ap_ipv6_tcp_mss_adjust = groups['ap_ipv6_tcp_mss_adjust']
+                ap_ipv6_tcp_mss_adjust = change_data_type(value=ap_ipv6_tcp_mss_adjust)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'ap_ipv6_tcp_mss_adjust': ap_ipv6_tcp_mss_adjust})
+            # AP IPv6 TCP MSS Size                            : 1250
+            elif ap_ipv6_tcp_mss_size_capture.match(line):
+                ap_ipv6_tcp_mss_size_match = ap_ipv6_tcp_mss_size_capture.match(line)
+                groups = ap_ipv6_tcp_mss_size_match.groupdict()
+                ap_ipv6_tcp_mss_size = groups['ap_ipv6_tcp_mss_size']
+                ap_ipv6_tcp_mss_size = change_data_type(value=ap_ipv6_tcp_mss_size)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'ap_ipv6_tcp_mss_size': ap_ipv6_tcp_mss_size})
+            # Hyperlocation Admin Status                      : Disabled
+            elif hyperlocation_admin_status_capture.match(line):
+                hyperlocation_admin_status_match = hyperlocation_admin_status_capture.match(line)
+                groups = hyperlocation_admin_status_match.groupdict()
+                hyperlocation_admin_status = groups['hyperlocation_admin_status']
+                hyperlocation_admin_status = change_data_type(value=hyperlocation_admin_status)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'hyperlocation_admin_status': hyperlocation_admin_status})
+            # Retransmit count                                : 5
+            elif retransmit_count_capture.match(line):
+                retransmit_count_match = retransmit_count_capture.match(line)
+                groups = retransmit_count_match.groupdict()
+                retransmit_count = groups['retransmit_count']
+                retransmit_count = change_data_type(value=retransmit_count)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'retransmit_count': retransmit_count})
+            # Retransmit interval                             : 3
+            elif retransmit_interval_capture.match(line):
+                retransmit_interval_match = retransmit_interval_capture.match(line)
+                groups = retransmit_interval_match.groupdict()
+                retransmit_interval = groups['retransmit_interval']
+                retransmit_interval = change_data_type(value=retransmit_interval)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'retransmit_interval': retransmit_interval})
+            # Fabric status                                   : Disabled
+            elif fabric_status_capture.match(line):
+                fabric_status_match = fabric_status_capture.match(line)
+                groups = fabric_status_match.groupdict()
+                fabric_status = groups['fabric_status']
+                fabric_status = change_data_type(value=fabric_status)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'fabric_status': fabric_status})
+            # FIPS status                                     : Disabled
+            elif fips_status_capture.match(line):
+                fips_status_match = fips_status_capture.match(line)
+                groups = fips_status_match.groupdict()
+                fips_status = groups['fips_status']
+                fips_status = change_data_type(value=fips_status)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'fips_status': fips_status})
+            # WLANCC status                                   : Disabled
+            elif wlancc_status_capture.match(line):
+                wlancc_status_match = wlancc_status_capture.match(line)
+                groups = wlancc_status_match.groupdict()
+                wlancc_status = groups['wlancc_status']
+                wlancc_status = change_data_type(value=wlancc_status)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'wlancc_status': wlancc_status})
+            # USB Module Type                                 : USB Module
+            elif usb_module_type_capture.match(line):
+                usb_module_type_match = usb_module_type_capture.match(line)
+                groups = usb_module_type_match.groupdict()
+                usb_module_type = groups['usb_module_type']
+                usb_module_type = change_data_type(value=usb_module_type)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'usb_module_type': usb_module_type})
+            # USB Module State                                : Enabled
+            elif usb_module_state_capture.match(line):
+                usb_module_state_match = usb_module_state_capture.match(line)
+                groups = usb_module_state_match.groupdict()
+                usb_module_state = groups['usb_module_state']
+                usb_module_state = change_data_type(value=usb_module_state)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'usb_module_state': usb_module_state})
+            # USB Operational State                           : Disabled
+            elif usb_operational_state_capture.match(line):
+                usb_operational_state_match = usb_operational_state_capture.match(line)
+                groups = usb_operational_state_match.groupdict()
+                usb_operational_state = groups['usb_operational_state']
+                usb_operational_state = change_data_type(value=usb_operational_state)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'usb_operational_state': usb_operational_state})
+            # USB Override                                    : Disabled
+            elif usb_override_capture.match(line):
+                usb_override_match = usb_override_capture.match(line)
+                groups = usb_override_match.groupdict()
+                usb_override = groups['usb_override']
+                usb_override = change_data_type(value=usb_override)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'usb_override': usb_override})
+            # GAS rate limit Admin status                     : Disabled
+            elif gas_rate_limit_admin_status_capture.match(line):
+                gas_rate_limit_admin_status_match = gas_rate_limit_admin_status_capture.match(line)
+                groups = gas_rate_limit_admin_status_match.groupdict()
+                gas_rate_limit_admin_status = groups['gas_rate_limit_admin_status']
+                gas_rate_limit_admin_status = change_data_type(value=gas_rate_limit_admin_status)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'gas_rate_limit_admin_status': gas_rate_limit_admin_status})
+            # WPA3 Capability                                 : Enabled
+            elif wpa3_capability_capture.match(line):
+                wpa3_capability_match = wpa3_capability_capture.match(line)
+                groups = wpa3_capability_match.groupdict()
+                wpa3_capability = groups['wpa3_capability']
+                wpa3_capability = change_data_type(value=wpa3_capability)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'wpa3_capability': wpa3_capability})
+            # EWC-AP Capability                               : Disabled
+            elif ewc_ap_capability_capture.match(line):
+                ewc_ap_capability_match = ewc_ap_capability_capture.match(line)
+                groups = ewc_ap_capability_match.groupdict()
+                ewc_ap_capability = groups['ewc_ap_capability']
+                ewc_ap_capability = change_data_type(value=ewc_ap_capability)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'ewc_ap_capability': ewc_ap_capability})
+            # AWIPS Capability                                : Enabled
+            elif awips_capability_capture.match(line):
+                awips_capability_match = awips_capability_capture.match(line)
+                groups = awips_capability_match.groupdict()
+                awips_capability = groups['awips_capability']
+                awips_capability = change_data_type(value=awips_capability)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'awips_capability': awips_capability})
+            # Proxy Hostname                                  : Not Configured
+            elif proxy_hostname_capture.match(line):
+                proxy_hostname_match = proxy_hostname_capture.match(line)
+                groups = proxy_hostname_match.groupdict()
+                proxy_hostname = groups['proxy_hostname']
+                proxy_hostname = change_data_type(value=proxy_hostname)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'proxy_hostname': proxy_hostname})
+            # Proxy Port                                      : Not Configured
+            elif proxy_port_capture.match(line):
+                proxy_port_match = proxy_port_capture.match(line)
+                groups = proxy_port_match.groupdict()
+                proxy_port = groups['proxy_port']
+                proxy_port = change_data_type(value=proxy_port)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'proxy_port': proxy_port})
+            # Proxy NO_PROXY list                             : Not Configured
+            elif proxy_no_proxy_list_capture.match(line):
+                proxy_no_proxy_list_match = proxy_no_proxy_list_capture.match(line)
+                groups = proxy_no_proxy_list_match.groupdict()
+                proxy_no_proxy_list = groups['proxy_no_proxy_list']
+                proxy_no_proxy_list = change_data_type(value=proxy_no_proxy_list)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'proxy_no_proxy_list': proxy_no_proxy_list})
+            # GRPC server status                              : Disabled
+            elif grpc_server_status_capture.match(line):
+                grpc_server_status_match = grpc_server_status_capture.match(line)
+                groups = grpc_server_status_match.groupdict()
+                grpc_server_status = groups['grpc_server_status']
+                grpc_server_status = change_data_type(value=grpc_server_status)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'grpc_server_status': grpc_server_status})
+            # Unencrypted Data Keep Alive                     : Enabled
+            elif unencrypted_data_keep_alive_capture.match(line):
+                unencrypted_data_keep_alive_match = unencrypted_data_keep_alive_capture.match(line)
+                groups = unencrypted_data_keep_alive_match.groupdict()
+                unencrypted_data_keep_alive = groups['unencrypted_data_keep_alive']
+                unencrypted_data_keep_alive = change_data_type(value=unencrypted_data_keep_alive)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'unencrypted_data_keep_alive': unencrypted_data_keep_alive})
+            # Local DHCP Server                               : Disabled
+            elif local_dhcp_server_capture.match(line):
+                local_dhcp_server_match = local_dhcp_server_capture.match(line)
+                groups = local_dhcp_server_match.groupdict()
+                local_dhcp_server = groups['local_dhcp_server']
+                local_dhcp_server = change_data_type(value=local_dhcp_server)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'local_dhcp_server': local_dhcp_server})
+            # Traffic Distribution Statistics Capability      : Enabled
+            elif traffic_distribution_statistics_capability_capture.match(line):
+                traffic_distribution_statistics_capability_match = traffic_distribution_statistics_capability_capture.match(
+                    line)
+                groups = traffic_distribution_statistics_capability_match.groupdict()
+                traffic_distribution_statistics_capability = groups['traffic_distribution_statistics_capability']
+                traffic_distribution_statistics_capability = change_data_type(
+                    value=traffic_distribution_statistics_capability)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'traffic_distribution_statistics_capability': traffic_distribution_statistics_capability})
+            # Dual DFS Statistics                             : Disabled
+            elif dual_dfs_statistics_capture.match(line):
+                dual_dfs_statistics_match = dual_dfs_statistics_capture.match(line)
+                groups = dual_dfs_statistics_match.groupdict()
+                dual_dfs_statistics = groups['dual_dfs_statistics']
+                dual_dfs_statistics = change_data_type(value=dual_dfs_statistics)
+                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                    {'dual_dfs_statistics': dual_dfs_statistics})
         return ap_config_general_dict
 
