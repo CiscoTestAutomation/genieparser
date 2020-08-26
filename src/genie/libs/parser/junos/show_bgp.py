@@ -14,8 +14,8 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import (Any, Optional, Use,
-                                                SchemaTypeError, Schema)
+from pyats.utils.exceptions import SchemaError
+from genie.metaparser.util.schemaengine import (Any, Optional, Use, Schema)
 
 
 class ShowBgpGroupBriefSchema(MetaParser):
@@ -86,11 +86,11 @@ class ShowBgpGroupBriefSchema(MetaParser):
     """
     def validate_bgp_group_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('bgp-rib is not a list')
+            raise SchemaError('bgp-rib is not a list')
 
         def validate_bgp_rib(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('bgp-rib is not a list')
+                raise SchemaError('bgp-rib is not a list')
             bgp_rib_schema = Schema({
                 'accepted-prefix-count': str,
                 'active-prefix-count': str,
@@ -144,7 +144,7 @@ class ShowBgpGroupBriefSchema(MetaParser):
 
     def validate_bgp_info_bgp_rib_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('bgp-information bgp-rib is not a list')
+            raise SchemaError('bgp-information bgp-rib is not a list')
         bgp_rib_list_schema = Schema({
             Optional("@junos:style"):
             str,
@@ -835,7 +835,7 @@ class ShowBgpSummarySchema(MetaParser):
     """
     def validate_bgp_rib_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('bgp-rib is not a list')
+            raise SchemaError('bgp-rib is not a list')
         bgp_rib_schema = Schema({
             Optional("accepted-external-prefix-count"): str,
             Optional("accepted-internal-prefix-count"): str,
@@ -863,11 +863,11 @@ class ShowBgpSummarySchema(MetaParser):
 
     def validate_bgp_peer_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('bgp-peer is not a list')
+            raise SchemaError('bgp-peer is not a list')
 
         def validate_bgp_peer_rib_list(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('bgp-rib of bgp-peer is not a list')
+                raise SchemaError('bgp-rib of bgp-peer is not a list')
             bgp_peer_rib_schema = Schema({
                 'accepted-prefix-count': str,
                 'active-prefix-count': str,
@@ -1134,7 +1134,7 @@ class ShowBgpNeighborSchema(MetaParser):
     def validate_bgp_peer_list(value):
         def validate_bgp_output_queue(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('bgp-peer is not a list')
+                raise SchemaError('bgp-peer is not a list')
             bgp_output_queue_schema = Schema({
                 "count": str,
                 "number": str,
@@ -1147,7 +1147,7 @@ class ShowBgpNeighborSchema(MetaParser):
 
         def validate_bgp_error(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('bgp-error is not a list')
+                raise SchemaError('bgp-error is not a list')
             bgp_error_schema = Schema({
                 "name": str,
                 "receive-count": str,
@@ -1159,7 +1159,7 @@ class ShowBgpNeighborSchema(MetaParser):
 
         def validate_bgp_rib(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('bgp-rib is not a list')
+                raise SchemaError('bgp-rib is not a list')
             bgp_rib_schema = Schema({
                 "accepted-prefix-count": str,
                 "active-prefix-count": str,
@@ -1176,14 +1176,14 @@ class ShowBgpNeighborSchema(MetaParser):
             return value
 
         if not isinstance(value, list):
-            raise SchemaTypeError('bgp-peer is not a list')
+            raise SchemaError('bgp-peer is not a list')
         entry_schema = Schema({
             "bgp-option-information": {
                 "bgp-options": str,
-                "bgp-options2": bool,
-                "bgp-options-extended": str,
+                Optional("bgp-options2"): bool,
+                Optional("bgp-options-extended"): str,
                 Optional("export-policy"): str,
-                "gshut-recv-local-preference": str,
+                Optional("gshut-recv-local-preference"): str,
                 Optional("holdtime"): str,
                 Optional("import-policy"): str,
                 Optional("local-address"): str,
@@ -1202,9 +1202,9 @@ class ShowBgpNeighborSchema(MetaParser):
             "local-as": str,
             "peer-address": str,
             "peer-as":str,
-            "peer-cfg-rti":str,
-            "peer-fwd-rti":str,
-            "peer-group":str,
+            Optional("peer-cfg-rti"):str,
+            Optional("peer-fwd-rti"):str,
+            Optional("peer-group"):str,
             "peer-state":str,
             "peer-type":str,
             'peer-flags':str,
@@ -1279,7 +1279,8 @@ class ShowBgpNeighborSchema(MetaParser):
             entry_schema.validate(item)
         return value
 
-    schema = {"bgp-information": {"bgp-peer": Use(validate_bgp_peer_list)}}
+    schema = {"bgp-information": {"bgp-peer": Use(validate_bgp_peer_list),
+                                  Optional('is-bgp-running'): bool}}
 
 
 class ShowBgpNeighbor(ShowBgpNeighborSchema):
@@ -1467,6 +1468,8 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
         p51 = re.compile(
             r'^Output +Queue\[(?P<number>\d+)\]: +(?P<count>\d+) +\((?P<table_name>\S+), +(?P<rib_adv_nlri>\S+)\)$'
         )
+        # BGP is not running
+        p52 = re.compile(r'^BGP +is +not +running+$')
 
         ret_dict = {}
 
@@ -2012,6 +2015,14 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
                     key = key.replace('_', '-')
                     entry[key] = value
                 entry_list.append(entry)
+                continue
+
+            # BGP is not running
+            m = p52.match(line)
+            if m:
+                entry = ret_dict.setdefault('bgp-information', {})
+                entry.setdefault('bgp-peer', [])
+                entry['is-bgp-running'] = False
                 continue
 
         return ret_dict

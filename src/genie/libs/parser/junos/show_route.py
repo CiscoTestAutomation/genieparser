@@ -27,8 +27,8 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema
-from genie.metaparser.util.exceptions import SchemaTypeError
 '''
 Schema for:
     * show route table {table}
@@ -116,8 +116,9 @@ class ShowRouteTable(ShowRouteTableSchema):
 
         # > to 192.168.220.6 via ge-0/0/1.0
         # > to 192.168.220.6 via ge-0/0/1.0, Push 305550
+        # > to 192.168.220.6 via ge-0/0/1.0, Pop
         r3 = re.compile(r'(?:(?P<best_route>\>*))?\s*to\s+(?P<to>\S+)\s+via\s+'
-                         '(?P<via>[\w\d\/\-\.]+)\,*\s*(?:(?P<mpls_label>\S+\s+\d+))?')
+                         '(?P<via>[\w\d\/\-\.]+)\,*\s*(?:(?P<mpls_label>[\S\s]+))?')
 
         parsed_output = {}
 
@@ -242,17 +243,17 @@ class ShowRouteSchema(MetaParser):
     def validate_route_table_list(value):
         # Pass route-table list of dict in value
         if not isinstance(value, list):
-            raise SchemaTypeError('route-table is not a list')
+            raise SchemaError('route-table is not a list')
         
         def validate_rt_list(value):
             # Pass rt list of dict in value
             if not isinstance(value, list):
-                raise SchemaTypeError('rt list is not a list')
+                raise SchemaError('rt list is not a list')
             
             def validate_nh_list(value):
                 # Pass nh list of dict in value
                 if not isinstance(value, list):
-                    raise SchemaTypeError('nh list is not a list')
+                    raise SchemaError('nh list is not a list')
                 # Create nh-list Entry Schema
                 nh_schema = Schema({
                             Optional("mpls-label"): str,
@@ -402,7 +403,8 @@ class ShowRoute(ShowRouteSchema):
 
         # AS path: (65151 65000) I, validation-state: unverified
         # AS path: I
-        p4 = re.compile(r'AS +path:(?P<as_path>( +\([\S\s]+\))? +\S+)'
+        # AS path: 3 4 I, validation-state: unverified
+        p4 = re.compile(r'AS +path:(?P<as_path>([()\d\s]+ )?\w)'
                         r'(, validation-state: +(?P<validation_state>\S+))?$')
         
         # to table inet.0
@@ -594,6 +596,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                                     "last-active": str,
                                     "local-as": str,
                                     "metric": str,
+                                    "metric2": str,
                                     "nh": {
                                         Optional("@junos:indent"): str,
                                         "label-element": str,
@@ -648,21 +651,21 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
     def validate_route_table_list(value):
         # Pass route-table list of dict in value
         if not isinstance(value, list):
-            raise SchemaTypeError('route-table is not a list')
+            raise SchemaError('route-table is not a list')
         
         def validate_rt_list(value):
             # Pass rt list of dict in value
             if not isinstance(value, list):
-                raise SchemaTypeError('rt is not a list')
+                raise SchemaError('rt is not a list')
             def validate_rt_entry_list(value):
                 if isinstance(value, dict):
                     value = [value]
                 if not isinstance(value, list):
-                    raise SchemaTypeError('rt-entry is not a list')
+                    raise SchemaError('rt-entry is not a list')
                 def validate_nh_list(value):
                     # Pass nh list of dict in value
                     if not isinstance(value, list):
-                        raise SchemaTypeError('nh is not a list')
+                        raise SchemaError('nh is not a list')
                     nh_schema = Schema({
                         Optional("@junos:indent"): str,
                         Optional("label-element"): str,
@@ -689,13 +692,13 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                     if isinstance(value, dict):
                         value = [value]
                     if not isinstance(value, list):
-                        raise SchemaTypeError('protocol-nh is not a list')
+                        raise SchemaError('protocol-nh is not a list')
                     def validate_nh_list(value):
                         # Pass nh list of dict in value
                         if isinstance(value, dict):
                             value = [value]
                         if not isinstance(value, list):
-                            raise SchemaTypeError('nh is not a list')
+                            raise SchemaError('nh is not a list')
                         nh_schema = Schema({
                             Optional("@junos:indent"): str,
                             Optional("label-element"): str,
@@ -756,6 +759,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                     Optional("last-active"): str,
                     Optional("local-as"): str,
                     Optional("metric"): str,
+                    Optional("metric2"): str,
                     Optional("nh"): Use(validate_nh_list),
                     "nh-address": str,
                     Optional("nh-index"): str,
@@ -923,7 +927,10 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         # Age: 3w2d 4:43:35   Metric: 101 
         # Age: 3:07:25    Metric: 200
         # Age: 29w6d 21:42:46
-        p11 = re.compile(r'^Age:\s+(?P<age>\w+(\s+\S+)?)(\s+Metric:\s+(?P<metric>\d+))?$')
+        p11 = re.compile(r'^Age:\s+(?P<age>(\w+(\s+\S+)?)|[\d:]+)(\s+Metric:\s+(?P<metric>\d+))?$')
+
+        # Age: 12 Metric2: 50
+        p11_2 = re.compile(r'^Age:\s+(?P<age>(\w+(\s+\S+)?)|[\d:]+)(\s+Metric2:\s+(?P<metric2>\d+))?$')
 
         # Validation State: unverified 
         p12 = re.compile(r'^Validation +State: +(?P<validation_state>\S+)$')
@@ -1201,6 +1208,17 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                     rt_entry_dict.update({'metric': metric})
                 continue
 
+            # Age: 12 Metric2: 50
+            m = p11_2.match(line)
+            if m:
+                group = m.groupdict()
+                age_dict = rt_entry_dict.setdefault('age', {})
+                age_dict.update({'#text': group['age']})
+                metric2 = group['metric2']
+                if metric2:
+                    rt_entry_dict.update({'metric2': metric2})
+                continue            
+
             # Validation State: unverified 
             m = p12.match(line)
             if m:
@@ -1457,11 +1475,11 @@ class ShowRouteForwardingTableSummarySchema(MetaParser):
     def validate_route_table_list(value):
         # Pass route-table list of dict in value
         if not isinstance(value, list):
-            raise SchemaTypeError('route-table is not a list')
+            raise SchemaError('route-table is not a list')
         def validate_route_table_summary_list(value):
             # Pass route-table-summary list of dict in value
             if not isinstance(value, list):
-                raise SchemaTypeError('route-table-summary is not a list')
+                raise SchemaError('route-table-summary is not a list')
             # Create route-table-summary Schema
             route_table_summary_schema = Schema({
                 "route-count": str,
@@ -1598,12 +1616,12 @@ class ShowRouteReceiveProtocolSchema(MetaParser):
     def validate_route_table_list(value):
         # Pass route-table list of dict in value
         if not isinstance(value, list):
-            raise SchemaTypeError('route-table is not a list')
+            raise SchemaError('route-table is not a list')
         
         def validate_rt_list(value):
             # Pass rt list of dict in value
             if not isinstance(value, list):
-                raise SchemaTypeError('rt is not a list')
+                raise SchemaError('rt is not a list')
             # Create rt entry Schema
             rt_entry_schema = Schema({
                 Optional("@junos:style"): str,
@@ -1754,7 +1772,7 @@ class ShowRouteAdvertisingProtocolSchema(MetaParser):
     def validate_rt_list(value):
         # Pass rt list of dict in value
         if not isinstance(value, list):
-            raise SchemaTypeError('rt is not a list')
+            raise SchemaError('rt is not a list')
         # Create rt entry Schema
         entry_schema = Schema({
             Optional("@junos:style"): str,
@@ -1903,11 +1921,11 @@ class ShowRouteSummarySchema(MetaParser):
     def validate_route_table_list(value):
         # Pass route-table list of dict in value
         if not isinstance(value, list):
-            raise SchemaTypeError('route-table is not a list')
+            raise SchemaError('route-table is not a list')
         def validate_protocols_list(value):
             # Pass protocols list of dict in value
             if not isinstance(value, list):
-                raise SchemaTypeError('protocols is not a list')
+                raise SchemaError('protocols is not a list')
             # Create protocols Schema
             protocols_schema = Schema({
                 "active-route-count": str,
@@ -2051,10 +2069,10 @@ class ShowRouteInstanceDetailSchema(MetaParser):
 
     def validate_instance_core_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('instance-core is not a list')
+            raise SchemaError('instance-core is not a list')
         def validate_instance_rib_list(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('instance-rib is not a list')
+                raise SchemaError('instance-rib is not a list')
             instance_rib_schema = Schema({
                         "irib-active-count": str,
                         "irib-hidden-count": str,
@@ -2068,7 +2086,7 @@ class ShowRouteInstanceDetailSchema(MetaParser):
             return value
         def validate_interface_name_list(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('interface-name is not a list')
+                raise SchemaError('interface-name is not a list')
             instance_rib_schema = Schema({
                     "interface-name": str
                 })
@@ -2235,7 +2253,7 @@ class ShowRouteAdvertisingProtocolDetailSchema(MetaParser):
 
     def validate_rt_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('protocol information is not a list')
+            raise SchemaError('protocol information is not a list')
 
         entry_schema = Schema({
             Optional("@junos:style"): str,
@@ -2259,10 +2277,10 @@ class ShowRouteAdvertisingProtocolDetailSchema(MetaParser):
                 "nh": {
                     "to": str,
                 },
-                "med": str,
-                "local-preference": str,
+                Optional("med"): str,
+                Optional("local-preference"): str,
                 'as-path': str,
-                "communities": str,
+                Optional("communities"): str,
                 Optional("flags"): str,
             }
         })
@@ -2304,7 +2322,8 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
                         r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
 
         # * 10.36.255.252/32 (1 entry, 1 announced)
-        p2 = re.compile(r'^(?P<active_tag>\*)? *(?P<rt_destination>[\d\.]+)'
+        # * 2001:3/128 (2 entries, 2 announced)
+        p2 = re.compile(r'^(?P<active_tag>\*)? *(?P<rt_destination>[\s\S]+)'
                         r'/(?P<rt_prefix_length>\d+)'
                         r' +\((?P<rt_entry_count>\d+) +\S+, +'
                         r'(?P<rt_announced_count>\d+) +announced\)$')
@@ -2330,7 +2349,8 @@ class ShowRouteAdvertisingProtocolDetail(ShowRouteAdvertisingProtocolDetailSchem
 
 
         # Communities: 65151:65109
-        p9 = re.compile(r'^Communities: +(?P<communities>\S+)$')
+        # Communities: 2:2 4:4 no-export
+        p9 = re.compile(r'^Communities: +(?P<communities>[\s\S]+)$')
 
         # Flags: Nexthop Change
         p10 = re.compile(r'^Flags: +(?P<flags>.*)$')
@@ -2426,11 +2446,11 @@ class ShowRouteForwardingTableLabelSchema(MetaParser):
 
     def validate_rt_table_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('Route table is not a list')
+            raise SchemaError('Route table is not a list')
 
         def validate_rt_entry_list(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('Route entry is not a list')
+                raise SchemaError('Route entry is not a list')
 
             rt_entry = Schema({
                                 "rt-destination": str,
@@ -2561,15 +2581,15 @@ class ShowRouteTableLabelSwitchedNameSchema(MetaParser):
 
     def validate_rt_schema(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('rt schema is not a list')
+            raise SchemaError('rt schema is not a list')
 
         def validate_rt_entry_schema(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('rt entry schema is not a list')
+                raise SchemaError('rt entry schema is not a list')
 
             def validate_nh_schema(value):
                 if not isinstance(value, list):
-                    raise SchemaTypeError('nh schema is not a list')
+                    raise SchemaError('nh schema is not a list')
             
                 nh_schema = Schema({
                             Optional("selected-next-hop"): bool,

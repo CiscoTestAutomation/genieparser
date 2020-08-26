@@ -13,8 +13,8 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema
-from genie.metaparser.util.exceptions import SchemaTypeError
 
 
 class ShowLDPSessionSchema(MetaParser):
@@ -23,7 +23,7 @@ class ShowLDPSessionSchema(MetaParser):
     """
     def validate_ldp_session(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('LDP Session not a list')
+            raise SchemaError('LDP Session not a list')
 
         ldp_session = Schema({
             "ldp-neighbor-address": str,
@@ -105,7 +105,7 @@ class ShowLdpNeighborSchema(MetaParser):
 
     def validate_ldp_neighbor(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('LDP neighbor is not a list')
+            raise SchemaError('LDP neighbor is not a list')
 
         ldp_neighbor = Schema({
             "interface-name": str,
@@ -195,7 +195,7 @@ class ShowLdpDatabaseSessionIpaddressSchema(MetaParser):
 
     def validate_ldp_binding(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('LDP binding is not a list')
+            raise SchemaError('LDP binding is not a list')
 
         ldp_binding = Schema({
             "ldp-label": str,
@@ -208,7 +208,7 @@ class ShowLdpDatabaseSessionIpaddressSchema(MetaParser):
 
     def validate_ldp_database(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('LDP database is not a list')
+            raise SchemaError('LDP database is not a list')
 
         ldp_database = Schema({
             "ldp-binding": Use(ShowLdpDatabaseSessionIpaddress.validate_ldp_binding),
@@ -320,6 +320,7 @@ class ShowLDPOverviewSchema(MetaParser):
                 Optional("ldp-transport-preference"): str,
                 "ldp-message-id": int,
                 "ldp-configuration-sequence": int,
+                Optional("ldp-control-mode"): str,
                 "ldp-deaggregate": str,
                 "ldp-explicit-null": str,
                 "ldp-ipv6-tunneling": str,
@@ -329,6 +330,7 @@ class ShowLDPOverviewSchema(MetaParser):
                 "ldp-unicast-transit-lsp-chaining": str,
                 "ldp-p2mp-transit-lsp-chaining": str,
                 "ldp-transit-lsp-route-stats": str,
+                Optional("ldp-retention-mode"): str,
                 Optional("ldp-route-acknowledgement"): str,
                 Optional("ldp-bgp-export"): str,
                 Optional("ldp-mtu-discovery"): str,
@@ -346,6 +348,7 @@ class ShowLDPOverviewSchema(MetaParser):
                     Optional("ldp-control-mode"): str,
                     Optional("ldp-session-connecting"): int
                 },
+                Optional("ldp-session-operational"): int,
                 Optional("ldp-dod-session-count"): str,
                 Optional("ldp-auto-targeted-session"): {
                     "ldp-auto-targeted-session-enabled": str,
@@ -888,7 +891,6 @@ class ShowLDPInterface(ShowLDPInterfaceSchema):
 
         return ret_dict
 
-
 class ShowLDPInterfaceDetail(ShowLDPInterface):
     cli_command = 'show ldp interface {interface} detail'
     def cli(self, interface, output=None):
@@ -901,3 +903,415 @@ class ShowLDPInterfaceDetail(ShowLDPInterface):
             out = output
 
         return super().cli(interface=interface, output=' ' if not out else out)
+
+
+class ShowLdpSessionIpaddressDetailSchema(MetaParser):
+    """ Schema for:
+            * show ldp session ipaddress detail
+    """
+
+    schema = {
+    "ldp-session-information": {
+        "ldp-session": {
+            "ldp-connection-state": str,
+            "ldp-graceful-restart-local": str,
+            Optional("ldp-graceful-restart-remote"): str,
+            "ldp-holdtime": str,
+            "ldp-keepalive-interval": str,
+            "ldp-keepalive-time": str,
+            "ldp-local-address": str,
+            "ldp-local-helper-mode": str,
+            "ldp-local-label-adv-mode": str,
+            "ldp-local-maximum-reconnect": str,
+            "ldp-local-maximum-recovery": str,
+            "ldp-mtu-discovery": str,
+            "ldp-neg-label-adv-mode": str,
+            "ldp-neighbor-address": str,
+            "ldp-neighbor-count": str,
+            "ldp-neighbor-types": {
+                "ldp-neighbor-type": str
+            },
+            "ldp-remaining-time": str,
+            "ldp-remote-address": str,
+            Optional("ldp-remote-helper-mode"): str,
+            Optional("ldp-remote-label-adv-mode"): str,
+            "ldp-retry-interval": str,
+            "ldp-session-address": {
+                "interface-address": str
+            },
+            Optional("ldp-session-adv-mode"): str,
+            "ldp-session-capabilities-advertised": {
+                "ldp-capability": str
+            },
+            "ldp-session-capabilities-received": {
+                "ldp-capability": str
+            },
+            "ldp-session-flags": {
+                "ldp-session-flag": str
+            },
+            "ldp-session-id": str,
+            "ldp-session-max-pdu": str,
+            "ldp-session-nsr-state": str,
+            "ldp-session-protection": {
+                "ldp-session-protection-state": str
+            },
+            "ldp-session-role": str,
+            "ldp-session-state": str,
+            "ldp-up-time": str
+        }
+    }
+}
+
+
+class ShowLdpSessionIpaddressDetail(ShowLdpSessionIpaddressDetailSchema):
+    """ Parser for:
+            * show ldp session {ipaddress} detail
+    """
+
+    cli_command = 'show ldp session {ipaddress} detail'
+
+    def cli(self, ipaddress, output=None):
+        if not output:
+            cmd = self.cli_command.format(ipaddress=ipaddress)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Address: 106.187.14.240, State: Operational, Connection: Open, Hold time: 23
+        p1 = re.compile(
+            r'^Address: +(?P<ldp_neighbor_address>\S+), '
+            r'+State: +(?P<ldp_session_state>\S+), '
+            r'+Connection: +(?P<ldp_connection_state>\S+), '
+            r'+Hold +time: +(?P<ldp_remaining_time>\S+)$'
+        )
+
+        # Session ID: 59.128.2.250:0--106.187.14.240:0
+        p2 = re.compile(
+            r'^Session ID: +(?P<ldp_session_id>\S+)$'
+        )
+
+        # Next keepalive in 3 seconds
+        p3 = re.compile(
+            r'^Next +keepalive +in +(?P<ldp_keepalive_time>\S+) +seconds$'
+        )
+
+        # Passive, Maximum PDU: 4096, Hold time: 30, Neighbor count: 1
+        p4 = re.compile(
+            r'^(?P<ldp_session_role>\S+), +Maximum +PDU: '
+            r'+(?P<ldp_session_max_pdu>\d+), +Hold +time: '
+            r'(?P<ldp_holdtime>\d+), Neighbor +count: (?P<ldp_neighbor_count>\d+)$'
+        )
+
+        # Neighbor types: discovered
+        p5 = re.compile(
+            r'^Neighbor +types: +(?P<ldp_neighbor_type>\S+)$'
+        )
+
+        # Keepalive interval: 10, Connect retry interval: 1
+        p6 = re.compile(
+            r'^Keepalive +interval: +(?P<ldp_keepalive_interval>\d+)+, '
+            r'+Connect +retry +interval: (?P<ldp_retry_interval>\d+)$'
+        )
+
+        # Local address: 59.128.2.250, Remote address: 106.187.14.240
+        p7 = re.compile(
+            r'^Local +address: +(?P<ldp_local_address>\S+), '
+            r'+Remote +address: +(?P<ldp_remote_address>\S+)$'
+        )
+
+        # Up for 00:00:47
+        p8 = re.compile(
+            r'^Up +for +(?P<ldp_up_time>\S+)$'
+        )
+
+        # Capabilities advertised: none
+        p9 = re.compile(
+            r'^Capabilities +advertised: +(?P<ldp_capability_advertised>\S+)$'
+        )
+
+        # Capabilities received: none
+        p10 = re.compile(
+            r'^Capabilities +received: +(?P<ldp_capability_received>\S+)$'
+        )
+
+        # Protection: disabled
+        p11 = re.compile(
+            r'^Protection: +(?P<ldp_session_protection_state>\S+)$'
+        )
+
+        # Session flags: none
+        p12 = re.compile(
+            r'^Session +flags: +(?P<ldp_session_flag>\S+)$'
+        )
+
+        # Local - Restart: disabled, Helper mode: enabled
+        p13 = re.compile(
+            r'^Local +- +Restart: +(?P<ldp_graceful_restart_local>\S+), '
+            r'Helper +mode: +(?P<ldp_local_helper_mode>\S+)$'
+        )
+
+        # Remote - Restart: disabled, Helper mode: enabled
+        p14 = re.compile(
+            r'^Remote +- +Restart: +(?P<ldp_graceful_restart_remote>\S+), '
+            r'Helper +mode: +(?P<ldp_remote_helper_mode>\S+)$'
+        )
+
+        # Local maximum neighbor reconnect time: 120000 msec
+        p15 = re.compile(
+            r'^Local +maximum +neighbor +reconnect +time: '
+            r'+(?P<ldp_local_maximum_reconnect>\S+) +msec$'
+        )
+
+        # Local maximum neighbor recovery time: 240000 msec
+        p16 = re.compile(
+            r'^Local +maximum +neighbor +recovery +time: '
+            r'+(?P<ldp_local_maximum_recovery>\S+) +msec$'
+        )
+
+        # Local Label Advertisement mode: Downstream unsolicited
+        p17 = re.compile(
+            r'^Local +Label +Advertisement +mode: '
+            r'+(?P<ldp_local_label_adv_mode>[\S\s]+)$'
+        )
+
+        # Remote Label Advertisement mode: Downstream unsolicited
+        p18 = re.compile(
+            r'^Remote +Label +Advertisement +mode: '
+            r'+(?P<ldp_remote_label_adv_mode>[\S\s]+)$'
+        )
+
+        # Negotiated Label Advertisement mode: Downstream unsolicited
+        p18_2 = re.compile(
+            r'^Negotiated +Label +Advertisement +mode: '
+            r'+(?P<ldp_neg_label_adv_mode>[\S\s]+)$'
+        )
+
+        # MTU discovery: disabled
+        p19 = re.compile(r'^MTU +discovery: +(?P<ldp_mtu_discovery>\S+)$'
+        )
+
+        # Nonstop routing state: Not in sync
+        p20 = re.compile(r'^Nonstop +routing +state: +(?P<ldp_session_nsr_state>[\S\s]+)$'
+        )
+
+        # Next-hop addresses received:
+        p21 = re.compile(r'^(?P<next_hop_flag>Next-hop +addresses +received:)$'
+        )
+
+        # Next-hop addresses received:
+        p22 = re.compile(r'^(?P<interface_address>[\d\.]+)$'
+        )
+
+        
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Address: 106.187.14.240, State: Operational, Connection: Open, Hold time: 23
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_session_dict = ret_dict.setdefault('ldp-session-information', {}).\
+                    setdefault('ldp-session', {})
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ldp_session_dict[entry_key] = group_value
+                continue
+
+            # Session ID: 59.128.2.250:0--106.187.14.240:0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_session_dict['ldp-session-id'] = group['ldp_session_id']
+                continue
+
+            # Next keepalive in 3 seconds
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_session_dict['ldp-keepalive-time'] = group['ldp_keepalive_time']
+                continue
+
+            # Passive, Maximum PDU: 4096, Hold time: 30, Neighbor count: 1
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ldp_session_dict[entry_key] = group_value
+                continue
+
+            # Neighbor types: discovered
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_neighbor_type_dict = {}
+                ldp_neighbor_type_dict['ldp-neighbor-type'] = group['ldp_neighbor_type']
+                ldp_session_dict['ldp-neighbor-types'] = ldp_neighbor_type_dict
+
+            # Keepalive interval: 10, Connect retry interval: 1
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ldp_session_dict[entry_key] = group_value
+                continue
+
+            # Local address: 59.128.2.250, Remote address: 106.187.14.240
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ldp_session_dict[entry_key] = group_value
+                continue
+
+            # Up for 00:00:47
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ldp_session_dict[entry_key] = group_value
+                continue
+
+            # Capabilities advertised: none
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_capability_dict = {}
+                ldp_capability_dict['ldp-capability'] = group['ldp_capability_advertised']
+                ldp_session_dict['ldp-session-capabilities-advertised'] = ldp_capability_dict
+                continue
+
+            # Capabilities received: none
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_capability_dict = {}
+                ldp_capability_dict['ldp-capability'] = group['ldp_capability_received']
+                ldp_session_dict['ldp-session-capabilities-received'] = ldp_capability_dict
+                continue
+
+            # Protection: disabled
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_protection_dict = {}
+                ldp_protection_dict['ldp-session-protection-state'] = group['ldp_session_protection_state']
+                ldp_session_dict['ldp-session-protection'] = ldp_protection_dict
+                continue
+
+            # Session flags: none
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_session_protection_dict = {}
+                ldp_session_protection_dict['ldp-session-flag'] = group['ldp_session_flag']
+                ldp_session_dict['ldp-session-flags'] = ldp_session_protection_dict
+                continue
+
+            # Local - Restart: disabled, Helper mode: enabled
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ldp_session_dict[entry_key] = group_value
+                continue
+
+            # Remote - Restart: disabled, Helper mode: enabled
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ldp_session_dict[entry_key] = group_value
+                continue
+
+            # Local maximum neighbor reconnect time: 120000 msec
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ldp_session_dict[entry_key] = group_value
+                continue
+
+            # Local maximum neighbor recovery time: 240000 msec
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ldp_session_dict[entry_key] = group_value
+                continue
+
+            # Local Label Advertisement mode: Downstream unsolicited
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ldp_session_dict[entry_key] = group_value
+                continue
+
+            # Remote Label Advertisement mode: Downstream unsolicited
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ldp_session_dict[entry_key] = group_value
+                continue
+
+            # Negotiated Label Advertisement mode: Downstream unsolicited
+            m = p18_2.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ldp_session_dict[entry_key] = group_value
+                continue
+
+            # MTU discovery: disabled
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ldp_session_dict[entry_key] = group_value
+                continue
+            
+            # Nonstop routing state: Not in sync
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    ldp_session_dict[entry_key] = group_value
+                continue
+
+            # Next-hop addresses received:
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                if group['next_hop_flag']:
+                    next_hop_flag = True
+                continue
+
+            # 106.187.14.157
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                if next_hop_flag:
+                    ldp_session_address_dict = {}
+                    ldp_session_address_dict['interface-address'] = group['interface_address']
+                    ldp_session_dict['ldp-session-address'] = ldp_session_address_dict
+                next_hop_flag = False
+                continue
+
+        return ret_dict

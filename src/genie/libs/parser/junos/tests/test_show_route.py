@@ -294,6 +294,49 @@ class test_show_route_table(unittest.TestCase):
         }
     }
 
+    golden_output_6 = {
+        'execute.return_value':
+        '''
+        show route table mpls.0 label 118420
+
+        mpls.0: 54 destinations, 54 routes (54 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
+
+        118420             *[VPN/170] 31w3d 20:13:54
+                            >  to 10.19.198.66 via ge-0/0/3.0, Swap
+    '''
+    }
+
+    parsed_output_6 = {
+        "table_name": {
+            "mpls.0": {
+                "destination_count": 54,
+                "total_route_count": 54,
+                "active_route_count": 54,
+                "holddown_route_count": 0,
+                "hidden_route_count": 0,
+                "routes": {
+                    "118420": {
+                        "active_tag": "*",
+                        "protocol_name": "VPN",
+                        "preference": "170",
+                        "age": "31w3d 20:13:54",
+                        "next_hop": {
+                            "next_hop_list": {
+                                1: {
+                                    "to": "10.19.198.66",
+                                    "via": "ge-0/0/3.0",
+                                    "best_route": ">",
+                                    "mpls_label": "Swap",
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     def test_show_route_table_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -337,6 +380,15 @@ class test_show_route_table(unittest.TestCase):
                                   prefix='label',
                                   destination='118420')
         self.assertEqual(parsed_output, self.parsed_output_5)
+
+    def test_show_route_table_6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_6)
+        obj = ShowRouteTable(device=self.device)
+        parsed_output = obj.parse(table='mpls.0',
+                                  prefix='label',
+                                  destination='118420')
+        self.assertEqual(parsed_output, self.parsed_output_6)
 
 
 '''
@@ -54968,6 +55020,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "nh-address": "0xbb68bf4",
                                     "nh-reference-count": "4",
                                     "gateway": "2.2.2.2",
+                                    'age': {'#text': '13'},
+                                    'metric2': '3',
                                     "nh": [
                                         {
                                             "to": "20.0.0.2",
@@ -56239,6 +56293,39 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
         },
     }
 
+    golden_output_3 = {'execute.return_value':'''
+    show route advertising-protocol bgp 20.0.0.3 3.3.3.3 detail 
+
+    inet.3: 1 destinations, 1 routes (1 active, 0 holddown, 0 hidden)
+    * 3.3.3.3/32 (1 entry, 1 announced)
+    BGP group eBGP_SUT-2 type External
+        Route Label: 17
+        Nexthop: Self
+        Flags: Nexthop Change
+        MED: 1
+        AS path: [1] I 
+        Entropy label capable
+    '''}
+
+    golden_parsed_output_3 = {'route-information': {'route-table': [{'active-route-count': '1',
+                                        'destination-count': '1',
+                                        'hidden-route-count': '0',
+                                        'holddown-route-count': '0',
+                                        'rt-entry': {'active-tag': '*',
+                                                     'as-path': '[1] I',
+                                                     'bgp-group': {'bgp-group-name': 'eBGP_SUT-2',
+                                                                   'bgp-group-type': 'External'},
+                                                     'flags': 'Nexthop Change',
+                                                     'med': '1',
+                                                     'nh': {'to': 'Self'},
+                                                     'route-label': '17',
+                                                     'rt-announced-count': '1',
+                                                     'rt-destination': '3.3.3.3',
+                                                     'rt-entry-count': '1',
+                                                     'rt-prefix-length': '32'},
+                                        'table-name': 'inet.3',
+                                        'total-route-count': '1'}]}}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteAdvertisingProtocolDetail(device=self.device)
@@ -56268,6 +56355,16 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
             route="10.169.196.254",
         )
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowRouteAdvertisingProtocolDetail(device=self.device)
+        parsed_output = obj.parse(
+            protocol='bgp',
+            ip_address='20.0.0.3',
+            route="3.3.3.3",
+        )
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)        
 
 
 class TestShowRouteForwardingTableLabel(unittest.TestCase):

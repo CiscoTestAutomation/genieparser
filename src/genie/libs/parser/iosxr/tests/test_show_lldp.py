@@ -249,6 +249,7 @@ class TestShowLldpEntry(unittest.TestCase):
                                         'system': True,
                                     },
                                 },
+                                'peer_mac': '00:8a:96:ff:13:13',
                                 'chassis_id': '008a.96ff.178c',
                                 'hold_time': 120,
                                 'management_address': '10.10.10.11',
@@ -273,6 +274,7 @@ class TestShowLldpEntry(unittest.TestCase):
                                         'system': True,
                                     },
                                 },
+                                'peer_mac': '00:8a:96:ff:2b:13',
                                 'chassis_id': '008a.96ff.2f8c',
                                 'hold_time': 120,
                                 'management_address': '10.10.10.10',
@@ -297,6 +299,7 @@ class TestShowLldpEntry(unittest.TestCase):
                                         'system': True,
                                     },
                                 },
+                                'peer_mac': '00:bc:60:ff:7f:17',
                                 'chassis_id': '00bc.60ff.7ff0',
                                 'hold_time': 120,
                                 'management_address': '10.10.10.2',
@@ -374,8 +377,22 @@ class TestShowLldpEntry(unittest.TestCase):
       IPv4 address: 10.10.10.14
 
     Peer MAC Address: a0:f3:e4:ff:19:d4
+    
+    Local Interface: TenGigE0/5/0/8
+    Chassis id: 8426.2bff.e85a
+    Port id: 8426.2bff.e85a
+    Port Description - not advertised
+    System Name - not advertised
+    System Description - not advertised
+    
+    Time remaining: 74 seconds
+    Hold Time: 14 seconds
+    System Capabilities: N/A
+    Enabled Capabilities: N/A
+    Management Addresses - not advertised
+    Peer MAC Address: c4:71:fe:ff:73:3d
 
-    Total entries displayed: 3
+    Total entries displayed: 4
     '''}
     expected_output2 = {
         'interfaces': {
@@ -384,79 +401,97 @@ class TestShowLldpEntry(unittest.TestCase):
                     'Bundle-Ether2': {
                         'neighbors': {
                             'geni5-genie': {
+                                'chassis_id': 'ccd8.c1ff.49dc',
+                                'port_description': '10G to ge1-genie port Ge1/1/1/1:GG1',
+                                'system_name': 'geni5-genie',
+                                'neighbor_id': 'geni5-genie',
+                                'system_description': 'Cisco IOS XR Software, Version 6.5.3[Default]\nCopyright (c) 2019 by Cisco Systems, Inc., ASR9K Series\n',
+                                'time_remaining': 99,
+                                'hold_time': 120,
                                 'capabilities': {
                                     'router': {
-                                        'enabled': True,
                                         'system': True,
-                                    },
+                                        'enabled': True
+                                    }
                                 },
-                                'chassis_id': 'ccd8.c1ff.49dc',
-                                'hold_time': 120,
                                 'management_address': '10.10.10.12',
-                                'neighbor_id': 'geni5-genie',
-                                'port_description': '10G to ge1-genie port Ge1/1/1/1:GG1',
-                                'system_description': 'Cisco IOS XR Software, Version 6.5.3[Default]\nCopyright (c) 2019 by Cisco Systems, Inc., ASR9K Series\n',
-                                'system_name': 'geni5-genie',
-                                'time_remaining': 99,
-                            },
-                        },
-                    },
-                },
+                                'peer_mac': 'cc:d8:c1:ff:49:df'
+                            }
+                        }
+                    }
+                }
             },
             'TenGigE0/5/0/5': {
                 'port_id': {
                     'TenGigabitEthernet0/1/0/3': {
                         'neighbors': {
                             'system3': {
+                                'chassis_id': 'c471.feff.70c3',
+                                'port_description': '10G link to genie1-genie port TEN 0/5/0/5 in BE 43 (with port 0/4/0/3)',
+                                'system_name': 'system3',
+                                'neighbor_id': 'system3',
+                                'system_description': 'Cisco IOS XR Software, Version 6.4.2[Default]\nCopyright (c) 2019 by Cisco Systems, Inc., CRS\n',
+                                'time_remaining': 108,
+                                'hold_time': 120,
                                 'capabilities': {
                                     'router': {
-                                        'enabled': True,
                                         'system': True,
-                                    },
+                                        'enabled': True
+                                    }
                                 },
-                                'chassis_id': 'c471.feff.70c3',
-                                'hold_time': 120,
                                 'management_address': '10.10.10.13',
-                                'neighbor_id': 'system3',
-                                'port_description': '10G link to genie1-genie port TEN 0/5/0/5 in BE 43 (with port 0/4/0/3)',
-                                'system_description': 'Cisco IOS XR Software, Version 6.4.2[Default]\nCopyright (c) 2019 by Cisco Systems, Inc., CRS\n',
-                                'system_name': 'system3',
-                                'time_remaining': 108,
-                            },
-                        },
-                    },
-                },
+                                'peer_mac': 'c4:71:fe:ff:73:3d'
+                            }
+                        }
+                    }
+                }
             },
             'TenGigE0/5/0/6': {
                 'port_id': {
                     '1611153480': {
                         'neighbors': {
                             'GENIE02GEN2': {
+                                'chassis_id': '8426.2bff.e85a',
+                                'port_description': '2/1/9, 10-Gig Ethernet, "10G interface to genie1-genie port 0/5/0/6-DO NOT SHUT or REMOVE..Mitch"',
+                                'system_name': 'GENIE02GEN2',
+                                'neighbor_id': 'GENIE02GEN2',
+                                'system_description': '',
+                                'time_remaining': 105,
+                                'hold_time': 121,
                                 'capabilities': {
                                     'bridge': {
-                                        'enabled': True,
                                         'system': True,
+                                        'enabled': True
                                     },
                                     'router': {
-                                        'enabled': True,
                                         'system': True,
-                                    },
+                                        'enabled': True
+                                    }
                                 },
-                                'chassis_id': '8426.2bff.e85a',
-                                'hold_time': 121,
                                 'management_address': '10.10.10.14',
-                                'neighbor_id': 'GENIE02GEN2',
-                                'port_description': '2/1/9, 10-Gig Ethernet, "10G interface to genie1-genie port 0/5/0/6-DO NOT SHUT or REMOVE..Mitch"',
-                                'system_description': '',
-                                'system_name': 'GENIE02GEN2',
-                                'time_remaining': 105,
-                            },
-                        },
-                    },
-                },
+                                'peer_mac': 'a0:f3:e4:ff:19:d4'
+                            }
+                        }
+                    }
+                }
             },
+            'TenGigE0/5/0/8': {
+                'port_id': {
+                    '8426.2bff.e85a': {
+                        'neighbors': {
+                            'c4:71:fe:ff:73:3d': {
+                                'chassis_id': '8426.2bff.e85a',
+                                'port_description': 'not advertised',
+                                'time_remaining': 74,
+                                'hold_time': 14,
+                                'peer_mac': 'c4:71:fe:ff:73:3d'
+                            }
+                        }
+                    }
+                }
+            }
         },
-        'total_entries': 3,
+        'total_entries': 4
     }
 
     def test_empty(self):
@@ -774,6 +809,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                                         'system': True,
                                     },
                                 },
+                                'peer_mac': '00:8a:96:ff:13:13',
                                 'chassis_id': '008a.96ff.178c',
                                 'hold_time': 120,
                                 'management_address': '10.10.10.11',
@@ -798,6 +834,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                                         'system': True,
                                     },
                                 },
+                                'peer_mac': '00:8a:96:ff:2b:13',
                                 'chassis_id': '008a.96ff.2f8c',
                                 'hold_time': 120,
                                 'management_address': '10.10.10.10',
@@ -822,6 +859,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                                         'system': True,
                                     },
                                 },
+                                'peer_mac': '00:bc:60:ff:7f:17',
                                 'chassis_id': '00bc.60ff.7ff0',
                                 'hold_time': 120,
                                 'management_address': '10.10.10.2',
