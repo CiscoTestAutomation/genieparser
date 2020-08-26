@@ -11,7 +11,7 @@ from genie.libs.parser.nxos.show_platform import (
     ShowBoot, ShowInventory, ShowInstallActive, ShowSystemRedundancyStatus,
     ShowRedundancyStatus, ShowVersion, ShowModule, Dir, ShowVdcDetail,
     ShowVdcCurrent, ShowVdcMembershipStatus, ShowProcessesCpu,
-    ShowProcessesMemory)
+    ShowProcessesMemory, ShowCores)
 ats_mock = Mock()
 
 
@@ -1731,6 +1731,60 @@ class TestShowProcessesMemory(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
+class TestShowCores(unittest.TestCase):
+
+    dev = Device(name='N9Kv')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "date": {
+            "2020-08-17 18:00:56": {
+                "pid": {
+                    8083: {
+                        "instance": 1,
+                        "module": 27,
+                        "process_name": "bgp",
+                        "vdc": 1
+                    }
+                }
+            },
+            "2020-08-17 18:04:03": {
+                "pid": {
+                    8083: {
+                        "instance": 2,
+                        "module": 27,
+                        "process_name": "bgp",
+                        "vdc": 1
+                    }
+                }
+            }
+        }
+    }
+
+    # show cores
+    golden_output = {
+        'execute.return_value':
+        '''\
+        VDC  Module  Instance  Process-name     PID       Date(Year-Month-Day Time)
+        ---  ------  --------  ---------------  --------  -------------------------
+        1    27      1         bgp              8083      2020-08-17 18:00:56
+        1    27      2         bgp              8083      2020-08-17 18:04:03
+        '''
+    }
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowCores(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsered_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowCores(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()
