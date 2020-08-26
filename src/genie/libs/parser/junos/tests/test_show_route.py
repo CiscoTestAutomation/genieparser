@@ -55528,6 +55528,221 @@ class TestShowRouteReceiveProtocol(unittest.TestCase):
         }
     }
 
+    golden_output_2 = {
+        'execute.return_value':
+        '''
+    show route receive-protocol bgp 2001:268:ff00::4
+
+    inet.0: 21 destinations, 34 routes (21 active, 0 holddown, 0 hidden)
+
+    inet6.0: 24 destinations, 36 routes (24 active, 0 holddown, 0 hidden)
+    Prefix                  Nexthop              MED     Lclpref    AS path
+    2001:268:ff00::1/128
+                            2001:268:ff00::4     2       100        I
+    2001:268:ff00::2/128
+                            2001:268:ff00::4     1       100        I
+    2001:268:ff00::3/128
+                            2001:268:ff00::4     1       100        I
+    2001:268:ff00::4/128
+                            2001:268:ff00::4             100        I
+    2001:268:ff00::5/128
+                            2001:268:ff00::4     3       100        I
+    2001:268:ff00:2::/64
+                            2001:268:ff00::4     2       100        I
+    2001:268:ff00:3::/64
+                            2001:268:ff00::4     2       100        I
+    2001:268:ff00:4::/64
+                            2001:268:ff00::4             100        I
+    2001:268:ff00:5::/64
+                            2001:268:ff00::4             100        I
+    2001:268:ff00:6::/64
+                            2001:268:ff00::4     3       100        I
+    2001:268:ff00:100::2/128
+                            2001:268:ff00::2             100        I
+    2001:268:ff00:100::3/128
+                            2001:268:ff00::3             100        I
+    2001:268:ff00:100::4/128
+    *                         2001:268:ff00::4             100        I
+    '''
+    }
+
+    golden_parsed_output_2 = {
+        "route-information": {
+        "route-table": [
+            {
+                "active-route-count": "21",
+                "destination-count": "21",
+                "hidden-route-count": "0",
+                "holddown-route-count": "0",
+                "table-name": "inet.0",
+                "total-route-count": "34"
+            },
+            {
+                "active-route-count": "24",
+                "destination-count": "24",
+                "hidden-route-count": "0",
+                "holddown-route-count": "0",
+                "rt": [
+                    {
+                        "rt-destination": "2001:268:ff00::1/128",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "med": "2",
+                            "nh": {
+                                "to": "2001:268:ff00::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:268:ff00::2/128",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "med": "1",
+                            "nh": {
+                                "to": "2001:268:ff00::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:268:ff00::3/128",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "med": "1",
+                            "nh": {
+                                "to": "2001:268:ff00::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:268:ff00::4/128",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "nh": {
+                                "to": "2001:268:ff00::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:268:ff00::5/128",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "med": "3",
+                            "nh": {
+                                "to": "2001:268:ff00::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:268:ff00:2::/64",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "med": "2",
+                            "nh": {
+                                "to": "2001:268:ff00::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:268:ff00:3::/64",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "med": "2",
+                            "nh": {
+                                "to": "2001:268:ff00::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:268:ff00:4::/64",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "nh": {
+                                "to": "2001:268:ff00::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:268:ff00:5::/64",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "nh": {
+                                "to": "2001:268:ff00::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:268:ff00:6::/64",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "med": "3",
+                            "nh": {
+                                "to": "2001:268:ff00::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:268:ff00:100::2/128",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "nh": {
+                                "to": "2001:268:ff00::2"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:268:ff00:100::3/128",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "nh": {
+                                "to": "2001:268:ff00::3"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:268:ff00:100::4/128",
+                        "rt-entry": {
+                            "active-tag": "*",
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "nh": {
+                                "to": "2001:268:ff00::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    }
+                ],
+                "table-name": "inet6.0",
+                "total-route-count": "36"
+            }
+        ]
+    }
+        
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteReceiveProtocol(device=self.device)
@@ -55539,6 +55754,12 @@ class TestShowRouteReceiveProtocol(unittest.TestCase):
         obj = ShowRouteReceiveProtocol(device=self.device)
         parsed_output = obj.parse(protocol='bgp', peer='10.189.5.253')
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowRouteReceiveProtocol(device=self.device)
+        parsed_output = obj.parse(protocol='bgp', peer='2001:268:ff00::4')
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 '''
@@ -55722,6 +55943,267 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
         }
     }
 
+
+    golden_output_3 = {
+        'execute.return_value':
+        '''
+    show route advertising-protocol bgp 2001:268:ff00::1
+
+    inet6.0: 21 destinations, 23 routes (21 active, 0 holddown, 0 hidden)
+    Prefix                  Nexthop              MED     Lclpref    AS path
+        2001:268:ff00::1/128
+    *                         Self                 2       100        I
+        2001:268:ff00::2/128
+    *                         Self                 1       100        I
+        2001:268:ff00::3/128
+    *                         Self                 1       100        I
+        2001:268:ff00::4/128
+    *                         Self                         100        I
+        2001:268:ff00::5/128
+    *                         Self                 3       100        I
+        2001:268:ff00:2::/64
+    *                         Self                 2       100        I
+        2001:268:ff00:3::/64
+    *                         Self                 2       100        I
+        2001:268:ff00:4::/64
+    *                         Self                         100        I
+        2001:268:ff00:5::/64
+    *                         Self                         100        I
+        2001:268:ff00:6::/64
+    *                         Self                 3       100        I
+        2001:268:ff00:100::2/128
+    *                         2001:268:ff00::2             100        I
+        2001:268:ff00:100::3/128
+    *                         2001:268:ff00::3             100        I
+        2001:268:ff00:100::4/128
+    *                         Self                         100        I
+    '''
+    }
+
+    golden_parsed_output_3 = {
+        "route-information": {
+        "route-table": {
+            "active-route-count": "21",
+            "destination-count": "21",
+            "hidden-route-count": "0",
+            "holddown-route-count": "0",
+            "rt": [
+                {
+                    "rt-destination": "2001:268:ff00::1/128",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "med": "2",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:268:ff00::2/128",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "med": "1",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:268:ff00::3/128",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "med": "1",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:268:ff00::4/128",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:268:ff00::5/128",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "med": "3",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:268:ff00:2::/64",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "med": "2",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:268:ff00:3::/64",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "med": "2",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:268:ff00:4::/64",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:268:ff00:5::/64",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:268:ff00:6::/64",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "med": "3",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:268:ff00:100::2/128",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "nh": {
+                            "to": "2001:268:ff00::2"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:268:ff00:100::3/128",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "nh": {
+                            "to": "2001:268:ff00::3"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:268:ff00:100::4/128",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                }
+            ],
+            "table-name": "inet6.0",
+            "total-route-count": "23"
+        }
+    }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteAdvertisingProtocol(device=self.device)
@@ -55739,6 +56221,12 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
         obj = ShowRouteAdvertisingProtocol(device=self.device)
         parsed_output = obj.parse(protocol='bgp', neighbor='10.145.0.3')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowRouteAdvertisingProtocol(device=self.device)
+        parsed_output = obj.parse(protocol='bgp', neighbor='2001:268:ff00::1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 
 '''
