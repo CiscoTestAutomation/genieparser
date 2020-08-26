@@ -283,6 +283,7 @@ class ShowRouteSchema(MetaParser):
                         Optional("last-active"): str,
                         Optional("learned-from"): str,
                         Optional("local-preference"): str,
+                        Optional("peer-id"): str,
                         Optional("med"): str,
                         Optional("metric"): str,
                         Optional("metric2"): str,
@@ -775,7 +776,8 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                     Optional("rt-ospf-area"): str,
                     Optional("rt-tag"): str,
                     "task-name": str,
-                    Optional("validation-state"): str
+                    Optional("validation-state"): str,
+                    Optional("peer-id"): str,
                 })
                 # Validate each dictionary in list
                 for item in value:
@@ -1022,6 +1024,9 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
 
         # Cluster list:  2.2.2.2 4.4.4.4
         p36 = re.compile(r'^Cluster +list: +(?P<cluster_list>[\S\s]+)$')
+
+        # Router ID: 2.2.2.2
+        p37 = re.compile(r'^Router +ID: +(?P<peer_id>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1444,6 +1449,13 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             if m:
                 group = m.groupdict()
                 rt_entry_dict.update({'cluster-list': group['cluster_list']})
+                continue
+            
+            # Router ID: 2.2.2.2 
+            m = p37.match(line)
+            if m:
+                group = m.groupdict()
+                rt_entry_dict.update({'peer-id': group['peer_id']})
                 continue
         
         return ret_dict
