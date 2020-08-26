@@ -25,6 +25,7 @@ from genie.libs.parser.junos.show_route import (ShowRouteTable,
 Unit test for:
     * show route table {table}
     * show route table {table} {prefix}
+    * show route protocol {protocol} extensive {ipaddress}
 '''
 
 
