@@ -1,3 +1,6 @@
+#temporary until folder structure tests are all built
+helper.py
+
 # Python compiled files
 *.pyc
 *.pyo

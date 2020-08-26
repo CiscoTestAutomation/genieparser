@@ -54840,6 +54840,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "announce-bits": "3",
                                     "announce-tasks": "0-KRT 6-BGP_RT_Background 7-Resolve tree 3",
                                     "gateway": "10.169.14.240",
+                                    "local-as": "65171",
+                                    "peer-as": "65151",
                                     "nh": [
                                         {
                                             "nh-string": "Next hop",
@@ -54882,6 +54884,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                 {
                                     "inactive-reason": "IGP metric",
                                     "gateway": "10.189.5.253",
+                                    "local-as": "65171",
+                                    "peer-as": "65171",
                                     "nh": [
                                         {
                                             "label-element": "0xc5cda38",
@@ -55022,6 +55026,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "nh-address": "0xbb68bf4",
                                     "nh-reference-count": "4",
                                     "gateway": "2.2.2.2",
+                                    "local-as": "2",
+                                    "peer-as": "2",
                                     'age': {'#text': '13'},
                                     'metric2': '3',
                                     "nh": [
@@ -56295,6 +56301,39 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
         },
     }
 
+    golden_output_3 = {'execute.return_value':'''
+    show route advertising-protocol bgp 20.0.0.3 3.3.3.3 detail 
+
+    inet.3: 1 destinations, 1 routes (1 active, 0 holddown, 0 hidden)
+    * 3.3.3.3/32 (1 entry, 1 announced)
+    BGP group eBGP_SUT-2 type External
+        Route Label: 17
+        Nexthop: Self
+        Flags: Nexthop Change
+        MED: 1
+        AS path: [1] I 
+        Entropy label capable
+    '''}
+
+    golden_parsed_output_3 = {'route-information': {'route-table': [{'active-route-count': '1',
+                                        'destination-count': '1',
+                                        'hidden-route-count': '0',
+                                        'holddown-route-count': '0',
+                                        'rt-entry': {'active-tag': '*',
+                                                     'as-path': '[1] I',
+                                                     'bgp-group': {'bgp-group-name': 'eBGP_SUT-2',
+                                                                   'bgp-group-type': 'External'},
+                                                     'flags': 'Nexthop Change',
+                                                     'med': '1',
+                                                     'nh': {'to': 'Self'},
+                                                     'route-label': '17',
+                                                     'rt-announced-count': '1',
+                                                     'rt-destination': '3.3.3.3',
+                                                     'rt-entry-count': '1',
+                                                     'rt-prefix-length': '32'},
+                                        'table-name': 'inet.3',
+                                        'total-route-count': '1'}]}}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteAdvertisingProtocolDetail(device=self.device)
@@ -56324,6 +56363,16 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
             route="10.169.196.254",
         )
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowRouteAdvertisingProtocolDetail(device=self.device)
+        parsed_output = obj.parse(
+            protocol='bgp',
+            ip_address='20.0.0.3',
+            route="3.3.3.3",
+        )
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)        
 
 
 class TestShowRouteForwardingTableLabel(unittest.TestCase):
