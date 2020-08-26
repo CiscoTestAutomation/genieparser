@@ -55531,38 +55531,38 @@ class TestShowRouteReceiveProtocol(unittest.TestCase):
     golden_output_2 = {
         'execute.return_value':
         '''
-    show route receive-protocol bgp 2001:268:ff00::4
+        show route receive-protocol bgp 2001:268:ff00::4
 
-    inet.0: 21 destinations, 34 routes (21 active, 0 holddown, 0 hidden)
+        inet.0: 21 destinations, 34 routes (21 active, 0 holddown, 0 hidden)
 
-    inet6.0: 24 destinations, 36 routes (24 active, 0 holddown, 0 hidden)
-    Prefix                  Nexthop              MED     Lclpref    AS path
-    2001:268:ff00::1/128
-                            2001:268:ff00::4     2       100        I
-    2001:268:ff00::2/128
-                            2001:268:ff00::4     1       100        I
-    2001:268:ff00::3/128
-                            2001:268:ff00::4     1       100        I
-    2001:268:ff00::4/128
-                            2001:268:ff00::4             100        I
-    2001:268:ff00::5/128
-                            2001:268:ff00::4     3       100        I
-    2001:268:ff00:2::/64
-                            2001:268:ff00::4     2       100        I
-    2001:268:ff00:3::/64
-                            2001:268:ff00::4     2       100        I
-    2001:268:ff00:4::/64
-                            2001:268:ff00::4             100        I
-    2001:268:ff00:5::/64
-                            2001:268:ff00::4             100        I
-    2001:268:ff00:6::/64
-                            2001:268:ff00::4     3       100        I
-    2001:268:ff00:100::2/128
-                            2001:268:ff00::2             100        I
-    2001:268:ff00:100::3/128
-                            2001:268:ff00::3             100        I
-    2001:268:ff00:100::4/128
-    *                         2001:268:ff00::4             100        I
+        inet6.0: 24 destinations, 36 routes (24 active, 0 holddown, 0 hidden)
+        Prefix                  Nexthop              MED     Lclpref    AS path
+        2001:268:ff00::1/128
+                                2001:268:ff00::4     2       100        I
+        2001:268:ff00::2/128
+                                2001:268:ff00::4     1       100        I
+        2001:268:ff00::3/128
+                                2001:268:ff00::4     1       100        I
+        2001:268:ff00::4/128
+                                2001:268:ff00::4             100        I
+        2001:268:ff00::5/128
+                                2001:268:ff00::4     3       100        I
+        2001:268:ff00:2::/64
+                                2001:268:ff00::4     2       100        I
+        2001:268:ff00:3::/64
+                                2001:268:ff00::4     2       100        I
+        2001:268:ff00:4::/64
+                                2001:268:ff00::4             100        I
+        2001:268:ff00:5::/64
+                                2001:268:ff00::4             100        I
+        2001:268:ff00:6::/64
+                                2001:268:ff00::4     3       100        I
+        2001:268:ff00:100::2/128
+                                2001:268:ff00::2             100        I
+        2001:268:ff00:100::3/128
+                                2001:268:ff00::3             100        I
+        2001:268:ff00:100::4/128
+        *                         2001:268:ff00::4             100        I
     '''
     }
 

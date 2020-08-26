@@ -3,6 +3,10 @@
 --------------------------------------------------------------------------------
 * Junos
     * Modified ShowRouteReceiveProtocol
-        * Enhanced to caputure different CLI output
+        * Enhanced regex pattern p2, as well as proceeding
+          code to develop parser
+        * Created regex patterns p3 and p4
     * Modified ShowRouteAdvertisingProtocol
-        * Enhanced to caputure different CLI output
+        * Enhanced regex pattern p2, as well as proceeding
+          code to develop parser
+        * Created regex patterns p3 and p4
