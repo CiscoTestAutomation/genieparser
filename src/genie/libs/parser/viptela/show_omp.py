@@ -366,4 +366,5 @@ class ShowOmpTlocs(ShowOmpTlocsSchema):
                 last_dict_ptr.update({keys:values})
                 continue
 
+
         return tloc_data
