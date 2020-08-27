@@ -2770,6 +2770,7 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
         # -----------------------------------------------------------
         # *1       Active   689c.e2ff.b9d9     3      V04     Ready
         #  2       Standby  689c.e2ff.b9d9     14             Ready
+        #  3       Member   bbcc.fc7f.fb80     15     0       V-Mismatch
         p3_0 = re.compile(r'^Switch#\s+Role\s+Mac\sAddress\s+Priority\s+Version\s+State$')
 
         p3_1 = re.compile(r'^\*?(?P<switch>\d+) +(?P<role>\w+) +'
