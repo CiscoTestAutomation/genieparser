@@ -1463,9 +1463,15 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             m = p36.match(line)
             if m:
                 group = m.groupdict()
-                rt_entry_dict.update({'cluster-list': group['cluster_list']})
+                if rt_dict.get('rt-entry', None):
+                    rt_entry_dict.update({'cluster-list': group['cluster_list']})
                 continue
         
+        import json
+        json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
+        f = open("dict228.txt","w")
+        f.write(json_data)
+        f.close()
         return ret_dict
     
 class ShowRouteForwardingTableSummarySchema(MetaParser):
@@ -3128,9 +3134,4 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
 
                 continue
 
-        import json
-        json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
-        f = open("dict08192020.txt","w")
-        f.write(json_data)
-        f.close()
         return ret_dict
