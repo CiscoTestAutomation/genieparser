@@ -10,8 +10,6 @@
 --------------------------------------------------------------------------------
 
 * IOSXE
-    * added showstackwisevirtual
-        * show stackwise-virtual
     * added ShowLispSite
         * show lisp site
 
