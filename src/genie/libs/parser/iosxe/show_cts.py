@@ -14,16 +14,20 @@ class ShowCtsRbaclSchema(MetaParser):
     schema = {
         "cts_rbacl": {
             "ip_ver_support": str,
-            str: {
-                "ip_protocol_version": str,
-                "refcnt": int,
-                "flag": str,
-                "stale": bool,
-                Optional(int): {
-                    Optional("action"): str,
-                    Optional("protocol"): str,
-                    Optional("direction"): str,
-                    Optional("port"): int
+            "name": {
+                str: {
+                    "ip_protocol_version": str,
+                    "refcnt": int,
+                    "flag": str,
+                    "stale": bool,
+                    "aces": {
+                        Optional(int): {
+                            Optional("action"): str,
+                            Optional("protocol"): str,
+                            Optional("direction"): str,
+                            Optional("port"): int
+                        }
+                    }
                 }
             }
         }
@@ -119,6 +123,7 @@ class ShowCtsRbacl(ShowCtsRbaclSchema):
                 ip_ver_support = groups['ip_ver_support']
                 if not cts_rbacl_dict.get('cts_rbacl', {}):
                     cts_rbacl_dict['cts_rbacl'] = {}
+                    cts_rbacl_dict['cts_rbacl']['name'] = {}
                 cts_rbacl_dict['cts_rbacl']['ip_ver_support'] = ip_ver_support
                 continue
             #   name   = TCP_13131-01
@@ -141,15 +146,16 @@ class ShowCtsRbacl(ShowCtsRbaclSchema):
                     cts_rbacl_dict['cts_rbacl'] = {}
                 if rbacl_key == 'name':
                     rbacl_name = rbacl_value
-                    cts_rbacl_dict['cts_rbacl'][rbacl_name] = {}
+                    cts_rbacl_dict['cts_rbacl']['name'][rbacl_name] = {}
                     rbacl_ace_index = 1
                 else:
-                    cts_rbacl_dict['cts_rbacl'][rbacl_name].update({rbacl_key: rbacl_value})
+                    cts_rbacl_dict['cts_rbacl']['name'][rbacl_name].update({rbacl_key: rbacl_value})
                 continue
             #     permit tcp dst eq 13131
             elif rbacl_ace_capture.match(line):
                 groups = rbacl_ace_capture.match(line).groupdict()
                 ace_group_dict = {}
+                cts_rbacl_dict['cts_rbacl']['name'][rbacl_name]['aces'] = {}
                 if groups['action']:
                     ace_group_dict.update({'action': groups['action']})
                 if groups['protocol']:
@@ -160,8 +166,8 @@ class ShowCtsRbacl(ShowCtsRbaclSchema):
                     ace_group_dict.update({'port_condition': groups['port_condition']})
                 if groups['port']:
                     ace_group_dict.update({'port': int(groups['port'])})
-                if not cts_rbacl_dict['cts_rbacl'][rbacl_name].get(rbacl_ace_index, {}):
-                    cts_rbacl_dict['cts_rbacl'][rbacl_name][rbacl_ace_index] = ace_group_dict
+                if not cts_rbacl_dict['cts_rbacl']['name'][rbacl_name]['aces'].get(rbacl_ace_index, {}):
+                    cts_rbacl_dict['cts_rbacl']['name'][rbacl_name]['aces'][rbacl_ace_index] = ace_group_dict
                 rbacl_ace_index = rbacl_ace_index + 1
                 continue
         return cts_rbacl_dict
