@@ -2771,13 +2771,14 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
         # -----------------------------------------------------------
         # *1       Active   689c.e2ff.b9d9     3      V04     Ready
         #  2       Standby  689c.e2ff.b9d9     14             Ready
+        #  3       Member   bbcc.fc7f.fb80     15     0       V-Mismatch
         p3_0 = re.compile(r'^Switch#\s+Role\s+Mac\sAddress\s+Priority\s+Version\s+State$')
 
         p3_1 = re.compile(r'^\*?(?P<switch>\d+) +(?P<role>\w+) +'
                            '(?P<mac_address>[\w\.]+) +'
                            '(?P<priority>\d+) +'
                            '(?P<hw_ver>\w+)? +'
-                           '(?P<state>[\w\s]+)$')
+                           '(?P<state>[\w\s-]+)$')
 
         #          Stack Port Status             Neighbors
         # Switch#  Port 1     Port 2           Port 1   Port 2
