@@ -500,6 +500,118 @@ class ShowOspfNeighborInstance(ShowOspfNeighbor):
             )
 
 
+'''
+Schema for:
+    * show ospf neighbor instance all
+'''
+
+
+class ShowOspfNeighborInstanceAllSchema(MetaParser):
+    '''
+    schema = {
+        'ospf-neighbor-information-all': {
+        	'ospf-instance-neighbor': {
+        		'ospf-instance-name': str,
+	            'ospf-neighbor': [{
+	                'neighbor-address': str,
+	                'interface-name': str,
+	                'ospf-neighbor-state': str,
+	                'neighbor-id': str,
+	                'neighbor-priority': str,
+	                'activity-timer': str
+	            }]
+	        }
+        }
+    }
+    '''
+
+    def validate_neighbor_list(value):
+        if not isinstance(value, list):
+            raise SchemaError('ospf-neighbor is not a list')
+        neighbor_schema = Schema({
+            'neighbor-address': str,
+            'interface-name': str,
+            'ospf-neighbor-state': str,
+            'neighbor-id': str,
+            'neighbor-priority': str,
+            'activity-timer': str
+        })
+        for item in value:
+            neighbor_schema.validate(item)
+        return value
+
+    schema = {
+        'ospf-neighbor-information-all': {
+            'ospf-instance-neighbor':
+                {
+                    'ospf-instance-name': str,
+                    'ospf-neighbor': Use(validate_neighbor_list)
+                }
+        }
+    }
+
+
+'''
+Parser for:
+    * show ospf neighbor instance all
+'''
+
+
+class ShowOspfNeighborInstanceAll(ShowOspfNeighborInstanceAllSchema):
+    cli_command = 'show ospf neighbor instance all'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Instance: master
+        p0 = re.compile(r'^Instance: +(?P<instance_name>\S+)$')
+
+        # 10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    32
+        p1 = re.compile(
+            r'^(?P<neighbor>\S+) +(?P<interface>\S+) +'
+            r'(?P<state>\S+) +(?P<id>\S+) +(?P<pri>\d+) +(?P<dead>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Instance: master
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                instance = group['instance_name']
+                ospf_instance_neighbor = ret_dict.setdefault('ospf-neighbor-information-all', {}).setdefault(
+                    'ospf-instance-neighbor', {})
+                ospf_instance_neighbor['ospf-instance-name'] = instance
+
+            # 10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    32
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor = group['neighbor']
+                interface = group['interface']
+                state = group['state']
+                _id = group['id']
+                pri = group['pri']
+                dead = group['dead']
+                neighbor_list = ospf_instance_neighbor.setdefault('ospf-neighbor', [])
+                new_neighbor = {
+                    'neighbor-address': neighbor,
+                    'interface-name': interface,
+                    'ospf-neighbor-state': state,
+                    'neighbor-id': _id,
+                    'neighbor-priority': pri,
+                    'activity-timer': dead
+                }
+                neighbor_list.append(new_neighbor)
+                continue
+        return ret_dict
+
+
 class ShowOspfDatabaseSchema(MetaParser):
     '''
     schema = {
