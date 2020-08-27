@@ -10,7 +10,8 @@
 --------------------------------------------------------------------------------
 
 * IOSXE
-    * added ShowLispSite
+    * Added ShowLispSite
+      * show lisp site
     * Added ShowLicense
         * show license
     * Added ShowStackwiseVirtual
