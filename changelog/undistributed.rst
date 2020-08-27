@@ -16,6 +16,8 @@
         * show cts pacs
     * Added ShowClassMap
         * show class-map
+    * Added ShowApDot11DualBandSummary
+        * show ap dot11 dual-band summary
 
 --------------------------------------------------------------------------------
                                 Fix
