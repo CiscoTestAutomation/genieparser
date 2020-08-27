@@ -154,6 +154,7 @@ class TestShowCtsEnvironmentData(unittest.TestCase):
             },
             "expiration": "0:00:46:51",
             "refresh": "0:00:46:51",
+            "cache_data_status" : "NONE",
             "state_machine_status": "running"
         }
     }

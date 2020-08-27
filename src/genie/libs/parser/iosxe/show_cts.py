@@ -21,7 +21,7 @@ class ShowCtsPacsSchema(MetaParser):
             "credential_lifetime": str,
         },
         "pac_opaque": str,
-        "refresh_timer": str
+        "refresh_timer": str,
     }
 
 
@@ -164,37 +164,38 @@ class ShowCtsEnvironmentDataSchema(MetaParser):
             "current_state": str,
             "last_status": str,
             Optional("sgt_tags"): str,
-          Optional("tag_status"): str,
-          Optional("server_list_name"): str,
-          Optional("server_count"): int,
-          Optional("servers"): {
-              Optional(int): {
-                  Optional("server_ip"): str,
-                  Optional("port"): int,
-                  Optional("aid"): str,
-                  Optional("server_status"): str,
-                  Optional("auto_test"): str,
-                  Optional("keywrap_enable"): str,
-                  Optional("idle_time_mins"): int,
-                  Optional("dead_time_secs"): int
-              }
+            Optional("tag_status"): str,
+            Optional("server_list_name"): str,
+            Optional("server_count"): int,
+            Optional("servers"): {
+                Optional(int): {
+                    Optional("server_ip"): str,
+                    Optional("port"): int,
+                    Optional("aid"): str,
+                    Optional("server_status"): str,
+                    Optional("auto_test"): str,
+                    Optional("keywrap_enable"): str,
+                    Optional("idle_time_mins"): int,
+                    Optional("dead_time_secs"): int
+                }
           },
-          Optional("security_groups"): {
-              Optional(int): {
-                  Optional("sec_group"): str,
-                  Optional("sec_group_name"): str
+            Optional("security_groups"): {
+                Optional(int): {
+                    Optional("sec_group"): str,
+                    Optional("sec_group_name"): str
               }
           },
           Optional("env_data_lifetime_secs"): str,
           Optional("last_update"): {
-            Optional("date"): str,
-            Optional("time"): str,
-            Optional("time_zone"): str
+                Optional("date"): str,
+                Optional("time"): str,
+                Optional("time_zone"): str
           },
           Optional("expiration"): str,
           Optional("refresh"): str,
           "state_machine_status": str,
-          Optional("retry_timer_status"): str
+          Optional("retry_timer_status"): str,
+          Optional("cache_data_status"): str
         }
     }
 
@@ -207,11 +208,11 @@ class ShowCtsEnvironmentDataSchema(MetaParser):
 class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
     """Parser for show cts environment-data"""
 
-    cli_command = ['show cts environment-data']
+    cli_command = 'show cts environment-data'
 
     def cli(self, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command[0])
+            out = self.device.execute(self.cli_command)
         else:
             out = output
 
@@ -254,7 +255,7 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
         # State Machine is running
 
         # Current state = COMPLETE
-        current_state_capture = re.compile(r"^Current\s+state\s=\s+(?P<state>.*$)")
+        current_state_capture = re.compile(r"^Current\s+state\s+=\s+(?P<state>.*$)")
         # Last status = Successful
         last_status_capture = re.compile(r"^Last\s+status\s+=\s+(?P<last_status>.*$)")
         #   SGT tag = 0-16:Unknown
@@ -281,6 +282,8 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
         expiration_capture = re.compile(r"^Env-data\s+expires\s+in\s+(?P<expiration>\d+:\d+:\d+:\d+)\s+\S+")
         # Env-data refreshes in 0:00:46:51 (dd:hr:mm:sec)
         refresh_capture = re.compile(r"^Env-data\s+refreshes\s+in\s+(?P<refresh>\d+:\d+:\d+:\d+)\s+\S+")
+        # Cache data applied           = NONE
+        cache_data_capture = re.compile(r"^Cache\s+data\s+applied\s+=\s+(?P<cache_data_status>\S+)")
         # State Machine is running
         state_machine_capture = re.compile(r"^State\s+Machine\s+is\s+(?P<state_machine_status>\S+)")
         # Retry_timer (60 secs) is not running
@@ -430,6 +433,13 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
                 groups = refresh_match.groupdict()
                 refresh = groups['refresh']
                 cts_env_dict['cts_env']['refresh'] = refresh
+                continue
+            # Cache data applied           = NONE
+            cache_data_match = cache_data_capture.match(line)
+            if cache_data_match:
+                groups = cache_data_match.groupdict()
+                cache_data_status = groups['cache_data_status']
+                cts_env_dict['cts_env']['cache_data_status'] = cache_data_status
                 continue
             # State Machine is running
             state_machine_match = state_machine_capture.match(line)
