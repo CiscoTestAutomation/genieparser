@@ -1,5 +1,4 @@
 # Python
-import genie.gre
 import unittest
 from unittest.mock import Mock
 
@@ -102,7 +101,7 @@ class TestShowLldpTimers(unittest.TestCase):
         'hello_timer': 30,
         'hold_multiplier': 4,
         'hold_timer': 120,
-        'notification_internal': 5,
+        'notification_interval': 5,
         'reinit_timer': 2,
         'transmit_delay': 2
     }

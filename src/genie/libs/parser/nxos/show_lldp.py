@@ -86,7 +86,7 @@ class ShowLldpTimersSchema(MetaParser):
         'hello_timer': int,
         Optional('transmit_delay'): int,
         Optional('hold_multiplier'): int,
-        Optional('notification_internal'): int
+        Optional('notification_interval'): int
     }
 
 class ShowLldpTimers(ShowLldpTimersSchema):
@@ -131,7 +131,7 @@ class ShowLldpTimers(ShowLldpTimersSchema):
                 elif 'Hold multiplier' in timer_name:
                     parsed_dict.update({'hold_multiplier': seconds})
                 elif 'Notification interval' in timer_name:
-                    parsed_dict.update({'notification_internal': seconds})
+                    parsed_dict.update({'notification_interval': seconds})
                 else:
                     parsed_dict.update({'hello_timer': seconds})
                 continue
