@@ -75,8 +75,8 @@ class TestShowCtsRoleBasedCounters(unittest.TestCase):
                 "hw_monitor_count": 0
             },
             2: {
-                "src_group": 2,
-                "dst_group": 0,
+                "src_group": "2",
+                "dst_group": "0",
                 "sw_denied_count": 0,
                 "hw_denied_count": 4794060,
                 "sw_permit_count": 0,
@@ -85,8 +85,8 @@ class TestShowCtsRoleBasedCounters(unittest.TestCase):
                 "hw_monitor_count": 0
             },
             3: {
-                "src_group": 7,
-                "dst_group": 0,
+                "src_group": "7",
+                "dst_group": "0",
                 "sw_denied_count": 0,
                 "hw_denied_count": 0,
                 "sw_permit_count": 0,
@@ -95,8 +95,8 @@ class TestShowCtsRoleBasedCounters(unittest.TestCase):
                 "hw_monitor_count": 0
             },
             4: {
-                "src_group": 99,
-                "dst_group": 0,
+                "src_group": "99",
+                "dst_group": "0",
                 "sw_denied_count": 0,
                 "hw_denied_count": 0,
                 "sw_permit_count": 0,
@@ -105,8 +105,8 @@ class TestShowCtsRoleBasedCounters(unittest.TestCase):
                 "hw_monitor_count": 0
             },
             5: {
-                "src_group": 100,
-                "dst_group": 0,
+                "src_group": "100",
+                "dst_group": "0",
                 "sw_denied_count": 0,
                 "hw_denied_count": 0,
                 "sw_permit_count": 0,
@@ -115,8 +115,8 @@ class TestShowCtsRoleBasedCounters(unittest.TestCase):
                 "hw_monitor_count": 0
             },
             6: {
-                "src_group": 103,
-                "dst_group": 0,
+                "src_group": "103",
+                "dst_group": "0",
                 "sw_denied_count": 0,
                 "hw_denied_count": 0,
                 "sw_permit_count": 0,
@@ -125,8 +125,8 @@ class TestShowCtsRoleBasedCounters(unittest.TestCase):
                 "hw_monitor_count": 0
             },
             7: {
-                "src_group": 104,
-                "dst_group": 0,
+                "src_group": "104",
+                "dst_group": "0",
                 "sw_denied_count": 0,
                 "hw_denied_count": 0,
                 "sw_permit_count": 0,
@@ -135,8 +135,8 @@ class TestShowCtsRoleBasedCounters(unittest.TestCase):
                 "hw_monitor_count": 0
             },
             8: {
-                "src_group": 2,
-                "dst_group": 2,
+                "src_group": "2",
+                "dst_group": "2",
                 "sw_denied_count": 0,
                 "hw_denied_count": 4,
                 "sw_permit_count": 0,
@@ -145,8 +145,8 @@ class TestShowCtsRoleBasedCounters(unittest.TestCase):
                 "hw_monitor_count": 0
             },
             9: {
-                "src_group": 7,
-                "dst_group": 2,
+                "src_group": "7",
+                "dst_group": "2",
                 "sw_denied_count": 0,
                 "hw_denied_count": 0,
                 "sw_permit_count": 0,
@@ -155,8 +155,8 @@ class TestShowCtsRoleBasedCounters(unittest.TestCase):
                 "hw_monitor_count": 0
             },
             10: {
-                "src_group": 99,
-                "dst_group": 2,
+                "src_group": "99",
+                "dst_group": "2",
                 "sw_denied_count": 0,
                 "hw_denied_count": 0,
                 "sw_permit_count": 0,
@@ -168,18 +168,18 @@ class TestShowCtsRoleBasedCounters(unittest.TestCase):
     }
 
     golden_output1 = {'execute.return_value': '''
-Role-based IPv4 counters
-From    To      SW-Denied  HW-Denied  SW-Permitt HW-Permitt SW-Monitor HW-Monitor
-*       *       0          0          2          30802626587 0          0         
-2       0       0          4794060    0          0          0          0         
-7       0       0          0          0          0          0          0         
-99      0       0          0          0          0          0          0         
-100     0       0          0          0          0          0          0         
-103     0       0          0          0          0          0          0         
-104     0       0          0          0          0          0          0         
-2       2       0          4          0          0          0          0         
-7       2       0          0          0          0          0          0         
-99      2       0          0          0          0          0          0         
+    Role-based IPv4 counters
+    From    To      SW-Denied  HW-Denied  SW-Permitt HW-Permitt SW-Monitor HW-Monitor
+    *       *       0          0          2          30802626587 0          0         
+    2       0       0          4794060    0          0          0          0         
+    7       0       0          0          0          0          0          0         
+    99      0       0          0          0          0          0          0         
+    100     0       0          0          0          0          0          0         
+    103     0       0          0          0          0          0          0         
+    104     0       0          0          0          0          0          0         
+    2       2       0          4          0          0          0          0         
+    7       2       0          0          0          0          0          0         
+    99      2       0          0          0          0          0          0         
 
     '''}
 

@@ -1,7 +1,6 @@
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Or
 
 # ==================
 # Schema for:
@@ -160,8 +159,8 @@ class ShowCtsRoleBasedCountersSchema(MetaParser):
     schema = {
         "cts_rb_count": {
             int: {
-                "src_group": Or(str, int),
-                "dst_group": Or(str, int),
+                "src_group": str,
+                "dst_group": str,
                 "sw_denied_count": int,
                 "hw_denied_count": int,
                 "sw_permit_count": int,
@@ -231,7 +230,7 @@ class ShowCtsRoleBasedCounters(ShowCtsRoleBasedCountersSchema):
                 if not cts_rb_count_dict['cts_rb_count'].get(rb_count_index, {}):
                     cts_rb_count_dict['cts_rb_count'][rb_count_index] = {}
                 for k, v in groups.items():
-                    if v.isdigit():
+                    if v.isdigit() and k not in ['src_group', 'dst_group']:
                         v = int(v)
                     rb_count_data.update({k: v})
                 cts_rb_count_dict['cts_rb_count'][rb_count_index].update(rb_count_data)
