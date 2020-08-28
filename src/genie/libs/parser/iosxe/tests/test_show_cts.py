@@ -160,42 +160,42 @@ class TestShowCtsEnvironmentData(unittest.TestCase):
     }
 
     golden_output1 = {'execute.return_value': '''
-CTS Environment Data
-====================
-Current state = COMPLETE
-Last status = Successful
-Local Device SGT:
-  SGT tag = 0-16:Unknown
-Server List Info:
-Installed list: CTSServerList1-0089, 4 server(s):
- *Server: 10.1.100.4, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
-          Status = ALIVE
-          auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
- *Server: 10.1.100.5, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
-          Status = ALIVE
-          auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
- *Server: 10.1.100.6, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
-          Status = ALIVE
-          auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
- *Server: 10.1.100.6, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
-          Status = ALIVE
-          auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
-Security Group Name Table:
-    0-15:Unit0
-    2-12:Unit1
-    3-10:Unit2
-    4-11:Device11
-    3215-08:K2
-    9999-06:Q1
-    68-10:North
-    5016-00:Quarantine
-    8000-00:TEST_8000
-Environment Data Lifetime = 86400 secs 
-Last update time = 20:04:42 PDT Tue Jul 21 2020
-Env-data expires in   0:00:46:51 (dd:hr:mm:sec)
-Env-data refreshes in 0:00:46:51 (dd:hr:mm:sec)
-Cache data applied           = NONE
-State Machine is running
+    CTS Environment Data
+    ====================
+    Current state = COMPLETE
+    Last status = Successful
+    Local Device SGT:
+      SGT tag = 0-16:Unknown
+    Server List Info:
+    Installed list: CTSServerList1-0089, 4 server(s):
+     *Server: 10.1.100.4, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+              Status = ALIVE
+              auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+     *Server: 10.1.100.5, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+              Status = ALIVE
+              auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+     *Server: 10.1.100.6, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+              Status = ALIVE
+              auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+     *Server: 10.1.100.6, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+              Status = ALIVE
+              auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+    Security Group Name Table:
+        0-15:Unit0
+        2-12:Unit1
+        3-10:Unit2
+        4-11:Device11
+        3215-08:K2
+        9999-06:Q1
+        68-10:North
+        5016-00:Quarantine
+        8000-00:TEST_8000
+    Environment Data Lifetime = 86400 secs 
+    Last update time = 20:04:42 PDT Tue Jul 21 2020
+    Env-data expires in   0:00:46:51 (dd:hr:mm:sec)
+    Env-data refreshes in 0:00:46:51 (dd:hr:mm:sec)
+    Cache data applied           = NONE
+    State Machine is running
         
     '''}
 
