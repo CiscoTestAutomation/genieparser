@@ -1,0 +1,9 @@
+
+show ip eigrp neighbors
+EIGRP-IPv4 VR(test) Address-Family Neighbors for AS(100)
+H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq
+                                                   (sec)         (ms)       Cnt Num
+1   10.12.90.2              Gi0/2.90                 12 01:34:23   29   174  0  5
+0   10.13.90.3              Gi0/3.90                 10 01:37:17   13   100  0  9
+
+    

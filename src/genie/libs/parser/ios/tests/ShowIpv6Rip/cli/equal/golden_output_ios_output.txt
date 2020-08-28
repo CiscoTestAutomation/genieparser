@@ -1,0 +1,13 @@
+Router> show ipv6 rip
+RIP process "process1", port 521, multicast-group FF02::9, pid 62
+     Administrative distance is 120. Maximum paths is 1
+     Updates every 5 seconds, expire after 15
+     Holddown lasts 10 seconds, garbage collect after 30
+     Split horizon is on; poison reverse is off
+     Default routes are generated
+     Periodic updates 223, trigger updates 1
+  Interfaces:
+    Gigabitethernet0/0/0
+  Redistribution:
+    Redistributing protocol bgp 65001 route-map bgp-to-rip
+    
