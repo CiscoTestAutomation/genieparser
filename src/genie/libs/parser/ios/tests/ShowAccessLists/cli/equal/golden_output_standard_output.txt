@@ -1,0 +1,13 @@
+Switch# show ip access-lists
+Standard IP access list 1
+    permit 172.20.10.10
+Standard IP access list 10
+    permit 10.66.12.12
+Standard IP access list 12
+    deny   10.16.3.2
+Standard IP access list 32
+    permit 172.20.20.20
+Standard IP access list 34
+    permit 10.24.35.56
+    permit 10.34.56.34
+    

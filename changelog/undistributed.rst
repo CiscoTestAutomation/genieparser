@@ -12,14 +12,6 @@
 * IOSXE
     * Added ShowLispSite
       * show lisp site
-    * Added ShowLicense
-        * show license
-    * Added ShowStackwiseVirtual
-        * show stackwise-virtual
-    * Added ShowCtsPacs
-        * show cts pacs
-    * Added ShowClassMap
-        * show class-map
 
 --------------------------------------------------------------------------------
                                 Fix
