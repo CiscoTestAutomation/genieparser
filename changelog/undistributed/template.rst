@@ -1,9 +1,9 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
-* <OS>
-    * <Added|Removed|Modified> <Class>:
-      * <Show command| Command>
+* IOSXE
+    * Added ShowApLedBrightnessLevelSummarySchema:
+      * show ap led-brightness-level summary
 
 --------------------------------------------------------------------------------
                                 Fix
