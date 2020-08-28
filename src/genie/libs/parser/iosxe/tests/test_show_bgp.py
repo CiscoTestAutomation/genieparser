@@ -5621,6 +5621,7 @@ class TestShowBgpAllNeighbors(unittest.TestCase):
             InQ depth is 0
             OutQ depth is 0
 
+<<<<<<< HEAD
                                  Sent       Rcvd
             Opens:                  1          1
             Notifications:          0          0
@@ -5629,6 +5630,38 @@ class TestShowBgpAllNeighbors(unittest.TestCase):
             Route Refresh:          0          0
             Total:                 87         81
           Default minimum time between advertisement runs is 0 seconds
+=======
+    golden_parsed_output4 = {
+        'vrf': {
+            'LABDR_HoC_AZS_Transit': {
+                'neighbor': {
+                    '10.251.15.5': {
+                        'address_family': {
+                            'vpnv4 unicast': {
+                                'nbr_af_route_map_name_in': 'HoC_AZSPREFIXES_in',
+                                'nbr_af_route_map_name_out': 'HoC_LOCALPREFIXES_out',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output4 = {'execute.return_value': '''
+        LABDR-ISR-1# show bgp all neighbors 10.251.15.5 policy
+        Neighbor: 10.251.15.5, Address-Family: VPNv4 Unicast (LABDR_HoC_AZS_Transit)
+          Locally configured policies:
+            route-map HoC_AZSPREFIXES_in in
+            route-map HoC_LOCALPREFIXES_out out
+    '''}
+
+    def test_show_bgp_all_neighbors_policy_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpAllNeighborsPolicy(device=self.device)
+        parsed_output = obj.parse(neighbor='10.186.0.2')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+>>>>>>> master
 
           Address tracking is enabled, the RIB does have a route to 10.16.2.2
           Connections established 1; dropped 0
@@ -5642,7 +5675,23 @@ class TestShowBgpAllNeighbors(unittest.TestCase):
         Connection tableid (VRF): 0
         Maximum output segment queue size: 50
 
+<<<<<<< HEAD
         Enqueued packets for retransmit: 0, input: 0  mis-ordered: 0 (0 bytes)
+=======
+    def test_show_bgp_all_neighbors_policy_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowBgpAllNeighborsPolicy(device=self.device)
+        parsed_output = obj.parse(neighbor='10.4.6.6')
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
+    
+    def test_show_bgp_all_neighbors_policy_golden4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output4)
+        obj = ShowBgpAllNeighborsPolicy(device=self.device)
+        parsed_output = obj.parse(neighbor='10.251.15.5')
+        self.assertEqual(parsed_output,self.golden_parsed_output4)
+>>>>>>> master
 
         Event Timers (current time is 0x530449):
         Timer          Starts    Wakeups            Next

@@ -458,7 +458,8 @@ class ShowLldpTrafficSchema(MetaParser):
             "total_frames_received_in_error": int,  # Total frames received in error: 0
             "total_frames_discarded": int,  # Total frames discarded: 0
             'total_unrecognized_tlvs': int,  # Total unrecognized TLVs: 0
-            'total_entries_aged': int  # Total entries aged: 0
+            'total_entries_aged': int,  # Total entries aged: 0
+            Optional('total_flap_count'): int #  Total flap count: 1
         }
     }
 

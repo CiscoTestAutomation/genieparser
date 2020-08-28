@@ -9,8 +9,9 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any,
-        Optional, Use, SchemaTypeError, Schema)
+        Optional, Use, Schema)
 
 
 class ShowSnmpMibWalkSystemSchema(MetaParser):
@@ -21,7 +22,7 @@ class ShowSnmpMibWalkSystemSchema(MetaParser):
     # Sub Schema snmp-object
     def validate_snmp_object_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('snmp-object is not a list')
+            raise SchemaError('snmp-object is not a list')
         snmp_object_schema = Schema({
                     "name": str,
                     "object-value": str,

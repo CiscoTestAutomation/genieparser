@@ -12,6 +12,7 @@
     * show ipv6 interface
     * show interfaces accounting
     * show interfaces status
+    * show interface {interface} transceiver detail
 """
 
 import os
@@ -3431,3 +3432,80 @@ class ShowInterfacesStatus(ShowInterfacesStatusSchema):
 
         return result_dict
 
+
+# ==========================================================
+#  Parser for show interface {interface} transceiver detail
+# ==========================================================
+class ShowInterfaceTransceiverDetailSchema(MetaParser):
+    """Schema for:
+        show interface {interface} transceiver detail"""
+
+    schema = {
+        'interfaces': {
+            Any(): {# interface name
+                Optional('cisco_extended_id_number'): str,
+                Optional('cisco_id'): str,
+                Optional('cisco_part_number'): str,
+                Optional('cisco_product_id'): str,
+                Optional('cisco_vendor_id'): str,
+                Optional('name'): str,
+                Optional('nominal_bitrate'): str,
+                Optional('number_of_lanes'): str,
+                Optional('part_number'): str,
+                Optional('revision'): str,
+                Optional('serial_number'): str,
+                Optional('transceiver'): str,
+                Optional('type'): str,
+                Any(): str,
+            }
+        }
+    }
+
+
+class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
+    """parser for 
+            * show interface {interface} transceiver detail
+        """
+
+    cli_command = 'show interface {interface} transceiver detail'
+
+    def cli(self, interface, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(interface=interface))
+        else:
+            out = output
+
+        result_dict = {}
+
+        # transceiver is present
+        # type is 10Gbase-LR
+        # name is CISCO-FINISAR
+        # part number is FTLX1474D3BCL-CS
+        p1 = re.compile(r'^(?P<key>[\S\s]+) +is +(?P<value>[\S\s]+)$')
+
+        # number of lanes 1
+        p2 = re.compile(r'^number +of +lanes +(?P<lanes>[\d]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # transceiver is present
+            # type is 10Gbase-LR
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                key = group['key'].strip().replace(" ", '_').lower()
+                value = group['value'].strip()
+
+                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                intf_dict.update({key: value})
+                continue
+            
+            # number of lanes 1
+            m = p2.match(line)
+            if m:
+                intf_dict['number_of_lanes'] = m.groupdict()['lanes']
+                continue
+
+        return result_dict
