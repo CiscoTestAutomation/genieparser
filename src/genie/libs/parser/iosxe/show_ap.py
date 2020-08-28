@@ -12,8 +12,8 @@ class ShowApSummarySchema(MetaParser):
     """Schema for show ap summary."""
 
     schema = {
-        "ap_summary": {
-            "ap_neighbor_count": int,
+        "ap_neighbor_count": int,
+        "ap_name": {
             str: {
                 "slots_count": int,
                 "ap_model": str,
@@ -34,7 +34,7 @@ class ShowApSummarySchema(MetaParser):
 class ShowApSummary(ShowApSummarySchema):
     """Parser for show ap summary"""
 
-    cli_command = ['show ap summary']
+    cli_command = 'show ap summary'
 
     def cli(self, output=None):
         if output is None:
@@ -88,9 +88,7 @@ class ShowApSummary(ShowApSummarySchema):
                 ap_neighbor_count_match = ap_neighbor_count_capture.match(line)
                 groups = ap_neighbor_count_match.groupdict()
                 ap_neighbor_count = int(groups['ap_neighbor_count'])
-                if not ap_summary_dict.get('ap_summary', {}):
-                    ap_summary_dict['ap_summary'] = {}
-                ap_summary_dict['ap_summary']['ap_neighbor_count'] = ap_neighbor_count
+                ap_summary_dict['ap_neighbor_count'] = ap_neighbor_count
             # a121-cap22                       2      9130AXI   a4b2.3291.9b28  2c57.4119.a060  Fab A  UK          10.6.33.106                               Registered
             elif ap_neighbor_info_capture.match(line):
                 ap_neighbor_info_match = ap_neighbor_info_capture.match(line)
@@ -109,9 +107,11 @@ class ShowApSummary(ShowApSummarySchema):
                         elif str(v):
                             # The location value can be any value as a string but need to strip the whitespace
                             v = v.strip()
-                        ap_summary_dict['ap_summary'][ap_name] = {}
+                        if not ap_summary_dict.get("ap_name", {}):
+                            ap_summary_dict["ap_name"] = {}
+                        ap_summary_dict['ap_name'][ap_name] = {}
                         ap_summary_data.update({k: v})
-                ap_summary_dict['ap_summary'][ap_name].update(ap_summary_data)
+                ap_summary_dict['ap_name'][ap_name].update(ap_summary_data)
                 ap_summary_data = {}
                 continue
 
