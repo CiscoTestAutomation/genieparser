@@ -1,0 +1,10 @@
+
+R1_xe#show ip pim bsr-router
+PIMv2 Bootstrap information
+  BSR address: 10.64.4.4 (?)
+  Uptime:      00:01:23, BSR Priority: 0, Hash mask length: 0
+  Expires:     00:01:46
+This system is a candidate BSR
+  Candidate BSR address: 10.4.1.1, priority: 0, hash mask length: 0
+
+        

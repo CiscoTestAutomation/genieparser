@@ -72,14 +72,17 @@ class Traceroute(TracerouteSchema):
     ''' Parser for:
         * 'traceroute'
     '''
+    cli_command = 'traceroute'
 
-    def cli(self, output):
+    def cli(self, output=None):
 
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
         # Init vars
         ret_dict = {}
         vrf, tr_dict = None, None
-        # Set output
-        out = output
         # init index for paths
         index = 1
         # Type escape sequence to abort.

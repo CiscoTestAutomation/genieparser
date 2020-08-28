@@ -1,0 +1,9 @@
+
+asr-MIB-1#show bootvar
+BOOT variable = bootflash:12351822-iedge-asr-uut,12;
+CONFIG_FILE variable =
+BOOTLDR variable does not exist
+Configuration register is 0x2102
+
+Standby not ready to show bootvar
+        

@@ -1,0 +1,71 @@
+expected_output = {
+    "interfaces": {
+        "Port-channel1": {
+            "name": "Port-channel1",
+            "protocol": "pagp",
+            "members": {
+                "GigabitEthernet0/1": {
+                    "interface": "GigabitEthernet0/1",
+                    "group_ifindex": 8,
+                    "partner_count": 1,
+                    "hello_interval": 30,
+                    "timers": "H",
+                    "pagp_port_priority": 128,
+                    "flags": "SC",
+                    "state": "U6/S7",
+                    "learn_method": "any",
+                },
+                "GigabitEthernet0/2": {
+                    "interface": "GigabitEthernet0/2",
+                    "group_ifindex": 8,
+                    "partner_count": 1,
+                    "hello_interval": 30,
+                    "timers": "H",
+                    "pagp_port_priority": 128,
+                    "flags": "SC",
+                    "state": "U6/S7",
+                    "learn_method": "any",
+                },
+            },
+        },
+        "Port-channel2": {
+            "name": "Port-channel2",
+            "protocol": "pagp",
+            "members": {
+                "GigabitEthernet0/3": {
+                    "interface": "GigabitEthernet0/3",
+                    "group_ifindex": 11,
+                    "partner_count": 1,
+                    "hello_interval": 30,
+                    "timers": "H",
+                    "pagp_port_priority": 128,
+                    "flags": "SC",
+                    "state": "U6/S7",
+                    "learn_method": "any",
+                },
+                "GigabitEthernet1/0": {
+                    "interface": "GigabitEthernet1/0",
+                    "group_ifindex": 11,
+                    "partner_count": 1,
+                    "hello_interval": 30,
+                    "timers": "H",
+                    "pagp_port_priority": 128,
+                    "flags": "S C",
+                    "state": "U6/S7",
+                    "learn_method": "any",
+                },
+                "GigabitEthernet1/1": {
+                    "interface": "GigabitEthernet1/1",
+                    "group_ifindex": 11,
+                    "partner_count": 1,
+                    "hello_interval": 30,
+                    "timers": "H",
+                    "pagp_port_priority": 128,
+                    "flags": "S C",
+                    "state": "U6/S7",
+                    "learn_method": "any",
+                },
+            },
+        },
+    }
+}

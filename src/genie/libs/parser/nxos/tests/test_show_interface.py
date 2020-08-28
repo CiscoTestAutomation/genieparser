@@ -6181,7 +6181,7 @@ class TestShowInterfaceBrief(unittest.TestCase):
                                    'vlan': '1'}}}}
 
     golden_output = {'execute.return_value': '''
-        pinxdt-n9kv-3# show interface brief 
+        pinxdt-n9kv-3 # show interface brief 
 
         --------------------------------------------------------------------------------
         Port   VRF          Status IP Address                              Speed    MTU
@@ -6232,6 +6232,155 @@ class TestShowInterfaceBrief(unittest.TestCase):
                     'type': 'eth',
                     'vlan': '--'}}}}
 
+    golden_output3 = {'execute.return_value': '''
+
+        --------------------------------------------------------------------------------
+
+        Port   VRF          Status IP Address                              Speed    MTU
+
+        --------------------------------------------------------------------------------
+
+        mgmt0  --           up     172.31.150.153                          1000    1500    
+
+        --------------------------------------------------------------------------------
+
+        Ethernet        VLAN    Type Mode   Status  Reason                 Speed     Port
+
+        Interface                                                                    Ch #
+
+        --------------------------------------------------------------------------------
+
+        Eth1/1          --      eth  routed down    Administratively down    auto(D) --
+
+        Eth1/4          --      eth  routed down    Administratively down    auto(D) --
+
+        Eth1/4.1        110     eth  routed down    Administratively down    auto(D) --
+
+        Eth1/4.2        112     eth  routed down    Administratively down    auto(D) --
+
+        Eth1/4.3        114     eth  routed down    Administratively down    auto(D) --
+
+        Eth1/9          --      eth  routed down    XCVR not inserted        auto(D) --
+
+        Eth1/10         --      eth  routed up      none                      10G(D) --
+
+        Eth1/10.1       --      eth  routed down    Configuration Incomplet  auto(D) --
+
+        Eth1/11         --      eth  routed down    Administratively down    auto(D) --
+
+        -------------------------------------------------------------------------------
+
+        Interface Secondary VLAN(Type)                    Status Reason                 
+
+        -------------------------------------------------------------------------------
+
+        Vlan1     --                                      down   Administratively down  
+    '''}
+
+    golden_parsed_output3 = {
+        'interface': {
+            'ethernet': {
+                'Ethernet1/1': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'Administratively down',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '--',
+                },
+                'Ethernet1/10': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'none',
+                    'speed': '10G(D)',
+                    'status': 'up',
+                    'type': 'eth',
+                    'vlan': '--',
+                },
+                'Ethernet1/10.1': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'Configuration Incomplet',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '--',
+                },
+                'Ethernet1/11': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'Administratively down',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '--',
+                },
+                'Ethernet1/4': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'Administratively down',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '--',
+                },
+                'Ethernet1/4.1': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'Administratively down',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '110',
+                },
+                'Ethernet1/4.2': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'Administratively down',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '112',
+                },
+                'Ethernet1/4.3': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'Administratively down',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '114',
+                },
+                'Ethernet1/9': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'XCVR not inserted',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '--',
+                },
+            },
+            'port': {
+                'mgmt0': {
+                    'ip_address': '172.31.150.153',
+                    'mtu': 1500,
+                    'speed': '1000',
+                    'status': 'up',
+                    'vrf': '--',
+                },
+            },
+            'vlan': {
+                'Vlan1': {
+                    'reason': 'Administratively down',
+                    'status': 'down',
+                    'type': '--',
+                },
+            },
+        },
+    }
+
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         intf_obj = ShowInterfaceBrief(device=self.device)
@@ -6243,6 +6392,12 @@ class TestShowInterfaceBrief(unittest.TestCase):
         intf_obj = ShowInterfaceBrief(device=self.device)
         parsed_output = intf_obj.parse(interface="Ethernet1/1")
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_golden3(self):
+        self.device = Mock(**self.golden_output3)
+        intf_obj = ShowInterfaceBrief(device=self.device)
+        parsed_output = intf_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)

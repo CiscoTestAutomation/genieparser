@@ -1,0 +1,23 @@
+
+PE1#show redundancy states 
+Load for five secs: 2%/0%; one minute: 1%; five minutes: 1%
+Time source is NTP, 05:47:45.686 EST Thu Jun 6 2019
+       my state = 13 -ACTIVE 
+     peer state = 1  -DISABLED 
+           Mode = Simplex
+           Unit = Primary
+        Unit ID = 48
+
+Redundancy Mode (Operational) = Non-redundant
+Redundancy Mode (Configured)  = Non-redundant
+Redundancy State              = Non Redundant
+     Maintenance Mode = Disabled
+    Manual Swact = disabled (system is simplex (no peer unit))
+ Communications = Down      Reason: Simplex mode
+
+   client count = 111
+ client_notification_TMR = 30000 milliseconds
+           RF debug mask = 0x0   
+
+PE1#
+    

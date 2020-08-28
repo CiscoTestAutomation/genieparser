@@ -7,17 +7,11 @@ from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from genie.libs.parser.nxos.show_platform import  ShowBoot,\
-                                         ShowInventory,\
-                                         ShowInstallActive,\
-                                         ShowSystemRedundancyStatus,\
-                                         ShowRedundancyStatus,\
-                                         ShowVersion,\
-                                         ShowModule,\
-                                         Dir, \
-                                         ShowVdcDetail, \
-                                         ShowVdcCurrent, \
-                                         ShowVdcMembershipStatus
+from genie.libs.parser.nxos.show_platform import (
+    ShowBoot, ShowInventory, ShowInstallActive, ShowSystemRedundancyStatus,
+    ShowRedundancyStatus, ShowVersion, ShowModule, Dir, ShowVdcDetail,
+    ShowVdcCurrent, ShowVdcMembershipStatus, ShowProcessesCpu,
+    ShowProcessesMemory, ShowCores)
 ats_mock = Mock()
 
 
@@ -42,7 +36,7 @@ class test_show_version(unittest.TestCase):
                                  'model': 'Nexus7000 C7009',
                                  'processor_board_id': 'JAF1708AAKL',
                                  'slot0': '7989768 kB',
-                                 'slots': '9'}, 
+                                 'slots': '9'},
                               'kernel_uptime':
                                 {'days': 0,
                                  'hours': 0,
@@ -73,7 +67,7 @@ class test_show_version(unittest.TestCase):
                                  'device_name': 'N95_2',
                                  'memory': '10214428 kB',
                                  'model': 'NX-OSv',
-                                 'processor_board_id': '9YH2MQQB30N'}, 
+                                 'processor_board_id': '9YH2MQQB30N'},
                               'kernel_uptime':
                                 {'days': 0,
                                  'hours': 18,
@@ -247,7 +241,7 @@ Active Package(s):
                                  'device_name': 'sample_5k',
                                  'memory': '8253792 kB',
                                  'bootflash': '2007040 kB',
-                                 'processor_board_id': 'FOC171850PP'}, 
+                                 'processor_board_id': 'FOC171850PP'},
                               'kernel_uptime':
                                 {'days': 289,
                                  'hours': 16,
@@ -326,7 +320,7 @@ Active Package(s):
                                  'device_name': 'n3k',
                                  'memory': '3665288 kB',
                                  'bootflash': '2007040 kB',
-                                 'processor_board_id': 'FOC19243WQN'}, 
+                                 'processor_board_id': 'FOC19243WQN'},
                               'kernel_uptime':
                                 {'days': 796,
                                  'hours': 15,
@@ -359,7 +353,7 @@ Active Package(s):
         version_obj = ShowVersion(device=self.device)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
-        
+
     def test_golden3(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
@@ -373,7 +367,7 @@ Active Package(s):
         version_obj = ShowVersion(device=self.device)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output4)
-        
+
     def test_empty(self):
         self.device2 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.device2)
@@ -593,7 +587,7 @@ class test_show_install_active(unittest.TestCase):
                             'active_packages':
                               {'active_package_module_0':
                                 {'active_package_name': 'n7700-s2-dk10.1.2.0.D1.1.CSCuo7721.bin'},
-                               'active_package_module_3': 
+                               'active_package_module_3':
                                 {'active_package_name': 'n7700-s2-dk10.1.2.0.D1.1.CSCuo7721.bin'}
                               }
                             }
@@ -1264,27 +1258,27 @@ class test_dir(unittest.TestCase):
     device1 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {'files':
-                                {'.patch/': 
+                                {'.patch/':
                                     {'size': '4096', 'date': 'Apr 20 2017', 'time': '10:23:05'},
-                                 '20170202_074746_poap_7537_init.log': 
+                                 '20170202_074746_poap_7537_init.log':
                                     {'size': '1398', 'date': 'Feb 02 2017', 'time': '00:48:18'},
-                                 'ethpm_act_logs.log': 
+                                 'ethpm_act_logs.log':
                                     {'size': '251599', 'date': 'Mar 15 2017', 'time': '10:35:50'},
-                                 'ethpm_im_tech.log': 
+                                 'ethpm_im_tech.log':
                                     {'size': '1171318', 'date': 'Mar 15 2017', 'time': '10:35:55'},
-                                 'ethpm_mts_details.log': 
+                                 'ethpm_mts_details.log':
                                     {'size': '3837', 'date': 'Mar 15 2017', 'time': '10:35:50'},
-                                 'ethpm_syslogs.log': 
+                                 'ethpm_syslogs.log':
                                     {'size': '81257', 'date': 'Mar 15 2017', 'time': '10:35:50'},
-                                 'ethpm_tech.log': 
+                                 'ethpm_tech.log':
                                     {'size': '3930383', 'date': 'Mar 15 2017', 'time': '10:35:55'},
-                                 'fault-management-logs/': 
+                                 'fault-management-logs/':
                                     {'size': '24576', 'date': 'Apr 21 2017', 'time': '04:18:28'},
-                                 'lost+found/': 
+                                 'lost+found/':
                                     {'size': '4096', 'date': 'Nov 23 2016', 'time': '08:25:40'},
-                                 'n7000-s2-debug-sh.10.81.0.125.gbin': 
+                                 'n7000-s2-debug-sh.10.81.0.125.gbin':
                                     {'size': '4073830', 'date': 'Apr 20 2017', 'time': '10:19:08'},
-                                 'virtual-instance-stby-sync/': 
+                                 'virtual-instance-stby-sync/':
                                     {'size': '4096', 'date': 'Apr 20 2017', 'time': '10:28:55'}
                                 },
                             'dir': 'bootflash:',
@@ -1588,6 +1582,209 @@ class test_show_vdc_membership_status(unittest.TestCase):
         vdc_membership_status_obj = ShowVdcMembershipStatus(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = vdc_membership_status_obj.parse()
+
+
+class TestShowProcessesCpu(unittest.TestCase):
+
+    dev = Device(name='N9Kv')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'five_min_cpu': 21,
+        'five_sec_cpu_interrupts': 5,
+        'five_sec_cpu_total': 19,
+        'idle_percent': 78.35,
+        'index': {
+            1: {
+                'invoked': 162103,
+                'one_sec': 0.0,
+                'pid': 1,
+                'process': 'init',
+                'runtime_ms': 24380,
+                'usecs': 0
+            },
+            2: {
+                'invoked': 28,
+                'one_sec': 0.0,
+                'pid': 417,
+                'process': 'bootflash_sync.',
+                'runtime_ms': 0,
+                'usecs': 0
+            },
+            3: {
+                'invoked': 10,
+                'one_sec': 0.0,
+                'pid': 447,
+                'process': 'inotifywait',
+                'runtime_ms': 0,
+                'usecs': 0
+            }
+        },
+        'kernel_percent': 20.34,
+        'one_min_cpu': 19,
+        'user_percent': 1.29
+    }
+
+    golden_output = {
+        'execute.return_value':
+        '''\
+
+    PID    Runtime(ms)  Invoked   uSecs  1Sec    Process
+    -----  -----------  --------  -----  ------  -----------
+        1        24380    162103      0   0.00%  init
+      417            0        28      0   0.00%  bootflash_sync.
+      447            0        10      0   0.00%  inotifywait
+
+    CPU util  :    1.29% user,   20.34% kernel,   78.35% idle
+
+    CPU utilization for five seconds: 19%/5%; one minute: 19%; five minutes: 21%
+     Please note that only processes from the requested vdc are shown above
+    '''
+    }
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowProcessesCpu(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsered_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowProcessesCpu(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class TestShowProcessesMemory(unittest.TestCase):
+
+    dev = Device(name='N9Kv')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'all_mem_alloc': 4646350848,
+        'pid': {
+            1: {
+                'index': {
+                    1: {
+                        'mem_alloc': 188416,
+                        'mem_limit': 0,
+                        'mem_used': 4308992,
+                        'pid': 1,
+                        'process': 'init',
+                        'stack_base_ptr': 'ffffffff/ffffffff'
+                    }
+                }
+            },
+            417: {
+                'index': {
+                    1: {
+                        'mem_alloc': 200704,
+                        'mem_limit': 0,
+                        'mem_used': 3588096,
+                        'pid': 417,
+                        'process': 'bootflash_sync.',
+                        'stack_base_ptr': 'ffe65dd0/ffe64518'
+                    }
+                }
+            },
+            447: {
+                'index': {
+                    1: {
+                        'mem_alloc': 393216,
+                        'mem_limit': 0,
+                        'mem_used': 6639616,
+                        'pid': 447,
+                        'process': 'inotifywait',
+                        'stack_base_ptr': 'ffffffff/ffffffff'
+                    }
+                }
+            }
+        }
+    }
+
+    # show processes memory
+    golden_output = {
+        'execute.return_value':
+        '''\
+
+    PID    MemAlloc  MemLimit    MemUsed     StackBase/Ptr      Process
+    -----  --------  ----------  ----------  -----------------  ----------------
+        1    188416  0           4308992     ffffffff/ffffffff  init
+      417    200704  0           3588096     ffe65dd0/ffe64518  bootflash_sync.
+      447    393216  0           6639616     ffffffff/ffffffff  inotifywait
+
+    All processes: MemAlloc = 4646350848
+    '''
+    }
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowProcessesMemory(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsered_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowProcessesMemory(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class TestShowCores(unittest.TestCase):
+
+    dev = Device(name='N9Kv')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "date": {
+            "2020-08-17 18:00:56": {
+                "pid": {
+                    8083: {
+                        "instance": 1,
+                        "module": 27,
+                        "process_name": "bgp",
+                        "vdc": 1
+                    }
+                }
+            },
+            "2020-08-17 18:04:03": {
+                "pid": {
+                    8083: {
+                        "instance": 2,
+                        "module": 27,
+                        "process_name": "bgp",
+                        "vdc": 1
+                    }
+                }
+            }
+        }
+    }
+
+    # show cores
+    golden_output = {
+        'execute.return_value':
+        '''\
+        VDC  Module  Instance  Process-name     PID       Date(Year-Month-Day Time)
+        ---  ------  --------  ---------------  --------  -------------------------
+        1    27      1         bgp              8083      2020-08-17 18:00:56
+        1    27      2         bgp              8083      2020-08-17 18:04:03
+        '''
+    }
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowCores(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsered_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowCores(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()
