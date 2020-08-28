@@ -1,0 +1,50 @@
+expected_output = {
+    "GigabitEthernet1": {
+        "ip_multicast_fast_switching": True,
+        "oper_status": "up",
+        "ip_output_packet_accounting": False,
+        "address_determined_by": "DHCP",
+        "rtp_ip_header_compression": False,
+        "ip_multicast_distributed_fast_switching": False,
+        "wccp": {
+            "redirect_exclude": False,
+            "redirect_outbound": False,
+            "redirect_inbound": False,
+        },
+        "unicast_routing_topologies": {"topology": {"base": {"status": "up"}}},
+        "router_discovery": False,
+        "tcp_ip_header_compression": False,
+        "probe_proxy_name_replies": False,
+        "local_proxy_arp": False,
+        "policy_routing": False,
+        "mtu": 1500,
+        "icmp": {
+            "mask_replies": "never sent",
+            "unreachables": "always sent",
+            "redirects": "always sent",
+        },
+        "enabled": True,
+        "ip_route_cache_flags": ["CEF", "Fast"],
+        "ip_cef_switching": True,
+        "ip_fast_switching": True,
+        "security_level": "default",
+        "directed_broadcast_forwarding": False,
+        "proxy_arp": True,
+        "ip_null_turbo_vector": True,
+        "network_address_translation": False,
+        "input_features": ["MCI Check"],
+        "bgp_policy_mapping": False,
+        "split_horizon": True,
+        "ip_access_violation_accounting": False,
+        "ip_cef_switching_turbo_vector": True,
+        "ipv4": {
+            "172.16.1.243/24": {
+                "ip": "172.16.1.243",
+                "prefix_length": "24",
+                "broadcast_address": "255.255.255.255",
+                "secondary": False,
+            }
+        },
+        "ip_flow_switching": False,
+    }
+}

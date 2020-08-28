@@ -9,8 +9,9 @@ JunOs parsers for the following show commands:
 import re
 
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any,
-        Optional, Use, SchemaTypeError, Schema)
+        Optional, Use, Schema)
 
 class ShowVersionDetailSchema(MetaParser):
 
@@ -50,7 +51,7 @@ class ShowVersionDetailSchema(MetaParser):
     def validate_version_information_list(value):
         # Pass ospf3-interface list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('version_information is not a list')
+            raise SchemaError('version_information is not a list')
         version_information_schema = Schema({
             "build-date": str,
             Optional("build-number"): str,
@@ -71,7 +72,7 @@ class ShowVersionDetailSchema(MetaParser):
     def validate_package_information_list(value):
         # Pass ospf3-interface list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('package_information is not a list')
+            raise SchemaError('package_information is not a list')
         package_information_schema = Schema({
             "comment": str,
             "name": str
@@ -113,7 +114,7 @@ class ShowVersionDetail(ShowVersionDetailSchema):
 
         ret_dict = {}
 
-        #Hostname: sr_hktGCS001
+        #Hostname: sr_hktGDS201
         p1 = re.compile(r'^Hostname: +(?P<host_name>\S+)$')
 
         #Model: vmx
@@ -212,7 +213,7 @@ class ShowVersionDetail(ShowVersionDetailSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # Hostname: sr_hktGCS001
+            # Hostname: sr_hktGDS201
             m = p1.match(line)
             if m:
                 software_info_first_entry = ret_dict.setdefault("software-information", {})
@@ -261,7 +262,7 @@ class ShowVersionDetail(ShowVersionDetailSchema):
 
                 continue
 
-            
+
             #JUNOS OS Kernel 64-bit  [20190517.f0321c3_builder_stable_11]
             m = p7.match(line)
             if m:
@@ -344,7 +345,7 @@ class ShowVersionInvokeOnAllRoutingEnginesSchema(MetaParser):
     def validate_package_information_list(value):
         # Pass ospf3-interface list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('package_information is not a list')
+            raise SchemaError('package_information is not a list')
         package_information_schema = Schema({
             "comment": str,
             "name": str
@@ -385,15 +386,15 @@ class ShowVersionInvokeOnAllRoutingEngines(ShowVersionInvokeOnAllRoutingEnginesS
             out = output
 
         ret_dict = {}
-        
+
         #re0:
         p0 = re.compile(r'^(?P<re_name>\Are0+)+:$')
 
-        #Hostname: sr_hktGCS001
+        #Hostname: sr_hktGDS201
         p1 = re.compile(r'^Hostname: +(?P<host_name>\S+)$')
 
         #Model: vmx
-        p2 = re.compile(r'^Model: +(?P<product_model>\S+)$')   
+        p2 = re.compile(r'^Model: +(?P<product_model>\S+)$')
 
         #Junos: 19.2R1.8
         p3 = re.compile(r'^Junos: +(?P<junos_version>\S+)$')
@@ -496,11 +497,11 @@ class ShowVersionInvokeOnAllRoutingEngines(ShowVersionInvokeOnAllRoutingEnginesS
                                             setdefault("multi-routing-engine-item", {})
                 software_information_entry = multi_routing_engine_item_entry.setdefault("software-information", {})
                 multi_routing_engine_item_entry['re-name'] = group['re_name']
-                continue 
+                continue
 
-            # Hostname: sr_hktGCS001
+            # Hostname: sr_hktGDS201
             m = p1.match(line)
-            if m:                
+            if m:
                 group = m.groupdict()
                 package_list = []
                 software_information_entry['host-name'] = group['host_name']
@@ -512,7 +513,7 @@ class ShowVersionInvokeOnAllRoutingEngines(ShowVersionInvokeOnAllRoutingEnginesS
                 group = m.groupdict()
                 software_information_entry['product-model'] = group['product_model']
                 software_information_entry['product-name'] = group['product_model']
-                continue                
+                continue
 
             # Junos: 19.2R1.8
             m = p3.match(line)
@@ -521,7 +522,7 @@ class ShowVersionInvokeOnAllRoutingEngines(ShowVersionInvokeOnAllRoutingEnginesS
                 software_information_entry['junos-version'] = group['junos_version']
                 continue
 
-            
+
             #JUNOS OS Kernel 64-bit  [20190517.f0321c3_builder_stable_11]
             m = p7.match(line)
             if m:
@@ -534,5 +535,5 @@ class ShowVersionInvokeOnAllRoutingEngines(ShowVersionInvokeOnAllRoutingEnginesS
                 if(group["comment"].strip() == "JUNOS jail runtime [20190517.f0321c3_builder_stable_11]"):
                     software_information_entry["package-information"] = package_list
                 continue
-        
+
         return ret_dict

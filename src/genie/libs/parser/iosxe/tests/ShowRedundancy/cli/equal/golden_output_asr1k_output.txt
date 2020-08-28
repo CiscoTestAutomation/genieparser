@@ -1,0 +1,36 @@
+Redundant System Information :
+------------------------------
+       Available system uptime = 15 hours, 4 minutes
+Switchovers system experienced = 0
+              Standby failures = 0
+        Last switchover reason = none
+
+                 Hardware Mode = Duplex
+    Configured Redundancy Mode = sso
+     Operating Redundancy Mode = sso
+              Maintenance Mode = Disabled
+                Communications = Up
+
+Current Processor Information :
+-------------------------------
+               Active Location = slot 6
+        Current Software state = ACTIVE
+       Uptime in current state = 15 hours, 4 minutes
+                 Image Version = Cisco IOS Software [Everest], ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Experimental Version 16.4.20170425:070036 [v164_throttle-BLD-BLD_V164_THROTTLE_LATEST_20170425_075354 141]
+Copyright (c) 1986-2017 by Cisco Systems, Inc.
+Compiled Tue 25-Apr-17 06:17 by mcpre
+                          BOOT = harddisk:test-image-PE1-13116843,12;
+                   CONFIG_FILE = 
+        Configuration register = 0x2102
+
+Peer Processor Information :
+----------------------------
+              Standby Location = slot 7
+        Current Software state = STANDBY HOT 
+       Uptime in current state = 15 hours, 1 minute
+                 Image Version = Cisco IOS Software [Everest], ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Experimental Version 16.4.20170425:070036 [v164_throttle-BLD-BLD_V164_THROTTLE_LATEST_20170425_075354 141]
+Copyright (c) 1986-2017 by Cisco Systems, Inc.
+Compiled Tue 25-Apr-17 06:17 by mcpre
+                          BOOT = harddisk:test-image-PE1-13116843,12;
+                   CONFIG_FILE = 
+        Configuration register = 0x2102

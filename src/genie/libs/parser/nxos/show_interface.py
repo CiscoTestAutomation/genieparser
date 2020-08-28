@@ -2686,42 +2686,54 @@ class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
 class ShowInterfaceBriefSchema(MetaParser):
     """Schema for show interface brief"""
 
-    schema = {'interface':
-                {'ethernet':
-                    {Any():
-                        {'vlan': str,
-                         'type': str,
-                         'mode': str,
-                         'status': str,
-                         'speed': str,
-                         'reason': str,
-                         'port_ch': str}
-                    },
-                Optional('port'):
-                    {Any():
-                        {Optional('vrf'): str,
-                         Optional('status'): str,
-                         Optional('ip_address'): str,
-                         Optional('speed'): str,
-                         Optional('mtu'): int}
-                    },
-                Optional('port_channel'):
-                    {Any():
-                        {Optional('vlan'): str,
-                         Optional('type'): str,
-                         Optional('mode'): str,
-                         Optional('status'): str,
-                         Optional('speed'): str,
-                         Optional('reason'): str,
-                         Optional('protocol'): str}
-                    },
-                Optional('loopback'):
-                    {Any():
-                        {Optional('status'): str,
-                         Optional('description'): str}
-                    },
-                }
-            }
+    schema = {
+        'interface': {
+            'ethernet': {
+                Any(): {
+                    'vlan': str,
+                    'type': str,
+                    'mode': str,
+                    'status': str,
+                    'speed': str,
+                    'reason': str,
+                    'port_ch': str,
+                },
+            },
+            Optional('port'): {
+                Any(): {
+                    Optional('vrf'): str,
+                    Optional('status'): str,
+                    Optional('ip_address'): str,
+                    Optional('speed'): str,
+                    Optional('mtu'): int,
+                },
+            },
+            Optional('port_channel'): {
+                Any(): {
+                    Optional('vlan'): str,
+                    Optional('type'): str,
+                    Optional('mode'): str,
+                    Optional('status'): str,
+                    Optional('speed'): str,
+                    Optional('reason'): str,
+                    Optional('protocol'): str,
+                },
+            },
+            Optional('loopback'): {
+                Any(): {
+                    Optional('status'): str,
+                    Optional('description'): str,
+                },
+            },
+            Optional('vlan'): {
+                Any(): {
+                    Optional('type'): str,
+                    Optional('status'): str,
+                    Optional('reason'): str,
+                },
+            },
+        }
+    }
 
 # =================================
 # Parser for 'show interface brief'
@@ -2756,38 +2768,45 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
 
         # mgmt0  --           up     172.25.143.76                           1000     1500
         p2 = re.compile(r'^(?P<port>[a-zA-Z0-9]+) +(?P<vrf>[a-zA-Z0-9\-]+)'
-                         ' +(?P<status>[a-zA-Z]+) +(?P<ip_address>(\S+))'
-                         ' +(?P<speed>[0-9]+) +(?P<mtu>[0-9]+)$')
+                        r' +(?P<status>[a-zA-Z]+) +(?P<ip_address>(\S+))'
+                        r' +(?P<speed>[0-9]+) +(?P<mtu>[0-9]+)$')
 
         # Ethernet      VLAN    Type Mode   Status  Reason                   Speed     Port
         p3 = re.compile(r'^Ethernet +VLAN +Type +Mode +Status +Reason +Speed'
-                         ' +Port$')
+                        r' +Port$')
 
         # Eth1/6        1       eth  access down    Link not connected         auto(D) --
-        p4 = re.compile(r'^(?P<interface>[a-zA-Z0-9\/]+) +(?P<vlan>[a-zA-Z0-9\-]+)'
-                         ' +(?P<type>[a-zA-Z]+) +(?P<mode>[a-z]+)'
-                         ' +(?P<status>[a-z]+) +(?P<reason>[a-zA-Z\s]+)'
-                         ' +(?P<speed>[0-9a-zA-Z\(\)\s]+)'
-                         ' +(?P<port>[0-9\-]+)$')
+        # Eth1/4.2      112     eth  routed down    Administratively down    auto(D) --
+        p4 = re.compile(r'^(?P<interface>[\S]+) +(?P<vlan>[a-zA-Z0-9\-]+)'
+                        r' +(?P<type>[a-zA-Z]+) +(?P<mode>[a-z]+)'
+                        r' +(?P<status>[a-z]+) +(?P<reason>[a-zA-Z\s]+)'
+                        r' +(?P<speed>[0-9a-zA-Z\(\)]+)'
+                        r' +(?P<port>[0-9\-]+)$')
 
         # Port-channel VLAN    Type Mode   Status  Reason                    Speed   Protocol
         p5 = re.compile(r'^Port-channel +VLAN +Type +Mode +Status +Reason'
-                         ' +Speed +Protocol$')
+                        r' +Speed +Protocol$')
 
         # Po8          1       eth  access down    No operational members      auto(I)  none
-        p6 = re.compile(r'^(?P<interface>[a-zA-Z0-9\/]+) +(?P<vlan>[a-zA-Z0-9\-]+)'
-                         ' +(?P<type>[a-zA-Z]+) +(?P<mode>[a-z]+)'
-                         ' +(?P<status>[a-z]+) +(?P<reason>[a-zA-Z\s]+)'
-                         ' +(?P<speed>[0-9a-zA-Z\(\)\s]+)'
-                         ' +(?P<protocol>[a-zA-Z0-9\-]+)$')
+        p6 = re.compile(r'^(?P<interface>[\S]+) +(?P<vlan>[a-zA-Z0-9\-]+)'
+                        r' +(?P<type>[a-zA-Z]+) +(?P<mode>[a-z]+)'
+                        r' +(?P<status>[a-z]+) +(?P<reason>[a-zA-Z\s]+)'
+                        r' +(?P<speed>[0-9a-zA-Z\(\)\s]+)'
+                        r' +(?P<protocol>[a-zA-Z0-9\-]+)$')
 
         # Interface     Status     Description
         p7 = re.compile(r'^Interface +Status +Description$')
 
         # Lo0           up         --
         p8 = re.compile(r'^(?P<interface>[a-zA-Z0-9\/]+) +(?P<status>[a-z]+)'
-                         ' +(?P<description>[a-zA-Z\s\-]+)$')
+                        r' +(?P<description>[a-zA-Z\s\-]+)$')
 
+        # Interface Secondary VLAN(Type)                    Status Reason   
+        p9 = re.compile(r'^Interface +Secondary +VLAN\(Type\) +Status +Reason$')
+
+        # Vlan1     --                                      down   Administratively down
+        p10 = re.compile(r'^(?P<interface>[\S]+) +(?P<type>[\w\-]+) +(?P<status>[\w]+)'
+                         r' +(?P<reason>[\w\s\-]+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -2871,6 +2890,24 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
                     setdefault(Common.convert_intf_name(group['interface']), {})
                 intf_dict['status'] = group['status']
                 intf_dict['description'] = group['description']
+                continue
+
+            # Interface Secondary VLAN(Type)                    Status Reason
+            m = p9.match(line)
+            if m:
+                vlan_dict = parsed_dict.setdefault('interface', {}).\
+                                        setdefault('vlan', {})
+                continue
+
+            # Vlan1     --                                      down   Administratively down
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict = vlan_dict.\
+                    setdefault(Common.convert_intf_name(group['interface']), {})
+                intf_dict['type'] = group['type']
+                intf_dict['status'] = group['status']
+                intf_dict['reason'] = group['reason']
                 continue
 
         return parsed_dict

@@ -19,8 +19,9 @@ Parser for the following show commands:
 import re
 
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any,
-        Optional, Use, SchemaTypeError, Schema, Or)
+        Optional, Use, Schema, Or)
 
 class ShowChassisFpcDetailSchema(MetaParser):
 
@@ -266,7 +267,7 @@ class ShowChassisFirmwareSchema(MetaParser):
     def validate_chassis_firmware_list(value):
         # Pass firmware list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('firmware is not a list')
+            raise SchemaError('firmware is not a list')
         chassis_firmware_schema = Schema({
             "firmware-version": str,
                         "type": str
@@ -411,7 +412,7 @@ class ShowChassisHardwareSchema(MetaParser):
     def validate_inner_chassis_hardware_list(value):
         # Pass firmware list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('inner chassis hardware is not a list')
+            raise SchemaError('inner chassis hardware is not a list')
         chassis_inner_hardware_schema = Schema(
                         {
                             Optional("chassis-sub-sub-module"): {
@@ -437,7 +438,7 @@ class ShowChassisHardwareSchema(MetaParser):
     def validate_chassis_hardware_list(value):
         # Pass firmware list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('chassis hardware is not a list')
+            raise SchemaError('chassis hardware is not a list')
         chassis_hardware_schema = Schema({
             Optional("chassis-sub-module"): Use(ShowChassisHardware.validate_inner_chassis_hardware_list),
             Optional("description"): str,
@@ -655,7 +656,7 @@ class ShowChassisHardwareDetailSchema(MetaParser):
     def validate_inner_chassis_hardware_detail_list(value):
         # Pass firmware list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('inner chassis module is not a list')
+            raise SchemaError('inner chassis module is not a list')
         chassis_inner_hardware_schema = Schema(
                         {
                             Optional("chassis-sub-sub-module"): {
@@ -681,7 +682,7 @@ class ShowChassisHardwareDetailSchema(MetaParser):
     def validate_chassis_hardware_detail_list(value):
         # Pass firmware list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('chassis module is not a list')
+            raise SchemaError('chassis module is not a list')
         chassis_hardware_detail_schema = Schema({
             Optional("chassis-re-disk-module"): {
                         "description": str,
@@ -958,7 +959,7 @@ class ShowChassisHardwareExtensiveSchema(MetaParser):
     def validate_inner_chassis_hardware_detail_list(value):
         # Pass firmware list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('inner chassis module is not a list')
+            raise SchemaError('inner chassis module is not a list')
         chassis_inner_hardware_schema = Schema(
                         {
                             Optional("chassis-sub-sub-module"): {
@@ -998,7 +999,7 @@ class ShowChassisHardwareExtensiveSchema(MetaParser):
     def validate_chassis_hardware_extensive_list(value):
         # Pass firmware list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('chassis module is not a list')
+            raise SchemaError('chassis module is not a list')
         chassis_hardware_detail_schema = Schema({
             Optional("chassis-re-disk-module"): {
                         "description": str,
@@ -1498,7 +1499,7 @@ class ShowChassisFpcSchema(MetaParser):
     def validate_chassis_fpc_list(value):
         # Pass firmware list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('fpc is not a list')
+            raise SchemaError('fpc is not a list')
         chassis_fpc_schema = Schema({
                 Optional("cpu-15min-avg"): str,
                 Optional("cpu-1min-avg"): str,
