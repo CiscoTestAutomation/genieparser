@@ -8,8 +8,9 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any,
-        Optional, Use, SchemaTypeError, Schema)
+        Optional, Use, Schema)
 
 class TracerouteNoResolveSchema(MetaParser):
     """ Schema for:
@@ -38,7 +39,7 @@ class TracerouteNoResolveSchema(MetaParser):
     def validate_hops_list(value):
         # Pass hops list of dict in value
         if not isinstance(value, list):
-            raise SchemaTypeError('hops is not a list')
+            raise SchemaError('hops is not a list')
         # Create hop Schema
         hop_schema = Schema({
                        "hop-number": str,
@@ -79,18 +80,18 @@ class TracerouteNoResolve(TracerouteNoResolveSchema):
 
         ret_dict = {}
 
-        # traceroute to 30.0.0.2 (30.0.0.2) 30 hops max 52 byte packets
+        # traceroute to 10.135.0.2 (10.135.0.2) 30 hops max 52 byte packets
         p1 = re.compile(r'^traceroute +to +(?P<domain>\S+) +\((?P<address>\S+)\), +'
                         r'(?P<max_hops>\S+) +hops +max, +(?P<packet_size>\S+) +byte +packets$')
 
-        #  1  30.0.0.2  1.792 ms  1.142 ms  0.831 ms
+        #  1  10.135.0.2  1.792 ms  1.142 ms  0.831 ms
         p2 = re.compile(r'^(?P<hop_number>\S+) +( +(?P<router_name>\S+))? +'
                         r'(?P<address>\S+) +(?P<round_trip_time>\S+ +ms +\S+ +ms +\S+ +ms)$')
 
         for line in out.splitlines():
             line = line.strip()
 
-            # traceroute to 30.0.0.2 (30.0.0.2) 30 hops max 52 byte packets
+            # traceroute to 10.135.0.2 (10.135.0.2) 30 hops max 52 byte packets
             m = p1.match(line)
 
             if m:
@@ -103,7 +104,7 @@ class TracerouteNoResolve(TracerouteNoResolveSchema):
                 traceroute_dict['packet-size'] = group['packet_size']
                 continue
 
-            #  1  30.0.0.2  1.792 ms  1.142 ms  0.831 ms
+            #  1  10.135.0.2  1.792 ms  1.142 ms  0.831 ms
             m = p2.match(line)
             if m:
                 group = m.groupdict()

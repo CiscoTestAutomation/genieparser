@@ -1,0 +1,20 @@
+Device# show l2vpn service all
+
+Legend: St=State    Prio=Priority
+        UP=Up       DN=Down            AD=Admin Down      IA=Inactive
+        SB=Standby  HS=Hot Standby     RV=Recovering      NH=No Hardware
+
+  Interface          Group       Encapsulation           Prio  St  XC St
+  ---------          -----       -------------           ----  --  -----
+XC name: serviceWire1, State: UP
+  Eth1/1:10          access      EVC 45                  0     UP  UP
+  Pw1                core        MPLS 10.100.5.5:100        0     UP  UP
+  Pw2                core        MPLS 10.144.6.6:200        1     SB  IA
+XC name: serviceConn2, State:UP
+  Eth2/1:20          access_conn EVC 55                  0     UP  UP
+  Eth3/1:20          core_conn   EVC 55                  0     DN  IA
+  Eth4/1:20          core_conn   EVC 55                  1     UP  UP
+XC name: serviceStit3, State: UP
+  Pw3                left        MPLS 10.196.7.7:300        0     UP  UP
+  Pw4                right       MPLS 10.1.8.8:300        0     UP  UP
+    

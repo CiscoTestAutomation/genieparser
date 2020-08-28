@@ -1385,12 +1385,12 @@ class ShowPolicyMapInterfaceClass(ShowPolicyMapTypeSuperParser, ShowPolicyMapTyp
     cli_command = ['show policy-map interface class {class_name}',
                    ]
 
-    def cli(self, class_name='', output=None):
+    def cli(self, class_name, output=None):
 
         if output is None:
             # Build command
-            if class_name:
-                cmd = self.cli_command[0].format(class_name=class_name)
+            
+            cmd = self.cli_command[0].format(class_name=class_name)
             # Execute command
             show_output = self.device.execute(cmd)
         else:
