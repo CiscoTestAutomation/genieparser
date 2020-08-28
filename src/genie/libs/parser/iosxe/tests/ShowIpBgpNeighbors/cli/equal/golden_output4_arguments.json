@@ -1,0 +1,4 @@
+{
+    "address_family": "vpnv4",
+    "vrf": "CE1test"
+}

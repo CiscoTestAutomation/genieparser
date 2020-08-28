@@ -1,0 +1,19 @@
+
+NAME: "3845 chassis", DESCR: "3845 chassis"
+PID: CISCO3845         , VID: V05 , SN: FTX6666ARJ9
+    
+NAME: "c3845 Motherboard with Gigabit Ethernet on Slot 0", DESCR: "c3845 Motherboard with Gigabit Ethernet"
+PID: CISCO3845-MB      , VID: V09 , SN: FOC729346GQ
+    
+NAME: "Virtual Private Network (VPN) Module on Slot 0", DESCR: "Encryption AIM Element"
+PID: AIM-VPN/SSL-3     , VID: V01, SN: FOC758693YO
+    
+NAME: "Clear/Subrate T3/E3 WAN on Slot 1", DESCR: "Clear/Subrate T3/E3 WAN"
+PID: NM-1T3/E3=        , VID: V01 , SN: FOC28476ADM
+    
+NAME: "16 Port 10BaseT/100BaseTX EtherSwitch on Slot 2", DESCR: "16 Port 10BaseT/100BaseTX EtherSwitch"
+PID: NM-16ESW          , VID: V01 , SN: FOC135464KO
+    
+NAME: "Gigabit(1000BaseT) module for EtherSwitch NM on Slot 2 SubSlot 0", DESCR: "Gigabit(1000BaseT) module for EtherSwitch NM"
+PID: GE-DCARD-ESW      , VID: V01 , SN: FOC91864MNN
+    

@@ -46,7 +46,7 @@ class TestShowSnmpMibWalkSystem(unittest.TestCase):
                 {"name": "sysObjectID.0", "object-value": "jnxProductNameVMX"},
                 {"name": "sysUpTime.0", "object-value": "1805867174"},
                 {"name": "sysContact.0", "object-value": "KHK"},
-                {"name": "sysName.0", "object-value": "sr_hktGCS001"},
+                {"name": "sysName.0", "object-value": "sr_hktGDS201"},
                 {
                     "name": "sysLocation.0",
                     "object-value": "TH-HK2/floor_1B-002/rack_KHK1104",
@@ -63,7 +63,7 @@ class TestShowSnmpMibWalkSystem(unittest.TestCase):
         sysObjectID.0 = jnxProductNameVMX
         sysUpTime.0   = 1805867174
         sysContact.0  = KHK
-        sysName.0     = sr_hktGCS001
+        sysName.0     = sr_hktGDS201
         sysLocation.0 = TH-HK2/floor_1B-002/rack_KHK1104
         sysServices.0 = 6
     """

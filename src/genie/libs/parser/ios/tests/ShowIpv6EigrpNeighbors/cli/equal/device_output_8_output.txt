@@ -1,0 +1,11 @@
+
+show ipv6 eigrp neighbors
+EIGRP-IPv6 VR(test) Address-Family Neighbors for AS(100)
+H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq
+                                                   (sec)         (ms)       Cnt Num
+1   Link-local address:     Gi0/2.90                 14 01:37:31  739  4434  0  7
+    FE80::F816:3EFF:FE39:94CB
+0   Link-local address:     Gi0/3.90                 12 01:40:24  993  5000  0  11
+    FE80::5C00:80FF:FE01:7
+
+    

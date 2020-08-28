@@ -82,15 +82,16 @@ class ShowLldpEntrySchema(MetaParser):
                 'port_id': {
                     Any(): {
                         'neighbors': {
-                            Any(): {                        
+                            Any(): {
+                                Optional('peer_mac'): str,
                                 'chassis_id': str,
                                 'port_description': str,
-                                'system_name': str,
-                                'system_description': str,
+                                Optional('system_name'): str,
+                                Optional('system_description'): str,
                                 'time_remaining': int,
-                                'neighbor_id': str,
+                                Optional('neighbor_id'): str,
                                 'hold_time': int,
-                                'capabilities': {
+                                Optional('capabilities'): {
                                     Any():{
                                         Optional('system'): bool,
                                         Optional('enabled'): bool
@@ -132,9 +133,11 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 out = self.device.execute(self.cli_command)
         else:
             out = output
+
         # initial return dictionary
         ret_dict = {}
         description_found = False
+        sub_dict_inserted = False
 
         # Local Interface: GigabitEthernet0/0/0/0
         p1 = re.compile(r'^Local +Interface: +(?P<local_interface>\S+)$')
@@ -178,6 +181,8 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         p15 = re.compile(r'IPv4 +address: +(?P<management_address>[\d\.]+)$')
         # Total entries displayed: 2
         p16 = re.compile(r'Total +entries +displayed: +(?P<total_entries>\d+)$')
+        # Peer MAC Address: 30:b2:b1:1c:b2:3a
+        p17 = re.compile(r'Peer +MAC +Address: +(?P<mac>[\s\S]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -185,6 +190,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             # Local Interface: GigabitEthernet0/0/0/0
             m = p1.match(line)
             if m:
+                sub_dict_inserted = False
                 sub_dict = {}
                 group = m.groupdict()
                 intf = Common.convert_intf_name(group['local_interface'])
@@ -227,7 +233,9 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 system_name = group['system_name']
                 sub_dict.update({'system_name': system_name})
                 sub_dict.update({'neighbor_id' : system_name})
-                nei_dict = port_dict.setdefault('neighbors', {}).setdefault(system_name, sub_dict)
+
+                port_dict.setdefault('neighbors', {}).setdefault(system_name, sub_dict)
+                sub_dict_inserted = True
                 continue
 
             # System Description: 
@@ -309,7 +317,16 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             m = p16.match(line)
             if m:
                 ret_dict['total_entries'] = int(m.groupdict()['total_entries'])
-                continue  
+                continue
+
+            m = p17.match(line)
+            if m:
+                peer_mac = m.groupdict()['mac']
+                sub_dict.update({'peer_mac': peer_mac})
+                if not sub_dict_inserted:
+                    sub_dict_inserted = True
+                    port_dict.setdefault('neighbors', {}).setdefault(peer_mac, sub_dict)
+
         return ret_dict     
 
 
