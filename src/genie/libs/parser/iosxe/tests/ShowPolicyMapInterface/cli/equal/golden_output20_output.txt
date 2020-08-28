@@ -1,0 +1,15 @@
+
+TenGigabitEthernet0/0/0.101
+
+  Service-policy input: L3VPNin
+
+    Class-map: IPP11111 (match-all)
+      253 packets, 5656 bytes
+      5 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: ip precedence 6  7
+      Queueing
+      queue limit 32 packets
+      (queue depth/total drops/no-buffer drops) 98/666/0
+      (pkts output/bytes output) 125/253654
+      bandwidth 4% (536 kbps)
+          

@@ -1,0 +1,78 @@
+
+R1#show ip traffic 
+IP statistics:
+    Rcvd:  17780 total, 110596 local destination
+                 0 format errors, 0 checksum errors, 0 bad hop count
+                 0 unknown protocol, 5 not a gateway
+                 0 security failures, 0 bad options, 12717 with options
+    Opts:  0 end, 0 nop, 0 basic security, 0 loose source route
+                 0 timestamp, 0 extended security, 0 record route
+                 0 stream ID, 0 strict source route, 12717 alert, 0 cipso, 0 ump
+                 0 other, 0 ignored
+    Frags: 0 reassembled, 0 timeouts, 0 couldn't reassemble
+                 1 fragmented, 5 fragments, 0 couldn't fragment
+                 0 invalid hole
+    Bcast: 33324 received, 5 sent
+    Mcast: 144833 received, 66274 sent
+    Sent:  85543 generated, 1654728 forwarded
+    Drop:  8 encapsulation failed, 0 unresolved, 20 no adjacency
+                 19 no route, 0 unicast RPF, 0 forced drop, 0 unsupported-addr
+                 0 options denied, 0 source IP address zero
+
+ICMP statistics:
+    Rcvd: 0 format errors, 0 checksum errors, 0 redirects, 0 unreachable
+                284 echo, 9 echo reply, 0 mask requests, 0 mask replies, 0 quench
+                0 parameter, 0 timestamp, 0 timestamp replies, 0 info request, 0 other
+                0 irdp solicitations, 0 irdp advertisements
+                0 time exceeded, 0 info replies
+    Sent: 0 redirects, 14 unreachable, 9 echo, 134 echo reply
+                0 mask requests, 0 mask replies, 0 quench, 0 timestamp, 0 timestamp replies
+                0 info reply, 0 time exceeded, 0 parameter problem
+                0 irdp solicitations, 0 irdp advertisements
+
+UDP statistics:
+    Rcvd: 62515 total, 0 checksum errors, 15906 no port 0 finput
+    Sent: 41486 total, 0 forwarded broadcasts
+
+OSPF statistics:
+    Last clearing of OSPF traffic counters never
+    Rcvd: 16222 total, 0 checksum errors
+        15153 hello, 20 database desc, 2 link state req
+        359 link state updates, 688 link state acks
+    Sent: 9456 total
+        8887 hello, 30 database desc, 8 link state req
+        299 link state updates, 239 link state acks
+
+PIMv2 statistics: Sent/Received
+    Total: 7458/8859, 0 checksum errors, 0 format errors
+    Registers: 1/1 (0 non-rp, 0 non-sm-group), Register Stops: 1/1,  Hellos: 5011/5008
+    Join/Prunes: 5/712, Asserts: 0/697, grafts: 0/2
+    Bootstraps: 2088/2438, Candidate_RP_Advertisements: 350/0
+    Queue drops: 0
+    State-Refresh: 0/0
+
+IGMP statistics: Sent/Received
+    Total: 2832/4946, Format errors: 0/0, Checksum errors: 0/0
+    Host Queries: 2475/1414, Host Reports: 357/3525, Host Leaves: 0/5 
+    DVMRP: 0/0, PIM: 0/0
+    Queue drops: 0
+
+TCP statistics:
+    Rcvd: 15396 total, 0 checksum errors, 0 no port
+    Sent: 19552 total
+
+EIGRP-IPv4 statistics:
+    Rcvd: 4612 total
+    Sent: 4611 total
+
+BGP statistics:
+    Rcvd: 2185 total, 6 opens, 0 notifications, 12 updates
+                2167 keepalives, 0 route-refresh, 0 unrecognized
+    Sent: 2304 total, 6 opens, 2 notifications, 0 updates
+                2296 keepalives, 0 route-refresh
+
+ARP statistics:
+    Rcvd: 2020 requests, 764 replies, 0 reverse, 0 other
+    Sent: 29 requests, 126 replies (2 proxy), 0 reverse
+    Drop due to input queue full: 0
+        

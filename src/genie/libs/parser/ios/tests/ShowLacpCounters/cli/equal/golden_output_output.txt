@@ -1,0 +1,11 @@
+
+Device# show lacp 1 counters
+              LACPDUs         Marker       LACPDUs
+Port       Sent   Recv     Sent   Recv     Pkts Err
+---------------------------------------------------
+Channel group: 1
+  Fa4/1    8      15       0      0         3    0
+  Fa4/2    14     18       0      0         3    0
+  Fa4/3    14     18       0      0         0
+  Fa4/4    13     18       0      0         0
+    

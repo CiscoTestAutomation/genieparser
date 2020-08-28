@@ -1,0 +1,19 @@
+
+Route Distinguisher: 102:102 (default for vrf sample_vrf)
+BGP routing table entry for 102:102:0.0.0.0/0, version 1559863
+  Paths: (4 available, best #1, table sample_vrf)
+  Advertised to update-groups:
+     1          29         35
+  Refresh Epoch 1
+  2, imported safety path from 50000:2:172.17.0.0/16
+    10.220.100.80 (via vrf sample_vrf) from 10.220.100.80 (10.115.10.40)
+      Origin IGP, localpref 100, valid, external, best
+      Community: 65300:106 65300:500 65300:601 65351:1
+      rx pathid: 0, tx pathid: 0x0
+  Refresh Epoch 3
+  Local, imported path from base
+    10.115.10.1 (metric 2) (via vrf sample_vrf) from 10.115.10.1 (10.115.10.1)
+      Origin IGP, metric 0, localpref 100, valid, internal
+      Community: 65300:106 65300:500 65300:601 65351:1
+      rx pathid: 0, tx pathid: 0
+        

@@ -1,0 +1,7 @@
+
+R4_iosv#show bgp all neighbors 10.106.102.3 policy 
+ Neighbor: 10.106.102.3, Address-Family: VPNv4 Unicast
+
+ Neighbor: 10.106.102.3, Address-Family: VPNv6 Unicast
+
+        

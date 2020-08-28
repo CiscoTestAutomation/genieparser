@@ -8,8 +8,8 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import (Any, Optional, Use,
-                                                SchemaTypeError, Schema)
+from pyats.utils.exceptions import SchemaError
+from genie.metaparser.util.schemaengine import (Any, Optional, Use, Schema)
 
 
 class ShowClassOfServiceSchema(MetaParser):
@@ -90,7 +90,9 @@ class ShowClassOfService(ShowClassOfServiceSchema):
         p8 = re.compile(r'^Logical +interface: +(?P<i_logical_name>\S+), +Index: +(?P<i_logical_index>\S+)$')
 
         # Classifier              dscp-ipv6-compatibility dscp-ipv6                  9
-        p9 = re.compile(r'^(?P<object_type>\S+) +(?P<object_name>\S+) +(?P<object_subtype>\S+) +(?P<index>\d+)$')
+        # Rewrite-Output          EXP-test               exp (mpls-any)          49467
+        p9 = re.compile(r'^(?P<object_type>\S+) +(?P<object_name>\S+) +(?P<object_subtype>\S+( +\(\S+\))?) +'
+            r'(?P<index>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
