@@ -1,0 +1,4 @@
+{
+    "vrf": "Mgmt-vrf",
+    "intf_or_ip": "GigabitEthernet0/0"
+}

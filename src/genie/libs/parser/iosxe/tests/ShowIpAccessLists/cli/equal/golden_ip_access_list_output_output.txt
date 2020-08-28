@@ -1,0 +1,24 @@
+    Router#show ip access-lists ACL_TEST
+Load for five secs: 1%/0%; one minute: 2%; five minutes: 2%
+Time source is NTP, 18:12:32.965 EST Mon Oct 17 2016
+
+Extended IP access list ACL_TEST
+    10 deny tcp 10.69.188.0 0.0.0.255 host 192.168.16.1 eq www
+    20 deny tcp 10.4.1.0 0.0.0.255 host 192.168.16.1 eq www
+    30 deny tcp 10.4.2.0 0.0.0.255 host 192.168.16.1 eq www
+    40 deny tcp 10.4.3.0 0.0.0.255 host 192.168.16.1 eq www
+    50 deny tcp 10.4.4.0 0.0.0.255 host 192.168.16.1 eq www
+    60 deny tcp 10.4.5.0 0.0.0.255 host 192.168.16.1 eq www
+    70 deny tcp 10.4.6.0 0.0.0.255 host 192.168.16.1 eq www
+    80 deny tcp 10.4.7.0 0.0.0.255 host 192.168.16.1 eq www
+    90 deny tcp 10.4.8.0 0.0.0.255 host 192.168.16.1 eq www
+    100 deny tcp 10.4.9.0 0.0.0.255 host 192.168.16.1 eq www
+    110 deny tcp 10.4.10.0 0.0.0.255 host 192.168.16.1 eq www
+    120 deny tcp 10.4.11.0 0.0.0.255 host 192.168.16.1 eq www
+    130 deny tcp 10.4.12.0 0.0.0.255 host 192.168.16.1 eq www
+    140 deny tcp 10.4.13.0 0.0.0.255 host 192.168.16.1 eq www
+    150 deny tcp 10.4.14.0 0.0.0.255 host 192.168.16.1 eq www
+    160 deny tcp 10.4.15.0 0.0.0.255 host 192.168.16.1 eq www
+    170 deny tcp 10.4.16.0 0.0.0.255 host 192.168.16.1 eq www
+
+    

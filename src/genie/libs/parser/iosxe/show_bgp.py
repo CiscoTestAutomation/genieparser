@@ -6391,9 +6391,13 @@ class ShowBgpAllNeighborsPolicy(ShowBgpAllNeighborsPolicySchema):
         else:
             out = output
 
-        p1 = re.compile(r'^\s*Neighbor: +(?P<neighbor>[a-zA-Z0-9\.\:]+),'
-                            ' +Address-Family: +(?P<address_family>[a-zA-Z0-9\s\-\_]+)'
-                            '( +\((?P<vrf>[a-zA-Z0-9]+)\))?$')
+        # Neighbor: 10.4.6.6, Address-Family: VPNv4 Unicast (VRF1)
+        # Neighbor: 10.251.15.5, Address-Family: VPNv4 Unicast (LABDR_HoC_AZS_Transit)
+        p1 = re.compile(r'^\s*Neighbor: +(?P<neighbor>[\S]+),'
+                        r' +Address-Family: +(?P<address_family>[\w\s\-\_]+)'
+                        r'( +\((?P<vrf>[\S]+)\))?$')
+
+        # route-map test in
         p2 = re.compile(r'^\s*route-map +(?P<route_map_name>\S+)'
                             ' +(?P<route_map_direction>[a-zA-Z]+)$')
 
@@ -6422,29 +6426,14 @@ class ShowBgpAllNeighborsPolicy(ShowBgpAllNeighborsPolicySchema):
                 route_map_direction = str(m.groupdict()['route_map_direction'])
 
                 # Init dict
-                if 'vrf' not in policy_dict:
-                    policy_dict['vrf'] = {}
-                if vrf not in policy_dict['vrf']:
-                    policy_dict['vrf'][vrf] = {}
-                if 'neighbor' not in policy_dict['vrf'][vrf]:
-                    policy_dict['vrf'][vrf]['neighbor'] = {}
-                if neighbor_id not in policy_dict['vrf'][vrf]['neighbor']:
-                    policy_dict['vrf'][vrf]['neighbor'][neighbor_id] = {}
-                if 'address_family' not in policy_dict['vrf'][vrf]['neighbor']\
-                    [neighbor_id]:
-                    policy_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'] = {}
-                if address_family not in policy_dict['vrf'][vrf]['neighbor']\
-                    [neighbor_id]['address_family']:
-                    policy_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'][address_family] = {}
+                sub_dict = policy_dict.setdefault('vrf', {}).setdefault(vrf, {}).\
+                    setdefault('neighbor', {}).setdefault(neighbor_id, {}).\
+                    setdefault('address_family', {}).setdefault(address_family, {})
 
                 if route_map_direction == 'in':
-                    policy_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'][address_family]['nbr_af_route_map_name_in'] = route_map_name
+                    sub_dict['nbr_af_route_map_name_in'] = route_map_name
                 else:
-                    policy_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'][address_family]['nbr_af_route_map_name_out'] = route_map_name
+                    sub_dict['nbr_af_route_map_name_out'] = route_map_name
 
                 continue
 

@@ -1,0 +1,13 @@
+Config Session Lock
+---------------------
+Owner PID   : 578
+TTY number  : 2
+TTY username    : testuser
+User debug info : CLI Session Lock
+Lock Active time (in Sec)   : 17
+Owner PID   : 5781
+TTY number  : 21
+TTY username    : testuser1
+User debug info : CLI Session Lock
+Lock Active time (in Sec)   : 171
+            

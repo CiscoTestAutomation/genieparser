@@ -1,0 +1,19 @@
+
+IP routing table name is VRF1 (0x2)
+IP routing table maximum-paths is 32
+Route Source    Networks    Subnets     Replicates  Overhead    Memory (bytes)
+application     0           0           0           0           0
+connected       0           17          0           1632        5168
+static          0           0           0           0           0
+ospf 2          0           1           0           96          308
+  Intra-area: 1 Inter-area: 0 External-1: 0 External-2: 0
+  NSSA External-1: 0 NSSA External-2: 0
+isis test1      0           1           0           96          304
+  Level 1: 1 Level 2: 0 Inter-area: 0
+eigrp 100       0           3           0           672         912
+rip             0           1           0           192         304
+bgp 65000       0           0           0           0           0
+  External: 0 Internal: 0 Local: 0
+internal        4                                               2936
+Total           4           23          0           2688        9932
+    
