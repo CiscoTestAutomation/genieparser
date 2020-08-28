@@ -16,6 +16,8 @@
         * show cts pacs
     * Added ShowClassMap
         * show class-map
+    * Added ShowApCdpNeighbor
+        * show ap cdp neighbor
 
 --------------------------------------------------------------------------------
                                 Fix
