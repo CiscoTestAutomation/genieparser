@@ -8,8 +8,9 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any, 
-        Optional, Use, SchemaTypeError, Schema)
+        Optional, Use, Schema)
 
 class ShowIpv6NeighborsSchema(MetaParser):
     """ Schema for:
@@ -38,7 +39,7 @@ class ShowIpv6NeighborsSchema(MetaParser):
     def validate_ipv6_entry_list(value):
         # Pass arp-entry list of dict in value
         if not isinstance(value, list):
-            raise SchemaTypeError('ipv6-entry is not a list')
+            raise SchemaError('ipv6-entry is not a list')
         # Create Arp Entry Schema
         entry_schema = Schema({
             "ipv6-nd-expire": str,

@@ -1,0 +1,21 @@
+Local interface: VFI TEST VFI up
+  MPLS VC type is VFI, interworking type is Ethernet
+  Destination address: 10.1.1.1, VC ID: 1000, VC status: up
+    Output interface: Se2/0, imposed label stack {17}
+    Preferred path: not configured
+    Default path: active
+    Next hop: point2point
+  Create time: 00:04:34, last status change time: 00:04:15
+  Signaling protocol: LDP, peer 10.1.1.1:0 up
+    Targeted Hello: 10.1.1.1(LDP Id) -> 10.1.1.1
+    MPLS VC labels: local 16, remote 17
+    Group ID: local 0, remote 0
+    MTU: local 1500, remote 1500    
+    Remote interface description:
+    MAC Withdraw: sent 5, received 3
+  Sequencing: receive disabled, send disabled
+  VC statistics:
+    packet totals: receive 0, send 0
+    byte totals:   receive 0, send 0
+    packet drops:  receive 0, send 0
+    

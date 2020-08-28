@@ -1,0 +1,94 @@
+
+Class Map match-any system-cpp-police-ewlc-control (id 23)
+  Description: EWLC Control 
+   Match none 
+
+ Class Map match-any system-cpp-police-topology-control (id 2)
+  Description: Topology control
+   Match none 
+
+ Class Map match-any system-cpp-police-sw-forward (id 3)
+  Description: Sw forwarding, L2 LVX data packets, LOGGING, Transit Traffic
+   Match none 
+
+ Class Map match-any system-cpp-default (id 4)
+  Description: EWLC Data, Inter FED Traffic 
+   Match none 
+
+ Class Map match-any system-cpp-police-sys-data (id 5)
+  Description: Openflow, Exception, EGR Exception, NFL Sampled Data, RPF Failed
+   Match none 
+
+ Class Map match-any system-cpp-police-punt-webauth (id 6)
+  Description: Punt Webauth
+   Match none 
+
+ Class Map match-any system-cpp-police-l2lvx-control (id 7)
+  Description: L2 LVX control packets
+   Match none 
+
+ Class Map match-any class-default (id 0)
+   Match any 
+
+ Class Map match-any system-cpp-police-forus (id 8)
+  Description: Forus Address resolution and Forus traffic
+   Match none 
+
+ Class Map match-any system-cpp-police-multicast-end-station (id 9)
+  Description: MCAST END STATION
+   Match none 
+
+ Class Map match-any system-cpp-police-high-rate-app (id 10)
+  Description: High Rate Applications 
+   Match none 
+
+ Class Map match-any system-cpp-police-multicast (id 11)
+  Description: MCAST Data
+   Match none 
+
+ Class Map match-any system-cpp-police-l2-control (id 12)
+  Description: L2 control
+   Match none 
+
+ Class Map match-any system-cpp-police-dot1x-auth (id 13)
+  Description: DOT1X Auth
+   Match none 
+
+ Class Map match-any system-cpp-police-data (id 14)
+  Description: ICMP redirect, ICMP_GEN and BROADCAST
+   Match none 
+
+ Class Map match-any system-cpp-police-stackwise-virt-control (id 15)
+  Description: Stackwise Virtual OOB
+   Match none 
+
+ Class Map match-any system-cpp-police-control-low-priority (id 16)
+  Description: General punt
+   Match none 
+
+ Class Map match-any non-client-nrt-class (id 1)
+   Match non-client-nrt 
+ Class Map match-any system-cpp-police-routing-control (id 17)
+  Description: Routing control and Low Latency
+   Match none 
+
+ Class Map match-any system-cpp-police-protocol-snooping (id 18)
+  Description: Protocol snooping
+   Match none 
+
+ Class Map match-any system-cpp-police-dhcp-snooping (id 19)
+  Description: DHCP snooping
+   Match none 
+
+ Class Map match-any system-cpp-police-ios-routing (id 21)
+  Description: L2 control, Topology control, Routing control, Low Latency
+   Match none 
+
+ Class Map match-any system-cpp-police-system-critical (id 20)
+  Description: System Critical and Gold Pkt
+   Match none 
+
+ Class Map match-any system-cpp-police-ios-feature (id 22)
+  Description: ICMPGEN,BROADCAST,ICMP,L2LVXCntrl,ProtoSnoop,PuntWebauth,MCASTData,Transit,DOT1XAuth,Swfwd,LOGGING,L2LVXData,ForusTraffic,ForusARP,McastEndStn,Openflow,Exception,EGRExcption,NflSampled,RpfFailed
+   Match none
+    
