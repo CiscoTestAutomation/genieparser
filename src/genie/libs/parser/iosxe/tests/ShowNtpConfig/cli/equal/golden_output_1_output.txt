@@ -2,4 +2,4 @@ R1#show ntp config
 ntp server 10.4.1.1
 ntp server 10.16.2.2
 ntp server vrf VRF1 10.64.4.4
-    
+ntp server 10.2.1.1 prefer

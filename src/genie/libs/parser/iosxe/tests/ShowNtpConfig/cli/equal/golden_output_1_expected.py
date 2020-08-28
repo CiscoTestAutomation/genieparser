@@ -42,6 +42,20 @@ expected_output = {
                         }
                     },
                 },
+                '10.2.1.1': {
+                    'isconfigured': {
+                        'True': {
+                            'address': '10.2.1.1',
+                            'isconfigured': True}
+                    },
+                    'type': {
+                        'server': {
+                            'address': '10.2.1.1',
+                            'type': 'server',
+                            'vrf': 'default',
+                            'preferred': True}
+                    }
+                }
             }
         },
     }
