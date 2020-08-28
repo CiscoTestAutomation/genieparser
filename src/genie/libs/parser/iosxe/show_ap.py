@@ -69,25 +69,14 @@ class ShowApRfProfileSummary(ShowApRfProfileSummarySchema):
         # Custom-RF_a                      5 GHz    Custom-RF_a_Desc                     Up
         rf_profile_info_capture = re.compile(
             r"^(?P<rf_profile_name>\S+)\s+(?P<band>\S+\s+\S+)\s+(?P<description>.*)(?P<state>(Up|Down))")
+        # RF Profile Name                  Band     Description                          State
+        # ------------------------------------------------------------------------------------
 
-        remove_lines = ('RF Profile', '----')
 
-        # Remove unwanted lines from raw text
-        def filter_lines(raw_output, remove_lines):
-            # Remove empty lines
-            clean_lines = list(filter(None, raw_output.splitlines()))
-            rendered_lines = []
-            for clean_line in clean_lines:
-                clean_line_strip = clean_line.strip()
-                # Remove lines unwanted lines from list of "remove_lines"
-                if not clean_line_strip.startswith(remove_lines):
-                    rendered_lines.append(clean_line_strip)
-            return rendered_lines
-
-        out_filter = filter_lines(raw_output=out, remove_lines=remove_lines)
         rf_profile_data = {}
 
-        for line in out_filter:
+        for line in out.splitlines():
+            line = line.strip()
             # Number of RF-profiles: 14
             if rf_profile_count_capture.match(line):
                 rf_profile_count_match = rf_profile_count_capture.match(line)
@@ -96,6 +85,10 @@ class ShowApRfProfileSummary(ShowApRfProfileSummarySchema):
                 if not rf_profile_summary_dict.get('rf_profile_summary', {}):
                     rf_profile_summary_dict['rf_profile_summary'] = {}
                 rf_profile_summary_dict['rf_profile_summary']['rf_profile_count'] = rf_profile_count
+                continue
+            elif line.startswith('RF Profile Name'):
+                continue
+            elif line.startswith('-----'):
                 continue
             # Custom-RF_a                      5 GHz    Custom-RF_a_Desc                     Up
             elif rf_profile_info_capture.match(line):
