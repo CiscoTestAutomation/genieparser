@@ -1,0 +1,4 @@
+{
+    "address_family": "vpnv4",
+    "vrf": "L3VPN-0050"
+}

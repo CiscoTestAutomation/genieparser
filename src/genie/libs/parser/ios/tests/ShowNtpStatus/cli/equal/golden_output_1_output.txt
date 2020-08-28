@@ -1,0 +1,10 @@
+iosv-1#show ntp status 
+Clock is synchronized, stratum 4, reference is 10.16.2.2        
+nominal freq is 1000.0003 Hz, actual freq is 1000.4589 Hz, precision is 2**14
+ntp uptime is 239700 (1/100 of seconds), resolution is 1000
+reference time is DFA02517.D2F7B9F6 (13:40:23.824 EST Wed Nov 21 2018)
+clock offset is 27.0279 msec, root delay is 5.61 msec
+root dispersion is 273.61 msec, peer dispersion is 3.34 msec
+loopfilter state is 'CTRL' (Normal Controlled Loop), drift is -0.000458631 s/s
+system poll interval is 64, last update was 182 sec ago.
+    

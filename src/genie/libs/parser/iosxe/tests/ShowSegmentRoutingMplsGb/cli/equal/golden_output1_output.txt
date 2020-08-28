@@ -1,0 +1,6 @@
+
+PE1#show segment-routing mpls gb
+LABEL-MIN  LABEL_MAX  STATE           DEFAULT   
+16000      23999      ENABLED         Yes       
+PE1#
+        

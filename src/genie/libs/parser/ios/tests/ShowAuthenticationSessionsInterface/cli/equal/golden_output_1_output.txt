@@ -1,0 +1,21 @@
+        show authentication sessions interface GigabitEthernet2/0/47
+
+            Interface:  GigabitEthernet2/0/47
+          MAC Address:  Unknown
+           IP Address:  Unknown
+               Status:  Authz Success
+               Domain:  DATA
+       Oper host mode:  multi-host
+     Oper control dir:  both
+        Authorized By:  Guest Vlan
+          Vlan Policy:  20
+      Session timeout:  N/A
+         Idle timeout:  N/A
+    Common Session ID:  0A3462C8000000000002763C
+      Acct Session ID:  0x00000002
+               Handle:  0x25000000
+Runnable methods list:
+       Method   State
+       mab      Failed over
+       dot1x    Failed over
+        
