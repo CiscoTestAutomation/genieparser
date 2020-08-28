@@ -10,12 +10,6 @@
 --------------------------------------------------------------------------------
 
 * IOSXE
-    * Added ShowStackwiseVirtual
-        * show stackwise-virtual
-    * Added ShowCtsPacs
-        * show cts pacs
-    * Added ShowClassMap
-        * show class-map
     * Added ShowCtsRoleBasedCounters
         * show cts role-based counters
 

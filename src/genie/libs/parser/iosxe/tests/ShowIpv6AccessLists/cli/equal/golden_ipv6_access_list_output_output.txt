@@ -1,0 +1,15 @@
+    Router# show ipv6 access-list OutFilter_IPv6
+IPv6 access list OutFilter_IPv6
+    permit icmp any any mld-query sequence 30
+    permit icmp any any router-advertisement sequence 40
+    deny 103 any any sequence 50
+    permit icmp any any packet-too-big sequence 60
+    deny icmp any any sequence 70
+    deny ipv6 2001:DB8:B30A:DC63::/64 any sequence 74
+    deny ipv6 2001:DB8:B30A:F442::/64 any sequence 75
+    permit ipv6 any 2001:db8:1d14::/16 log-input sequence 80
+    deny ipv6 2001:DB8:B30A:FE9B::/64 any sequence 90
+    deny ipv6 2001:DB8:B30A:213::/64 any sequence 100
+    deny ipv6 2001:db8:5254:1000::/35 2001:db8:5254:1000::/35 dscp default sequence 110
+    permit ipv6 any any (3974749339 matches) sequence 120
+    

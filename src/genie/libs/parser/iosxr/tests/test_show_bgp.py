@@ -84,7 +84,7 @@ class TestShowBgpEgressEngineering(unittest.TestCase):
 
     golden_output1 = {
         "execute.return_value": """
-        RP/0/RSP0/CPU0:router_C# show bgp egress-engineering 
+        RP/0/RSP0/CPU0:router_C# show bgp egress-engineering
 
         Egress Engineering Peer Set: 192.168.1.2/32 (10b87210)
             Nexthop: 192.168.1.2
@@ -98,7 +98,7 @@ class TestShowBgpEgressEngineering(unittest.TestCase):
                NHID: 3
               Label: 24002, Refcount: 3
             rpc_set: 10b9d408
-    
+
         Egress Engineering Peer Set: 192.168.1.3/32 (10be61d4)
             Nexthop: 192.168.1.3
             Version: 3, rn_version: 3
@@ -216,8 +216,8 @@ class TestShowBgpEgressEngineering(unittest.TestCase):
     }
 
     golden_output2 = {
-        "execute.return_value": """  
-        RP/0/0/CPU0:R1#show bgp egress-engineering 
+        "execute.return_value": """
+        RP/0/0/CPU0:R1#show bgp egress-engineering
         Wed Apr 25 15:45:31.170
 
      Egress Engineering Peer Set: 10.19.0.2/32 (0xa968758)
@@ -289,7 +289,7 @@ class TestShowBgpEgressEngineering(unittest.TestCase):
                NHID: 11
                 IFH: 0x150
               Label: 24010, Refcount: 3
-            rpc_set: 0xe91d4548, ID: 11 
+            rpc_set: 0xe91d4548, ID: 11
 
         """
     }
@@ -373,7 +373,7 @@ class TestShowBgpInstances(unittest.TestCase):
 
     golden_output1 = {
         "execute.return_value": """
-        
+
         show bgp instances
 
         Number of BGP instances: 1
@@ -507,20 +507,20 @@ class TestShowPlacementProgramAll(unittest.TestCase):
 
     golden_output = {
         "execute.return_value": """
-            
+
             Display program related information. This is the program information corresponding to this LR as
             perceived by the placement daemon.
             ------------------------------------------------------------------------------------------------------------------------------------------
                                Process Information
             ------------------------------------------------------------------------------------------------------------------------------------------
-            Program                                 Group               jid  Active         Active-state             Standby        Standby-state  
+            Program                                 Group               jid  Active         Active-state             Standby        Standby-state
             ------------------------------------------------------------------------------------------------------------------------------------------
-            rcp_fs                                  central-services    1168 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED    
-            ospf(1)                                 v4-routing          1018 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED    
+            rcp_fs                                  central-services    1168 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED
+            ospf(1)                                 v4-routing          1018 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED
             bgp(default)                            v4-routing          1018 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED
-            statsd_manager_g                        netmgmt             1141 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED    
-            pim                                     mcast-routing       1158 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED    
-            ipv6_local                              v6-routing          1156 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED    
+            statsd_manager_g                        netmgmt             1141 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED
+            pim                                     mcast-routing       1158 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED
+            ipv6_local                              v6-routing          1156 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED
       """
     }
 
@@ -1246,68 +1246,68 @@ class TestShowPlacementProgramAll(unittest.TestCase):
         ------------------------------------------------------------------------------------------------------------------------------------------
                            Process Information
         ------------------------------------------------------------------------------------------------------------------------------------------
-        Program                                 Group               jid  Active         Active-state             Standby        Standby-state  
+        Program                                 Group               jid  Active         Active-state             Standby        Standby-state
         ------------------------------------------------------------------------------------------------------------------------------------------
-        schema_server                           central-services    1177 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        vservice_mgr                            central-services    1173 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        ipv4_mpa                                central-services    1149 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        qos_ma                                  central-services    1172 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        icpe_satmgr                             central-services    1163 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        eth_gl_cfg                              central-services    1151 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        rcp_fs                                  central-services    1165 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        ssh_server                              central-services    1184 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        es_acl_mgr                              central-services    1169 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        snmppingd                               central-services    1195 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        xtc_agent                               central-services    1174 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        ftp_fs                                  central-services    1162 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        ipv6_mpa                                central-services    1150 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        telemetry_encoder                       central-services    1194 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        bfd                                     central-services    1158 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        ethernet_stats_controller_edm           central-services    1161 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        tty_verifyd                             central-services    1166 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        spa_cfg_hlpr                            central-services    1130 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        auto_ip_ring                            central-services    1156 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        nfmgr                                   central-services    1145 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        bundlemgr_distrib                       central-services    1157 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        netconf                                 central-services    1189 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        intf_mgbl                               central-services    1143 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        domain_services                         central-services    1160 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        python_process_manager                  central-services    1164 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        wanphy_proc                             central-services    1178 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        ssh_conf_verifier                       central-services    1183 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        pbr_ma                                  central-services    1171 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        rt_check_mgr                            v4-routing          1170 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        ipv4_rib                                v4-routing          1146 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        l2vpn_mgr                               v4-routing          1175 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        ipv4_connected                          v4-routing          1152 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        ospf(1)                                 v4-routing          1018 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        l2tp_mgr                                v4-routing          1176 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        bgp_epe                                 v4-routing          1159 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        ospf_uv                                 v4-routing          1114 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        bpm                                     v4-routing          1066 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        ipv4_rump                               v4-routing          1167 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        ipv4_static                             v4-routing          1043 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        mpls_ldp                                v4-routing          1199 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        bgp(default)                            v4-routing          1051 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        policy_repository                       v4-routing          1148 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        mpls_static                             v4-routing          1142 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        ipv4_local                              v4-routing          1153 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        statsd_manager_g                        netmgmt             1144 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        igmp                                    mcast-routing       1208 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        mrib                                    mcast-routing       1206 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        ipv4_mfwd_ma                            mcast-routing       1204 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        pim6                                    mcast-routing       1211 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        ipv6_mfwd_ma                            mcast-routing       1205 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        mld                                     mcast-routing       1209 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        pim                                     mcast-routing       1210 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        mrib6                                   mcast-routing       1207 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        ipv6_rib                                v6-routing          1147 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        ipv6_connected                          v6-routing          1154 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        ipv6_local                              v6-routing          1155 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        ipv6_rump                               v6-routing          1168 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        bgp(test)                               Group_10_bgp2       1052 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        bgp(test1)                              Group_5_bgp3        1053 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
-        bgp(test2)                              Group_5_bgp4        1054 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING        
+        schema_server                           central-services    1177 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        vservice_mgr                            central-services    1173 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        ipv4_mpa                                central-services    1149 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        qos_ma                                  central-services    1172 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        icpe_satmgr                             central-services    1163 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        eth_gl_cfg                              central-services    1151 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        rcp_fs                                  central-services    1165 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        ssh_server                              central-services    1184 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        es_acl_mgr                              central-services    1169 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        snmppingd                               central-services    1195 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        xtc_agent                               central-services    1174 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        ftp_fs                                  central-services    1162 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        ipv6_mpa                                central-services    1150 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        telemetry_encoder                       central-services    1194 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        bfd                                     central-services    1158 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        ethernet_stats_controller_edm           central-services    1161 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        tty_verifyd                             central-services    1166 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        spa_cfg_hlpr                            central-services    1130 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        auto_ip_ring                            central-services    1156 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        nfmgr                                   central-services    1145 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        bundlemgr_distrib                       central-services    1157 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        netconf                                 central-services    1189 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        intf_mgbl                               central-services    1143 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        domain_services                         central-services    1160 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        python_process_manager                  central-services    1164 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        wanphy_proc                             central-services    1178 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        ssh_conf_verifier                       central-services    1183 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        pbr_ma                                  central-services    1171 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        rt_check_mgr                            v4-routing          1170 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        ipv4_rib                                v4-routing          1146 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        l2vpn_mgr                               v4-routing          1175 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        ipv4_connected                          v4-routing          1152 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        ospf(1)                                 v4-routing          1018 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        l2tp_mgr                                v4-routing          1176 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        bgp_epe                                 v4-routing          1159 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        ospf_uv                                 v4-routing          1114 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        bpm                                     v4-routing          1066 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        ipv4_rump                               v4-routing          1167 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        ipv4_static                             v4-routing          1043 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        mpls_ldp                                v4-routing          1199 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        bgp(default)                            v4-routing          1051 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        policy_repository                       v4-routing          1148 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        mpls_static                             v4-routing          1142 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        ipv4_local                              v4-routing          1153 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        statsd_manager_g                        netmgmt             1144 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        igmp                                    mcast-routing       1208 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        mrib                                    mcast-routing       1206 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        ipv4_mfwd_ma                            mcast-routing       1204 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        pim6                                    mcast-routing       1211 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        ipv6_mfwd_ma                            mcast-routing       1205 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        mld                                     mcast-routing       1209 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        pim                                     mcast-routing       1210 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        mrib6                                   mcast-routing       1207 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        ipv6_rib                                v6-routing          1147 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        ipv6_connected                          v6-routing          1154 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        ipv6_local                              v6-routing          1155 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        ipv6_rump                               v6-routing          1168 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        bgp(test)                               Group_10_bgp2       1052 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        bgp(test1)                              Group_5_bgp3        1053 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+        bgp(test2)                              Group_5_bgp4        1054 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
         ------------------------------------------------------------------------------------------------------------------------------------------
         """
     }
@@ -1373,8 +1373,8 @@ class TestShowBgpInstanceAfGroupConfiguration(unittest.TestCase):
         "execute.return_value": """
 
     Fri Jul 14 16:30:21.081 EDT
-    Building configuration...    
-    router bgp 100 af-group af_group address-family ipv4 unicast 
+    Building configuration...
+    router bgp 100 af-group af_group address-family ipv4 unicast
 
         Wed Jul 12 15:42:07.027 EDT
     af-group af_group address-family IPv4 Unicast
@@ -1450,7 +1450,7 @@ class TestShowBgpInstanceSessionGroupConfiguration(unittest.TestCase):
         "execute.return_value": """
         Fri Jul 14 17:50:40.461 EDT
         Building configuration...
-        router bgp 100 session-group SG 
+        router bgp 100 session-group SG
 
         Thu Jul 13 12:28:48.673 EDT
         session-group SG
@@ -1532,20 +1532,20 @@ class TestShowBgpInstanceSessionGroupConfiguration(unittest.TestCase):
         session-group SG
          description SG  []
 
-        RP/0/RSP1/CPU0:PE1#show bgp instance test session-group abcd configuration 
+        RP/0/RSP1/CPU0:PE1#show bgp instance test session-group abcd configuration
         Thu Jul 20 09:02:48.738 PDT
         session-group abcd
          description LALALALLA []
          bfd fast-detect       []
 
-        RP/0/RSP1/CPU0:PE1#show bgp instance test session-group efddd configuration 
+        RP/0/RSP1/CPU0:PE1#show bgp instance test session-group efddd configuration
         Thu Jul 20 09:03:10.702 PDT
         session-group efddd
          ebgp-multihop 255      []
          local-as 10 no-prepend []
          bfd fast-detect        []
-        
-        RP/0/RSP1/CPU0:PE1#show bgp instance test session-group LALALALLA configuration 
+
+        RP/0/RSP1/CPU0:PE1#show bgp instance test session-group LALALALLA configuration
         Thu Jul 20 09:03:41.151 PDT
         """
     }
@@ -1964,69 +1964,69 @@ class TestShowBgpInstanceAllVrfAllProcessDetail(unittest.TestCase):
         This VRF:                                  0/2
 
                                    Sent            Received
-        Updates:                   0               0               
-        Notifications:             0               0               
+        Updates:                   0               0
+        Notifications:             0               0
 
                                    Number          Memory Used
-        Attributes:                1               152             
-        AS Paths:                  0               0               
-        Communities:               0               0               
-        Extended communities:      0               0               
-        PMSI Tunnel attr:          0               0               
-        RIBRNH Tunnel attr:        0               0               
-        PPMP attr:                 0               0               
-        Tunnel Encap attr:         0               0               
-        PE distinguisher labels:   0               0               
-        Route Reflector Entries:   0               0               
-        Nexthop Entries:           19              7600            
+        Attributes:                1               152
+        AS Paths:                  0               0
+        Communities:               0               0
+        Extended communities:      0               0
+        PMSI Tunnel attr:          0               0
+        RIBRNH Tunnel attr:        0               0
+        PPMP attr:                 0               0
+        Tunnel Encap attr:         0               0
+        PE distinguisher labels:   0               0
+        Route Reflector Entries:   0               0
+        Nexthop Entries:           19              7600
 
-                                   Alloc           Free          
-        Pool 200:                  0               0             
-        Pool 300:                  1               0             
-        Pool 400:                  0               0             
-        Pool 500:                  0               0             
-        Pool 600:                  0               0             
-        Pool 700:                  0               0             
-        Pool 800:                  0               0             
-        Pool 900:                  0               0             
-        Pool 1200:                 0               0             
-        Pool 2200:                 0               0             
-        Pool 3300:                 0               0             
-        Pool 4000:                 0               0             
-        Pool 4500:                 0               0             
-        Pool 5000:                 0               0             
-        Pool 20000:                0               0             
+                                   Alloc           Free
+        Pool 200:                  0               0
+        Pool 300:                  1               0
+        Pool 400:                  0               0
+        Pool 500:                  0               0
+        Pool 600:                  0               0
+        Pool 700:                  0               0
+        Pool 800:                  0               0
+        Pool 900:                  0               0
+        Pool 1200:                 0               0
+        Pool 2200:                 0               0
+        Pool 3300:                 0               0
+        Pool 4000:                 0               0
+        Pool 4500:                 0               0
+        Pool 5000:                 0               0
+        Pool 20000:                0               0
 
         Message logging pool summary:
-                                   Alloc           Free          
-        Pool 100:                  0               0             
-        Pool 200:                  0               0             
-        Pool 500:                  0               0             
-        Pool 2200:                 0               0             
-        Pool 4500:                 0               0             
+                                   Alloc           Free
+        Pool 100:                  0               0
+        Pool 200:                  0               0
+        Pool 500:                  0               0
+        Pool 2200:                 0               0
+        Pool 4500:                 0               0
 
         BMP pool summary:
-                                   Alloc           Free          
-        Pool 100:                  0               0             
-        Pool 200:                  0               0             
-        Pool 300:                  0               0             
-        Pool 400:                  0               0             
-        Pool 500:                  0               0             
-        Pool 600:                  0               0             
-        Pool 700:                  0               0             
-        Pool 800:                  0               0             
-        Pool 900:                  0               0             
-        Pool 1200:                 0               0             
-        Pool 2200:                 0               0             
-        Pool 3300:                 0               0             
-        Pool 4000:                 0               0             
-        Pool 4500:                 0               0             
-        Pool 5500:                 0               0             
-        Pool 6500:                 0               0             
-        Pool 7500:                 0               0             
-        Pool 8500:                 0               0             
-        Pool 10000:                0               0             
-        Pool 20000:                0               0             
+                                   Alloc           Free
+        Pool 100:                  0               0
+        Pool 200:                  0               0
+        Pool 300:                  0               0
+        Pool 400:                  0               0
+        Pool 500:                  0               0
+        Pool 600:                  0               0
+        Pool 700:                  0               0
+        Pool 800:                  0               0
+        Pool 900:                  0               0
+        Pool 1200:                 0               0
+        Pool 2200:                 0               0
+        Pool 3300:                 0               0
+        Pool 4000:                 0               0
+        Pool 4500:                 0               0
+        Pool 5500:                 0               0
+        Pool 6500:                 0               0
+        Pool 7500:                 0               0
+        Pool 8500:                 0               0
+        Pool 10000:                0               0
+        Pool 20000:                0               0
 
         VRF a Address family: IPv4 Unicast (Table inactive)
         Dampening is not enabled
@@ -2055,7 +2055,7 @@ class TestShowBgpInstanceAllVrfAllProcessDetail(unittest.TestCase):
         Soft Reconfig Entries: 0
         Table bit-field size : 1 Chunk element size : 3
 
-                           Last 8 Triggers       Ver         Tbl Ver     Trig TID  
+                           Last 8 Triggers       Ver         Tbl Ver     Trig TID
 
         Label Thread       Total triggers: 0
 
@@ -2065,17 +2065,17 @@ class TestShowBgpInstanceAllVrfAllProcessDetail(unittest.TestCase):
 
         Update Thread      Total triggers: 0
 
-                                   Allocated       Freed         
-        Prefixes:                  0               0             
-        Paths:                     0               0             
-        Path-elems:                0               0             
+                                   Allocated       Freed
+        Prefixes:                  0               0
+        Paths:                     0               0
+        Path-elems:                0               0
 
-                                   Number          Mem Used      
-        Prefixes:                  0               0             
-        Paths:                     0               0             
-        Path-elems:                0               0             
-        BMP Prefixes:              0               0             
-        BMP Paths:                 0               0             
+                                   Number          Mem Used
+        Prefixes:                  0               0
+        Paths:                     0               0
+        Path-elems:                0               0
+        BMP Prefixes:              0               0
+        BMP Paths:                 0               0
 
 
         VRF: VRF1
@@ -2113,69 +2113,69 @@ class TestShowBgpInstanceAllVrfAllProcessDetail(unittest.TestCase):
         This VRF:                                  0/0
 
                                    Sent            Received
-        Updates:                   0               0               
-        Notifications:             0               0               
+        Updates:                   0               0
+        Notifications:             0               0
 
                                    Number          Memory Used
-        Attributes:                1               152             
-        AS Paths:                  0               0               
-        Communities:               0               0               
-        Extended communities:      0               0               
-        PMSI Tunnel attr:          0               0               
-        RIBRNH Tunnel attr:        0               0               
-        PPMP attr:                 0               0               
-        Tunnel Encap attr:         0               0               
-        PE distinguisher labels:   0               0               
-        Route Reflector Entries:   0               0               
-        Nexthop Entries:           19              7600            
+        Attributes:                1               152
+        AS Paths:                  0               0
+        Communities:               0               0
+        Extended communities:      0               0
+        PMSI Tunnel attr:          0               0
+        RIBRNH Tunnel attr:        0               0
+        PPMP attr:                 0               0
+        Tunnel Encap attr:         0               0
+        PE distinguisher labels:   0               0
+        Route Reflector Entries:   0               0
+        Nexthop Entries:           19              7600
 
-                                   Alloc           Free          
-        Pool 200:                  0               0             
-        Pool 300:                  1               0             
-        Pool 400:                  0               0             
-        Pool 500:                  0               0             
-        Pool 600:                  0               0             
-        Pool 700:                  0               0             
-        Pool 800:                  0               0             
-        Pool 900:                  0               0             
-        Pool 1200:                 0               0             
-        Pool 2200:                 0               0             
-        Pool 3300:                 0               0             
-        Pool 4000:                 0               0             
-        Pool 4500:                 0               0             
-        Pool 5000:                 0               0             
-        Pool 20000:                0               0             
+                                   Alloc           Free
+        Pool 200:                  0               0
+        Pool 300:                  1               0
+        Pool 400:                  0               0
+        Pool 500:                  0               0
+        Pool 600:                  0               0
+        Pool 700:                  0               0
+        Pool 800:                  0               0
+        Pool 900:                  0               0
+        Pool 1200:                 0               0
+        Pool 2200:                 0               0
+        Pool 3300:                 0               0
+        Pool 4000:                 0               0
+        Pool 4500:                 0               0
+        Pool 5000:                 0               0
+        Pool 20000:                0               0
 
         Message logging pool summary:
-                                   Alloc           Free          
-        Pool 100:                  0               0             
-        Pool 200:                  0               0             
-        Pool 500:                  0               0             
-        Pool 2200:                 0               0             
-        Pool 4500:                 0               0             
+                                   Alloc           Free
+        Pool 100:                  0               0
+        Pool 200:                  0               0
+        Pool 500:                  0               0
+        Pool 2200:                 0               0
+        Pool 4500:                 0               0
 
         BMP pool summary:
-                                   Alloc           Free          
-        Pool 100:                  0               0             
-        Pool 200:                  0               0             
-        Pool 300:                  0               0             
-        Pool 400:                  0               0             
-        Pool 500:                  0               0             
-        Pool 600:                  0               0             
-        Pool 700:                  0               0             
-        Pool 800:                  0               0             
-        Pool 900:                  0               0             
-        Pool 1200:                 0               0             
-        Pool 2200:                 0               0             
-        Pool 3300:                 0               0             
-        Pool 4000:                 0               0             
-        Pool 4500:                 0               0             
-        Pool 5500:                 0               0             
-        Pool 6500:                 0               0             
-        Pool 7500:                 0               0             
-        Pool 8500:                 0               0             
-        Pool 10000:                0               0             
-        Pool 20000:                0               0             
+                                   Alloc           Free
+        Pool 100:                  0               0
+        Pool 200:                  0               0
+        Pool 300:                  0               0
+        Pool 400:                  0               0
+        Pool 500:                  0               0
+        Pool 600:                  0               0
+        Pool 700:                  0               0
+        Pool 800:                  0               0
+        Pool 900:                  0               0
+        Pool 1200:                 0               0
+        Pool 2200:                 0               0
+        Pool 3300:                 0               0
+        Pool 4000:                 0               0
+        Pool 4500:                 0               0
+        Pool 5500:                 0               0
+        Pool 6500:                 0               0
+        Pool 7500:                 0               0
+        Pool 8500:                 0               0
+        Pool 10000:                0               0
+        Pool 20000:                0               0
 
         VRF: vrf1
         ---------
@@ -2212,69 +2212,69 @@ class TestShowBgpInstanceAllVrfAllProcessDetail(unittest.TestCase):
         This VRF:                                  0/0
 
                                    Sent            Received
-        Updates:                   0               0               
-        Notifications:             0               0               
+        Updates:                   0               0
+        Notifications:             0               0
 
                                    Number          Memory Used
-        Attributes:                1               152             
-        AS Paths:                  0               0               
-        Communities:               0               0               
-        Extended communities:      0               0               
-        PMSI Tunnel attr:          0               0               
-        RIBRNH Tunnel attr:        0               0               
-        PPMP attr:                 0               0               
-        Tunnel Encap attr:         0               0               
-        PE distinguisher labels:   0               0               
-        Route Reflector Entries:   0               0               
-        Nexthop Entries:           19              7600            
+        Attributes:                1               152
+        AS Paths:                  0               0
+        Communities:               0               0
+        Extended communities:      0               0
+        PMSI Tunnel attr:          0               0
+        RIBRNH Tunnel attr:        0               0
+        PPMP attr:                 0               0
+        Tunnel Encap attr:         0               0
+        PE distinguisher labels:   0               0
+        Route Reflector Entries:   0               0
+        Nexthop Entries:           19              7600
 
-                                   Alloc           Free          
-        Pool 200:                  0               0             
-        Pool 300:                  1               0             
-        Pool 400:                  0               0             
-        Pool 500:                  0               0             
-        Pool 600:                  0               0             
-        Pool 700:                  0               0             
-        Pool 800:                  0               0             
-        Pool 900:                  0               0             
-        Pool 1200:                 0               0             
-        Pool 2200:                 0               0             
-        Pool 3300:                 0               0             
-        Pool 4000:                 0               0             
-        Pool 4500:                 0               0             
-        Pool 5000:                 0               0             
-        Pool 20000:                0               0             
+                                   Alloc           Free
+        Pool 200:                  0               0
+        Pool 300:                  1               0
+        Pool 400:                  0               0
+        Pool 500:                  0               0
+        Pool 600:                  0               0
+        Pool 700:                  0               0
+        Pool 800:                  0               0
+        Pool 900:                  0               0
+        Pool 1200:                 0               0
+        Pool 2200:                 0               0
+        Pool 3300:                 0               0
+        Pool 4000:                 0               0
+        Pool 4500:                 0               0
+        Pool 5000:                 0               0
+        Pool 20000:                0               0
 
         Message logging pool summary:
-                                   Alloc           Free          
-        Pool 100:                  0               0             
-        Pool 200:                  0               0             
-        Pool 500:                  0               0             
-        Pool 2200:                 0               0             
-        Pool 4500:                 0               0             
+                                   Alloc           Free
+        Pool 100:                  0               0
+        Pool 200:                  0               0
+        Pool 500:                  0               0
+        Pool 2200:                 0               0
+        Pool 4500:                 0               0
 
         BMP pool summary:
-                                   Alloc           Free          
-        Pool 100:                  0               0             
-        Pool 200:                  0               0             
-        Pool 300:                  0               0             
-        Pool 400:                  0               0             
-        Pool 500:                  0               0             
-        Pool 600:                  0               0             
-        Pool 700:                  0               0             
-        Pool 800:                  0               0             
-        Pool 900:                  0               0             
-        Pool 1200:                 0               0             
-        Pool 2200:                 0               0             
-        Pool 3300:                 0               0             
-        Pool 4000:                 0               0             
-        Pool 4500:                 0               0             
-        Pool 5500:                 0               0             
-        Pool 6500:                 0               0             
-        Pool 7500:                 0               0             
-        Pool 8500:                 0               0             
-        Pool 10000:                0               0             
-        Pool 20000:                0               0             
+                                   Alloc           Free
+        Pool 100:                  0               0
+        Pool 200:                  0               0
+        Pool 300:                  0               0
+        Pool 400:                  0               0
+        Pool 500:                  0               0
+        Pool 600:                  0               0
+        Pool 700:                  0               0
+        Pool 800:                  0               0
+        Pool 900:                  0               0
+        Pool 1200:                 0               0
+        Pool 2200:                 0               0
+        Pool 3300:                 0               0
+        Pool 4000:                 0               0
+        Pool 4500:                 0               0
+        Pool 5500:                 0               0
+        Pool 6500:                 0               0
+        Pool 7500:                 0               0
+        Pool 8500:                 0               0
+        Pool 10000:                0               0
+        Pool 20000:                0               0
 
 
         BGP instance 1: 'test'
@@ -2649,7 +2649,7 @@ class TestShowBgpInstanceAllVrfAllProcessDetail(unittest.TestCase):
 
     golden_output2 = {
         "execute.return_value": """
-        RP/0/RSP1/CPU0:PE1#show bgp instance all vrf all ipv6 unicast process detail 
+        RP/0/RSP1/CPU0:PE1#show bgp instance all vrf all ipv6 unicast process detail
         Fri Aug 11 11:09:29.206 PDT
 
         BGP instance 0: 'default'
@@ -2690,71 +2690,71 @@ class TestShowBgpInstanceAllVrfAllProcessDetail(unittest.TestCase):
         This VRF:                                  0/2
 
                                    Sent            Received
-        Updates:                   0               0               
-        Notifications:             0               0               
+        Updates:                   0               0
+        Notifications:             0               0
 
                                    Number          Memory Used
-        Attributes:                0               0               
-        AS Paths:                  0               0               
-        Communities:               0               0               
-        Large Communities:         0               0               
-        Extended communities:      0               0               
-        PMSI Tunnel attr:          0               0               
-        RIBRNH Tunnel attr:        0               0               
-        PPMP attr:                 0               0               
-        Tunnel Encap attr:         0               0               
-        PE distinguisher labels:   0               0               
-        Route Reflector Entries:   0               0               
-        Nexthop Entries:           27              10800           
-                  
-                                   Alloc           Free          
-        Pool 200:                  0               0             
-        Pool 300:                  1               0             
-        Pool 400:                  0               0             
-        Pool 500:                  0               0             
-        Pool 600:                  0               0             
-        Pool 700:                  0               0             
-        Pool 800:                  0               0             
-        Pool 900:                  0               0             
-        Pool 1200:                 0               0             
-        Pool 2200:                 0               0             
-        Pool 3300:                 0               0             
-        Pool 4000:                 0               0             
-        Pool 4500:                 0               0             
-        Pool 5000:                 0               0             
-        Pool 20000:                0               0             
-                  
+        Attributes:                0               0
+        AS Paths:                  0               0
+        Communities:               0               0
+        Large Communities:         0               0
+        Extended communities:      0               0
+        PMSI Tunnel attr:          0               0
+        RIBRNH Tunnel attr:        0               0
+        PPMP attr:                 0               0
+        Tunnel Encap attr:         0               0
+        PE distinguisher labels:   0               0
+        Route Reflector Entries:   0               0
+        Nexthop Entries:           27              10800
+
+                                   Alloc           Free
+        Pool 200:                  0               0
+        Pool 300:                  1               0
+        Pool 400:                  0               0
+        Pool 500:                  0               0
+        Pool 600:                  0               0
+        Pool 700:                  0               0
+        Pool 800:                  0               0
+        Pool 900:                  0               0
+        Pool 1200:                 0               0
+        Pool 2200:                 0               0
+        Pool 3300:                 0               0
+        Pool 4000:                 0               0
+        Pool 4500:                 0               0
+        Pool 5000:                 0               0
+        Pool 20000:                0               0
+
         Message logging pool summary:
-                                   Alloc           Free          
-        Pool 100:                  0               0             
-        Pool 200:                  0               0             
-        Pool 500:                  0               0             
-        Pool 2200:                 0               0             
-        Pool 4500:                 0               0             
-                  
+                                   Alloc           Free
+        Pool 100:                  0               0
+        Pool 200:                  0               0
+        Pool 500:                  0               0
+        Pool 2200:                 0               0
+        Pool 4500:                 0               0
+
         BMP pool summary:
-                                   Alloc           Free          
-        Pool 100:                  0               0             
-        Pool 200:                  0               0             
-        Pool 300:                  0               0             
-        Pool 400:                  0               0             
-        Pool 500:                  0               0             
-        Pool 600:                  0               0             
-        Pool 700:                  0               0             
-        Pool 800:                  0               0             
-        Pool 900:                  0               0             
-        Pool 1200:                 0               0             
-        Pool 2200:                 0               0             
-        Pool 3300:                 0               0             
-        Pool 4000:                 0               0             
-        Pool 4500:                 0               0             
-        Pool 5500:                 0               0             
-        Pool 6500:                 0               0             
-        Pool 7500:                 0               0             
-        Pool 8500:                 0               0             
-        Pool 10000:                0               0             
-        Pool 20000:                0               0             
-                  
+                                   Alloc           Free
+        Pool 100:                  0               0
+        Pool 200:                  0               0
+        Pool 300:                  0               0
+        Pool 400:                  0               0
+        Pool 500:                  0               0
+        Pool 600:                  0               0
+        Pool 700:                  0               0
+        Pool 800:                  0               0
+        Pool 900:                  0               0
+        Pool 1200:                 0               0
+        Pool 2200:                 0               0
+        Pool 3300:                 0               0
+        Pool 4000:                 0               0
+        Pool 4500:                 0               0
+        Pool 5500:                 0               0
+        Pool 6500:                 0               0
+        Pool 7500:                 0               0
+        Pool 8500:                 0               0
+        Pool 10000:                0               0
+        Pool 20000:                0               0
+
         VRF VRF1 Address family: IPv6 Unicast
         Dampening is not enabled
         Client reflection is not enabled in global config
@@ -2773,55 +2773,55 @@ class TestShowBgpInstanceAllVrfAllProcessDetail(unittest.TestCase):
         RIB has converged: version 2
         RIB table prefix-limit reached ?  [No], version 0
         Permanent Network Unconfigured
-                  
+
         State: Normal mode.
         BGP Table Version: 3
         Attribute download: Disabled
         Label retention timer value 5 mins
         Soft Reconfig Entries: 0
         Table bit-field size : 1 Chunk element size : 3
-                  
-                           Last 8 Triggers       Ver         Tbl Ver     Trig TID  
-                  
-        Label Thread       Aug 10 15:55:35.385   3           3           3         
-                           Aug 10 15:55:32.391   3           3           19        
-                           Aug 10 15:55:32.385   0           3           4         
+
+                           Last 8 Triggers       Ver         Tbl Ver     Trig TID
+
+        Label Thread       Aug 10 15:55:35.385   3           3           3
+                           Aug 10 15:55:32.391   3           3           19
+                           Aug 10 15:55:32.385   0           3           4
                            Total triggers: 3
-                  
-        Import Thread      Aug 10 15:55:35.385   3           3           3         
-                           Aug 10 15:55:32.391   3           3           19        
-                           Aug 10 15:55:32.385   0           3           19        
+
+        Import Thread      Aug 10 15:55:35.385   3           3           3
+                           Aug 10 15:55:32.391   3           3           19
+                           Aug 10 15:55:32.385   0           3           19
                            Total triggers: 3
-                  
-        RIB Thread         Aug 10 15:55:32.391   3           3           8         
-                           Aug 10 15:55:32.385   1           3           8         
-                           Aug 10 15:55:32.385   1           3           6         
+
+        RIB Thread         Aug 10 15:55:32.391   3           3           8
+                           Aug 10 15:55:32.385   1           3           8
+                           Aug 10 15:55:32.385   1           3           6
                            Total triggers: 3
-                  
-        Update Thread      Aug 10 15:55:35.385   3           3           8         
-                           Aug 10 15:55:32.391   3           3           8         
-                           Aug 10 15:55:32.391   3           3           19        
+
+        Update Thread      Aug 10 15:55:35.385   3           3           8
+                           Aug 10 15:55:32.391   3           3           8
+                           Aug 10 15:55:32.391   3           3           19
                            Total triggers: 3
-                  
-                                   Allocated       Freed         
-        Prefixes:                  0               0             
-        Paths:                     0               0             
-        Path-elems:                0               0             
-                  
-                                   Number          Mem Used      
-        Prefixes:                  0               0             
-        Paths:                     0               0             
-        Path-elems:                0               0             
-        BMP Prefixes:              0               0             
-        BMP Paths:                 0               0             
-                  
-                  
-        VRF: VRF2 
-        --------- 
-                  
+
+                                   Allocated       Freed
+        Prefixes:                  0               0
+        Paths:                     0               0
+        Path-elems:                0               0
+
+                                   Number          Mem Used
+        Prefixes:                  0               0
+        Paths:                     0               0
+        Path-elems:                0               0
+        BMP Prefixes:              0               0
+        BMP Paths:                 0               0
+
+
+        VRF: VRF2
+        ---------
+
         BGP Process Information: VRF VRF2
         BGP Route Distinguisher: 200:2
-                  
+
         BGP is operating in STANDALONE mode
         Autonomous System number format: ASPLAIN
         Autonomous System: 100
@@ -2842,80 +2842,80 @@ class TestShowBgpInstanceAllVrfAllProcessDetail(unittest.TestCase):
         Non-stop routing is enabled
         Update delay: 120
         Generic scan interval: 60
-                  
+
         BGP Speaker process: 0, Node: node0_RSP1_CPU0
         Restart count: 7
                                    Total           Nbrs Estab/Cfg
         Default VRFs:              1               0/3
         Non-Default VRFs:          2               0/4
         This VRF:                                  0/2
-                  
+
                                    Sent            Received
-        Updates:                   0               0               
-        Notifications:             0               0               
-                  
+        Updates:                   0               0
+        Notifications:             0               0
+
                                    Number          Memory Used
-        Attributes:                0               0               
-        AS Paths:                  0               0               
-        Communities:               0               0               
-        Large Communities:         0               0               
-        Extended communities:      0               0               
-        PMSI Tunnel attr:          0               0               
-        RIBRNH Tunnel attr:        0               0               
-        PPMP attr:                 0               0               
-        Tunnel Encap attr:         0               0               
-        PE distinguisher labels:   0               0               
-        Route Reflector Entries:   0               0               
-        Nexthop Entries:           27              10800           
-                  
-                                   Alloc           Free          
-        Pool 200:                  0               0             
-        Pool 300:                  1               0             
-        Pool 400:                  0               0             
-        Pool 500:                  0               0             
-        Pool 600:                  0               0             
-        Pool 700:                  0               0             
-        Pool 800:                  0               0             
-        Pool 900:                  0               0             
-        Pool 1200:                 0               0             
-        Pool 2200:                 0               0             
-        Pool 3300:                 0               0             
-        Pool 4000:                 0               0             
-        Pool 4500:                 0               0             
-        Pool 5000:                 0               0             
-        Pool 20000:                0               0             
-                  
+        Attributes:                0               0
+        AS Paths:                  0               0
+        Communities:               0               0
+        Large Communities:         0               0
+        Extended communities:      0               0
+        PMSI Tunnel attr:          0               0
+        RIBRNH Tunnel attr:        0               0
+        PPMP attr:                 0               0
+        Tunnel Encap attr:         0               0
+        PE distinguisher labels:   0               0
+        Route Reflector Entries:   0               0
+        Nexthop Entries:           27              10800
+
+                                   Alloc           Free
+        Pool 200:                  0               0
+        Pool 300:                  1               0
+        Pool 400:                  0               0
+        Pool 500:                  0               0
+        Pool 600:                  0               0
+        Pool 700:                  0               0
+        Pool 800:                  0               0
+        Pool 900:                  0               0
+        Pool 1200:                 0               0
+        Pool 2200:                 0               0
+        Pool 3300:                 0               0
+        Pool 4000:                 0               0
+        Pool 4500:                 0               0
+        Pool 5000:                 0               0
+        Pool 20000:                0               0
+
         Message logging pool summary:
-                                   Alloc           Free          
-        Pool 100:                  0               0             
-        Pool 200:                  0               0             
-        Pool 500:                  0               0             
-        Pool 2200:                 0               0             
-        Pool 4500:                 0               0             
-                  
+                                   Alloc           Free
+        Pool 100:                  0               0
+        Pool 200:                  0               0
+        Pool 500:                  0               0
+        Pool 2200:                 0               0
+        Pool 4500:                 0               0
+
         BMP pool summary:
-                                   Alloc           Free          
-        Pool 100:                  0               0             
-        Pool 200:                  0               0             
-        Pool 300:                  0               0             
-        Pool 400:                  0               0             
-        Pool 500:                  0               0             
-        Pool 600:                  0               0             
-        Pool 700:                  0               0             
-        Pool 800:                  0               0             
-        Pool 900:                  0               0             
-        Pool 1200:                 0               0             
-        Pool 2200:                 0               0             
-        Pool 3300:                 0               0             
-        Pool 4000:                 0               0             
-        Pool 4500:                 0               0             
-        Pool 5500:                 0               0             
-        Pool 6500:                 0               0             
-        Pool 7500:                 0               0             
-        Pool 8500:                 0               0             
-        Pool 10000:                0               0             
-        Pool 20000:                0               0             
-                  
+                                   Alloc           Free
+        Pool 100:                  0               0
+        Pool 200:                  0               0
+        Pool 300:                  0               0
+        Pool 400:                  0               0
+        Pool 500:                  0               0
+        Pool 600:                  0               0
+        Pool 700:                  0               0
+        Pool 800:                  0               0
+        Pool 900:                  0               0
+        Pool 1200:                 0               0
+        Pool 2200:                 0               0
+        Pool 3300:                 0               0
+        Pool 4000:                 0               0
+        Pool 4500:                 0               0
+        Pool 5500:                 0               0
+        Pool 6500:                 0               0
+        Pool 7500:                 0               0
+        Pool 8500:                 0               0
+        Pool 10000:                0               0
+        Pool 20000:                0               0
+
         VRF VRF2 Address family: IPv6 Unicast
         Dampening is not enabled
         Client reflection is not enabled in global config
@@ -2934,58 +2934,58 @@ class TestShowBgpInstanceAllVrfAllProcessDetail(unittest.TestCase):
         RIB has converged: version 2
         RIB table prefix-limit reached ?  [No], version 0
         Permanent Network Unconfigured
-                  
+
         State: Normal mode.
         BGP Table Version: 3
         Attribute download: Disabled
         Label retention timer value 5 mins
         Soft Reconfig Entries: 0
         Table bit-field size : 1 Chunk element size : 3
-                  
-                           Last 8 Triggers       Ver         Tbl Ver     Trig TID  
-                  
-        Label Thread       Aug 10 15:55:35.385   3           3           3         
-                           Aug 10 15:55:32.391   3           3           19        
-                           Aug 10 15:55:32.385   0           3           4         
+
+                           Last 8 Triggers       Ver         Tbl Ver     Trig TID
+
+        Label Thread       Aug 10 15:55:35.385   3           3           3
+                           Aug 10 15:55:32.391   3           3           19
+                           Aug 10 15:55:32.385   0           3           4
                            Total triggers: 3
-                  
-        Import Thread      Aug 10 15:55:35.385   3           3           3         
-                           Aug 10 15:55:32.391   3           3           19        
-                           Aug 10 15:55:32.385   0           3           19        
+
+        Import Thread      Aug 10 15:55:35.385   3           3           3
+                           Aug 10 15:55:32.391   3           3           19
+                           Aug 10 15:55:32.385   0           3           19
                            Total triggers: 3
-                  
-        RIB Thread         Aug 10 15:55:32.391   3           3           8         
-                           Aug 10 15:55:32.385   1           3           8         
-                           Aug 10 15:55:32.385   1           3           6         
+
+        RIB Thread         Aug 10 15:55:32.391   3           3           8
+                           Aug 10 15:55:32.385   1           3           8
+                           Aug 10 15:55:32.385   1           3           6
                            Total triggers: 3
-                  
-        Update Thread      Aug 10 15:55:35.385   3           3           8         
-                           Aug 10 15:55:32.391   3           3           8         
-                           Aug 10 15:55:32.391   3           3           19        
+
+        Update Thread      Aug 10 15:55:35.385   3           3           8
+                           Aug 10 15:55:32.391   3           3           8
+                           Aug 10 15:55:32.391   3           3           19
                            Total triggers: 3
-                  
-                                   Allocated       Freed         
-        Prefixes:                  0               0             
-        Paths:                     0               0             
-        Path-elems:                0               0             
-                  
-                                   Number          Mem Used      
-        Prefixes:                  0               0             
-        Paths:                     0               0             
-        Path-elems:                0               0             
-        BMP Prefixes:              0               0             
-        BMP Paths:                 0               0             
-                  
-                  
-                  
+
+                                   Allocated       Freed
+        Prefixes:                  0               0
+        Paths:                     0               0
+        Path-elems:                0               0
+
+                                   Number          Mem Used
+        Prefixes:                  0               0
+        Paths:                     0               0
+        Path-elems:                0               0
+        BMP Prefixes:              0               0
+        BMP Paths:                 0               0
+
+
+
         BGP instance 1: 'test'
         ======================
         % None of the requested address families are configured for instance 'test'(29193)
-                  
+
         BGP instance 2: 'test1'
         =======================
         % None of the requested address families are configured for instance 'test1'(29193)
-                  
+
         BGP instance 3: 'test2'
         =======================
         % None of the requested address families are configured for instance 'test2'(29193)
@@ -3290,7 +3290,7 @@ class TestShowBgpInstanceAllAllAllProcessDetail(unittest.TestCase):
         BGP instance 0: 'default'
         =========================
 
-        BGP Process Information: 
+        BGP Process Information:
         BGP is operating in standalone mode
         Autonomous System number format: ASPLAIN
         Autonomous System: 100
@@ -3318,69 +3318,69 @@ class TestShowBgpInstanceAllAllAllProcessDetail(unittest.TestCase):
         Non-Default VRFs:          2               4/4
 
                                    Sent            Received
-        Updates:                   14              24              
-        Notifications:             1               0               
+        Updates:                   14              24
+        Notifications:             1               0
 
                                    Number          Memory Used
-        Attributes:                6               912             
-        AS Paths:                  6               480             
-        Communities:               0               0               
-        Extended communities:      6               480             
-        PMSI Tunnel attr:          0               0               
-        RIBRNH Tunnel attr:        0               0               
-        PPMP attr:                 0               0               
-        Tunnel Encap attr:         0               0               
-        PE distinguisher labels:   0               0               
-        Route Reflector Entries:   4               320             
-        Nexthop Entries:           32              12800           
+        Attributes:                6               912
+        AS Paths:                  6               480
+        Communities:               0               0
+        Extended communities:      6               480
+        PMSI Tunnel attr:          0               0
+        RIBRNH Tunnel attr:        0               0
+        PPMP attr:                 0               0
+        Tunnel Encap attr:         0               0
+        PE distinguisher labels:   0               0
+        Route Reflector Entries:   4               320
+        Nexthop Entries:           32              12800
 
-                                   Alloc           Free          
-        Pool 200:                  0               0             
-        Pool 300:                  311             310           
-        Pool 400:                  6               6             
-        Pool 500:                  20              20            
-        Pool 600:                  12              12            
-        Pool 700:                  2               2             
-        Pool 800:                  0               0             
-        Pool 900:                  0               0             
-        Pool 1200:                 0               0             
-        Pool 2200:                 0               0             
-        Pool 3300:                 0               0             
-        Pool 4000:                 0               0             
-        Pool 4500:                 0               0             
-        Pool 5000:                 0               0             
-        Pool 20000:                0               0             
+                                   Alloc           Free
+        Pool 200:                  0               0
+        Pool 300:                  311             310
+        Pool 400:                  6               6
+        Pool 500:                  20              20
+        Pool 600:                  12              12
+        Pool 700:                  2               2
+        Pool 800:                  0               0
+        Pool 900:                  0               0
+        Pool 1200:                 0               0
+        Pool 2200:                 0               0
+        Pool 3300:                 0               0
+        Pool 4000:                 0               0
+        Pool 4500:                 0               0
+        Pool 5000:                 0               0
+        Pool 20000:                0               0
 
         Message logging pool summary:
-                                   Alloc           Free          
-        Pool 100:                  19              10            
-        Pool 200:                  11              1             
-        Pool 500:                  19              12            
-        Pool 2200:                 0               0             
-        Pool 4500:                 0               0             
+                                   Alloc           Free
+        Pool 100:                  19              10
+        Pool 200:                  11              1
+        Pool 500:                  19              12
+        Pool 2200:                 0               0
+        Pool 4500:                 0               0
 
         BMP pool summary:
-                                   Alloc           Free          
-        Pool 100:                  0               0             
-        Pool 200:                  0               0             
-        Pool 300:                  0               0             
-        Pool 400:                  0               0             
-        Pool 500:                  0               0             
-        Pool 600:                  0               0             
-        Pool 700:                  0               0             
-        Pool 800:                  0               0             
-        Pool 900:                  0               0             
-        Pool 1200:                 0               0             
-        Pool 2200:                 0               0             
-        Pool 3300:                 0               0             
-        Pool 4000:                 0               0             
-        Pool 4500:                 0               0             
-        Pool 5500:                 0               0             
-        Pool 6500:                 0               0             
-        Pool 7500:                 0               0             
-        Pool 8500:                 0               0             
-        Pool 10000:                0               0             
-        Pool 20000:                0               0             
+                                   Alloc           Free
+        Pool 100:                  0               0
+        Pool 200:                  0               0
+        Pool 300:                  0               0
+        Pool 400:                  0               0
+        Pool 500:                  0               0
+        Pool 600:                  0               0
+        Pool 700:                  0               0
+        Pool 800:                  0               0
+        Pool 900:                  0               0
+        Pool 1200:                 0               0
+        Pool 2200:                 0               0
+        Pool 3300:                 0               0
+        Pool 4000:                 0               0
+        Pool 4500:                 0               0
+        Pool 5500:                 0               0
+        Pool 6500:                 0               0
+        Pool 7500:                 0               0
+        Pool 8500:                 0               0
+        Pool 10000:                0               0
+        Pool 20000:                0               0
 
         Address family: VPNv4 Unicast
         Dampening is not enabled
@@ -3408,71 +3408,71 @@ class TestShowBgpInstanceAllAllAllProcessDetail(unittest.TestCase):
         Soft Reconfig Entries: 0
         Table bit-field size : 1 Chunk element size : 3
 
-                           Last 8 Triggers       Ver         Tbl Ver     Trig TID  
+                           Last 8 Triggers       Ver         Tbl Ver     Trig TID
 
-        Label Thread       Jun 28 19:10:16.427   43          43          3         
-                           Jun 28 19:10:16.417   43          43          3         
-                           Jun 28 19:09:29.680   43          43          3         
-                           Jun 28 19:09:29.670   43          43          3         
-                           Jun 28 18:29:34.604   43          43          3         
-                           Jun 28 18:29:29.595   33          43          4         
-                           Jun 28 18:29:29.595   33          38          3         
-                           Jun 28 18:24:52.694   33          33          3         
+        Label Thread       Jun 28 19:10:16.427   43          43          3
+                           Jun 28 19:10:16.417   43          43          3
+                           Jun 28 19:09:29.680   43          43          3
+                           Jun 28 19:09:29.670   43          43          3
+                           Jun 28 18:29:34.604   43          43          3
+                           Jun 28 18:29:29.595   33          43          4
+                           Jun 28 18:29:29.595   33          38          3
+                           Jun 28 18:24:52.694   33          33          3
                            Total triggers: 15
 
-        Import Thread      Jun 28 19:10:16.427   43          43          3         
-                           Jun 28 19:10:16.417   43          43          3         
-                           Jun 28 19:09:29.680   43          43          3         
-                           Jun 28 19:09:29.670   43          43          3         
-                           Jun 28 18:29:34.604   43          43          3         
-                           Jun 28 18:29:29.595   43          43          8         
-                           Jun 28 18:29:29.595   38          43          4         
-                           Jun 28 18:29:29.595   33          38          3         
+        Import Thread      Jun 28 19:10:16.427   43          43          3
+                           Jun 28 19:10:16.417   43          43          3
+                           Jun 28 19:09:29.680   43          43          3
+                           Jun 28 19:09:29.670   43          43          3
+                           Jun 28 18:29:34.604   43          43          3
+                           Jun 28 18:29:29.595   43          43          8
+                           Jun 28 18:29:29.595   38          43          4
+                           Jun 28 18:29:29.595   33          38          3
                            Total triggers: 16
 
-        RIB Thread         Jun 28 18:29:29.595   33          43          8         
-                           Jun 28 18:29:29.595   33          43          4         
-                           Jun 28 18:24:26.135   13          33          4         
-                           Jun 28 18:24:26.135   13          33          8         
-                           Jun 28 18:24:26.135   13          33          4         
-                           Jun 28 18:24:21.656   11          13          4         
-                           Jun 28 18:21:26.418   1           11          8         
-                           Jun 28 18:21:26.418   1           11          6         
+        RIB Thread         Jun 28 18:29:29.595   33          43          8
+                           Jun 28 18:29:29.595   33          43          4
+                           Jun 28 18:24:26.135   13          33          4
+                           Jun 28 18:24:26.135   13          33          8
+                           Jun 28 18:24:26.135   13          33          4
+                           Jun 28 18:24:21.656   11          13          4
+                           Jun 28 18:21:26.418   1           11          8
+                           Jun 28 18:21:26.418   1           11          6
                            Total triggers: 8
 
-        Update Thread      Jun 28 19:10:16.427   43          43          8         
-                           Jun 28 19:10:16.417   43          43          8         
-                           Jun 28 19:09:29.680   43          43          8         
-                           Jun 28 19:09:29.670   43          43          8         
-                           Jun 28 18:29:34.604   43          43          8         
-                           Jun 28 18:29:29.605   43          43          18        
-                           Jun 28 18:29:29.595   33          43          8         
-                           Jun 28 18:24:52.694   33          33          8         
+        Update Thread      Jun 28 19:10:16.427   43          43          8
+                           Jun 28 19:10:16.417   43          43          8
+                           Jun 28 19:09:29.680   43          43          8
+                           Jun 28 19:09:29.670   43          43          8
+                           Jun 28 18:29:34.604   43          43          8
+                           Jun 28 18:29:29.605   43          43          18
+                           Jun 28 18:29:29.595   33          43          8
+                           Jun 28 18:24:52.694   33          33          8
                            Total triggers: 17
 
-                              Allocated       Freed         
-        Remote Prefixes:      10              0             
-        Remote Paths:         20              0             
-        Remote Path-elems:    10              0             
+                              Allocated       Freed
+        Remote Prefixes:      10              0
+        Remote Paths:         20              0
+        Remote Path-elems:    10              0
 
-        Local Prefixes:       30              0             
-        Local Paths:          30              0             
+        Local Prefixes:       30              0
+        Local Paths:          30              0
 
-                              Number          Mem Used      
-        Remote Prefixes:      10              920           
-        Remote Paths:         20              1760          
-        Remote Path-elems:    10              630           
-        Remote RDs:           2               160           
+                              Number          Mem Used
+        Remote Prefixes:      10              920
+        Remote Paths:         20              1760
+        Remote Path-elems:    10              630
+        Remote RDs:           2               160
 
-        Local Prefixes:       30              2850          
-        Local Paths:          30              2640          
-        Local RDs:            2               160           
+        Local Prefixes:       30              2850
+        Local Paths:          30              2640
+        Local RDs:            2               160
 
-        Total Prefixes:       40              3800          
-        Total Paths:          50              4400          
-        Total Path-elems:     40              4400          
-        Imported Paths:       25              2200          
-        Total RDs:            4               320           
+        Total Prefixes:       40              3800
+        Total Paths:          50              4400
+        Total Path-elems:     40              4400
+        Imported Paths:       25              2200
+        Total RDs:            4               320
 
 
         Address family: VPNv6 Unicast
@@ -3501,69 +3501,69 @@ class TestShowBgpInstanceAllAllAllProcessDetail(unittest.TestCase):
         Soft Reconfig Entries: 0
         Table bit-field size : 1 Chunk element size : 3
 
-                           Last 8 Triggers       Ver         Tbl Ver     Trig TID  
+                           Last 8 Triggers       Ver         Tbl Ver     Trig TID
 
-        Label Thread       Jun 28 19:10:16.427   43          43          3         
-                           Jun 28 19:10:16.417   43          43          3         
-                           Jun 28 19:09:29.680   43          43          3         
-                           Jun 28 19:09:29.670   43          43          3         
-                           Jun 28 18:29:34.604   33          43          4         
-                           Jun 28 18:29:34.604   33          38          3         
-                           Jun 28 18:29:29.595   33          33          3         
-                           Jun 28 18:24:52.694   33          33          3         
+        Label Thread       Jun 28 19:10:16.427   43          43          3
+                           Jun 28 19:10:16.417   43          43          3
+                           Jun 28 19:09:29.680   43          43          3
+                           Jun 28 19:09:29.670   43          43          3
+                           Jun 28 18:29:34.604   33          43          4
+                           Jun 28 18:29:34.604   33          38          3
+                           Jun 28 18:29:29.595   33          33          3
+                           Jun 28 18:24:52.694   33          33          3
                            Total triggers: 15
 
-        Import Thread      Jun 28 19:10:16.427   43          43          3         
-                           Jun 28 19:10:16.417   43          43          3         
-                           Jun 28 19:09:29.680   43          43          3         
-                           Jun 28 19:09:29.670   43          43          3         
-                           Jun 28 18:29:34.604   43          43          8         
-                           Jun 28 18:29:34.604   38          43          4         
-                           Jun 28 18:29:34.604   33          38          3         
-                           Jun 28 18:29:29.595   33          33          3         
+        Import Thread      Jun 28 19:10:16.427   43          43          3
+                           Jun 28 19:10:16.417   43          43          3
+                           Jun 28 19:09:29.680   43          43          3
+                           Jun 28 19:09:29.670   43          43          3
+                           Jun 28 18:29:34.604   43          43          8
+                           Jun 28 18:29:34.604   38          43          4
+                           Jun 28 18:29:34.604   33          38          3
+                           Jun 28 18:29:29.595   33          33          3
                            Total triggers: 16
 
-        RIB Thread         Jun 28 18:29:34.604   33          43          8         
-                           Jun 28 18:29:34.604   33          43          4         
-                           Jun 28 18:24:26.135   13          33          4         
-                           Jun 28 18:24:26.135   13          33          4         
-                           Jun 28 18:24:21.656   11          13          8         
-                           Jun 28 18:21:26.428   1           11          8         
-                           Jun 28 18:21:26.418   1           11          6         
+        RIB Thread         Jun 28 18:29:34.604   33          43          8
+                           Jun 28 18:29:34.604   33          43          4
+                           Jun 28 18:24:26.135   13          33          4
+                           Jun 28 18:24:26.135   13          33          4
+                           Jun 28 18:24:21.656   11          13          8
+                           Jun 28 18:21:26.428   1           11          8
+                           Jun 28 18:21:26.418   1           11          6
                            Total triggers: 7
 
-        Update Thread      Jun 28 19:10:16.427   43          43          8         
-                           Jun 28 19:10:16.417   43          43          8         
-                           Jun 28 19:09:29.680   43          43          8         
-                           Jun 28 19:09:29.670   43          43          8         
-                           Jun 28 18:29:34.604   43          43          19        
-                           Jun 28 18:29:34.604   33          43          8         
-                           Jun 28 18:29:29.595   33          33          8         
-                           Jun 28 18:24:52.694   33          33          8         
+        Update Thread      Jun 28 19:10:16.427   43          43          8
+                           Jun 28 19:10:16.417   43          43          8
+                           Jun 28 19:09:29.680   43          43          8
+                           Jun 28 19:09:29.670   43          43          8
+                           Jun 28 18:29:34.604   43          43          19
+                           Jun 28 18:29:34.604   33          43          8
+                           Jun 28 18:29:29.595   33          33          8
+                           Jun 28 18:24:52.694   33          33          8
                            Total triggers: 17
 
-                              Allocated       Freed         
-        Remote Prefixes:      10              0             
-        Remote Paths:         20              0             
-        Remote Path-elems:    10              0             
+                              Allocated       Freed
+        Remote Prefixes:      10              0
+        Remote Paths:         20              0
+        Remote Path-elems:    10              0
 
-        Local Prefixes:       30              0             
-        Local Paths:          30              0             
+        Local Prefixes:       30              0
+        Local Paths:          30              0
 
-                              Number          Mem Used      
-        Remote Prefixes:      10              1040          
-        Remote Paths:         20              1760          
-        Remote Path-elems:    10              630           
-        Remote RDs:           2               160           
+                              Number          Mem Used
+        Remote Prefixes:      10              1040
+        Remote Paths:         20              1760
+        Remote Path-elems:    10              630
+        Remote RDs:           2               160
 
-        Local Prefixes:       30              3210          
-        Local Paths:          30              2640          
-        Local RDs:            2               160           
+        Local Prefixes:       30              3210
+        Local Paths:          30              2640
+        Local RDs:            2               160
 
-        Total Prefixes:       40              4280          
-        Total Paths:          50              4400          
-        Total Path-elems:     40              4400          
-        Imported Paths:       25              2200          
+        Total Prefixes:       40              4280
+        Total Paths:          50              4400
+        Total Path-elems:     40              4400
+        Imported Paths:       25              2200
         Total RDs:            4               320
         """
     }
@@ -3758,7 +3758,7 @@ class TestShowBgpInstanceAllAllAllProcessDetail(unittest.TestCase):
         BGP instance 0: 'default'
         =========================
 
-        BGP Process Information: 
+        BGP Process Information:
         BGP is operating in standalone mode
         Autonomous System number format: ASPLAIN
         Autonomous System: 100
@@ -3786,70 +3786,70 @@ class TestShowBgpInstanceAllAllAllProcessDetail(unittest.TestCase):
         Non-Default VRFs:          2               0/4
 
                                    Sent            Received
-        Updates:                   0               0               
-        Notifications:             0               0               
+        Updates:                   0               0
+        Notifications:             0               0
 
                                    Number          Memory Used
-        Attributes:                0               0               
-        AS Paths:                  0               0               
-        Communities:               0               0               
-        Large Communities:         0               0               
-        Extended communities:      0               0               
-        PMSI Tunnel attr:          0               0               
-        RIBRNH Tunnel attr:        0               0               
-        PPMP attr:                 0               0               
-        Tunnel Encap attr:         0               0               
-        PE distinguisher labels:   0               0               
-        Route Reflector Entries:   0               0               
-        Nexthop Entries:           26              10400           
+        Attributes:                0               0
+        AS Paths:                  0               0
+        Communities:               0               0
+        Large Communities:         0               0
+        Extended communities:      0               0
+        PMSI Tunnel attr:          0               0
+        RIBRNH Tunnel attr:        0               0
+        PPMP attr:                 0               0
+        Tunnel Encap attr:         0               0
+        PE distinguisher labels:   0               0
+        Route Reflector Entries:   0               0
+        Nexthop Entries:           26              10400
 
-                                   Alloc           Free          
-        Pool 200:                  0               0             
-        Pool 300:                  1               0             
-        Pool 400:                  0               0             
-        Pool 500:                  0               0             
-        Pool 600:                  0               0             
-        Pool 700:                  0               0             
-        Pool 800:                  0               0             
-        Pool 900:                  0               0             
-        Pool 1200:                 0               0             
-        Pool 2200:                 0               0             
-        Pool 3300:                 0               0             
-        Pool 4000:                 0               0             
-        Pool 4500:                 0               0             
-        Pool 5000:                 0               0             
-        Pool 20000:                0               0             
+                                   Alloc           Free
+        Pool 200:                  0               0
+        Pool 300:                  1               0
+        Pool 400:                  0               0
+        Pool 500:                  0               0
+        Pool 600:                  0               0
+        Pool 700:                  0               0
+        Pool 800:                  0               0
+        Pool 900:                  0               0
+        Pool 1200:                 0               0
+        Pool 2200:                 0               0
+        Pool 3300:                 0               0
+        Pool 4000:                 0               0
+        Pool 4500:                 0               0
+        Pool 5000:                 0               0
+        Pool 20000:                0               0
 
         Message logging pool summary:
-                                   Alloc           Free          
-        Pool 100:                  0               0             
-        Pool 200:                  0               0             
-        Pool 500:                  0               0             
-        Pool 2200:                 0               0             
-        Pool 4500:                 0               0             
+                                   Alloc           Free
+        Pool 100:                  0               0
+        Pool 200:                  0               0
+        Pool 500:                  0               0
+        Pool 2200:                 0               0
+        Pool 4500:                 0               0
 
         BMP pool summary:
-                                   Alloc           Free          
-        Pool 100:                  0               0             
-        Pool 200:                  0               0             
-        Pool 300:                  0               0             
-        Pool 400:                  0               0             
-        Pool 500:                  0               0             
-        Pool 600:                  0               0             
-        Pool 700:                  0               0             
-        Pool 800:                  0               0             
-        Pool 900:                  0               0             
-        Pool 1200:                 0               0             
-        Pool 2200:                 0               0             
-        Pool 3300:                 0               0             
-        Pool 4000:                 0               0             
-        Pool 4500:                 0               0             
-        Pool 5500:                 0               0             
-        Pool 6500:                 0               0             
-        Pool 7500:                 0               0             
-        Pool 8500:                 0               0             
-        Pool 10000:                0               0             
-        Pool 20000:                0               0             
+                                   Alloc           Free
+        Pool 100:                  0               0
+        Pool 200:                  0               0
+        Pool 300:                  0               0
+        Pool 400:                  0               0
+        Pool 500:                  0               0
+        Pool 600:                  0               0
+        Pool 700:                  0               0
+        Pool 800:                  0               0
+        Pool 900:                  0               0
+        Pool 1200:                 0               0
+        Pool 2200:                 0               0
+        Pool 3300:                 0               0
+        Pool 4000:                 0               0
+        Pool 4500:                 0               0
+        Pool 5500:                 0               0
+        Pool 6500:                 0               0
+        Pool 7500:                 0               0
+        Pool 8500:                 0               0
+        Pool 10000:                0               0
+        Pool 20000:                0               0
 
         Address family: VPNv4 Unicast
         Dampening is not enabled
@@ -3880,56 +3880,56 @@ class TestShowBgpInstanceAllAllAllProcessDetail(unittest.TestCase):
            For IPv4 Nexthop: 0
            For IPv6 Nexthop: 0
 
-                           Last 8 Triggers       Ver         Tbl Ver     Trig TID  
+                           Last 8 Triggers       Ver         Tbl Ver     Trig TID
 
-        Label Thread       Jul  6 11:42:04.367   7           7           3         
-                           Jul  6 11:42:01.371   5           6           9         
-                           Jul  6 11:42:01.370   5           5           18        
-                           Jul  6 11:42:01.367   0           5           4         
+        Label Thread       Jul  6 11:42:04.367   7           7           3
+                           Jul  6 11:42:01.371   5           6           9
+                           Jul  6 11:42:01.370   5           5           18
+                           Jul  6 11:42:01.367   0           5           4
                            Total triggers: 4
 
-        Import Thread      Jul  6 11:42:04.367   7           7           3         
-                           Jul  6 11:42:01.371   5           6           9         
-                           Jul  6 11:42:01.370   5           5           18        
-                           Jul  6 11:42:01.366   0           5           18        
+        Import Thread      Jul  6 11:42:04.367   7           7           3
+                           Jul  6 11:42:01.371   5           6           9
+                           Jul  6 11:42:01.370   5           5           18
+                           Jul  6 11:42:01.366   0           5           18
                            Total triggers: 4
 
-        RIB Thread         Jul  6 11:42:01.371   5           7           8         
-                           Jul  6 11:42:01.370   5           5           8         
-                           Jul  6 11:42:01.367   1           5           8         
-                           Jul  6 11:42:01.366   1           5           6         
+        RIB Thread         Jul  6 11:42:01.371   5           7           8
+                           Jul  6 11:42:01.370   5           5           8
+                           Jul  6 11:42:01.367   1           5           8
+                           Jul  6 11:42:01.366   1           5           6
                            Total triggers: 4
 
-        Update Thread      Jul  6 11:42:04.367   7           7           8         
-                           Jul  6 11:42:01.371   7           7           18        
-                           Jul  6 11:42:01.371   5           7           9         
-                           Jul  6 11:42:01.370   5           5           8         
-                           Jul  6 11:42:01.370   5           5           18        
+        Update Thread      Jul  6 11:42:04.367   7           7           8
+                           Jul  6 11:42:01.371   7           7           18
+                           Jul  6 11:42:01.371   5           7           9
+                           Jul  6 11:42:01.370   5           5           8
+                           Jul  6 11:42:01.370   5           5           18
                            Total triggers: 5
 
-                              Allocated       Freed         
-        Remote Prefixes:      0               0             
-        Remote Paths:         0               0             
-        Remote Path-elems:    0               0             
+                              Allocated       Freed
+        Remote Prefixes:      0               0
+        Remote Paths:         0               0
+        Remote Path-elems:    0               0
 
-        Local Prefixes:       0               0             
-        Local Paths:          0               0             
+        Local Prefixes:       0               0
+        Local Paths:          0               0
 
-                              Number          Mem Used      
-        Remote Prefixes:      0               0             
-        Remote Paths:         0               0             
-        Remote Path-elems:    0               0             
-        Remote RDs:           0               0             
+                              Number          Mem Used
+        Remote Prefixes:      0               0
+        Remote Paths:         0               0
+        Remote Path-elems:    0               0
+        Remote RDs:           0               0
 
-        Local Prefixes:       0               0             
-        Local Paths:          0               0             
-        Local RDs:            2               160           
+        Local Prefixes:       0               0
+        Local Paths:          0               0
+        Local RDs:            2               160
 
-        Total Prefixes:       0               0             
-        Total Paths:          0               0             
-        Total Path-elems:     0               0             
-        Imported Paths:       0               0             
-        Total RDs:            2               160           
+        Total Prefixes:       0               0
+        Total Paths:          0               0
+        Total Path-elems:     0               0
+        Imported Paths:       0               0
+        Total RDs:            2               160
 
 
         Address family: VPNv6 Unicast
@@ -3961,57 +3961,57 @@ class TestShowBgpInstanceAllAllAllProcessDetail(unittest.TestCase):
            For IPv4 Nexthop: 0
            For IPv6 Nexthop: 0
 
-                           Last 8 Triggers       Ver         Tbl Ver     Trig TID  
+                           Last 8 Triggers       Ver         Tbl Ver     Trig TID
 
-        Label Thread       Jul  6 11:42:04.367   7           7           3         
-                           Jul  6 11:42:01.373   5           6           9         
-                           Jul  6 11:42:01.371   5           5           19        
-                           Jul  6 11:42:01.367   0           5           4         
+        Label Thread       Jul  6 11:42:04.367   7           7           3
+                           Jul  6 11:42:01.373   5           6           9
+                           Jul  6 11:42:01.371   5           5           19
+                           Jul  6 11:42:01.367   0           5           4
                            Total triggers: 4
 
-        Import Thread      Jul  6 11:42:04.367   7           7           3         
-                           Jul  6 11:42:01.373   5           6           9         
-                           Jul  6 11:42:01.371   5           5           19        
-                           Jul  6 11:42:01.367   0           5           19        
+        Import Thread      Jul  6 11:42:04.367   7           7           3
+                           Jul  6 11:42:01.373   5           6           9
+                           Jul  6 11:42:01.371   5           5           19
+                           Jul  6 11:42:01.367   0           5           19
                            Total triggers: 4
 
-        RIB Thread         Jul  6 11:42:01.373   5           7           4         
-                           Jul  6 11:42:01.371   5           5           8         
-                           Jul  6 11:42:01.367   1           5           8         
-                           Jul  6 11:42:01.367   1           5           6         
+        RIB Thread         Jul  6 11:42:01.373   5           7           4
+                           Jul  6 11:42:01.371   5           5           8
+                           Jul  6 11:42:01.367   1           5           8
+                           Jul  6 11:42:01.367   1           5           6
                            Total triggers: 4
 
-        Update Thread      Jul  6 11:42:04.367   7           7           8         
-                           Jul  6 11:42:01.373   7           7           19        
-                           Jul  6 11:42:01.373   5           7           8         
-                           Jul  6 11:42:01.373   5           7           9         
-                           Jul  6 11:42:01.371   5           5           8         
-                           Jul  6 11:42:01.371   5           5           19        
+        Update Thread      Jul  6 11:42:04.367   7           7           8
+                           Jul  6 11:42:01.373   7           7           19
+                           Jul  6 11:42:01.373   5           7           8
+                           Jul  6 11:42:01.373   5           7           9
+                           Jul  6 11:42:01.371   5           5           8
+                           Jul  6 11:42:01.371   5           5           19
                            Total triggers: 6
 
-                              Allocated       Freed         
-        Remote Prefixes:      0               0             
-        Remote Paths:         0               0             
-        Remote Path-elems:    0               0             
+                              Allocated       Freed
+        Remote Prefixes:      0               0
+        Remote Paths:         0               0
+        Remote Path-elems:    0               0
 
-        Local Prefixes:       0               0             
-        Local Paths:          0               0             
+        Local Prefixes:       0               0
+        Local Paths:          0               0
 
-                              Number          Mem Used      
-        Remote Prefixes:      0               0             
-        Remote Paths:         0               0             
-        Remote Path-elems:    0               0             
-        Remote RDs:           0               0             
+                              Number          Mem Used
+        Remote Prefixes:      0               0
+        Remote Paths:         0               0
+        Remote Path-elems:    0               0
+        Remote RDs:           0               0
 
-        Local Prefixes:       0               0             
-        Local Paths:          0               0             
-        Local RDs:            2               160           
+        Local Prefixes:       0               0
+        Local Paths:          0               0
+        Local RDs:            2               160
 
-        Total Prefixes:       0               0             
-        Total Paths:          0               0             
-        Total Path-elems:     0               0             
-        Imported Paths:       0               0             
-        Total RDs:            2               160           
+        Total Prefixes:       0               0
+        Total Paths:          0               0
+        Total Path-elems:     0               0
+        Imported Paths:       0               0
+        Total RDs:            2               160
 
 
 
@@ -4356,7 +4356,7 @@ class TestShowBgpInstanceAllAllAllNeighborsDetail(unittest.TestCase):
 
     golden_output = {
         "execute.return_value": """
-           
+
         BGP instance 0: 'default'
         =========================
 
@@ -4382,9 +4382,9 @@ class TestShowBgpInstanceAllAllAllNeighborsDetail(unittest.TestCase):
           Precedence: internet
           Non-stop routing is enabled
           Entered Neighbor NSR TCP mode:
-            TCP Initial Sync :              ---                
-            TCP Initial Sync Phase Two :    ---                
-            TCP Initial Sync Done :         ---                
+            TCP Initial Sync :              ---
+            TCP Initial Sync Phase Two :    ---
+            TCP Initial Sync Done :         ---
           Multi-protocol capability received
           Neighbor capabilities:            Adv         Rcvd
             Route refresh:                  Yes         Yes
@@ -4413,7 +4413,7 @@ class TestShowBgpInstanceAllAllAllNeighborsDetail(unittest.TestCase):
           Route refresh request: received 0, sent 0
           10 accepted prefixes, 10 are bestpaths
           Exact no. of prefixes denied : 0.
-          Cumulative no. of prefixes denied: 0. 
+          Cumulative no. of prefixes denied: 0.
           Prefix advertised 5, suppressed 0, withdrawn 0
           Maximum prefixes allowed 2097152
           Threshold for warning message 75%, restart interval 0 min
@@ -4433,7 +4433,7 @@ class TestShowBgpInstanceAllAllAllNeighborsDetail(unittest.TestCase):
           Route refresh request: received 0, sent 0
           10 accepted prefixes, 10 are bestpaths
           Exact no. of prefixes denied : 0.
-          Cumulative no. of prefixes denied: 0. 
+          Cumulative no. of prefixes denied: 0.
           Prefix advertised 5, suppressed 0, withdrawn 0
           Maximum prefixes allowed 1048576
           Threshold for warning message 75%, restart interval 0 min
@@ -4471,9 +4471,9 @@ class TestShowBgpInstanceAllAllAllNeighborsDetail(unittest.TestCase):
           Precedence: internet
           Non-stop routing is enabled
           Entered Neighbor NSR TCP mode:
-            TCP Initial Sync :              ---                
-            TCP Initial Sync Phase Two :    ---                
-            TCP Initial Sync Done :         ---                
+            TCP Initial Sync :              ---
+            TCP Initial Sync Phase Two :    ---
+            TCP Initial Sync Done :         ---
           Multi-protocol capability received
           Neighbor capabilities:            Adv         Rcvd
             Route refresh:                  Yes         Yes
@@ -4502,7 +4502,7 @@ class TestShowBgpInstanceAllAllAllNeighborsDetail(unittest.TestCase):
           Route refresh request: received 0, sent 0
           10 accepted prefixes, 0 are bestpaths
           Exact no. of prefixes denied : 0.
-          Cumulative no. of prefixes denied: 0. 
+          Cumulative no. of prefixes denied: 0.
           Prefix advertised 5, suppressed 0, withdrawn 0
           Maximum prefixes allowed 2097152
           Threshold for warning message 75%, restart interval 0 min
@@ -4522,7 +4522,7 @@ class TestShowBgpInstanceAllAllAllNeighborsDetail(unittest.TestCase):
           Route refresh request: received 0, sent 0
           10 accepted prefixes, 0 are bestpaths
           Exact no. of prefixes denied : 0.
-          Cumulative no. of prefixes denied: 0. 
+          Cumulative no. of prefixes denied: 0.
           Prefix advertised 5, suppressed 0, withdrawn 0
           Maximum prefixes allowed 1048576
           Threshold for warning message 75%, restart interval 0 min
@@ -4564,9 +4564,9 @@ class TestShowBgpInstanceAllAllAllNeighborsDetail(unittest.TestCase):
       Precedence: internet
       Non-stop routing is enabled
       Entered Neighbor NSR TCP mode:
-        TCP Initial Sync :              ---                
-        TCP Initial Sync Phase Two :    ---                
-        TCP Initial Sync Done :         ---                
+        TCP Initial Sync :              ---
+        TCP Initial Sync Phase Two :    ---
+        TCP Initial Sync Done :         ---
       Enforcing first AS is enabled
       Multi-protocol capability received
       Neighbor capabilities:            Adv         Rcvd
@@ -4585,7 +4585,7 @@ class TestShowBgpInstanceAllAllAllNeighborsDetail(unittest.TestCase):
       Minimum time between advertisement runs is 0 secs
       Inbound message logging enabled, 3 messages buffered
       Outbound message logging enabled, 3 messages buffered
-    
+
      For Address Family: IPv4 Unicast
       BGP neighbor version 152526730
       Update group: 0.2 Filter-group: 0.1  No Refresh request being processed
@@ -4594,7 +4594,7 @@ class TestShowBgpInstanceAllAllAllNeighborsDetail(unittest.TestCase):
       Policy for incoming advertisements is BGP-POL-TELENOR-IN
       Policy for outgoing advertisements is BGP-POL-TELENOR-OUT
       48 accepted prefixes, 17 are bestpaths
-      Cumulative no. of prefixes denied: 2. 
+      Cumulative no. of prefixes denied: 2.
         No policy: 0, Failed RT match: 0
         By ORF policy: 0, By policy: 2
       Prefix advertised 74, suppressed 0, withdrawn 17
@@ -4606,7 +4606,7 @@ class TestShowBgpInstanceAllAllAllNeighborsDetail(unittest.TestCase):
       Additional-paths operation: None
       Advertise VPNv4 routes enabled with Reoriginate,disable  option
       Advertise VPNv6 routes is enabled with Reoriginate, option
-    
+
       Connections established 5; dropped 4
       Local host: 10.19.27.10, Local port: 19638, IF Handle: 0x04000d80
       Foreign host: 10.19.27.9, Foreign port: 179
@@ -5319,9 +5319,9 @@ class TestShowBgpInstanceAllVrfAllNeighborsDetail(unittest.TestCase):
           Precedence: internet
           Non-stop routing is enabled
           Entered Neighbor NSR TCP mode:
-            TCP Initial Sync :              ---                
-            TCP Initial Sync Phase Two :    ---                
-            TCP Initial Sync Done :         ---                
+            TCP Initial Sync :              ---
+            TCP Initial Sync Phase Two :    ---
+            TCP Initial Sync Done :         ---
           Enforcing first AS is enabled
           Multi-protocol capability not received
           Neighbor capabilities:            Adv         Rcvd
@@ -5349,7 +5349,7 @@ class TestShowBgpInstanceAllVrfAllNeighborsDetail(unittest.TestCase):
           Policy for outgoing advertisements is all-pass
           0 accepted prefixes, 0 are bestpaths
           Exact no. of prefixes denied : 0.
-          Cumulative no. of prefixes denied: 5. 
+          Cumulative no. of prefixes denied: 5.
             No policy: 5, Failed RT match: 0
             By ORF policy: 0, By policy: 0
           Prefix advertised 10, suppressed 0, withdrawn 0
@@ -5388,9 +5388,9 @@ class TestShowBgpInstanceAllVrfAllNeighborsDetail(unittest.TestCase):
           Precedence: internet
           Non-stop routing is enabled
           Entered Neighbor NSR TCP mode:
-            TCP Initial Sync :              ---                
-            TCP Initial Sync Phase Two :    ---                
-            TCP Initial Sync Done :         ---                
+            TCP Initial Sync :              ---
+            TCP Initial Sync Phase Two :    ---
+            TCP Initial Sync Done :         ---
           Enforcing first AS is enabled
           Multi-protocol capability received
           Neighbor capabilities:            Adv         Rcvd
@@ -5418,7 +5418,7 @@ class TestShowBgpInstanceAllVrfAllNeighborsDetail(unittest.TestCase):
           Policy for outgoing advertisements is all-pass
           0 accepted prefixes, 0 are bestpaths
           Exact no. of prefixes denied : 0.
-          Cumulative no. of prefixes denied: 5. 
+          Cumulative no. of prefixes denied: 5.
             No policy: 5, Failed RT match: 0
             By ORF policy: 0, By policy: 0
           Prefix advertised 10, suppressed 0, withdrawn 0
@@ -5460,9 +5460,9 @@ class TestShowBgpInstanceAllVrfAllNeighborsDetail(unittest.TestCase):
           Precedence: internet
           Non-stop routing is enabled
           Entered Neighbor NSR TCP mode:
-            TCP Initial Sync :              ---                
-            TCP Initial Sync Phase Two :    ---                
-            TCP Initial Sync Done :         ---                
+            TCP Initial Sync :              ---
+            TCP Initial Sync Phase Two :    ---
+            TCP Initial Sync Done :         ---
           Enforcing first AS is enabled
           Multi-protocol capability not received
           Neighbor capabilities:            Adv         Rcvd
@@ -5490,7 +5490,7 @@ class TestShowBgpInstanceAllVrfAllNeighborsDetail(unittest.TestCase):
           Policy for outgoing advertisements is all-pass
           5 accepted prefixes, 5 are bestpaths
           Exact no. of prefixes denied : 0.
-          Cumulative no. of prefixes denied: 0. 
+          Cumulative no. of prefixes denied: 0.
           Prefix advertised 10, suppressed 0, withdrawn 0
           Maximum prefixes allowed 495
           Threshold for warning message 75%, restart interval 0 min
@@ -5527,9 +5527,9 @@ class TestShowBgpInstanceAllVrfAllNeighborsDetail(unittest.TestCase):
           Precedence: internet
           Non-stop routing is enabled
           Entered Neighbor NSR TCP mode:
-            TCP Initial Sync :              ---                
-            TCP Initial Sync Phase Two :    ---                
-            TCP Initial Sync Done :         ---                
+            TCP Initial Sync :              ---
+            TCP Initial Sync Phase Two :    ---
+            TCP Initial Sync Done :         ---
           Enforcing first AS is enabled
           Multi-protocol capability received
           Neighbor capabilities:            Adv         Rcvd
@@ -5557,7 +5557,7 @@ class TestShowBgpInstanceAllVrfAllNeighborsDetail(unittest.TestCase):
           Policy for outgoing advertisements is all-pass
           5 accepted prefixes, 5 are bestpaths
           Exact no. of prefixes denied : 0.
-          Cumulative no. of prefixes denied: 0. 
+          Cumulative no. of prefixes denied: 0.
           Prefix advertised 10, suppressed 0, withdrawn 0
           Maximum prefixes allowed 524288
           Threshold for warning message 75%, restart interval 0 min
@@ -5856,7 +5856,7 @@ class TestShowBgpInstanceAllVrfAllNeighborsDetail(unittest.TestCase):
 
     golden_output2 = {
         "execute.return_value": """
-        RP/0/RSP1/CPU0:PE1#show bgp instance all vrf all ipv6 unicast neighbors detail 
+        RP/0/RSP1/CPU0:PE1#show bgp instance all vrf all ipv6 unicast neighbors detail
         Fri Aug 11 13:15:07.809 PDT
 
         BGP instance 0: 'default'
@@ -5887,9 +5887,9 @@ class TestShowBgpInstanceAllVrfAllNeighborsDetail(unittest.TestCase):
           Precedence: internet
           Non-stop routing is enabled
           Entered Neighbor NSR TCP mode:
-            TCP Initial Sync :              ---                
-            TCP Initial Sync Phase Two :    ---                
-            TCP Initial Sync Done :         ---                
+            TCP Initial Sync :              ---
+            TCP Initial Sync Phase Two :    ---
+            TCP Initial Sync Done :         ---
           Enforcing first AS is enabled
           Multi-protocol capability not received
           Message stats:
@@ -5913,7 +5913,7 @@ class TestShowBgpInstanceAllVrfAllNeighborsDetail(unittest.TestCase):
           Policy for outgoing advertisements is all-pass
           0 accepted prefixes, 0 are bestpaths
           Exact no. of prefixes denied : 0.
-          Cumulative no. of prefixes denied: 0. 
+          Cumulative no. of prefixes denied: 0.
           Prefix advertised 0, suppressed 0, withdrawn 0
           Maximum prefixes allowed 524288
           Threshold for warning message 75%, restart interval 0 min
@@ -5922,16 +5922,16 @@ class TestShowBgpInstanceAllVrfAllNeighborsDetail(unittest.TestCase):
           Outstanding version objects: current 0, max 0
           Additional-paths operation: None
           Advertise routes with local-label via Unicast SAFI
-                  
+
           Connections established 0; dropped 0
           Local host: ::, Local port: 0, IF Handle: 0x00000000
           Foreign host: 2001:db8:1:5::5, Foreign port: 0
           Last reset 00:00:00
           External BGP neighbor not directly connected.
-                  
-        VRF: VRF2 
-        --------- 
-                  
+
+        VRF: VRF2
+        ---------
+
         BGP neighbor is 2001:db8:20:1:5::5, vrf VRF2
          Remote AS 200, local AS 100, external link
          Remote router ID 0.0.0.0
@@ -5954,9 +5954,9 @@ class TestShowBgpInstanceAllVrfAllNeighborsDetail(unittest.TestCase):
           Precedence: internet
           Non-stop routing is enabled
           Entered Neighbor NSR TCP mode:
-            TCP Initial Sync :              ---                
-            TCP Initial Sync Phase Two :    ---                
-            TCP Initial Sync Done :         ---                
+            TCP Initial Sync :              ---
+            TCP Initial Sync Phase Two :    ---
+            TCP Initial Sync Done :         ---
           Enforcing first AS is enabled
           Multi-protocol capability not received
           Message stats:
@@ -5971,7 +5971,7 @@ class TestShowBgpInstanceAllVrfAllNeighborsDetail(unittest.TestCase):
           Minimum time between advertisement runs is 0 secs
           Inbound message logging enabled, 3 messages buffered
           Outbound message logging enabled, 3 messages buffered
-                  
+
          For Address Family: IPv6 Unicast
           BGP neighbor version 0
           Update group: 0.1 Filter-group: 0.0  No Refresh request being processed
@@ -5980,7 +5980,7 @@ class TestShowBgpInstanceAllVrfAllNeighborsDetail(unittest.TestCase):
           Policy for outgoing advertisements is all-pass
           0 accepted prefixes, 0 are bestpaths
           Exact no. of prefixes denied : 0.
-          Cumulative no. of prefixes denied: 0. 
+          Cumulative no. of prefixes denied: 0.
           Prefix advertised 0, suppressed 0, withdrawn 0
           Maximum prefixes allowed 524288
           Threshold for warning message 75%, restart interval 0 min
@@ -5989,19 +5989,19 @@ class TestShowBgpInstanceAllVrfAllNeighborsDetail(unittest.TestCase):
           Outstanding version objects: current 0, max 0
           Additional-paths operation: None
           Advertise routes with local-label via Unicast SAFI
-                  
+
           Connections established 0; dropped 0
           Local host: ::, Local port: 0, IF Handle: 0x00000000
           Foreign host: 2001:db8:20:1:5::5, Foreign port: 0
           Last reset 00:00:00
           External BGP neighbor not directly connected.
-                  
+
         BGP instance 1: 'test'
         ======================
-                  
+
         BGP instance 2: 'test1'
         =======================
-                  
+
         BGP instance 3: 'test2'
         =======================
         """
@@ -6754,7 +6754,7 @@ class TestShowBgpInstanceAllVrfAllNeighborsRoutes(unittest.TestCase):
 
     golden_output = {
         "execute.return_value": """
-    
+
         Neighbor not found
 
         BGP instance 0: 'default'
@@ -6783,7 +6783,7 @@ class TestShowBgpInstanceAllVrfAllNeighborsRoutes(unittest.TestCase):
         Route Distinguisher: 200:2 (default for vrf VRF2)
         *> 10.1.1.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
         *> 10.1.2.0/24        10.186.5.5              2219             0 200 33299 51178 47751 {27016} e
-        
+
         Processed 2 prefixes, 2 paths
         """
     }
@@ -7000,10 +7000,10 @@ class TestShowBgpInstanceAllAllAllNeighborsRoutes(unittest.TestCase):
            Network            Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 300:1
         * i10.169.1.0/24        10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        
+
         Route Distinguisher: 400:1
         * i10.9.2.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        
+
 
         Processed 2 prefixes, 2 paths
 
@@ -7029,7 +7029,7 @@ class TestShowBgpInstanceAllAllAllNeighborsRoutes(unittest.TestCase):
         * i2001:2:11:1::/64   10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         Route Distinguisher: 400:1
         * i2001:3:22::/64     10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        
+
 
         Processed 3 prefixes, 3 paths
 
@@ -7080,7 +7080,7 @@ class TestShowBgpInstanceAllAllAllNeighborsRoutes(unittest.TestCase):
     golden_output_1 = {
         "execute.return_value": """
         show bgp instance all all all  neighbors 192.168.0.4 routes
-    
+
         Mon Jan 22 14:32:03.615 UTC
 
         BGP instance 0: 'default'
@@ -7387,7 +7387,7 @@ class TestShowBgpInstanceAllAllAllSummary(unittest.TestCase):
 
     golden_output = {
         "execute.return_value": """
-    
+
         BGP instance 0: 'default'
         =========================
 
@@ -8493,7 +8493,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
 
     golden_output1 = {
         "execute.return_value": """
-    
+
         BGP instance 0: 'default'
         =========================
 
@@ -8528,7 +8528,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
         * i                   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
         *>i10.9.3.0/24        10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
         * i                   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        
+
         Processed 40 prefixes, 50 paths
 
         Address Family: VPNv6 Unicast
@@ -8574,7 +8574,7 @@ class TestShowBgpInstanceAllAll(unittest.TestCase):
         * i                   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
         *>i2001:3:22:1::/64   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
         * i                   10.64.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-    
+
         Processed 40 prefixes, 50 paths
 
         """
@@ -31212,7 +31212,7 @@ class TestShowBgpVrfDbVrfAll(unittest.TestCase):
 
         Fri Jun 12 16:57:48.790 EDT
         VRF                              ID          RD              REF AFs
-        default                          0x60000000  0:0:0           8   v4u, Vv4u, v6u, 
+        default                          0x60000000  0:0:0           8   v4u, Vv4u, v6u,
                                                                          Vv6u, L2evpn
         NOVI-TST                         0x60000001  172.16.2.88:0   4   v4u
         test_ipv6_overlay                0x0         0:0:0           2   v4u, v6u
@@ -31303,19 +31303,19 @@ class TestShowBgpL2vpnEvpnAdvertised(unittest.TestCase):
          [1][0009.08ff.0d0c.0403.0201][0]/120 is advertised to 10.100.5.5
          Path info:
            neighbor: Local           neighbor router id: 10.196.7.7
-           valid  redistributed  best  import-candidate  
+           valid  redistributed  best  import-candidate
            Received Path ID 0, Local Path ID 0, version 12
            Attributes after inbound policy was applied:
             next hop: 0.0.0.0
-            EXTCOMM 
-            origin: IGP  
-            aspath: 
-            extended community: 
+            EXTCOMM
+            origin: IGP
+            aspath:
+            extended community:
            Attributes after outbound policy was applied:
             next hop: 10.196.7.7
-            ORG AS EXTCOMM 
-            origin: IGP  
-            aspath: 
+            ORG AS EXTCOMM
+            origin: IGP
+            aspath:
             extended community: SoO:0.0.0.0:0 RT:100:7
         """
     }

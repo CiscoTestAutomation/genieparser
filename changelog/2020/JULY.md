@@ -57,6 +57,8 @@
     * Updated ShowOspfDatabaseAdvertisingRouterSelfDetail
         * Added more keys to the schema, in order to support output of ShowOspfDatabaseLsaidDetail
         * ospf-lsa-topology now optional
+        * med now optional
+        * Updated rt_destination pattern, matches ipv6 addresses now
     * Updated ShowSystemUsers
         * Regex issues resolved
     * Updated ShowOspfOverview
