@@ -12,6 +12,8 @@
 * IOSXE
     * Added ShowCtsEnvironmentData
         * show cts environment-data
+    * Added ShowCtsSxpConnectionsBrief
+        * show show cts sxp connections brief
 
 --------------------------------------------------------------------------------
                                 Fix
