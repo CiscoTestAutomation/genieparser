@@ -12,6 +12,8 @@
 * IOSXE
     * Added ShowLispSite
       * show lisp site
+    * Added ShowCtsSxpConnectionsBrief
+        * show show cts sxp connections brief
 
 --------------------------------------------------------------------------------
                                 Fix
