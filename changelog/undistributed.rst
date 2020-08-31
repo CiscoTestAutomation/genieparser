@@ -12,6 +12,8 @@
 * IOSXE
     * Added ShowCtsRoleBasedCounters
         * show cts role-based counters
+    * Added ShowCtsSxpConnectionsBrief
+        * show show cts sxp connections brief
 
 --------------------------------------------------------------------------------
                                 Fix
