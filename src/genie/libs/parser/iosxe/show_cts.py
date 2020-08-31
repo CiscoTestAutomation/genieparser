@@ -1,6 +1,7 @@
 import re
 
 from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Optional
 
 # ===================================
 # Schema for:
@@ -10,29 +11,29 @@ class Show_Cts_Sxp_Connections_BriefSchema(MetaParser):
     """Schema for show_cts_sxp_connections_brief."""
 
     schema = {
-    "sxp_connections": {
-        "total_sxp_connections": int,
-        "status": {
-            "sxp_status": str,
-            "highest_version": int,
-            "default_pw": str,
-            Optional("key_chain"): str,
-            Optional("key_chain_name"): str,
-            "source_ip": str,
-            "conn_retry": int,
-            "reconcile_secs": int,
-            "retry_timer": str,
-            "peer_sequence_traverse_limit_for_export": str,
-            "peer_sequence_traverse_limit_for_import":str
-        },
-        Optional("sxp_peers"): {
-            str: {
+        "sxp_connections": {
+            "total_sxp_connections": int,
+            "status": {
+                "sxp_status": str,
+                "highest_version": int,
+                "default_pw": str,
+                Optional("key_chain"): str,
+                Optional("key_chain_name"): str,
                 "source_ip": str,
-                "conn_status": str,
-                "duration": str
+                "conn_retry": int,
+                "reconcile_secs": int,
+                "retry_timer": str,
+                "peer_sequence_traverse_limit_for_export": str,
+                "peer_sequence_traverse_limit_for_import":str
+            },
+            Optional("sxp_peers"): {
+                str: {
+                    "source_ip": str,
+                    "conn_status": str,
+                    "duration": str
+                }
             }
         }
-    }
     }
 
 
