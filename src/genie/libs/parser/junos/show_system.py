@@ -4905,3 +4905,90 @@ class ShowSystemStatisticsNoForwarding(ShowSystemStatistics):
             out = output
 
         return super().cli(output=out)
+    
+class ShowSystemInformationSchema(MetaParser):
+    """ Schema for:
+            * show system information
+    """
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "system-information": {
+            "hardware-model": str,
+            "host-name": str,
+            "os-name": str,
+            "os-version": str,
+            Optional("serial-number"): str
+        }
+    }
+
+
+class ShowSystemInformation(ShowSystemInformationSchema):
+    """ Parser for:
+            * show system information
+    """
+    cli_command = 'show system information'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Model: vmx
+        p1 = re.compile(r'^Model: +(?P<hardware_model>\S+)$')
+        
+        # Family: junos
+        p2 = re.compile(r'^Family: +(?P<os_name>\S+)$')
+        
+        # Junos: 19.2R1.8
+        p3 = re.compile(r'^Junos: +(?P<os_version>\S+)$')
+        
+        # Hostname: P4
+        p4 = re.compile(r'^Hostname: +(?P<host_name>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+    
+            # Model: vmx
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict.setdefault("system-information", {})
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace("_", "-")
+                    entry[entry_key] = group_value
+                continue
+            
+            # Family: junos
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict.setdefault("system-information", {})
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace("_", "-")
+                    entry[entry_key] = group_value
+                continue
+            
+            # Junos: 19.2R1.8
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict.setdefault("system-information", {})
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace("_", "-")
+                    entry[entry_key] = group_value
+                continue
+            
+            # Hostname: P4
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict.setdefault("system-information", {})
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace("_", "-")
+                    entry[entry_key] = group_value
+                continue
+
+        return ret_dict
