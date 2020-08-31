@@ -1,0 +1,11 @@
+Stackwise Virtual Configuration:
+--------------------------------
+Stackwise Virtual : Enabled
+Domain Number : 100
+
+Switch  Stackwise Virtual Link  Ports
+------  ----------------------  ------
+1       1                       HundredGigE1/0/3
+                                HundredGigE1/0/4
+2       1                       HundredGigE2/0/3
+                                HundredGigE2/0/4
