@@ -12,6 +12,8 @@
 * IOSXE
     * Added ShowCtsRbacl
         * show cts rbacl
+    * Added ShowCtsSxpConnectionsBrief
+        * show show cts sxp connections brief
 
 --------------------------------------------------------------------------------
                                 Fix
