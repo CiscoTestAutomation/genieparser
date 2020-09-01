@@ -1,0 +1,14 @@
+
+Router# show ip nat statistics
+Total translations: 2 (0 static, 2 dynamic; 0 extended)
+Outside interfaces: Serial0
+Inside interfaces: Ethernet1
+Hits: 135  Misses: 5
+Expired translations: 2
+Dynamic mappings:
+-- Inside Source
+access-list 1 pool net-208 refcount 2
+pool net-208: netmask 255.255.255.240
+        start 172.16.233.208 end 172.16.233.221
+        type generic, total addresses 14, allocated 2 (14%), misses 0
+    

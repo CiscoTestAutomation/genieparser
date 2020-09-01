@@ -1,0 +1,11 @@
+show ntp status
+Clock is unsynchronized, stratum 16, no reference clock
+nominal freq is 1000.0003 Hz, actual freq is 1000.4923 Hz, precision is 2**13
+ntp uptime is 1938800 (1/100 of seconds), resolution is 1000
+reference time is DFA98D6B.F2F229A7 (16:55:55.949 EST Wed Nov 28 2018)
+clock offset is 0.0000 msec, root delay is 0.00 msec
+root dispersion is 18.84 msec, peer dispersion is 0.00 msec
+loopfilter state is 'SPIK' (Spike), drift is -0.000491998 s/s
+system poll interval is 64, last update was 1301 sec ago.
+iosv-1
+    

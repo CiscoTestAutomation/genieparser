@@ -1,0 +1,8 @@
+
+Device# show lacp 1 internal
+Channel group 1
+                            LACPDUs     LACP Port    Admin   Oper    Port     Port
+Port      Flags    State    Interval    Priority     Key     Key     Number   State
+Fa4/1     saC      bndl     30s         32768        100     100     0xc1     0x75
+Fa4/2     saC      bndl     30s         32768        100     100     0xc2     0x75
+    

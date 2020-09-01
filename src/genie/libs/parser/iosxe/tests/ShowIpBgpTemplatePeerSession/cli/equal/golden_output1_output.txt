@@ -1,0 +1,25 @@
+
+R4_iosv#show ip bgp template peer-session
+Template:PEER-SESSION, index:1
+Local policies:0x5025FD, Inherited polices:0x0
+Locally configured session commands:
+ remote-as 321
+ password is configured
+ shutdown
+ ebgp-multihop 254
+ update-source Loopback0
+ transport connection-mode passive
+ description desc1!
+ dont-capability-negotiate four-octets-as
+ timers 10 30
+ local-as 255
+ disable-connected-check
+ fall-over bfd
+Inherited session commands:
+
+Template:PEER-SESSION2, index:2
+Local policies:0x100000, Inherited polices:0x0
+Locally configured session commands:
+ fall-over bfd
+Inherited session commands:
+        
