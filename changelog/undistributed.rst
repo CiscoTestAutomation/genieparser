@@ -10,6 +10,10 @@
 --------------------------------------------------------------------------------
 
 * IOSXE
+    * Added ShowStackwiseVirtual
+        * show stackwise-virtual
+    * Added ShowPlatformTcamUtilization
+        * show platform hardware fed sw active fwd-asic resource tcam utilization
     * Added ShowApRfProfileSummary
         * show ap rf-profile summary
     * Added ShowCtsSxpConnectionsBrief
@@ -18,4 +22,5 @@
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
+
 
