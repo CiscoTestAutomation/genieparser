@@ -207,6 +207,5 @@ Refresh timer is set for 6w3d
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-
 if __name__ == '__main__':
     unittest.main()
