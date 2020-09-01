@@ -10,6 +10,8 @@
 --------------------------------------------------------------------------------
 
 * IOSXE
+    * Added ShowApRfProfileSummary
+        * show ap rf-profile summary
     * Added ShowCtsSxpConnectionsBrief
         * show show cts sxp connections brief
 
