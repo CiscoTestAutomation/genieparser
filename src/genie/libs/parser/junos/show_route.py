@@ -957,7 +957,6 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                          r'(?P<announce_tasks>[\S\s]+)$')
 
         # AS path: I 
-        # p16 = re.compile(r'^(?P<aspath_effective_string>AS +path:) +(?P<attr_value>\S+)$')
         p16 = re.compile(r'^(?P<aspath_effective_string>AS +path:) +(?P<attr_value>([\S]+( +)?)+)$')
 
         # Accepted Multipath
