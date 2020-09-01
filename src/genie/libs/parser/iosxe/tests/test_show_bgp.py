@@ -7895,7 +7895,7 @@ class TestShowIpBgpAllSummary(unittest.TestCase):
             BGP activity 226/0 prefixes, 4035/3696 paths, scan interval 60 secs
 
             Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-            192.168.10.253  4        65555   10112   10107      263    0    0 3d05h          13
+            *192.168.10.253  4        65555   10112   10107      263    0    0 3d05h          13
             192.168.10.253  4        65555       0       0        1    0    0 never    Idle           
             192.168.36.119 4         65109   10293   10213      263    0    0 3d05h          62
             192.168.36.120 4         65109    9930    9826      263    0    0 3d02h          62
