@@ -3,6 +3,7 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 
+
 # ===================================
 # Schema for:
 #  * 'show_cts_sxp_connections_brief'
