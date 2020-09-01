@@ -13,7 +13,15 @@
     * Added ShowApRfProfileSummary
         * show ap rf-profile summary
     * Added ShowCtsSxpConnectionsBrief
-        * show show cts sxp connections brief
+        * show show cts sxp
+    * Added ShowStackwiseVirtual
+        * show stackwise-virtual
+    * Added ShowCtsPacs
+        * show cts pacs
+    * Added ShowClassMap
+        * show class-map
+    * Added ShowApCdpNeighbor
+        * show ap cdp neighbor
 
 --------------------------------------------------------------------------------
                                 Fix
