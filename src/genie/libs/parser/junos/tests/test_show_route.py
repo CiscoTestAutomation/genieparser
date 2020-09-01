@@ -55222,6 +55222,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                             "gateway": "4.4.4.4",
                             "local-as": "3",
                             "metric2": "2",
+                            "as-path": "AS path: I  (Originator)",
+                            "bgp-path-attributes": {
+                                "attr-as-path-effective": {
+                                    "aspath-effective-string": "AS path:",
+                                    "attr-value": "I  (Originator)",
+                                },
+                            },
                             "nh": [
                                 {
                                     "nh-string": "Next hop",
@@ -55268,7 +55275,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                             "@junos:format": "1 entry"
                         },
                         "tsi": {
-                            "#text": "KRT in-kernel 12.12.12.12/32 -> {indirect(1048578)}\nPage 0 idx 1, (group ibgp-DUT type Internal) Type 1 val 0x134b0034 (adv_entry)\nAdvertised metrics:\nNexthop: 2.2.2.2\nLocalpref: 100\nAS path: [3] I (Originator)\nCommunities:\nPath 12.12.12.12\nfrom 4.4.4.4\nVector len 4.  Val: 1\nAS path: I  (Originator)\nLocalpref: 100"
+                            "#text": "KRT in-kernel 12.12.12.12/32 -> {indirect(1048578)}\nPage 0 idx 1, (group ibgp-DUT type Internal) Type 1 val 0x134b0034 (adv_entry)\nAdvertised metrics:\nNexthop: 2.2.2.2\nLocalpref: 100\nAS path: [3] I (Originator)\nCommunities:\nPath 12.12.12.12\nfrom 4.4.4.4\nVector len 4.  Val: 1\nLocalpref: 100"
                         }
                     }
                 ],
