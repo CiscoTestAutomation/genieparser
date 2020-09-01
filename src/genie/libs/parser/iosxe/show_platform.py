@@ -6556,7 +6556,6 @@ class ShowPlatformHardwareQfpActiveTcamResourceManagerUsage(ShowPlatformHardware
                 groups = m.groupdict()
                 key1 = groups['key'].replace(' ','_').lower()
                 feature_dict = ret_dict.setdefault(key1, {})    
-                last_dict_ptr = feature_dict
                 continue
             
             #80 Bit Region Information
@@ -6567,7 +6566,6 @@ class ShowPlatformHardwareQfpActiveTcamResourceManagerUsage(ShowPlatformHardware
                 reg = groups['region'].strip().replace(' ','_').lower()
                 reg_name = groups['num'].replace(' ','_').lower() +'_'+reg
                 region_hash = feature_dict.setdefault(reg_name, {})
-                last_dict_ptr = region_hash
                 continue
 
             # Name                                : Leaf Region #1
@@ -6583,11 +6581,11 @@ class ShowPlatformHardwareQfpActiveTcamResourceManagerUsage(ShowPlatformHardware
                 if name not in ['threshold_status', 'name']:
                     val = int(groups['value'])
 
-                region_hash.update(({name : val}))
+                region_hash.update({name : val})
                 continue
 
         
-        return(ret_dict)
+        return ret_dict
 
 # =======================================================================
 # Schema for 'show platform resources'
