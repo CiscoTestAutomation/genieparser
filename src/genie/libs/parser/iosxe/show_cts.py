@@ -366,3 +366,4 @@ class ShowCtsPacs(ShowCtsPacsSchema):
                 cts_pacs_dict['refresh_timer'] = refresh_timer
                 continue
         return cts_pacs_dict
+
