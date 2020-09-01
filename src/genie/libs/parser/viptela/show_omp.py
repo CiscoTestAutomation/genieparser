@@ -84,17 +84,17 @@ class ShowOmpSummary(ShowOmpSummarySchema):
 # Schema for 'show omp tloc path'
 # =====================================
 class ShowOmpTlocPathSchema(MetaParser):
- schema = {
-    'tloc_path': {
-        Any(): {
-            'tloc': {
-                Any(): {
-                    'transport': str
+    schema = {
+        'tloc_path': {
+            Any(): {
+                'tloc': {
+                    Any(): {
+                        'transport': str
+                    }
                 }
             }
         }
-    }
-}     
+    }     
 
 # =====================================
 # Parser for 'show omp tloc path'
@@ -127,7 +127,7 @@ class ShowOmpTlocPath(ShowOmpTlocPathSchema):
                         setdefault(groups['ip_add'], {}).\
                         setdefault('tloc', {}).\
 					    setdefault(groups['tloc'], {})
-                tloc_data.update(({'transport' : groups['transport']})) 
+                tloc_data.update({'transport' : groups['transport']}) 
 
         return parsed_dict
 
@@ -292,6 +292,7 @@ class ShowOmpTlocs(ShowOmpTlocsSchema):
             line = line.strip()
 
             # ------------------------------- 
+            ### match the line so that P4 expression does not match the line and fail
             m = p0.match(line)
             if m:
                 groups = m.groupdict()
@@ -351,7 +352,7 @@ class ShowOmpTlocs(ShowOmpTlocsSchema):
                     values = groups['value'].replace('[','').replace(']','').replace(' ','') 
                     values = [int(i) for i in values.split(",")]
                 elif keys in ['overlay_id', 'site_id', 'domain_id']:
-                    #import pdb; pdb.set_trace()
+                    #set the domain_id/site_id/overlay_id only if its int else skip
                     if groups['value'].isdigit():
                          values = int(groups['value'])
                     else:
