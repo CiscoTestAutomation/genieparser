@@ -54842,6 +54842,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "gateway": "10.169.14.240",
                                     "local-as": "65171",
                                     "peer-as": "65151",
+                                    'as-path': 'AS path: (65151 65000) I',
+                                    'bgp-path-attributes': {
+                                        'attr-as-path-effective': {
+                                            'aspath-effective-string': 'AS path:', 
+                                            'attr-value': '(65151 65000) I'
+                                            }
+                                        },
                                     "nh": [
                                         {
                                             "nh-string": "Next hop",
@@ -54886,6 +54893,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "gateway": "10.189.5.253",
                                     "local-as": "65171",
                                     "peer-as": "65171",
+                                    'as-path': 'AS path: (65151 65000) I',
+                                    'bgp-path-attributes': {
+                                        'attr-as-path-effective': {
+                                            'aspath-effective-string': 'AS path:',
+                                            'attr-value': '(65151 65000) I'
+                                            }
+                                        },
                                     "nh": [
                                         {
                                             "label-element": "0xc5cda38",
@@ -54939,7 +54953,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                 "@junos:format": "2 entries"
                             },
                             "tsi": {
-                                "#text": "KRT in-kernel 10.220.0.0/16 -> {indirect(1048574)}\nPage 0 idx 1, (group hktGCS002 type Internal) Type 1 val 0x10c0b9b0 (adv_entry)\nAdvertised metrics:\nFlags: Nexthop Change\nNexthop: Self\nMED: 12003\nLocalpref: 120\nAS path: [65171] (65151 65000) I\nCommunities: 65001:10 65151:244\nPath 10.220.0.0\nfrom 10.169.14.240\nVector len 4.  Val: 1\nAS path: (65151 65000) I\nCommunities: 65001:10 65151:244\nLocalpref: 120\nAS path: (65151 65000) I\nCommunities: 65001:10 65151:244\nLocalpref: 120"
+                                "#text": "KRT in-kernel 10.220.0.0/16 -> {indirect(1048574)}\nPage 0 idx 1, (group hktGCS002 type Internal) Type 1 val 0x10c0b9b0 (adv_entry)\nAdvertised metrics:\nFlags: Nexthop Change\nNexthop: Self\nMED: 12003\nLocalpref: 120\nAS path: [65171] (65151 65000) I\nCommunities: 65001:10 65151:244\nPath 10.220.0.0\nfrom 10.169.14.240\nVector len 4.  Val: 1\nCommunities: 65001:10 65151:244\nLocalpref: 120\nCommunities: 65001:10 65151:244\nLocalpref: 120"
                             }
                         }
                     ],
@@ -55014,7 +55028,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "@junos:format": "1 entry"
                                 },
                                 "tsi": {
-                                    "#text": "KRT in-kernel 100.0.0.1/32 -> {indirect(1048574)}\nAS path: I  (Originator)\nLocalpref: 100"
+                                    "#text": "KRT in-kernel 100.0.0.1/32 -> {indirect(1048574)}\nLocalpref: 100"
                                 },
                                 "rt-entry": {
                                     "active-tag": "*",
@@ -55030,6 +55044,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "peer-as": "2",
                                     'age': {'#text': '13'},
                                     'metric2': '3',
+                                    'as-path': 'AS path: I  (Originator)',
+                                    'bgp-path-attributes': {
+                                        'attr-as-path-effective': {
+                                            'aspath-effective-string': 'AS path:',
+                                            'attr-value': 'I  (Originator)'
+                                        }
+                                    },
                                     "nh": [
                                         {
                                             "to": "20.0.0.2",

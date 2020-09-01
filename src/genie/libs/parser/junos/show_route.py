@@ -847,13 +847,18 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                     'show route protocol {protocol} table {table} extensive {destination}',
                     'show route {route} extensive',
                     'show route extensive',
-                    'show route extensive {destination}']
+                    'show route extensive {destination}',
+                    'show route protocol {protocol} {destination} extensive']
     def cli(self, protocol=None, table=None, destination=None, route=None, output=None):
         if not output:
             if protocol and table and destination:
                 cmd = self.cli_command[2].format(
                     protocol=protocol,
                     table=table,
+                    destination=destination)
+            elif protocol and destination:
+                cmd = self.cli_command[6].format(
+                    protocol=protocol,
                     destination=destination)
             elif table and protocol:
                 cmd = self.cli_command[1].format(
@@ -952,7 +957,8 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                          r'(?P<announce_tasks>[\S\s]+)$')
 
         # AS path: I 
-        p16 = re.compile(r'^(?P<aspath_effective_string>AS +path:) +(?P<attr_value>\S+)$')
+        # p16 = re.compile(r'^(?P<aspath_effective_string>AS +path:) +(?P<attr_value>\S+)$')
+        p16 = re.compile(r'^(?P<aspath_effective_string>AS +path:) +(?P<attr_value>([\S]+( +)?)+)$')
 
         # Accepted Multipath
         p16_1 = re.compile(r'^Accepted +(?P<accepted>\S+)$')
@@ -1264,14 +1270,16 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             # AS path: I 
             m = p16.match(line)
             if m:
-                group = m.groupdict()
-                attr_as_path_dict = rt_entry_dict.setdefault('bgp-path-attributes', {}). \
-                    setdefault('attr-as-path-effective', {})
-                rt_entry_dict.update({'as-path': line})
-                attr_as_path_dict.update({'aspath-effective-string': 
-                    group['aspath_effective_string']})
-                attr_as_path_dict.update({'attr-value': group['attr_value']})
-                continue
+                rt_entry_exist = rt_dict.get('rt-entry', None)
+                if rt_entry_exist:
+                    group = m.groupdict()
+                    attr_as_path_dict = rt_entry_dict.setdefault('bgp-path-attributes', {}). \
+                        setdefault('attr-as-path-effective', {})
+                    rt_entry_dict.update({'as-path': line})
+                    attr_as_path_dict.update({'aspath-effective-string': 
+                        group['aspath_effective_string']})
+                    attr_as_path_dict.update({'attr-value': group['attr_value']})
+                    continue
 
             # Accepted Multipath
             m = p16_1.match(line)
