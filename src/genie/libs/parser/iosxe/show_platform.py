@@ -15,6 +15,8 @@ IOSXE parsers for the following show commands:
     * 'show environment all'
     * 'show module'
     * 'show platform hardware qfp active datapath utilization summary'
+    * 'show platform resources'
+    * 'show platform hardware qfp active tcam resource-manager usage'
 '''
 
 # Python
@@ -6489,3 +6491,358 @@ class ShowPlatformHardwareQfpActiveDatapathUtilSum(ShowPlatformHardwareQfpActive
                 continue
         
         return ret_dict
+
+# =======================================================================
+# Schema for 'show platform hardware qfp active tcam resource-manager usage'
+# =======================================================================
+class ShowPlatformHardwareQfpActiveTcamResourceManagerUsageSchema(MetaParser):
+     schema = {
+                'qfp_tcam_usage_information': {
+                    Any(): {
+                        'name': str,
+                        'number_of_cells_per_entry': int,
+                        Optional('current_80_bit_entries_used'): int,
+                        Optional('current_160_bits_entries_used'): int,
+                        Optional('current_320_bits_entries_used'): int,
+                        'current_used_cell_entries': int,
+                        'current_free_cell_entries': int
+                        },
+                    'total_tcam_cell_usage_information': {
+                        'name': str,
+                        'total_number_of_regions': int,
+                        'total_tcam_used_cell_entries': int,
+                        'total_tcam_free_cell_entries': int,
+                        'threshold_status': str
+                        }
+                    }
+                }
+
+# =======================================================================
+# Parser for 'show platform hardware qfp active tcam resource-manager usage'
+# =======================================================================
+class ShowPlatformHardwareQfpActiveTcamResourceManagerUsage(ShowPlatformHardwareQfpActiveTcamResourceManagerUsageSchema):
+
+    cli_command = ['show platform hardware qfp active tcam resource-manager usage']
+
+
+    def cli(self, output=None):
+
+        # if the user does not provide output to the parser
+        # we need to get it from the device
+        if not output:
+            output = self.device.execute(self.cli_command[0])
+
+        #QFP TCAM Usage Information
+        p1 = re.compile(r'^(?P<key>QFP TCAM Usage Information)$')
+     
+        #80 Bit Region Information
+        #Total TCAM Cell Usage Information
+        p2 = re.compile(r'^(?P<num>\d+|Total TCAM)(?P<region>[\s\S]+)$')
+  
+        # Name                                : Leaf Region #1
+        # Number of cells per entry           : 2
+        # Current 160 bits entries used       : 19
+        # Current used cell entries           : 38
+        # Current free cell entries           : 4058
+        p3 = re.compile(r'^(?P<key>[\s\S]+)\:(?P<value>[\s\S]+\S)$')
+
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+           
+            #QFP TCAM Usage Information
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                key1 = groups['key'].replace(' ','_').lower()
+                feature_dict = ret_dict.setdefault(key1, {})    
+                continue
+            
+            #80 Bit Region Information
+            #Total TCAM Cell Usage Information
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                reg = groups['region'].strip().replace(' ','_').lower()
+                reg_name = groups['num'].replace(' ','_').lower() +'_'+reg
+                region_hash = feature_dict.setdefault(reg_name, {})
+                continue
+
+            # Name                                : Leaf Region #1
+            # Number of cells per entry           : 2
+            # Current 160 bits entries used       : 19
+            # Current used cell entries           : 38
+            # Current free cell entries           : 4058
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                name = groups['key'].strip().replace(' ','_').lower()
+                val = groups['value'].strip()
+                if name not in ['threshold_status', 'name']:
+                    val = int(groups['value'])
+
+                region_hash.update({name : val})
+                continue
+
+        
+        return ret_dict
+
+# =======================================================================
+# Schema for 'show platform resources'
+# =======================================================================
+class ShowPlatformResourcesSchema(MetaParser):
+    schema = {
+        'rp': {
+            Any():  {
+
+            'state': str,
+            'role': str,
+            'control_processer': {
+                'usage_perc': float,
+                'max_perc': int,
+                'warning_perc': int,
+                'critical_perc': int,
+                'state': str,
+                'dram': {
+                    'usage_mb': int,
+                    'usage_perc': int,
+                    'max_mb': int,
+                    'warning_perc': int,
+                    'critical_perc': int,
+                    'state': str
+                },
+                Optional('bootflash'): {
+                'usage_mb': int,
+                'usage_perc': int,
+                'max_mb': int,
+                'warning_perc': int,
+                'critical_perc': int,
+                'state': str
+                },
+                Optional('harddisk'): {
+                'usage_mb': int,
+                'usage_perc': int,
+                'max_mb': int,
+                'warning_perc': int,
+                'critical_perc': int,
+                'state': str
+                }
+            }
+            }
+        },
+        'esp': {
+            Any(): {
+                'state': str,
+                'role': str,
+                Optional('control_processer'): {
+                    'usage_perc': float,
+                    'max_perc': int,
+                    'warning_perc': int,
+                    'critical_perc': int,
+                    'state': str,
+                    'dram': {
+                        'usage_mb': int,
+                        'usage_perc': int,
+                        'max_mb': int,
+                        'warning_perc': int,
+                        'critical_perc': int,
+                        'state': str
+                    }
+                },
+                'qfp': {
+                    'state': str,
+                    'tcam': {
+                        'usage_cells': int,
+                        'usage_perc': int,
+                        'max_cells': int,
+                        'warning_perc': int,
+                        'critical_perc': int,
+                        'state': 'H'
+                    },
+                    'dram': {
+                        'usage_kb': int,
+                        'usage_perc': int,
+                        'max_kb': int,
+                        'warning_perc': int,
+                        'critical_perc': int,
+                        'state': str
+                    },
+                    'iram': {
+                        'usage_kb': int,
+                        'usage_perc': int,
+                        'max_kb': int,
+                        'warning_perc': int,
+                        'critical_perc': int,
+                        'state': str
+                    },
+                    'cpu_utilization': {
+                        'usage_perc': float,
+                        'max_perc': int,
+                        'warning_perc': int,
+                        'state': str
+                    },
+                    Optional('pkt_buf_mem_0'): {
+                        'usage_kb': int,
+                        'usage_perc': int,
+                        'max_kb': int,
+                        'warning_perc': int,
+                        'critical_perc': int,
+                        'state': str
+                    },
+                    Optional('pkt_buf_mem_1'): {
+                        'usage_kb': int,
+                        'usage_perc': int,
+                        'max_kb': int,
+                        'warning_perc': int,
+                        'critical_perc': int,
+                        'state': str
+                    }
+                }
+            }    
+        },
+        Optional('sip'): {
+            Any(): {
+                'state': str,
+                'control_processer': {
+                    'usage_perc': float,
+                    'max_perc': int,
+                    'warning_perc': int,
+                    'critical_perc': int,
+                    'state': str,
+                    'dram': {
+                        'usage_mb': int,
+                        'usage_perc': int,
+                        'max_mb': int,
+                        'warning_perc': int,
+                        'critical_perc': int,
+                        'state': str
+                    }
+                }
+            }
+        }
+    }    
+
+# =======================================================================
+# Parser for 'show platform resources'
+# =======================================================================
+class ShowPlatformResources(ShowPlatformResourcesSchema):
+
+    cli_command = ['show platform resources']
+
+
+    def cli(self, output=None):
+
+        # if the user does not provide output to the parser
+        # we need to get it from the device
+        if not output:
+            output = self.device.execute(self.cli_command[0])
+
+
+        #RP0 (ok, active)                                                                               H 
+        #RP1 (ok, standby)                                                                               H  
+        #ESP0(ok, active)                                                                               H 
+        #ESP1(ok, standby)                                                                               H   
+        p1 = re.compile(r'^(?P<type>RP|ESP)(?P<key>[0-9]) ?\((?P<status>\S+)\, +(?P<role>\S+)\) +(?P<state>\S)$')
+
+        #SIP0                                                                                           H 
+        p2 = re.compile(r'^SIP(?P<key>[0-9]) +(?P<state>\S)$')
+
+        # Control Processor       0.51%                 100%            80%             90%             H    
+        p3 = re.compile(r'^Control Processor +(?P<usage>(\d*\.?\d+))\S+ +(?P<max>\d+)\S+ +(?P<warning>\d+)\S+ +(?P<critical>\d+)\S+ +(?P<state>\S)$')
+
+        #QFP                                                                                           H
+        p4 = re.compile(r'^QFP +(?P<state>\S)$')
+
+        #CPU Utilization        0.00%                 100%            90%             95%             H    
+        p5 = re.compile(r'^(?P<resource>[\S\s]+\S) +(?P<usage>(\d*\.?\d+))\S+ +(?P<max>\d+)\S+ +(?P<warning>\d+)\S+ +(?P<critical>\d+)\S+ +(?P<state>\S)$')
+
+        # TCAM                   16cells(0%)           1048576cells    65%             85%             H    
+        # DRAM                   238906KB(5%)          4194304KB       85%             95%             H    
+        # IRAM                   13014KB(9%)           131072KB        85%             95%             H    
+        p6 = re.compile(r'^(?P<resource>[\s\S]+\S) +(?P<use_val>(\d*\.?\d+))(?P<type>\S+)\((?P<val>\d+)\%\) +(?P<max>\d+)(?P<max_type>\S+) +(?P<warning>\d+)\S+ +(?P<critical>\d+)\S+ +(?P<state>\S)$')
+        
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            #RP1 (ok, standby)                                                                               H  
+            #ESP0 (ok, active)                                                                               H 
+            m = p1.match(line)
+
+            if m:
+                groups = m.groupdict()
+                type_ = groups['type'].lower()
+                
+                feature_dict = ret_dict.setdefault(type_, {}).setdefault(groups['key'], {})
+                
+                feature_dict.update(({'state': (groups['state'])}))
+                feature_dict.update(({'role': (groups['role'])}))
+                
+                last_dict_ptr1 = feature_dict
+                continue
+
+            #SIP0                                                                                           H      
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict() 
+                feature_dict = ret_dict.setdefault('sip', {}).setdefault(groups['key'], {})
+                feature_dict.update(({'state': (groups['state'])}))
+                last_dict_ptr1 = feature_dict
+                continue
+
+            # Control Processor       0.51%                 100%            80%             90%             H     
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict() 
+                feature_dict = feature_dict.setdefault('control_processer', {})
+                feature_dict.update({'usage_perc': float(groups['usage'])})
+                feature_dict.update({'max_perc': int(groups['max'])})
+                feature_dict.update({'warning_perc': int(groups['warning'])})
+                feature_dict.update({'critical_perc': int(groups['critical'])})
+                feature_dict.update({'state': (groups['state'])})
+                last_dict_ptr = feature_dict
+                continue
+            
+            #QFP                                                                                           H
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict() 
+                feature_dict = last_dict_ptr1
+                feature_dict = feature_dict.setdefault('qfp', {})
+                feature_dict.update({'state': (groups['state'])})
+                last_dict_ptr = feature_dict
+                continue
+
+            #CPU Utilization        0.00%                 100%            90%             95%             H 
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                feature_dict = last_dict_ptr
+                res1 = groups['resource'].replace(' ','_').replace('(','').replace(')','').lower()
+                feature_dict = feature_dict.setdefault(res1,{})  
+                feature_dict.update({'usage_' + groups['type'].lower(): int(groups['use_val'])})
+                feature_dict.update({'usage_perc': int(groups['val'])})
+                feature_dict.update({'max_' + groups['max_type'].lower(): int(groups['max'])})
+                feature_dict.update({'warning_perc': int(groups['warning'])})
+                feature_dict.update({'critical_perc': int(groups['critical'])})
+                feature_dict.update({'state': (groups['state'])})
+                continue
+            
+            #TCAM                   16cells(0%)           1048576cells    65%             85%             H    
+            # DRAM                   238906KB(5%)          4194304KB       85%             95%             H    
+            # IRAM                   13014KB(9%)           131072KB        85%             95%             H  
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                feature_dict = last_dict_ptr
+                res1 = groups['resource'].replace(' ','_').replace('(','').replace(')','').lower()
+                feature_dict = feature_dict.setdefault(res1,{})     
+                feature_dict.update({'usage_perc': float(groups['usage'])})
+                feature_dict.update({'max_perc': int(groups['max'])})
+                feature_dict.update({'warning_perc': int(groups['warning'])})
+                feature_dict.update({'state': (groups['state'])})
+                continue
+
+        return(ret_dict)
