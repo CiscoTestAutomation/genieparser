@@ -12,6 +12,8 @@
 * IOSXE
     * Added ShowStackwiseVirtual
         * show stackwise-virtual
+    * Added ShowPlatformTcamUtilization
+        * show platform hardware fed sw active fwd-asic resource tcam utilization
 
 --------------------------------------------------------------------------------
                                 Fix
