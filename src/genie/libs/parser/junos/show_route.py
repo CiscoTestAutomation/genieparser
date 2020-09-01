@@ -1470,9 +1470,10 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             m = p36.match(line)
             if m:
                 group = m.groupdict()
-                rt_entry_dict.update({'cluster-list': group['cluster_list']})
+                if rt_dict.get('rt-entry', None):
+                    rt_entry_dict.update({'cluster-list': group['cluster_list']})
                 continue
-        
+
         return ret_dict
     
 class ShowRouteForwardingTableSummarySchema(MetaParser):
