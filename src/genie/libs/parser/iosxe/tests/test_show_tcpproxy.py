@@ -87,6 +87,9 @@ class TestShowTcpProxyStatistics(unittest.TestCase):
         SYNCACHE Added                      : 32432
         SYNCACHE Not Added:NAT entry null   : 0
         SYNCACHE Not Added:Mrkd for Cleanup : 0
+        SYNCACHE Not Added:FLOW entry null  : 0
+        SYNCACHE Not Added:FLOW Invalid     : 0
+        SYNCACHE Not Added:FLOW is in use   : 0
         SYN purge enqueued                  : 0
         SYN purge enqueue failed            : 0
         Other cleanup enqueued              : 0
@@ -105,7 +108,7 @@ class TestShowTcpProxyStatistics(unittest.TestCase):
         Pre-tcp-flow-list deq (cleanup)     : 0
         Pre-tcp-flow-list deq (accept)      : 32432
         Pre-tcp cleanup timeout update count: 0
-        Total Flow Entries pending cleanup  : 0
+        Total Flow Entries pending cleanup 0  : 0
         Total Cleanup done                  : 32432
         Num stack cb with null ctx          : 0
         Vpath Cleanup from nmrx-thread      : 0
@@ -241,6 +244,9 @@ class TestShowTcpProxyStatistics(unittest.TestCase):
             'syncache_added': 32432,
             'syncache_not_added_nat_entry_null': 0,
             'syncache_not_added_mrkd_for_cleanup': 0,
+            'syncache_not_added_flow_entry_null': 0,
+            'syncache_not_added_flow_invalid': 0,
+            'syncache_not_added_flow_is_in_use': 0,
             'syn_purge_enqueued': 0,
             'syn_purge_enqueue_failed': 0,
             'other_cleanup_enqueued': 0,
@@ -259,7 +265,7 @@ class TestShowTcpProxyStatistics(unittest.TestCase):
             'pre_tcp_flow_list_deq_cleanup': 0,
             'pre_tcp_flow_list_deq_accept': 32432,
             'pre_tcp_cleanup_timeout_update_count': 0,
-            'total_flow_entries_pending_cleanup': 0,
+            'total_flow_entries_pending_cleanup_0': 0,
             'total_cleanup_done': 32432,
             'num_stack_cb_with_null_ctx': 0,
             'vpath_cleanup_from_nmrx_thread': 0,

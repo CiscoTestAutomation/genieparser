@@ -5643,6 +5643,13 @@ class TestShowSwitch(unittest.TestCase):
                     "state": "ready",
                     "priority": "2",
                     "mac_address": "c800.84ff.7e00"
+               },
+               "4": {
+                    "role": "member",
+                    "hw_ver": "0",
+                    "state": "v-mismatch",
+                    "priority": "15",
+                    "mac_address": "00cc.fc7f.fb80"
                }
             },
             "mac_address": "689c.e2ff.b9d9",
@@ -5658,7 +5665,8 @@ class TestShowSwitch(unittest.TestCase):
         -------------------------------------------------------------------------------------
         *1       Active   689c.e2ff.b9d9     3      V04     Ready                
          2       Standby  c800.84ff.7e00     2      V05     Ready                
-         3       Member   c800.84ff.4800     1      V05     Ready 
+         3       Member   c800.84ff.4800     1      V05     Ready
+         4       Member   00cc.fc7f.fb80     15     0       V-Mismatch 
     '''
     }
 
