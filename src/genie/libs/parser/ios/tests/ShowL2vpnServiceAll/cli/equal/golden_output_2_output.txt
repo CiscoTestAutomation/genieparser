@@ -1,0 +1,12 @@
+Device# show l2vpn service all
+Legend: St=State    XC St=State in the L2VPN Service      Prio=Priority
+        UP=Up       DN=Down            AD=Admin Down      IA=Inactive
+        SB=Standby  HS=Hot Standby     RV=Recovering      NH=No Hardware
+        m=manually selected
+
+  Interface          Group       Encapsulation                   Prio  St  XC St
+  ---------          -----       -------------                   ----  --  -----
+VPWS name: Gi1/1/1-1001, State: UP
+  Gi1/1/1            left        Gi1/1/1:1001(Gi VLAN)          0     UP  UP
+  pw100001           right       10.9.1.2:1234000(MPLS)           0     UP  UP
+    

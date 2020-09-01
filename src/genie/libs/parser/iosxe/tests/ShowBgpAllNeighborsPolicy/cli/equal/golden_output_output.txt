@@ -1,0 +1,7 @@
+
+R4_iosv#show bgp all neighbors 10.186.0.2 policy
+ Neighbor: 10.186.0.2, Address-Family: VPNv4 Unicast (VRF1)
+ Locally configured policies:
+  route-map test in
+  route-map test out
+        

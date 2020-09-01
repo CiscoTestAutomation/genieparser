@@ -1,0 +1,13 @@
+R2#show clns neighbors detail
+
+Tag VRF1:
+System Id       Interface     SNPA                State  Holdtime  Type Protocol
+R7              Gi4           5e00.c0ff.060d      Up     26        L2   M-ISIS
+  Area Address(es): 49.0002
+  IP Address(es):  10.229.7.7*
+  IPv6 Address(es): FE80::5C00:C0FF:FEFF:60D
+  Uptime: 00:23:58
+  NSF capable
+  Topology: IPv4, IPv6
+  Interface name: GigabitEthernet4
+    

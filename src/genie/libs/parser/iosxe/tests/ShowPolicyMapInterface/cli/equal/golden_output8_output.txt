@@ -1,0 +1,56 @@
+
+TenGigabitEthernet0/0/2
+
+    Service-policy output: shape_priority
+
+        queue stats for all priority classes:
+            Queueing
+            priority level 1
+            queue limit 3932 us/ 49152 bytes
+            (queue depth/total drops/no-buffer drops) 49476/44577300/0
+            (pkts output/bytes output) 2348138/1202246656
+
+        queue stats for all priority classes:
+            Queueing
+            priority level 2
+            queue limit 1966 us/ 49152 bytes
+            (queue depth/total drops/no-buffer drops) 51072/42228358/0
+            (pkts output/bytes output) 4697080/2404904960
+
+        Class-map: class_priority (match-any)
+            46925438 packets, 24025824256 bytes
+            30 second offered rate 1871849000 bps, drop rate 1778171000 bps
+            Match: cos  1
+            Match: cos  2
+            Priority: 10% (100000 kbps), burst bytes 2500000, b/w exceed drops: 44577300
+
+            Priority Level: 1
+
+        Class-map: class_priority_level2 (match-any)
+            46925438 packets, 24025824256 bytes
+            30 second offered rate 1871849000 bps, drop rate 1684485000 bps
+            Match: cos  3
+            Match: cos  4
+            Priority: 20% (200000 kbps), burst bytes 5000000, b/w exceed drops: 42228358
+                
+            Priority Level: 2
+
+        Class-map: class_bw (match-any)
+            23462719 packets, 12012912128 bytes
+            30 second offered rate 935925000 bps, drop rate 281045000 bps
+            Match: cos  5
+            Queueing
+            queue limit 393 us/ 49152 bytes
+            (queue depth/total drops/no-buffer drops) 49476/7045085/0
+            (pkts output/bytes output) 16417634/8405828608
+            bandwidth remaining 70%
+
+        Class-map: class-default (match-any)
+            0 packets, 0 bytes
+            30 second offered rate 0000 bps, drop rate 0000 bps
+            Match: any
+                  
+            queue limit 393 us/ 49152 bytes
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts output/bytes output) 0/0
+    
