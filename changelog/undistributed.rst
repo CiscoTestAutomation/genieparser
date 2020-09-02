@@ -12,10 +12,17 @@
 * IOSXE
     * Added ShowLispSite
       * show lisp site
+    * Added ShowStackwiseVirtual
+        * show stackwise-virtual
+    * Added ShowPlatformTcamUtilization
+        * show platform hardware fed sw active fwd-asic resource tcam utilization
+    * Added ShowApRfProfileSummary
+        * show ap rf-profile summary
     * Added ShowCtsSxpConnectionsBrief
         * show show cts sxp connections brief
 
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
+
 
