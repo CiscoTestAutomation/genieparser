@@ -29,6 +29,7 @@ JunOs parsers for the following show commands:
     * show ospf route brief
     * show ospf route network extensive
     * show ospf database advertising-router {ipaddress} extensive
+    * show ospf neighbor instance all
 """
 
 # Python
@@ -542,11 +543,10 @@ class ShowOspfNeighborInstanceAllSchema(MetaParser):
 
     schema = {
         'ospf-neighbor-information-all': {
-            'ospf-instance-neighbor':
-                {
-                    'ospf-instance-name': str,
-                    'ospf-neighbor': Use(validate_neighbor_list)
-                }
+            'ospf-instance-neighbor': {
+                'ospf-instance-name': str,
+                'ospf-neighbor': Use(validate_neighbor_list)
+            }
         }
     }
 
