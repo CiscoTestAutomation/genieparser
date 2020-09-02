@@ -347,11 +347,12 @@ class ShowPlatform(ShowPlatformSchema):
 
             # 0/RSP0/CPU0     A9K-RSP440-TR(Active)     IOS XR RUN       PWR,NSHUT,MON
             # 0/0/CPU0        RP(Active)      N/A             IOS XR RUN      PWR,NSHUT,MON
+            # 0/0/CPU0        RP(Active)      N/A             OPERATIONAL      PWR,NSHUT,MON
             p1 = re.compile(r'\s*(?P<node>[a-zA-Z0-9\/]+)'
                              ' +(?P<name>[a-zA-Z0-9\-]+)'
                              '(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
                              '(?: +(?P<plim>[a-zA-Z\/]+))?'
-                             ' +(?P<state>(IOS XR RUN|OK)+)'
+                             ' +(?P<state>(IOS XR RUN|OK|OPERATIONAL)+)'
                              ' +(?P<config_state>[a-zA-Z\,]+)$')
             m = p1.match(line)
             if m:
@@ -364,10 +365,7 @@ class ShowPlatform(ShowPlatformSchema):
                 config_state = str(m.groupdict()['config_state']).strip()
                 
                 # Parse node for rack, slot, subslot details
-                parse_node = re.compile(r'\s*(?P<rack>[0-9]+)'
-                                         '\/(?P<slot>[0-9A-Z]+)'
-                                         '\/(?P<last_entry>[0-9A-Z]+)'
-                                         '$').match(node)
+                parse_node = re.compile(r'\s*(?P<rack>[0-9]+)\/(?P<slot>[0-9A-Z]+)(?:\/(?P<last_entry>[0-9A-Z]+))?$').match(node)
                 rack = str(parse_node.groupdict()['rack'])
                 slot = rack + '/' + str(parse_node.groupdict()['slot'])
                 last_entry = str(parse_node.groupdict()['last_entry'])
@@ -823,12 +821,12 @@ class AdminShowDiagChassisSchema(MetaParser):
         Optional('part_revision'): str,
         Optional('hw_version'): str,
         Optional('top_assembly_block'): {
-            'serial_number': str,
+            Optional('serial_number'): str,
             'part_number': str,
-            'part_revision': str,
-            'mfg_deviation': str,
-            'hw_version': str,
-            'mfg_bits': str,
+            Optional('part_revision'): str,
+            Optional('mfg_deviation'): str,
+            Optional('hw_version'): str,
+            Optional('mfg_bits'): str,
         }
     }
 
@@ -899,8 +897,8 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
             
             # S/N:   FOX1810G8LR
             # Serial Number   : FOC23158L99
-            p3 = re.compile(r'^(S\/N|Serial +Number)(\s+)?(\:)? '
-                            r'+(?P<serial_number>\S+)$')
+            # Chassis Serial Number    : FOC23158L99
+            p3 = re.compile(r'^(S\/N|(?:Chassis +)?Serial +Number)(\s+)?(\:)? +(?P<serial_number>\S+)$')
             m = p3.match(line)
             if m:
                 serial_num = str(m.groupdict()['serial_number'])
@@ -925,7 +923,8 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
             
             # VID:   V02
             # VID             : V01
-            p5 = re.compile(r'VID(\s+)?\: +(?P<vid>[a-zA-Z0-9\-]+)$')
+            # Version Identifier       : V01
+            p5 = re.compile(r'(?:VID|Version +Identifier)(\s+)?\: +(?P<vid>[a-zA-Z0-9\-]+)$')
             m = p5.match(line)
             if m:
                 admin_show_diag_dict['vid'] = \
@@ -1002,7 +1001,8 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 continue
             
             # 0 Rack 0-IDPROM Info
-            p15 = re.compile(r'(?P<rack_num>[0-9]+) +Rack +\d\-IDPROM +Info$')
+            # Rack 0-IDPROM Info
+            p15 = re.compile(r'(?:[0-9]+ +)?Rack +(?P<rack_num>[0-9]+)\-IDPROM +Info$')
 
             m15 = p15.match(line)
             if m15:
@@ -1030,6 +1030,15 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                     admin_show_diag_dict['part_number'] = part_num
                 
                 continue
+
+            # Top Assy. Part Number    : 73-101057-02
+            p17_1 = re.compile(r'^Top +Assy\. +Part +Number +: +(?P<part_number>\S+)$')
+            m = p17_1.match(line)
+            if m:
+                part_num = str(m.groupdict()['part_number'])
+                top_assembly_dict = admin_show_diag_dict.setdefault('top_assembly_block', {})
+                top_assembly_dict.update({'part_number': part_num})
+
 
             # Part Revision   : D0
             p18 = re.compile(r'^Part +(r|R)evision(\s+)?\: +(?P<part_revision>\S+)$')

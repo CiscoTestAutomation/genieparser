@@ -1963,7 +1963,7 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
         # 192.168.111.1       4          100       0       0        1    0    0 01:07:38 Idle
         # 192.168.4.1       4          100       0       0        1    0    0 never    Idle
         # 192.168.51.1       4          100       0       0        1    0    0 01:07:38 Idle
-        p9 = re.compile(r'^(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<version>[0-9]+)'
+        p9 = re.compile(r'^ *(?P<our_entry>\*)?(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<version>[0-9]+)'
                          ' +(?P<as>[0-9]+) +(?P<msg_rcvd>[0-9]+)'
                          ' +(?P<msg_sent>[0-9]+) +(?P<tbl_ver>[0-9]+)'
                          ' +(?P<inq>[0-9]+) +(?P<outq>[0-9]+)'

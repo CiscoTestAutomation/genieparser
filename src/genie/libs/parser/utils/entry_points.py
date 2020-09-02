@@ -65,7 +65,11 @@ def add_parser(parser, os_name):
     mod = sys.modules[parser.__module__]
     package = mod.__package__
 
-    for cmd in parser.cli_command:
+    cli_commands = parser.cli_command
+    if isinstance(cli_commands, str):
+        cli_commands = [cli_commands]
+
+    for cmd in cli_commands:
         if cmd not in parser_data:
             parser_data[cmd] = {}
 
