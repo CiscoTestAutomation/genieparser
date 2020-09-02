@@ -41,6 +41,7 @@ from genie.libs.parser.iosxe.show_platform import (
     ShowProcessesMemory,
     ShowProcessesMemorySorted,
     ShowPlatformIntegrity,
+    ShowPlatformTcamUtilization,
     ShowPlatformHardwareQfpActiveFeatureAppqoe,
     ShowPlatformHardwareQfpActiveDatapathUtilSum)
 
