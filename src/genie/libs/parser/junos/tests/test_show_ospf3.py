@@ -15,7 +15,8 @@ from genie.libs.parser.junos.show_ospf3 import ShowOspf3Interface, \
                                                ShowOspf3DatabaseExtensive,\
                                                ShowOspf3DatabaseNetworkDetail,\
                                                ShowOspf3DatabaseLinkAdvertisingRouter,\
-                                               ShowOspf3RouteNetworkExtensive
+                                               ShowOspf3RouteNetworkExtensive,\
+                                               ShowOspf3NeighborInstanceAll
 
 
 class TestShowOspf3Interface(unittest.TestCase):
@@ -4340,6 +4341,89 @@ class TestShowOspf3RouteNetworkExtensive(unittest.TestCase):
         obj = ShowOspf3RouteNetworkExtensive(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+class TestShowOspfNeighborInstanceAll(unittest.TestCase):
+    """ Unit tests for:
+            * show ospf neighbor instance all
+    """
+
+    device = Device(name="aDevice")
+
+    empty_output = {"execute.return_value": ""}
+
+    golden_output = {
+        "execute.return_value": """
+        Instance: master
+
+        Realm: ipv6-unicast
+        ID               Interface              State     Pri   Dead
+        2.2.2.2          ge-0/0/0.0             Full      128     32
+          Neighbor-address fe80::250:56ff:fe8d:c305
+        3.3.3.3          ge-0/0/1.0             Full      128     32
+          Neighbor-address fe80::250:56ff:fe8d:fe22
+        2.2.2.2          ge-0/0/2.0             Full      128     35
+          Neighbor-address fe80::250:56ff:fe8d:54f2
+        135.231.0.1      ge-0/0/3.0             Full        0     38
+          Neighbor-address fe80::200:23ff:fed6:9656
+        """
+    }
+
+    golden_parsed_output = {
+        "ospf3-neighbor-information-all": {
+             "ospf3-instance-neighbor": {
+                "ospf3-instance-name": "master",
+                "ospf3-realm-neighbor": {
+                   "ospf3-realm-name": "ipv6-unicast",
+                   "ospf3-neighbor": [
+                      {
+                         "interface-name": "ge-0/0/0.0",
+                         "ospf-neighbor-state": "Full",
+                         "neighbor-id": "2.2.2.2",
+                         "neighbor-priority": "128",
+                         "activity-timer": "32",
+                         "neighbor-address": "fe80::250:56ff:fe8d:c305"
+                      },
+                      {
+                         "interface-name": "ge-0/0/1.0",
+                         "ospf-neighbor-state": "Full",
+                         "neighbor-id": "3.3.3.3",
+                         "neighbor-priority": "128",
+                         "activity-timer": "32",
+                         "neighbor-address": "fe80::250:56ff:fe8d:fe22"
+                      },
+                      {
+                         "interface-name": "ge-0/0/2.0",
+                         "ospf-neighbor-state": "Full",
+                         "neighbor-id": "2.2.2.2",
+                         "neighbor-priority": "128",
+                         "activity-timer": "35",
+                         "neighbor-address": "fe80::250:56ff:fe8d:54f2"
+                      },
+                      {
+                         "interface-name": "ge-0/0/3.0",
+                         "ospf-neighbor-state": "Full",
+                         "neighbor-id": "135.231.0.1",
+                         "neighbor-priority": "0",
+                         "activity-timer": "38",
+                         "neighbor-address": "fe80::200:23ff:fed6:9656"
+                      }
+                   ]
+                }
+             }
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspf3NeighborInstanceAll(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspf3NeighborInstanceAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 if __name__ == '__main__':
