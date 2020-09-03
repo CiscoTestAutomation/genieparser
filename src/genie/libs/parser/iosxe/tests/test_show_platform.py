@@ -42,7 +42,9 @@ from genie.libs.parser.iosxe.show_platform import (
     ShowProcessesMemorySorted,
     ShowPlatformIntegrity,
     ShowPlatformHardwareQfpActiveFeatureAppqoe,
-    ShowPlatformHardwareQfpActiveDatapathUtilSum)
+    ShowPlatformHardwareQfpActiveDatapathUtilSum,
+    ShowPlatformHardwareQfpActiveTcamResourceManagerUsage,
+    ShowPlatformResources)
 
 # ============================
 # Unit test for 'show bootvar'
@@ -5641,6 +5643,13 @@ class TestShowSwitch(unittest.TestCase):
                     "state": "ready",
                     "priority": "2",
                     "mac_address": "c800.84ff.7e00"
+               },
+               "4": {
+                    "role": "member",
+                    "hw_ver": "0",
+                    "state": "v-mismatch",
+                    "priority": "15",
+                    "mac_address": "00cc.fc7f.fb80"
                }
             },
             "mac_address": "689c.e2ff.b9d9",
@@ -5656,7 +5665,8 @@ class TestShowSwitch(unittest.TestCase):
         -------------------------------------------------------------------------------------
         *1       Active   689c.e2ff.b9d9     3      V04     Ready                
          2       Standby  c800.84ff.7e00     2      V05     Ready                
-         3       Member   c800.84ff.4800     1      V05     Ready 
+         3       Member   c800.84ff.4800     1      V05     Ready
+         4       Member   00cc.fc7f.fb80     15     0       V-Mismatch 
     '''
     }
 
@@ -21252,6 +21262,474 @@ class TestShowPlatformHardwareQfpActiveDatapathUtilSum(unittest.TestCase):
         obj = ShowPlatformHardwareQfpActiveDatapathUtilSum(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+class TestShowPlatformHardwareQfpActiveTcamResourceManagerUsage(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+        'qfp_tcam_usage_information': {
+            '80_bit_region_information': {
+                'name': 'Leaf Region #0',
+                'number_of_cells_per_entry': 1,
+                'current_80_bit_entries_used': 0,
+                'current_used_cell_entries': 0,
+                'current_free_cell_entries': 0
+            },
+            '160_bit_region_information': {
+                'name': 'Leaf Region #1',
+                'number_of_cells_per_entry': 2,
+                'current_160_bits_entries_used': 19,
+                'current_used_cell_entries': 38,
+                'current_free_cell_entries': 4058
+            },
+            '320_bit_region_information': {
+                'name': 'Leaf Region #2',
+                'number_of_cells_per_entry': 4,
+                'current_320_bits_entries_used': 0,
+                'current_used_cell_entries': 0,
+                'current_free_cell_entries': 0
+            },
+            'total_tcam_cell_usage_information': {
+                'name': 'TCAM #0 on CPP #0',
+                'total_number_of_regions': 3,
+                'total_tcam_used_cell_entries': 38,
+                'total_tcam_free_cell_entries': 1048538,
+                'threshold_status': 'below critical limit'
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''\
+        QFP TCAM Usage Information
+
+        80 Bit Region Information
+        --------------------------
+        Name                                : Leaf Region #0
+        Number of cells per entry           : 1
+        Current 80 bit entries used         : 0
+        Current used cell entries           : 0
+        Current free cell entries           : 0
+
+        160 Bit Region Information
+        --------------------------
+        Name                                : Leaf Region #1
+        Number of cells per entry           : 2
+        Current 160 bits entries used       : 19
+        Current used cell entries           : 38
+        Current free cell entries           : 4058
+
+        320 Bit Region Information
+        --------------------------
+        Name                                : Leaf Region #2
+        Number of cells per entry           : 4
+        Current 320 bits entries used       : 0
+        Current used cell entries           : 0
+        Current free cell entries           : 0
+
+
+        Total TCAM Cell Usage Information
+        ----------------------------------
+        Name                                : TCAM #0 on CPP #0
+        Total number of regions             : 3
+        Total tcam used cell entries        : 38
+        Total tcam free cell entries        : 1048538
+        Threshold status                    : below critical limit     
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowPlatformHardwareQfpActiveTcamResourceManagerUsage(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()  
+
+    def test_golden(self):
+        #self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowPlatformHardwareQfpActiveTcamResourceManagerUsage(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+class TestShowPlatformResources(unittest.TestCase):
+
+    
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output_modular = {
+       'rp': {
+            '0': {
+            'state': 'H',
+            'role': 'active',
+            'control_processer': {
+                'usage_perc': 0.25,
+                'max_perc': 100,
+                'warning_perc': 80,
+                'critical_perc': 90,
+                'state': 'H',
+                'dram': {
+                    'usage_mb': 3388,
+                    'usage_perc': 44,
+                    'max_mb': 7557,
+                    'warning_perc': 88,
+                    'critical_perc': 93,
+                    'state': 'H'
+                },
+                'bootflash': {
+                    'usage_mb': 1443,
+                    'usage_perc': 19,
+                    'max_mb': 7281,
+                    'warning_perc': 88,
+                    'critical_perc': 93,
+                    'state': 'H'
+                },
+                'harddisk': {
+                    'usage_mb': 69916,
+                    'usage_perc': 74,
+                    'max_mb': 93836,
+                    'warning_perc': 88,
+                    'critical_perc': 93,
+                    'state': 'H'
+                }
+            }
+            },
+            '1': {
+            'state': 'H',
+            'role': 'standby',
+            'control_processer': {
+                'usage_perc': 0.2,
+                'max_perc': 100,
+                'warning_perc': 80,
+                'critical_perc': 90,
+                'state': 'H',
+                'dram': {
+                    'usage_mb': 3331,
+                    'usage_perc': 44,
+                    'max_mb': 7557,
+                    'warning_perc': 88,
+                    'critical_perc': 93,
+                    'state': 'H'
+                },
+                'bootflash': {
+                    'usage_mb': 2162,
+                    'usage_perc': 31,
+                    'max_mb': 6840,
+                    'warning_perc': 88,
+                    'critical_perc': 93,
+                    'state': 'H'
+                },
+                'harddisk': {
+                    'usage_mb': 48619,
+                    'usage_perc': 51,
+                    'max_mb': 93836,
+                    'warning_perc': 88,
+                    'critical_perc': 93,
+                    'state': 'H'
+                }
+            }
+            }
+        },
+        'esp': {
+            '0': {
+            'state': 'H',
+            'role': 'active',
+            'control_processer': {
+                'usage_perc': 1.4,
+                'max_perc': 100,
+                'warning_perc': 80,
+                'critical_perc': 90,
+                'state': 'H',
+                'dram': {
+                    'usage_mb': 1057,
+                    'usage_perc': 6,
+                    'max_mb': 15911,
+                    'warning_perc': 88,
+                    'critical_perc': 93,
+                    'state': 'H'
+                }
+            },
+            'qfp': {
+                'state': 'H',
+                'tcam': {
+                    'usage_cells': 16,
+                    'usage_perc': 0,
+                    'max_cells': 1048576,
+                    'warning_perc': 65,
+                    'critical_perc': 85,
+                    'state': 'H'
+                },
+                'dram': {
+                    'usage_kb': 238906,
+                    'usage_perc': 5,
+                    'max_kb': 4194304,
+                    'warning_perc': 85,
+                    'critical_perc': 95,
+                    'state': 'H'
+                },
+                'iram': {
+                    'usage_kb': 13014,
+                    'usage_perc': 9,
+                    'max_kb': 131072,
+                    'warning_perc': 85,
+                    'critical_perc': 95,
+                    'state': 'H'
+                },
+                'cpu_utilization': {
+                    'usage_perc': 0.0,
+                    'max_perc': 100,
+                    'warning_perc': 90,
+                    'state': 'H'
+                },
+                'pkt_buf_mem_0': {
+                    'usage_kb': 67,
+                    'usage_perc': 0,
+                    'max_kb': 524288,
+                    'warning_perc': 85,
+                    'critical_perc': 95,
+                    'state': 'H'
+                },
+                'pkt_buf_mem_1': {
+                    'usage_kb': 67,
+                    'usage_perc': 0,
+                    'max_kb': 524288,
+                    'warning_perc': 85,
+                    'critical_perc': 95,
+                    'state': 'H'
+                }
+            }
+            },
+            '1': {
+            'state': 'H',
+            'role': 'standby',
+            'control_processer': {
+                    'usage_perc': 2.23,
+                    'max_perc': 100,
+                    'warning_perc': 80,
+                    'critical_perc': 90,
+                    'state': 'H',
+                'dram': {
+                    'usage_mb': 1055,
+                    'usage_perc': 6,
+                    'max_mb': 15911,
+                    'warning_perc': 88,
+                    'critical_perc': 93,
+                    'state': 'H'
+                }
+            },
+            'qfp': {
+                'state': 'H',
+                'tcam': {
+                    'usage_cells': 16,
+                    'usage_perc': 0,
+                    'max_cells': 1048576,
+                    'warning_perc': 65,
+                    'critical_perc': 85,
+                    'state': 'H'
+                },
+                'dram': {
+                    'usage_kb': 238906,
+                    'usage_perc': 5,
+                    'max_kb': 4194304,
+                    'warning_perc': 85,
+                    'critical_perc': 95,
+                    'state': 'H'
+                },
+                'iram': {
+                    'usage_kb': 13014,
+                    'usage_perc': 9,
+                    'max_kb': 131072,
+                    'warning_perc': 85,
+                    'critical_perc': 95,
+                    'state': 'H'
+                },
+                'cpu_utilization': {
+                    'usage_perc': 0.0,
+                    'max_perc': 100,
+                    'warning_perc': 90,
+                    'state': 'H'
+                },
+                'pkt_buf_mem_0': {
+                    'usage_kb': 67,
+                    'usage_perc': 0,
+                    'max_kb': 524288,
+                    'warning_perc': 85,
+                    'critical_perc': 95,
+                    'state': 'H'
+                },
+                'pkt_buf_mem_1': {
+                    'usage_kb': 67,
+                    'usage_perc': 0,
+                    'max_kb': 524288,
+                    'warning_perc': 85,
+                    'critical_perc': 95,
+                    'state': 'H'
+                }
+            }
+            }
+        },
+        'sip': {
+            '0': {
+            'state': 'H',
+            'control_processer': {
+                'usage_perc': 13.32,
+                'max_perc': 100,
+                'warning_perc': 80,
+                'critical_perc': 90,
+                'state': 'H',
+                'dram': {
+                    'usage_mb': 703,
+                    'usage_perc': 35,
+                    'max_mb': 1955,
+                    'warning_perc': 88,
+                    'critical_perc': 93,
+                    'state': 'H'
+                }
+            }
+            }
+        }
+    }
+
+    golden_output_modular = {'execute.return_value': '''\
+                Resource                 Usage                 Max             Warning         Critical        State
+        ----------------------------------------------------------------------------------------------------
+        RP0 (ok, active)                                                                               H    
+        Control Processor       0.25%                 100%            80%             90%             H    
+        DRAM                   3388MB(44%)           7557MB          88%             93%             H    
+        bootflash              1443MB(19%)           7281MB          88%             93%             H    
+        harddisk               69916MB(74%)          93836MB         88%             93%             H    
+        RP1 (ok, standby)                                                                              H    
+        Control Processor       0.20%                 100%            80%             90%             H    
+        DRAM                   3331MB(44%)           7557MB          88%             93%             H    
+        bootflash              2162MB(31%)           6840MB          88%             93%             H    
+        harddisk               48619MB(51%)          93836MB         88%             93%             H    
+        ESP0(ok, active)                                                                               H    
+        Control Processor       1.40%                 100%            80%             90%             H    
+        DRAM                   1057MB(6%)            15911MB         88%             93%             H    
+        QFP                                                                                           H    
+        TCAM                   16cells(0%)           1048576cells    65%             85%             H    
+        DRAM                   238906KB(5%)          4194304KB       85%             95%             H    
+        IRAM                   13014KB(9%)           131072KB        85%             95%             H    
+        CPU Utilization        0.00%                 100%            90%             95%             H    
+        Pkt Buf Mem (0)        67KB(0%)              524288KB        85%             95%             H    
+        Pkt Buf Mem (1)        67KB(0%)              524288KB        85%             95%             H    
+        ESP1(ok, standby)                                                                              H    
+        Control Processor       2.23%                 100%            80%             90%             H    
+        DRAM                   1055MB(6%)            15911MB         88%             93%             H    
+        QFP                                                                                           H    
+        TCAM                   16cells(0%)           1048576cells    65%             85%             H    
+        DRAM                   238906KB(5%)          4194304KB       85%             95%             H    
+        IRAM                   13014KB(9%)           131072KB        85%             95%             H    
+        CPU Utilization        0.00%                 100%            90%             95%             H    
+        Pkt Buf Mem (0)        67KB(0%)              524288KB        85%             95%             H    
+        Pkt Buf Mem (1)        67KB(0%)              524288KB        85%             95%             H    
+        SIP0                                                                                           H    
+        Control Processor       13.32%                100%            80%             90%             H    
+        DRAM                   703MB(35%)            1955MB          88%             93%             H      
+    '''}
+
+    golden_parsed_output_fixed = {
+        'rp': {
+            '0': {
+            'state': 'H',
+            'role': 'active',
+            'control_processer': {
+                'usage_perc': 2.5,
+                'max_perc': 100,
+                'warning_perc': 80,
+                'critical_perc': 90,
+                'state': 'H',
+                'dram': {
+                    'usage_mb': 3515,
+                    'usage_perc': 22,
+                    'max_mb': 15915,
+                    'warning_perc': 88,
+                    'critical_perc': 93,
+                    'state': 'H'
+                }
+            }
+            }
+        },
+        'esp': {
+            '0': {
+            'state': 'H',
+            'role': 'active',
+            'qfp': {
+                'state': 'H',
+                'tcam': {
+                    'usage_cells': 10616,
+                    'usage_perc': 1,
+                    'max_cells': 1048576,
+                    'warning_perc': 65,
+                    'critical_perc': 85,
+                    'state': 'H'
+                },
+                'dram': {
+                    'usage_kb': 611434,
+                    'usage_perc': 14,
+                    'max_kb': 4194304,
+                    'warning_perc': 80,
+                    'critical_perc': 90,
+                    'state': 'H'
+                },
+                'iram': {
+                    'usage_kb': 12716,
+                    'usage_perc': 9,
+                    'max_kb': 131072,
+                    'warning_perc': 80,
+                    'critical_perc': 90,
+                    'state': 'H'
+                },
+                'cpu_utilization': {
+                    'usage_perc': 1.0,
+                    'max_perc': 100,
+                    'warning_perc': 90,
+                    'state': 'H'
+                }
+            }
+            }
+        }
+    }
+       
+
+    golden_output_fixed = {'execute.return_value': '''\
+                Resource                 Usage                 Max             Warning         Critical        State
+        ----------------------------------------------------------------------------------------------------
+        RP0 (ok, active)                                                                               H    
+        Control Processor       2.50%                 100%            80%             90%             H    
+        DRAM                   3515MB(22%)           15915MB         88%             93%             H    
+        ESP0(ok, active)                                                                               H    
+        QFP                                                                                           H    
+        TCAM                   10616cells(1%)        1048576cells    65%             85%             H    
+        DRAM                   611434KB(14%)         4194304KB       80%             90%             H    
+        IRAM                   12716KB(9%)           131072KB        80%             90%             H    
+        CPU Utilization        1.00%                 100%            90%             95%             H  
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowPlatformResources(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()  
+
+    def test_golden_modular(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_modular)
+        obj = ShowPlatformResources(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_modular)
+
+    def test_golden_fixed(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_fixed)
+        obj = ShowPlatformResources(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_fixed)
 
 
 if __name__ == '__main__':

@@ -20,8 +20,8 @@ import re
 
 # metaparser
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use
-from genie.metaparser.util.exceptions import SchemaTypeError
 
 
 class ShowSystemBuffersSchema(MetaParser):
@@ -342,7 +342,7 @@ class ShowSystemUsersSchema(MetaParser):
 } """
     def validate_system_user_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-neighbor is not a list')
+            raise SchemaError('ospf-neighbor is not a list')
         neighbor_schema = Schema({
             "command": str,
             "from": str,
@@ -496,7 +496,7 @@ class ShowSystemCommitSchema(MetaParser):
     def validate_commit_history_list(value):
         # Pass commit-history list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('commit-history is not a list')
+            raise SchemaError('commit-history is not a list')
         commit_history_schema = Schema({
             "client": str,
             "date-time": {
@@ -596,7 +596,7 @@ class ShowSystemQueuesSchema(MetaParser):
     def validate_interface_queue_list(value):
         # Pass interface-queue list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('commit-history is not a list')
+            raise SchemaError('commit-history is not a list')
         interface_queue_schema = Schema({
             "max-octets-allowed": str,
             "max-packets-allowed": str,
@@ -726,7 +726,7 @@ class ShowSystemStorageSchema(MetaParser):
     def validate_filesystem_list(value):
         # Pass filesystem list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('filesystem is not a list')
+            raise SchemaError('filesystem is not a list')
         filesystem_schema = Schema({
             "available-blocks": {
                 "junos:format": str
@@ -856,7 +856,7 @@ class ShowSystemCoreDumpsSchema(MetaParser):
     def validate_file_information_list(value):
         # Pass file-information list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-interface is not a list')
+            raise SchemaError('ospf-interface is not a list')
         file_information_schema = Schema({
             "file-date": {
                 Optional("#text"): str,
@@ -1925,11 +1925,11 @@ class ShowSystemStatisticsSchema(MetaParser):
     """
     def statistics_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError("statistics is not a list")
+            raise SchemaError("statistics is not a list")
 
         def icmp_histogram_list(value):
             if not isinstance(value, list):
-                raise SchemaTypeError("icmp-histogram is not a list")
+                raise SchemaError("icmp-histogram is not a list")
             icmp_histogram_schema = Schema({
                 "destination-unreachable": str,
                 "icmp-echo": str,
@@ -1943,7 +1943,7 @@ class ShowSystemStatisticsSchema(MetaParser):
 
         def ip6_header_type(value):
             if not isinstance(value, list):
-                raise SchemaTypeError("statistics is not a list")
+                raise SchemaError("statistics is not a list")
             ip6_header_type_schema = Schema({
                 "globals":
                 str,
@@ -4905,3 +4905,90 @@ class ShowSystemStatisticsNoForwarding(ShowSystemStatistics):
             out = output
 
         return super().cli(output=out)
+    
+class ShowSystemInformationSchema(MetaParser):
+    """ Schema for:
+            * show system information
+    """
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "system-information": {
+            "hardware-model": str,
+            "host-name": str,
+            "os-name": str,
+            "os-version": str,
+            Optional("serial-number"): str
+        }
+    }
+
+
+class ShowSystemInformation(ShowSystemInformationSchema):
+    """ Parser for:
+            * show system information
+    """
+    cli_command = 'show system information'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Model: vmx
+        p1 = re.compile(r'^Model: +(?P<hardware_model>\S+)$')
+        
+        # Family: junos
+        p2 = re.compile(r'^Family: +(?P<os_name>\S+)$')
+        
+        # Junos: 19.2R1.8
+        p3 = re.compile(r'^Junos: +(?P<os_version>\S+)$')
+        
+        # Hostname: P4
+        p4 = re.compile(r'^Hostname: +(?P<host_name>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+    
+            # Model: vmx
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict.setdefault("system-information", {})
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace("_", "-")
+                    entry[entry_key] = group_value
+                continue
+            
+            # Family: junos
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict.setdefault("system-information", {})
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace("_", "-")
+                    entry[entry_key] = group_value
+                continue
+            
+            # Junos: 19.2R1.8
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict.setdefault("system-information", {})
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace("_", "-")
+                    entry[entry_key] = group_value
+                continue
+            
+            # Hostname: P4
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict.setdefault("system-information", {})
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace("_", "-")
+                    entry[entry_key] = group_value
+                continue
+
+        return ret_dict

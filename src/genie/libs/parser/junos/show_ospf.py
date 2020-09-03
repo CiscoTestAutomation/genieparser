@@ -29,6 +29,7 @@ JunOs parsers for the following show commands:
     * show ospf route brief
     * show ospf route network extensive
     * show ospf database advertising-router {ipaddress} extensive
+    * show ospf neighbor instance all
 """
 
 # Python
@@ -36,8 +37,9 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any, Optional, Use,
-                                                SchemaTypeError, Schema, Or)
+                                                Schema, Or)
 
 
 class ShowOspfInterfaceBriefSchema(MetaParser):
@@ -411,7 +413,7 @@ class ShowOspfNeighborSchema(MetaParser):
     '''
     def validate_neighbor_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-neighbor is not a list')
+            raise SchemaError('ospf-neighbor is not a list')
         neighbor_schema = Schema({
             'neighbor-address': str,
             'interface-name': str,
@@ -499,6 +501,117 @@ class ShowOspfNeighborInstance(ShowOspfNeighbor):
             )
 
 
+'''
+Schema for:
+    * show ospf neighbor instance all
+'''
+
+
+class ShowOspfNeighborInstanceAllSchema(MetaParser):
+    '''
+    schema = {
+        'ospf-neighbor-information-all': {
+        	'ospf-instance-neighbor': {
+        		'ospf-instance-name': str,
+	            'ospf-neighbor': [{
+	                'neighbor-address': str,
+	                'interface-name': str,
+	                'ospf-neighbor-state': str,
+	                'neighbor-id': str,
+	                'neighbor-priority': str,
+	                'activity-timer': str
+	            }]
+	        }
+        }
+    }
+    '''
+
+    def validate_neighbor_list(value):
+        if not isinstance(value, list):
+            raise SchemaError('ospf-neighbor is not a list')
+        neighbor_schema = Schema({
+            'neighbor-address': str,
+            'interface-name': str,
+            'ospf-neighbor-state': str,
+            'neighbor-id': str,
+            'neighbor-priority': str,
+            'activity-timer': str
+        })
+        for item in value:
+            neighbor_schema.validate(item)
+        return value
+
+    schema = {
+        'ospf-neighbor-information-all': {
+            'ospf-instance-neighbor': {
+                'ospf-instance-name': str,
+                'ospf-neighbor': Use(validate_neighbor_list)
+            }
+        }
+    }
+
+
+'''
+Parser for:
+    * show ospf neighbor instance all
+'''
+
+
+class ShowOspfNeighborInstanceAll(ShowOspfNeighborInstanceAllSchema):
+    cli_command = 'show ospf neighbor instance all'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Instance: master
+        p0 = re.compile(r'^Instance: +(?P<instance_name>\S+)$')
+
+        # 10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    32
+        p1 = re.compile(
+            r'^(?P<neighbor>\S+) +(?P<interface>\S+) +'
+            r'(?P<state>\S+) +(?P<id>\S+) +(?P<pri>\d+) +(?P<dead>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Instance: master
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                instance = group['instance_name']
+                ospf_instance_neighbor = ret_dict.setdefault('ospf-neighbor-information-all', {}).setdefault(
+                    'ospf-instance-neighbor', {})
+                ospf_instance_neighbor['ospf-instance-name'] = instance
+
+            # 10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    32
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor = group['neighbor']
+                interface = group['interface']
+                state = group['state']
+                _id = group['id']
+                pri = group['pri']
+                dead = group['dead']
+                neighbor_list = ospf_instance_neighbor.setdefault('ospf-neighbor', [])
+                new_neighbor = {
+                    'neighbor-address': neighbor,
+                    'interface-name': interface,
+                    'ospf-neighbor-state': state,
+                    'neighbor-id': _id,
+                    'neighbor-priority': pri,
+                    'activity-timer': dead
+                }
+                neighbor_list.append(new_neighbor)
+                continue
+        return ret_dict
+
+
 class ShowOspfDatabaseSchema(MetaParser):
     '''
     schema = {
@@ -524,7 +637,7 @@ class ShowOspfDatabaseSchema(MetaParser):
     '''
     def validate_neighbor_database_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-neighbor is not a list')
+            raise SchemaError('ospf-neighbor is not a list')
         neighbor_schema = Schema({
             "advertising-router": str,
             "age": str,
@@ -637,7 +750,7 @@ class ShowOspfDatabaseSummarySchema(MetaParser):
     '''
     def validate_neighbor_database_summary_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-database-summary is not a list')
+            raise SchemaError('ospf-database-summary is not a list')
         neighbor_schema = Schema({
             Optional("@external-heading"): str,
             Optional("ospf-area"): Or(list, str),
@@ -831,7 +944,7 @@ class ShowOspfDatabaseExternalExtensiveSchema(MetaParser):
 } """
     def validate_neighbor_database_external_extensive_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-database is not a list')
+            raise SchemaError('ospf-database is not a list')
         neighbor_schema = Schema({
             Optional("@external-heading"): str,
             Optional("@heading"): str,
@@ -1571,11 +1684,11 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetailSchema(MetaParser):
     }'''
     def validate_ospf_database(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-database is not a list')
+            raise SchemaError('ospf-database is not a list')
 
         def validate_ospf_link(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('ospf-link is not a list')
+                raise SchemaError('ospf-link is not a list')
             ospf_link_schema = Schema({
                 "link-data": str,
                 "link-id": str,
@@ -1590,7 +1703,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetailSchema(MetaParser):
 
         def validate_ospf_lsa_topology_link(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('ospf-lsa-topology-link is not a list')
+                raise SchemaError('ospf-lsa-topology-link is not a list')
             ospf_lsa_topology_ink_schema = Schema({
                 "link-type-name":
                 str,
@@ -1607,7 +1720,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetailSchema(MetaParser):
 
         def validate_ospf_lsa_topology_list(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('ospf-lsa is not a list')
+                raise SchemaError('ospf-lsa is not a list')
             ospf_lsa_schema = Schema({
                 "link-type-name": str,
                 "ospf-lsa-topology-link-metric": str,
@@ -2250,11 +2363,11 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
     }'''
     def validate_ospf_database(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-database is not a list')
+            raise SchemaError('ospf-database is not a list')
 
         def validate_ospf_link(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('ospf-link is not a list')
+                raise SchemaError('ospf-link is not a list')
             ospf_link_schema = Schema({
                 "link-data": str,
                 "link-id": str,
@@ -2269,7 +2382,7 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
 
         def validate_ospf_lsa_topology_link(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('ospf-lsa-topology-link is not a list')
+                raise SchemaError('ospf-lsa-topology-link is not a list')
             ospf_lsa_topology_ink_schema = Schema({
                 "link-type-name":
                 str,
@@ -3302,7 +3415,7 @@ class ShowOspfNeighborExtensiveSchema(MetaParser):
     def validate_ospf_neighbor_list(value):
         def validate_adjacency_labels_list(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('adjacency labels is not a list')
+                raise SchemaError('adjacency labels is not a list')
             adjacency_labels_schema = Schema(
                 {
                     'label': str,
@@ -3314,7 +3427,7 @@ class ShowOspfNeighborExtensiveSchema(MetaParser):
             return value
 
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-neighbor is not a list')
+            raise SchemaError('ospf-neighbor is not a list')
         ospf_lsa_topology_ink_schema = Schema({
             "activity-timer": str,
             Optional("adj-sid-list"): {
@@ -3479,7 +3592,7 @@ class ShowOspfInterfaceExtensiveSchema(MetaParser):
     """
     def validate_ospf_interface_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-interface is not a list')
+            raise SchemaError('ospf-interface is not a list')
         neighbor_schema = Schema({
             "address-mask": str,
             "adj-count": str,
@@ -3770,7 +3883,7 @@ class ShowOspfRouteBriefSchema(MetaParser):
     """
     def validate_ospf_route_entry_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-route-entry is not a list')
+            raise SchemaError('ospf-route-entry is not a list')
         ospf_route_schema = Schema({
             "address-prefix": str,
             "interface-cost": str,
@@ -3797,7 +3910,7 @@ class ShowOspfRouteBriefSchema(MetaParser):
 
     def validate_ospf_route_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-route is not a list')
+            raise SchemaError('ospf-route is not a list')
         ospf_route_schema = Schema({
             "ospf-route-entry":
             Use(ShowOspfRouteBriefSchema.validate_ospf_route_entry_list)
@@ -3963,7 +4076,7 @@ class ShowOspfDatabaseNetworkLsaidDetailSchema(MetaParser):
     } """
     def validate_ospf_lsa_topology_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-lsa is not a list')
+            raise SchemaError('ospf-lsa is not a list')
         ospf_lsa_schema = Schema({
             "link-type-name": str,
             "ospf-lsa-topology-link-metric": str,
@@ -4203,7 +4316,7 @@ class ShowOspfRouteNetworkExtensiveSchema(MetaParser):
 
     def validate_ospf_route_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-route is not a list')
+            raise SchemaError('ospf-route is not a list')
         ospf_route_schema = Schema({
             "ospf-route-entry": {
                 "address-prefix": str,
@@ -4356,7 +4469,7 @@ class ShowOspfDatabaseOpaqueAreaSchema(MetaParser):
     def validate_ospf_database_entry(ospf_db_list):
         ''' Validates each entry in ospf-database '''
         if not isinstance(ospf_db_list, list):
-            raise SchemaTypeError('ospf-database is not a list')
+            raise SchemaError('ospf-database is not a list')
         
         ospf_db_entry_schema = Schema({
             Optional("@heading"): str,
