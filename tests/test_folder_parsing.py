@@ -127,12 +127,8 @@ CLASS_SKIP = {
         "ShowInterfaceSummary": True,
         "ShowInterfaceTransceiverDetail": True,
         "ShowSdwanSystemStatus": True,
-        "ShowSdwanSoftware": True
+        "ShowSdwanSoftware": True,
     },
-    "viptella": {
-       "ShowSoftwaretab_viptela": True,
-        "ShowVersion": True
-    }
 }
 
 EMPTY_SKIP = {
