@@ -191,8 +191,6 @@ class FileBasedTest(aetest.Testcase):
             _module = importlib.machinery.SourceFileLoader(
                 os.path.basename(parse_file[: -len(".py")]), parse_file
             ).load_module()
-            print(operating_system)
-            print(_module)
             start = 0
             for name, _class in inspect.getmembers(_module):
                 if CLASS_SKIP.get(operating_system) and CLASS_SKIP[operating_system].get(name):
@@ -247,7 +245,6 @@ class FileBasedTest(aetest.Testcase):
                 device = Mock(**golden_output)
                 obj = _class(device=device)
                 parsed_output = obj.parse(**arguments)
-                # print(parsed_output)
                 assert parsed_output == golden_parsed_output
 
     def test_empty(self, steps, _class, operating_system, token=None):
