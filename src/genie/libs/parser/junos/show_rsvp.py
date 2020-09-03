@@ -426,15 +426,15 @@ class ShowRSVPSession(ShowRSVPSessionSchema):
         return ret_dict
     
 class ShowRSVPSessionTransit(ShowRSVPSession):
-	""" Parser for:
+    """ Parser for:
             * show rsvp session transit
     """
-	cli_command = 'show rsvp session transit'
+    cli_command = 'show rsvp session transit'
 
-	def cli(self, output=None):
-		if not output:
-			out = self.device.execute(self.cli_command)
-		else:
-			out = output
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 		
-		return super.cli(output=out)
+        return super.cli(output=out)
