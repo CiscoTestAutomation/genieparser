@@ -1,44 +1,20 @@
-<!--- please ensure that the WIP label is not being applied. -->
-<!--- If the WIP label is applied to your PR, no one will look at it -->
+## Description
+<!--- Describe your changes in detail -->
 
-## Proposed Changes
-
-  -
-  -
-  -
-  
-## Internal Release Notes
-<!-- Put notes here that internal users will find useful -->
-<!-- What you type here will go into the release notes -->
-<!-- so please be descriptive, yet concise -->
-
-## External Release Notes
-<!-- Put notes here that external users will find useful -->
-<!-- Please don't put anything here that a customer shouldn't see -->
-<!-- Don't put security vulnerabilities, internal links, etc... here -->
-<!-- Again, be descriptive and concise -->
-<!-- If you have nothing to say for external customers, please leave this blank -->
-  
 ## Motivation and Context
-<!--- please link to the jira ticket here. -->
-<!--- If there's no jira, please explain why this is needed. -->
-There is no JIRA ticket for this issue.
+<!--- Why is this change required? What problem does it solve? -->
 
-## Definition of Done:
-<!---
-please add an X into boxes as you complete the checklist like this: [X]
-PRs won't be merged until all boxes in DoD checklist list are checked.
-and most boxes in PR checklist are checked. 
--->
+## Impact (If any)
+<!--- If there is any negative impact - what is it? -->
 
-* [ ] All unittests passed
-* [ ] Pull request approved by pyATS | Genie Core Dev team members
+## Screenshots:
+<!--- Provide screenshots of tests/compile/demo/etc -->
 
-
-## PR Checklist
-
-* [ ] Unittests written for new parser / existing parser modification
-* [ ] Changelog updated with description of change
-* [ ] JSON file updated
-* [ ] All existing unittests passing
-* [ ] 'make compile' passing
+## Checklist:
+<!--- This is meant more as a personal checklist so we don't forgot important steps! -->
+<!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
+- [ ] I have updated the changelog.
+- [ ] I have updated the documentation (If applicable).
+- [ ] I have added tests to cover my changes (If applicable).
+- [ ] All new and existing tests passed.
+- [ ] All new code passed compilation.
