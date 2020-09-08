@@ -73,12 +73,12 @@ CLASS_SKIP = {
         "ShowRebootHistory_viptela": True,
         "ShowOmpSummary_viptela": True,
         "ShowSystemStatus_viptela": True,
-        "ShowTcpProxyStatistics": True, # To be migrated
-        "ShowTcpproxyStatus": True, # To be migrated
-        "ShowPlatformTcamUtilization": True, # To be migrated
-        "ShowLicense": True, # To be migrated
-        "Show_Stackwise_Virtual_Dual_Active_Detection": True, # To be migrated
-        "Show_Cts_Sxp_Connections_Brief": True, # To be migrated
+        "ShowTcpProxyStatistics": True, # PR submitted
+        "ShowTcpproxyStatus": True, # PR submitted
+        "ShowPlatformTcamUtilization": True, # PR submitted
+        "ShowLicense": True, # PR submitted
+        "Show_Stackwise_Virtual_Dual_Active_Detection": True, # PR submitted
+        "Show_Cts_Sxp_Connections_Brief": True, # PR submitted
         "ShowSoftwaretab": True, # To be migrated
         "ShowOmpSummary": True, # To be migrated
         "ShowSdwanOmpSummary": True, # To be migrated
