@@ -1078,8 +1078,9 @@ class ShowSystemUptime(ShowSystemUptimeSchema):
 
         #8:16AM  up 209 days, 23:14, 5 users, load averages: 0.43, 0.43, 0.42
         # 2:08PM  up 11:03, 1 users, load averages: 0.31, 0.48, 0.50
+        # 3:57AM  up 1 day, 16:57, 1 users, load averages: 0.55, 0.46, 0.44
         p6 = re.compile(r'^(?P<date_time>\d+\:\w+)\s+up\s+'
-                        r'((?P<days>\d+)\s+days,\s+)?(?P<mins>'
+                        r'((?P<days>\d+)\s+day(s)?,\s+)?(?P<mins>'
                         r'[\w\:]+)[^,]*,\s+(?P<user_count>\d+)'
                         r'\s+users,\s+load\s+averages:\s+'
                         r'(?P<avg1>[\d\.]+),\s+(?P<avg2>[\d\.]+),'
