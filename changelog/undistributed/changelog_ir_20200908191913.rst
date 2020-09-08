@@ -2,6 +2,6 @@
                                 Fix
 --------------------------------------------------------------------------------
 * JUNOS
-	* Modified ShowSystemUptime:
+    * Modified ShowSystemUptime:
         * Updated regex pattern {p6} to accommodate various outputs.
         
