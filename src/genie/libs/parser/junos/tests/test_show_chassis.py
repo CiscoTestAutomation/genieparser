@@ -1278,7 +1278,7 @@ class TestShowChassisRoutingEngine(unittest.TestCase):
 
     golden_parsed_output = {
         "route-engine-information": {
-            "route-engine": {
+            "route-engine": [{
                 "cpu-background-15min": "0",
                 "cpu-background-1min": "0",
                 "cpu-background-5min": "0",
@@ -1317,6 +1317,117 @@ class TestShowChassisRoutingEngine(unittest.TestCase):
                     "#text": "208 days, 23 hours, 14 minutes, 9 seconds"
                 }
                 }
+            ]
+        }
+        
+    }
+
+    golden_output2 = {'execute.return_value': 
+    ''' show chassis routing-engine
+        Routing Engine status:
+        Slot 0:
+            Current state                  Master
+            Election priority              Master (default)
+            Temperature                 42 degrees C / 107 degrees F
+            CPU temperature             38 degrees C / 100 degrees F
+            DRAM                      32733 MB (32768 MB installed)
+            Memory utilization          19 percent
+            CPU utilization:
+            User                       3 percent
+            Background                 0 percent
+            Kernel                    11 percent
+            Interrupt                  4 percent
+            Idle                      82 percent
+            Model                          RE-S-1800x4
+            Serial ID                      9009237267
+            Start time                     2020-07-16 13:36:25 JST
+            Uptime                         5 days, 3 hours, 24 minutes, 13 seconds
+            Last reboot reason             Router rebooted after a normal shutdown.
+            Load averages:                 1 minute   5 minute  15 minute
+                                            0.22       0.26       0.23
+        Routing Engine status:
+        Slot 1:
+            Current state                  Backup
+            Election priority              Backup (default)
+            Temperature                 39 degrees C / 102 degrees F
+            CPU temperature             34 degrees C / 93 degrees F
+            DRAM                      32733 MB (32768 MB installed)
+            Memory utilization           8 percent
+            CPU utilization:
+            User                       0 percent
+            Background                 0 percent
+            Kernel                     0 percent
+            Interrupt                  0 percent
+            Idle                      99 percent
+            Model                          RE-S-1800x4
+            Serial ID                      9009237474
+            Start time                     2020-07-16 13:36:22 JST
+            Uptime                         5 days, 3 hours, 23 minutes, 59 seconds
+            Last reboot reason             Router rebooted after a normal shutdown.
+            Load averages:                 1 minute   5 minute  15 minute
+                                            0.00       0.00       0.00
+    '''}
+
+    golden_parsed_output2 = {
+        "route-engine-information": {
+            "route-engine": [
+                {
+                    "cpu-background": "0",
+                    "cpu-idle": "82",
+                    "cpu-interrupt": "4",
+                    "cpu-system": "11",
+                    "cpu-user": "3",
+                    "last-reboot-reason": "Router rebooted after a normal shutdown.",
+                    "load-average-fifteen": "0.23",
+                    "load-average-five": "0.26",
+                    "load-average-one": "0.22",
+                    "mastership-priority": "Master (default)",
+                    "mastership-state": "Master",
+                    "memory-buffer-utilization": "19",
+                    "memory-dram-size": "32733 MB",
+                    "memory-installed-size": "(32768 MB installed)",
+                    "model": "RE-S-1800x4",
+                    "serial-number": "9009237267",
+                    "slot": "0",
+                    "start-time": {
+                        "#text": "2020-07-16 13:36:25 JST"
+                    },
+                    "temperature": {
+                        "#text": "42 degrees C / 107 degrees F"
+                    },
+                    "up-time": {
+                        "#text": "5 days, 3 hours, 24 minutes, 13 seconds"
+                    }
+                },
+                {
+                    "cpu-background": "0",
+                    "cpu-idle": "99",
+                    "cpu-interrupt": "0",
+                    "cpu-system": "0",
+                    "cpu-user": "0",
+                    "last-reboot-reason": "Router rebooted after a normal shutdown.",
+                    "load-average-fifteen": "0.00",
+                    "load-average-five": "0.00",
+                    "load-average-one": "0.00",
+                    "mastership-priority": "Backup (default)",
+                    "mastership-state": "Backup",
+                    "memory-buffer-utilization": "8",
+                    "memory-dram-size": "32733 MB",
+                    "memory-installed-size": "(32768 MB installed)",
+                    "model": "RE-S-1800x4",
+                    "serial-number": "9009237474",
+                    "slot": "1",
+                    "start-time": {
+                        "#text": "2020-07-16 13:36:22 JST"
+                    },
+                    "temperature": {
+                        "#text": "39 degrees C / 102 degrees F"
+                    },
+                    "up-time": {
+                        "#text": "5 days, 3 hours, 23 minutes, 59 seconds"
+                    }
+                }
+            ]
         }
         
     }
@@ -1332,6 +1443,12 @@ class TestShowChassisRoutingEngine(unittest.TestCase):
         obj = ShowChassisRoutingEngine(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowChassisRoutingEngine(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 class TestShowChassisRoutingEngineNoForwarding(unittest.TestCase):
     """ Unit tests for:
@@ -1385,7 +1502,7 @@ class TestShowChassisRoutingEngineNoForwarding(unittest.TestCase):
 
     golden_parsed_output = {
         "route-engine-information": {
-            "route-engine": {
+            "route-engine": [{
                 "cpu-background-15min": "0",
                 "cpu-background-1min": "0",
                 "cpu-background-5min": "0",
@@ -1424,6 +1541,7 @@ class TestShowChassisRoutingEngineNoForwarding(unittest.TestCase):
                     "#text": "208 days, 23 hours, 15 minutes, 9 seconds"
                 }
             }
+            ]
             }
         
     }
