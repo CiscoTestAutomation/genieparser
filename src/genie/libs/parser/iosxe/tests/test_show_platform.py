@@ -2529,6 +2529,9 @@ class TestShowRedundancy2(unittest.TestCase):
 #   * 'show inventory'
 # ====================
 class TestShowInventory(unittest.TestCase):
+    '''Unit test for "show inventory" '''
+
+    maxDiff = None
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -4066,35 +4069,6 @@ class TestShowInventory(unittest.TestCase):
             },
         },
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     golden_output_3 = {'execute.return_value': '''
         NAME: "Switch1 System", DESCR: "Cisco Systems, Inc. WS-C4507R+E 7 slot switch "
