@@ -1802,7 +1802,7 @@ class ShowInventorySchema(MetaParser):
     schema = {
         Optional('main'):
             {Optional('swstack'): bool,
-             Optional('chassis'):
+             Optional(Any()):
                 {Any():
                     {Optional('name'): str,
                      Optional('descr'): str,
@@ -1956,7 +1956,6 @@ class ShowInventory(ShowInventorySchema):
         # PID: , VID: 1.0  , SN: 1162722191
         p2 = re.compile(r'^PID: +(?P<pid>[\S\s]+)? *, +VID:(?: +(?P<vid>(\S+)))? *,'
                         r' +SN:(?: +(?P<sn>(\S+)))?$')
-
         for line in out.splitlines():
             line = line.strip()
 
@@ -1967,6 +1966,7 @@ class ShowInventory(ShowInventorySchema):
             # NAME: "NIM subslot 0/0", DESCR: "Front Panel 3 ports Gigabitethernet Module"
             # NAME: "Modem 0 on Cellular0/2/0", DESCR: "Sierra Wireless EM7455/EM7430"
             m = p1.match(line)
+            
             if m:
                 group = m.groupdict()
                 name = group['name'].strip()
@@ -2028,6 +2028,36 @@ class ShowInventory(ShowInventorySchema):
                 if 'Chassis' in name:
                     main_dict = ret_dict.setdefault('main', {}).\
                         setdefault('chassis', {}).\
+                        setdefault(pid, {})
+                    main_dict['name'] = name
+                    main_dict['descr'] = descr
+                    main_dict['pid'] = pid
+                    main_dict['vid'] = vid
+                    main_dict['sn'] = sn
+
+                if 'Switch1' in name:
+                    main_dict = ret_dict.setdefault('main', {}).\
+                        setdefault(name, {}).\
+                        setdefault(pid, {})
+                    main_dict['name'] = name
+                    main_dict['descr'] = descr
+                    main_dict['pid'] = pid
+                    main_dict['vid'] = vid
+                    main_dict['sn'] = sn
+
+                if 'Switch2' in name:
+                    main_dict = ret_dict.setdefault('main', {}).\
+                        setdefault(name, {}).\
+                        setdefault(pid, {})
+                    main_dict['name'] = name
+                    main_dict['descr'] = descr
+                    main_dict['pid'] = pid
+                    main_dict['vid'] = vid
+                    main_dict['sn'] = sn
+
+                if 'TenGigabitEthernet' in name:
+                    main_dict = ret_dict.setdefault('main', {}).\
+                        setdefault(name, {}).\
                         setdefault(pid, {})
                     main_dict['name'] = name
                     main_dict['descr'] = descr
