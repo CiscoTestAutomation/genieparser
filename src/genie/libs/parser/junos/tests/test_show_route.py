@@ -19,7 +19,8 @@ from genie.libs.parser.junos.show_route import (ShowRouteTable,
                                                 ShowRouteForwardingTableLabel,
                                                 ShowRouteReceiveProtocol,
                                                 ShowRouteTableLabelSwitchedName,
-                                                ShowRouteProtocolProtocolExtensiveIpaddress)
+                                                ShowRouteProtocolProtocolExtensiveIpaddress,
+                                                ShowRouteReceiveProtocolExtensive)
 
 '''
 Unit test for:
@@ -57414,6 +57415,91 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
         obj = ShowRouteProtocolProtocolExtensiveIpaddress(device=self.device)
         parsed_output = obj.parse(protocol="bgp", ipaddress='2.2.2.2')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+
+# Unit test for 'show route receive-protocol bgp {peer_addrress} {target_address} extensive'
+class TestShowRouteReceiveProtocolExtensive(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    # show route receive-protocol bgp 4.4.4.4 4.4.4.4 extensive
+    golden_output = {'execute.return_value':'''
+    inet.0: 18 destinations, 22 routes (18 active, 0 holddown, 0 hidden)
+    4.4.4.4/32 (3 entries, 2 announced)
+        Accepted
+        Nexthop: 4.4.4.4
+        Localpref: 100
+        AS path: I
+
+    inet.3: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
+    '''}
+
+    golden_parsed_output = {
+            "route-information": {
+                "route-table": [
+                    {
+                        "active-route-count": "18",
+                        "destination-count": "18",
+                        "hidden-route-count": "0",
+                        "holddown-route-count": "0",
+                        "rt": {
+                            "rt-announced-count": "2",
+                            "rt-destination": "4.4.4.4",
+                            "rt-entry": {
+                                "as-path": "AS path: I",
+                                "bgp-path-attributes": {
+                                    "attr-as-path-effective": {
+                                        "aspath-effective-string": "AS path:",
+                                        "attr-value": "I"
+                                    }
+                                },
+                                "bgp-rt-flag": "Accepted",
+                                "local-preference": "100",
+                                "nh": {
+                                    "to": "4.4.4.4"
+                                },
+                            },
+                            "rt-entry-count": {
+                                "#text": "3",
+                            },
+                            "rt-prefix-length": "32",
+                        },
+                        "table-name": "inet.0",
+                        "total-route-count": "22"
+                    },
+                    {
+                        "active-route-count": "3",
+                        "destination-count": "3",
+                        "hidden-route-count": "0",
+                        "holddown-route-count": "0",
+                        "table-name": "inet.3",
+                        "total-route-count": "3"
+                    }
+                ]
+            }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRouteReceiveProtocolExtensive(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(
+                peer_address=None,
+                target_address=None,
+            )
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowRouteReceiveProtocolExtensive(device=self.device)
+        parsed_output = obj.parse(
+                peer_address='4.4.4.4',
+                target_address='4.4.4.4')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
 
 if __name__ == '__main__':
     unittest.main()
