@@ -67,6 +67,39 @@ CLASS_SKIP = {
         "ShowInterfaceIpBrief": True,
         "ShowInterfaceSummary": True,
         "ShowAuthenticationSessionsInterface": True,
+        "ShowVersion_viptela": True,
+        "ShowBfdSummary_viptela": True,
+        "ShowSoftwaretab_viptela": True, # PR submitted
+        "ShowRebootHistory_viptela": True,
+        "ShowOmpSummary_viptela": True,
+        "ShowSystemStatus_viptela": True,
+        "ShowTcpProxyStatistics": True, # PR submitted
+        "ShowTcpproxyStatus": True, # PR submitted
+        "ShowPlatformTcamUtilization": True, # PR submitted
+        "ShowLicense": True, # PR submitted
+        "Show_Stackwise_Virtual_Dual_Active_Detection": True, # PR submitted
+        "Show_Cts_Sxp_Connections_Brief": True, # PR submitted
+        "ShowSoftwaretab": True, # PR submitted
+        "ShowOmpSummary": True, # To be migrated
+        "ShowSdwanOmpSummary": True, # To be migrated
+        "ShowSdwanSystemStatus": True, # To be migrated
+        "ShowRebootHistory": True, # To be migrated
+        "ShowSdwanRebootHistory": True, # To be migrated
+        "ShowSslProxyStatistics": True, # To be migrated
+        "ShowSslproxyStatus": True, # To be migrated
+        "ShowSdwanIpsecInboundConnections": True, # To be migrated
+        "ShowSdwanIpsecLocalsa": True, # To be migrated
+        "ShowSdwanIpsecOutboundConnections": True, # To be migrated
+        "ShowSdwanVersion": True, # To be migrated
+        "ShowLispSite": True, # To be migrated
+        "ShowSdwanAppqoeNatStatistics": True, # To be migrated
+        "ShowSdwanAppqoeRmResources": True, # To be migrated
+        "ShowSdwanAppqoeTcpoptStatus": True, # To be migrated
+        "ShowApphostingList": True, # To be migrated
+        "ShowApRfProfileSummary": True, # To be migrated
+        "ShowHwModuleStatus": True, # To be migrated
+        "ShowSdwanVersion": True, # To be migrated
+        "ShowSdwanSoftware": True, # To be migrated
     },
     "ios": {
         "ShowPimNeighbor": True,
@@ -90,6 +123,9 @@ CLASS_SKIP = {
         "ShowInterfaceDetail": True,
         "ShowInterfaceIpBrief": True,
         "ShowInterfaceSummary": True,
+        "ShowInterfaceTransceiverDetail": True,
+        "ShowSdwanSystemStatus": True,
+        "ShowSdwanSoftware": True,
     },
 }
 
@@ -137,7 +173,6 @@ class FileBasedTest(aetest.Testcase):
     """Standard pyats testcase class."""
 
     OPERATING_SYSTEMS = get_operating_systems()
-
     @aetest.test
     @aetest.test.loop(operating_system=OPERATING_SYSTEMS)
     def check_os_folder(self, steps, operating_system):
@@ -156,7 +191,8 @@ class FileBasedTest(aetest.Testcase):
             ).load_module()
             start = 0
             for name, _class in inspect.getmembers(_module):
-
+                if CLASS_SKIP.get(operating_system) and CLASS_SKIP[operating_system].get(name):
+                    continue
                 if hasattr(_class, "cli") and not name.endswith("_iosxe"):
                     # if name != 'ShowAuthenticationSessionsInterface':
                     #    start = 1
@@ -180,9 +216,7 @@ class FileBasedTest(aetest.Testcase):
         """Test step that finds any output named with _output.txt, and compares to similar named .py file."""
         folder_root = f"{operating_system}/{_class.__name__}/cli/equal"
         output_glob = glob.glob(f"{folder_root}/*_output.txt")
-        if len(output_glob) == 0 and not CLASS_SKIP.get(operating_system, {}).get(
-            _class.__name__
-        ):
+        if len(output_glob) == 0:
             self.failed(f"No files found in appropriate directory for {_class}")
         # Look for any files ending with _output.txt, presume the user defined name from that (based
         # on truncating that _output.txt suffix) and obtaining expected results and potentially an arguments file
@@ -209,7 +243,6 @@ class FileBasedTest(aetest.Testcase):
                 device = Mock(**golden_output)
                 obj = _class(device=device)
                 parsed_output = obj.parse(**arguments)
-                # print(parsed_output)
                 assert parsed_output == golden_parsed_output
 
     def test_empty(self, steps, _class, operating_system, token=None):
@@ -219,7 +252,6 @@ class FileBasedTest(aetest.Testcase):
         output_glob = glob.glob(f"{folder_root}/*_output.txt")
         if (
             len(output_glob) == 0
-            and not CLASS_SKIP.get(operating_system, {}).get(_class.__name__)
             and not EMPTY_SKIP.get(operating_system, {}).get(_class.__name__)
         ):
             self.failed(
