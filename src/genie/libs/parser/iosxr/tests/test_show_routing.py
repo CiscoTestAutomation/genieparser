@@ -2925,6 +2925,7 @@ class TestShowRouteIpv6(unittest.TestCase):
             M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
 
         Gateway of last resort is fe80::10ff:fe04:209e to network ::
+
         a*   ::/0
         [2/0] via fe80::10ff:fe04:209e, 00:08:31, MgmtEth0/RP0/CPU0/0
         O    2001:db8:1234::8/128
@@ -2958,7 +2959,7 @@ class TestShowRouteIpv6(unittest.TestCase):
         C    2001:db8:50e0:7b33::/64 is directly connected,
         00:08:31, MgmtEth0/RP0/CPU0/0
         L    2001:db8:50e0:7b33:5054:ff:fe43:e2ee/128 is directly connected,
-        00:08:31, MgmtEth0/RP0/CPU0/0    
+        00:08:31, MgmtEth0/RP0/CPU0/0   
     '''
     }
 
@@ -3269,6 +3270,261 @@ class TestShowRouteIpv6(unittest.TestCase):
         }
     }
 
+    golden_output_10 = {'execute.return_value': '''
+        RP/0/RSP1/CPU0:ASR-01#show route ipv6
+        Wed Sep  9 16:23:10.848 UTC
+        
+        Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
+            D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+            N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+            E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+            i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
+            ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
+            U - per-user static route, o - ODR, L - local, G  - DAGR, l - LISP
+            A - access/subscriber, a - Application route
+            M - mobile route, r - RPL, (!) - FRR Backup path
+        
+        Gateway of last resort is fe80::226:88ff:fe55:6f17 to network ::
+        
+        i*L2 ::/0 
+            [115/11] via fe80::226:88ff:fe55:6f17, 00:00:10, TenGigE0/0/0/1
+        L    2001:db8:4:4::1/128 is directly connected,
+            00:54:19, Loopback60
+        C    2001:0:10:204:0:30::/126 is directly connected,
+            00:54:06, Bundle-Ether10
+        L    2001:0:10:204:0:30:0:2/128 is directly connected,
+            00:54:06, Bundle-Ether10
+        i L2 2001:0:10:204:0:33::/126 
+            [115/11] via fe80::226:88ff:fe55:6f17, 00:53:18, TenGigE0/0/0/1
+        i L2 2001:db8:1b7f:8e5c::8/128 
+            [115/11] via fe80::226:88ff:fe55:6f17, 00:53:18, TenGigE0/0/0/1
+        C    fc00:a0:1::/64 is directly connected,
+            00:54:18, TenGigE0/0/0/0
+        L    fc00:a0:1::2/128 is directly connected,
+            00:54:18, TenGigE0/0/0/0
+        i L2 fc00:a0:1:216::1/128 
+            [115/20] via fe80::464c:a8ff:fe96:a25f, 00:53:55, Bundle-Ether10
+        i L2 fc00:a0:2::/64 
+            [115/11] via fe80::226:88ff:fe55:6f17, 00:53:18, TenGigE0/0/0/1
+        C    fc00:a0:5::/64 is directly connected,
+            00:54:18, TenGigE0/0/0/1
+        L    fc00:a0:5::2/128 is directly connected,
+            00:54:18, TenGigE0/0/0/1
+        RP/0/RSP1/CPU0:ASR-01#
+    '''
+    }
+    
+    golden_parsed_output_10 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv6': {
+                        'routes': {
+                            '2001:0:10:204:0:30:0:2/128': {
+                                'active': True,
+                                'next_hop': {
+                                    'outgoing_interface': {
+                                        'Bundle-Ether10': {
+                                            'outgoing_interface': 'Bundle-Ether10',
+                                            'updated': '00:54:06'
+                                        }
+                                    }
+                                },
+                                'route': '2001:0:10:204:0:30:0:2/128',
+                                'source_protocol': 'local',
+                                'source_protocol_codes': 'L'
+                            },
+                            '2001:0:10:204:0:30::/126': {
+                                'active': True,
+                                'next_hop': {
+                                    'outgoing_interface': {
+                                        'Bundle-Ether10': {
+                                            'outgoing_interface': 'Bundle-Ether10',
+                                            'updated': '00:54:06'
+                                        }
+                                    }
+                                },
+                                'route': '2001:0:10:204:0:30::/126',
+                                'source_protocol': 'connected',
+                                'source_protocol_codes': 'C'
+                            },
+                            '2001:0:10:204:0:33::/126': {
+                                'active': True,
+                                'metric': 11,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': 'fe80::226:88ff:fe55:6f17',
+                                            'outgoing_interface': 'TenGigE0/0/0/1',
+                                            'updated': '00:53:18'
+                                        }
+                                    }
+                                },
+                                'route': '2001:0:10:204:0:33::/126',
+                                'route_preference': 115,
+                                'source_protocol': 'isis',
+                                'source_protocol_codes': 'i '
+                                                        'L2'
+                        },
+                        '2001:db8:1b7f:8e5c::8/128': {
+                            'active': True,
+                            'metric': 11,
+                            'next_hop': {
+                                'next_hop_list': {
+                                    1: {
+                                        'index': 1,
+                                        'next_hop': 'fe80::226:88ff:fe55:6f17',
+                                        'outgoing_interface': 'TenGigE0/0/0/1',
+                                        'updated': '00:53:18'
+                                    }
+                                }
+                            },
+                            'route': '2001:db8:1b7f:8e5c::8/128',
+                            'route_preference': 115,
+                            'source_protocol': 'isis',
+                            'source_protocol_codes': 'i '
+                                                    'L2'
+                        },
+                        '2001:db8:4:4::1/128': {
+                            'active': True,
+                            'next_hop': {
+                                'outgoing_interface': {
+                                    'Loopback60': {
+                                        'outgoing_interface': 'Loopback60',
+                                        'updated': '00:54:19'
+                                    }
+                                }
+                            },
+                            'route': '2001:db8:4:4::1/128',
+                            'source_protocol': 'local',
+                            'source_protocol_codes': 'L'
+                        },
+                        '::/0': {
+                            'active': True,
+                            'metric': 11,
+                            'next_hop': {
+                                'next_hop_list': {
+                                    1: {
+                                        'index': 1,
+                                        'next_hop': 'fe80::226:88ff:fe55:6f17',
+                                        'outgoing_interface': 'TenGigE0/0/0/1',
+                                        'updated': '00:00:10'
+                                    }
+                                }
+                            },
+                            'route': '::/0',
+                            'route_preference': 115,
+                            'source_protocol': 'isis',
+                            'source_protocol_codes': 'i* '
+                                                    'L2'
+                        },
+                        'fc00:a0:1:216::1/128': {
+                            'active': True,
+                            'metric': 20,
+                            'next_hop': {
+                                'next_hop_list': {
+                                    1: {
+                                        'index': 1,
+                                        'next_hop': 'fe80::464c:a8ff:fe96:a25f',
+                                        'outgoing_interface': 'Bundle-Ether10',
+                                        'updated': '00:53:55'
+                                    }
+                                }
+                            },
+                            'route': 'fc00:a0:1:216::1/128',
+                            'route_preference': 115,
+                            'source_protocol': 'isis',
+                            'source_protocol_codes': 'i '
+                                                    'L2'
+                        },
+                        'fc00:a0:1::/64': {
+                            'active': True,
+                            'next_hop': {
+                                'outgoing_interface': {
+                                    'TenGigE0/0/0/0': {
+                                        'outgoing_interface': 'TenGigE0/0/0/0',
+                                        'updated': '00:54:18'
+                                    }
+                                }
+                            },
+                            'route': 'fc00:a0:1::/64',
+                            'source_protocol': 'connected',
+                            'source_protocol_codes': 'C'
+                        },
+                        'fc00:a0:1::2/128': {
+                            'active': True,
+                            'next_hop': {
+                                'outgoing_interface': {
+                                    'TenGigE0/0/0/0': {
+                                        'outgoing_interface': 'TenGigE0/0/0/0',
+                                        'updated': '00:54:18'
+                                    }
+                                }
+                            },
+                            'route': 'fc00:a0:1::2/128',
+                            'source_protocol': 'local',
+                            'source_protocol_codes': 'L'
+                        },
+                        'fc00:a0:2::/64': {
+                            'active': True,
+                            'metric': 11,
+                            'next_hop': {
+                                'next_hop_list': {
+                                    1: {
+                                        'index': 1,
+                                        'next_hop': 'fe80::226:88ff:fe55:6f17',
+                                        'outgoing_interface': 'TenGigE0/0/0/1',
+                                        'updated': '00:53:18'
+                                    }
+                                }
+                            },
+                            'route': 'fc00:a0:2::/64',
+                            'route_preference': 115,
+                            'source_protocol': 'isis',
+                            'source_protocol_codes': 'i '
+                                                    'L2'
+                        },
+                        'fc00:a0:5::/64': {
+                            'active': True,
+                            'next_hop': {
+                                'outgoing_interface': {
+                                    'TenGigE0/0/0/1': {
+                                        'outgoing_interface': 'TenGigE0/0/0/1',
+                                        'updated': '00:54:18'
+                                    }
+                                }
+                            },
+                            'route': 'fc00:a0:5::/64',
+                            'source_protocol': 'connected',
+                            'source_protocol_codes': 'C'
+                        },
+                        'fc00:a0:5::2/128': {
+                            'active': True,
+                            'next_hop': {
+                                'outgoing_interface': {
+                                    'TenGigE0/0/0/1': {
+                                        'outgoing_interface': 'TenGigE0/0/0/1',
+                                        'updated': '00:54:18'
+                                    }
+                                }
+                            },
+                            'route': 'fc00:a0:5::2/128',
+                            'source_protocol': 'local',
+                            'source_protocol_codes': 'L'
+                        }
+                    }
+                }
+            },
+            'last_resort': {
+                'gateway': 'fe80::226:88ff:fe55:6f17',
+                'to_network': '::'
+                }
+            }
+        }
+    }
+
+
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteIpv6(device=self.device)
@@ -3331,6 +3587,13 @@ class TestShowRouteIpv6(unittest.TestCase):
         obj = ShowRouteIpv6(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output9)
+
+    def test_show_route_ipv6_10(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_10)
+        obj = ShowRouteIpv6(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_10)
 
 if __name__ == '__main__':
     unittest.main()
