@@ -3219,10 +3219,13 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
 
         return ret_dict
 
-# Schema for 'show route receive-protocol bgp {peer_address} {target_address} extensive'
+# Schema for 
+#   *'show route receive-protocol bgp {peer_address} {target_address} extensive'
+#   *'show route receive-protocol bgp {peer_address} extensive'
 class ShowRouteReceiveProtocolExtensiveSchema(MetaParser):
     """ Schema for:
             * 'show route receive-protocol bgp {peer_address} {target_address} extensive'
+            * 'show route receive-protocol bgp {peer_address} extensive'
     """
     def validate_route_table_list(value):
         # Pass route-table list of dict in value
@@ -3277,16 +3280,23 @@ class ShowRouteReceiveProtocolExtensiveSchema(MetaParser):
 
 # Parser for 'show route receive-protocol bgp {peer_address} {target_address} extensive'
 class ShowRouteReceiveProtocolExtensive(ShowRouteReceiveProtocolExtensiveSchema):
-    cli_command = 'show route receive-protocol {protocol} {peer_address} {target_address} extensive'
+    cli_command = ['show route receive-protocol {protocol} {peer_address} {target_address} extensive',
+                    'show route receive-protocol {protocol} {peer_address} extensive']
 
-    def cli(self, peer_address, target_address, protocol='bgp', output=None):
+    def cli(self, peer_address, target_address=None, protocol='bgp', output=None):
 
         if not output:
-            out = self.device.execute(self.cli_command.format(
-                peer_address=peer_address,
-                target_address=target_address,
-                protocol=protocol
-            ))
+            if target_address:
+                out = self.device.execute(self.cli_command[0].format(
+                    peer_address=peer_address,
+                    target_address=target_address,
+                    protocol=protocol
+                ))
+            else:
+                out = self.device.execute(self.cli_command[1].format(
+                    peer_address=peer_address,
+                    protocol=protocol
+                ))
         else:
             out = output
 
