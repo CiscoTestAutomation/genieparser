@@ -79,3 +79,139 @@ class ShowSnmpMib(ShowSnmpMibSchema):
 
         return ret_dict
 
+
+
+# ===================
+# Schema for:
+#  * 'show snmp user'
+# ===================
+class ShowSnmpUserSchema(MetaParser):
+    """Schema for show snmp user."""
+
+    schema = {
+        Any(): {
+            Optional("access-list"): str,
+            "auth-protocol": str,
+            "engine-id": str,
+            "group-name": str,
+            "priv-protocol": str,
+            "storage-type": str
+        }
+    }
+
+
+# ===================
+# Parser for:
+#  * 'show snmp user'
+# ===================
+class ShowSnmpUser(ShowSnmpUserSchema):
+    """Parser for show snmp user"""
+
+    cli_command = "show snmp user"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        else: 
+            output = output
+
+        # User name: SNMPv3-alfa
+        # Engine ID: 800000090300002790FBCF00
+        # storage-type: nonvolatile	 active
+        # Authentication Protocol: SHA
+        # Privacy Protocol: AES128
+        # Group-name: ALFA
+        # 
+        # User name: bob
+        # Engine ID: 800000090300001B53CEDC01
+        # storage-type: nonvolatile        active
+        # Authentication Protocol: SHA
+        # Privacy Protocol: AES256
+        # Group-name: group1
+        # 
+        # User name: bad4
+        # Engine ID: 800000090300001B53CEDC01
+        # storage-type: nonvolatile        active
+        # Authentication Protocol: SHA
+        # Privacy Protocol: DES
+        # Group-name: group1
+        # 
+        # User name: user1
+        # Engine ID: 800000090300001B53CEDC01
+        # storage-type: nonvolatile        active
+        # Authentication Protocol: SHA
+        # Privacy Protocol: AES128
+        # Group-name: group1
+        # 
+        # User name: nmsops
+        # Engine ID: 00000063000100A20A101B3E
+        # storage-type: nonvolatile	 active	access-list: 69
+        # Authentication Protocol: MD5
+        # Privacy Protocol: DES
+        # Group-name: nmcigroup
+
+        # User name: SNMPv3-alfa
+        user_capture = "(?P<user>\S+)"
+        p_user = re.compile("User\s+name:\s+{user_capture}".format(user_capture=user_capture))
+
+        # Engine ID: 800000090300002790FBCF00
+        engine_capture = "(?P<engine>\S+)"
+        p_engine = re.compile("Engine\s+ID:\s+{engine_capture}".format(engine_capture=engine_capture))
+
+        # storage-type: nonvolatile   active access-list: 69
+        storage_capture = "(?P<storage>\S+)"
+        access_capture = "(?P<access>.*)"
+        p_storage_access = re.compile("storage-type:\s{storage_capture}\s+active\s+access-list:\s+{access_capture}".format(storage_capture=storage_capture, access_capture=access_capture))
+
+        # storage-type: nonvolatile         active
+        p_storage = re.compile("storage-type:\s{storage_capture}\s+active".format(storage_capture=storage_capture))
+
+        # Authentication Protocol: SHA
+        auth_capture = "(?P<auth>\S+)"
+        p_auth = re.compile("Authentication\s+Protocol:\s+{auth_capture}".format(auth_capture=auth_capture))
+
+        # Privacy Protocol: AES256
+        priv_capture = "(?P<priv>\S+)"
+        p_priv = re.compile("Privacy\s+Protocol:\s+{priv_capture}".format(priv_capture=priv_capture))
+
+        # Group-name: group1
+        group_capture = "(?P<group>\S+)"
+        p_group = re.compile("Group-name:\s+{group_capture}".format(group_capture=group_capture))
+
+
+        snmp_user_obj = {}
+        current_loop_user = ""
+
+        for line in output.splitlines():
+            if p_user.match(line):
+                match = p_user.match(line)
+                current_loop_user = match.group("user") 
+                snmp_user_obj[match.group("user")] = {}
+                continue
+            elif p_engine.match(line):
+                match = p_engine.match(line)
+                snmp_user_obj[current_loop_user]["engine-id"] = match.group("engine")
+                continue
+            elif p_storage_access.match(line):
+                match = p_storage_access.match(line)
+                snmp_user_obj[current_loop_user]["storage-type"] = match.group("storage")
+                snmp_user_obj[current_loop_user]["access-list"] = match.group("access")
+                continue
+            elif p_storage.match(line):
+                match = p_storage.match(line)
+                snmp_user_obj[current_loop_user]["storage-type"] = match.group("storage")
+                continue
+            elif p_auth.match(line):
+                match = p_auth.match(line)
+                snmp_user_obj[current_loop_user]['auth-protocol'] = match.group("auth")
+                continue
+            elif p_priv.match(line):
+                match = p_priv.match(line)
+                snmp_user_obj[current_loop_user]['priv-protocol'] = match.group("priv")
+                continue
+            elif p_group.match(line):
+                match = p_group.match(line)
+                snmp_user_obj[current_loop_user]['group-name'] = match.group("group")
+
+        return snmp_user_obj
