@@ -54840,16 +54840,15 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "active-tag": "*",
                                     "announce-bits": "3",
                                     "announce-tasks": "0-KRT 6-BGP_RT_Background 7-Resolve tree 3",
+                                    "as-path": "AS path: (65151 65000) I",
+                                    "bgp-path-attributes": {
+                                        "attr-as-path-effective": {
+                                            "aspath-effective-string": "AS path:",
+                                            "attr-value": "(65151 65000) I"
+                                        }
+                                    },
                                     "gateway": "10.169.14.240",
                                     "local-as": "65171",
-                                    "peer-as": "65151",
-                                    'as-path': 'AS path: (65151 65000) I',
-                                    'bgp-path-attributes': {
-                                        'attr-as-path-effective': {
-                                            'aspath-effective-string': 'AS path:', 
-                                            'attr-value': '(65151 65000) I'
-                                            }
-                                        },
                                     "nh": [
                                         {
                                             "nh-string": "Next hop",
@@ -54862,6 +54861,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "nh-index": "613",
                                     "nh-reference-count": "1366",
                                     "nh-type": "Router",
+                                    "peer-as": "65151",
+                                    "peer-id": "10.169.14.240",
                                     "preference": "170",
                                     "preference2": "121",
                                     "protocol-name": "BGP",
@@ -54890,17 +54891,16 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "validation-state": "unverified"
                                 },
                                 {
-                                    "inactive-reason": "IGP metric",
+                                    "as-path": "AS path: (65151 65000) I",
+                                    "bgp-path-attributes": {
+                                        "attr-as-path-effective": {
+                                            "aspath-effective-string": "AS path:",
+                                            "attr-value": "(65151 65000) I"
+                                        }
+                                    },
                                     "gateway": "10.189.5.253",
+                                    "inactive-reason": "IGP metric",
                                     "local-as": "65171",
-                                    "peer-as": "65171",
-                                    'as-path': 'AS path: (65151 65000) I',
-                                    'bgp-path-attributes': {
-                                        'attr-as-path-effective': {
-                                            'aspath-effective-string': 'AS path:',
-                                            'attr-value': '(65151 65000) I'
-                                            }
-                                        },
                                     "nh": [
                                         {
                                             "label-element": "0xc5cda38",
@@ -54919,6 +54919,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "nh-index": "0",
                                     "nh-reference-count": "682",
                                     "nh-type": "Router",
+                                    "peer-as": "65171",
+                                    "peer-id": "10.189.5.253",
                                     "preference": "170",
                                     "preference2": "121",
                                     "protocol-name": "BGP",
@@ -55010,90 +55012,92 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
     }
 
     golden_parsed_output_6 = {
-            "route-information": {
-                "route-table": [
-                    {
-                        "table-name": "inet.0",
-                        "destination-count": "13",
-                        "total-route-count": "13",
-                        "active-route-count": "13",
-                        "holddown-route-count": "0",
-                        "hidden-route-count": "0",
-                        "rt": [
-                            {
-
-                                "rt-announced-count": "1",
-                                "rt-destination": "100.0.0.1/32",
-                                "rt-entry-count": {
-                                    "#text": "1",
-                                    "@junos:format": "1 entry"
+        "route-information": {
+            "route-table": [
+                {
+                    "active-route-count": "13",
+                    "destination-count": "13",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": [
+                        {
+                            "rt-announced-count": "1",
+                            "rt-destination": "100.0.0.1/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "13"
                                 },
-                                "tsi": {
-                                    "#text": "KRT in-kernel 100.0.0.1/32 -> {indirect(1048574)}\nLocalpref: 100"
+                                "announce-bits": "2",
+                                "announce-tasks": "0-KRT 5-Resolve tree 1",
+                                "as-path": "AS path: I  (Originator)",
+                                "bgp-path-attributes": {
+                                    "attr-as-path-effective": {
+                                        "aspath-effective-string": "AS path:",
+                                        "attr-value": "I  (Originator)"
+                                    }
                                 },
-                                "rt-entry": {
-                                    "active-tag": "*",
-                                    "protocol-name": "BGP",
-                                    "preference": "170",
-                                    "preference2": "101",
-                                    "nh-type": "Router",
-                                    "nh-index": "595",
-                                    "nh-address": "0xbb68bf4",
-                                    "nh-reference-count": "4",
-                                    "gateway": "2.2.2.2",
-                                    "local-as": "2",
-                                    "peer-as": "2",
-                                    'age': {'#text': '13'},
-                                    'metric2': '3',
-                                    'as-path': 'AS path: I  (Originator)',
-                                    'bgp-path-attributes': {
-                                        'attr-as-path-effective': {
-                                            'aspath-effective-string': 'AS path:',
-                                            'attr-value': 'I  (Originator)'
-                                        }
+                                "cluster-list": "2.2.2.2 4.4.4.4",
+                                "gateway": "2.2.2.2",
+                                "local-as": "2",
+                                "metric2": "3",
+                                "nh": [
+                                    {
+                                        "nh-string": "Next hop",
+                                        "session": "3bf",
+                                        "to": "20.0.0.2",
+                                        "via": "ge-0/0/0.0"
+                                    }
+                                ],
+                                "nh-address": "0xbb68bf4",
+                                "nh-index": "595",
+                                "nh-reference-count": "4",
+                                "nh-type": "Router",
+                                "peer-as": "2",
+                                "peer-id": "2.2.2.2",
+                                "preference": "170",
+                                "preference2": "101",
+                                "protocol-name": "BGP",
+                                "protocol-nh": [
+                                    {
+                                        "indirect-nh": "0xc298604 1048574 INH Session ID: 0x3c1",
+                                        "to": "5.5.5.5"
                                     },
-                                    "nh": [
-                                        {
-                                            "to": "20.0.0.2",
-                                            "via": "ge-0/0/0.0",
-                                            "nh-string": "Next hop",
-                                            "session": "3bf"
-                                        }
-                                    ],
-                                    "protocol-nh": [
-                                        {
-                                            "to": "5.5.5.5",
-                                            "indirect-nh": "0xc298604 1048574 INH Session ID: 0x3c1"
-                                        },
-                                        {
-                                            "to": "5.5.5.5",
-                                            "metric": "3",
-                                            "forwarding-nh-count": "1",
-                                            "indirect-nh": "0xc298604 1048574 INH Session ID: 0x3c1",
-                                            "nh": [
-                                                {
-                                                    "to": "20.0.0.2",
-                                                    "via": "ge-0/0/0.0",
-                                                    "nh-string": "Next hop",
-                                                    "session": "3bf"
-                                                }
-                                            ],
-                                            "output": "5.5.5.5/32 Originating RIB: inet.0\nForwarding nexthops: 1\nNexthop: 20.0.0.2 via ge-0/0/0.0\nSession Id: 3bf\n"
-                                        }
-                                    ],
-                                    "rt-entry-state": "Active Int Ext",
-                                    "validation-state": "unverified",
-                                    "task-name": "BGP_2.2.2.2.2",
-                                    "announce-bits": "2",
-                                    "announce-tasks": "0-KRT 5-Resolve tree 1",
-                                    "cluster-list": "2.2.2.2 4.4.4.4"
-                                }
+                                    {
+                                        "forwarding-nh-count": "1",
+                                        "indirect-nh": "0xc298604 1048574 INH Session ID: 0x3c1",
+                                        "metric": "3",
+                                        "nh": [
+                                            {
+                                                "nh-string": "Next hop",
+                                                "session": "3bf",
+                                                "to": "20.0.0.2",
+                                                "via": "ge-0/0/0.0"
+                                            }
+                                        ],
+                                        "output": "5.5.5.5/32 Originating RIB: inet.0\nForwarding nexthops: 1\nNexthop: 20.0.0.2 via ge-0/0/0.0\nSession Id: 3bf\n",
+                                        "to": "5.5.5.5"
+                                    }
+                                ],
+                                "rt-entry-state": "Active Int Ext",
+                                "task-name": "BGP_2.2.2.2.2",
+                                "validation-state": "unverified"
+                            },
+                            "rt-entry-count": {
+                                "#text": "1",
+                                "@junos:format": "1 entry"
+                            },
+                            "tsi": {
+                                "#text": "KRT in-kernel 100.0.0.1/32 -> {indirect(1048574)}\nLocalpref: 100"
                             }
-                        ]
-                    }
-                ]
-            }
+                        }
+                    ],
+                    "table-name": "inet.0",
+                    "total-route-count": "13"
+                }
+            ]
         }
+    }
 
     golden_output_7 = {'execute.return_value': '''
             show route 12.12.12.12/32 extensive 
@@ -55202,86 +55206,87 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
 
     golden_parsed_output_7 = {
         "route-information": {
-        "route-table": [
-            {
-                "active-route-count": "16",
-                "destination-count": "16",
-                "hidden-route-count": "0",
-                "holddown-route-count": "0",
-                "rt": [
-                    {
-                        "rt-announced-count": "1",
-                        "rt-destination": "12.12.12.12/32",
-                        "rt-entry": {
-                            "active-tag": "*",
-                            "age": {
-                                "#text": "9"
-                            },
-                            "announce-bits": "3",
-                            "announce-tasks": "0-KRT 5-BGP_RT_Background 6-Resolve tree 1",
-                            "cluster-list": "0.0.0.4",
-                            "gateway": "4.4.4.4",
-                            "local-as": "3",
-                            "metric2": "2",
-                            "as-path": "AS path: I  (Originator)",
-                            "bgp-path-attributes": {
-                                "attr-as-path-effective": {
-                                    "aspath-effective-string": "AS path:",
-                                    "attr-value": "I  (Originator)",
+            "route-table": [
+                {
+                    "active-route-count": "16",
+                    "destination-count": "16",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": [
+                        {
+                            "rt-announced-count": "1",
+                            "rt-destination": "12.12.12.12/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "9"
                                 },
-                            },
-                            "nh": [
-                                {
-                                    "nh-string": "Next hop",
-                                    "session": "1304",
-                                    "to": "50.0.0.2",
-                                    "via": "ge-0/0/1.0"
-                                }
-                            ],
-                            "nh-address": "0xbb7fff4",
-                            "nh-index": "614",
-                            "nh-reference-count": "3",
-                            "nh-type": "Router",
-                            "peer-as": "3",
-                            "preference": "170",
-                            "preference2": "101",
-                            "protocol-name": "BGP",
-                            "protocol-nh": [
-                                {
-                                    "indirect-nh": "0xc296984 1048578 INH Session ID: 0x130c",
-                                    "to": "2.2.2.2"
+                                "announce-bits": "3",
+                                "announce-tasks": "0-KRT 5-BGP_RT_Background 6-Resolve tree 1",
+                                "as-path": "AS path: I  (Originator)",
+                                "bgp-path-attributes": {
+                                    "attr-as-path-effective": {
+                                        "aspath-effective-string": "AS path:",
+                                        "attr-value": "I  (Originator)"
+                                    }
                                 },
-                                {
-                                    "forwarding-nh-count": "1",
-                                    "indirect-nh": "0xc296984 1048578 INH Session ID: 0x130c",
-                                    "metric": "2",
-                                    "nh": [
-                                        {
-                                            "nh-string": "Next hop",
-                                            "session": "1304",
-                                            "to": "50.0.0.2",
-                                            "via": "ge-0/0/1.0"
-                                        }
-                                    ],
-                                    "output": "2.2.2.2/32 Originating RIB: inet.0\nForwarding nexthops: 1\nNexthop: 50.0.0.2 via ge-0/0/1.0\n",
-                                    "to": "2.2.2.2"
-                                }
-                            ],
-                            "rt-entry-state": "Active Int Ext",
-                            "task-name": "BGP_3.4.4.4.4",
-                            "validation-state": "unverified"
-                        },
-                        "rt-entry-count": {
-                            "#text": "1",
-                            "@junos:format": "1 entry"
-                        },
-                        "tsi": {
-                            "#text": "KRT in-kernel 12.12.12.12/32 -> {indirect(1048578)}\nPage 0 idx 1, (group ibgp-DUT type Internal) Type 1 val 0x134b0034 (adv_entry)\nAdvertised metrics:\nNexthop: 2.2.2.2\nLocalpref: 100\nAS path: [3] I (Originator)\nCommunities:\nPath 12.12.12.12\nfrom 4.4.4.4\nVector len 4.  Val: 1\nLocalpref: 100"
+                                "cluster-list": "0.0.0.4",
+                                "gateway": "4.4.4.4",
+                                "local-as": "3",
+                                "metric2": "2",
+                                "nh": [
+                                    {
+                                        "nh-string": "Next hop",
+                                        "session": "1304",
+                                        "to": "50.0.0.2",
+                                        "via": "ge-0/0/1.0"
+                                    }
+                                ],
+                                "nh-address": "0xbb7fff4",
+                                "nh-index": "614",
+                                "nh-reference-count": "3",
+                                "nh-type": "Router",
+                                "peer-as": "3",
+                                "peer-id": "4.4.4.4",
+                                "preference": "170",
+                                "preference2": "101",
+                                "protocol-name": "BGP",
+                                "protocol-nh": [
+                                    {
+                                        "indirect-nh": "0xc296984 1048578 INH Session ID: 0x130c",
+                                        "to": "2.2.2.2"
+                                    },
+                                    {
+                                        "forwarding-nh-count": "1",
+                                        "indirect-nh": "0xc296984 1048578 INH Session ID: 0x130c",
+                                        "metric": "2",
+                                        "nh": [
+                                            {
+                                                "nh-string": "Next hop",
+                                                "session": "1304",
+                                                "to": "50.0.0.2",
+                                                "via": "ge-0/0/1.0"
+                                            }
+                                        ],
+                                        "output": "2.2.2.2/32 Originating RIB: inet.0\nForwarding nexthops: 1\nNexthop: 50.0.0.2 via ge-0/0/1.0\n",
+                                        "to": "2.2.2.2"
+                                    }
+                                ],
+                                "rt-entry-state": "Active Int Ext",
+                                "task-name": "BGP_3.4.4.4.4",
+                                "validation-state": "unverified"
+                            },
+                            "rt-entry-count": {
+                                "#text": "1",
+                                "@junos:format": "1 entry"
+                            },
+                            "tsi": {
+                                "#text": "KRT in-kernel 12.12.12.12/32 -> {indirect(1048578)}\nPage 0 idx 1, (group ibgp-DUT type Internal) Type 1 val 0x134b0034 (adv_entry)\nAdvertised metrics:\nNexthop: 2.2.2.2\nLocalpref: 100\nAS path: [3] I (Originator)\nCommunities:\nPath 12.12.12.12\nfrom 4.4.4.4\nVector len 4.  Val: 1\nLocalpref: 100"
+                            }
                         }
-                    }
-                ],
-                "table-name": "inet.0",
-                "total-route-count": "16"
+                    ],
+                    "table-name": "inet.0",
+                    "total-route-count": "16"
                 }
             ]
         }
