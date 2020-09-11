@@ -2035,27 +2035,7 @@ class ShowInventory(ShowInventorySchema):
                     main_dict['vid'] = vid
                     main_dict['sn'] = sn
 
-                if 'Switch1' in name:
-                    main_dict = ret_dict.setdefault('main', {}).\
-                        setdefault(name, {}).\
-                        setdefault(pid, {})
-                    main_dict['name'] = name
-                    main_dict['descr'] = descr
-                    main_dict['pid'] = pid
-                    main_dict['vid'] = vid
-                    main_dict['sn'] = sn
-
-                if 'Switch2' in name:
-                    main_dict = ret_dict.setdefault('main', {}).\
-                        setdefault(name, {}).\
-                        setdefault(pid, {})
-                    main_dict['name'] = name
-                    main_dict['descr'] = descr
-                    main_dict['pid'] = pid
-                    main_dict['vid'] = vid
-                    main_dict['sn'] = sn
-
-                if 'TenGigabitEthernet' in name:
+                if 'Switch1' in name or 'Switch2' in name or 'TenGigabitEthernet' in name:
                     main_dict = ret_dict.setdefault('main', {}).\
                         setdefault(name, {}).\
                         setdefault(pid, {})

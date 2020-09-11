@@ -2754,7 +2754,7 @@ class ShowOspf3NeighborInstanceAll(ShowOspf3NeighborInstanceAllSchema):
                 ospf3_instance_neighbor = ret_dict.setdefault('ospf3-neighbor-information-all', {}).setdefault(
                     'ospf3-instance-neighbor', {})
                 ospf3_instance_neighbor['ospf3-instance-name'] = instance
-
+                continue
             # Realm: ipv6-unicast
             m = p1.match(line)
             if m:
@@ -2762,7 +2762,7 @@ class ShowOspf3NeighborInstanceAll(ShowOspf3NeighborInstanceAllSchema):
                 realm_name = group['realm_name']
                 ospf3_realm_neighbor = ospf3_instance_neighbor.setdefault("ospf3-realm-neighbor", {})
                 ospf3_realm_neighbor["ospf3-realm-name"] = realm_name
-
+                continue
             #10.189.5.253     ge-0/0/0.0             Full      128     35
             m = p2.match(line)
             if m:
