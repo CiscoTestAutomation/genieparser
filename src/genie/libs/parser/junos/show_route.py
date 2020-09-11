@@ -3301,7 +3301,8 @@ class ShowRouteReceiveProtocolExtensive(ShowRouteReceiveProtocolExtensiveSchema)
 
         # 0.0.0.0/0 (1 entry, 1 announced)
         # * 100.50.1.0/24 (1 entry, 1 announced)
-        p2 = re.compile(r'^(?P<active_tag>\*)? *(?P<rt_destination>[0-9.]+)(\/(?P<rt_prefix_length>\d+))? +'
+        # * 2001:500::/64 (1 entry, 1 announced)
+        p2 = re.compile(r'^(?P<active_tag>\*)? *(?P<rt_destination>[0-9.:]+)(\/(?P<rt_prefix_length>\d+))? +'
                         r'\((?P<format>(?P<text>\d+) +(entry|entries)), +(?P<rt_announced_count>\d+) +announced\)$')        
 
         # Accepted
