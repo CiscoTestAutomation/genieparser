@@ -249,12 +249,12 @@ class TestShowFirewallCounterFilter(unittest.TestCase):
         self.device = Mock(**self.empty_output)
         obj = ShowFirewallCounterFilter(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            obj.parse()
+            obj.parse(filters='v6_local-access-control', counter_name='v6_last_policer')
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowFirewallCounterFilter(device=self.device)
-        parsed_output = obj.parse()
+        parsed_output = obj.parse(filters='v6_local-access-control', counter_name='v6_last_policer')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
