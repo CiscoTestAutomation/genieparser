@@ -12,6 +12,8 @@
 * IOSXE
     * Added ShowLispSite
       * show lisp site
+    * Added ShowCtsRoleBasedCounters
+        * show cts role-based counters
     * Added ShowStackwiseVirtual
         * show stackwise-virtual
     * Added ShowPlatformTcamUtilization
