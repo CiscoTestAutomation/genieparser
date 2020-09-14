@@ -1,0 +1,13 @@
+PE1#show bridge-domain 10
+Bridge-domain 10 (3 ports in all)
+State: UP                    Mac learning: Enabled
+Aging-Timer: 30 second(s)
+    GigabitEthernet6 service instance 10
+    GigabitEthernet7 service instance 10
+    EVPN Instance 10
+   AED MAC address    Policy  Tag       Age  Pseudoport
+   -   000C.29FF.EEC6 forward static_r  0    OCE_PTR:0xe8eb04a0
+   -   000C.29FF.A9B3 forward dynamic_c 29   GigabitEthernet6.EFP10
+   -   000C.29FF.A6A1 forward dynamic_c 26   GigabitEthernet7.EFP10
+   -   000C.29FF.DBFB forward static_r  0    OCE_PTR:0xe8eb0500
+    

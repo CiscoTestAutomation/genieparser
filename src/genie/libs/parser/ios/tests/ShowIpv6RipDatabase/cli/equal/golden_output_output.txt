@@ -1,0 +1,11 @@
+R1#show ipv6 rip database
+RIP VRF "Default VRF", local RIB
+ 2001:DB8:1:3::/64, metric 2
+     GigabitEthernet3.100/FE80::F816:3EFF:FEFF:1E3D, expires in 179 secs
+ 2001:DB8:2:3::/64, metric 2, installed
+     GigabitEthernet3.100/FE80::F816:3EFF:FEFF:1E3D, expires in 179 secs
+ 2001:DB8:2222:2222::/64, metric 7, installed
+     GigabitEthernet3.100/FE80::F816:3EFF:FEFF:1E3D, expires in 179 secs
+ 2001:DB8:2223:2223::/64, metric 6, installed
+     GigabitEthernet2.100/FE80::F816:3EFF:FE7B:437, expires in 173 secs
+    

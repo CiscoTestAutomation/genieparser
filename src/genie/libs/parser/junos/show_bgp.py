@@ -1328,7 +1328,6 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
         )
         # Last Error: None
         p7 = re.compile(r'^Last +Error: +(?P<last_error>[\S\s]+)$')
-
         # Export: [ v4_pyats_NO-DEFAULT ] Import: [ 11 ]
         p8 = re.compile(
             r'^Export: +\[ +(?P<export_policy>\S+) +\] +Import: +\[ +(?P<import_policy>\S+) +\]$'

@@ -15,8 +15,6 @@ with patch.dict('sys.modules',
     from genie.parsergen import oper_check
     from genie.parsergen import oper_fill_tabular
 
-import xml.etree.ElementTree as ET
-
 from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError

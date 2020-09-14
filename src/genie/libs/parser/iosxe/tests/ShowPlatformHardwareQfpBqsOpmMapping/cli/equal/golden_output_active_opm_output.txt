@@ -1,0 +1,67 @@
+\ 
+        Router#show platform hardware qfp active bqs 0 opm mapping 
+        Load for five secs: 5%/3%; one minute: 7%; five minutes: 8%
+        Time source is NTP, 07:43:32.664 EST Thu Sep 8 2016
+
+        BQS OPM Channel Mapping
+
+        Chan     Name                          Interface      LogicalChannel
+
+         0       CC0 Low                       SPI0            0             
+         1       CC0 Hi                        SPI0            1             
+         2       CC0B Low                      SPI0            2             
+         3       CC0B Hi                       SPI0            3             
+         4       CC1 Low                       SPI0            4             
+         5       CC1 Hi                        SPI0            5             
+         6       CC1B Low                      SPI0            6             
+         7       CC1B Hi                       SPI0            7             
+         8       CC2 Low                       SPI0            8             
+         9       CC2 Hi                        SPI0            9             
+        10       CC2B Low                      SPI0           10             
+        11       CC2B Hi                       SPI0           11             
+        12       CC3 Low                       SPI0           12             
+        13       CC3 Hi                        SPI0           13             
+        14       CC3B Low                      SPI0           14             
+        15       CC3B Hi                       SPI0           15             
+        16       CC4 Low                       SPI0           16             
+        17       CC4 Hi                        SPI0           17             
+        18       CC5 Low                       SPI0           18             
+        19       CC5 Hi                        SPI0           19             
+        20       RP0 Low                       SPI0           20             
+        21       RP0 Hi                        SPI0           21             
+        22       RP1 Low                       SPI0           22             
+        23       RP1 Hi                        SPI0           23             
+        24       Peer-FP Low                   SPI0           24             
+        25       Peer-FP Hi                    SPI0           25             
+        26       Nitrox Low                    SPI0           26             
+        27       Nitrox Hi                     SPI0           27             
+        28       HT Pkt Low                    HT              0             
+        29       HT Pkt Hi                     HT              1             
+        30       HT IPC Low                    HT              2             
+        31       HT IPC Hi                     HT              3             
+        32       Unmapped                      
+        33       Unmapped                      
+        34       Unmapped                      
+        35       Unmapped                      
+        36       Unmapped                      
+        37       Unmapped                      
+        38       HighNormal                    GPM             7             
+        39       HighPriority                  GPM             6             
+        40       LowNormal                     GPM            11             
+        41       LowPriority                   GPM            10             
+        42       InternalTrafficHiChannel      GPM            12             
+        43       InternalTrafficLoChannel      GPM            13             
+        44       AttnTrafficHiChannel          GPM            14             
+        45       MetaPktTrafficChannel         GPM            15             
+        46       Unmapped                      
+        47       Unmapped                      
+        48       Unmapped                      
+        49       Unmapped                      
+        50       Unmapped                      
+        51       Unmapped                      
+        52       Unmapped                      
+        53       Unmapped                      
+        54       Unmapped                      
+        55*      Drain Low                     GPM             0             
+         * - indicates the drain mode bit is set for this channel
+    
