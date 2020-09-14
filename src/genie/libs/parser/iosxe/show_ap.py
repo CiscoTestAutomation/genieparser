@@ -108,3 +108,77 @@ class ShowApRfProfileSummary(ShowApRfProfileSummarySchema):
                 continue
 
         return rf_profile_summary_dict
+
+
+# ====================================
+# Schema for:
+#  * 'show ap dot11 dual-band summary'
+# ====================================
+class ShowApDot11DualBandSummarySchema(MetaParser):
+    """Schema for show ap dot11 dual-band summary."""
+
+    schema = {
+        "ap_dot11_dual-band_summary": {
+            int: {
+                "ap_name": str,
+                "ap_mac_address": str,
+                "slot_id": int,
+                "admin_state": str,
+                "oper_state": str,
+                "width": int,
+                "tx_pwr": str,
+                "mode": str,
+                "subband": str,
+                "channel": str
+            }
+        }
+    }
+
+
+# ====================================
+# Parser for:
+#  * 'show ap dot11 dual-band summary'
+# ====================================
+class ShowApDot11DualBandSummary(ShowApDot11DualBandSummarySchema):
+    """Parser for show ap dot11 dual-band summary"""
+
+    cli_command = 'show ap dot11 dual-band summary'
+
+    def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # aa-test-4800                 64d8.14ec.1120  0     Enabled       Down           20     *1/8 (23 dBm)   Local   All        (6)*
+        ap_info_capture = re.compile(
+            r"^(?P<ap_name>\S+)\s+(?P<ap_mac_address>\S+)\s+(?P<slot_id>\d+)\s+(?P<admin_state>(Enabled|Disabled))\s+(?P<oper_state>\S+)\s+(?P<width>\d+)\s+(?P<tx_pwr>(N\/A|\*.*m\)))\s+(?P<mode>\S+)\s+(?P<subband>\S+)\s+(?P<channel>\S+)$")
+
+        ap_index = 0
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # aa-test-4800                 64d8.14ec.1120  0     Enabled       Down           20     *1/8 (23 dBm)   Local   All        (6)*
+            m = ap_info_capture.match(line)
+            if m:
+                groups = m.groupdict()
+                ap_index += 1
+
+                ap_index_dict = ret_dict.setdefault('ap_dot11_dual-band_summary', {}).\
+                    setdefault('index', {}).setdefault(ap_index, {})
+
+                ap_index_dict.update({
+                    'ap_name': groups['ap_name'],
+                    'ap_mac_address': groups['ap_mac_address'],
+                    'slot_id': int(groups['slot_id']),
+                    'admin_state': groups['admin_state'],
+                    'oper_state': groups['oper_state'],
+                    'width': int(groups['width']),
+                    'tx_pwr': groups['tx_pwr'],
+                    'mode': groups['mode'],
+                    'subband': groups['subband'],
+                    'channel': groups['channel']
+                })
+
+        return ret_dict
