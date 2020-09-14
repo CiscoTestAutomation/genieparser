@@ -122,28 +122,7 @@ class ShowSnmpUser(ShowSnmpUserSchema):
         # Authentication Protocol: SHA
         # Privacy Protocol: AES128
         # Group-name: ALFA
-        # 
-        # User name: bob
-        # Engine ID: 800000090300001B53CEDC01
-        # storage-type: nonvolatile        active
-        # Authentication Protocol: SHA
-        # Privacy Protocol: AES256
-        # Group-name: group1
-        # 
-        # User name: bad4
-        # Engine ID: 800000090300001B53CEDC01
-        # storage-type: nonvolatile        active
-        # Authentication Protocol: SHA
-        # Privacy Protocol: DES
-        # Group-name: group1
-        # 
-        # User name: user1
-        # Engine ID: 800000090300001B53CEDC01
-        # storage-type: nonvolatile        active
-        # Authentication Protocol: SHA
-        # Privacy Protocol: AES128
-        # Group-name: group1
-        # 
+        #
         # User name: nmsops
         # Engine ID: 00000063000100A20A101B3E
         # storage-type: nonvolatile	 active	access-list: 69
