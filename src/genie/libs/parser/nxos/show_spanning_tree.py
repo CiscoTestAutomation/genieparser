@@ -629,7 +629,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                          r'\s+path\s+cost\s+(?P<designated_path_cost>\d+)'
                          r'(, +(?P<topology_change>Topology +change +is +set))?$')
 
-        p14 = re.compile(r'^Timers:\s+message\s+age\s+(?P<message_age>\d+),'
+        p14 = re.compile(r'^Timers:\s+message\s+age\s+(?P<message_age>\-?\d+),'
                          r'\s+forward\s+delay\s+(?P<forward_delay>\d+),'
                          r'\s+hold\s+(?P<hold>\d+)$')
 
