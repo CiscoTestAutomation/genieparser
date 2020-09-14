@@ -525,7 +525,7 @@ class test_show_policy_map_type(unittest.TestCase):
                     'policy_name': {
                         'control-plane-in': {
                             'class_map': {
-                                'telnet-class': {
+                                'TEST-OTTAWA_CANADA#PYATS': {
                                     'match_evaluation': 'match-all',
                                     'packets': 10521,
                                     'bytes': 673344,
@@ -561,7 +561,7 @@ class test_show_policy_map_type(unittest.TestCase):
     golden_output3 = {'execute.return_value': '''
         Control Plane
         Service-policy input: control-plane-in
-        Class-map: telnet-class (match-all)
+        Class-map: TEST-OTTAWA_CANADA#PYATS (match-all)
             10521 packets, 673344 bytes
             5 minute offered rate 18000 bps, drop rate 15000 bps
             Match: access-group 102
@@ -593,7 +593,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'interval': 300,
                                         'offered_rate_bps': 0,
                                         'drop_rate_bps': 0},
-                                    'match': ['access-group name copp-ftp'],
+                                    'match': ['access-group name PYATS-MARKING_IN#CUSTOM__ACL'],
                                     'police': {
                                         'cir_bps': 10000000,
                                         'cir_be_bytes': 312500,
@@ -659,7 +659,7 @@ class test_show_policy_map_type(unittest.TestCase):
         Class-map: copp-ftp (match-any)
             2234 packets, 223400 bytes
             5 minute offered rate 0000 bps, drop rate 0000 bps
-            Match: access-group name copp-ftp
+            Match: access-group name PYATS-MARKING_IN#CUSTOM__ACL
             police:
             cir 10000000 bps, be 312500 bytes
             conformed 2234 packets, 223400 bytes; actions:
@@ -4247,8 +4247,7 @@ class test_show_policy_map(unittest.TestCase):
                 'class': {
                     'class-default': {
                         'police': {
-                            'cir_bps': 445500,
-                            'cir_bc_bytes': 83619,
+                            'rate_percent': 10,
                             'conform_action': ['transmit'],
                             'exceed_action': ['drop']}}}}}}
 
@@ -4261,7 +4260,7 @@ class test_show_policy_map(unittest.TestCase):
 
             Policy Map police-in
                 Class class-default
-                    police cir 445500 bc 83619
+                    police rate percent 10
                         conform-action transmit 
                         exceed-action drop 
     '''}
@@ -4506,7 +4505,7 @@ class test_show_policy_map(unittest.TestCase):
 
                 Policy-map ingress_policy
                     Class cos3
-                        Set cos 5
+                        set cos 5
                 Policy-map egress policy
                     Class cos5
                         Shape average 30m '''}
@@ -4595,7 +4594,7 @@ class test_show_policy_map(unittest.TestCase):
                             'bandwidth_percent': 10,
                             'exponential_weight': 9,
                             'class_val': {
-                                '0': {
+                                'default (0)': {
                                     'min_threshold': '-',
                                     'max_threshold': '-',
                                     'mark_probability': '1/10'},
@@ -4642,7 +4641,7 @@ class test_show_policy_map(unittest.TestCase):
         class   min-threshold(bytes)   max-threshold(bytes)  mark-probability
         -------------------------------------------------------------------
  
-        0       -                       -                      1/10
+        default (0)   -                -                1/10
         1       20000                   30000                  1/10
         2       -                       -                      1/10
         3       -                       -                      1/10

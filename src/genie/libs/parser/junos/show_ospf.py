@@ -587,7 +587,7 @@ class ShowOspfNeighborInstanceAll(ShowOspfNeighborInstanceAllSchema):
                 ospf_instance_neighbor = ret_dict.setdefault('ospf-neighbor-information-all', {}).setdefault(
                     'ospf-instance-neighbor', {})
                 ospf_instance_neighbor['ospf-instance-name'] = instance
-
+                continue
             # 10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    32
             m = p1.match(line)
             if m:

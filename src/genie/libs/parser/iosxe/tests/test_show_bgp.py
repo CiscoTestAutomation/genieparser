@@ -1861,8 +1861,6 @@ class TestShowBgpAllDetail(unittest.TestCase):
         For address family: VPNv6 Flowspec
         '''}
 
-
-
     golden_parsed_output2 = {
       'instance':
         {'default':
@@ -2225,6 +2223,115 @@ Paths: (1 available, best #1, table VRF1)
             },
         },
     }
+
+    golden_output4 = {'execute.return_value': '''
+        Route Distinguisher: 9.1.1.1:3014 (default for vrf vrf1)
+        BGP routing table entry for 9.1.1.1:3014:0.0.0.0/0, version 74438
+        BGP Bestpath: deterministic-med
+        Paths: (2 available, best #1, table vrf1)
+        Multipath: eBGP iBGP
+        Advertised to update-groups:
+            304        13       
+        Refresh Epoch 2
+        64624
+            9.2.2.2 (via vrf vrf1) from 9.2.2.2 (9.207.128.21)
+            Origin IGP, localpref 950, valid, external, best
+            Community: 163:43242 2002:8 2002:35 2002:53 2002:100 2002:1000
+            Extended Community: RT:65002:3014
+            mpls labels in/out IPv4 VRF Aggr:25/nolabel
+            rx pathid: 0, tx pathid: 0x0
+        Refresh Epoch 17
+        64624, imported path from 9.91.117.38:3014:0.0.0.0/0 (global)
+            9.91.117.38 (metric 11) (via default) from 9.91.117.38 (9.91.117.38)
+            Origin IGP, metric 0, localpref 950, valid, internal
+            Community: 163:43242 2002:8 2002:35 2002:53 2002:100 2002:1000
+            Extended Community: RT:65002:3014
+            mpls labels in/out IPv4 VRF Aggr:25/26
+            rx pathid: 0, tx pathid: 0
+    '''
+    }
+    
+    golden_parsed_output4 = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'vrf1': {
+                        'address_family': {
+                            '': {
+                                'default_vrf': 'vrf1',
+                                'prefixes': {
+                                    '0.0.0.0/0': {
+                                        'available_path': '2',
+                                        'best_path': '1',
+                                        'index': {
+                                            1: {
+                                                'community': '163:43242 '
+                                                                    '2002:8 '
+                                                                    '2002:35 '
+                                                                    '2002:53 '
+                                                                    '2002:100 '
+                                                                    '2002:1000',
+                                                'ext_community': 'RT:65002:3014',
+                                                'gateway': '9.2.2.2',
+                                                'localpref': 950,
+                                                'next_hop': '9.2.2.2',
+                                                'next_hop_via': 'vrf '
+                                                                'vrf1',
+                                                'origin_codes': 'i',
+                                                'originator': '9.207.128.21',
+                                                'recipient_pathid': '0',
+                                                'refresh_epoch': 2,
+                                                'route_info': '304        '
+                                                                '13',
+                                                'status_codes': '*>',
+                                                'transfer_pathid': '0x0',
+                                                'update_group': 64624
+                                            },
+                                            2: {
+                                                'community': '163:43242 '
+                                                                '2002:8 '
+                                                                '2002:35 '
+                                                                '2002:53 '
+                                                                '2002:100 '
+                                                                '2002:1000',
+                                                'ext_community': 'RT:65002:3014',
+                                                'gateway': '9.91.117.38',
+                                                'imported_path_from': '9.91.117.38:3014:0.0.0.0/0 '
+                                                                        '(global)',
+                                                'localpref': 950,
+                                                'metric': 0,
+                                                'next_hop': '9.91.117.38',
+                                                'next_hop_igp_metric': '11',
+                                                'next_hop_via': 'default',
+                                                'origin_codes': 'i',
+                                                'originator': '9.91.117.38',
+                                                'recipient_pathid': '0',
+                                                'refresh_epoch': 17,
+                                                'route_info': '64624',
+                                                'status_codes': '* '
+                                                                'i',
+                                                'transfer_pathid': '0',
+                                                'update_group': 64624
+                                            }
+                                        },
+                                        'paths': '2 '
+                                                'available, '
+                                                'best '
+                                                '#1, '
+                                                'table '
+                                                'vrf1',
+                                        'table_version': '74438'
+                                    }
+                                },
+                                'route_distinguisher': '9.1.1.1:3014'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     def test_show_bgp_all_detail_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpAllDetail(device=self.device)
@@ -2250,7 +2357,14 @@ Paths: (1 available, best #1, table VRF1)
         self.device = Mock(**self.golden_output3)
         obj = ShowBgpAllDetail(device=self.device)
         parsed_output = obj.parse(vrf='VRF1', route='10.4.1.1')
-        self.assertEqual(parsed_output,self.golden_parsed_output3)
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+    def test_show_bgp_vrf_route_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output4)
+        obj = ShowBgpAllDetail(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1')
+        self.assertEqual(parsed_output, self.golden_parsed_output4)        
 
 # ============================
 # Unit test for:
