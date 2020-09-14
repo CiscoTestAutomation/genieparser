@@ -1160,7 +1160,8 @@ DS1-R101# sh spanning-tree detail
         self.dev_c3850 = Mock(**self.golden_output_3)
         obj = ShowSpanningTreeDetail(device = self.dev_c3850)
         parsed = obj.parse()
-        self.assertEqual(parsed, self.golden_parsed_output_3)    
+        self.assertEqual(parsed, self.golden_parsed_output_3)   
+
 
 class TestShowErrdisabledRecovery(unittest.TestCase):
     dev_n7k = Device(name='n7000')
