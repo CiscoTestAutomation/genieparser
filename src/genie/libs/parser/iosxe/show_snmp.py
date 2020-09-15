@@ -235,6 +235,5 @@ class ShowSnmpGroup(ShowSnmpGroupSchema):
                 p_row.match(line)
                 status = "active"
                 show_snmp_groups_dict[index]["row_status"] = {"status" : status}
-        print(show_snmp_groups_dict)
         return show_snmp_groups_dict
 
