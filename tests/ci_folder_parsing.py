@@ -18,12 +18,10 @@ from pyats.topology import Device
 # Create the parser
 my_parser = argparse.ArgumentParser(description="Optional arguments for 'nose'-like tests")
 my_parser.add_argument('-o', "--operating_system",
-                       #metavar='_os',
                        type=str,
                        help='The OS you wish to filter on',
                        default=None)
 my_parser.add_argument('-c', "--class_name",
-                       #metavar='_class',
                        type=str,
                        help="The Class you wish to filter on, (not the Test File)",
                        default=None)
