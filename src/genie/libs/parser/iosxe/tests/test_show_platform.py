@@ -41,9 +41,10 @@ from genie.libs.parser.iosxe.show_platform import (
     ShowProcessesMemory,
     ShowProcessesMemorySorted,
     ShowPlatformIntegrity,
-    ShowPlatformTcamUtilization,
     ShowPlatformHardwareQfpActiveFeatureAppqoe,
-    ShowPlatformHardwareQfpActiveDatapathUtilSum)
+    ShowPlatformHardwareQfpActiveDatapathUtilSum,
+    ShowPlatformHardwareQfpActiveTcamResourceManagerUsage,
+    ShowPlatformResources)
 
 # ============================
 # Unit test for 'show bootvar'
@@ -2528,6 +2529,9 @@ class TestShowRedundancy2(unittest.TestCase):
 #   * 'show inventory'
 # ====================
 class TestShowInventory(unittest.TestCase):
+    '''Unit test for "show inventory" '''
+
+    maxDiff = None
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -4066,6 +4070,398 @@ class TestShowInventory(unittest.TestCase):
         },
     }
 
+    golden_output_3 = {'execute.return_value': '''
+        NAME: "Switch1 System", DESCR: "Cisco Systems, Inc. WS-C4507R+E 7 slot switch "
+        PID: WS-C4507R+E       , VID: V09  , SN: FXS1941Q20T
+
+        NAME: "Switch1 Clock Module", DESCR: "Clock Module"
+        PID: WS-X4K-CLOCK-E    , VID:      , SN: FXS193805C1
+
+        NAME: "Switch1 Mux Buffer 1 ", DESCR: "Mux Buffers for Redundancy Logic"
+        PID: WS-X4590-EX=      , VID:      , SN: FXS193800RL
+
+        NAME: "Switch1 Mux Buffer 2 ", DESCR: "Mux Buffers for Redundancy Logic"
+        PID: WS-X4590-EX=      , VID:      , SN: FXS193800RK
+
+        NAME: "Switch1 Mux Buffer 5 ", DESCR: "Mux Buffers for Redundancy Logic"
+        PID: WS-X4590-EX=      , VID:      , SN: FXS193900AF
+
+        NAME: "Switch1 Mux Buffer 6 ", DESCR: "Mux Buffers for Redundancy Logic"
+        PID: WS-X4590-EX=      , VID:      , SN: FXS193900AH
+
+        NAME: "Switch1 Mux Buffer 7 ", DESCR: "Mux Buffers for Redundancy Logic"
+        PID: WS-X4590-EX=      , VID:      , SN: FXS193800RG
+
+        NAME: "Switch1 Linecard 1 (virtual slot 1)", DESCR: "10/100/1000BaseT (RJ45)+V E Series with 48 10/100/1000 baseT Premium PoE ports (Cisco/IEEE)"
+        PID: WS-X4748-RJ45V+E  , VID: V05  , SN: CAT1948L2JF
+
+        NAME: "Switch1 Linecard 2 (virtual slot 2)", DESCR: "10/100/1000BaseT (RJ45)+V E Series with 48 10/100/1000 baseT Premium PoE ports (Cisco/IEEE)"
+        PID: WS-X4748-RJ45V+E  , VID: V05  , SN: CAT1948L2S1
+
+        NAME: "Switch1 Supervisor 3 (virtual slot 3)", DESCR: "Sup 8-E 10GE (SFP+), 1000BaseX (SFP) with 8 SFP+ Ports"
+        PID: WS-X45-SUP8-E     , VID: V05  , SN: CAT1947L6E4
+
+        NAME: "TenGigabitEthernet1/3/1", DESCR: "SFP-10Gbase-LRM"
+        PID: SFP-10G-LRM       , VID: V03  , SN: FNS1946164Q
+
+        NAME: "TenGigabitEthernet1/3/2", DESCR: "SFP-10Gbase-LRM"
+        PID: SFP-10G-LRM       , VID: V03  , SN: FNS1946169N
+
+        NAME: "TenGigabitEthernet1/3/3", DESCR: "1000BaseSX"
+        PID: Unspecified       , VID:      , SN: A58069025
+
+        NAME: "TenGigabitEthernet1/3/4", DESCR: "1000BaseSX"
+        PID: Unspecified       , VID:      , SN: A58072076
+
+        NAME: "TenGigabitEthernet1/3/5", DESCR: "1000BaseSX"
+        PID: Unspecified       , VID:      , SN: Z2005291
+
+        NAME: "TenGigabitEthernet1/3/6", DESCR: "1000BaseSX"
+        PID: Unspecified       , VID:      , SN: AGM1549L6SN
+
+        NAME: "Switch1 Linecard 5 (virtual slot 5)", DESCR: "10/100/1000BaseT (RJ45)+V E Series with 48 10/100/1000 baseT Premium PoE ports (Cisco/IEEE)"
+        PID: WS-X4748-RJ45V+E  , VID: V05  , SN: CAT1948L14U
+
+        NAME: "Switch1 Linecard 7 (virtual slot 7)", DESCR: "10/100/1000BaseT (RJ45)+V E Series with 48 10/100/1000 baseT Premium PoE ports (Cisco/IEEE)"
+        PID: WS-X4748-RJ45V+E  , VID: V05  , SN: CAT1948L1BT
+
+        NAME: "Switch1 FanTray 1", DESCR: "FanTray"
+        PID: WS-X4597+E        , VID: V04  , SN: FXS1941Q0K6
+
+        NAME: "Switch1 Power Supply 1", DESCR: "Power Supply ( AC 2800W )"
+        PID: PWR-C45-2800ACV   , VID: V07  , SN: SDG1940EA1T
+
+        NAME: "Switch1 Power Supply 2", DESCR: "Power Supply ( AC 2800W )"
+        PID: PWR-C45-2800ACV   , VID: V07  , SN: SDG1940EA0U
+
+        NAME: "Switch2 System", DESCR: "Cisco Systems, Inc. WS-C4506-E 6 slot switch "
+        PID: WS-C4506-E        , VID: V02  , SN: FOX1353G062
+
+        NAME: "Switch2 Supervisor 1 (virtual slot 11)", DESCR: "Sup 8-E 10GE (SFP+), 1000BaseX (SFP) with 8 SFP+ Ports"
+        PID: WS-X45-SUP8-E     , VID: V05  , SN: CAT1947L2JB
+
+        NAME: "TenGigabitEthernet2/1/1", DESCR: "SFP-10Gbase-LRM"
+        PID: SFP-10G-LRM       , VID: V03  , SN: AGD1944V1X0
+
+        NAME: "TenGigabitEthernet2/1/2", DESCR: "SFP-10Gbase-LRM"
+        PID: SFP-10G-LRM       , VID: V03  , SN: FNS19461646
+
+        NAME: "TenGigabitEthernet2/1/3", DESCR: "1000BaseSX"
+        PID: Unspecified       , VID:      , SN: A58069142
+
+        NAME: "TenGigabitEthernet2/1/4", DESCR: "1000BaseSX"
+        PID: Unspecified       , VID:      , SN: Z2005495
+
+        NAME: "Switch2 Linecard 2 (virtual slot 12)", DESCR: "10/100/1000BaseT (RJ45)+V E Series with 48 10/100/1000 baseT Premium PoE ports (Cisco/IEEE)"
+        PID: WS-X4648-RJ45V+E  , VID: V05  , SN: JAE140539YZ
+
+        NAME: "Switch2 Linecard 3 (virtual slot 13)", DESCR: "10/100/1000BaseT (RJ45)+V E Series with 48 10/100/1000 baseT Premium PoE ports (Cisco/IEEE)"
+        PID: WS-X4648-RJ45V+E  , VID: V05  , SN: JAE14053A0H
+
+        NAME: "Switch2 FanTray 1", DESCR: "FanTray"
+        PID: WS-X4596-E        , VID: V03  , SN: FOX1352H2X8
+
+        NAME: "Switch2 Power Supply 1", DESCR: "Power Supply ( AC 2800W )"
+        PID: PWR-C45-2800ACV   , VID: V07  , SN: SNI1937A7JL
+
+        NAME: "Switch2 Power Supply 2", DESCR: "Power Supply ( AC 2800W )"
+        PID: PWR-C45-2800ACV   , VID: V07  , SN: SNI1937A7EB
+
+    '''}
+
+    golden_parsed_output_3 = {
+        "main": {
+            "Switch1 Clock Module": {
+                "WS-X4K-CLOCK-E": {
+                    "descr": "Clock Module",
+                    "name": "Switch1 Clock Module",
+                    "pid": "WS-X4K-CLOCK-E",
+                    "sn": "FXS193805C1",
+                    "vid": ""
+                }
+            },
+            "Switch1 FanTray 1": {
+                "WS-X4597+E": {
+                    "descr": "FanTray",
+                    "name": "Switch1 FanTray 1",
+                    "pid": "WS-X4597+E",
+                    "sn": "FXS1941Q0K6",
+                    "vid": "V04"
+                }
+            },
+            "Switch1 Linecard 1 (virtual slot 1)": {
+                "WS-X4748-RJ45V+E": {
+                    "descr": "10/100/1000BaseT (RJ45)+V E Series with 48 10/100/1000 baseT Premium PoE ports (Cisco/IEEE)",
+                    "name": "Switch1 Linecard 1 (virtual slot 1)",
+                    "pid": "WS-X4748-RJ45V+E",
+                    "sn": "CAT1948L2JF",
+                    "vid": "V05"
+                }
+            },
+            "Switch1 Linecard 2 (virtual slot 2)": {
+                "WS-X4748-RJ45V+E": {
+                    "descr": "10/100/1000BaseT (RJ45)+V E Series with 48 10/100/1000 baseT Premium PoE ports (Cisco/IEEE)",
+                    "name": "Switch1 Linecard 2 (virtual slot 2)",
+                    "pid": "WS-X4748-RJ45V+E",
+                    "sn": "CAT1948L2S1",
+                    "vid": "V05"
+                }
+            },
+            "Switch1 Linecard 5 (virtual slot 5)": {
+                "WS-X4748-RJ45V+E": {
+                    "descr": "10/100/1000BaseT (RJ45)+V E Series with 48 10/100/1000 baseT Premium PoE ports (Cisco/IEEE)",
+                    "name": "Switch1 Linecard 5 (virtual slot 5)",
+                    "pid": "WS-X4748-RJ45V+E",
+                    "sn": "CAT1948L14U",
+                    "vid": "V05"
+                }
+            },
+            "Switch1 Linecard 7 (virtual slot 7)": {
+                "WS-X4748-RJ45V+E": {
+                    "descr": "10/100/1000BaseT (RJ45)+V E Series with 48 10/100/1000 baseT Premium PoE ports (Cisco/IEEE)",
+                    "name": "Switch1 Linecard 7 (virtual slot 7)",
+                    "pid": "WS-X4748-RJ45V+E",
+                    "sn": "CAT1948L1BT",
+                    "vid": "V05"
+                }
+            },
+            "Switch1 Mux Buffer 1": {
+                "WS-X4590-EX=": {
+                    "descr": "Mux Buffers for Redundancy Logic",
+                    "name": "Switch1 Mux Buffer 1",
+                    "pid": "WS-X4590-EX=",
+                    "sn": "FXS193800RL",
+                    "vid": ""
+                }
+            },
+            "Switch1 Mux Buffer 2": {
+                "WS-X4590-EX=": {
+                    "descr": "Mux Buffers for Redundancy Logic",
+                    "name": "Switch1 Mux Buffer 2",
+                    "pid": "WS-X4590-EX=",
+                    "sn": "FXS193800RK",
+                    "vid": ""
+                }
+            },
+            "Switch1 Mux Buffer 5": {
+                "WS-X4590-EX=": {
+                    "descr": "Mux Buffers for Redundancy Logic",
+                    "name": "Switch1 Mux Buffer 5",
+                    "pid": "WS-X4590-EX=",
+                    "sn": "FXS193900AF",
+                    "vid": ""
+                }
+            },
+            "Switch1 Mux Buffer 6": {
+                "WS-X4590-EX=": {
+                    "descr": "Mux Buffers for Redundancy Logic",
+                    "name": "Switch1 Mux Buffer 6",
+                    "pid": "WS-X4590-EX=",
+                    "sn": "FXS193900AH",
+                    "vid": ""
+                }
+            },
+            "Switch1 Mux Buffer 7": {
+                "WS-X4590-EX=": {
+                    "descr": "Mux Buffers for Redundancy Logic",
+                    "name": "Switch1 Mux Buffer 7",
+                    "pid": "WS-X4590-EX=",
+                    "sn": "FXS193800RG",
+                    "vid": ""
+                }
+            },
+            "Switch1 Power Supply 1": {
+                "PWR-C45-2800ACV": {
+                    "descr": "Power Supply ( AC 2800W )",
+                    "name": "Switch1 Power Supply 1",
+                    "pid": "PWR-C45-2800ACV",
+                    "sn": "SDG1940EA1T",
+                    "vid": "V07"
+                }
+            },
+            "Switch1 Power Supply 2": {
+                "PWR-C45-2800ACV": {
+                    "descr": "Power Supply ( AC 2800W )",
+                    "name": "Switch1 Power Supply 2",
+                    "pid": "PWR-C45-2800ACV",
+                    "sn": "SDG1940EA0U",
+                    "vid": "V07"
+                }
+            },
+            "Switch1 Supervisor 3 (virtual slot 3)": {
+                "WS-X45-SUP8-E": {
+                    "descr": "Sup 8-E 10GE (SFP+), 1000BaseX (SFP) with 8 SFP+ Ports",
+                    "name": "Switch1 Supervisor 3 (virtual slot 3)",
+                    "pid": "WS-X45-SUP8-E",
+                    "sn": "CAT1947L6E4",
+                    "vid": "V05"
+                }
+            },
+            "Switch1 System": {
+                "WS-C4507R+E": {
+                    "descr": "Cisco Systems, Inc. WS-C4507R+E 7 slot switch",
+                    "name": "Switch1 System",
+                    "pid": "WS-C4507R+E",
+                    "sn": "FXS1941Q20T",
+                    "vid": "V09"
+                }
+            },
+            "Switch2 FanTray 1": {
+                "WS-X4596-E": {
+                    "descr": "FanTray",
+                    "name": "Switch2 FanTray 1",
+                    "pid": "WS-X4596-E",
+                    "sn": "FOX1352H2X8",
+                    "vid": "V03"
+                }
+            },
+            "Switch2 Linecard 2 (virtual slot 12)": {
+                "WS-X4648-RJ45V+E": {
+                    "descr": "10/100/1000BaseT (RJ45)+V E Series with 48 10/100/1000 baseT Premium PoE ports (Cisco/IEEE)",
+                    "name": "Switch2 Linecard 2 (virtual slot 12)",
+                    "pid": "WS-X4648-RJ45V+E",
+                    "sn": "JAE140539YZ",
+                    "vid": "V05"
+                }
+            },
+            "Switch2 Linecard 3 (virtual slot 13)": {
+                "WS-X4648-RJ45V+E": {
+                    "descr": "10/100/1000BaseT (RJ45)+V E Series with 48 10/100/1000 baseT Premium PoE ports (Cisco/IEEE)",
+                    "name": "Switch2 Linecard 3 (virtual slot 13)",
+                    "pid": "WS-X4648-RJ45V+E",
+                    "sn": "JAE14053A0H",
+                    "vid": "V05"
+                }
+            },
+            "Switch2 Power Supply 1": {
+                "PWR-C45-2800ACV": {
+                    "descr": "Power Supply ( AC 2800W )",
+                    "name": "Switch2 Power Supply 1",
+                    "pid": "PWR-C45-2800ACV",
+                    "sn": "SNI1937A7JL",
+                    "vid": "V07"
+                }
+            },
+            "Switch2 Power Supply 2": {
+                "PWR-C45-2800ACV": {
+                    "descr": "Power Supply ( AC 2800W )",
+                    "name": "Switch2 Power Supply 2",
+                    "pid": "PWR-C45-2800ACV",
+                    "sn": "SNI1937A7EB",
+                    "vid": "V07"
+                }
+            },
+            "Switch2 Supervisor 1 (virtual slot 11)": {
+                "WS-X45-SUP8-E": {
+                    "descr": "Sup 8-E 10GE (SFP+), 1000BaseX (SFP) with 8 SFP+ Ports",
+                    "name": "Switch2 Supervisor 1 (virtual slot 11)",
+                    "pid": "WS-X45-SUP8-E",
+                    "sn": "CAT1947L2JB",
+                    "vid": "V05"
+                }
+            },
+            "Switch2 System": {
+                "WS-C4506-E": {
+                    "descr": "Cisco Systems, Inc. WS-C4506-E 6 slot switch",
+                    "name": "Switch2 System",
+                    "pid": "WS-C4506-E",
+                    "sn": "FOX1353G062",
+                    "vid": "V02"
+                }
+            },
+            "TenGigabitEthernet1/3/1": {
+                "SFP-10G-LRM": {
+                    "descr": "SFP-10Gbase-LRM",
+                    "name": "TenGigabitEthernet1/3/1",
+                    "pid": "SFP-10G-LRM",
+                    "sn": "FNS1946164Q",
+                    "vid": "V03"
+                }
+            },
+            "TenGigabitEthernet1/3/2": {
+                "SFP-10G-LRM": {
+                    "descr": "SFP-10Gbase-LRM",
+                    "name": "TenGigabitEthernet1/3/2",
+                    "pid": "SFP-10G-LRM",
+                    "sn": "FNS1946169N",
+                    "vid": "V03"
+                }
+            },
+            "TenGigabitEthernet1/3/3": {
+                "Unspecified": {
+                    "descr": "1000BaseSX",
+                    "name": "TenGigabitEthernet1/3/3",
+                    "pid": "Unspecified",
+                    "sn": "A58069025",
+                    "vid": ""
+                }
+            },
+            "TenGigabitEthernet1/3/4": {
+                "Unspecified": {
+                    "descr": "1000BaseSX",
+                    "name": "TenGigabitEthernet1/3/4",
+                    "pid": "Unspecified",
+                    "sn": "A58072076",
+                    "vid": ""
+                }
+            },
+            "TenGigabitEthernet1/3/5": {
+                "Unspecified": {
+                    "descr": "1000BaseSX",
+                    "name": "TenGigabitEthernet1/3/5",
+                    "pid": "Unspecified",
+                    "sn": "Z2005291",
+                    "vid": ""
+                }
+            },
+            "TenGigabitEthernet1/3/6": {
+                "Unspecified": {
+                    "descr": "1000BaseSX",
+                    "name": "TenGigabitEthernet1/3/6",
+                    "pid": "Unspecified",
+                    "sn": "AGM1549L6SN",
+                    "vid": ""
+                }
+            },
+            "TenGigabitEthernet2/1/1": {
+                "SFP-10G-LRM": {
+                    "descr": "SFP-10Gbase-LRM",
+                    "name": "TenGigabitEthernet2/1/1",
+                    "pid": "SFP-10G-LRM",
+                    "sn": "AGD1944V1X0",
+                    "vid": "V03"
+                }
+            },
+            "TenGigabitEthernet2/1/2": {
+                "SFP-10G-LRM": {
+                    "descr": "SFP-10Gbase-LRM",
+                    "name": "TenGigabitEthernet2/1/2",
+                    "pid": "SFP-10G-LRM",
+                    "sn": "FNS19461646",
+                    "vid": "V03"
+                }
+            },
+            "TenGigabitEthernet2/1/3": {
+                "Unspecified": {
+                    "descr": "1000BaseSX",
+                    "name": "TenGigabitEthernet2/1/3",
+                    "pid": "Unspecified",
+                    "sn": "A58069142",
+                    "vid": ""
+                }
+            },
+            "TenGigabitEthernet2/1/4": {
+                "Unspecified": {
+                    "descr": "1000BaseSX",
+                    "name": "TenGigabitEthernet2/1/4",
+                    "pid": "Unspecified",
+                    "sn": "Z2005495",
+                    "vid": ""
+                }
+            }
+        }
+    }
+
     def test_show_inventory_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -4135,6 +4531,13 @@ class TestShowInventory(unittest.TestCase):
         inventory_obj = ShowInventory(device=self.device)
         parsed_output = inventory_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        inventory_obj = ShowInventory(device=self.device)
+        parsed_output = inventory_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 
 class TestShowPlatform(unittest.TestCase):
@@ -5642,6 +6045,13 @@ class TestShowSwitch(unittest.TestCase):
                     "state": "ready",
                     "priority": "2",
                     "mac_address": "c800.84ff.7e00"
+               },
+               "4": {
+                    "role": "member",
+                    "hw_ver": "0",
+                    "state": "v-mismatch",
+                    "priority": "15",
+                    "mac_address": "00cc.fc7f.fb80"
                }
             },
             "mac_address": "689c.e2ff.b9d9",
@@ -5657,7 +6067,8 @@ class TestShowSwitch(unittest.TestCase):
         -------------------------------------------------------------------------------------
         *1       Active   689c.e2ff.b9d9     3      V04     Ready                
          2       Standby  c800.84ff.7e00     2      V05     Ready                
-         3       Member   c800.84ff.4800     1      V05     Ready 
+         3       Member   c800.84ff.4800     1      V05     Ready
+         4       Member   00cc.fc7f.fb80     15     0       V-Mismatch 
     '''
     }
 
@@ -21253,6 +21664,474 @@ class TestShowPlatformHardwareQfpActiveDatapathUtilSum(unittest.TestCase):
         obj = ShowPlatformHardwareQfpActiveDatapathUtilSum(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+class TestShowPlatformHardwareQfpActiveTcamResourceManagerUsage(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+        'qfp_tcam_usage_information': {
+            '80_bit_region_information': {
+                'name': 'Leaf Region #0',
+                'number_of_cells_per_entry': 1,
+                'current_80_bit_entries_used': 0,
+                'current_used_cell_entries': 0,
+                'current_free_cell_entries': 0
+            },
+            '160_bit_region_information': {
+                'name': 'Leaf Region #1',
+                'number_of_cells_per_entry': 2,
+                'current_160_bits_entries_used': 19,
+                'current_used_cell_entries': 38,
+                'current_free_cell_entries': 4058
+            },
+            '320_bit_region_information': {
+                'name': 'Leaf Region #2',
+                'number_of_cells_per_entry': 4,
+                'current_320_bits_entries_used': 0,
+                'current_used_cell_entries': 0,
+                'current_free_cell_entries': 0
+            },
+            'total_tcam_cell_usage_information': {
+                'name': 'TCAM #0 on CPP #0',
+                'total_number_of_regions': 3,
+                'total_tcam_used_cell_entries': 38,
+                'total_tcam_free_cell_entries': 1048538,
+                'threshold_status': 'below critical limit'
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''\
+        QFP TCAM Usage Information
+
+        80 Bit Region Information
+        --------------------------
+        Name                                : Leaf Region #0
+        Number of cells per entry           : 1
+        Current 80 bit entries used         : 0
+        Current used cell entries           : 0
+        Current free cell entries           : 0
+
+        160 Bit Region Information
+        --------------------------
+        Name                                : Leaf Region #1
+        Number of cells per entry           : 2
+        Current 160 bits entries used       : 19
+        Current used cell entries           : 38
+        Current free cell entries           : 4058
+
+        320 Bit Region Information
+        --------------------------
+        Name                                : Leaf Region #2
+        Number of cells per entry           : 4
+        Current 320 bits entries used       : 0
+        Current used cell entries           : 0
+        Current free cell entries           : 0
+
+
+        Total TCAM Cell Usage Information
+        ----------------------------------
+        Name                                : TCAM #0 on CPP #0
+        Total number of regions             : 3
+        Total tcam used cell entries        : 38
+        Total tcam free cell entries        : 1048538
+        Threshold status                    : below critical limit     
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowPlatformHardwareQfpActiveTcamResourceManagerUsage(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()  
+
+    def test_golden(self):
+        #self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowPlatformHardwareQfpActiveTcamResourceManagerUsage(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+class TestShowPlatformResources(unittest.TestCase):
+
+    
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output_modular = {
+       'rp': {
+            '0': {
+            'state': 'H',
+            'role': 'active',
+            'control_processer': {
+                'usage_perc': 0.25,
+                'max_perc': 100,
+                'warning_perc': 80,
+                'critical_perc': 90,
+                'state': 'H',
+                'dram': {
+                    'usage_mb': 3388,
+                    'usage_perc': 44,
+                    'max_mb': 7557,
+                    'warning_perc': 88,
+                    'critical_perc': 93,
+                    'state': 'H'
+                },
+                'bootflash': {
+                    'usage_mb': 1443,
+                    'usage_perc': 19,
+                    'max_mb': 7281,
+                    'warning_perc': 88,
+                    'critical_perc': 93,
+                    'state': 'H'
+                },
+                'harddisk': {
+                    'usage_mb': 69916,
+                    'usage_perc': 74,
+                    'max_mb': 93836,
+                    'warning_perc': 88,
+                    'critical_perc': 93,
+                    'state': 'H'
+                }
+            }
+            },
+            '1': {
+            'state': 'H',
+            'role': 'standby',
+            'control_processer': {
+                'usage_perc': 0.2,
+                'max_perc': 100,
+                'warning_perc': 80,
+                'critical_perc': 90,
+                'state': 'H',
+                'dram': {
+                    'usage_mb': 3331,
+                    'usage_perc': 44,
+                    'max_mb': 7557,
+                    'warning_perc': 88,
+                    'critical_perc': 93,
+                    'state': 'H'
+                },
+                'bootflash': {
+                    'usage_mb': 2162,
+                    'usage_perc': 31,
+                    'max_mb': 6840,
+                    'warning_perc': 88,
+                    'critical_perc': 93,
+                    'state': 'H'
+                },
+                'harddisk': {
+                    'usage_mb': 48619,
+                    'usage_perc': 51,
+                    'max_mb': 93836,
+                    'warning_perc': 88,
+                    'critical_perc': 93,
+                    'state': 'H'
+                }
+            }
+            }
+        },
+        'esp': {
+            '0': {
+            'state': 'H',
+            'role': 'active',
+            'control_processer': {
+                'usage_perc': 1.4,
+                'max_perc': 100,
+                'warning_perc': 80,
+                'critical_perc': 90,
+                'state': 'H',
+                'dram': {
+                    'usage_mb': 1057,
+                    'usage_perc': 6,
+                    'max_mb': 15911,
+                    'warning_perc': 88,
+                    'critical_perc': 93,
+                    'state': 'H'
+                }
+            },
+            'qfp': {
+                'state': 'H',
+                'tcam': {
+                    'usage_cells': 16,
+                    'usage_perc': 0,
+                    'max_cells': 1048576,
+                    'warning_perc': 65,
+                    'critical_perc': 85,
+                    'state': 'H'
+                },
+                'dram': {
+                    'usage_kb': 238906,
+                    'usage_perc': 5,
+                    'max_kb': 4194304,
+                    'warning_perc': 85,
+                    'critical_perc': 95,
+                    'state': 'H'
+                },
+                'iram': {
+                    'usage_kb': 13014,
+                    'usage_perc': 9,
+                    'max_kb': 131072,
+                    'warning_perc': 85,
+                    'critical_perc': 95,
+                    'state': 'H'
+                },
+                'cpu_utilization': {
+                    'usage_perc': 0.0,
+                    'max_perc': 100,
+                    'warning_perc': 90,
+                    'state': 'H'
+                },
+                'pkt_buf_mem_0': {
+                    'usage_kb': 67,
+                    'usage_perc': 0,
+                    'max_kb': 524288,
+                    'warning_perc': 85,
+                    'critical_perc': 95,
+                    'state': 'H'
+                },
+                'pkt_buf_mem_1': {
+                    'usage_kb': 67,
+                    'usage_perc': 0,
+                    'max_kb': 524288,
+                    'warning_perc': 85,
+                    'critical_perc': 95,
+                    'state': 'H'
+                }
+            }
+            },
+            '1': {
+            'state': 'H',
+            'role': 'standby',
+            'control_processer': {
+                    'usage_perc': 2.23,
+                    'max_perc': 100,
+                    'warning_perc': 80,
+                    'critical_perc': 90,
+                    'state': 'H',
+                'dram': {
+                    'usage_mb': 1055,
+                    'usage_perc': 6,
+                    'max_mb': 15911,
+                    'warning_perc': 88,
+                    'critical_perc': 93,
+                    'state': 'H'
+                }
+            },
+            'qfp': {
+                'state': 'H',
+                'tcam': {
+                    'usage_cells': 16,
+                    'usage_perc': 0,
+                    'max_cells': 1048576,
+                    'warning_perc': 65,
+                    'critical_perc': 85,
+                    'state': 'H'
+                },
+                'dram': {
+                    'usage_kb': 238906,
+                    'usage_perc': 5,
+                    'max_kb': 4194304,
+                    'warning_perc': 85,
+                    'critical_perc': 95,
+                    'state': 'H'
+                },
+                'iram': {
+                    'usage_kb': 13014,
+                    'usage_perc': 9,
+                    'max_kb': 131072,
+                    'warning_perc': 85,
+                    'critical_perc': 95,
+                    'state': 'H'
+                },
+                'cpu_utilization': {
+                    'usage_perc': 0.0,
+                    'max_perc': 100,
+                    'warning_perc': 90,
+                    'state': 'H'
+                },
+                'pkt_buf_mem_0': {
+                    'usage_kb': 67,
+                    'usage_perc': 0,
+                    'max_kb': 524288,
+                    'warning_perc': 85,
+                    'critical_perc': 95,
+                    'state': 'H'
+                },
+                'pkt_buf_mem_1': {
+                    'usage_kb': 67,
+                    'usage_perc': 0,
+                    'max_kb': 524288,
+                    'warning_perc': 85,
+                    'critical_perc': 95,
+                    'state': 'H'
+                }
+            }
+            }
+        },
+        'sip': {
+            '0': {
+            'state': 'H',
+            'control_processer': {
+                'usage_perc': 13.32,
+                'max_perc': 100,
+                'warning_perc': 80,
+                'critical_perc': 90,
+                'state': 'H',
+                'dram': {
+                    'usage_mb': 703,
+                    'usage_perc': 35,
+                    'max_mb': 1955,
+                    'warning_perc': 88,
+                    'critical_perc': 93,
+                    'state': 'H'
+                }
+            }
+            }
+        }
+    }
+
+    golden_output_modular = {'execute.return_value': '''\
+                Resource                 Usage                 Max             Warning         Critical        State
+        ----------------------------------------------------------------------------------------------------
+        RP0 (ok, active)                                                                               H    
+        Control Processor       0.25%                 100%            80%             90%             H    
+        DRAM                   3388MB(44%)           7557MB          88%             93%             H    
+        bootflash              1443MB(19%)           7281MB          88%             93%             H    
+        harddisk               69916MB(74%)          93836MB         88%             93%             H    
+        RP1 (ok, standby)                                                                              H    
+        Control Processor       0.20%                 100%            80%             90%             H    
+        DRAM                   3331MB(44%)           7557MB          88%             93%             H    
+        bootflash              2162MB(31%)           6840MB          88%             93%             H    
+        harddisk               48619MB(51%)          93836MB         88%             93%             H    
+        ESP0(ok, active)                                                                               H    
+        Control Processor       1.40%                 100%            80%             90%             H    
+        DRAM                   1057MB(6%)            15911MB         88%             93%             H    
+        QFP                                                                                           H    
+        TCAM                   16cells(0%)           1048576cells    65%             85%             H    
+        DRAM                   238906KB(5%)          4194304KB       85%             95%             H    
+        IRAM                   13014KB(9%)           131072KB        85%             95%             H    
+        CPU Utilization        0.00%                 100%            90%             95%             H    
+        Pkt Buf Mem (0)        67KB(0%)              524288KB        85%             95%             H    
+        Pkt Buf Mem (1)        67KB(0%)              524288KB        85%             95%             H    
+        ESP1(ok, standby)                                                                              H    
+        Control Processor       2.23%                 100%            80%             90%             H    
+        DRAM                   1055MB(6%)            15911MB         88%             93%             H    
+        QFP                                                                                           H    
+        TCAM                   16cells(0%)           1048576cells    65%             85%             H    
+        DRAM                   238906KB(5%)          4194304KB       85%             95%             H    
+        IRAM                   13014KB(9%)           131072KB        85%             95%             H    
+        CPU Utilization        0.00%                 100%            90%             95%             H    
+        Pkt Buf Mem (0)        67KB(0%)              524288KB        85%             95%             H    
+        Pkt Buf Mem (1)        67KB(0%)              524288KB        85%             95%             H    
+        SIP0                                                                                           H    
+        Control Processor       13.32%                100%            80%             90%             H    
+        DRAM                   703MB(35%)            1955MB          88%             93%             H      
+    '''}
+
+    golden_parsed_output_fixed = {
+        'rp': {
+            '0': {
+            'state': 'H',
+            'role': 'active',
+            'control_processer': {
+                'usage_perc': 2.5,
+                'max_perc': 100,
+                'warning_perc': 80,
+                'critical_perc': 90,
+                'state': 'H',
+                'dram': {
+                    'usage_mb': 3515,
+                    'usage_perc': 22,
+                    'max_mb': 15915,
+                    'warning_perc': 88,
+                    'critical_perc': 93,
+                    'state': 'H'
+                }
+            }
+            }
+        },
+        'esp': {
+            '0': {
+            'state': 'H',
+            'role': 'active',
+            'qfp': {
+                'state': 'H',
+                'tcam': {
+                    'usage_cells': 10616,
+                    'usage_perc': 1,
+                    'max_cells': 1048576,
+                    'warning_perc': 65,
+                    'critical_perc': 85,
+                    'state': 'H'
+                },
+                'dram': {
+                    'usage_kb': 611434,
+                    'usage_perc': 14,
+                    'max_kb': 4194304,
+                    'warning_perc': 80,
+                    'critical_perc': 90,
+                    'state': 'H'
+                },
+                'iram': {
+                    'usage_kb': 12716,
+                    'usage_perc': 9,
+                    'max_kb': 131072,
+                    'warning_perc': 80,
+                    'critical_perc': 90,
+                    'state': 'H'
+                },
+                'cpu_utilization': {
+                    'usage_perc': 1.0,
+                    'max_perc': 100,
+                    'warning_perc': 90,
+                    'state': 'H'
+                }
+            }
+            }
+        }
+    }
+       
+
+    golden_output_fixed = {'execute.return_value': '''\
+                Resource                 Usage                 Max             Warning         Critical        State
+        ----------------------------------------------------------------------------------------------------
+        RP0 (ok, active)                                                                               H    
+        Control Processor       2.50%                 100%            80%             90%             H    
+        DRAM                   3515MB(22%)           15915MB         88%             93%             H    
+        ESP0(ok, active)                                                                               H    
+        QFP                                                                                           H    
+        TCAM                   10616cells(1%)        1048576cells    65%             85%             H    
+        DRAM                   611434KB(14%)         4194304KB       80%             90%             H    
+        IRAM                   12716KB(9%)           131072KB        80%             90%             H    
+        CPU Utilization        1.00%                 100%            90%             95%             H  
+    '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowPlatformResources(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()  
+
+    def test_golden_modular(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_modular)
+        obj = ShowPlatformResources(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_modular)
+
+    def test_golden_fixed(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_fixed)
+        obj = ShowPlatformResources(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_fixed)
 
 
 if __name__ == '__main__':
