@@ -1,0 +1,16 @@
+Device# show l2vpn vfi
+
+Legend: RT= Route-target
+
+VFI name: serviceCore1, State: UP, Signaling Protocol: LDP
+  VPN ID: 100, VPLS-ID: 9:10, Bridge-domain vlan: 100
+  RD: 9:10, RT: 10.10.10.10:150
+  Pseudo-port Interface: Virtual-Ethernet1000
+
+  Neighbors connected via pseudowires:
+  Interface    Peer Address    VC ID      Discovered Router ID   Next Hop
+  Pw2000       10.0.0.1        10         10.0.0.1               10.0.0.1
+  Pw2001       10.0.0.2        10         10.1.1.2               10.0.0.2
+  Pw2002       10.0.0.3        10         10.1.1.3               10.0.0.3
+  Pw5          10.0.0.4        10         -                      10.0.0.4
+    

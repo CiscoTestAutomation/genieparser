@@ -1,0 +1,18 @@
+
+R1_xe#show isis neighbors 
+
+Tag test:
+System Id       Type Interface     IP Address      State Holdtime Circuit Id
+R2_xr           L1   Gi2.115       10.12.115.2     UP    7        R2_xr.01           
+R2_xr           L2   Gi2.115       10.12.115.2     UP    7        R2_xr.01           
+R3_nx           L1   Gi3.115       10.13.115.3     UP    28       R1_xe.02           
+R3_nx           L2   Gi3.115       10.13.115.3     UP    23       R1_xe.02           
+        
+Tag test1:
+System Id       Type Interface     IP Address      State Holdtime Circuit Id
+2222.22ff.4444  L1   Gi2.415       10.12.115.2     INIT  21       2222.22ff.4444.01  
+2222.22ff.4444  L2   Gi2.415       10.12.115.2     INIT  20       2222.22ff.4444.01  
+R3_nx           L1   Gi3.415       10.13.115.3     UP    21       R1_xe.02           
+R3_nx           L2   Gi3.415       10.13.115.3     UP    27       R1_xe.02           
+        
+    

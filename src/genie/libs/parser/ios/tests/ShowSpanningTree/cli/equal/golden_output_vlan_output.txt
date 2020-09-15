@@ -1,0 +1,20 @@
+
+cat# show spanning-tree vlan 333
+
+MST03
+  Spanning tree enabled protocol mstp
+  Root ID    Priority    32771
+             Address     0050.14ff.1cbb
+             Cost        20000
+             Port        136 (GigabitEthernet3/8)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32771  (priority 32768 sys-id-ext 3)
+             Address     00d0.00ff.c73f
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+Interface        Role Sts Cost      Prio.Nbr Status
+---------------- ---- --- --------- -------- ------------------------
+Gi3/8            Root FWD 20000     128.136  P2p
+Po1              Desg FWD 20000     128.833  P2p
+        

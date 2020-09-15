@@ -1,0 +1,16 @@
+
+ show ip ospf segment-routing local-block
+      
+         OSPF Router with ID (10.4.113.144) (Process ID 88)
+
+         OSPF Segment Routing Local Blocks in Area 8
+
+ Router ID        SR Capable   SRLB Base   SRLB Range
+ --------------------------------------------------------
+ 10.16.2.2          No
+ 10.36.3.3          No
+ 10.64.4.4          No
+ 10.4.113.142  No
+*10.4.113.144  No
+ 10.4.113.99   No
+    

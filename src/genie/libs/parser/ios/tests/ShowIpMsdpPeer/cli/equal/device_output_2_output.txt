@@ -1,0 +1,51 @@
+
+Router# show ip msdp vrf VRF1 peer
+MSDP Peer 10.16.2.2 (?), AS 65000
+  Connection status:
+    State: Up, Resets: 0, Connection source: Loopback300 (10.4.1.1)
+    Uptime(Downtime): 00:19:00, Messages sent/received: 22/40
+    Output messages discarded: 0
+    Connection and counters cleared 00:27:47 ago
+  SA Filtering:
+    Input (S,G) filter: none, route-map: none
+    Input RP filter: none, route-map: none
+    Output (S,G) filter: none, route-map: none
+    Output RP filter: none, route-map: none
+  SA-Requests:
+    Input filter: none
+  Peer ttl threshold: 0
+  SAs learned from this peer: 0
+  Number of connection transitions to Established state: 1
+    Input queue size: 0, Output queue size: 0
+  MD5 signature protection on MSDP TCP connection: not enabled
+  Message counters:
+    RPF Failure count: 0
+    SA Messages in/out: 0/21
+    SA Requests in: 0
+    SA Responses out: 0
+    Data Packets in/out: 0/0
+MSDP Peer 10.36.3.3 (?), AS 65000
+  Connection status:
+    State: Down, Resets: 31, Connection source: Loopback300 (10.4.1.1)
+    Uptime(Downtime): 00:00:23, Messages sent/received: 0/0
+    Output messages discarded: 0
+    Connection and counters cleared 00:27:56 ago
+  SA Filtering:
+    Input (S,G) filter: none, route-map: none
+    Input RP filter: none, route-map: none
+    Output (S,G) filter: none, route-map: none
+    Output RP filter: none, route-map: none
+  SA-Requests:
+    Input filter: none
+  Peer ttl threshold: 0
+  SAs learned from this peer: 0
+  Number of connection transitions to Established state: 31
+    Input queue size: 0, Output queue size: 0
+  MD5 signature protection on MSDP TCP connection: not enabled
+  Message counters:
+    RPF Failure count: 0
+    SA Messages in/out: 0/0
+    SA Requests in: 0
+    SA Responses out: 0
+    Data Packets in/out: 0/0
+    
