@@ -23,7 +23,8 @@ from genie.libs.parser.iosxe.show_lisp import ShowLispSession,\
                                               ShowLispServiceDatabase,\
                                               ShowLispServiceServerSummary,\
                                               ShowLispServiceServerDetailInternal,\
-                                              ShowLispServiceStatistics
+                                              ShowLispServiceStatistics, \
+                                              ShowLispSite
 
 
 
@@ -5620,6 +5621,190 @@ class test_show_lisp_service_statistics(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(service='ipv4', instance_id='*')
 
+
+
+if __name__ == '__main__':
+    unittest.main()
+# ==============================
+# Unit test for 'show lisp site'
+# ==============================
+class TestShowLispSite(unittest.TestCase):
+    """Unit test for 'show lisp site'"""
+
+    maxDiff = None
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output1 = {
+    "site_names": {
+        "site_uci": {
+            1: {
+                "last_register": "never",
+                "up": "no",
+                "who_last_registered": "--",
+                "inst_id": 4097,
+                "eid_prefix": "10.10.64.0/27"
+            },
+            2: {
+                "last_register": "2w4d",
+                "up": "yes#",
+                "who_last_registered": "10.1.64.71:36820",
+                "inst_id": 4097,
+                "eid_prefix": "10.10.64.2/32"
+            },
+            3: {
+                "last_register": "2w4d",
+                "up": "yes#",
+                "who_last_registered": "10.1.64.71:36820",
+                "inst_id": 4097,
+                "eid_prefix": "10.10.64.6/32"
+            },
+            4: {
+                "last_register": "2w4d",
+                "up": "yes#",
+                "who_last_registered": "10.1.64.106:51580",
+                "inst_id": 4097,
+                "eid_prefix": "10.10.64.7/32"
+            },
+            5: {
+                "last_register": "2w4d",
+                "up": "yes#",
+                "who_last_registered": "10.1.64.106:51580",
+                "inst_id": 4097,
+                "eid_prefix": "10.10.64.18/32"
+            },
+            6: {
+                "last_register": "never",
+                "up": "no",
+                "who_last_registered": "--",
+                "inst_id": 4099,
+                "eid_prefix": "10.19.22.0/26"
+            },
+            7: {
+                "last_register": "02:05:11",
+                "up": "yes#",
+                "who_last_registered": "10.1.64.71:36820",
+                "inst_id": 4099,
+                "eid_prefix": "10.19.22.2/32"
+            },
+            8: {
+                "last_register": "2d16h",
+                "up": "yes#",
+                "who_last_registered": "10.1.64.106:51580",
+                "inst_id": 4099,
+                "eid_prefix": "10.19.22.3/32"
+            },
+            9: {
+                "last_register": "00:33:39",
+                "up": "yes#",
+                "who_last_registered": "10.1.64.71:36820",
+                "inst_id": 4099,
+                "eid_prefix": "10.19.22.21/32"
+            },
+            10: {
+                "last_register": "never",
+                "up": "no",
+                "who_last_registered": "--",
+                "inst_id": 4099,
+                "eid_prefix": "10.19.22.64/27"
+            },
+            11: {
+                "last_register": "4w3d",
+                "up": "yes#",
+                "who_last_registered": "10.1.64.76:30688",
+                "inst_id": 4099,
+                "eid_prefix": "10.19.22.66/32"
+            },
+            12: {
+                "last_register": "never",
+                "up": "no",
+                "who_last_registered": "--",
+                "inst_id": 4099,
+                "eid_prefix": "10.19.22.96/27"
+            },
+            13: {
+                "last_register": "3w5d",
+                "up": "yes#",
+                "who_last_registered": "10.1.64.71:36820",
+                "inst_id": 4099,
+                "eid_prefix": "10.19.22.112/32"
+            },
+            14: {
+                "last_register": "never",
+                "up": "no",
+                "who_last_registered": "--",
+                "inst_id": 4099,
+                "eid_prefix": "1000:420:700:1FEE::/66"
+            },
+            15: {
+                "last_register": "never",
+                "up": "no",
+                "who_last_registered": "--",
+                "inst_id": 4099,
+                "eid_prefix": "1000:420:700:1FEE:4000::/66"
+            },
+            16: {
+                "last_register": "4w3d",
+                "up": "yes#",
+                "who_last_registered": "10.1.64.76:30688",
+                "inst_id": 4099,
+                "eid_prefix": "1000:420:780:1FE0:502A:1ADA:1ADA:1ADA/128"
+            },
+            17: {
+                "last_register": "never",
+                "up": "no",
+                "who_last_registered": "--",
+                "inst_id": 4100,
+                "eid_prefix": "10.19.20.0/25"
+            },
+            18: {
+                "last_register": "01:05:05",
+                "up": "yes#",
+                "who_last_registered": "10.1.64.106:51580",
+                "inst_id": 4100,
+                "eid_prefix": "10.19.20.55/32"
+            }
+        }
+    }
+}
+
+
+    golden_output1 = {'execute.return_value': '''
+LISP Site Registration Information
+* = Some locators are down or unreachable
+# = Some registrations are sourced by reliable transport
+
+Site Name      Last      Up     Who Last             Inst     EID Prefix
+               Register         Registered           ID       
+site_uci       never     no     --                   4097     10.10.64.0/27
+               2w4d      yes#   10.1.64.71:36820  4097     10.10.64.2/32
+               2w4d      yes#   10.1.64.71:36820  4097     10.10.64.6/32
+               2w4d      yes#   10.1.64.106:51580 4097     10.10.64.7/32
+               2w4d      yes#   10.1.64.106:51580 4097     10.10.64.18/32
+               never     no     --                   4099     10.19.22.0/26
+               02:05:11  yes#   10.1.64.71:36820  4099     10.19.22.2/32
+               2d16h     yes#   10.1.64.106:51580 4099     10.19.22.3/32
+               00:33:39  yes#   10.1.64.71:36820  4099     10.19.22.21/32
+               never     no     --                   4099     10.19.22.64/27
+               4w3d      yes#   10.1.64.76:30688  4099     10.19.22.66/32
+               never     no     --                   4099     10.19.22.96/27
+               3w5d      yes#   10.1.64.71:36820  4099     10.19.22.112/32
+               never     no     --                   4099     1000:420:700:1FEE::/66
+               never     no     --                   4099     1000:420:700:1FEE:4000::/66
+               4w3d      yes#   10.1.64.76:30688  4099     1000:420:780:1FE0:502A:1ADA:1ADA:1ADA/128
+               never     no     --                   4100     10.19.20.0/25
+               01:05:05  yes#   10.1.64.106:51580 4100     10.19.20.55/32         
+    '''}
+
+    def test_show_lisp_site_full(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowLispSite(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_lisp_site_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowLispSite(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
 
 if __name__ == '__main__':

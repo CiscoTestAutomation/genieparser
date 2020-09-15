@@ -1,0 +1,9 @@
+Router# show ip rpf 192.168.16.226
+RPF information for ? (192.168.16.226) MoFRR Enabled
+  RPF interface: Ethernet1/4
+  RPF neighbor: ? (192.168.145.2)
+  RPF route/mask: 255.255.255.225
+  RPF type: unicast (ospf 200)
+  Doing distance-preferred lookups across tables
+  RPF topology: ipv4 multicast base, originated from ipv4 unicast base
+    

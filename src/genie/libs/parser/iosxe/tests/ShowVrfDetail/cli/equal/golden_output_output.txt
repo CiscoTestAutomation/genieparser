@@ -1,0 +1,58 @@
+
+VRF VRF1 (VRF Id = 1); default RD 100:1; default VPNID <not set>
+  New CLI format, supports multiple address-families
+  Flags: 0x180C
+    Interfaces:
+        Gi0/0
+Address family ipv4 unicast (Table ID = 0x1):
+  Flags: 0x2100
+  Export VPN route-target communities
+    RT:100:1                 RT:200:1                
+  Import VPN route-target communities
+    RT:100:1                 RT:200:1                
+  Import route-map for ipv4 unicast: import_from_global_map (prefix limit: 1000)
+  Global export route-map for ipv4 unicast: export_to_global_map (prefix limit: 1000)
+  No export route-map
+  Route warning limit 10000, current count 0
+  VRF label distribution protocol: not configured
+  VRF label allocation mode: per-prefix
+Address family ipv6 unicast (Table ID = 0x1E000001):
+  Flags: 0x100
+  Export VPN route-target communities
+    RT:100:1                 RT:300:1                
+  Import VPN route-target communities
+    RT:200:1                 RT:400:1                
+  No import route-map
+  Global export route-map for ipv6 unicast: export_to_global_map (prefix limit: 1000)
+  No export route-map
+  Route limit 10000, warning limit 70% (7000), current count 1
+  VRF label distribution protocol: not configured
+  VRF label allocation mode: per-prefix
+Address family ipv4 multicast not active
+
+VRF Mgmt-vrf (VRF Id = 1); default RD <not set>; default VPNID <not set>
+  New CLI format, supports multiple address-families
+  Flags: 0x1808
+  Interfaces:
+    Gi0/0                   
+Address family ipv4 unicast (Table ID = 0x1):
+  Flags: 0x0
+  No Export VPN route-target communities
+  No Import VPN route-target communities
+  No import route-map
+  No global export route-map
+  No export route-map
+  VRF label distribution protocol: not configured
+  VRF label allocation mode: per-prefix
+Address family ipv6 unicast (Table ID = 0x1E000001):
+  Flags: 0x0
+  No Export VPN route-target communities
+  No Import VPN route-target communities
+  No import route-map
+  No global export route-map
+  No export route-map
+  VRF label distribution protocol: not configured
+  VRF label allocation mode: per-prefix
+Address family ipv4 multicast not active
+Address family ipv6 multicast not active
+        

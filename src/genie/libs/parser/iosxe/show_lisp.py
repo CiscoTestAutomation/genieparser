@@ -3267,3 +3267,148 @@ class ShowLispServiceStatistics(ShowLispServiceStatisticsSchema):
                 continue
 
         return parsed_dict
+
+
+# ===================
+# Schema for:
+#  * 'show lisp site'
+# ===================
+class ShowLispSiteSchema(MetaParser):
+    """Schema for show lisp site."""
+
+    schema = {
+        "site_names": {
+            str: {
+                int: {
+                    "last_register": str,
+                    "up": str,
+                    "who_last_registered": str,
+                    "inst_id": int,
+                    "eid_prefix": str
+                }
+            }
+        }
+    }
+
+
+# ===================
+# Parser for:
+#  * 'show lisp site'
+# ===================
+class ShowLispSite(ShowLispSiteSchema):
+    """Parser for show lisp site"""
+
+    cli_command = 'show lisp site'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        lisp_site_dict = {}
+
+        # LISP Site Registration Information
+        # * = Some locators are down or unreachable
+        # # = Some registrations are sourced by reliable transport
+        #
+        # Site Name      Last      Up     Who Last             Inst     EID Prefix
+        #                Register         Registered           ID
+        # site_uci       never     no     --                   4097     10.10.64.0/27
+        #                2w4d      yes#   10.1.64.71:36820  4097     10.10.64.2/32
+        #                2w4d      yes#   10.1.64.71:36820  4097     10.10.64.6/32
+        #                2w4d      yes#   10.1.64.106:51580 4097     10.10.64.7/32
+        #                2w4d      yes#   10.1.64.106:51580 4097     10.10.64.18/32
+        #                never     no     --                   4099     10.19.22.0/26
+        #                02:05:11  yes#   10.1.64.71:36820  4099     10.19.22.2/32
+        #                2d16h     yes#   10.1.64.106:51580 4099     10.19.22.3/32
+        #                00:33:39  yes#   10.1.64.71:36820  4099     10.19.22.21/32
+        #                never     no     --                   4099     10.19.22.64/27
+        #                4w3d      yes#   10.1.64.76:30688  4099     10.19.22.66/32
+        #                never     no     --                   4099     10.19.22.96/27
+        #                3w5d      yes#   10.1.64.71:36820  4099     10.19.22.112/32
+        #                never     no     --                   4099     1000:420:700:1FEE::/66
+        #                never     no     --                   4099     1000:420:700:1FEE:4000::/66
+        #                4w3d      yes#   10.1.64.76:30688  4099     1000:420:780:1FE0:502A:1ADA:1ADA:1ADA/128
+        #                never     no     --                   4100     10.19.20.0/25
+        #                01:05:05  yes#   10.1.64.106:51580 4100     10.19.20.55/32
+
+        # site_uci       never     no     --                   4097     10.10.64.0/27
+        lisp_site_capture = re.compile(
+            r"^(?P<lisp_site>\S+)\s+(?P<last_register>\S+)\s+(?P<up>\S+)\s+(?P<who_last_registered>\S+)\s+(?P<inst_id>\d+)\s+(?P<eid_prefix>\S+)")
+        #                2w4d      yes#   10.1.64.71:36820  4097     10.10.64.2/32
+        list_site_info_capture = re.compile(
+            r"^(?P<last_register>\S+)\s+(?P<up>\S+)\s+(?P<who_last_registered>\S+)\s+(?P<inst_id>\d+)\s+(?P<eid_prefix>\S+)")
+
+        remove_lines = (
+            'LISP Site Registration Information',
+            '* = Some locators are down or unreachable',
+            '# = Some registrations are sourced by reliable transport',
+            'Site Name      Last      Up     Who Last             Inst     EID Prefix',
+            'Register         Registered           ID'
+        )
+
+        # Remove unwanted lines from raw text
+        def filter_lines(raw_output, remove_lines):
+            # Remove empty lines
+            clean_lines = list(filter(None, raw_output.splitlines()))
+            rendered_lines = []
+            for clean_line in clean_lines:
+                clean_line_strip = clean_line.strip()
+                # Remove lines unwanted lines from list of "remove_lines"
+                if not clean_line_strip.startswith(remove_lines):
+                    rendered_lines.append(clean_line_strip)
+            return rendered_lines
+
+        out = filter_lines(raw_output=out, remove_lines=remove_lines)
+
+        lisp_site = {}
+        lisp_site_index = 1
+        lisp_group_dict = {}
+
+        for line in out:
+            # site_uci       never     no     --                   4097     10.10.64.0/27
+            if lisp_site_capture.match(line):
+                lisp_site_match = lisp_site_capture.match(line)
+                groups = lisp_site_match.groupdict()
+                lisp_site = groups['lisp_site']
+                last_register = groups['last_register']
+                up = groups['up']
+                who_last_registered = groups['who_last_registered']
+                inst_id = groups['inst_id']
+                eid_prefix = groups['eid_prefix']
+                if not lisp_site_dict.get(lisp_site, {}):
+                    lisp_site_dict['site_names'] = {}
+                    lisp_site_dict['site_names'][lisp_site] = {}
+                    lisp_site_index = 1
+                lisp_group_dict['last_register'] = last_register
+                lisp_group_dict['up'] = up
+                lisp_group_dict['who_last_registered'] = who_last_registered
+                lisp_group_dict['inst_id'] = int(inst_id)
+                lisp_group_dict['eid_prefix'] = eid_prefix
+                if not lisp_site_dict['site_names'][lisp_site].get(lisp_site_index, {}):
+                    lisp_site_dict['site_names'][lisp_site][lisp_site_index] = lisp_group_dict
+                lisp_site_index = lisp_site_index + 1
+                lisp_group_dict = {}
+                continue
+            #                2w4d      yes#   10.1.64.71:36820  4097     10.10.64.2/32
+            elif list_site_info_capture.match(line):
+                list_site_info_match = list_site_info_capture.match(line)
+                groups = list_site_info_match.groupdict()
+                last_register = groups['last_register']
+                up = groups['up']
+                who_last_registered = groups['who_last_registered']
+                inst_id = groups['inst_id']
+                eid_prefix = groups['eid_prefix']
+                lisp_group_dict['last_register'] = last_register
+                lisp_group_dict['up'] = up
+                lisp_group_dict['who_last_registered'] = who_last_registered
+                lisp_group_dict['inst_id'] = int(inst_id)
+                lisp_group_dict['eid_prefix'] = eid_prefix
+                lisp_site_dict['site_names'][lisp_site][lisp_site_index] = lisp_group_dict
+                lisp_site_index = lisp_site_index + 1
+                lisp_group_dict = {}
+                continue
+        return lisp_site_dict
+
+

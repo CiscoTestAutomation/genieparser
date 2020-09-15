@@ -1,0 +1,24 @@
+Redundant System Information :
+------------------------------
+       Available system uptime = 0 minutes
+Switchovers system experienced = 0
+              Standby failures = 0
+        Last switchover reason = unsupported
+
+                 Hardware Mode = Simplex
+              Maintenance Mode = Disabled
+                Communications = Down      Reason: Failure
+
+Current Processor Information :
+-------------------------------
+               Active Location = slot 0
+        Current Software state = ACTIVE
+       Uptime in current state = 1 day, 16 hours, 42 minutes
+                 Image Version = Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.6(3)M2, RELEASE SOFTWARE (fc2)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2017 by Cisco Systems, Inc.
+Compiled Wed 29-Mar-17 14:05 by prod_rel_team
+        Configuration register = 0x0
+
+Peer (slot: 0) information is not available because it is in 'DISABLED' state
+    

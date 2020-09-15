@@ -1,0 +1,7 @@
+
+Router# show issu state detail
+ 
+--- Starting installation state synchronization ---
+Finished installation state synchronization
+No ISSU operation is in progress
+    
