@@ -249,7 +249,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                 group = m.groupdict()
                 ps = group['ps']
                 power_supply_dict = root_dict.setdefault('power_supply', {}).setdefault(ps, {})
-                power_supply_dict.setdefault('state', group['state'].lower())
+                power_supply_dict.setdefault('state', group['state'])
                 continue
 
             # Switch 1: SYSTEM TEMPERATURE is OK
@@ -299,7 +299,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                 root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
                 power_supply_dict = root_dict.setdefault('power_supply', {}).setdefault(ps, {})
                 power_supply_dict.update({k: v for k, v in group.items() if k in ['pid', 'serial_number', 'watts'] and v})
-                power_supply_dict.update({k: v.lower() for k, v in group.items()
+                power_supply_dict.update({k: v for k, v in group.items()
                      if k in ['status', 'system_power', 'poe_power'] and v})
                 continue
         return ret_dict
