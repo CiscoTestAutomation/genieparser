@@ -79,8 +79,6 @@ class ShowSnmpMib(ShowSnmpMibSchema):
 
         return ret_dict
 
-
-
 # ===================
 # Schema for:
 #  * 'show snmp user'
@@ -88,14 +86,16 @@ class ShowSnmpMib(ShowSnmpMibSchema):
 class ShowSnmpUserSchema(MetaParser):
     """Schema for show snmp user."""
 
-    schema = {
-        Any(): {
-            Optional("access-list"): str,
-            "auth-protocol": str,
-            "engine-id": str,
-            "group-name": str,
-            "priv-protocol": str,
-            "storage-type": str
+    schema = { 
+        "user_name" : {
+             Any(): {
+                Optional("access_list"): str,
+                "auth_protocol": str,
+                "engine_id": str,
+                "group_name": str,
+                "priv_protocol": str,
+                "storage_type": str
+            }
         }
     }
 
@@ -163,34 +163,43 @@ class ShowSnmpUser(ShowSnmpUserSchema):
         current_loop_user = ""
 
         for line in output.splitlines():
+            # User name: SNMPv3-alfa
             if p_user.match(line):
                 match = p_user.match(line)
-                current_loop_user = match.group("user") 
-                snmp_user_obj[match.group("user")] = {}
+                current_loop_user = match.group("user")
+                if not snmp_user_obj.get("user_name", {}):
+                    snmp_user_obj["user_name"] = {}
+                snmp_user_obj["user_name"].update({current_loop_user: {}})
                 continue
+            # Engine ID: 800000090300002790FBCF00
             elif p_engine.match(line):
                 match = p_engine.match(line)
-                snmp_user_obj[current_loop_user]["engine-id"] = match.group("engine")
+                snmp_user_obj["user_name"][current_loop_user]["engine_id"] = match.group("engine")
                 continue
+            # storage-type: nonvolatile   active access-list: 69
             elif p_storage_access.match(line):
                 match = p_storage_access.match(line)
-                snmp_user_obj[current_loop_user]["storage-type"] = match.group("storage")
-                snmp_user_obj[current_loop_user]["access-list"] = match.group("access")
+                snmp_user_obj["user_name"][current_loop_user]["storage_type"] = match.group("storage")
+                snmp_user_obj["user_name"][current_loop_user]["access_list"] = match.group("access")
                 continue
+            # storage-type: nonvolatile         active
             elif p_storage.match(line):
                 match = p_storage.match(line)
-                snmp_user_obj[current_loop_user]["storage-type"] = match.group("storage")
+                snmp_user_obj["user_name"][current_loop_user]["storage_type"] = match.group("storage")
                 continue
+            # Authentication Protocol: SHA
             elif p_auth.match(line):
                 match = p_auth.match(line)
-                snmp_user_obj[current_loop_user]['auth-protocol'] = match.group("auth")
+                snmp_user_obj["user_name"][current_loop_user]["auth_protocol"] = match.group("auth")
                 continue
+            # Privacy Protocol: AES256
             elif p_priv.match(line):
                 match = p_priv.match(line)
-                snmp_user_obj[current_loop_user]['priv-protocol'] = match.group("priv")
+                snmp_user_obj["user_name"][current_loop_user]["priv_protocol"] = match.group("priv")
                 continue
+            # Group-name: group1
             elif p_group.match(line):
                 match = p_group.match(line)
-                snmp_user_obj[current_loop_user]['group-name'] = match.group("group")
+                snmp_user_obj["user_name"][current_loop_user]["group_name"] = match.group("group")
 
         return snmp_user_obj
