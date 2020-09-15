@@ -1,0 +1,34 @@
+       There are no SXP Connections.
+ SXP              : Enabled
+ Highest Version Supported: 4
+ Default Password : Set
+ Default Key-Chain: Not Set
+ Default Key-Chain Name: Not Applicable
+ Default Source IP: 192.168.2.24
+Connection retry open period: 120 secs
+Reconcile period: 120 secs
+Retry open timer is not running
+Peer-Sequence traverse limit for export: Not Set
+Peer-Sequence traverse limit for import: Not Set
+
+----------------------------------------------------------------------------------------------------------------------------------
+Peer_IP          Source_IP        Conn Status                                          Duration
+----------------------------------------------------------------------------------------------------------------------------------
+10.100.123.1    192.168.2.24   On                                                   44:19:54:52 (dd:hr:mm:sec)
+10.100.123.2    192.168.2.24   On                                                   44:19:54:52 (dd:hr:mm:sec)
+10.100.123.3    192.168.2.24   On                                                   44:19:54:52 (dd:hr:mm:sec)
+10.100.123.4    192.168.2.24   On                                                   44:19:54:52 (dd:hr:mm:sec)
+10.100.123.5    192.168.2.24   On                                                   44:18:58:47 (dd:hr:mm:sec)
+10.100.123.6    192.168.2.24   On                                                   20:12:53:40 (dd:hr:mm:sec)
+10.100.123.7    192.168.2.24   On                                                   44:18:58:47 (dd:hr:mm:sec)
+10.100.123.8    192.168.2.24   On                                                   20:12:40:41 (dd:hr:mm:sec)
+10.100.123.9    192.168.2.24   On                                                   44:18:58:47 (dd:hr:mm:sec)
+10.100.123.10   192.168.2.24   On                                                   44:18:58:47 (dd:hr:mm:sec)
+10.100.123.11   192.168.2.24   On                                                   44:22:21:10 (dd:hr:mm:sec)
+10.100.123.12   192.168.2.24   On                                                   44:18:58:47 (dd:hr:mm:sec)
+10.100.123.13   192.168.2.24   On                                                   45:08:24:37 (dd:hr:mm:sec)
+10.100.123.14   192.168.2.24   On                                                   45:08:24:37 (dd:hr:mm:sec)
+10.100.123.15   192.168.2.24   On                                                   36:11:31:08 (dd:hr:mm:sec)
+10.100.123.16   192.168.2.24   On                                                   36:12:13:50 (dd:hr:mm:sec)
+
+Total num of SXP Connections = 16

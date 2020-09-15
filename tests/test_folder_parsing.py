@@ -5,6 +5,7 @@ import inspect
 import os
 import glob
 import json
+import argparse
 from unittest.mock import Mock
 from pyats import aetest
 from pyats.aetest.steps import Steps
@@ -13,6 +14,23 @@ from genie.libs import parser as _parser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 from pyats.topology import Device
+
+# Create the parser
+my_parser = argparse.ArgumentParser(description="Optional arguments for 'nose'-like tests")
+my_parser.add_argument('-o', "--operating_system",
+                       #metavar='_os',
+                       type=str,
+                       help='The OS you wish to filter on',
+                       default=None)
+my_parser.add_argument('-c', "--class_name",
+                       #metavar='_class',
+                       type=str,
+                       help="The Class you wish to filter on, (not the Test File)",
+                       default=None)
+args = my_parser.parse_args()
+
+_os = args.operating_system
+_class = args.class_name
 
 # This is the list of Classes that currently have no testing. It was found during the process
 # of converting to folder based testing strategy
@@ -80,26 +98,6 @@ CLASS_SKIP = {
         "Show_Stackwise_Virtual_Dual_Active_Detection": True, # PR submitted
         "Show_Cts_Sxp_Connections_Brief": True, # PR submitted
         "ShowSoftwaretab": True, # PR submitted
-        "ShowOmpSummary": True, # To be migrated
-        "ShowSdwanOmpSummary": True, # To be migrated
-        "ShowSdwanSystemStatus": True, # To be migrated
-        "ShowRebootHistory": True, # To be migrated
-        "ShowSdwanRebootHistory": True, # To be migrated
-        "ShowSslProxyStatistics": True, # To be migrated
-        "ShowSslproxyStatus": True, # To be migrated
-        "ShowSdwanIpsecInboundConnections": True, # To be migrated
-        "ShowSdwanIpsecLocalsa": True, # To be migrated
-        "ShowSdwanIpsecOutboundConnections": True, # To be migrated
-        "ShowSdwanVersion": True, # To be migrated
-        "ShowLispSite": True, # To be migrated
-        "ShowSdwanAppqoeNatStatistics": True, # To be migrated
-        "ShowSdwanAppqoeRmResources": True, # To be migrated
-        "ShowSdwanAppqoeTcpoptStatus": True, # To be migrated
-        "ShowApphostingList": True, # To be migrated
-        "ShowApRfProfileSummary": True, # To be migrated
-        "ShowHwModuleStatus": True, # To be migrated
-        "ShowSdwanVersion": True, # To be migrated
-        "ShowSdwanSoftware": True, # To be migrated
     },
     "ios": {
         "ShowPimNeighbor": True,
@@ -161,6 +159,8 @@ def read_python_file(file_path):
 def get_operating_systems():
     """Helper Script to get operating systems."""
     # Update and fix as more OS's converted to folder baed tests
+    if _os:
+        return [_os]
     return ["asa", "ios", "iosxe"]
     # operating_system = []
     # for folder in os.listdir("./"):
@@ -190,10 +190,12 @@ class FileBasedTest(aetest.Testcase):
                 os.path.basename(parse_file[: -len(".py")]), parse_file
             ).load_module()
             start = 0
-            for name, _class in inspect.getmembers(_module):
+            for name, local_class in inspect.getmembers(_module):
                 if CLASS_SKIP.get(operating_system) and CLASS_SKIP[operating_system].get(name):
                     continue
-                if hasattr(_class, "cli") and not name.endswith("_iosxe"):
+                if _class and _class != name:
+                    continue
+                if hasattr(local_class, "cli") and not name.endswith("_iosxe"):
                     # if name != 'ShowAuthenticationSessionsInterface':
                     #    start = 1
                     # if not start:
@@ -204,26 +206,26 @@ class FileBasedTest(aetest.Testcase):
                             continue_=True,
                         ) as golden_steps:
                             self.test_golden(
-                                golden_steps, _class, operating_system, None
+                                golden_steps, local_class, operating_system, None
                             )
                         with class_step.start(
                             f"Test Empty -> {operating_system} -> {name}",
                             continue_=True,
                         ) as empty_steps:
-                            self.test_empty(empty_steps, _class, operating_system, None)
+                            self.test_empty(empty_steps, local_class, operating_system, None)
 
-    def test_golden(self, steps, _class, operating_system, token=None):
+    def test_golden(self, steps, local_class, operating_system, token=None):
         """Test step that finds any output named with _output.txt, and compares to similar named .py file."""
-        folder_root = f"{operating_system}/{_class.__name__}/cli/equal"
+        folder_root = f"{operating_system}/{local_class.__name__}/cli/equal"
         output_glob = glob.glob(f"{folder_root}/*_output.txt")
         if len(output_glob) == 0:
-            self.failed(f"No files found in appropriate directory for {_class}")
+            self.failed(f"No files found in appropriate directory for {local_class}")
         # Look for any files ending with _output.txt, presume the user defined name from that (based
         # on truncating that _output.txt suffix) and obtaining expected results and potentially an arguments file
         for user_defined in output_glob:
             user_test = os.path.basename(user_defined[: -len("_output.txt")])
             with steps.start(
-                f"Gold -> {operating_system} -> {_class.__name__} -> {user_test}",
+                f"Gold -> {operating_system} -> {local_class.__name__} -> {user_test}",
                 continue_=True,
             ):
                 golden_output_str = read_from_file(
@@ -241,26 +243,26 @@ class FileBasedTest(aetest.Testcase):
                     )
 
                 device = Mock(**golden_output)
-                obj = _class(device=device)
+                obj = local_class(device=device)
                 parsed_output = obj.parse(**arguments)
-                assert parsed_output == golden_parsed_output
+                assert parsed_output == golden_parsed_output, "{parsed_output} \n!=\n{golden_parsed_output}".format(parsed_output=parsed_output, golden_parsed_output=golden_parsed_output)
 
-    def test_empty(self, steps, _class, operating_system, token=None):
+    def test_empty(self, steps, local_class, operating_system, token=None):
         """Test step that looks for empty output."""
 
-        folder_root = f"{operating_system}/{_class.__name__}/cli/empty"
+        folder_root = f"{operating_system}/{local_class.__name__}/cli/empty"
         output_glob = glob.glob(f"{folder_root}/*_output.txt")
         if (
             len(output_glob) == 0
-            and not EMPTY_SKIP.get(operating_system, {}).get(_class.__name__)
+            and not EMPTY_SKIP.get(operating_system, {}).get(local_class.__name__)
         ):
             self.failed(
-                f"No files found in appropriate directory for {_class} empty file"
+                f"No files found in appropriate directory for {local_class} empty file"
             )
         for user_defined in output_glob:
             user_test = os.path.basename(user_defined[: -len("_output.txt")])
             with steps.start(
-                f"Empty -> {operating_system} -> {_class.__name__} -> {user_test}",
+                f"Empty -> {operating_system} -> {local_class.__name__} -> {user_test}",
                 continue_=True,
             ):
                 empty_output_str = read_from_file(
@@ -274,10 +276,10 @@ class FileBasedTest(aetest.Testcase):
                     )
 
                 device = Mock(**empty_output)
-                obj = _class(device=device)
+                obj = local_class(device=device)
                 try:
                     obj.parse(**arguments)
-                    self.failed(f"File parsed, when expected not to for {_class}")
+                    self.failed(f"File parsed, when expected not to for {local_class}")
                 except SchemaEmptyParserError:
                     return True
 
