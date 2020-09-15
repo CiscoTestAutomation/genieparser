@@ -253,8 +253,9 @@ class ShowVersion(ShowVersionSchema):
                 continue
 
             # cisco N9K-C93180YC-EX ("supervisor")
+            '''
             p15a = re.compile(r'^\s*cisco +(?P<model>[a-zA-Z0-9\-\s]+)'
-            r'( +\((?P<slot>[0-9]+) Slot\))? +[C|c]hassis( +\(\"(?P<rp>'
+            r'( +\((?P<slot>[0-9]+) Slot\))?( +[C|c]hassis)?( +\(\"(?P<rp>'
             r'[a-zA-Z0-9\s\-\/\+]+)\"\))?(\s)?$')
             m = p15.match(line)
             if m:
@@ -272,7 +273,7 @@ class ShowVersion(ShowVersionSchema):
                 if 'rp' not in version_dict['platform']['hardware']:
                     version_dict['platform']['hardware']['rp'] = rp
                 continue
-
+            '''
 
 
 
