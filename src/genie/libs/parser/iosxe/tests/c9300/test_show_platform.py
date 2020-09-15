@@ -464,9 +464,7 @@ class TestShowEnvironmentAll(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowEnvironmentAll(device=self.device)
         parsed_output = obj.parse()
-        from genie.libs.parser.utils.common import format_output
-        print(format_output(parsed_output))
-        # self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 if __name__ == '__main__':
