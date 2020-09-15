@@ -102,7 +102,7 @@ class ShowEnvironmentAllSchema(MetaParser):
                     Any(): {
                         'state': str,
                         Optional('direction'): str,
-                        Optional('speed'): str,
+                        Optional('speed'): int,
                     },
                 },
                 'power_supply': {
@@ -212,7 +212,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                 switch = group['switch']
                 fan = group['fan']
                 root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
-                root_dict.setdefault('fan', {}).setdefault(fan, {}).setdefault('state', group['state'].lower())
+                root_dict.setdefault('fan', {}).setdefault(fan, {}).setdefault('state', group['state'])
                 continue
 
             # Switch 1 FAN 1 direction is Front to Back
@@ -223,7 +223,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                 fan = group['fan']
                 fan_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})\
                                    .setdefault('fan', {}).setdefault(fan, {})
-                fan_dict.update({'direction': group['direction'].lower()})
+                fan_dict.update({'direction': group['direction']})
                 continue
 
             # Switch   FAN     Speed   State
@@ -234,8 +234,8 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                 group = m.groupdict()
                 switch = group['switch']
                 fan = group['fan']
-                speed = group['speed']
-                state = group['state'].lower()
+                speed = int(group['speed'])
+                state = group['state']
 
                 root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
                 fan_dict = root_dict.setdefault('fan', {}).setdefault(fan, {})
@@ -258,7 +258,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                 group = m.groupdict()
                 switch = group['switch']
                 root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
-                root_dict['system_temperature_state'] = group['state'].lower()
+                root_dict['system_temperature_state'] = group['state']
                 continue
 
             # Inlet Temperature Value: 34 Degree Celsius
@@ -275,7 +275,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
             # Temperature State: GREEN
             m = p5.match(line)
             if m:
-                temp_dict['state'] = m.groupdict()['state'].lower()
+                temp_dict['state'] = m.groupdict()['state']
                 continue
 
             # Yellow Threshold : 46 Degree Celsius
