@@ -221,6 +221,7 @@ class ShowCtsSxpConnectionsBrief(ShowCtsSxpConnectionsBriefSchema):
         else:
             return {}
 
+
 # ==================
 # Schema for:
 #  * 'show cts pacs'
@@ -368,8 +369,97 @@ class ShowCtsPacs(ShowCtsPacsSchema):
         return cts_pacs_dict
 
 
+# =================================
+# Schema for:
+#  * 'show cts role-based counters'
+# =================================
+class ShowCtsRoleBasedCountersSchema(MetaParser):
+    """Schema for show cts role-based counters."""
 
-<<<<<<< HEAD
+    schema = {
+        "cts_rb_count": {
+            int: {
+                "src_group": str,
+                "dst_group": str,
+                "sw_denied_count": int,
+                "hw_denied_count": int,
+                "sw_permit_count": int,
+                "hw_permit_count": int,
+                "sw_monitor_count": int,
+                "hw_monitor_count": int
+            }
+        }
+    }
+
+
+# =================================
+# Parser for:
+#  * 'show cts role-based counters'
+# =================================
+class ShowCtsRoleBasedCounters(ShowCtsRoleBasedCountersSchema):
+    """Parser for show cts role-based counters"""
+
+    cli_command = 'show cts role-based counters'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        cts_rb_count_dict = {}
+        # Role-based IPv4 counters
+        # From    To      SW-Denied  HW-Denied  SW-Permitt HW-Permitt SW-Monitor HW-Monitor
+        # *       *       0          0          2          30802626587 0          0
+        # 2       0       0          4794060    0          0          0          0
+        # 7       0       0          0          0          0          0          0
+        # 99      0       0          0          0          0          0          0
+
+        rb_counters_capture = re.compile(r"^(?P<src_group>(\d+|\*))\s+(?P<dst_group>(\d+|\*))\s+"
+                                         r"(?P<sw_denied_count>\d+)\s+(?P<hw_denied_count>\d+)\s+"
+                                         r"(?P<sw_permit_count>\d+)\s+(?P<hw_permit_count>\d+)\s+"
+                                         r"(?P<sw_monitor_count>\d+)\s+(?P<hw_monitor_count>\d+)")
+
+        remove_lines = ('Role-based IPv4 counters', 'From')
+
+        # Remove unwanted lines from raw text
+        def filter_lines(raw_output, remove_lines):
+            # Remove empty lines
+            clean_lines = list(filter(None, raw_output.splitlines()))
+            rendered_lines = []
+            for clean_line in clean_lines:
+                clean_line_strip = clean_line.strip()
+                # print(clean_line)
+                # Remove lines unwanted lines from list of "remove_lines"
+                if not clean_line_strip.startswith(remove_lines):
+                    rendered_lines.append(clean_line_strip)
+            return rendered_lines
+
+        out = filter_lines(raw_output=out, remove_lines=remove_lines)
+
+        rb_count_index = 1
+        rb_count_data = {}
+
+        for line in out:
+            # *       *       0          0          2          30802626587 0          0
+            if rb_counters_capture.match(line):
+                rb_counters_match = rb_counters_capture.match(line)
+                groups = rb_counters_match.groupdict()
+                if not cts_rb_count_dict.get('cts_rb_count', {}):
+                    cts_rb_count_dict['cts_rb_count'] = {}
+                if not cts_rb_count_dict['cts_rb_count'].get(rb_count_index, {}):
+                    cts_rb_count_dict['cts_rb_count'][rb_count_index] = {}
+                for k, v in groups.items():
+                    if v.isdigit() and k not in ['src_group', 'dst_group']:
+                        v = int(v)
+                    rb_count_data.update({k: v})
+                cts_rb_count_dict['cts_rb_count'][rb_count_index].update(rb_count_data)
+                rb_count_index = rb_count_index + 1
+                continue
+
+        return cts_rb_count_dict
+
+
 # ==============================
 # Schema for:
 #  * 'show cts environment-data'
@@ -414,32 +504,9 @@ class ShowCtsEnvironmentDataSchema(MetaParser):
           "state_machine_status": str,
           Optional("retry_timer_status"): str,
           Optional("cache_data_status"): str
-=======
-# =================================
-# Schema for:
-#  * 'show cts role-based counters'
-# =================================
-class ShowCtsRoleBasedCountersSchema(MetaParser):
-    """Schema for show cts role-based counters."""
-
-    schema = {
-        "cts_rb_count": {
-            int: {
-                "src_group": str,
-                "dst_group": str,
-                "sw_denied_count": int,
-                "hw_denied_count": int,
-                "sw_permit_count": int,
-                "hw_permit_count": int,
-                "sw_monitor_count": int,
-                "hw_monitor_count": int
-            }
->>>>>>> 35471076b60e2623ce3b860b92f0702fc1de4a8d
         }
     }
 
-
-<<<<<<< HEAD
 
 # ==============================
 # Parser for:
@@ -449,16 +516,6 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
     """Parser for show cts environment-data"""
 
     cli_command = 'show cts environment-data'
-=======
-# =================================
-# Parser for:
-#  * 'show cts role-based counters'
-# =================================
-class ShowCtsRoleBasedCounters(ShowCtsRoleBasedCountersSchema):
-    """Parser for show cts role-based counters"""
-
-    cli_command = 'show cts role-based counters'
->>>>>>> 35471076b60e2623ce3b860b92f0702fc1de4a8d
 
     def cli(self, output=None):
         if output is None:
@@ -466,7 +523,6 @@ class ShowCtsRoleBasedCounters(ShowCtsRoleBasedCountersSchema):
         else:
             out = output
 
-<<<<<<< HEAD
         cts_env_dict = {}
         # CTS Environment Data
         # ====================
@@ -543,22 +599,6 @@ class ShowCtsRoleBasedCounters(ShowCtsRoleBasedCountersSchema):
 
         remove_lines = (
         'CTS Environment Data', '=========', 'Local Device SGT:', 'Server List Info:', 'Security Group Name Table:')
-=======
-        cts_rb_count_dict = {}
-        # Role-based IPv4 counters
-        # From    To      SW-Denied  HW-Denied  SW-Permitt HW-Permitt SW-Monitor HW-Monitor
-        # *       *       0          0          2          30802626587 0          0
-        # 2       0       0          4794060    0          0          0          0
-        # 7       0       0          0          0          0          0          0
-        # 99      0       0          0          0          0          0          0
-
-        rb_counters_capture = re.compile(r"^(?P<src_group>(\d+|\*))\s+(?P<dst_group>(\d+|\*))\s+"
-                                         r"(?P<sw_denied_count>\d+)\s+(?P<hw_denied_count>\d+)\s+"
-                                         r"(?P<sw_permit_count>\d+)\s+(?P<hw_permit_count>\d+)\s+"
-                                         r"(?P<sw_monitor_count>\d+)\s+(?P<hw_monitor_count>\d+)")
-
-        remove_lines = ('Role-based IPv4 counters', 'From')
->>>>>>> 35471076b60e2623ce3b860b92f0702fc1de4a8d
 
         # Remove unwanted lines from raw text
         def filter_lines(raw_output, remove_lines):
@@ -575,7 +615,6 @@ class ShowCtsRoleBasedCounters(ShowCtsRoleBasedCountersSchema):
 
         out = filter_lines(raw_output=out, remove_lines=remove_lines)
 
-<<<<<<< HEAD
         server_data = {}
         security_groups = {}
         keywrap_index = 1
@@ -727,26 +766,3 @@ class ShowCtsRoleBasedCounters(ShowCtsRoleBasedCountersSchema):
                 continue
 
         return cts_env_dict
-=======
-        rb_count_index = 1
-        rb_count_data = {}
-
-        for line in out:
-            # *       *       0          0          2          30802626587 0          0
-            if rb_counters_capture.match(line):
-                rb_counters_match = rb_counters_capture.match(line)
-                groups = rb_counters_match.groupdict()
-                if not cts_rb_count_dict.get('cts_rb_count', {}):
-                    cts_rb_count_dict['cts_rb_count'] = {}
-                if not cts_rb_count_dict['cts_rb_count'].get(rb_count_index, {}):
-                    cts_rb_count_dict['cts_rb_count'][rb_count_index] = {}
-                for k, v in groups.items():
-                    if v.isdigit() and k not in ['src_group', 'dst_group']:
-                        v = int(v)
-                    rb_count_data.update({k: v})
-                cts_rb_count_dict['cts_rb_count'][rb_count_index].update(rb_count_data)
-                rb_count_index = rb_count_index + 1
-                continue
-
-        return cts_rb_count_dict
->>>>>>> 35471076b60e2623ce3b860b92f0702fc1de4a8d

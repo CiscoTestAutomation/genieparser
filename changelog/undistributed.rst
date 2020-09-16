@@ -10,10 +10,6 @@
 --------------------------------------------------------------------------------
 
 * IOSXE
-<<<<<<< HEAD
-    * Added ShowCtsEnvironmentData
-        * show cts environment-data
-=======
     * Added ShowLispSite
       * show lisp site
     * Added ShowCtsRoleBasedCounters
@@ -26,13 +22,8 @@
         * show ap rf-profile summary
     * Added ShowCtsSxpConnectionsBrief
         * show show cts sxp connections brief
->>>>>>> 35471076b60e2623ce3b860b92f0702fc1de4a8d
 
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 35471076b60e2623ce3b860b92f0702fc1de4a8d
