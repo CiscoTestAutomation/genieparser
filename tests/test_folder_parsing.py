@@ -105,6 +105,15 @@ CLASS_SKIP = {
         "ShowPlatformResources": True, # To be migrated
         "ShowCtsRoleBasedCounters": True, # To be migrated
         "ShowCtsSxpConnectionsBrief": True, # To be migrated
+        "ShowOmpPeers_viptela": True, # To be migrated
+        "ShowOmpTlocPath_viptela": True, # To be migrated
+        "ShowOmpTlocs_viptela": True, # To be migrated
+        "ShowSdwanOmpPeers": True, # To be migrated
+        "ShowSdwanOmpTlocPath": True,
+        "ShowSdwanOmpTlocs": True,
+        "ShowApDot11DualBandSummary": True,
+        "ShowSdwanUtdEngine": True,
+        "ShowUtdEngineStandardStatus": True,
     },
     "ios": {
         "ShowPimNeighbor": True,
