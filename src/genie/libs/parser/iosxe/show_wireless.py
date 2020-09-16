@@ -11,7 +11,30 @@ from genie.metaparser.util.schemaengine import Any, Optional
 class ShowWirelessMobilitySummarySchema(MetaParser):
     """Schema for show wireless mobility summary."""
 
-    schema = {}
+    schema = {
+        "controller_config": {
+            "group_name": str,
+            "ipv4": str,
+            "mac_address": str,
+            "multicast_ipv4": str,
+            "multicast_ipv6": str,
+            "pmtu": str,
+            "public_ip": str,
+            "status": str,
+        },
+        "mobility_summary": {
+            "domain_id": str,
+            "dscp_value": str,
+            "group_name": str,
+            "keepalive": str,
+            "mac_addr": str,
+            "mgmt_ipv4": str,
+            "mgmt_ipv6": str,
+            "mgmt_vlan": str,
+            "multi_ipv4": str,
+            "multi_ipv6": str,
+        },
+    }
 
 
 # ===================================
@@ -29,6 +52,25 @@ class ShowWirelessMobilitySummary(ShowWirelessMobilitySummarySchema):
 
         else:
             output = output
+
+        # Mobility Summary
+
+        # Wireless Management VLAN: 299
+        # Wireless Management IP Address: 10.10.7.177
+        # Wireless Management IPv6 Address:
+        # Mobility Control Message DSCP Value: 48
+        # Mobility Keepalive Interval/Count: 10/3
+        # Mobility Group Name: b80-mobility
+        # Mobility Multicast Ipv4 address: 0.0.0.0
+        # Mobility Multicast Ipv6 address: ::
+        # Mobility MAC Address: 58bf.ea35.b60b
+        # Mobility Domain Identifier: 0x61b3
+
+        # Controllers configured in the Mobility Domain:
+
+        # IP                                        Public Ip                                  MAC Address         Group Name                       Multicast IPv4    Multicast IPv6                              Status                       PMTU
+        # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        # 10.10.7.177                               N/A                                        58bf.ea35.b60b      b80-mobility                0.0.0.0           ::                                          N/A                          N/A
 
         # Mobility Summary
         mobility_summary_capture = (
@@ -84,8 +126,9 @@ class ShowWirelessMobilitySummary(ShowWirelessMobilitySummarySchema):
         for key, capture in zip(info_dict_keys, info_captures):
 
             info_search = re.search(capture, output, re.MULTILINE)
-            info_group = info_search.groupdict()
-            print(info_group)
-            mobility_info_obj[key] = info_group
+
+            if info_search:
+                info_group = info_search.groupdict()
+                mobility_info_obj[key] = info_group
 
         return mobility_info_obj
