@@ -1,0 +1,40 @@
+#show running-config interface Gi1/0/13
+
+Building configuration...
+
+
+
+Current configuration : 914 bytes
+
+!
+
+interface GigabitEthernet1/0/13
+    description ISE Controlled Port
+    switchport access vlan 70
+    switchport mode access
+    switchport nonegotiate
+    ip arp inspection limit rate 1024
+    load-interval 30
+    authentication control-direction in
+    authentication event fail action next-method
+    authentication host-mode multi-auth
+    authentication order dot1x mab
+    authentication priority dot1x mab
+    authentication port-control auto
+    authentication periodic
+    authentication timer reauthenticate server
+    authentication timer inactivity 65535
+    authentication violation restrict
+    authentication fallback dot1x
+    mab
+    snmp trap mac-notification change added
+    snmp trap mac-notification change removed
+    no snmp trap link-status
+    dot1x pae authenticator
+    dot1x timeout quiet-period 5
+    dot1x timeout server-timeout 10
+    dot1x timeout tx-period 5
+    spanning-tree portfast
+    spanning-tree bpduguard enable
+    ip dhcp snooping limit rate 100
+end

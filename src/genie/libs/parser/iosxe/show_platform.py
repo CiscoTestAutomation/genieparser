@@ -13,6 +13,7 @@ IOSXE parsers for the following show commands:
     * 'show switch detail'
     * 'show switch'
     * 'show environment all'
+    * 'show platform hardware fed switch active fwd-asic resource tcam utilization'
     * 'show module'
     * 'show platform hardware qfp active datapath utilization summary'
     * 'show platform resources'
@@ -1802,7 +1803,7 @@ class ShowInventorySchema(MetaParser):
     schema = {
         Optional('main'):
             {Optional('swstack'): bool,
-             Optional('chassis'):
+             Optional(Any()):
                 {Any():
                     {Optional('name'): str,
                      Optional('descr'): str,
@@ -1956,7 +1957,6 @@ class ShowInventory(ShowInventorySchema):
         # PID: , VID: 1.0  , SN: 1162722191
         p2 = re.compile(r'^PID: +(?P<pid>[\S\s]+)? *, +VID:(?: +(?P<vid>(\S+)))? *,'
                         r' +SN:(?: +(?P<sn>(\S+)))?$')
-
         for line in out.splitlines():
             line = line.strip()
 
@@ -1967,6 +1967,7 @@ class ShowInventory(ShowInventorySchema):
             # NAME: "NIM subslot 0/0", DESCR: "Front Panel 3 ports Gigabitethernet Module"
             # NAME: "Modem 0 on Cellular0/2/0", DESCR: "Sierra Wireless EM7455/EM7430"
             m = p1.match(line)
+            
             if m:
                 group = m.groupdict()
                 name = group['name'].strip()
@@ -2028,6 +2029,16 @@ class ShowInventory(ShowInventorySchema):
                 if 'Chassis' in name:
                     main_dict = ret_dict.setdefault('main', {}).\
                         setdefault('chassis', {}).\
+                        setdefault(pid, {})
+                    main_dict['name'] = name
+                    main_dict['descr'] = descr
+                    main_dict['pid'] = pid
+                    main_dict['vid'] = vid
+                    main_dict['sn'] = sn
+
+                if 'Switch1' in name or 'Switch2' in name or 'TenGigabitEthernet' in name:
+                    main_dict = ret_dict.setdefault('main', {}).\
+                        setdefault(name, {}).\
                         setdefault(pid, {})
                     main_dict['name'] = name
                     main_dict['descr'] = descr
@@ -6397,6 +6408,99 @@ class ShowPlatformHardwareQfpActiveFeatureAppqoe(ShowPlatformHardwareQfpActiveFe
                 groups = m.groupdict()
                 key = groups['key'].replace('-', '_').replace(' ', '_').lower()
                 last_dict_ptr.update({key: int(groups['value'])})
+
+        return ret_dict
+
+
+class ShowPlatformTcamUtilizationSchema(MetaParser):
+    """Schema for show platform hardware fed sw active fwd-asic resource tcam utilization """
+    schema = {
+        'asic': {
+            Any(): {
+                'table': {
+                    Any(): {
+                        'subtype': {
+                            Any(): {
+                                'dir': {
+                                    Any(): {
+                                        'max': str,
+                                        'used': str,
+                                        'used_percent': str,
+                                        'v4': str,
+                                        'v6': str,
+                                        'mpls': str,
+                                        'other': str,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowPlatformTcamUtilization(ShowPlatformTcamUtilizationSchema):
+    """Parser for show platform hardware fed sw active fwd-asic resource tcam utilization """
+
+    cli_command = 'show platform hardware fed switch active fwd-asic resource tcam utilization'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        # CAM Utilization for ASIC  [0]
+        p1 = re.compile(r'CAM +Utilization +for +ASIC  +\[+(?P<asic>(\d+))\]$')
+        
+        #CTS Cell Matrix/VPN
+        #Label                  EM           O       16384        0    0.00%        0        0        0        0
+        #CTS Cell Matrix/VPN
+        #Label                  TCAM         O        1024        1    0.10%        0        0        0        1
+        # Mac Address Table      EM           I       16384       44    0.27%        0        0        0       44
+        # Mac Address Table      TCAM         I        1024       21    2.05%        0        0        0       21
+        p2 = re.compile(r'(?P<table>.*(\S+)) +(?P<subtype>\S+) +(?P<dir>\S+) +(?P<max>\d+) +(?P<used>\d+) +(?P<used_percent>\S+\%) +(?P<v4>\d+) +(?P<v6>\d+) +(?P<mpls>\d+) +(?P<other>\d+)$')
+        
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # CAM Utilization for ASIC  [0]
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                asic = group['asic']
+                asic_dict = ret_dict.setdefault('asic', {}).setdefault(asic, {})
+                continue
+
+            #CTS Cell Matrix/VPN
+            #Label                  EM           O       16384        0    0.00%        0        0        0        0
+            #CTS Cell Matrix/VPN
+            #Label                  TCAM         O        1024        1    0.10%        0        0        0        1
+            # Mac Address Table      EM           I       16384       44    0.27%        0        0        0       44
+            # Mac Address Table      TCAM         I        1024       21    2.05%        0        0        0       21
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                table_ = group.pop('table')
+                if table_ == 'Label':
+                    table_ = 'CTS Cell Matrix/VPN Label'
+                subtype_ = group.pop('subtype')
+                dir_ = group.pop('dir')
+                dir_dict = asic_dict.setdefault('table', {}). \
+                            setdefault(table_, {}). \
+                            setdefault('subtype', {}). \
+                            setdefault(subtype_, {}). \
+                            setdefault('dir', {}). \
+                            setdefault(dir_, {})
+                dir_dict.update({k: v for k, v in group.items()})
+                continue
 
         return ret_dict
 

@@ -1,0 +1,20 @@
+
+show inventory
+NAME: "Switch System", DESCR: "Cisco Systems, Inc. WS-C4948 1 slot switch "
+PID:                   , VID:      , SN: FOX1638GU8L
+
+NAME: "Linecard(slot 1)", DESCR: "10/100/1000BaseT (RJ45), 1000BaseX (SFP) Supervisor with 48 10/100/1000BASE-T ports and 4 1000BASE-"
+PID: WS-C4948          , VID: V12  , SN: FOX1638GU8L
+
+NAME: "GigabitEthernet1/45", DESCR: "1000BaseSX"
+PID: Unspecified       , VID:      , SN: AGM1637LJE4
+
+NAME: "GigabitEthernet1/47", DESCR: "1000BaseSX"
+PID: GLC-SX-MM         , VID: V03  , SN: VB12150046 
+
+NAME: "Power Supply 1", DESCR: "Power Supply ( AC 300W )"
+PID: PWR-C49-300AC     , VID:      , SN: PAC15240NRN
+
+NAME: "Power Supply 2", DESCR: "Power Supply ( AC 300W )"
+PID: PWR-C49-300AC     , VID:      , SN: PAC15240S5T
+    

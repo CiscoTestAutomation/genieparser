@@ -42,9 +42,12 @@ class ShowHwModuleStatus(ShowHwModuleStatusSchema):
 
     cli_command = 'show hw_module subslot {subslot} transceiver {transceiver} status'
 
-    def cli(self, output=None):
+    def cli(self, subslot="", transceiver="", output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if subslot and transceiver:
+                out = self.device.execute(self.cli_command).format(subslot=subslot, transceiver=transceiver)
+            else:
+                out = self.device.execute(self.cli_command)
         else:
             out = output
 
