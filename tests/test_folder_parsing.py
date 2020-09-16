@@ -100,6 +100,11 @@ CLASS_SKIP = {
         "ShowHwModuleStatus": True, # To be migrated
         "ShowSdwanVersion": True, # To be migrated
         "ShowSdwanSoftware": True, # To be migrated
+        "ShowSdwanSoftware": True, # To be migrated
+        "ShowPlatformHardwareQfpActiveTcamResourceManagerUsage": True, # To be migrated
+        "ShowPlatformResources": True, # To be migrated
+        "ShowCtsRoleBasedCounters": True, # To be migrated
+        "ShowCtsSxpConnectionsBrief": True, # To be migrated
     },
     "ios": {
         "ShowPimNeighbor": True,
