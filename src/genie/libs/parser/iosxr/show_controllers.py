@@ -1094,7 +1094,7 @@ class ShowControllersNpuInterfaceInstanceLocationSchema(MetaParser):
             Any(): {
                 'interface': {
                     Any(): {
-                        'interface_handle_hex': int,
+                        'interface_handle_hex': str,
                         'npu_number': int,
                         'npu_core': int,
                         'pp_port': int,
@@ -1133,7 +1133,7 @@ class ShowControllersNpuInterfaceInstanceLocation(ShowControllersNpuInterfaceIns
         # Node ID: 0/0/CPU0
         p1 = re.compile(r'^Node +ID: +(?P<node_id>\S+)$')
         # Gi0/0/0/0    108       0   0   33    33   1024   5384 local     1G
-        p2 = re.compile(r'^(?P<interface>\S+) +(?P<interface_handle_hex>\d+) +'
+        p2 = re.compile(r'^(?P<interface>\S+) +(?P<interface_handle_hex>[0-9a-f]+) +'
                 r'(?P<npu_number>\d+) +(?P<npu_core>\d+) +(?P<pp_port>\d+) +'
                 r'(?P<sys_port>\d+) +(?P<voq_base>\d+) +(?P<flow_base>\d+) +'
                 r'(?P<voq_port_type>\S+) +(?P<port_speed>\S+)$')
@@ -1155,7 +1155,7 @@ class ShowControllersNpuInterfaceInstanceLocation(ShowControllersNpuInterfaceIns
                 group = m.groupdict()
                 interface = group['interface']
                 interface = Common.convert_intf_name(interface)
-                interface_handle_hex = int(group['interface_handle_hex'])
+                interface_handle_hex = group['interface_handle_hex']
                 npu_number = int(group['npu_number'])
                 npu_core = int(group['npu_core'])
                 pp_port = int(group['pp_port'])
