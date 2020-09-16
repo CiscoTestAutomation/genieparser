@@ -5,10 +5,10 @@ from genie.metaparser.util.schemaengine import Optional
 
 # ===================================
 # Schema for:
-#  * 'show cts sxp connectionsbrief'
+#  * 'show cts sxp connections brief'
 # ===================================
 class ShowCtsSxpConnectionsBriefSchema(MetaParser):
-    """Schema for show_cts_sxp_connections_brief."""
+    """Schema for show cts sxp connections brief."""
 
     schema = {
         "sxp_connections": {

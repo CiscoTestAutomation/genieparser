@@ -104,7 +104,6 @@ CLASS_SKIP = {
         "ShowPlatformHardwareQfpActiveTcamResourceManagerUsage": True, # To be migrated
         "ShowPlatformResources": True, # To be migrated
         "ShowCtsRoleBasedCounters": True, # To be migrated
-        "ShowCtsSxpConnectionsBrief": True, # To be migrated
         "ShowOmpPeers_viptela": True, # To be migrated
         "ShowOmpTlocPath_viptela": True, # To be migrated
         "ShowOmpTlocs_viptela": True, # To be migrated
