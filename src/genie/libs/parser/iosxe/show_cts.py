@@ -766,3 +766,333 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
                 continue
 
         return cts_env_dict
+
+# ======================
+# Schema for:
+#  * 'show cts rbacl'
+# ======================
+class ShowCtsRbaclSchema(MetaParser):
+    """Schema for show cts rbacl."""
+
+    schema = {
+        "cts_rbacl": {
+            "ip_ver_support": str,
+            "name": {
+                str: {
+                    "ip_protocol_version": str,
+                    "refcnt": int,
+                    "flag": str,
+                    "stale": bool,
+                    "aces": {
+                        Optional(int): {
+                            Optional("action"): str,
+                            Optional("protocol"): str,
+                            Optional("direction"): str,
+                            Optional("port"): int
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+# ======================
+# Parser for:
+#  * 'show cts rbacl'
+# ======================
+class ShowCtsRbacl(ShowCtsRbaclSchema):
+    """Parser for show cts rbacl"""
+
+    cli_command = 'show cts rbacl'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        cts_rbacl_dict = {}
+        # CTS RBACL Policy
+        # ================
+        # RBACL IP Version Supported: IPv4 & IPv6
+        #   name   = TCP_51005-01
+        #   IP protocol version = IPV4
+        #   refcnt = 2
+        #   flag   = 0x41000000
+        #   stale  = FALSE
+        #   RBACL ACEs:
+        #     permit tcp dst eq 51005
+        #
+        #   name   = TCP_51060-02
+        #   IP protocol version = IPV4
+        #   refcnt = 4
+        #   flag   = 0x41000000
+        #   stale  = FALSE
+        #   RBACL ACEs:
+        #     permit tcp dst eq 51060
+        #
+        #   name   = TCP_51144-01
+        #   IP protocol version = IPV4
+        #   refcnt = 10
+        #   flag   = 0x41000000
+        #   stale  = FALSE
+        #   RBACL ACEs:
+        #     permit tcp dst eq 51144
+        #
+        #   name   = TCP_51009-01
+        #   IP protocol version = IPV4
+        #   refcnt = 2
+        #   flag   = 0x41000000
+        #   stale  = FALSE
+        #   RBACL ACEs:
+        #     permit tcp dst eq 51009
+
+
+
+        # RBACL IP Version Supported: IPv4 & IPv6
+        ip_ver_capture = re.compile(r"^RBACL\s+IP\s+Version\s+Supported:\s(?P<ip_ver_support>.*$)")
+        #   name   = TCP_13131-01
+        #   IP protocol version = IPV4
+        #   refcnt = 2
+        #   flag   = 0x41000000
+        #   stale  = FALSE
+        rbacl_capture = re.compile(r"^(?P<rbacl_key>.*)(?==)=\s+(?P<rbacl_value>.*$)")
+        #     permit tcp dst eq 13131
+        rbacl_ace_capture = re.compile(
+            r"^(?P<action>(permit|deny))\s+(?P<protocol>\S+)(\s+(?P<direction>dst|src)\s+((?P<port_condition>)\S+)\s+(?P<port>\d+)|)")
+
+        remove_lines = ('CTS RBACL Policy', '================', 'RBACL ACEs:')
+
+                # Remove unwanted lines from raw text
+        def filter_lines(raw_output, remove_lines):
+            # Remove empty lines
+            clean_lines = list(filter(None, raw_output.splitlines()))
+            rendered_lines = []
+            for clean_line in clean_lines:
+                clean_line_strip = clean_line.strip()
+                if not clean_line_strip.startswith(remove_lines):
+                    rendered_lines.append(clean_line_strip)
+            return rendered_lines
+
+        out = filter_lines(raw_output=out, remove_lines=remove_lines)
+        rbacl_name = ''
+        rbacl_ace_index = 1
+        for line in out:
+            # RBACL IP Version Supported: IPv4 & IPv6
+            ip_ver_match = ip_ver_capture.match(line)
+            if ip_ver_match:
+                groups = ip_ver_match.groupdict()
+                ip_ver_support = groups['ip_ver_support']
+                if not cts_rbacl_dict.get('cts_rbacl', {}):
+                    cts_rbacl_dict['cts_rbacl'] = {}
+                    cts_rbacl_dict['cts_rbacl']['name'] = {}
+                cts_rbacl_dict['cts_rbacl']['ip_ver_support'] = ip_ver_support
+                continue
+            #   name   = TCP_13131-01
+            #   IP protocol version = IPV4
+            #   refcnt = 2
+            #   flag   = 0x41000000
+            #   stale  = FALSE
+            elif rbacl_capture.match(line):
+                groups = rbacl_capture.match(line).groupdict()
+                rbacl_key = groups['rbacl_key'].strip().lower().replace(' ', '_')
+                rbacl_value = groups['rbacl_value']
+                if rbacl_value.isdigit():
+                    rbacl_value = int(rbacl_value)
+                if rbacl_value == "TRUE" or rbacl_value == "FALSE":
+                    if rbacl_value == "TRUE":
+                        rbacl_value = True
+                    else:
+                        rbacl_value = False
+                if not cts_rbacl_dict.get('cts_rbacl', {}):
+                    cts_rbacl_dict['cts_rbacl'] = {}
+                if rbacl_key == 'name':
+                    rbacl_name = rbacl_value
+                    cts_rbacl_dict['cts_rbacl']['name'][rbacl_name] = {}
+                    rbacl_ace_index = 1
+                else:
+                    cts_rbacl_dict['cts_rbacl']['name'][rbacl_name].update({rbacl_key: rbacl_value})
+                continue
+            #     permit tcp dst eq 13131
+            elif rbacl_ace_capture.match(line):
+                groups = rbacl_ace_capture.match(line).groupdict()
+                ace_group_dict = {}
+                cts_rbacl_dict['cts_rbacl']['name'][rbacl_name]['aces'] = {}
+                if groups['action']:
+                    ace_group_dict.update({'action': groups['action']})
+                if groups['protocol']:
+                    ace_group_dict.update({'protocol': groups['protocol']})
+                if groups['direction']:
+                    ace_group_dict.update({'direction': groups['direction']})
+                if groups['port_condition']:
+                    ace_group_dict.update({'port_condition': groups['port_condition']})
+                if groups['port']:
+                    ace_group_dict.update({'port': int(groups['port'])})
+                if not cts_rbacl_dict['cts_rbacl']['name'][rbacl_name]['aces'].get(rbacl_ace_index, {}):
+                    cts_rbacl_dict['cts_rbacl']['name'][rbacl_name]['aces'][rbacl_ace_index] = ace_group_dict
+                rbacl_ace_index = rbacl_ace_index + 1
+                continue
+        return cts_rbacl_dict
+
+
+# ====================================
+# Schema for:
+#  * 'show cts role-based permissions'
+# ====================================
+class ShowCtsRoleBasedPermissionsSchema(MetaParser):
+    """Schema for show cts role-based permissions."""
+
+    schema = {
+        "rbp_policies": {
+            int: {
+                Optional("policy_name"): str,
+                "action_policy": str,
+                "action_policy_group": str,
+                Optional("src_grp_id"): int,
+                Optional("src_grp_name"): str,
+                Optional("unknown_group"): str,
+                Optional("dst_group_id"): int,
+                Optional("dst_group_name"): str,
+                Optional("policy_groups"): {
+                    Optional(int): {
+                        Optional("policy_group"): str
+                    }
+                }
+            },
+            "monitor_dynamic": bool,
+            "monitor_configured": bool
+        }
+    }
+
+
+
+# ====================================
+# Parser for:
+#  * 'show cts role-based permissions'
+# ====================================
+class ShowCtsRoleBasedPermissions(ShowCtsRoleBasedPermissionsSchema):
+    """Parser for show cts role-based permissions"""
+
+    cli_command = 'show cts role-based permissions'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        cts_rb_permissions_dict = {}
+
+        # IPv4 Role-based permissions default:
+        rb_default_capture = re.compile(r"^IPv4\s+Role-based\s+permissions\s+(?P<default_group>default)")
+        # IPv4 Role-based permissions from group 42:Untrusted to group Unknown:
+        rb_permissions_capture = re.compile(
+            r"^IPv4\s+Role-based\s+permissions\s+from\s+group\s+(?P<src_grp_id>\d+):(?P<src_grp_name>\S+)\s+to\s+group\s((?P<unknown_group>Unknown)|(?P<dst_group_id>\d+):(?P<dst_group_name>\S+)):")
+        #         Deny IP-00
+        policy_action_capture = re.compile(r"^(?P<action_policy>(Permit|Deny))\s+(?P<action_policy_group>\S+)")
+        # ACCESS-01
+        policy_group_capture = re.compile(r"^(?P<policy_group>\w+-\d+)")
+        # RBACL Monitor All for Dynamic Policies : FALSE
+        monitor_dynamic_capture = re.compile(
+            r"^RBACL\s+Monitor\s+All\s+for\s+Dynamic\s+Policies\s+:\s+(?P<monitor_dynamic>(TRUE|FALSE))")
+        #RBACL Monitor All for Configured Policies : FALSE
+        monitor_configured_capture = re.compile(
+            r"^RBACL\s+Monitor\s+All\s+for\s+Configured\s+Policies\s+:\s+(?P<monitor_configured>(TRUE|FALSE))")
+
+        remove_lines = ()
+
+        # Remove unwanted lines from raw text
+        def filter_lines(raw_output, remove_lines):
+            # Remove empty lines
+            clean_lines = list(filter(None, raw_output.splitlines()))
+            rendered_lines = []
+            for clean_line in clean_lines:
+                clean_line_strip = clean_line.strip()
+                # print(clean_line)
+                # Remove lines unwanted lines from list of "remove_lines"
+                if not clean_line_strip.startswith(remove_lines):
+                    rendered_lines.append(clean_line_strip)
+            return rendered_lines
+
+        out = filter_lines(raw_output=out, remove_lines=remove_lines)
+
+        # Index value for each policy which will increment as it matches a new policy
+        policy_index = 1
+        # Index value for each policy group which will increment as it matches a new policy group
+        policy_group_index = 1
+        # Used to populate data for each policy and the policy index will be used as the key.
+        policy_data = {}
+
+        for line in out:
+            # IPv4 Role-based permissions default:
+            if rb_default_capture.match(line):
+                policy_group_index = 1
+                rb_default_match = rb_default_capture.match(line)
+                groups = rb_default_match.groupdict()
+                default_group = groups['default_group']
+                policy_data = {'policy_name': default_group}
+                if not cts_rb_permissions_dict.get('rbp_policies', {}):
+                    cts_rb_permissions_dict['rbp_policies'] = {}
+                continue
+            # IPv4 Role-based permissions from group 42:Untrusted to group Unknown:
+            elif rb_permissions_capture.match(line):
+                policy_group_index = 1
+                rb_permissions_match = rb_permissions_capture.match(line)
+                groups = rb_permissions_match.groupdict()
+                policy_data = {}
+                if not cts_rb_permissions_dict.get('rbp_policies', {}):
+                    cts_rb_permissions_dict['rbp_policies'] = {}
+                for k, v in groups.items():
+                    if v:
+                        if v.isdigit():
+                            v = int(v)
+                        policy_data.update({k: v})
+                continue
+            # ACCESS-01
+            elif policy_group_capture.match(line):
+                policy_group_match = policy_group_capture.match(line)
+                groups = policy_group_match.groupdict()
+                policy_group = groups['policy_group']
+                if not policy_data.get('policy_groups', {}):
+                    policy_data['policy_groups'] = {}
+                if not policy_data['policy_groups'].get(policy_group_index, {}):
+                    policy_data['policy_groups'][policy_group_index] = {}
+                policy_data['policy_groups'][policy_group_index]['policy_group'] = policy_group
+                policy_group_index = policy_group_index + 1
+                continue
+            #         Deny IP-00
+            elif policy_action_capture.match(line):
+                policy_action_match = policy_action_capture.match(line)
+                groups = policy_action_match.groupdict()
+                action_policy = groups['action_policy']
+                action_policy_group = groups['action_policy_group']
+                for k, v in groups.items():
+                    policy_data.update({k: v})
+                cts_rb_permissions_dict['rbp_policies'][policy_index] = policy_data
+                policy_index = policy_index + 1
+                continue
+            # RBACL Monitor All for Dynamic Policies : FALSE
+            elif monitor_dynamic_capture.match(line):
+                monitor_dynamic_match = monitor_dynamic_capture.match(line)
+                groups = monitor_dynamic_match.groupdict()
+                monitor_dynamic = groups['monitor_dynamic']
+                if monitor_dynamic == 'FALSE':
+                    monitor_dynamic = False
+                else:
+                    monitor_dynamic = True
+                cts_rb_permissions_dict['rbp_policies']['monitor_dynamic'] = monitor_dynamic
+                continue
+            # RBACL Monitor All for Configured Policies : FALSE
+            elif monitor_configured_capture.match(line):
+                monitor_configured_match = monitor_configured_capture.match(line)
+                groups = monitor_configured_match.groupdict()
+                monitor_configured = groups['monitor_configured']
+                if monitor_configured == 'FALSE':
+                    monitor_configured = False
+                else:
+                    monitor_configured = True
+                cts_rb_permissions_dict['rbp_policies']['monitor_configured'] = monitor_configured
+                continue
+
+        return cts_rb_permissions_dict
