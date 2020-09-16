@@ -1,0 +1,26 @@
+
+LISP Site Registration Information
+* = Some locators are down or unreachable
+# = Some registrations are sourced by reliable transport
+
+Site Name      Last      Up     Who Last             Inst     EID Prefix
+               Register         Registered           ID       
+site_uci       never     no     --                   4097     10.10.64.0/27
+               2w4d      yes#   10.1.64.71:36820  4097     10.10.64.2/32
+               2w4d      yes#   10.1.64.71:36820  4097     10.10.64.6/32
+               2w4d      yes#   10.1.64.106:51580 4097     10.10.64.7/32
+               2w4d      yes#   10.1.64.106:51580 4097     10.10.64.18/32
+               never     no     --                   4099     10.19.22.0/26
+               02:05:11  yes#   10.1.64.71:36820  4099     10.19.22.2/32
+               2d16h     yes#   10.1.64.106:51580 4099     10.19.22.3/32
+               00:33:39  yes#   10.1.64.71:36820  4099     10.19.22.21/32
+               never     no     --                   4099     10.19.22.64/27
+               4w3d      yes#   10.1.64.76:30688  4099     10.19.22.66/32
+               never     no     --                   4099     10.19.22.96/27
+               3w5d      yes#   10.1.64.71:36820  4099     10.19.22.112/32
+               never     no     --                   4099     1000:420:700:1FEE::/66
+               never     no     --                   4099     1000:420:700:1FEE:4000::/66
+               4w3d      yes#   10.1.64.76:30688  4099     1000:420:780:1FE0:502A:1ADA:1ADA:1ADA/128
+               never     no     --                   4100     10.19.20.0/25
+               01:05:05  yes#   10.1.64.106:51580 4100     10.19.20.55/32         
+    

@@ -1,0 +1,33 @@
+
+    #show sdwan omp summary 
+oper-state             UP
+admin-state            UP
+personality            vedge
+omp-uptime             34:03:00:35
+routes-received        5
+routes-installed       3
+routes-sent            2
+tlocs-received         3
+tlocs-installed        2
+tlocs-sent             1
+services-received      3
+services-installed     0
+services-sent          3
+mcast-routes-received  0
+mcast-routes-installed 0
+mcast-routes-sent      0
+hello-sent             146344
+hello-received         146337
+handshake-sent         2
+handshake-received     2
+alert-sent             1
+alert-received         0
+inform-sent            16
+inform-received        16
+update-sent            79
+update-received        157
+policy-sent            0
+policy-received        2
+total-packets-sent     146442
+total-packets-received 146514
+vsmart-peers           1

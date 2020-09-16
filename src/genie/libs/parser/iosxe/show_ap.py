@@ -119,17 +119,19 @@ class ShowApDot11DualBandSummarySchema(MetaParser):
 
     schema = {
         "ap_dot11_dual-band_summary": {
-            int: {
-                "ap_name": str,
-                "ap_mac_address": str,
-                "slot_id": int,
-                "admin_state": str,
-                "oper_state": str,
-                "width": int,
-                "tx_pwr": str,
-                "mode": str,
-                "subband": str,
-                "channel": str
+            "index": {
+                int: {
+                    "ap_name": str,
+                    "ap_mac_address": str,
+                    "slot_id": int,
+                    "admin_state": str,
+                    "oper_state": str,
+                    "width": int,
+                    "tx_pwr": str,
+                    "mode": str,
+                    "subband": str,
+                    "channel": str
+                }
             }
         }
     }
@@ -165,10 +167,9 @@ class ShowApDot11DualBandSummary(ShowApDot11DualBandSummarySchema):
                 groups = m.groupdict()
                 ap_index += 1
 
-                ap_index_dict = ret_dict.setdefault('ap_dot11_dual-band_summary', {}).\
-                    setdefault('index', {}).setdefault(ap_index, {})
-
-                ap_index_dict.update({
+                if not ret_dict.get('ap_dot11_dual-band_summary'):
+                    ret_dict['ap_dot11_dual-band_summary'] = {"index": {}}
+                ret_dict['ap_dot11_dual-band_summary']["index"][ap_index]  = {
                     'ap_name': groups['ap_name'],
                     'ap_mac_address': groups['ap_mac_address'],
                     'slot_id': int(groups['slot_id']),
@@ -179,6 +180,6 @@ class ShowApDot11DualBandSummary(ShowApDot11DualBandSummarySchema):
                     'mode': groups['mode'],
                     'subband': groups['subband'],
                     'channel': groups['channel']
-                })
+                }
 
         return ret_dict

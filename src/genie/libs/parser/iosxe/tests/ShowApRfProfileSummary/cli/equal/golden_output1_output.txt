@@ -1,0 +1,23 @@
+
+Number of RF-profiles: 14
+
+RF Profile Name                  Band     Description                          State 
+------------------------------------------------------------------------------------
+Custom-RF_a                      5 GHz    Custom-RF_a_Desc                     Up    
+Custom-RF_b                      2.4 GHz  Custom-RF_b_Desc                     Up    
+Low_Client_Density_rf_5gh        5 GHz    pre configured Low Client Density rf Up    
+High_Client_Density_rf_5gh       5 GHz    pre configured High Client Density r Up    
+Low-Client-Density-802.11a       5 GHz                                         Up    
+Low_Client_Density_rf_24gh       2.4 GHz  pre configured Low Client Density rf Up    
+High-Client-Density-802.11a      5 GHz                                         Up    
+High_Client_Density_rf_24gh      2.4 GHz  pre configured High Client Density r Up    
+Low-Client-Density-802.11bg      2.4 GHz                                       Up    
+High-Client-Density-802.11bg     2.4 GHz                                       Up    
+Typical_Client_Density_rf_5gh    5 GHz    pre configured Typical Density rfpro Up    
+Typical-Client-Density-802.11a   5 GHz                                         Up    
+Typical_Client_Density_rf_24gh   2.4 GHz  pre configured Typical Client Densit Up    
+Typical-Client-Density-802.11bg  2.4 GHz                                       Up    
+
+=========================
+Number of RF-profiles: 14 
+    
