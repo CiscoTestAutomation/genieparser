@@ -408,9 +408,10 @@ class ShowSystemUsers(ShowSystemUsersSchema):
         # 12:58PM up 2 days, 5:30, 2 users, load averages: 0.36, 0.33, 0.35
         # 10:08PM up 7 days, 10:56, 1 user, load averages: 0.02, 0.02, 0.00
         # 1:08AM up 8 days, 5 hrs, 1 user, load averages: 0.07, 0.02, 0.01
+        # 9:38AM up 209 day, 37 mins, 3 users, load averages: 0.28, 0.39, 0.37
         p1 = re.compile(
             r'^(?P<time>[\d\:a-zA-Z]+) +up +'
-            r'(?P<up_time>(\d+ +days, +)?([\d:]+( +mins)?( +hrs)?)), +'
+            r'(?P<up_time>(\d+ +(days|day), +)?([\d:]+( +mins)?( +hrs)?)), +'
             r'(?P<user_count>\d+) +user(s)?, +'
             r'load +averages: (?P<avg1>[\d\.]+), +'
             r'(?P<avg2>[\d\.]+), +(?P<avg3>[\d\.]+)$')
@@ -427,6 +428,7 @@ class ShowSystemUsers(ShowSystemUsersSchema):
             # 9:38AM up 209 days, 37 mins, 3 users, load averages: 0.28, 0.39, 0.37
             # 12:58PM up 2 days, 5:30, 2 users, load averages: 0.36, 0.33, 0.35
             # 10:08PM up 7 days, 10:56, 1 user, load averages: 0.02, 0.02, 0.00
+            # 9:38AM up 209 day, 37 mins, 3 users, load averages: 0.28, 0.39, 0.37
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -1078,8 +1080,9 @@ class ShowSystemUptime(ShowSystemUptimeSchema):
 
         #8:16AM  up 209 days, 23:14, 5 users, load averages: 0.43, 0.43, 0.42
         # 2:08PM  up 11:03, 1 users, load averages: 0.31, 0.48, 0.50
+        # 3:57AM  up 1 day, 16:57, 1 users, load averages: 0.55, 0.46, 0.44
         p6 = re.compile(r'^(?P<date_time>\d+\:\w+)\s+up\s+'
-                        r'((?P<days>\d+)\s+days,\s+)?(?P<mins>'
+                        r'((?P<days>\d+)\s+day(s)?,\s+)?(?P<mins>'
                         r'[\w\:]+)[^,]*,\s+(?P<user_count>\d+)'
                         r'\s+users,\s+load\s+averages:\s+'
                         r'(?P<avg1>[\d\.]+),\s+(?P<avg2>[\d\.]+),'
