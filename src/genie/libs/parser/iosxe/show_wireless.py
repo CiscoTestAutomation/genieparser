@@ -11,7 +11,15 @@ from genie.metaparser.util.schemaengine import Any, Optional
 class ShowWirelessMobilityApListSchema(MetaParser):
     """Schema for show wireless mobility ap-list."""
 
-    schema = {Any(): {"controller_ip": str, "learnt_from": str, "radio_mac": str}}
+    schema = {
+        "ap_name": {
+            Any(): {
+                "ap_radio_mac": str,
+                "controller_ip": str,
+                "learnt_from": str,
+            }
+        }
+    }
 
 
 # ===================================
@@ -47,8 +55,8 @@ class ShowWirelessMobilityApList(ShowWirelessMobilityApListSchema):
 
         # b80-72-cap30                    58bf.eab3.1420    10.10.7.177      Self
         ap_info_capture = re.compile(
-            r"^(?P<ap_name>\S+)\s+(?P<radio_mac>\S+)\s+(?P<controller_ip>\d+\.\d+\.\d+\.\d+)\s+(?P<learnt_from>\S+)"
-        )  # could also do (?P<learnt_from>(Self))
+            r"^(?P<ap_name>\S+)\s+(?P<ap_radio_mac>\S{4}\.\S{4}\.\S{4})\s+(?P<controller_ip>\d+\.\d+\.\d+\.\d+)\s+(?P<learnt_from>\S+)\s+$"
+        )
 
         ap_info_obj = {}
 
@@ -63,14 +71,21 @@ class ShowWirelessMobilityApList(ShowWirelessMobilityApListSchema):
                 ap_info_capture_match = ap_info_capture.match(line)
                 groups = ap_info_capture_match.groupdict()
 
-                # ap_name: b80-72-cap30
-                ap_info_obj[groups["ap_name"]] = {
-                    # radio_mac: 58bf.eab3.1420
-                    "radio_mac": groups["radio_mac"],
-                    # controller_ip: 10.10.7.177
-                    "controller_ip": groups["controller_ip"],
-                    # learnt_from: Self
-                    "learnt_from": groups["learnt_from"],
+                if not ap_info_obj.get("ap_name", {}):
+                    ap_info_obj["ap_name"] = {}
+
+                ap_name_dict = {
+                    # ap_name: b80-72-cap30
+                    groups["ap_name"]: {
+                        # radio_mac: 58bf.eab3.1420
+                        "ap_radio_mac": groups["ap_radio_mac"],
+                        # controller_ip: 10.10.7.177
+                        "controller_ip": groups["controller_ip"],
+                        # learnt_from: Self
+                        "learnt_from": groups["learnt_from"],
+                    }
                 }
+
+                ap_info_obj["ap_name"].update(ap_name_dict)
 
         return ap_info_obj
