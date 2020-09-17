@@ -298,8 +298,9 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                 ps = self.PS_MAPPING[group.pop('ps')]
                 root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
                 power_supply_dict = root_dict.setdefault('power_supply', {}).setdefault(ps, {})
-                power_supply_dict.update({k: v for k, v in group.items() if k in ['pid', 'serial_number', 'watts'] and v})
                 power_supply_dict.update({k: v for k, v in group.items()
-                     if k in ['status', 'system_power', 'poe_power'] and v})
+                        if k in ['pid', 'serial_number', 'watts'] and v})
+                power_supply_dict.update({k: v for k, v in group.items()
+                        if k in ['status', 'system_power', 'poe_power'] and v})
                 continue
         return ret_dict
