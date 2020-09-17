@@ -18,7 +18,7 @@ from genie.libs.parser.junos.show_system import (
     ShowSystemUsers, ShowSystemBuffersNoForwarding, ShowSystemUsers,
     ShowSystemStorage, ShowSystemCoreDumps, ShowSystemCoreDumpsNoForwarding,
     ShowSystemStorageNoForwarding, ShowSystemStatistics,
-    ShowSystemStatisticsNoForwarding, ShowSystemInformation)
+    ShowSystemStatisticsNoForwarding, ShowSystemInformation, ShowSystemConnections)
 
 # =========================================================
 # Unit test for show system information
@@ -6200,6 +6200,80 @@ class TestShowSystemStatisticsNoForwarding(unittest.TestCase):
         obj = ShowSystemStatisticsNoForwarding(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+
+class TestShowSystemConnections(unittest.TestCase):
+
+    device = Device(name="aDevice")
+
+    maxDiff = None
+
+    empty_output = {"execute.return_value": ""}
+
+    golden_parsed_output_1 = {
+        "execute.return_value":
+        """
+        show system connections
+        Active Internet connections (including servers)
+        Proto Recv-Q Send-Q  Local Address                                 Foreign Address                               (state)
+        tcp4       0      0  1.0.0.192.22                                  1.0.0.1.56714                                 ESTABLISHED
+        tcp4       0      0  1.0.0.192.22                                  1.0.0.1.56708                                 ESTABLISHED
+        tcp4       0      0  *.33081                                       *.*                                           LISTEN
+        tcp4       0      0  128.0.0.1.6988                                128.0.0.16.43116                              ESTABLISHED
+        """
+    }
+
+    golden_output_1 = {
+       "output": {
+          "connections-table": [
+             {
+                "proto": "tcp4",
+                "recv-Q": "0",
+                "send-Q": "0",
+                "local-address": "1.0.0.192.22",
+                "foreign-address": "1.0.0.1.56714",
+                "state": "ESTABLISHED"
+             },
+             {
+                "proto": "tcp4",
+                "recv-Q": "0",
+                "send-Q": "0",
+                "local-address": "1.0.0.192.22",
+                "foreign-address": "1.0.0.1.56708",
+                "state": "ESTABLISHED"
+             },
+             {
+                "proto": "tcp4",
+                "recv-Q": "0",
+                "send-Q": "0",
+                "local-address": "*.33081",
+                "foreign-address": "*.*",
+                "state": "LISTEN"
+             },
+             {
+                "proto": "tcp4",
+                "recv-Q": "0",
+                "send-Q": "0",
+                "local-address": "128.0.0.1.6988",
+                "foreign-address": "128.0.0.16.43116",
+                "state": "ESTABLISHED"
+             }
+          ]
+       }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowSystemConnections(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_parsed_output_1)
+        obj = ShowSystemConnections(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_output_1)
+
 
 if __name__ == "__main__":
     unittest.main()
