@@ -249,8 +249,9 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
         '''}
 
     golden_output3 = {'execute.return_value': '''
-    (41.1.1.2/32, 225.1.0.3/32), uptime: 1d22h, ip pim mrib
-    Incoming interface: Ethernet1/9, RPF nbr: 41.1.1.2, internal
+    IP Multicast Routing Table for VRF "default"
+    (12.1.1.1/32, 123.1.1.1/32), uptime: 1d22h, ip pim mrib
+    Incoming interface: Ethernet1/9, RPF nbr: 12.1.1.1, internal
     Outgoing interface list: (count: 4)
         port-channel12, uptime: 01:24:28, pim
         Vlan200, uptime: 01:25:19, mrib, pim.                 
@@ -258,7 +259,45 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
         Ethernet1/11, uptime: 1d22h, mrib
     '''}
 
-    # golden_parsed_output3
+    golden_parsed_output3 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'multicast_group': {
+                            '123.1.1.1/32': {
+                                'source_address': {
+                                    '12.1.1.1/32': {
+                                        'flags': 'ip mrib pim',
+                                        'oil_count': 4,
+                                        'outgoing_interface_list': {
+                                            'Ethernet1/11': {
+                                                'oil_flags': 'mrib',
+                                                'oil_uptime': '1d22h',
+                                            },
+                                            'Vlan200': {
+                                                'oil_flags': 'mrib, pim.',
+                                                'oil_uptime': '01:25:19',
+                                            },
+                                            'Vlan30': {
+                                                'oil_flags': 'mrib',
+                                                'oil_uptime': '1d22h',
+                                            },
+                                            'port-channel12': {
+                                                'oil_flags': 'pim',
+                                                'oil_uptime': '01:24:28',
+                                            },
+                                        },
+                                        'uptime': '1d22h',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -282,8 +321,6 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
         self.device = Mock(**self.golden_output3)
         ip_mroute_vrf_all_obj = ShowIpMrouteVrfAll(device=self.device)
         parsed_output = ip_mroute_vrf_all_obj.parse()
-        import pprint; pprint.pprint(parsed_output)
-        import pdb; pdb.set_trace()
         self.assertEqual(parsed_output,self.golden_parsed_output3)        
 
 
