@@ -23,6 +23,7 @@ from genie.libs.parser.nxos.show_vrf import ShowVrf
 class test_show_ip_mroute_vrf_all(unittest.TestCase):
     
     device = Device(name='aDevice')
+    maxDiff = None
     empty_output = {'execute.return_value': ''}
     
     golden_parsed_output = {
@@ -269,6 +270,12 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
                                 'source_address': {
                                     '12.1.1.1/32': {
                                         'flags': 'ip mrib pim',
+                                        'incoming_interface_list': {
+                                            'Ethernet1/9': {
+                                                'internal': True,
+                                                'rpf_nbr': '12.1.1.1'
+                                                }
+                                            },
                                         'oil_count': 4,
                                         'outgoing_interface_list': {
                                             'Ethernet1/11': {
