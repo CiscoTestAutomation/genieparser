@@ -3253,6 +3253,7 @@ class ShowRouteReceiveProtocolExtensiveSchema(MetaParser):
                     Optional("@junos:style"): str,
                     "rt-announced-count": str,
                     "rt-destination": str,
+                    Optional("active-tag"): str,
                     Optional("rt-entry"): {
                         Optional("as-path"): str,
                         Optional("bgp-rt-flag"): str,
@@ -3313,7 +3314,9 @@ class ShowRouteReceiveProtocolExtensive(ShowRouteReceiveProtocolExtensiveSchema)
                         r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
 
         # 0.0.0.0/0 (1 entry, 1 announced)
-        p2 = re.compile(r'^(?P<rt_destination>[0-9.]+)(\/(?P<rt_prefix_length>\d+))? +'
+        # * 100.50.1.0/24 (1 entry, 1 announced)
+        # * 2001:500::/64 (1 entry, 1 announced)
+        p2 = re.compile(r'^(?P<active_tag>\*)? *(?P<rt_destination>[\w.:]+)(\/(?P<rt_prefix_length>\d+))? +'
                         r'\((?P<format>(?P<text>\d+) +(entry|entries)), +(?P<rt_announced_count>\d+) +announced\)$')        
 
         # Accepted
@@ -3344,14 +3347,15 @@ class ShowRouteReceiveProtocolExtensive(ShowRouteReceiveProtocolExtensiveSchema)
                 continue
 
             # 0.0.0.0/0 (1 entry, 1 announced)
+            # * 100.50.1.0/24 (1 entry, 1 announced)
             m = p2.match(line)
             if m:
                 group = m.groupdict()                
                 rt_dict = route_table_dict.setdefault('rt', {})
 
-                rt_dict['rt-announced-count'] = group['rt_announced_count']
-                rt_dict['rt-destination'] = group['rt_destination']
-                rt_dict['rt-prefix-length'] = group['rt_prefix_length']
+                for k in ['active_tag', 'rt_destination', 'rt_prefix_length', 'rt_announced_count']:
+                    if group[k]:
+                        rt_dict[k.replace('_', '-')] = group[k]
 
                 rt_entry_count_dict = rt_dict.setdefault('rt-entry-count', {})
                 rt_entry_count_dict['#text'] = group['text']
