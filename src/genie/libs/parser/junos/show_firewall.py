@@ -154,7 +154,7 @@ class ShowFirewall(ShowFirewallSchema):
 class ShowFirewallCounterFilterSchema(MetaParser):
 
     """ Schema for:
-            * show firewall counter filter v6_local-access-control v6_last_policer
+            * show firewall counter filter {filter} {counter-name}
     """
 
     schema = {
@@ -175,23 +175,23 @@ class ShowFirewallCounterFilterSchema(MetaParser):
 
 class ShowFirewallCounterFilter(ShowFirewallCounterFilterSchema):
     """ Parser for:
-            * show firewall counter filter v6_local-access-control v6_last_policer
-            * show firewall counter filter ICMP_ACL_filter block
+            * show firewall counter filter {filter} {counter-name}
+            * show firewall counter filter {filter} block
     """
-
     cli_command = [
-        'show firewall counter filter v6_local-access-control v6_last_policer',
+        'show firewall counter filter {filter} {counter_name}',
         'show firewall counter filter {filter} block'
         ]
 
-    def cli(self, filter=None, output=None):
+    def cli(self, filter=None, counter_name=None, output=None):
         if not output:
             if filter:
                 out = self.device.execute(self.cli_command[1].format(
                     filter=filter
                 ))
             else:
-                out = self.device.execute(self.cli_command[0])
+                out = self.device.execute(self.cli_command.format(filter=filter,
+                                                                  counter_name=counter_name))
         else:
             out = output
 
