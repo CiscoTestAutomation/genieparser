@@ -1233,60 +1233,6 @@ class test_show_module(unittest.TestCase):
        }
     }
 
-    golden_output_2 = {'execute.return_value': '''
-        show module
-        
-        Mod Ports             Module-Type                      Model           Status
-
-        --- ----- ------------------------------------- --------------------- ---------
-
-        1    56   48x10/25G + 8x100G Ethernet Module    N3K-C34200YC-SZZ      active *  
-
-
-
-        Mod  Sw                       Hw    Slot
-
-        ---  ----------------------- ------ ----
-
-        1    9.3(5)                   0.0    NA  
-
-
-
-
-
-        Mod  MAC-Address(es)                         Serial-Num
-
-        ---  --------------------------------------  ----------
-
-        1    dc-8c-37-b0-77-b0 to dc-8c-37-b0-78-0b  FOC23183Y87
-
-
-
-        Mod  Online Diag Status
-
-        ---  ------------------
-
-        1    Pass
-
-
-
-        * this terminal session 
-        '''
-    }
-
-    golden_parsed_output_2 = {'slot': {'lc': {},
-          'rp': {'1': {'48x10/25G + 8x100G Ethernet Module': {'hardware': '0.0',
-                                                              'mac_address': 'dc-8c-37-b0-77-b0 '
-                                                                             'to '
-                                                                             'dc-8c-37-b0-78-0b',
-                                                              'model': 'N3K-C34200YC-SZZ',
-                                                              'online_diag_status': 'Pass',
-                                                              'ports': '56',
-                                                              'serial_number': 'FOC23183Y87',
-                                                              'slot/world_wide_name': 'NA',
-                                                              'software': '9.3(5)',
-                                                              'status': 'active'}}}}}
-
     def test_golden_1(self):
         self.maxDiff = None
         self.device = Mock(**self.output)
@@ -1305,14 +1251,7 @@ class test_show_module(unittest.TestCase):
         self.device1 = Mock(**self.empty_output)
         module_obj = ShowModule(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = module_obj.parse()
-
-    def test_golden2(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output_2)
-        module_obj = ShowModule(device=self.device)
-        parsed_output = module_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_2)            
+            parsed_output = module_obj.parse()       
 
 class test_dir(unittest.TestCase):
     device = Device(name='aDevice')
