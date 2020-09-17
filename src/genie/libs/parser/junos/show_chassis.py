@@ -1607,7 +1607,7 @@ class ShowChassisRoutingEngineSchema(MetaParser):
     Optional("@xmlns:junos"): str,
     "route-engine-information": {
         Optional("@xmlns"): str,
-        "route-engine": {
+        "route-engine": [{
             "cpu-background-5sec": str,
             "cpu-background-1min": str,
             "cpu-background-5min": str,
@@ -1648,7 +1648,79 @@ class ShowChassisRoutingEngineSchema(MetaParser):
                 "#text": str,
                 Optional("@junos:seconds"): str
                 }
-            }
+            }]
+        }
+    }
+
+
+    def validate_chassis_routing_list(value):
+        # Pass firmware list as value
+        if not isinstance(value, list):
+            raise SchemaError('routing engine is not a list')
+        chassis_routing_schema = Schema({
+                Optional("cpu-background"): str,
+                Optional("cpu-background-5sec"): str,
+                Optional("cpu-background-1min"): str,
+                Optional("cpu-background-5min"): str,
+                Optional("cpu-background-15min"): str,
+                Optional("cpu-idle"): str,
+                Optional("cpu-idle-5sec"): str,
+                Optional("cpu-idle-1min"): str,
+                Optional("cpu-idle-5min"): str,
+                Optional("cpu-idle-15min"): str,
+                Optional("cpu-interrupt"): str,
+                Optional("cpu-interrupt-5sec"): str,
+                Optional("cpu-interrupt-1min"): str,
+                Optional("cpu-interrupt-5min"): str,
+                Optional("cpu-interrupt-15min"): str,
+                Optional("cpu-system"): str,
+                Optional("cpu-system-5sec"): str,
+                Optional("cpu-system-1min"): str,
+                Optional("cpu-system-5min"): str,
+                Optional("cpu-system-15min"): str,
+                Optional("cpu-temperature"):{
+                    "#text": str
+                },
+                Optional("cpu-user"): str,
+                Optional("cpu-user-5sec"): str,
+                Optional("cpu-user-1min"): str,
+                Optional("cpu-user-5min"): str,
+                Optional("cpu-user-15min"): str,
+                "last-reboot-reason": str,
+                "load-average-fifteen": str,
+                "load-average-five": str,
+                "load-average-one": str,
+                "mastership-priority": str,
+                "mastership-state": str,
+                "memory-buffer-utilization": str,
+                "memory-dram-size": str,
+                "memory-installed-size": str,
+                "model": str,
+                Optional("serial-number"): str,
+                "slot": str,
+                "start-time": {
+                    "#text": str,
+                    Optional("@junos:seconds"): str
+                },
+                Optional("status"): str,
+                Optional("temperature"):{
+                    "#text": str
+                },
+                "up-time": {
+                    "#text": str,
+                    Optional("@junos:seconds"): str
+                    }
+            })
+        # Validate each dictionary in list
+        for item in value:
+            chassis_routing_schema.validate(item)
+        return value
+
+    schema = {
+    Optional("@xmlns:junos"): str,
+    "route-engine-information": {
+        Optional("@xmlns"): str,
+        "route-engine": Use(validate_chassis_routing_list)
         }
     }
    
@@ -1692,6 +1764,9 @@ class ShowChassisRoutingEngine(ShowChassisRoutingEngineSchema):
         #Kernel                     1 percent
         p9 = re.compile(r'^Kernel +(?P<system>\d+) +percent$')
 
+        #Temperature                 42 degrees C / 107 degrees F
+        p9_1 = re.compile(r'^Temperature +(?P<cpu_temperature>[\S\s]+)$')
+
         #Interrupt                  0 percent
         p10 = re.compile(r'^Interrupt +(?P<interrupt>\d+) +percent$')
 
@@ -1701,8 +1776,14 @@ class ShowChassisRoutingEngine(ShowChassisRoutingEngineSchema):
         #Model                          RE-VMX
         p12 = re.compile(r'^Model +(?P<system>\S+)$')
 
+        #Serial ID                      9009237474
+        p12_1 = re.compile(r'^Serial +ID +(?P<serial_number>\d+)$')
+
         #Start time                     2019-08-29 09:02:22 UTC
         p13 = re.compile(r'^Start time +(?P<start_time>[\S\s]+)$')
+
+        #CPU temperature             38 degrees C / 100 degrees F
+        p13_1 = re.compile(r'^CPU +[tT]emperature +(?P<cpu_temperature>[\S\s]+)$')
 
         #Uptime                         208 days, 23 hours, 14 minutes, 9 seconds
         p14 = re.compile(r'^Uptime +(?P<uptime>[\S\s]+)$')
@@ -1725,42 +1806,43 @@ class ShowChassisRoutingEngine(ShowChassisRoutingEngineSchema):
             if m:
                 current_state = " "
                 
-                route_engine_dict = ret_dict.setdefault("route-engine-information", {})\
-                    .setdefault("route-engine", {})
+                route_engine_list = ret_dict.setdefault("route-engine-information", {})\
+                    .setdefault("route-engine", [])
 
                 group = m.groupdict()
                 route_engine_entry_dict = {}
-
-                route_engine_dict["slot"] = group["slot"]
+                route_engine_list.append(route_engine_entry_dict)
+                tag = ''
+                route_engine_entry_dict["slot"] = group["slot"]
                 continue
 
             #Current state                  Master
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                route_engine_dict["mastership-state"] = group["mastership_state"]
+                route_engine_entry_dict["mastership-state"] = group["mastership_state"]
                 continue
 
             #Election priority              Master (default)
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                route_engine_dict["mastership-priority"] = group["mastership_priority"]
+                route_engine_entry_dict["mastership-priority"] = group["mastership_priority"]
                 continue
 
             #DRAM                      2002 MB (2048 MB installed)
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                route_engine_dict["memory-dram-size"] = group["memory_dram_size"]
-                route_engine_dict["memory-installed-size"] = group["memory_installed_size"]
+                route_engine_entry_dict["memory-dram-size"] = group["memory_dram_size"]
+                route_engine_entry_dict["memory-installed-size"] = group["memory_installed_size"]
                 continue
 
             #Memory utilization          19 percent
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                route_engine_dict["memory-buffer-utilization"] = group["memory_buffer_utilization"]
+                route_engine_entry_dict["memory-buffer-utilization"] = group["memory_buffer_utilization"]
                 continue
 
             #5 sec CPU utilization:
@@ -1775,42 +1857,59 @@ class ShowChassisRoutingEngine(ShowChassisRoutingEngineSchema):
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                route_engine_dict["cpu-user"+tag] = group["user"]
+                route_engine_entry_dict["cpu-user"+tag] = group["user"]
                 continue
 
             #Background                 0 percent
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                route_engine_dict["cpu-background"+tag] = group["background"]
+                route_engine_entry_dict["cpu-background"+tag] = group["background"]
                 continue
 
             #Kernel                     1 percent
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                route_engine_dict["cpu-system"+tag] = group["system"]
+                route_engine_entry_dict["cpu-system"+tag] = group["system"]
+                continue
+
+            #Temperature                 42 degrees C / 107 degrees F
+            m = p9_1.match(line)
+            if m:
+                group = m.groupdict()
+                temp_dict = {}
+                temp_dict["#text"] = group["cpu_temperature"]
+
+                route_engine_entry_dict["temperature"] = temp_dict
                 continue
 
             #Interrupt                  0 percent
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                route_engine_dict["cpu-interrupt"+tag] = group["interrupt"]
+                route_engine_entry_dict["cpu-interrupt"+tag] = group["interrupt"]
                 continue
 
             #Idle                      98 percent
             m = p11.match(line)
             if m:
                 group = m.groupdict()
-                route_engine_dict["cpu-idle"+tag] = group["idle"]
+                route_engine_entry_dict["cpu-idle"+tag] = group["idle"]
                 continue
 
             #Model                          RE-VMX
             m = p12.match(line)
             if m:
                 group = m.groupdict()
-                route_engine_dict["model"] = group["system"]
+                route_engine_entry_dict["model"] = group["system"]
+                continue
+
+            #Serial ID                      9009237474
+            m = p12_1.match(line)
+            if m:
+                group = m.groupdict()
+                route_engine_entry_dict["serial-number"] = group["serial_number"]
                 continue
 
             #Start time                     2019-08-29 09:02:22 UTC
@@ -1820,7 +1919,17 @@ class ShowChassisRoutingEngine(ShowChassisRoutingEngineSchema):
                 start_time_dict = {}
                 start_time_dict["#text"] = group["start_time"]
 
-                route_engine_dict["start-time"] = start_time_dict
+                route_engine_entry_dict["start-time"] = start_time_dict
+                continue
+            
+            #CPU temperature             38 degrees C / 100 degrees F
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                cpu_temp_dict = {}
+                cpu_temp_dict["#text"] = group["cpu_temperature"]
+
+                route_engine_entry_dict["cpu-temperature"] = cpu_temp_dict
                 continue
 
             #Uptime                         208 days, 23 hours, 14 minutes, 9 seconds
@@ -1830,25 +1939,25 @@ class ShowChassisRoutingEngine(ShowChassisRoutingEngineSchema):
                 up_time_dict = {}
                 up_time_dict["#text"] = group["uptime"]
 
-                route_engine_dict["up-time"] = up_time_dict
+                route_engine_entry_dict["up-time"] = up_time_dict
                 continue
 
             #Last reboot reason             Router rebooted after a normal shutdown.
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-                route_engine_dict["last-reboot-reason"] = group["last_reboot_reason"]
+                route_engine_entry_dict["last-reboot-reason"] = group["last_reboot_reason"]
                 continue
 
             #0.72       0.46       0.40
             m = p16.match(line)
             if m:
                 group = m.groupdict()
-                route_engine_dict["load-average-one"] = group["load_average_one"]
-                route_engine_dict["load-average-five"] = group["load_average_five"]
-                route_engine_dict["load-average-fifteen"] = group["load_average_fifteen"]
+                route_engine_entry_dict["load-average-one"] = group["load_average_one"]
+                route_engine_entry_dict["load-average-five"] = group["load_average_five"]
+                route_engine_entry_dict["load-average-fifteen"] = group["load_average_fifteen"]
                 continue
-
+                
         return ret_dict
 
 

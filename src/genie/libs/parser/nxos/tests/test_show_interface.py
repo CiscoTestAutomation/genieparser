@@ -7081,7 +7081,12 @@ class test_show_interface_status(unittest.TestCase):
                 'port_speed': '1000',
                 'status': 'connected',
                 'vlan': 'routed'
-            }
+            },
+            'Nve1': {
+                'duplex_code': 'auto',
+                'port_speed': 'auto',
+                'status': 'connected',
+            },
         }
     }
 
@@ -7101,6 +7106,7 @@ class test_show_interface_status(unittest.TestCase):
         Po147         AOTLXPRPBD10112    connected 360       full    10G     --         
         Vlan1         --                 down      routed    auto    auto    --
         Vlan366       BigData            connected routed    auto    auto    --        
+        nve1          --                 connected --        auto    auto    --        
     '''}
 
     golden_parsed_interface_output = {

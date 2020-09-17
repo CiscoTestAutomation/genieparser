@@ -4346,7 +4346,8 @@ class TestShowOspfNeighborInstanceAll(unittest.TestCase):
     """ Unit tests for:
             * show ospf neighbor instance all
     """
-
+    maxDiff=None
+    
     device = Device(name="aDevice")
 
     empty_output = {"execute.return_value": ""}
