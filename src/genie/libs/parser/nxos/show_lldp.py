@@ -83,9 +83,11 @@ class ShowLldpTimersSchema(MetaParser):
     schema = {
         'hold_timer': int,
         'reinit_timer': int,
-        'hello_timer': int
+        'hello_timer': int,
+        Optional('transmit_delay'): int,
+        Optional('hold_multiplier'): int,
+        Optional('notification_interval'): int
     }
-
 
 class ShowLldpTimers(ShowLldpTimersSchema):
     """parser for show lldp timers"""
@@ -103,9 +105,12 @@ class ShowLldpTimers(ShowLldpTimersSchema):
         '''
          LLDP Timers:
         
-             Holdtime in seconds: 120
-             Reinit-time in seconds: 2
-             Transmit interval in seconds: 30
+            Holdtime in seconds: 120
+            Reinit-time in seconds: 2
+            Transmit interval in seconds: 30
+            Transmit delay in seconds: 2
+            Hold multiplier in seconds: 4
+            Notification interval in seconds: 5
          '''
         p1 = re.compile(r'^(?P<timer>[\w\s-]+) +in +seconds: +(?P<seconds>\d+)$')
         for line in out.splitlines():
@@ -121,6 +126,12 @@ class ShowLldpTimers(ShowLldpTimersSchema):
                     parsed_dict.update({'hold_timer': seconds})
                 elif timer_name == 'Reinit-time':
                     parsed_dict.update({'reinit_timer': seconds})
+                elif 'Transmit delay' in timer_name:
+                    parsed_dict.update({'transmit_delay': seconds})
+                elif 'Hold multiplier' in timer_name:
+                    parsed_dict.update({'hold_multiplier': seconds})
+                elif 'Notification interval' in timer_name:
+                    parsed_dict.update({'notification_interval': seconds})
                 else:
                     parsed_dict.update({'hello_timer': seconds})
                 continue

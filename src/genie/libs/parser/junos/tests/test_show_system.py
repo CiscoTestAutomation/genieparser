@@ -18,8 +18,49 @@ from genie.libs.parser.junos.show_system import (
     ShowSystemUsers, ShowSystemBuffersNoForwarding, ShowSystemUsers,
     ShowSystemStorage, ShowSystemCoreDumps, ShowSystemCoreDumpsNoForwarding,
     ShowSystemStorageNoForwarding, ShowSystemStatistics,
-    ShowSystemStatisticsNoForwarding)
+    ShowSystemStatisticsNoForwarding, ShowSystemInformation)
 
+# =========================================================
+# Unit test for show system information
+# =========================================================
+class TestShowSystemInformation(unittest.TestCase):
+    
+    device = Device(name="aDevice")
+    
+    maxDiff = None
+    empty_output = {"execute.return_value": ""}
+    
+    golden_parsed_output_1 = {
+         "system-information": {
+            "hardware-model": "vmx",
+            "host-name": "P4",
+            "os-name": "junos",
+            "os-version": "19.2R1.8"
+        }
+    }
+
+    golden_output_1 = {
+        "execute.return_value": 
+        """
+        show system information
+        Model: vmx
+        Family: junos
+        Junos: 19.2R1.8
+        Hostname: P4
+        """
+    }
+    
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowSystemInformation(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+        
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowSystemInformation(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 # =========================================================
 # Unit test for show system buffers
@@ -6159,7 +6200,6 @@ class TestShowSystemStatisticsNoForwarding(unittest.TestCase):
         obj = ShowSystemStatisticsNoForwarding(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
-
 
 if __name__ == "__main__":
     unittest.main()

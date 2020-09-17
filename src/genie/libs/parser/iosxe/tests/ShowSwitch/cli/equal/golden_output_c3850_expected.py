@@ -22,6 +22,13 @@ expected_output = {
                 "priority": "2",
                 "mac_address": "c800.84ff.7e00",
             },
+            "4": {
+                "role": "member",
+                "hw_ver": "0",
+                "state": "v-mismatch",
+                "priority": "15",
+                "mac_address": "00cc.fc7f.fb80",
+            },
         },
         "mac_address": "689c.e2ff.b9d9",
         "mac_persistency_wait_time": "indefinite",

@@ -1,0 +1,157 @@
+
+   ==========================================================
+               TCP Proxy Statistics
+   ==========================================================
+   Total Connections                   : 32420
+   Max Concurrent Connections          : 1466
+   Flow Entries Created                : 32432
+   Flow Entries Deleted                : 32432
+   Current Flow Entries                : 0
+   Current Connections                 : 0
+   Connections In Progress             : 0
+   Failed Connections                  : 12
+Invalid Flow Entries : 0
+   SYNCACHE Added                      : 32432
+   SYNCACHE Not Added:NAT entry null   : 0
+   SYNCACHE Not Added:Mrkd for Cleanup : 0
+   SYNCACHE Not Added:FLOW entry null  : 0
+   SYNCACHE Not Added:FLOW Invalid     : 0
+   SYNCACHE Not Added:FLOW is in use   : 0
+   SYN purge enqueued                  : 0
+   SYN purge enqueue failed            : 0
+   Other cleanup enqueued              : 0
+   Other cleanup enqueue failed        : 0
+   Stack Cleanup enqueued              : 11787
+   Stack Cleanup enqueue failed        : 0
+   Timer Expire Cleanup enqueued       : 0
+   Timer Expire Cleanup enqueue failed : 0
+   Proxy Cleanup enqueued              : 20645
+   Proxy Cleanup enqueue failed        : 0
+   Cleanup Req watcher called          : 118623
+   Pre-tcp-flow-list enq failed        : 0
+   Pre-tcp-flow-list deq failed(timer) : 0
+   Pre-tcp-flow-list deq failed(accept): 0
+   Pre-tcp-flow-list enq Success       : 32432
+   Pre-tcp-flow-list deq (cleanup)     : 0
+   Pre-tcp-flow-list deq (accept)      : 32432
+   Pre-tcp cleanup timeout update count: 0
+   Total Flow Entries pending cleanup 0  : 0
+   Total Cleanup done                  : 32432
+   Num stack cb with null ctx          : 0
+   Vpath Cleanup from nmrx-thread      : 0
+   Vpath Cleanup from ev-thread        : 32432
+   Failed Conn already accepted conn   : 0
+   SSL Init Failure                    : 0
+
+   Max Queue Length Work               : 27
+   Current Queue Length Work           : 0
+   Max Queue Length ISM                : 0
+   Current Queue Length ISM            : 0
+   Max Queue Length SC                 : 0
+   Current Queue Length SC             : 0
+   Total Tx Enq Ign due to Conn Close  : 15
+   Current Rx epoll                    : 0
+   Current Tx epoll                    : 0
+
+   Paused by TCP Tx Full               : 0
+   Resumed by TCP Tx below threshold   : 0
+   Paused by TCP Buffer Consumed       : 0
+   Resumed by TCP Buffer Released      : 0
+   SSL Pause Done                      : 0
+   SSL Resume Done                     : 0
+   SNORT Pause Done                    : 0
+   SNORT Resume Done                   : 0
+   EV SSL Pause Process                : 0
+   EV SNORT Pause Process              : 0
+   EV SSL/SNORT Resume Process         : 4728
+   Socket Pause Done                   : 0
+   Socket Resume Done                  : 4728
+   SSL Pause Called                    : 0
+   SSL Resume Called                   : 0
+   Async Events Sent                   : 31822
+   Async Events Processed              : 31822
+   Tx Async Events Sent                : 416778
+   Tx Async Events Recvd               : 416777
+   Tx Async Events Processed           : 416777
+   Failed Send                         : 0
+
+   TCP SSL Reset Initiated             : 0
+   TCP SNORT Reset Initiated           : 0
+   TCP FIN Received from clnt/svr      : 44168
+   TCP Reset Received from clnt/svr    : 24995
+   SSL FIN Received -> SC              : 0
+   SSL Reset Received -> SC            : 0
+   SC FIN Received -> SSL              : 0
+   SC Reset Received -> SSL            : 0
+   SSL FIN Received -> TCP             : 0
+   SSL Reset Received -> TCP           : 0
+   TCP FIN Processed                   : 44168
+   TCP FIN Ignored FD Already Closed   : 0
+   TCP Reset Processed                 : 20672
+   SVC Reset Processed                 : 0
+
+   Flow Cleaned with Client Data       : 0
+   Flow Cleaned with Server Data       : 0
+   Buffers dropped in Tx socket close  : 1
+   TCP 4k Allocated Buffers            : 416778
+   TCP 16k Allocated Buffers           : 0
+   TCP 32k Allocated Buffers           : 0
+   TCP 128k Allocated Buffers          : 0
+   TCP Freed Buffers                   : 449210
+   SSL Allocated Buffers               : 0
+   SSL Freed Buffers                   : 0
+   TCP Received Buffers                : 351938
+   TCP to SSL Enqueued Buffers         : 0
+   SSL to SVC Enqueued Buffers         : 0
+   SVC to SSL Enqueued Buffers         : 0
+   SSL to TCP Enqueued Buffers         : 0
+   TCP Buffers Sent                    : 351933
+
+   TCP Failed Buffers Allocations      : 0
+   TCP Failed 16k Buffers Allocations  : 0
+   TCP Failed 32k Buffers Allocations  : 0
+   TCP Failed 128k Buffers Allocations : 0
+   SSL Failed Buffers Allocations      : 0
+   Rx Sock Bytes Read < 512            : 49486
+   Rx Sock Bytes Read < 1024           : 3207
+   Rx Sock Bytes Read < 2048           : 18568
+   Rx Sock Bytes Read < 4096           : 280677
+   SSL Server Init                     : 0
+   Flows Dropped-Snort Gbl Health Yellow        : 0
+   Flows Dropped-Snort Inst Health Yellow       : 0
+   Flows Dropped-WCAPI Channel Health Yellow    : 0
+   Total WCAPI snd flow create svc chain failed : 0
+   Total WCAPI send data svc chain failed       : 0
+   Total WCAPI send close svc chain failed      : 0
+   Total Tx Enqueue Failed                      : 0
+   Total Cleanup Flow Msg Add to wk_q Failed    : 0
+   Total Cleanup Flow Msg Added to wk_q         : 0
+   Total Cleanup Flow Msg Rcvd in wk_q          : 0
+   Total Cleanup Flow Ignored, Already Done     : 0
+   Total Cleanup SSL Msg Add to wk_q Failed     : 0
+   Total UHI mmap                               : 7793
+   Total UHI munmap                             : 0
+Total UHI Page Alloc : 0
+Total UHI Page Alloc Retry : 0
+Total UHI Page Alloc Failed : 0
+Total UHI Page Alloc Failed Invalid Size : 0
+Total UHI Page Free : 0
+
+   Total Enable Rx Enqueued                     : 0
+   Total Enable Rx Called                       : 0
+   Total Enable Rx Process Done                 : 0
+   Total Enable Rx Enqueue Failed               : 0
+   Total Enable Rx Process Failed               : 0
+   Total Enable Rx socket on Client Stack Close : 11228
+   Total Enable Rx socket on Server Stack Close : 20594
+Unified Logging Msg Received : 0
+Unified Logging Drop (Data Too Long) : 0
+Unified Logging Enqueue Success : 0
+Unified Logging Dequeue Success : 0
+Unified Logging Deq Fail(not enough space) : 0
+   Flow Stats Add Failure count                 : 0
+   Flow Stats Delete Failure count              : 0
+AOIM Sync Started : 0
+AOIM Sync Completed : 0
+AOIM Sync Errored : 0
+        

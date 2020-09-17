@@ -1,0 +1,37 @@
+
+        Load for five secs: 2%/0%; one minute: 2%; five minutes: 2%
+        Time source is NTP, 17:42:14.490 EST Tue Apr 9 2019
+        
+        TenGigabitEthernet0/3/0.41
+
+            Service-policy output: VLAN51_QoS
+
+                Class-map: VLAN51_QoS (match-all)
+                    0 packets, 0 bytes
+                    5 minute offered rate 0000 bps, drop rate 0000 bps
+                    Match: access-group name VLAN51_QoS
+                    Queueing
+                    queue limit 64 packets
+                    (queue depth/total drops/no-buffer drops) 0/0/0
+                    (pkts output/bytes output) 0/0
+                    shape (average) cir 80000, bc 320, be 0
+                    target shape rate 80000
+                    police:
+                        cir 8000000 bps, bc 4000 bytes, be 1000 bytes
+                        conformed 0 packets, 0 bytes; actions:
+                            transmit
+                        exceeded 0 packets, 0 bytes; actions:
+                            transmit
+                        violated 0 packets, 0 bytes; actions:
+                             drop
+                        conformed 0000 bps, exceeded 0000 bps, violated 0000 bps
+
+                Class-map: class-default (match-any)
+                    0 packets, 0 bytes
+                    5 minute offered rate 0000 bps, drop rate 0000 bps
+                    Match: any
+            
+                    queue limit 41666 packets
+                    (queue depth/total drops/no-buffer drops) 0/0/0
+                    (pkts output/bytes output) 0/0
+        PE1# 
