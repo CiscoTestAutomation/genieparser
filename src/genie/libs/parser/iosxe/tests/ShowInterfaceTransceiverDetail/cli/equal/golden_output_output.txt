@@ -1,16 +1,116 @@
-# show interface GigabitEthernet1/0/0 transceiver detail
-
-transceiver is present
-type is 10Gbase-LR
-name is CISCO-FINISAR   
-part number is FTLX1474D3BCL-CS
-revision is A   
-serial number is FNS17221JJZ     
-nominal bitrate is 10300 MBit/sec
-Link length supported for 9/125um fiber is 10 km
-cisco id is --
-cisco extended id number is 4
-cisco part number is 10-2457-02
-cisco product id is SFP-10G-LR          
-cisco vendor id is V02 
-number of lanes 1
+Cisco AP Name   : bg-1-cap1
+=================================================
+Cisco AP Identifier                             : 70b3.d278.e03e
+Country Code                                    : IN
+Regulatory Domain Allowed by Country            : 802.11bg:-A   802.11a:-DN
+AP Country Code                                 : IN  - India
+AP Regulatory Domain
+  Slot 0                                        : -A
+  Slot 1                                        : -D
+MAC Address                                     : 70b3.1711.acbb
+IP Address Configuration                        : DHCP
+IP Address                                      : 10.10.5.14
+IP Netmask                                      : 255.255.254.0
+Gateway IP Address                              : 10.10.5.1
+Fallback IP Address Being Used                  : 
+Domain                                          : 
+Name Server                                     : 
+CAPWAP Path MTU                                 : 1485
+Capwap Active Window Size                       : 1
+Telnet State                                    : Disabled
+CPU Type                                        :  ARMv7 Processor rev 1 (v7l)
+Memory Type                                     : DDR3
+Memory Size                                     : 1028096 KB
+SSH State                                       : Enabled
+Cisco AP Location                               : default location
+Site Tag Name                                   : b8
+RF Tag Name                                     : Custom-RF
+Policy Tag Name                                 : b1_policy_tag
+AP join Profile                                 : APG_b18
+Flex Profile                                    : default-flex-profile
+AP Filter name                                  : b8
+Primary Cisco Controller Name                   : b7-wl-ewlc1
+Primary Cisco Controller IP Address             : 10.6.4.17
+Secondary Cisco Controller Name                 : b8-wl-wlc3
+Secondary Cisco Controller IP Address           : 10.6.7.16
+Tertiary Cisco Controller Name                  : b3-wl-wlc3
+Tertiary Cisco Controller IP Address            : 10.6.4.17
+Administrative State                            : Enabled
+Operation State                                 : Registered
+NAT External IP Address                         : 10.10.5.12
+AP Certificate type                             : Manufacturer Installed Certificate
+AP Mode                                         : Local
+AP VLAN tagging state                           : Disabled
+AP VLAN tag                                     : 0
+CAPWAP Preferred mode                           : IPv4
+CAPWAP UDP-Lite                                 : Not Configured
+AP Submode                                      : Not Configured
+Office Extend Mode                              : Disabled
+Dhcp Server                                     : Disabled
+Remote AP Debug                                 : Disabled
+Logging Trap Severity Level                     : information
+Logging Syslog facility                         : kern
+Software Version                                : 17.3.1.9
+Boot Version                                    : 1.1.2.4
+Mini IOS Version                                : 0.0.0.0
+Stats Reporting Period                          : 0
+LED State                                       : Enabled
+LED Flash State                                 : Enabled
+LED Flash Timer                                 : 0
+MDNS Group Id                                   : 0
+MDNS Rule Name                                  : 
+PoE Pre-Standard Switch                         : Disabled
+PoE Power Injector MAC Address                  : Disabled
+Power Type/Mode                                 : PoE/Full Power
+Number of Slots                                 : 3
+AP Model                                        : AIR-AP4800-D-K9
+IOS Version                                     : 17.3.1.9
+Reset Button                                    : Disabled
+AP Serial Number                                : FGL2102AZZZ
+Management Frame Validation                     : Capable
+Management Frame Protection                     : Capable
+AP User Name                                    : admin
+AP 802.1X User Mode                             : Global
+AP 802.1X User Name                             : Not Configured
+Cisco AP System Logging Host                    : 10.16.19.6
+Cisco AP Secured Logging TLS mode               : Disabled
+AP Up Time                                      : 3 days 9 hours 44 minutes 18 seconds 
+AP CAPWAP Up Time                               : 3 days 9 hours 37 minutes 20 seconds 
+Join Date and Time                              : 08/14/2020 19:48:09
+Join Taken Time                                 : 6 minutes 57 seconds 
+Join Priority                                   : 1
+AP Link Latency                                 : Disable
+AP Lag Configuration Status                     : Disabled
+Lag Support for AP                              : Yes
+Rogue Detection                                 : Enabled
+Rogue Containment auto-rate                     : Disabled
+Rogue Containment of standalone flexconnect APs : Disabled
+Rogue Detection Report Interval                 : 10
+Rogue AP minimum RSSI                           : -70
+Rogue AP minimum transient time                 : 0
+AP TCP MSS Adjust                               : Enabled
+AP TCP MSS Size                                 : 1250
+AP IPv6 TCP MSS Adjust                          : Enabled
+AP IPv6 TCP MSS Size                            : 1250
+Hyperlocation Admin Status                      : Disabled
+Retransmit count                                : 5
+Retransmit interval                             : 3
+Fabric status                                   : Disabled
+FIPS status                                     : Disabled
+WLANCC status                                   : Disabled
+USB Module Type                                 : USB Module
+USB Module State                                : Enabled
+USB Operational State                           : Disabled
+USB Override                                    : Disabled
+GAS rate limit Admin status                     : Disabled
+WPA3 Capability                                 : Enabled
+EWC-AP Capability                               : Disabled
+AWIPS Capability                                : Enabled
+Proxy Hostname                                  : Not Configured
+Proxy Port                                      : Not Configured
+Proxy NO_PROXY list                             : Not Configured
+GRPC server status                              : Disabled
+Unencrypted Data Keep Alive                     : Enabled
+Local DHCP Server                               : Disabled
+Traffic Distribution Statistics Capability      : Enabled
+Dual DFS Statistics                             : Disabled
