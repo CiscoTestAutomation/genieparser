@@ -186,3 +186,63 @@ class ShowConfigurationProtocolsMplsPath(ShowConfigurationProtocolsMplsPathSchem
                 path_list.append(path_dict)
 
         return ret_dict
+
+class ShowConfigurationFamilyBridgeVlanIdSchema(MetaParser):
+    """ Schema for:
+        show configuration interfaces {interface} unit {unit} family bridge vlan-id
+    """
+
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "configuration": {
+            Optional("@junos:commit-localtime"): str,
+            Optional("@junos:commit-seconds"): str,
+            Optional("@junos:commit-user"): str,
+            "interfaces": {
+                "interface": {
+                    "name": str,
+                    "unit": {
+                        "family": {
+                            "bridge": {
+                                "vlan-id": str
+                            }
+                        },
+                        "name": str
+                    }
+                }
+            }
+        }
+    }
+
+class ShowConfigurationFamilyBridgeVlanId(ShowConfigurationFamilyBridgeVlanIdSchema):
+    cli_command = ['show configuration interfaces {interface} unit {unit} family bridge vlan-id']
+
+    def cli(self, interface, unit, output):
+        if not output:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+        ret_dict = {}
+        
+        # vlan-id 10;
+        p1 = re.compile(r'^vlan-id +(?P<vlan_id>\S+);$')
+        
+        for line in out.splitlines():
+            line = line.strip()
+
+            #  vlan-id 10;
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_id = group['vlan_id']
+                configuration_dict = ret_dict.setdefault('configuration', {})
+                interface_dict = configuration_dict.setdefault('interfaces', {}). \
+                    setdefault('interface', {})
+                interface_dict.update({'name': interface})
+                unit_dict = interface_dict.setdefault('unit', {})
+                unit_dict.update({'name': unit})
+                vlan_dict = unit_dict.setdefault('family', {}).setdefault('bridge', {})
+                vlan_dict.update({'vlan-id': vlan_id})
+                continue
+
+        return ret_dict
