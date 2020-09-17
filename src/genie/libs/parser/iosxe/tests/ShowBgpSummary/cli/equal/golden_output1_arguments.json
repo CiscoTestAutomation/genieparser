@@ -1,0 +1,4 @@
+{
+    "address_family": "vpnv4 unicast",
+    "rd": "5918:51"
+}

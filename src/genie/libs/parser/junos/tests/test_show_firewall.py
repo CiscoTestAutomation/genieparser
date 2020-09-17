@@ -200,6 +200,126 @@ class TestShowFirewall(unittest.TestCase):
         
     }
 
+    golden_output_2 = {'execute.return_value': 
+    """
+        show firewall
+
+        Filter: __default_bpdu_filter__
+
+        Filter: ICMP_ACL_filter
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0
+
+        Filter: TCP_ACK-flood_ACL_filter
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0
+
+        Filter: TCP_SYN-flood_ACL_filter
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0
+
+        Filter: UDP_ACL_filter
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0
+
+        Filter: ICMP_ACL_filter_IPv6
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0
+
+        Filter: TCP_ACK-flood_ACL_filter_IPv6
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0
+
+        Filter: TCP_SYN-flood_ACL_filter_IPv6
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0
+
+        Filter: UDP_ACL_filter_IPv6
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0"""
+        }
+
+    golden_parsed_output_2 = {
+        'firewall-information': {
+            'filter-information': [{
+                'filter-name': '__default_bpdu_filter__'
+            },
+            {
+                'counter': [{
+                'byte-count': '0',
+                'counter-name': 'block',
+                'packet-count': '0'
+                }],
+                'filter-name': 'ICMP_ACL_filter'
+            },
+            {
+                'counter': [{
+                'byte-count': '0',
+                'counter-name': 'block',
+                'packet-count': '0'
+                }],
+                'filter-name': 'TCP_ACK-flood_ACL_filter'
+            },
+            {
+                'counter': [{
+                'byte-count': '0',
+                'counter-name': 'block',
+                'packet-count': '0'
+                }],
+                'filter-name': 'TCP_SYN-flood_ACL_filter'
+            },
+            {
+                'counter': [{
+                'byte-count': '0',
+                'counter-name': 'block',
+                'packet-count': '0'
+                }],
+                'filter-name': 'UDP_ACL_filter'
+            },
+            {
+                'counter': [{
+                'byte-count': '0',
+                'counter-name': 'block',
+                'packet-count': '0'
+                }],
+                'filter-name': 'ICMP_ACL_filter_IPv6'
+            },
+            {
+                'counter': [{
+                'byte-count': '0',
+                'counter-name': 'block',
+                'packet-count': '0'
+                }],
+                'filter-name': 'TCP_ACK-flood_ACL_filter_IPv6'
+            },
+            {
+                'counter': [{
+                'byte-count': '0',
+                'counter-name': 'block',
+                'packet-count': '0'
+                }],
+                'filter-name': 'TCP_SYN-flood_ACL_filter_IPv6'
+            },
+            {
+                'counter': [{
+                'byte-count': '0',
+                'counter-name': 'block',
+                'packet-count': '0'
+                }],
+                'filter-name': 'UDP_ACL_filter_IPv6'
+            }
+            ]
+        }
+        }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowFirewall(device=self.device)
@@ -211,6 +331,12 @@ class TestShowFirewall(unittest.TestCase):
         obj = ShowFirewall(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowFirewall(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 class TestShowFirewallCounterFilter(unittest.TestCase):
     """ Unit tests for:
@@ -249,12 +375,12 @@ class TestShowFirewallCounterFilter(unittest.TestCase):
         self.device = Mock(**self.empty_output)
         obj = ShowFirewallCounterFilter(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            obj.parse(filters='v6_local-access-control', counter_name='v6_last_policer')
+            obj.parse(filter='v6_local-access-control', counter_name='v6_last_policer')
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowFirewallCounterFilter(device=self.device)
-        parsed_output = obj.parse(filters='v6_local-access-control', counter_name='v6_last_policer')
+        parsed_output = obj.parse(filter='v6_local-access-control', counter_name='v6_last_policer')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 

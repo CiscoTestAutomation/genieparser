@@ -1,0 +1,25 @@
+
+traceroute
+Protocol [ip]: 
+Target IP address: 192.168.100.252
+Ingress traceroute [n]: 
+Source address or interface: 
+DSCP Value [0]: 
+Numeric display [n]: 
+Timeout in seconds [3]: 
+Probe count [3]: 
+Minimum Time to Live [1]: 
+Maximum Time to Live [30]: 
+Port Number [33434]: 
+Loose, Strict, Record, Timestamp, Verbose[none]: 
+Type escape sequence to abort.
+Tracing the route to 192.168.100.252
+VRF info: (vrf in name/id, vrf out name/id)
+  1 10.169.196.213 [MPLS: Labels 16051/67207 Exp 0] 45 msec 46 msec 46 msec
+  2  *  * 
+    10.169.14.157 [MPLS: Label 67207 Exp 0] 40 msec
+  3 10.169.14.217 [MPLS: Label 24003 Exp 0] 45 msec 46 msec 55 msec
+  4 10.174.135.94 36 msec 7 msec 2 msec
+  5  *  * 
+    192.168.100.18 [AS 2516] 2 msec
+    

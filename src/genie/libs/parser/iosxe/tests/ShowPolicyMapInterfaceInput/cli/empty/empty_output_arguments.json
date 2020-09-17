@@ -1,0 +1,4 @@
+{
+    "interface": "gigabitEthernet 0/1/4",
+    "class_name": "class-default"
+}

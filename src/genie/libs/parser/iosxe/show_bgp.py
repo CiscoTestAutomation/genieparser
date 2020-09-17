@@ -936,8 +936,9 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # Route Distinguisher: 100:100 (default for vrf VRF1)
         # Route Distinguisher: 65535:1 (default for vrf evpn1)
         # Route Distinguisher: 65109:3051
+        # Route Distinguisher: 9.1.1.1:3014 (default for vrf vrf1)
         p2_1 = re.compile(r'^Route +Distinguisher:'
-                          r' +(?P<route_distinguisher>[0-9\:]+)'
+                          r' +(?P<route_distinguisher>[0-9.\:]+)'
                           r'(?: +\(default +for +vrf +(?P<vrf_id>(\S+))\))?$')
 
         # BGP routing table entry for 10.4.1.1/32, version 4
@@ -946,19 +947,19 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # BGP routing table entry for 2001:DB8:1:1::/64, version 5
         # BGP routing table entry for 2001:2:2:2::2/128, version 2
         # BGP routing table entry for [5][65535:1][0][24][10.36.3.0]/17, version 3
-        p3_1 = re.compile(r'^BGP +routing +table +entry +for +'
-                          r'(\[[0-9]+\])?((?P<route_distinguisher>((\[[0-9]+'
-                          r'[\:][0-9]+\])|([0-9]+[\:][0-9]+[\:]))))?(\['
-                          r'[0-9]+\])?(\[[0-9]+\])?(?P<router_id>((\[[0-9]+'
-                          r'[\.][0-9]+[\.][0-9]+[\.][0-9]+\][\/][0-9]+)|'
-                          r'([0-9]+[\.][0-9]+[\.][0-9]+[\.][0-9]+[\/][0-9]+)'
-                          r'|([a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+'
-                          r'[\:][\:][a-zA-Z0-9]+[\/][0-9]+)|([a-zA-Z0-9]+'
-                          r'[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]'
-                          r'+[\:][\:][\/][0-9]+)|([a-zA-Z0-9]+[\:]'
-                          r'[a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
-                          r'[\:][0-9]+[\/][0-9]+)))\, +version +'
-                          r'(?P<prefix_table_version>[0-9]+)$')
+        # BGP routing table entry for 9.1.1.1:3014:0.0.0.0/0, version 74438
+        p3_1 = re.compile(r'^BGP +routing +table +entry +for +(\[[0-9]+\])?'
+                        r'((?P<route_distinguisher>((\[[0-9]+[\:][0-9]+\])'
+                        r'|[0-9]+])|([0-9.]+[:][0-9]+[:])))?(\[[0-9]+\])?'
+                        r'(\[[0-9]+\])?(?P<router_id>((\[[0-9]+[\.][0-9]+[\.]'
+                        r'[0-9]+[\.][0-9]+\][\/][0-9]+)|([0-9]+[\.][0-9]+[\.]'
+                        r'[0-9]+[\.][0-9]+[\/][0-9]+)|([a-zA-Z0-9]+[\:]'
+                        r'[a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][\:][a-zA-Z0-9]+'
+                        r'[\/][0-9]+)|([a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
+                        r'[a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][\:][\/][0-9]+)|'
+                        r'([a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
+                        r'[a-zA-Z0-9]+[\:][\:][0-9]+[\/][0-9]+)))\, +version '
+                        r'+(?P<prefix_table_version>[0-9]+)$')
 
         # BGP routing table entry for 65109:3051:VEID-1:Blk-1/136, version 2
         p3_2 = re.compile(r'^BGP +routing +table +entry +for'
@@ -1185,6 +1186,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
 
             # Route Distinguisher: 100:100 (default for vrf VRF1)
             # Route Distinguisher: 65535:1 (default for vrf evpn1)
+            # Route Distinguisher: 9.1.1.1:3014 (default for vrf vrf1)
             m = p2_1.match(line)
             if m:
                 route_distinguisher = m.groupdict()['route_distinguisher']
@@ -1208,6 +1210,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             # BGP routing table entry for 2001:DB8:1:1::/64, version 5
             # BGP routing table entry for 2001:2:2:2::2/128, version 2
             # BGP routing table entry for [5][65535:1][0][24][10.36.3.0]/17, version 3
+            # BGP routing table entry for 9.1.1.1:3014:0.0.0.0/0, version 74438
             m = p3_1.match(line)
             if m:
                 update_group = 0
