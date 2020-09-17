@@ -3408,7 +3408,7 @@ class ShowInterfaceStatusSchema(MetaParser):
             Any(): {
                 Optional('name'): str,
                 'status': str,
-                'vlan': str,
+                Optional('vlan'): str,
                 'duplex_code': str,
                 'port_speed': str,
                 Optional('type'): str,
