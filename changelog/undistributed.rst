@@ -12,6 +12,8 @@
 * IOSXE
     * Added ShowApSummary
         * show ap summary
+    * Added ShowCtsSxpConnectionsBrief
+        * show show cts sxp connections brief
 
 --------------------------------------------------------------------------------
                                 Fix
