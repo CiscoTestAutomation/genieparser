@@ -131,38 +131,32 @@ class ShowSnmpUser(ShowSnmpUserSchema):
         # Group-name: nmcigroup
 
         # User name: SNMPv3-alfa
-        user_capture = "(?P<user>\S+)"
-        p_user = re.compile("User\s+name:\s+{user_capture}".format(user_capture=user_capture))
+        p_user = re.compile(r"^User\s+name:\s+(?P<user>\S+)")
 
         # Engine ID: 800000090300002790FBCF00
-        engine_capture = "(?P<engine>\S+)"
-        p_engine = re.compile("Engine\s+ID:\s+{engine_capture}".format(engine_capture=engine_capture))
+        p_engine = re.compile(r"^Engine\s+ID:\s+(?P<engine>\S+)")
 
         # storage-type: nonvolatile   active access-list: 69
-        storage_capture = "(?P<storage>\S+)"
-        access_capture = "(?P<access>.*)"
-        p_storage_access = re.compile("storage-type:\s{storage_capture}\s+active\s+access-list:\s+{access_capture}".format(storage_capture=storage_capture, access_capture=access_capture))
+        p_storage_access = re.compile(r"^storage-type:\s(?P<storage>\S+)\s+active\s+access-list:\s+(?P<access>.*)")
 
         # storage-type: nonvolatile         active
-        p_storage = re.compile("storage-type:\s{storage_capture}\s+active".format(storage_capture=storage_capture))
+        p_storage = re.compile(r"^storage-type:\s(?P<storage>\S+)\s+active")
 
         # Authentication Protocol: SHA
-        auth_capture = "(?P<auth>\S+)"
-        p_auth = re.compile("Authentication\s+Protocol:\s+{auth_capture}".format(auth_capture=auth_capture))
+        p_auth = re.compile(r"^Authentication\s+Protocol:\s+(?P<auth>\S+)")
 
         # Privacy Protocol: AES256
-        priv_capture = "(?P<priv>\S+)"
-        p_priv = re.compile("Privacy\s+Protocol:\s+{priv_capture}".format(priv_capture=priv_capture))
+        p_priv = re.compile(r"^Privacy\s+Protocol:\s+(?P<priv>\S+)")
 
         # Group-name: group1
-        group_capture = "(?P<group>\S+)"
-        p_group = re.compile("Group-name:\s+{group_capture}".format(group_capture=group_capture))
+        p_group = re.compile(r"^Group-name:\s+(?P<group>\S+)")
 
 
         snmp_user_obj = {}
         current_loop_user = ""
 
         for line in output.splitlines():
+            line = line.strip()
             # User name: SNMPv3-alfa
             if p_user.match(line):
                 match = p_user.match(line)
