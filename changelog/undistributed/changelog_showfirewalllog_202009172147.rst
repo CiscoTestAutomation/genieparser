@@ -4,3 +4,10 @@
 * JUNOS
     * Added ShowFirewallLog
         * show firewall log
+
+--------------------------------------------------------------------------------
+                                Fix
+--------------------------------------------------------------------------------
+* JUNOS
+    * Fixed ShowFirewallCounterFilter
+        * Fixed Cli command to accept options for filter and counter_name
