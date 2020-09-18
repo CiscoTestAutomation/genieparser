@@ -6483,7 +6483,7 @@ class ShowPlatformHardwareQfpActiveFeatureAppqoe(ShowPlatformHardwareQfpActiveFe
             m = p8.match(line)
             if m:
                 groups = m.groupdict()
-                key = groups['key'].replace('-', '_').replace(' ', '_').lower()
+                key = groups['key'].replace('-', '_').replace(' ', '_').replace(':', '').lower()
                 last_dict_ptr.update({key: int(groups['value'])})
 
         return ret_dict

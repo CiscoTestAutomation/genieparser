@@ -19,6 +19,9 @@ from pyats.topology import Device
 CLASS_SKIP = {
     "asa": {"ShowVpnSessiondbSuper": True},
     "iosxe": {
+        "ShowCtsRoleBasedCounters": True,
+        "ShowPlatformHardwareQfpActiveTcamResourceManagerUsage": True,
+        "ShowPlatformResources": True,
         "ShowPimNeighbor": True,
         "ShowIpInterfaceBrief": True,
         "ShowIpInterfaceBriefPipeVlan": True,
@@ -63,14 +66,22 @@ CLASS_SKIP = {
         "ShowIpBgpRouteDistributer": True,
         "ShowPolicyMapTypeSuperParser": True,
         "ShowIpLocalPool": True,
+        "ShowSdwanOmpPeers": True,
+        "ShowSdwanOmpTlocPath": True,
+        "ShowSdwanOmpTlocs": True,
+        "ShowSdwanUtdEngine": True,
         "ShowInterfaceDetail": True,
         "ShowInterfaceIpBrief": True,
         "ShowInterfaceSummary": True,
         "ShowAuthenticationSessionsInterface": True,
         "ShowVersion_viptela": True,
+        "ShowOmpPeers_viptela": True,
         "ShowBfdSummary_viptela": True,
+        "ShowOmpTlocPath_viptela": True,
+        "ShowOmpTlocs_viptela": True,
         "ShowSoftwaretab_viptela": True, # PR submitted
         "ShowRebootHistory_viptela": True,
+        "ShowUtdEngineStandardStatus": True,
         "ShowOmpSummary_viptela": True,
         "ShowSystemStatus_viptela": True,
         "ShowTcpProxyStatistics": True, # PR submitted
@@ -198,7 +209,7 @@ class FileBasedTest(aetest.Testcase):
                     #    start = 1
                     # if not start:
                     #    continue
-                    with steps.start(f"{operating_system} -> {name}") as class_step:
+                    with steps.start(f"{operating_system} -> {name}", continue_=True) as class_step:
                         with class_step.start(
                             f"Test Golden -> {operating_system} -> {name}",
                             continue_=True,

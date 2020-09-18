@@ -119,17 +119,19 @@ class ShowApDot11DualBandSummarySchema(MetaParser):
 
     schema = {
         "ap_dot11_dual-band_summary": {
-            int: {
-                "ap_name": str,
-                "ap_mac_address": str,
-                "slot_id": int,
-                "admin_state": str,
-                "oper_state": str,
-                "width": int,
-                "tx_pwr": str,
-                "mode": str,
-                "subband": str,
-                "channel": str
+            "index":{
+                int: {
+                    "ap_name": str,
+                    "ap_mac_address": str,
+                    "slot_id": int,
+                    "admin_state": str,
+                    "oper_state": str,
+                    "width": int,
+                    "tx_pwr": str,
+                    "mode": str,
+                    "subband": str,
+                    "channel": str
+                }
             }
         }
     }
