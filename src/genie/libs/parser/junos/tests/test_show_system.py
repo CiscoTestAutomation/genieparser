@@ -6228,32 +6228,32 @@ class TestShowSystemConnections(unittest.TestCase):
           "connections-table": [
              {
                 "proto": "tcp4",
-                "recv-Q": "0",
-                "send-Q": "0",
+                "recv-q": "0",
+                "send-q": "0",
                 "local-address": "1.0.0.192.22",
                 "foreign-address": "1.0.0.1.56714",
                 "state": "ESTABLISHED"
              },
              {
                 "proto": "tcp4",
-                "recv-Q": "0",
-                "send-Q": "0",
+                "recv-q": "0",
+                "send-q": "0",
                 "local-address": "1.0.0.192.22",
                 "foreign-address": "1.0.0.1.56708",
                 "state": "ESTABLISHED"
              },
              {
                 "proto": "tcp4",
-                "recv-Q": "0",
-                "send-Q": "0",
+                "recv-q": "0",
+                "send-q": "0",
                 "local-address": "*.33081",
                 "foreign-address": "*.*",
                 "state": "LISTEN"
              },
              {
                 "proto": "tcp4",
-                "recv-Q": "0",
-                "send-Q": "0",
+                "recv-q": "0",
+                "send-q": "0",
                 "local-address": "128.0.0.1.6988",
                 "foreign-address": "128.0.0.16.43116",
                 "state": "ESTABLISHED"

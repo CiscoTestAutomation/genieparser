@@ -5006,8 +5006,8 @@ class ShowSystemConnectionsSchema(MetaParser):
             "connections-table": [
                 {
                     "proto": str,
-                    "recv-Q": str,
-                    "send-Q": str,
+                    "recv-q": str,
+                    "send-q": str,
                     "local-address": str,
                     "foreign-address": str,
                     "state": str,
@@ -5020,8 +5020,8 @@ class ShowSystemConnectionsSchema(MetaParser):
             raise SchemaError('connections-table is not a list')
         connections_schema = Schema({
             "proto": str,
-            "recv-Q": str,
-            "send-Q": str,
+            "recv-q": str,
+            "send-q": str,
             "local-address": str,
             "foreign-address": str,
             "state": str,
@@ -5059,7 +5059,7 @@ class ShowSystemConnections(ShowSystemConnectionsSchema):
         p2 = re.compile(r'^Proto +Recv-Q +Send-Q +Local +Address +Foreign +Address +\(state\) *$')
 
         # tcp4       0      0  1.0.0.192.22                                  1.0.0.1.56714                                 ESTABLISHED
-        p3 = re.compile(r'^(?P<proto>\S+) +(?P<recv_Q>\S+) +(?P<send_Q>\S+) +'
+        p3 = re.compile(r'^(?P<proto>\S+) +(?P<recv_q>\S+) +(?P<send_q>\S+) +'
                         r'(?P<local_address>\S+) +(?P<foreign_address>\S+) +(?P<state>.*)$')
 
         for line in out.splitlines():
@@ -5084,8 +5084,8 @@ class ShowSystemConnections(ShowSystemConnectionsSchema):
                     setdefault('connections-table', [])
 
                 entry_dict["proto"] = group["proto"]
-                entry_dict["recv-Q"] = group["recv_Q"]
-                entry_dict["send-Q"] = group["send_Q"]
+                entry_dict["recv-q"] = group["recv_q"]
+                entry_dict["send-q"] = group["send_q"]
                 entry_dict["local-address"] = group["local_address"]
                 entry_dict["foreign-address"] = group["foreign_address"]
                 entry_dict["state"] = group["state"]
