@@ -385,10 +385,6 @@ class TestShowFirewallCounterFilter(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
-
-
-
-
 class TestShowFirewallLog(unittest.TestCase):
     """ Unit tests for:
             * show firewall log

@@ -85,7 +85,6 @@ class ShowFirewallSchema(MetaParser):
     }
 
 
-
 class ShowFirewall(ShowFirewallSchema):
     """ Parser for:
             * show firewall
@@ -235,9 +234,6 @@ class ShowFirewallCounterFilter(ShowFirewallCounterFilterSchema):
         return ret_dict
 
 
-
-
-
 class ShowFirewallLogSchema(MetaParser):
 
     """ Schema for:
@@ -321,9 +317,4 @@ class ShowFirewallLog(ShowFirewallLogSchema):
                 log_information_list.append(entry_dict)
                 continue
 
-        import json
-        json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
-        f = open("dict.txt","w")
-        f.write(json_data)
-        f.close()
         return ret_dict
