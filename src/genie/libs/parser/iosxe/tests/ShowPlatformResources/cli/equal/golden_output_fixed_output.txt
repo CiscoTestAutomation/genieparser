@@ -1,0 +1,12 @@
+                Resource                 Usage                 Max             Warning         Critical        State
+        ----------------------------------------------------------------------------------------------------
+        RP0 (ok, active)                                                                               H    
+        Control Processor       2.50%                 100%            80%             90%             H    
+        DRAM                   3515MB(22%)           15915MB         88%             93%             H    
+        ESP0(ok, active)                                                                               H    
+        QFP                                                                                           H    
+        TCAM                   10616cells(1%)        1048576cells    65%             85%             H    
+        DRAM                   611434KB(14%)         4194304KB       80%             90%             H    
+        IRAM                   12716KB(9%)           131072KB        80%             90%             H    
+        CPU Utilization        1.00%                 100%            90%             95%             H  
+    

@@ -1,0 +1,17 @@
+
+==========================================================
+            TCP Proxy Status
+==========================================================
+
+Configuration
+-------------
+VPG Name            : VirtualPortGroup2
+VPG IP Addr         : 192.168.2.1
+VPG IP Mask         : 255.255.255.0
+SNG Name            : SNG-APPQOE
+SNG IP Addr         : 192.168.2.2
+
+Status
+------
+Operational State   : RUNNING
+        
