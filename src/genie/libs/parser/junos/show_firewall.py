@@ -185,12 +185,12 @@ class ShowFirewallCounterFilter(ShowFirewallCounterFilterSchema):
 
     def cli(self, filter=None, counter_name=None, output=None):
         if not output:
-            if filter:
+            if filter and not counter_name:
                 out = self.device.execute(self.cli_command[1].format(
                     filter=filter
                 ))
             else:
-                out = self.device.execute(self.cli_command.format(filter=filter,
+                out = self.device.execute(self.cli_command[0].format(filter=filter,
                                                                   counter_name=counter_name))
         else:
             out = output
@@ -232,4 +232,98 @@ class ShowFirewallCounterFilter(ShowFirewallCounterFilterSchema):
                 
                 continue
 
+        return ret_dict
+
+
+
+
+
+class ShowFirewallLogSchema(MetaParser):
+
+    """ Schema for:
+            * show firewall log
+    """
+
+    """schema = {
+    "firewall-log-information": {
+        "log-information": [
+            {
+                "action-name": str,
+                "destination-address": str,
+                "filter-name": str,
+                "interface-name": str,
+                "protocol-name": str,
+                "source-address": str,
+                "time": str
+            }
+        ]
+    }
+}"""
+
+    def validate_log_information_list(value):
+        if not isinstance(value, list):
+            raise SchemaError('log-information is not a list')
+        log_schema = Schema({
+                "action-name": str,
+                "destination-address": str,
+                "filter-name": str,
+                "interface-name": str,
+                "protocol-name": str,
+                "source-address": str,
+                "time": str
+        })
+        for item in value:
+            log_schema.validate(item)
+        return value
+
+    schema = {
+    "firewall-log-information": {
+        "log-information": Use(validate_log_information_list)
+            }
+        }
+
+
+class ShowFirewallLog(ShowFirewallLogSchema):
+    """ Parser for:
+            * show firewall log
+    """
+    cli_command = 'show firewall log'
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        #10:28:22  pfe       D      ge-0/0/0.0    TCP             40.0.0.2                         40.0.0.1
+        p1 = re.compile(r'^(?P<time>[\d\:]+) +(?P<filter_name>\S+) '
+                        r'+(?P<action_name>\S+) +(?P<interface_name>\S+) '
+                        r'+(?P<protocol_name>\S+) +(?P<source_address>\S+) '
+                        r'+(?P<destination_address>\S+)$')
+        
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #10:28:22  pfe       D      ge-0/0/0.0    TCP             40.0.0.2                         40.0.0.1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                log_information_list = ret_dict.setdefault("firewall-log-information", {})\
+                    .setdefault("log-information", [])
+
+                entry_dict = {}
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    entry_dict[entry_key] = group_value
+                log_information_list.append(entry_dict)
+                continue
+
+        import json
+        json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
+        f = open("dict.txt","w")
+        f.write(json_data)
+        f.close()
         return ret_dict
