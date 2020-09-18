@@ -184,7 +184,7 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
             # port-channel80, uptime: 3d23h, pim6
             p5 = re.compile(r'^\s*(?:(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+),)?'
                             r' +uptime: +(?:(?P<oil_uptime>[a-zA-Z0-9\:]+),)?'
-                            r' +(?:(?P<oil_flags>[a-zA-Z0-9\(\)\s]+))?( *\((?P<rpf>\w+)\))?$')
+                            r' +(?:(?P<oil_flags>[\S\s]+))?( *\((?P<rpf>\w+)\))?$')
             m = p5.match(line)
             if m:
                 outgoing_interface = m.groupdict()['outgoing_interface']
