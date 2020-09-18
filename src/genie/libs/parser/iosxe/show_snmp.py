@@ -131,25 +131,25 @@ class ShowSnmpUser(ShowSnmpUserSchema):
         # Group-name: nmcigroup
 
         # User name: SNMPv3-alfa
-        p_user = re.compile(r"^User\s+name:\s+(?P<user>\S+)")
+        p_user = re.compile(r"^User\s+name:\s+(?P<user>\S+)$")
 
         # Engine ID: 800000090300002790FBCF00
-        p_engine = re.compile(r"^Engine\s+ID:\s+(?P<engine>\S+)")
+        p_engine = re.compile(r"^Engine\s+ID:\s+(?P<engine>\S+)$")
 
         # storage-type: nonvolatile   active access-list: 69
-        p_storage_access = re.compile(r"^storage-type:\s(?P<storage>\S+)\s+active\s+access-list:\s+(?P<access>.*)")
+        p_storage_access = re.compile(r"^storage-type:\s(?P<storage>\S+)\s+active\s+access-list:\s+(?P<access>.*)$")
 
         # storage-type: nonvolatile         active
-        p_storage = re.compile(r"^storage-type:\s(?P<storage>\S+)\s+active")
+        p_storage = re.compile(r"^storage-type:\s(?P<storage>\S+)\s+active$")
 
         # Authentication Protocol: SHA
-        p_auth = re.compile(r"^Authentication\s+Protocol:\s+(?P<auth>\S+)")
+        p_auth = re.compile(r"^Authentication\s+Protocol:\s+(?P<auth>\S+)$")
 
         # Privacy Protocol: AES256
-        p_priv = re.compile(r"^Privacy\s+Protocol:\s+(?P<priv>\S+)")
+        p_priv = re.compile(r"^Privacy\s+Protocol:\s+(?P<priv>\S+)$")
 
         # Group-name: group1
-        p_group = re.compile(r"^Group-name:\s+(?P<group>\S+)")
+        p_group = re.compile(r"^Group-name:\s+(?P<group>\S+)$")
 
 
         snmp_user_obj = {}
