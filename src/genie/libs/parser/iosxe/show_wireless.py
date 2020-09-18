@@ -13,11 +13,10 @@ class ShowWirelessFabricClientSummarySchema(MetaParser):
 
     schema = {
         "number_of_fabric_clients" : int,
-        Optional("clients") : {
-            Optional(int) : {
-                Optional("mac_address") : str,
+        Optional("mac_address") : {
+            Optional(str) : {
                 Optional("ap_name") : str,
-                Optional("wlan") : str,
+                Optional("wlan") : int,
                 Optional("state") : str,
                 Optional("protocol") : str,
                 Optional("method") : str,
@@ -59,30 +58,20 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
         # 58bf.ea09.f357 a2-12-cap17                   19   Webauth Pending    11ac     MAB   
 
         # Number of Fabric Clients : 8
-        clients_capture = r"(?P<clients>\S+)"
-        p_clients = re.compile(r"Number\s+of\s+Fabric\s+Clients\s+:\s+{clients_capture}".format(clients_capture=clients_capture))
+        p_clients = re.compile(r"^Number\s+of\s+Fabric\s+Clients\s+:\s+(?P<clients>\S+)$")
 
         # MAC Address    AP Name                          WLAN State              Protocol Method
-        p_header = re.compile(r"MAC\s+Address\s+AP\s+Name\s+WLAN\s+State\s+Protocol\s+Method")
+        p_header = re.compile(r"^MAC\s+Address\s+AP\s+Name\s+WLAN\s+State\s+Protocol\s+Method$")
 
         # -------------------------------------------------------------------------------------------------------------------------
         p_delimiter = re.compile(
             r"^-------------------------------------------------------------------------------------------------------------------------$")
 
         # 58bf.ea72.1730 a2-11-cap43                   17   Run                11ac     Dot1x
-        mac_capture = r"(?P<mac>\S{4}\.\S{4}\.\S{4})"
-        name_capture = r"(?P<name>\S+)"
-        wlan_capture = r"(?P<wlan>\S+)"
-        state_capture = r"(?P<state>.*)"
-        protocol_capture = r"(?P<protocol>\S+)"
-        method_capture = r"(?P<method>(Dot1x|MAB))"
-        p_client_info = re.compile(r"{mac_capture}\s+{name_capture}\s+{wlan_capture}\s+{state_capture}\s+{protocol_capture}\s+{method_capture}".format(mac_capture=mac_capture, name_capture=name_capture, 
-                                                                                                                                                        wlan_capture=wlan_capture, state_capture=state_capture,
-                                                                                                                                                        protocol_capture=protocol_capture, method_capture=method_capture))
+        p_client_info = re.compile(r"^(?P<mac>\S{4}\.\S{4}\.\S{4})\s+(?P<name>\S+)\s+(?P<wlan>\S+)\s+(?P<state>.*)\s+(?P<protocol>\S+)\s+(?P<method>(Dot1x|MAB))$")
 
 
         show_wireless_fabric_client_summary_dict = {}
-        client_index = 0
 
         for line in output.splitlines():
             line = line.strip()
@@ -107,19 +96,12 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
                 groups = match.groupdict()
                 mac_address = groups['mac']
                 ap_name = groups['name']
-                wlan = groups['wlan']
+                wlan = int(groups['wlan'])
                 state = groups['state'].strip()
                 protocol = groups['protocol']
                 method = groups['method']
-                if not show_wireless_fabric_client_summary_dict.get('clients'):
-                    show_wireless_fabric_client_summary_dict['clients'] = {}
-                client_index += 1
-                show_wireless_fabric_client_summary_dict['clients'].update({client_index : {}})
-                show_wireless_fabric_client_summary_dict['clients'][client_index].update({'mac_address' : mac_address})
-                show_wireless_fabric_client_summary_dict['clients'][client_index].update({'ap_name' : ap_name})
-                show_wireless_fabric_client_summary_dict['clients'][client_index].update({'wlan' : wlan})
-                show_wireless_fabric_client_summary_dict['clients'][client_index].update({'state' : state})
-                show_wireless_fabric_client_summary_dict['clients'][client_index].update({'protocol' : protocol})
-                show_wireless_fabric_client_summary_dict['clients'][client_index].update({'method' : method})
+                if not show_wireless_fabric_client_summary_dict.get('mac_address'):
+                    show_wireless_fabric_client_summary_dict['mac_address'] = {}
+                show_wireless_fabric_client_summary_dict['mac_address'].update({mac_address : {'ap_name' : ap_name, 'wlan' : wlan, 'state' : state, 'protocol' : protocol, 'method' : method}})
 
         return show_wireless_fabric_client_summary_dict
