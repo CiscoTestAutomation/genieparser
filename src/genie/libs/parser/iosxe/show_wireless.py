@@ -48,23 +48,18 @@ class ShowWirelessMobilityApList(ShowWirelessMobilityApListSchema):
             r"^AP\s+name\s+AP\s+radio\s+MAC\s+Controller\s+IP\s+Learnt\s+from$"
         )
 
-        # --------------------------------------------------------------------------------------
-        delimiter_capture = re.compile(
-            r"^--------------------------------------------------------------------------------------$"
-        )
-
         # b80-72-cap30                    58bf.eab3.1420    10.10.7.177      Self
         ap_info_capture = re.compile(
-            r"^(?P<ap_name>\S+)\s+(?P<ap_radio_mac>\S{4}\.\S{4}\.\S{4})\s+(?P<controller_ip>\d+\.\d+\.\d+\.\d+)\s+(?P<learnt_from>\S+)\s+$"
+            r"^(?P<ap_name>\S+)\s+(?P<ap_radio_mac>\S{4}\.\S{4}\.\S{4})\s+(?P<controller_ip>\d+\.\d+\.\d+\.\d+)\s+(?P<learnt_from>\S+)$"
         )
 
         ap_info_obj = {}
 
         for line in output.splitlines():
 
+            line = line.strip()
+
             if ap_header_capture.match(line):
-                continue
-            elif delimiter_capture.match(line):
                 continue
 
             elif ap_info_capture.match(line):
