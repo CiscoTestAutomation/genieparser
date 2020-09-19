@@ -1,4 +1,4 @@
-golden_parsed_output1 = {
+expected_output = {
         "GigabitEthernet0/0": {
           "received": {
             "duration": 1799431,
