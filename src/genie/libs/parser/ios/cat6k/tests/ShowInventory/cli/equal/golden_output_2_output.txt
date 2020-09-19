@@ -1,0 +1,108 @@
+
+        NAME: "WS-C6506-E", DESCR: "Cisco Systems, Inc. Catalyst 6500 6-slot Chassis System"
+        PID: WS-C6506-E        ,                     VID: V05, SN: SAL123456ET
+
+        NAME: "WS-C6K-VTT-E 1", DESCR: "VTT-E FRU 1"
+        PID: WS-C6K-VTT-E      ,                     VID:    , SN: SMT6789A123
+
+        NAME: "WS-C6K-VTT-E 2", DESCR: "VTT-E FRU 2"
+        PID: WS-C6K-VTT-E      ,                     VID:    , SN: SMT6789A876
+
+        NAME: "WS-C6K-VTT-E 3", DESCR: "VTT-E FRU 3"
+        PID: WS-C6K-VTT-E      ,                     VID:    , SN: SMT6789A456
+
+        NAME: "CLK-7600 1", DESCR: "OSR-7600 Clock FRU 1"
+        PID: CLK-7600          ,                     VID:    , SN: SMT8760A198
+
+        NAME: "CLK-7600 2", DESCR: "OSR-7600 Clock FRU 2"
+        PID: CLK-7600          ,                     VID:    , SN: SMT8760A198
+
+        NAME: "1", DESCR: "C6800-16P10G-XL DCEF2T 4 port 40GE / 16 port 10GE Rev. 2.1"
+        PID: C6800-16P10G-XL   ,                     VID: V03, SN: JAE88776PMK
+
+        NAME: "C6800-DFC-XL Distributed Forwarding Card 4 EARL 1 sub-module of 1", DESCR: "C6800-DFC-XL Distributed Forwarding Card 4 Rev. 2.1"
+        PID: C6800-DFC-XL      ,                     VID:    , SN: JAE88776PMK
+
+        NAME: "Transceiver Te1/1", DESCR: "SFP+ Transceiver 10Gbase-SR Te1/1L
+        PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD656567YT     
+
+        NAME: "Transceiver Te1/3", DESCR: "SFP+ Transceiver 10Gbase-SR Te1/3"
+        PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD989078Z2     
+
+        NAME: "Transceiver Te1/5", DESCR: "SFP+ Transceiver 10Gbase-SR Te1/5"
+        PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD012345MB     
+
+        NAME: "Transceiver Te1/7", DESCR: "SFP+ Transceiver 10Gbase-SR Te1/7"
+        PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD012345LL     
+
+        NAME: "Transceiver Te1/9", DESCR: "SFP+ Transceiver 10Gbase-SR Te1/9"
+        PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD012345LF     
+
+        NAME: "Transceiver Te1/11", DESCR: "SFP+ Transceiver 10Gbase-SR Te1/11"
+        PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD012345L4     
+
+        NAME: "Transceiver Te1/13", DESCR: "SFP+ Transceiver 10Gbase-SR Te1/13"
+        PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD012345MN     
+
+        NAME: "Transceiver Te1/15", DESCR: "SFP+ Transceiver 10Gbase-SR Te1/15"
+        PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD012345LE     
+
+        NAME: "2", DESCR: "C6800-16P10G-XL DCEF2T 4 port 40GE / 16 port 10GE Rev. 2.1"
+        PID: C6800-16P10G-XL   ,                     VID: V03, SN: JAE65432PMG
+
+        NAME: "C6800-DFC-XL Distributed Forwarding Card 4 EARL 1 sub-module of 2", DESCR: "C6800-DFC-XL Distributed Forwarding Card 4 Rev. 2.1"
+        PID: C6800-DFC-XL      ,                     VID:    , SN: JAE65432PM
+
+        NAME: "Transceiver Te2/1", DESCR: "SFP+ Transceiver 10Gbase-SR Te2/1"
+        PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD012345RB     
+
+        NAME: "Transceiver Te2/3", DESCR: "SFP+ Transceiver 10Gbase-SR Te2/3"
+        PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD012345RF     
+
+        NAME: "Transceiver Te2/5", DESCR: "SFP+ Transceiver 10Gbase-SR Te2/5"
+        PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD0908070T     
+
+        NAME: "Transceiver Te2/7", DESCR: "SFP+ Transceiver 10Gbase-SR Te2/7"
+        PID: SFP-10G-SR         ,                     VID: V03 , SN: AVD097896CU     
+
+        NAME: "3", DESCR: "C6800-48P-TX-XL 48 ports DCEF-XL 48P 10/100/1000MB Ethernet Rev. 1.0"
+        PID: C6800-48P-TX-XL   ,                     VID: V01, SN: JAE264857DC
+
+        NAME: "WS-F6K-DFC4-AXL Distributed Forwarding Card 4 EARL 1 sub-module of 3", DESCR: "WS-F6K-DFC4-AXL Distributed Forwarding Card 4 Rev. 1.0"
+        PID: WS-F6K-DFC4-AXL   ,                     VID:    , SN: JAE264857DO
+
+        NAME: "5", DESCR: "VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 2.1"
+        PID: VS-SUP2T-10G      ,                     VID: V06, SN: JAE264233CQ
+
+        NAME: "msfc sub-module of 5", DESCR: "VS-F6K-MSFC5 CPU Daughterboard Rev. 3.1"
+        PID: VS-F6K-MSFC5      ,                     VID:    , SN: JAE66880PAV
+
+        NAME: "VS-F6K-PFC4 Policy Feature Card 4 EARL 1 sub-module of 5", DESCR: "VS-F6K-PFC4 Policy Feature Card 4 Rev. 3.0"
+        PID: VS-F6K-PFC4       ,                     VID: V04, SN: JAE66880GWE
+
+        NAME: "Transceiver Te5/4", DESCR: "X2 Transceiver 10Gbase-SR Te5/4"
+        PID: X2-10GB-SR        ,                     VID: V06 , SN: FNS00002Q8Q
+
+        NAME: "6", DESCR: "VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 2.1"
+        PID: VS-SUP2T-10G      ,                     VID: V06, SN: JAE77720W0N
+
+        NAME: "msfc sub-module of 6", DESCR: "VS-F6K-MSFC5 CPU Daughterboard Rev. 3.1"
+        PID: VS-F6K-MSFC5      ,                     VID:    , SN: JAE66880PAO
+
+        NAME: "VS-F6K-PFC4 Policy Feature Card 4 EARL 1 sub-module of 6", DESCR: "VS-F6K-PFC4 Policy Feature Card 4 Rev. 3.0"
+        PID: VS-F6K-PFC4       ,                     VID: V04, SN: JAE66880GWE
+
+        NAME: "Transceiver Te6/4", DESCR: "X2 Transceiver 10Gbase-SR Te6/4"
+        PID: X2-10GB-SR        ,                     VID: V06 , SN: FNS00002Q9B
+
+        NAME: "WS-C6506-E-FAN 1", DESCR: "Enhanced 6-slot Fan Tray 1"
+        PID: WS-C6506-E-FAN    ,                     VID: V03, SN: DCH200022UZ
+
+        NAME: "PS 1 WS-CAC-6000W", DESCR: "AC power supply, 6000 watt 1"
+        PID: WS-CAC-6000W      ,                     VID: V06, SN: ART1999F5B5
+
+        NAME: "PS 2 WS-CAC-6000W", DESCR: "AC power supply, 6000 watt 2"
+        PID: WS-CAC-6000W      ,                     VID: V06, SN: ART1999F5B8
+
+
+        

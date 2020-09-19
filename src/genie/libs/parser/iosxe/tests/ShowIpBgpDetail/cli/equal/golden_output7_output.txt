@@ -1,24 +1,24 @@
 
-        BGP routing table entry for 102:102:111.222.333.0/24, version 1606506
-        Paths: (3 available, best #3, table sample_vrf)
-        Advertised to update-groups:
-            1          29         35
-        Refresh Epoch 1
-        4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 10.160.0.61), (received & used)
-            10.105.6.80 (via vrf sample_vrf) from 10.105.6.80 (10.105.5.16)
-            Origin IGP, localpref 100, valid, external, atomic-aggregate
-            Community: 1:1 65100:101 65100:175 65100:500 65100:601 65151:65000 65351:1
-            rx pathid: 0, tx pathid: 0
-        Refresh Epoch 3
-        4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 2001:db8:4::1), (received & used)
-            10.105.5.1 (metric 2) (via vrf sample_vrf) from 10.105.5.1 (10.105.5.1)
-            Origin IGP, metric 0, localpref 100, valid, internal, atomic-aggregate
-            Community: 1:1 65100:101 65100:175 65100:500 65100:601 65151:65000 65351:1
-            rx pathid: 0, tx pathid: 0
-        Refresh Epoch 1
-        4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 FE80:CD00:0:CDE:1257:0:211E:729C), (received & used)
-            10.105.6.84 (via vrf sample_vrf) from 10.105.6.84 (10.105.5.17)
-            Origin IGP, localpref 100, valid, external, atomic-aggregate, best
-            Community: 1:1 65100:101 65100:175 65100:500 65100:601 65151:65000 65351:1
-            rx pathid: 0, tx pathid: 0x0    
+BGP routing table entry for 102:102:111.222.333.0/24, version 1606506
+Paths: (3 available, best #3, table sample_vrf)
+Advertised to update-groups:
+    1          29         35
+Refresh Epoch 1
+4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 10.160.0.61), (received & used)
+    10.105.6.80 (via vrf sample_vrf) from 10.105.6.80 (10.105.5.16)
+    Origin IGP, localpref 100, valid, external, atomic-aggregate
+    Community: 1:1 65100:101 65100:175 65100:500 65100:601 65151:65000 65351:1
+    rx pathid: 0, tx pathid: 0
+Refresh Epoch 3
+4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 2001:db8:4::1), (received & used)
+    10.105.5.1 (metric 2) (via vrf sample_vrf) from 10.105.5.1 (10.105.5.1)
+    Origin IGP, metric 0, localpref 100, valid, internal, atomic-aggregate
+    Community: 1:1 65100:101 65100:175 65100:500 65100:601 65151:65000 65351:1
+    rx pathid: 0, tx pathid: 0
+Refresh Epoch 1
+4210105002 4210105502 4210105001 4210105507 4210105007 4210105220 65000 65151 65501, (aggregated by 65251 FE80:CD00:0:CDE:1257:0:211E:729C), (received & used)
+    10.105.6.84 (via vrf sample_vrf) from 10.105.6.84 (10.105.5.17)
+    Origin IGP, localpref 100, valid, external, atomic-aggregate, best
+    Community: 1:1 65100:101 65100:175 65100:500 65100:601 65151:65000 65351:1
+    rx pathid: 0, tx pathid: 0x0    
     

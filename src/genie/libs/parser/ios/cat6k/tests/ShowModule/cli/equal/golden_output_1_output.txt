@@ -1,0 +1,28 @@
+
+        Mod Ports Card Type                              Model              Serial No.
+        --- ----- -------------------------------------- ------------------ -----------
+          1    2  Catalyst 6000 supervisor 2 (Active)    WS-X6K-S2U-MSFC2   SAD0628035C
+          2    0  Supervisor-Other                       unknown            unknown
+          3   16  Pure SFM-mode 16 port 1000mb GBIC      WS-X6816-GBIC      SAL061218K3
+          4   16  Pure SFM-mode 16 port 1000mb GBIC      WS-X6816-GBIC      SAL061218K8
+          5    0  Switching Fabric Module-136 (Active)   WS-X6500-SFM2      SAD061701YC
+          6    1  1 port 10-Gigabit Ethernet Module      WS-X6502-10GE      SAD062003CM
+
+        Mod MAC addresses                       Hw    Fw           Sw           Status
+        --- ---------------------------------- ------ ------------ ------------ -------
+          1  0001.64ff.1958 to 0001.64ff.1959   3.9   6.1(3)       7.5(0.6)HUB9 Ok      
+          2  0000.0000.0000 to 0000.0000.0000   0.0   Unknown      Unknown      Unknown 
+          3  0005.74ff.1b9d to 0005.74ff.1bac   1.3   12.1(5r)E1   12.1(13)E3,  Ok      
+          4  0005.74ff.1bcd to 0005.74ff.1bdc   1.3   12.1(5r)E1   12.1(13)E3,  Ok      
+          5  0001.00ff.0205 to 0001.00ff.0205   1.2   6.1(3)       7.5(0.6)HUB9 Ok      
+          6  0002.7eff.58b5 to 0002.7eff.58b5   1.0   6.3(1)       7.5(0.6)HUB9 Ok      
+
+        Mod Sub-Module                  Model           Serial           Hw     Status 
+        --- --------------------------- --------------- --------------- ------- -------
+          1 Policy Feature Card 2       WS-F6K-PFC2     SAD062802AV      3.2    Ok     
+          1 Cat6k MSFC 2 daughterboard  WS-F6K-MSFC2    SAD062803TX      2.5    Ok     
+          3 Distributed Forwarding Card WS-F6K-DFC      SAL06121A19      2.1    Ok     
+          4 Distributed Forwarding Card WS-F6K-DFC      SAL06121A46      2.1    Ok     
+          6 Distributed Forwarding Card WS-F6K-DFC      SAL06261R0A      2.3    Ok     
+          6 10GBASE-LR Serial 1310nm lo WS-G6488        SAD062201BN      1.1    Ok
+    

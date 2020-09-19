@@ -1,0 +1,10 @@
+
+            Directory of disk0:/
+
+            2  -rw-         373   May 9 2013 10:00:08 -07:00  default_config
+            3  -rw-         421   May 9 2013 10:00:20 -07:00  golden_config
+            4  -rw-   188183700   May 9 2013 10:11:56 -07:00  ISSUCleanGolden
+            5  -rw-   210179540  Oct 18 2018 07:22:24 -07:00  s72033-adventerprisek9_dbg-mz.154-0.10.S-ipcore-ssr-uut2
+
+        1024589824 bytes total (626180096 bytes free)
+    

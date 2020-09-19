@@ -1,0 +1,9 @@
+show issu rollback-timer
+
+--- Starting local lock acquisition on R0 ---
+
+Finished local lock acquisition on R0
+
+
+
+Rollback: inactive, no ISSU operation is in progress
