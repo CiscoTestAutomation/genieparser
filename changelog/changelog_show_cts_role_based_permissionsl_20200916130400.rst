@@ -3,4 +3,4 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Added ShowCtsRoleBasedPermissions
-        * sshow cts role-based permissions
+        * show cts role-based permissions
