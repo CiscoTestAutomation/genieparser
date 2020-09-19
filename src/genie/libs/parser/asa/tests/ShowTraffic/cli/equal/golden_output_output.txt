@@ -1,4 +1,3 @@
-golden_output1 = 
 ciscoasa# show traffic
 GigabitEthernet0/0:
 		received (in 1799431.270 secs):
