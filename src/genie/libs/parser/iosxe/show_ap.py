@@ -662,3 +662,118 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
                 continue
 
         return show_ap_dot11_5ghz_channel_dict
+
+
+import re
+
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Any, Optional
+
+
+# ===============================
+# Schema for:
+#  * 'show ap dot11 5ghz summary'
+# ===============================
+class ShowApDot115GhzSummarySchema(MetaParser):
+    """Schema for show ap dot11 5ghz summary."""
+
+    schema = {
+        "ap_name": {
+            str: {
+                "mac_address": str,
+                "slot": int,
+                "admin_state": str,
+                "oper_state": str,
+                "width": int,
+                "tx_pwr": str,
+                "channel": str
+            }
+        } 
+    }     
+
+
+# ===============================
+# Parser for:
+#  * 'show ap dot11 5ghz summary'
+# ===============================
+class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
+    """Parser for show ap dot11 5ghz summary"""
+
+    cli_command = 'show ap dot11 5ghz summary'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ap_dot11_5ghz_summ = {}
+        # AP Name                           Mac Address     Slot    Admin State    Oper State    Width  Txpwr           Channel
+        # ---------------------------------------------------------------------------------------------------------------------------------
+        # ab-1-test-4800                 5c50.1501.40e0  1       Enabled        Down          20     *1/8 (23 dBm)   (36)*
+        # ab21-cap40                    5c50.15f5.e5c0  1       Enabled        Up            20     *7/8 (6 dBm)    (100)*
+        # ab12-cap2                     5c50.1504.7b20  1       Enabled        Up            20     *7/8 (6 dBm)    (116)*
+        # ab21-cap36                    5c50.1504.87e0  1       Enabled        Up            20     *7/8 (6 dBm)    (100)*
+        # ab21-cap28                    5c50.1504.8920  1       Enabled        Up            20     *7/8 (6 dBm)    (120)*
+        # ab31-cap26                    5c50.1504.8940  1       Enabled        Up            20     *6/8 (9 dBm)    (128)*
+        # ab22-cap16                    5c50.1504.89a0  1       Enabled        Up            20     *7/8 (8 dBm)    (48)*
+        # ab22-cap24                    5c50.1504.89e0  1       Enabled        Up            20     *7/8 (8 dBm)    (36)*
+        # ab22-cap18                    5c50.1504.8ac0  1       Enabled        Up            20     *7/8 (6 dBm)    (124)*
+        # ab32-cap13                    5c50.1504.8bc0  1       Enabled        Up            20     *6/8 (9 dBm)    (124)*
+        #
+        # AP Name                           Mac Address     Slot    Admin State    Oper State    Width  Txpwr           Channel
+        # ---------------------------------------------------------------------------------------------------------------------------------
+        # ab22-cap10                    5c50.1504.8be0  1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
+        # ab11-cap18                    5c50.1504.8c20  1       Enabled        Up            20     *7/8 (8 dBm)    (48)*
+        # ab22-cap8                     5c50.1504.8c40  1       Enabled        Up            20     *7/8 (8 dBm)    (149)*
+        # ab22-cap22                    5c50.1504.8ce0  1       Enabled        Up            20     *8/8 (5 dBm)    (40)*
+        # ab22-cap6                     5c50.1504.8d80  1       Enabled        Up            20     *7/8 (6 dBm)    (100)*
+        # ab31-cap29                    5c50.1504.8dc0  1       Enabled        Up            20     *5/8 (12 dBm)   (52)*
+        # ab21-cap33                    5c50.1504.8de0  1       Enabled        Up            20     *7/8 (8 dBm)    (36)*
+        # ab31-cap21                    5c50.1504.8f20  1       Enabled        Up            20     *7/8 (6 dBm)    (116)*
+        # ab21-cap27                    5c50.1504.8f60  1       Enabled        Up            20     *7/8 (6 dBm)    (132)*
+        # ab21-cap35                    5c50.1504.aca0  1       Enabled        Up            20     *7/8 (6 dBm)    (140)*
+
+        # AP Name                           Mac Address     Slot    Admin State    Oper State    Width  Txpwr           Channel
+        ap_header_capture = re.compile(
+            r"^AP\s+Name\s+Mac\s+Address\s+Slot\s+Admin\s+State\s+Oper\s+State\s+Width\s+Txpwr\s+Channel$")
+        # ---------------------------------------------------------------------------------------------------------------------------------
+        delimiter_capture = re.compile(
+            r"^---------------------------------------------------------------------------------------------------------------------------------$")
+        # ab22-cap10                    5c50.1504.8be0  1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
+        ap_info_capture = re.compile(
+            r"^(?P<ap_name>\S+)\s+(?P<mac_address>\S+)\s+(?P<slot>\d+)\s+(?P<admin_state>(Enabled|Disabled))\s+(?P<oper_state>\S+)\s+(?P<width>\d+)\s+(?P<tx_pwr>\*.*dBm\))\s+(?P<channel>\S+)$")
+
+        for line in out.splitlines():
+            line = line.strip()
+            # AP Name                           Mac Address     Slot    Admin State    Oper State    Width  Txpwr           Channel
+            if ap_header_capture.match(line):
+                continue
+            # ---------------------------------------------------------------------------------------------------------------------------------
+            elif delimiter_capture.match(line):
+                continue
+            # ab22-cap10                    5c50.1504.8be0  1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
+            elif ap_info_capture.match(line):
+                if not ap_dot11_5ghz_summ.get('ap_name'):
+                    ap_dot11_5ghz_summ['ap_name'] = {}
+                ap_info_capture_match = ap_info_capture.match(line)
+                groups = ap_info_capture_match.groupdict()
+                ap_name = groups['ap_name']
+                mac_address = groups['mac_address']
+                slot = int(groups['slot'])
+                admin_state = groups['admin_state']
+                oper_state = groups['oper_state']
+                width = int(groups['width'])
+                tx_pwr = groups['tx_pwr']
+                channel = groups['channel']
+                ap_dot11_5ghz_summ['ap_name'].update({ap_name: {}})
+                ap_dot11_5ghz_summ['ap_name'][ap_name]['mac_address'] = mac_address
+                ap_dot11_5ghz_summ['ap_name'][ap_name]['slot'] = slot
+                ap_dot11_5ghz_summ['ap_name'][ap_name]['admin_state'] = admin_state
+                ap_dot11_5ghz_summ['ap_name'][ap_name]['oper_state'] = oper_state
+                ap_dot11_5ghz_summ['ap_name'][ap_name]['width'] = width
+                ap_dot11_5ghz_summ['ap_name'][ap_name]['tx_pwr'] = tx_pwr
+                ap_dot11_5ghz_summ['ap_name'][ap_name]['channel'] = channel
+                continue
+
+        return ap_dot11_5ghz_summ
