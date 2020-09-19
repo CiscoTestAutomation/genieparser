@@ -1,0 +1,16 @@
+golden_output1 = {'execute.return_value': '''
+    ciscoasa# show traffic
+    GigabitEthernet0/0:
+            received (in 1799431.270 secs):
+                    4501617383 packets      314808980561 bytes
+                    2000 pkts/sec   174001 bytes/sec
+            transmitted (in 1799431.270 secs):
+                    643491 packets  129611530 bytes
+                    0 pkts/sec      0 bytes/sec
+        1 minute input rate 30943 pkts/sec,  2164029 bytes/sec
+        1 minute output rate 0 pkts/sec,  0 bytes/sec
+        1 minute drop rate, 0 pkts/sec
+        5 minute input rate 37071 pkts/sec,  2592560 bytes/sec
+        5 minute output rate 0 pkts/sec,  0 bytes/sec
+        5 minute drop rate, 0 pkts/sec
+    '''}
