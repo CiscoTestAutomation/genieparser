@@ -94,7 +94,6 @@ CLASS_SKIP = {
         "ShowPlatformTcamUtilization": True, # PR submitted
         "ShowLicense": True, # PR submitted
         "Show_Stackwise_Virtual_Dual_Active_Detection": True, # PR submitted
-        "Show_Cts_Sxp_Connections_Brief": True, # PR submitted
         "ShowSoftwaretab": True, # PR submitted
     },
     "ios": {
