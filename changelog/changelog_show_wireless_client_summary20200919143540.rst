@@ -2,5 +2,5 @@
                                 New
 --------------------------------------------------------------------------------
 * IOSXE
-    * Added ShowWirelessClientSummary/:
+    * Added ShowWirelessClientSummary:
       * show wireless client summary
