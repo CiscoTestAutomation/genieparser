@@ -1,0 +1,31 @@
+CTS RBACL Policy
+================
+RBACL IP Version Supported: IPv4 & IPv6
+  name   = TCP_51005-01
+  IP protocol version = IPV4
+  refcnt = 2
+  flag   = 0x41000000
+  stale  = FALSE
+  RBACL ACEs:
+    permit tcp dst eq 51005
+  name   = TCP_51060-02
+  IP protocol version = IPV4
+  refcnt = 4
+  flag   = 0x41000000
+  stale  = FALSE
+  RBACL ACEs:
+    permit tcp dst eq 51060
+  name   = TCP_51144-01
+  IP protocol version = IPV4
+  refcnt = 10
+  flag   = 0x41000000
+  stale  = FALSE
+  RBACL ACEs:
+    permit tcp dst eq 51144
+  name   = TCP_51009-01
+  IP protocol version = IPV4
+  refcnt = 2
+  flag   = 0x41000000
+  stale  = FALSE
+  RBACL ACEs:
+    permit tcp dst eq 51009

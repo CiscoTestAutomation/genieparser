@@ -5,10 +5,10 @@ from genie.metaparser.util.schemaengine import Optional
 
 # ===================================
 # Schema for:
-#  * 'show_cts_sxp_connections_brief'
+#  * 'show cts sxp connections brief'
 # ===================================
 class ShowCtsSxpConnectionsBriefSchema(MetaParser):
-    """Schema for show_cts_sxp_connections_brief."""
+    """Schema for show cts sxp connections brief."""
 
     schema = {
         "sxp_connections": {
@@ -221,6 +221,7 @@ class ShowCtsSxpConnectionsBrief(ShowCtsSxpConnectionsBriefSchema):
         else:
             return {}
 
+
 # ==================
 # Schema for:
 #  * 'show cts pacs'
@@ -238,7 +239,7 @@ class ShowCtsPacsSchema(MetaParser):
             "credential_lifetime": str,
         },
         "pac_opaque": str,
-        "refresh_timer": str
+        "refresh_timer": str,
     }
 
 
@@ -364,8 +365,8 @@ class ShowCtsPacs(ShowCtsPacsSchema):
                 refresh_timer = groups['refresh_timer']
                 cts_pacs_dict['refresh_timer'] = refresh_timer
                 continue
-        return cts_pacs_dict
 
+        return cts_pacs_dict
 
 
 # =================================
@@ -457,3 +458,641 @@ class ShowCtsRoleBasedCounters(ShowCtsRoleBasedCountersSchema):
                 continue
 
         return cts_rb_count_dict
+
+
+# ==============================
+# Schema for:
+#  * 'show cts environment-data'
+# ==============================
+class ShowCtsEnvironmentDataSchema(MetaParser):
+    """Schema for show cts environment-data."""
+
+    schema = {
+        "cts_env": {
+            "current_state": str,
+            "last_status": str,
+            Optional("sgt_tags"): str,
+            Optional("tag_status"): str,
+            Optional("server_list_name"): str,
+            Optional("server_count"): int,
+            Optional("servers"): {
+                Optional(int): {
+                    Optional("server_ip"): str,
+                    Optional("port"): int,
+                    Optional("aid"): str,
+                    Optional("server_status"): str,
+                    Optional("auto_test"): str,
+                    Optional("keywrap_enable"): str,
+                    Optional("idle_time_mins"): int,
+                    Optional("dead_time_secs"): int
+                }
+          },
+            Optional("security_groups"): {
+                Optional(int): {
+                    Optional("sec_group"): str,
+                    Optional("sec_group_name"): str
+              }
+          },
+          Optional("env_data_lifetime_secs"): str,
+          Optional("last_update"): {
+                Optional("date"): str,
+                Optional("time"): str,
+                Optional("time_zone"): str
+          },
+          Optional("expiration"): str,
+          Optional("refresh"): str,
+          "state_machine_status": str,
+          Optional("retry_timer_status"): str,
+          Optional("cache_data_status"): str
+        }
+    }
+
+
+# ==============================
+# Parser for:
+#  * 'show cts environment-data'
+# ==============================
+class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
+    """Parser for show cts environment-data"""
+
+    cli_command = 'show cts environment-data'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        cts_env_dict = {}
+        # CTS Environment Data
+        # ====================
+        # Current state = COMPLETE
+        # Last status = Successful
+        # Local Device SGT:
+        #   SGT tag = 0-16:Unknown
+        # Server List Info:
+        # Installed list: CTSServerList1-0089, 4 server(s):
+        #  *Server: 10.1.100.4, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        #           Status = ALIVE
+        #           auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        #  *Server: 10.1.100.5, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        #           Status = ALIVE
+        #           auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        #  *Server: 10.1.100.6, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        #           Status = ALIVE
+        #           auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        #  *Server: 10.1.100.6, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        #           Status = ALIVE
+        #           auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        # Security Group Name Table:
+        #     0-15:Unit0
+        #     2-12:Unit1
+        #     3-10:Unit2
+        #     4-11:Device11
+        #     3215-08:K2
+        #     9999-06:Q1
+        #     68-10:North
+        #     5016-00:Quarantine
+        #     8000-00:TEST_8000
+        # Environment Data Lifetime = 86400 secs
+        # Last update time = 20:04:42 PDT Tue Jul 21 2020
+        # Env-data expires in   0:00:46:51 (dd:hr:mm:sec)
+        # Env-data refreshes in 0:00:46:51 (dd:hr:mm:sec)
+        # Cache data applied           = NONE
+        # State Machine is running
+
+        # Current state = COMPLETE
+        current_state_capture = re.compile(r"^Current\s+state\s+=\s+(?P<state>.*$)")
+        # Last status = Successful
+        last_status_capture = re.compile(r"^Last\s+status\s+=\s+(?P<last_status>.*$)")
+        #   SGT tag = 0-16:Unknown
+        tags_capture = re.compile(r"^SGT\s+tag\s+=\s+(?P<sgt_tags>\d+-\d+):(?P<tag_status>\w+)")
+        # Installed list: CTSServerList1-0089, 4 server(s):
+        server_list_capture = re.compile(
+            r"^Installed\s+list:\s+(?P<server_list_name>\S+),\s+(?P<server_count>\d+)\s+server\(s\):", re.MULTILINE)
+        #  *Server: 10.1.100.4, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        servers_capture = re.compile(
+            r"^(\*|)Server:\s+(?P<server_ip>\d+\.\d+\.\d+\.\d+),\s+port\s+(?P<port>\d+),\s+A-ID\s+(?P<aid>\S+)")
+        #           Status = ALIVE
+        server_status_capture = re.compile(r"^Status\s+=\s+(?P<server_status>\S+)")
+        #           auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        keywrap_capture = re.compile(
+            r"^auto-test\s+=\s+(?P<auto_test>(TRUE|FALSE)),\s+keywrap-enable\s+=\s+(?P<keywrap_enable>(TRUE|FALSE)),\s+idle-time\s+=\s+(?P<idle_time_mins>\d+)\s+mins,\s+deadtime\s+=\s+(?P<dead_time_secs>\d+)\s+secs")
+        #     0-15:Unit0
+        sec_group_capture = re.compile(r"^(?P<sec_group>\S+):(?P<sec_group_name>\S+)")
+        # Environment Data Lifetime = 86400 secs
+        env_data_capture = re.compile(r"^Environment\s+Data\s+Lifetime\s+=\s+(?P<env_data_lifetime_secs>\d+)\s+secs")
+        # Last update time = 20:04:42 PDT Tue Jul 21 2020
+        last_update_capture = re.compile(
+            r"^Last\s+update\s+time\s+=\s+(?P<time>\d+:\d+:\d+)\s+(?P<time_zone>\w+)\s+(?P<day>\S+)\s+(?P<month>\S+)\s+(?P<date>\d+)\s+(?P<year>\d+)")
+        # Env-data expires in   0:00:46:51 (dd:hr:mm:sec)
+        expiration_capture = re.compile(r"^Env-data\s+expires\s+in\s+(?P<expiration>\d+:\d+:\d+:\d+)\s+\S+")
+        # Env-data refreshes in 0:00:46:51 (dd:hr:mm:sec)
+        refresh_capture = re.compile(r"^Env-data\s+refreshes\s+in\s+(?P<refresh>\d+:\d+:\d+:\d+)\s+\S+")
+        # Cache data applied           = NONE
+        cache_data_capture = re.compile(r"^Cache\s+data\s+applied\s+=\s+(?P<cache_data_status>\S+)")
+        # State Machine is running
+        state_machine_capture = re.compile(r"^State\s+Machine\s+is\s+(?P<state_machine_status>\S+)")
+        # Retry_timer (60 secs) is not running
+        retry_capture = re.compile(
+            r"^Retry_timer\s+\((?P<retry_timer_secs>\d+)\s+secs\)\s+is\s+(?P<retry_timer_status>.*$)")
+
+        remove_lines = (
+        'CTS Environment Data', '=========', 'Local Device SGT:', 'Server List Info:', 'Security Group Name Table:')
+
+        # Remove unwanted lines from raw text
+        def filter_lines(raw_output, remove_lines):
+            # Remove empty lines
+            clean_lines = list(filter(None, raw_output.splitlines()))
+            rendered_lines = []
+            for clean_line in clean_lines:
+                clean_line_strip = clean_line.strip()
+                # print(clean_line)
+                # Remove lines unwanted lines from list of "remove_lines"
+                if not clean_line_strip.startswith(remove_lines):
+                    rendered_lines.append(clean_line_strip)
+            return rendered_lines
+
+        out = filter_lines(raw_output=out, remove_lines=remove_lines)
+
+        server_data = {}
+        security_groups = {}
+        keywrap_index = 1
+        sec_group_index = 1
+        for line in out:
+            # Current state = COMPLETE
+            current_state_match = current_state_capture.match(line)
+            if current_state_match:
+                groups = current_state_match.groupdict()
+                current_state = groups['state']
+                if not cts_env_dict.get('cts_env', {}):
+                    cts_env_dict['cts_env'] = {}
+                cts_env_dict['cts_env']['current_state'] = current_state
+                continue
+            # Last status = Successful
+            last_status_match = last_status_capture.match(line)
+            if last_status_match:
+                groups = last_status_match.groupdict()
+                last_status = groups['last_status']
+                cts_env_dict['cts_env']['last_status'] = last_status
+                continue
+            #   SGT tag = 0-16:Unknown
+            tags_match = tags_capture.match(line)
+            if tags_match:
+                groups = tags_match.groupdict()
+                sgt_tags = groups['sgt_tags']
+                tag_status = groups['tag_status']
+                cts_env_dict['cts_env']['sgt_tags'] = sgt_tags
+                cts_env_dict['cts_env']['tag_status'] = tag_status
+                continue
+            # Installed list: CTSServerList1-0089, 4 server(s):
+            server_list_match = server_list_capture.match(line)
+            if server_list_match:
+                groups = server_list_match.groupdict()
+                server_list_name = groups['server_list_name']
+                server_count = int(groups['server_count'])
+                cts_env_dict['cts_env']['server_list_name'] = server_list_name
+                cts_env_dict['cts_env']['server_count'] = server_count
+                continue
+            #  *Server: 10.1.100.4, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+            servers_match = servers_capture.match(line)
+            if servers_match:
+                groups = servers_match.groupdict()
+                server_ip = groups['server_ip']
+                port = int(groups['port'])
+                aid = groups['aid']
+                server_data = {'server_ip': server_ip, 'port': port, 'aid': aid}
+                continue
+            #           Status = ALIVE
+            server_status_match = server_status_capture.match(line)
+            if server_status_match:
+                groups = server_status_match.groupdict()
+                server_status = groups['server_status']
+                server_data.update({'server_status': server_status})
+                if not cts_env_dict['cts_env'].get('servers', {}):
+                    cts_env_dict['cts_env']['servers'] = []
+                continue
+            #           auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+            keywrap_match = keywrap_capture.match(line)
+            if keywrap_match:
+                groups = keywrap_match.groupdict()
+                auto_test = groups['auto_test']
+                keywrap_enable = groups['keywrap_enable']
+                idle_time_mins = int(groups['idle_time_mins'])
+                dead_time_secs = int(groups['dead_time_secs'])
+                server_data.update(
+                    {'auto_test': auto_test, 'keywrap_enable': keywrap_enable, 'idle_time_mins': idle_time_mins,
+                     'dead_time_secs': dead_time_secs})
+                if not cts_env_dict['cts_env'].get('servers', {}):
+                    cts_env_dict['cts_env']['servers'] = {}
+                if not cts_env_dict['cts_env']['servers'].get(keywrap_index, {}):
+                    cts_env_dict['cts_env']['servers'][keywrap_index] = server_data
+                keywrap_index = keywrap_index + 1
+                continue
+            #     0-15:Unit0
+            sec_group_match = sec_group_capture.match(line)
+            if sec_group_match:
+                groups = sec_group_match.groupdict()
+                sec_group = groups['sec_group']
+                sec_group_name = groups['sec_group_name']
+                sec_groups_data = {'sec_group': sec_group, 'sec_group_name': sec_group_name}
+                if not cts_env_dict['cts_env'].get('security_groups', {}):
+                    cts_env_dict['cts_env']['security_groups'] = {}
+                if not cts_env_dict['cts_env']['security_groups'].get(sec_group_index, {}):
+                    cts_env_dict['cts_env']['security_groups'][sec_group_index] = sec_groups_data
+                sec_group_index = sec_group_index + 1
+                continue
+            # Environment Data Lifetime = 86400 secs
+            env_data_match = env_data_capture.match(line)
+            if env_data_match:
+                groups = env_data_match.groupdict()
+                if groups.get('env_empty', {}):
+                    env_data = groups['env_empty']
+                    cts_env_dict['cts_env']['env_data'] = env_data
+                else:
+                    env_data_lifetime_secs = groups['env_data_lifetime_secs']
+                    cts_env_dict['cts_env']['env_data_lifetime_secs'] = env_data_lifetime_secs
+                continue
+            # Last update time = 20:04:42 PDT Tue Jul 21 2020
+            last_update_match = last_update_capture.match(line)
+            if last_update_match:
+                groups = last_update_match.groupdict()
+                time = groups['time']
+                time_zone = groups['time_zone']
+                day = groups['day']
+                month = groups['month']
+                date = groups['date']
+                year = groups['year']
+                full_date = f"{day}, {month}/{date}/{year}"
+                cts_env_dict['cts_env'].update(
+                    {'last_update': {'date': full_date, 'time': time, 'time_zone': time_zone}})
+                continue
+            # Env-data expires in   0:00:46:51 (dd:hr:mm:sec)
+            expiration_match = expiration_capture.match(line)
+            if expiration_match:
+                groups = expiration_match.groupdict()
+                expiration = groups['expiration']
+                cts_env_dict['cts_env']['expiration'] = expiration
+                continue
+            # Env-data refreshes in 0:00:46:51 (dd:hr:mm:sec)
+            refresh_match = refresh_capture.match(line)
+            if refresh_match:
+                groups = refresh_match.groupdict()
+                refresh = groups['refresh']
+                cts_env_dict['cts_env']['refresh'] = refresh
+                continue
+            # Cache data applied           = NONE
+            cache_data_match = cache_data_capture.match(line)
+            if cache_data_match:
+                groups = cache_data_match.groupdict()
+                cache_data_status = groups['cache_data_status']
+                cts_env_dict['cts_env']['cache_data_status'] = cache_data_status
+                continue
+            # State Machine is running
+            state_machine_match = state_machine_capture.match(line)
+            if state_machine_match:
+                groups = state_machine_match.groupdict()
+                state_machine_status = groups['state_machine_status']
+                cts_env_dict['cts_env']['state_machine_status'] = state_machine_status
+                continue
+            # Retry_timer (60 secs) is not running
+            retry_match = retry_capture.match(line)
+            if retry_match:
+                groups = retry_match.groupdict()
+                retry_timer_secs = int(groups['retry_timer_secs'])
+                retry_timer_status = groups['retry_timer_status']
+                cts_env_dict['cts_env']['state_machine_status'] = state_machine_status
+                cts_env_dict['cts_env']['retry_timer_status'] = retry_timer_status
+                continue
+
+        return cts_env_dict
+
+# ======================
+# Schema for:
+#  * 'show cts rbacl'
+# ======================
+class ShowCtsRbaclSchema(MetaParser):
+    """Schema for show cts rbacl."""
+
+    schema = {
+        "cts_rbacl": {
+            "ip_ver_support": str,
+            "name": {
+                str: {
+                    "ip_protocol_version": str,
+                    "refcnt": int,
+                    "flag": str,
+                    "stale": bool,
+                    "aces": {
+                        Optional(int): {
+                            Optional("action"): str,
+                            Optional("protocol"): str,
+                            Optional("direction"): str,
+                            Optional("port"): int
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+# ======================
+# Parser for:
+#  * 'show cts rbacl'
+# ======================
+class ShowCtsRbacl(ShowCtsRbaclSchema):
+    """Parser for show cts rbacl"""
+
+    cli_command = 'show cts rbacl'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        cts_rbacl_dict = {}
+        # CTS RBACL Policy
+        # ================
+        # RBACL IP Version Supported: IPv4 & IPv6
+        #   name   = TCP_51005-01
+        #   IP protocol version = IPV4
+        #   refcnt = 2
+        #   flag   = 0x41000000
+        #   stale  = FALSE
+        #   RBACL ACEs:
+        #     permit tcp dst eq 51005
+        #
+        #   name   = TCP_51060-02
+        #   IP protocol version = IPV4
+        #   refcnt = 4
+        #   flag   = 0x41000000
+        #   stale  = FALSE
+        #   RBACL ACEs:
+        #     permit tcp dst eq 51060
+        #
+        #   name   = TCP_51144-01
+        #   IP protocol version = IPV4
+        #   refcnt = 10
+        #   flag   = 0x41000000
+        #   stale  = FALSE
+        #   RBACL ACEs:
+        #     permit tcp dst eq 51144
+        #
+        #   name   = TCP_51009-01
+        #   IP protocol version = IPV4
+        #   refcnt = 2
+        #   flag   = 0x41000000
+        #   stale  = FALSE
+        #   RBACL ACEs:
+        #     permit tcp dst eq 51009
+
+
+
+        # RBACL IP Version Supported: IPv4 & IPv6
+        ip_ver_capture = re.compile(r"^RBACL\s+IP\s+Version\s+Supported:\s(?P<ip_ver_support>.*$)")
+        #   name   = TCP_13131-01
+        #   IP protocol version = IPV4
+        #   refcnt = 2
+        #   flag   = 0x41000000
+        #   stale  = FALSE
+        rbacl_capture = re.compile(r"^(?P<rbacl_key>.*)(?==)=\s+(?P<rbacl_value>.*$)")
+        #     permit tcp dst eq 13131
+        rbacl_ace_capture = re.compile(
+            r"^(?P<action>(permit|deny))\s+(?P<protocol>\S+)(\s+(?P<direction>dst|src)\s+((?P<port_condition>)\S+)\s+(?P<port>\d+)|)")
+
+        remove_lines = ('CTS RBACL Policy', '================', 'RBACL ACEs:')
+
+                # Remove unwanted lines from raw text
+        def filter_lines(raw_output, remove_lines):
+            # Remove empty lines
+            clean_lines = list(filter(None, raw_output.splitlines()))
+            rendered_lines = []
+            for clean_line in clean_lines:
+                clean_line_strip = clean_line.strip()
+                if not clean_line_strip.startswith(remove_lines):
+                    rendered_lines.append(clean_line_strip)
+            return rendered_lines
+
+        out = filter_lines(raw_output=out, remove_lines=remove_lines)
+        rbacl_name = ''
+        rbacl_ace_index = 1
+        for line in out:
+            # RBACL IP Version Supported: IPv4 & IPv6
+            ip_ver_match = ip_ver_capture.match(line)
+            if ip_ver_match:
+                groups = ip_ver_match.groupdict()
+                ip_ver_support = groups['ip_ver_support']
+                if not cts_rbacl_dict.get('cts_rbacl', {}):
+                    cts_rbacl_dict['cts_rbacl'] = {}
+                    cts_rbacl_dict['cts_rbacl']['name'] = {}
+                cts_rbacl_dict['cts_rbacl']['ip_ver_support'] = ip_ver_support
+                continue
+            #   name   = TCP_13131-01
+            #   IP protocol version = IPV4
+            #   refcnt = 2
+            #   flag   = 0x41000000
+            #   stale  = FALSE
+            elif rbacl_capture.match(line):
+                groups = rbacl_capture.match(line).groupdict()
+                rbacl_key = groups['rbacl_key'].strip().lower().replace(' ', '_')
+                rbacl_value = groups['rbacl_value']
+                if rbacl_value.isdigit():
+                    rbacl_value = int(rbacl_value)
+                if rbacl_value == "TRUE" or rbacl_value == "FALSE":
+                    if rbacl_value == "TRUE":
+                        rbacl_value = True
+                    else:
+                        rbacl_value = False
+                if not cts_rbacl_dict.get('cts_rbacl', {}):
+                    cts_rbacl_dict['cts_rbacl'] = {}
+                if rbacl_key == 'name':
+                    rbacl_name = rbacl_value
+                    cts_rbacl_dict['cts_rbacl']['name'][rbacl_name] = {}
+                    rbacl_ace_index = 1
+                else:
+                    cts_rbacl_dict['cts_rbacl']['name'][rbacl_name].update({rbacl_key: rbacl_value})
+                continue
+            #     permit tcp dst eq 13131
+            elif rbacl_ace_capture.match(line):
+                groups = rbacl_ace_capture.match(line).groupdict()
+                ace_group_dict = {}
+                cts_rbacl_dict['cts_rbacl']['name'][rbacl_name]['aces'] = {}
+                if groups['action']:
+                    ace_group_dict.update({'action': groups['action']})
+                if groups['protocol']:
+                    ace_group_dict.update({'protocol': groups['protocol']})
+                if groups['direction']:
+                    ace_group_dict.update({'direction': groups['direction']})
+                if groups['port_condition']:
+                    ace_group_dict.update({'port_condition': groups['port_condition']})
+                if groups['port']:
+                    ace_group_dict.update({'port': int(groups['port'])})
+                if not cts_rbacl_dict['cts_rbacl']['name'][rbacl_name]['aces'].get(rbacl_ace_index, {}):
+                    cts_rbacl_dict['cts_rbacl']['name'][rbacl_name]['aces'][rbacl_ace_index] = ace_group_dict
+                rbacl_ace_index = rbacl_ace_index + 1
+                continue
+        return cts_rbacl_dict
+
+
+# ====================================
+# Schema for:
+#  * 'show cts role-based permissions'
+# ====================================
+class ShowCtsRoleBasedPermissionsSchema(MetaParser):
+    """Schema for show cts role-based permissions."""
+
+    schema = {
+        "rbp_policies": {
+            int: {
+                Optional("policy_name"): str,
+                "action_policy": str,
+                "action_policy_group": str,
+                Optional("src_grp_id"): int,
+                Optional("src_grp_name"): str,
+                Optional("unknown_group"): str,
+                Optional("dst_group_id"): int,
+                Optional("dst_group_name"): str,
+                Optional("policy_groups"): {
+                    Optional(int): {
+                        Optional("policy_group"): str
+                    }
+                }
+            },
+            "monitor_dynamic": bool,
+            "monitor_configured": bool
+        }
+    }
+
+
+
+# ====================================
+# Parser for:
+#  * 'show cts role-based permissions'
+# ====================================
+class ShowCtsRoleBasedPermissions(ShowCtsRoleBasedPermissionsSchema):
+    """Parser for show cts role-based permissions"""
+
+    cli_command = 'show cts role-based permissions'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        cts_rb_permissions_dict = {}
+
+        # IPv4 Role-based permissions default:
+        rb_default_capture = re.compile(r"^IPv4\s+Role-based\s+permissions\s+(?P<default_group>default)")
+        # IPv4 Role-based permissions from group 42:Untrusted to group Unknown:
+        rb_permissions_capture = re.compile(
+            r"^IPv4\s+Role-based\s+permissions\s+from\s+group\s+(?P<src_grp_id>\d+):(?P<src_grp_name>\S+)\s+to\s+group\s((?P<unknown_group>Unknown)|(?P<dst_group_id>\d+):(?P<dst_group_name>\S+)):")
+        #         Deny IP-00
+        policy_action_capture = re.compile(r"^(?P<action_policy>(Permit|Deny))\s+(?P<action_policy_group>\S+)")
+        # ACCESS-01
+        policy_group_capture = re.compile(r"^(?P<policy_group>\w+-\d+)")
+        # RBACL Monitor All for Dynamic Policies : FALSE
+        monitor_dynamic_capture = re.compile(
+            r"^RBACL\s+Monitor\s+All\s+for\s+Dynamic\s+Policies\s+:\s+(?P<monitor_dynamic>(TRUE|FALSE))")
+        #RBACL Monitor All for Configured Policies : FALSE
+        monitor_configured_capture = re.compile(
+            r"^RBACL\s+Monitor\s+All\s+for\s+Configured\s+Policies\s+:\s+(?P<monitor_configured>(TRUE|FALSE))")
+
+        remove_lines = ()
+
+        # Remove unwanted lines from raw text
+        def filter_lines(raw_output, remove_lines):
+            # Remove empty lines
+            clean_lines = list(filter(None, raw_output.splitlines()))
+            rendered_lines = []
+            for clean_line in clean_lines:
+                clean_line_strip = clean_line.strip()
+                # print(clean_line)
+                # Remove lines unwanted lines from list of "remove_lines"
+                if not clean_line_strip.startswith(remove_lines):
+                    rendered_lines.append(clean_line_strip)
+            return rendered_lines
+
+        out = filter_lines(raw_output=out, remove_lines=remove_lines)
+
+        # Index value for each policy which will increment as it matches a new policy
+        policy_index = 1
+        # Index value for each policy group which will increment as it matches a new policy group
+        policy_group_index = 1
+        # Used to populate data for each policy and the policy index will be used as the key.
+        policy_data = {}
+
+        for line in out:
+            # IPv4 Role-based permissions default:
+            if rb_default_capture.match(line):
+                policy_group_index = 1
+                rb_default_match = rb_default_capture.match(line)
+                groups = rb_default_match.groupdict()
+                default_group = groups['default_group']
+                policy_data = {'policy_name': default_group}
+                if not cts_rb_permissions_dict.get('rbp_policies', {}):
+                    cts_rb_permissions_dict['rbp_policies'] = {}
+                continue
+            # IPv4 Role-based permissions from group 42:Untrusted to group Unknown:
+            elif rb_permissions_capture.match(line):
+                policy_group_index = 1
+                rb_permissions_match = rb_permissions_capture.match(line)
+                groups = rb_permissions_match.groupdict()
+                policy_data = {}
+                if not cts_rb_permissions_dict.get('rbp_policies', {}):
+                    cts_rb_permissions_dict['rbp_policies'] = {}
+                for k, v in groups.items():
+                    if v:
+                        if v.isdigit():
+                            v = int(v)
+                        policy_data.update({k: v})
+                continue
+            # ACCESS-01
+            elif policy_group_capture.match(line):
+                policy_group_match = policy_group_capture.match(line)
+                groups = policy_group_match.groupdict()
+                policy_group = groups['policy_group']
+                if not policy_data.get('policy_groups', {}):
+                    policy_data['policy_groups'] = {}
+                if not policy_data['policy_groups'].get(policy_group_index, {}):
+                    policy_data['policy_groups'][policy_group_index] = {}
+                policy_data['policy_groups'][policy_group_index]['policy_group'] = policy_group
+                policy_group_index = policy_group_index + 1
+                continue
+            #         Deny IP-00
+            elif policy_action_capture.match(line):
+                policy_action_match = policy_action_capture.match(line)
+                groups = policy_action_match.groupdict()
+                action_policy = groups['action_policy']
+                action_policy_group = groups['action_policy_group']
+                for k, v in groups.items():
+                    policy_data.update({k: v})
+                cts_rb_permissions_dict['rbp_policies'][policy_index] = policy_data
+                policy_index = policy_index + 1
+                continue
+            # RBACL Monitor All for Dynamic Policies : FALSE
+            elif monitor_dynamic_capture.match(line):
+                monitor_dynamic_match = monitor_dynamic_capture.match(line)
+                groups = monitor_dynamic_match.groupdict()
+                monitor_dynamic = groups['monitor_dynamic']
+                if monitor_dynamic == 'FALSE':
+                    monitor_dynamic = False
+                else:
+                    monitor_dynamic = True
+                cts_rb_permissions_dict['rbp_policies']['monitor_dynamic'] = monitor_dynamic
+                continue
+            # RBACL Monitor All for Configured Policies : FALSE
+            elif monitor_configured_capture.match(line):
+                monitor_configured_match = monitor_configured_capture.match(line)
+                groups = monitor_configured_match.groupdict()
+                monitor_configured = groups['monitor_configured']
+                if monitor_configured == 'FALSE':
+                    monitor_configured = False
+                else:
+                    monitor_configured = True
+                cts_rb_permissions_dict['rbp_policies']['monitor_configured'] = monitor_configured
+                continue
+
+        return cts_rb_permissions_dict
