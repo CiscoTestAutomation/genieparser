@@ -33,8 +33,26 @@ _class = args.class_name
 # This is the list of Classes that currently have no testing. It was found during the process
 # of converting to folder based testing strategy
 CLASS_SKIP = {
-    "asa": {"ShowVpnSessiondbSuper": True},
+    "asa": {
+        "ShowArp": True,
+        "ShowVpnSessiondbSuper": True,
+        "ShowAspDrop": True,
+        },
     "iosxe": {
+        "ShowSdwanIpsecLocalsa": True,
+        "ShowSdwanIpsecInboundConnections": True,
+        "ShowSdwanIpsecOutboundConnections": True,
+        "ShowSdwanAppqoeTcpoptStatus": True,
+        "ShowSdwanAppqoeRmResources": True,
+        "ShowSdwanAppqoeNatStatistics": True,
+        "ShowLispSite": True,
+        "ShowRunSectionIsis": True,
+        "ShowIPAliasDefaultVrf": True,
+        "ShowHwModuleStatus": True,
+        "ShowIpv6EigrpNeighbors": True,
+        "ShowIpv6EigrpNeighborsDetail": True,
+        "ShowApRfProfileSummary": True,
+        "ShowApphostingList": True,
         "ShowCtsRoleBasedCounters": True,
         "ShowPlatformHardwareQfpActiveTcamResourceManagerUsage": True,
         "ShowPlatformResources": True,
@@ -181,6 +199,8 @@ def get_operating_systems():
 class FileBasedTest(aetest.Testcase):
     """Standard pyats testcase class."""
 
+    tmp = []
+
     OPERATING_SYSTEMS = get_operating_systems()
     @aetest.test
     @aetest.test.loop(operating_system=OPERATING_SYSTEMS)
@@ -229,6 +249,7 @@ class FileBasedTest(aetest.Testcase):
         output_glob = glob.glob(f"{folder_root}/*_output.txt")
         if len(output_glob) == 0:
             self.failed(f"No files found in appropriate directory for {local_class}")
+
         # Look for any files ending with _output.txt, presume the user defined name from that (based
         # on truncating that _output.txt suffix) and obtaining expected results and potentially an arguments file
         for user_defined in output_glob:
@@ -268,6 +289,7 @@ class FileBasedTest(aetest.Testcase):
             self.failed(
                 f"No files found in appropriate directory for {local_class} empty file"
             )
+
         for user_defined in output_glob:
             user_test = os.path.basename(user_defined[: -len("_output.txt")])
             with steps.start(
@@ -283,8 +305,6 @@ class FileBasedTest(aetest.Testcase):
                     arguments = read_json_file(
                         f"{folder_root}/{user_test}_arguments.json"
                     )
-
-                print(user_test, f"{folder_root}/{user_test}_arguments.json", arguments, os.path.exists(f"{folder_root}/{user_test}_arguments.json"))
 
                 device = Mock(**empty_output)
                 obj = local_class(device=device)
