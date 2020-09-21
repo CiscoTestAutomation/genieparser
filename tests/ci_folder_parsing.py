@@ -81,10 +81,6 @@ CLASS_SKIP = {
         "ShowIpBgpRouteDistributer": True,
         "ShowPolicyMapTypeSuperParser": True,
         "ShowIpLocalPool": True,
-        "ShowSdwanOmpPeers": True,
-        "ShowSdwanOmpTlocPath": True,
-        "ShowSdwanOmpTlocs": True,
-        "ShowSdwanUtdEngine": True,
         "ShowInterfaceDetail": True,
         "ShowInterfaceIpBrief": True,
         "ShowInterfaceSummary": True,
@@ -96,7 +92,6 @@ CLASS_SKIP = {
         "ShowOmpTlocs_viptela": True,
         "ShowSoftwaretab_viptela": True, # PR submitted
         "ShowRebootHistory_viptela": True,
-        "ShowUtdEngineStandardStatus": True,
         "ShowOmpSummary_viptela": True,
         "ShowSystemStatus_viptela": True,
         "ShowTcpProxyStatistics": True, # PR submitted
@@ -179,8 +174,6 @@ def get_operating_systems():
 
 class FileBasedTest(aetest.Testcase):
     """Standard pyats testcase class."""
-
-    tmp = []
 
     OPERATING_SYSTEMS = get_operating_systems()
     @aetest.test
