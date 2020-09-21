@@ -1414,9 +1414,7 @@ class ShowPolicyMapTargetClass(ShowPolicyMapTypeSuperParser, ShowPolicyMapTypeSc
         * 'show policy-map target service-group {num}'
     '''
 
-    cli_command = [
-        'show policy-map target service-group {num}',
-        'show policy-map target service-group']
+    cli_command = ['show policy-map target service-group {num}']
 
     def cli(self, num='', output=None):
 
@@ -1424,8 +1422,6 @@ class ShowPolicyMapTargetClass(ShowPolicyMapTypeSuperParser, ShowPolicyMapTypeSc
             # Build command
             if num :
                 cmd = self.cli_command[0].format(num=num)
-            else:
-                cmd = self.cli_command[1]
             # Execute command
             show_output = self.device.execute(cmd)
         else:
