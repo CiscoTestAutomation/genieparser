@@ -10,7 +10,7 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, \
-												Any
+												Any, Optional
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -280,3 +280,84 @@ class ShowServiceGroupTrafficStats(ShowServiceGroupTrafficStatsSchema):
 				continue
 
 		return result_dict
+
+
+# ========================================================================
+# Schema for 'show service-insertion type appqoe service-node-group'
+# ========================================================================
+class ShowServiceInsertionTypeAppqoeServiceNodeGroupSchema(MetaParser):
+    """ Schema for show service-insertion type appqoe service-node-group """
+    schema = {
+        'service_node_group_name': str,
+        'service_context': str,
+        'member_service_node_count': int,
+		'service_node_sn': str,
+        'auto_discovered': str,
+        'sn_belongs_to_sng': str,
+        'current_status_of_sn': str,
+        Optional('system_ip'): str,
+        Optional('site_id'): int,
+        'time_current_status_was_reached': str,
+        Optional('cluster_protocol_vpath_version'): str,
+        Optional('cluster_protocol_incarnation_number'): int,
+        'cluster_protocol_last_sent_sequence_number': int,
+		'cluster_protocol_last_received_sequence_number': int,
+        'cluster_protocol_last_received_ack_number': int
+         }
+
+
+# ========================================================================
+# Parser for 'show service-insertion type appqoe service-node-group'
+# ========================================================================
+class ShowServiceInsertionTypeAppqoeServiceNodeGroup(ShowServiceInsertionTypeAppqoeServiceNodeGroupSchema):
+    """ Parser for "show service-insertion type appqoe service-node-group" """
+
+    cli_command = "show service-insertion type appqoe service-node-group"
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+		# Service Node Group name         : SNG-APPQOE
+		#     Service Context             : appqoe/1
+		#     Member Service Node count   : 1
+		# Service Node (SN)                   : 192.168.2.2
+		# Auto discovered                     : No
+		# SN belongs to SNG                   : SNG-APPQOE
+		# Current status of SN                : Alive
+		# System IP                           : 100.100.100.6
+		# Site ID                             : 30
+		# Time current status was reached               : Tue Sep 15 18:22:11 2020
+		# Cluster protocol VPATH version                : 1 (Bitmap recvd: 1)
+		# Cluster protocol incarnation number           : 5
+		# Cluster protocol last sent sequence number    : 1600512340
+		# Cluster protocol last received ack number     : 1600512339
+        p1 = re.compile(r'^(?P<key>[\s\S]+\S) +: +(?P<value>[\s\S]+)$')
+
+        # Cluster protocol last received sequence number: 311442
+        p2 = re.compile(r'^(?P<key>[\s\S]+\w)+: +(?P<value>[\s\S]+)$')
+
+        parsed_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                key = groups['key'].strip(')').replace('(', '_').replace(' ', '_').replace('__', '_').lower()
+                try:
+                    value = int(groups['value'])
+                except ValueError:
+                    value = groups['value']
+                parsed_dict.update({key: value})
+                continue
+
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                key = groups['key'].replace(' ', '_').lower()
+                parsed_dict.update({key: int(groups['value'])})
+
+        return parsed_dict
