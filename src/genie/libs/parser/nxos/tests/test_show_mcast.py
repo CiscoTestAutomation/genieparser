@@ -306,6 +306,66 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
         },
     }
 
+    golden_output4 = {'execute.return_value': '''
+    IP Multicast Routing Table for VRF "default"
+    (41.1.1.2/32, 225.1.0.1/32), uptime: 00:22:11, ip pim mrib
+    Incoming interface: Ethernet1/9, RPF nbr: 41.1.1.2,internal
+    Outgoing interface list: (count: 3)
+        port-channel12, uptime: 00:10:13, pim
+        Vlan30, uptime: 00:21:53, mrib
+        Vlan200, uptime: 03:01:01, mrib, (bridge-only)
+        Ethernet1/11, uptime: 00:22:00, mrib
+
+    '''
+    }
+
+    golden_parsed_output4 = {
+        "vrf":{
+           "default":{
+              "address_family":{
+                 "ipv4":{
+                    "multicast_group":{
+                       "225.1.0.1/32":{
+                          "source_address":{
+                             "41.1.1.2/32":{
+                                "uptime":"00:22:11",
+                                "flags":"ip mrib pim",
+                                "incoming_interface_list":{
+                                   "Ethernet1/9":{
+                                      "rpf_nbr":"41.1.1.2",
+                                      "internal":True
+                                   }
+                                },
+                                "oil_count":3,
+                                "outgoing_interface_list":{
+                                   "port-channel12":{
+                                      "oil_uptime":"00:10:13",
+                                      "oil_flags":"pim"
+                                   },
+                                   "Vlan30":{
+                                      "oil_uptime":"00:21:53",
+                                      "oil_flags":"mrib"
+                                   },
+                                   "Vlan200":{
+                                      "oil_uptime":"03:01:01",
+                                      "oil_flags":"mrib",
+                                      "flag":"bridge-only"
+                                   },
+                                   "Ethernet1/11":{
+                                      "oil_uptime":"00:22:00",
+                                      "oil_flags":"mrib"
+                                   }
+                                }
+                             }
+                          }
+                       }
+                    }
+                 }
+              }
+           }
+        }
+    }
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         ip_mroute_vrf_all_obj = ShowIpMrouteVrfAll(device=self.device1)
@@ -330,6 +390,11 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
         parsed_output = ip_mroute_vrf_all_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output3)        
 
+    def test_golden4(self):
+        self.device = Mock(**self.golden_output4)
+        ip_mroute_vrf_all_obj = ShowIpMrouteVrfAll(device=self.device)
+        parsed_output = ip_mroute_vrf_all_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output4)        
 
 # =========================================
 # Unit test for 'show ipv6 mroute vrf all'

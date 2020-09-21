@@ -1,16 +1,16 @@
 
-Router#show ip bgp neighbors 10.169.197.252 advertised-routes
-Load for five secs: 38%/0%; one minute: 11%; five minutes: 13%
-Time source is NTP, 17:40:07.943 EST Sat Jun 12 2016
+        Router#show ip bgp neighbors 10.169.197.252 advertised-routes
+        Load for five secs: 38%/0%; one minute: 11%; five minutes: 13%
+        Time source is NTP, 17:40:07.943 EST Sat Jun 12 2016
 
-BGP table version is 2, local router ID is 10.169.197.254
-Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
-              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
-              x best-external, a additional-path, c RIB-compressed, 
-Origin codes: i - IGP, e - EGP, ? - incomplete
-RPKI validation codes: V valid, I invalid, N Not found
+        BGP table version is 2, local router ID is 10.169.197.254
+        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
+                      r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
+                      x best-external, a additional-path, c RIB-compressed, 
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        RPKI validation codes: V valid, I invalid, N Not found
 
-     Network          Next Hop            Metric LocPrf Weight Path
- *>  10.69.9.9/32       192.168.36.119          0             0 5918 ?
- *b a10.69.9.9/32       192.168.36.120          0             0 5918 ?
+             Network          Next Hop            Metric LocPrf Weight Path
+         *>  10.69.9.9/32       192.168.36.119          0             0 5918 ?
+         *b a10.69.9.9/32       192.168.36.120          0             0 5918 ?
         

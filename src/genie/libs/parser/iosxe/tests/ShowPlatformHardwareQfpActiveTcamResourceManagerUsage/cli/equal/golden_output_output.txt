@@ -1,0 +1,35 @@
+        QFP TCAM Usage Information
+
+        80 Bit Region Information
+        --------------------------
+        Name                                : Leaf Region #0
+        Number of cells per entry           : 1
+        Current 80 bit entries used         : 0
+        Current used cell entries           : 0
+        Current free cell entries           : 0
+
+        160 Bit Region Information
+        --------------------------
+        Name                                : Leaf Region #1
+        Number of cells per entry           : 2
+        Current 160 bits entries used       : 19
+        Current used cell entries           : 38
+        Current free cell entries           : 4058
+
+        320 Bit Region Information
+        --------------------------
+        Name                                : Leaf Region #2
+        Number of cells per entry           : 4
+        Current 320 bits entries used       : 0
+        Current used cell entries           : 0
+        Current free cell entries           : 0
+
+
+        Total TCAM Cell Usage Information
+        ----------------------------------
+        Name                                : TCAM #0 on CPP #0
+        Total number of regions             : 3
+        Total tcam used cell entries        : 38
+        Total tcam free cell entries        : 1048538
+        Threshold status                    : below critical limit     
+    

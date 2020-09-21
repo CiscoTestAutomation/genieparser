@@ -1,40 +1,40 @@
 
-Router#show bgp l2vpn vpls rd 5918:3051 detail
-Load for five secs: 29%/0%; one minute: 7%; five minutes: 5%
-Time source is NTP, 16:31:16.271 EST Tue Jun 8 2016
+        Router#show bgp l2vpn vpls rd 5918:3051 detail
+        Load for five secs: 29%/0%; one minute: 7%; five minutes: 5%
+        Time source is NTP, 16:31:16.271 EST Tue Jun 8 2016
 
-Route Distinguisher: 5918:3051
-BGP routing table entry for 5918:3051:VEID-1:Blk-1/136, version 2
-  Paths: (2 available, best #1, table L2VPN-VPLS-BGP-Table)
-  Not advertised to any peer
-  Refresh Epoch 7
-  Local
-    192.168.165.220 (metric 66536) from 192.168.165.119 (192.168.165.119)
-      Origin incomplete, metric 0, localpref 100, valid, internal, best
-      AGI version(0), VE Block Size(10) Label Base(16)
-      Extended Community: RT:0:3051 RT:5918:3051 L2VPN L2:0x0:MTU-1500
-      Originator: 192.168.165.220, Cluster list: 0.0.0.61
-      mpls labels in/out exp-null/16
-      rx pathid: 0, tx pathid: 0x0
-  Refresh Epoch 9
-  Local
-    192.168.165.220 (metric 66536) from 192.168.165.120 (192.168.165.120)
-      Origin incomplete, metric 0, localpref 100, valid, internal
-      AGI version(0), VE Block Size(10) Label Base(16)
-      Extended Community: RT:0:3051 RT:5918:3051 L2VPN L2:0x0:MTU-1500
-      Originator: 192.168.165.220, Cluster list: 0.0.0.61
-      mpls labels in/out exp-null/16
-      rx pathid: 0, tx pathid: 0
-BGP routing table entry for 5918:3051:VEID-2:Blk-1/136, version 304
-  Paths: (1 available, best #1, table L2VPN-VPLS-BGP-Table)
-  Advertised to update-groups:
-     4
-  Refresh Epoch 1
-  Local
-    0.0.0.0 from 0.0.0.0 (10.169.197.254)
-      Origin incomplete, localpref 100, weight 32768, valid, sourced, local, best
-      AGI version(0), VE Block Size(10) Label Base(1026)
-      Extended Community: RT:0:3051 RT:5918:3051 L2VPN L2:0x0:MTU-1500
-      mpls labels in/out exp-null/1026
-      rx pathid: 0, tx pathid: 0x0
+        Route Distinguisher: 5918:3051
+        BGP routing table entry for 5918:3051:VEID-1:Blk-1/136, version 2
+          Paths: (2 available, best #1, table L2VPN-VPLS-BGP-Table)
+          Not advertised to any peer
+          Refresh Epoch 7
+          Local
+            192.168.165.220 (metric 66536) from 192.168.165.119 (192.168.165.119)
+              Origin incomplete, metric 0, localpref 100, valid, internal, best
+              AGI version(0), VE Block Size(10) Label Base(16)
+              Extended Community: RT:0:3051 RT:5918:3051 L2VPN L2:0x0:MTU-1500
+              Originator: 192.168.165.220, Cluster list: 0.0.0.61
+              mpls labels in/out exp-null/16
+              rx pathid: 0, tx pathid: 0x0
+          Refresh Epoch 9
+          Local
+            192.168.165.220 (metric 66536) from 192.168.165.120 (192.168.165.120)
+              Origin incomplete, metric 0, localpref 100, valid, internal
+              AGI version(0), VE Block Size(10) Label Base(16)
+              Extended Community: RT:0:3051 RT:5918:3051 L2VPN L2:0x0:MTU-1500
+              Originator: 192.168.165.220, Cluster list: 0.0.0.61
+              mpls labels in/out exp-null/16
+              rx pathid: 0, tx pathid: 0
+        BGP routing table entry for 5918:3051:VEID-2:Blk-1/136, version 304
+          Paths: (1 available, best #1, table L2VPN-VPLS-BGP-Table)
+          Advertised to update-groups:
+             4
+          Refresh Epoch 1
+          Local
+            0.0.0.0 from 0.0.0.0 (10.169.197.254)
+              Origin incomplete, localpref 100, weight 32768, valid, sourced, local, best
+              AGI version(0), VE Block Size(10) Label Base(1026)
+              Extended Community: RT:0:3051 RT:5918:3051 L2VPN L2:0x0:MTU-1500
+              mpls labels in/out exp-null/1026
+              rx pathid: 0, tx pathid: 0x0
         
