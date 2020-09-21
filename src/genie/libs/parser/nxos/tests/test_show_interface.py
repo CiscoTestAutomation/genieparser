@@ -6175,7 +6175,7 @@ class TestShowInterfaceBrief(unittest.TestCase):
                                    'protocol': 'none',
                                    'reason': 'No operational '
                                              'members',
-                                   'speed': 'auto(I) ',
+                                   'speed': 'auto(I)',
                                    'status': 'down',
                                    'type': 'eth',
                                    'vlan': '1'}}}}
@@ -6381,6 +6381,162 @@ class TestShowInterfaceBrief(unittest.TestCase):
         },
     }
 
+    golden_output4 = {'execute.return_value': '''
+        --------------------------------------------------------------------------------
+
+        Port   VRF          Status IP Address                              Speed    MTU
+
+        --------------------------------------------------------------------------------
+
+        mgmt0  --           up     172.28.249.175                          1000    1500    
+
+        --------------------------------------------------------------------------------
+
+        Ethernet        VLAN    Type Mode   Status  Reason                 Speed     Port
+
+        Interface                                                                    Ch #
+
+        --------------------------------------------------------------------------------
+
+        Eth1/1          --      eth  routed down    XCVR not inserted        auto(D) --
+
+        Eth1/2          --      eth  routed down    XCVR not inserted        auto(D) --
+
+        Eth1/3          --      eth  routed down    XCVR not inserted        auto(D) --
+
+        Eth1/4          --      eth  routed down    XCVR not inserted        auto(D) --
+
+        Eth1/5          --      eth  routed down    XCVR not inserted        auto(D) --
+
+        Eth1/6          --      eth  routed down    XCVR not inserted        auto(D) --
+    
+
+        ------------------------------------------------------------------------------------------
+
+        Port-channel VLAN    Type Mode   Status  Reason                              Speed   Protocol
+
+        Interface                                                                            
+
+        ------------------------------------------------------------------------------------------
+
+        Po10         --      eth  routed up      none                                 a-40G(D)  lacp
+
+        Po10.1       2       eth  routed up      none                                 a-40G(D)    --
+
+        Po10.2       3       eth  routed up      none                                 a-40G(D)    --
+
+        Po10.3       4       eth  routed up      none                                 a-40G(D)    --
+
+    '''}
+
+    golden_parsed_output4 = {
+        'interface': {
+            'ethernet': {
+                'Ethernet1/1': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'XCVR not inserted',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '--',
+                },
+                'Ethernet1/2': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'XCVR not inserted',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '--',
+                },
+                'Ethernet1/3': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'XCVR not inserted',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '--',
+                },
+                'Ethernet1/4': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'XCVR not inserted',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '--',
+                },
+                'Ethernet1/5': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'XCVR not inserted',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '--',
+                },
+                'Ethernet1/6': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'XCVR not inserted',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '--',
+                },
+            },
+            'port': {
+                'mgmt0': {
+                    'ip_address': '172.28.249.175',
+                    'mtu': 1500,
+                    'speed': '1000',
+                    'status': 'up',
+                    'vrf': '--',
+                },
+            },
+            'port_channel': {
+                'Port-channel10': {
+                    'mode': 'routed',
+                    'protocol': 'lacp',
+                    'reason': 'none',
+                    'speed': 'a-40G(D)',
+                    'status': 'up',
+                    'type': 'eth',
+                    'vlan': '--',
+                },
+                'Port-channel10.1': {
+                    'mode': 'routed',
+                    'protocol': '--',
+                    'reason': 'none',
+                    'speed': 'a-40G(D)',
+                    'status': 'up',
+                    'type': 'eth',
+                    'vlan': '2',
+                },
+                'Port-channel10.2': {
+                    'mode': 'routed',
+                    'protocol': '--',
+                    'reason': 'none',
+                    'speed': 'a-40G(D)',
+                    'status': 'up',
+                    'type': 'eth',
+                    'vlan': '3',
+                },
+                'Port-channel10.3': {
+                    'mode': 'routed',
+                    'protocol': '--',
+                    'reason': 'none',
+                    'speed': 'a-40G(D)',
+                    'status': 'up',
+                    'type': 'eth',
+                    'vlan': '4',
+                },
+            },
+        },
+    }
+
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         intf_obj = ShowInterfaceBrief(device=self.device)
@@ -6404,6 +6560,12 @@ class TestShowInterfaceBrief(unittest.TestCase):
         intf_obj = ShowInterfaceBrief(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
+
+    def test_golden4(self):
+        self.device = Mock(**self.golden_output4)
+        intf_obj = ShowInterfaceBrief(device=self.device)
+        parsed_output = intf_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output4)            
 
 
 class TestShowRunInterface(unittest.TestCase):

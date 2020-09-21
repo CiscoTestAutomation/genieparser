@@ -2788,11 +2788,12 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
                         r' +Speed +Protocol$')
 
         # Po8          1       eth  access down    No operational members      auto(I)  none
-        p6 = re.compile(r'^(?P<interface>[\S]+) +(?P<vlan>[a-zA-Z0-9\-]+)'
-                        r' +(?P<type>[a-zA-Z]+) +(?P<mode>[a-z]+)'
-                        r' +(?P<status>[a-z]+) +(?P<reason>[a-zA-Z\s]+)'
-                        r' +(?P<speed>[0-9a-zA-Z\(\)\s]+)'
-                        r' +(?P<protocol>[a-zA-Z0-9\-]+)$')
+        # Po10         --      eth  routed up      none                                 a-40G(D)  lacp
+        # Po10.1       2       eth  routed up      none                                 a-40G(D)    --
+        p6 = re.compile(r'^(?P<interface>\S+) +(?P<vlan>\S+) '
+                        r'+(?P<type>[a-zA-Z]+) +(?P<mode>[a-z]+) '
+                        r'+(?P<status>[a-z]+) +(?P<reason>[\w\s]+) '
+                        r'+(?P<speed>\S+) +(?P<protocol>[\w\-]+)$')
 
         # Interface     Status     Description
         p7 = re.compile(r'^Interface +Status +Description$')
