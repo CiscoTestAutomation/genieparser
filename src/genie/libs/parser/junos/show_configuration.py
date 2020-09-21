@@ -217,9 +217,12 @@ class ShowConfigurationFamilyBridgeVlanIdSchema(MetaParser):
 class ShowConfigurationFamilyBridgeVlanId(ShowConfigurationFamilyBridgeVlanIdSchema):
     cli_command = ['show configuration interfaces {interface} unit {unit} family bridge vlan-id']
 
-    def cli(self, interface, unit, output):
+    def cli(self, interface, unit, output=None):
         if not output:
-            out = self.device.execute(self.cli_command[0])
+            out = self.device.execute(self.cli_command[0].format(
+                interface=interface,
+                unit=unit
+            ))
         else:
             out = output
         ret_dict = {}
