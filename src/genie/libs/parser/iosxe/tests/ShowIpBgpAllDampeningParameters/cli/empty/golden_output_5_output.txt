@@ -1,90 +1,89 @@
 
-        R4_iosv#show ip bgp all dampening parameters
-        For address family: IPv4 Unicast
+R4_iosv#show ip bgp all dampening parameters
+For address family: IPv4 Unicast
 
-        % dampening not enabled for base
+% dampening not enabled for base
 
-        For address family: IPv6 Unicast
+For address family: IPv6 Unicast
 
-        % dampening not enabled for base
+% dampening not enabled for base
 
-        For address family: VPNv4 Unicast
+For address family: VPNv4 Unicast
 
-        % dampening not enabled for base
+% dampening not enabled for base
 
-        For vrf: VRF1
+For vrf: VRF1
 
-        % dampening not enabled for vrf VRF1
+% dampening not enabled for vrf VRF1
 
-        For vrf: VRF2
+For vrf: VRF2
 
-        % dampening not enabled for vrf VRF2
+% dampening not enabled for vrf VRF2
 
-        For address family: VPNv6 Unicast
+For address family: VPNv6 Unicast
 
-        % dampening not enabled for base
+% dampening not enabled for base
 
-        For vrf: VRF1
+For vrf: VRF1
 
-        % dampening not enabled for vrf VRF1
+% dampening not enabled for vrf VRF1
 
-        For vrf: VRF2
+For vrf: VRF2
 
-        % dampening not enabled for vrf VRF2
+% dampening not enabled for vrf VRF2
 
-        For address family: IPv4 Multicast
+For address family: IPv4 Multicast
 
-        % dampening not enabled for base
+% dampening not enabled for base
 
-        For address family: L2VPN E-VPN
+For address family: L2VPN E-VPN
 
-        % dampening not enabled for base
+% dampening not enabled for base
 
-        For address family: VPNv4 Multicast
+For address family: VPNv4 Multicast
 
-        % dampening not enabled for base
+% dampening not enabled for base
 
-        For vrf: VRF1
+For vrf: VRF1
 
-        % dampening not enabled for vrf VRF1
+% dampening not enabled for vrf VRF1
 
-        For vrf: VRF2
+For vrf: VRF2
 
-        % dampening not enabled for vrf VRF2
+% dampening not enabled for vrf VRF2
 
-        For address family: MVPNv4 Unicast
+For address family: MVPNv4 Unicast
 
-        % dampening not enabled for base
+% dampening not enabled for base
 
-        For vrf: VRF1
+For vrf: VRF1
 
-        % dampening not enabled for vrf VRF1
+% dampening not enabled for vrf VRF1
 
-        For vrf: VRF2
+For vrf: VRF2
 
-        % dampening not enabled for vrf VRF2
+% dampening not enabled for vrf VRF2
 
-        For address family: MVPNv6 Unicast
+For address family: MVPNv6 Unicast
 
-        % dampening not enabled for base
+% dampening not enabled for base
 
-        For vrf: VRF1
+For vrf: VRF1
 
-        % dampening not enabled for vrf VRF1
+% dampening not enabled for vrf VRF1
 
-        For vrf: VRF2
+For vrf: VRF2
 
-        % dampening not enabled for vrf VRF2
+% dampening not enabled for vrf VRF2
 
-        For address family: VPNv6 Multicast
+For address family: VPNv6 Multicast
 
-        % dampening not enabled for base
+% dampening not enabled for base
 
-        For vrf: VRF1
+For vrf: VRF1
 
-        % dampening not enabled for vrf VRF1
+% dampening not enabled for vrf VRF1
 
-        For vrf: VRF2
+For vrf: VRF2
 
-        % dampening not enabled for vrf VRF2
-        
+% dampening not enabled for vrf VRF2
