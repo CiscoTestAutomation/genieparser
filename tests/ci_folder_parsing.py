@@ -34,28 +34,9 @@ _class = args.class_name
 # of converting to folder based testing strategy
 CLASS_SKIP = {
     "asa": {
-        "ShowArp": True,
         "ShowVpnSessiondbSuper": True,
-        "ShowAspDrop": True,
         },
     "iosxe": {
-        "ShowSdwanIpsecLocalsa": True,
-        "ShowSdwanIpsecInboundConnections": True,
-        "ShowSdwanIpsecOutboundConnections": True,
-        "ShowSdwanAppqoeTcpoptStatus": True,
-        "ShowSdwanAppqoeRmResources": True,
-        "ShowSdwanAppqoeNatStatistics": True,
-        "ShowLispSite": True,
-        "ShowRunSectionIsis": True,
-        "ShowIPAliasDefaultVrf": True,
-        "ShowHwModuleStatus": True,
-        "ShowIpv6EigrpNeighbors": True,
-        "ShowIpv6EigrpNeighborsDetail": True,
-        "ShowApRfProfileSummary": True,
-        "ShowApphostingList": True,
-        "ShowCtsRoleBasedCounters": True,
-        "ShowPlatformHardwareQfpActiveTcamResourceManagerUsage": True,
-        "ShowPlatformResources": True,
         "ShowPimNeighbor": True,
         "ShowIpInterfaceBrief": True,
         "ShowIpInterfaceBriefPipeVlan": True,
@@ -312,6 +293,8 @@ class FileBasedTest(aetest.Testcase):
                     obj.parse(**arguments)
                     self.failed(f"File parsed, when expected not to for {local_class}")
                 except SchemaEmptyParserError:
+                    return True
+                except AttributeError:
                     return True
 
 
