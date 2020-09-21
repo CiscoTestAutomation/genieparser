@@ -20,7 +20,8 @@ from genie.libs.parser.junos.show_route import (ShowRouteTable,
                                                 ShowRouteReceiveProtocol,
                                                 ShowRouteTableLabelSwitchedName,
                                                 ShowRouteProtocolProtocolExtensiveIpaddress,
-                                                ShowRouteReceiveProtocolExtensive)
+                                                ShowRouteReceiveProtocolExtensive,
+                                                ShowRouteReceiveProtocolPeerAddressExtensive)
 
 '''
 Unit test for:
@@ -57499,6 +57500,247 @@ class TestShowRouteReceiveProtocolExtensive(unittest.TestCase):
                 target_address='4.4.4.4')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
+# Unit test for 'show route receive-protocol bgp {peer_addrress} extensive'
+class TestShowRouteReceiveProtocolPeerAddressExtensive(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    # show route receive-protocol bgp 4.4.4.4 extensive 
+    golden_output = {'execute.return_value': '''
+        inet.0: 16 destinations, 19 routes (16 active, 0 holddown, 0 hidden)
+
+        1.0.0.0/24 (2 entries, 1 announced)
+
+            Accepted
+
+            Nexthop: 4.4.4.4
+
+            Localpref: 100
+
+            AS path: I 
+
+
+
+        4.4.4.4/32 (2 entries, 1 announced)
+
+            Accepted
+
+            Nexthop: 4.4.4.4
+
+            Localpref: 100
+
+            AS path: I 
+
+
+
+        20.0.0.0/24 (2 entries, 1 announced)
+
+            Accepted
+
+            Nexthop: 4.4.4.4
+
+            Localpref: 100
+
+            AS path: I 
+
+
+
+        * 200.0.0.0/24 (1 entry, 1 announced)
+
+            Accepted
+
+            Nexthop: 4.4.4.4
+
+            Localpref: 100
+
+            AS path: I 
+
+
+
+        * 200.10.0.0/24 (1 entry, 1 announced)
+
+            Accepted
+
+            Nexthop: 4.4.4.4
+
+            Localpref: 100
+
+            AS path: 200000 4 5 6 I 
+
+
+
+        * 200.20.0.0/24 (1 entry, 1 announced)
+
+            Accepted
+
+            Nexthop: 4.4.4.4
+
+            Localpref: 100
+
+            AS path: 200000 4 7 8 I 
+
+
+
+        * 200.30.0.0/24 (1 entry, 1 announced)
+
+            Accepted
+
+            Nexthop: 4.4.4.4
+
+            Localpref: 100
+
+            AS path: 200000 4 100000 8 I 
+
+
+
+        inet6.0: 18 destinations, 20 routes (18 active, 0 holddown, 0 hidden)
+    
+    '''}
+
+    golden_parsed_output = {'route-information': {'route-table': [{'active-route-count': '16',
+                                        'destination-count': '16',
+                                        'hidden-route-count': '0',
+                                        'holddown-route-count': '0',
+                                        'rt': [{'rt-announced-count': '1',
+                                                'rt-destination': '1.0.0.0',
+                                                'rt-entry': {'as-path': 'AS '
+                                                                        'path: '
+                                                                        'I',
+                                                             'bgp-path-attributes': {'attr-as-path-effective': {'aspath-effective-string': 'AS '
+                                                                                                                                           'path:',
+                                                                                                                'attr-value': 'I'}},
+                                                             'bgp-rt-flag': 'Accepted',
+                                                             'local-preference': '100',
+                                                             'nh': {'to': '4.4.4.4'}},
+                                                'rt-entry-count': {'#text': '2'},
+                                                'rt-prefix-length': '24'},
+                                               {'rt-announced-count': '1',
+                                                'rt-destination': '4.4.4.4',
+                                                'rt-entry': {'as-path': 'AS '
+                                                                        'path: '
+                                                                        'I',
+                                                             'bgp-path-attributes': {'attr-as-path-effective': {'aspath-effective-string': 'AS '
+                                                                                                                                           'path:',
+                                                                                                                'attr-value': 'I'}},
+                                                             'bgp-rt-flag': 'Accepted',
+                                                             'local-preference': '100',
+                                                             'nh': {'to': '4.4.4.4'}},
+                                                'rt-entry-count': {'#text': '2'},
+                                                'rt-prefix-length': '32'},
+                                               {'rt-announced-count': '1',
+                                                'rt-destination': '20.0.0.0',
+                                                'rt-entry': {'as-path': 'AS '
+                                                                        'path: '
+                                                                        'I',
+                                                             'bgp-path-attributes': {'attr-as-path-effective': {'aspath-effective-string': 'AS '
+                                                                                                                                           'path:',
+                                                                                                                'attr-value': 'I'}},
+                                                             'bgp-rt-flag': 'Accepted',
+                                                             'local-preference': '100',
+                                                             'nh': {'to': '4.4.4.4'}},
+                                                'rt-entry-count': {'#text': '2'},
+                                                'rt-prefix-length': '24'},
+                                               {'active-tag': '* ',
+                                                'rt-announced-count': '1',
+                                                'rt-destination': '200.0.0.0',
+                                                'rt-entry': {'as-path': 'AS '
+                                                                        'path: '
+                                                                        'I',
+                                                             'bgp-path-attributes': {'attr-as-path-effective': {'aspath-effective-string': 'AS '
+                                                                                                                                           'path:',
+                                                                                                                'attr-value': 'I'}},
+                                                             'bgp-rt-flag': 'Accepted',
+                                                             'local-preference': '100',
+                                                             'nh': {'to': '4.4.4.4'}},
+                                                'rt-entry-count': {'#text': '1'},
+                                                'rt-prefix-length': '24'},
+                                               {'active-tag': '* ',
+                                                'rt-announced-count': '1',
+                                                'rt-destination': '200.10.0.0',
+                                                'rt-entry': {'as-path': 'AS '
+                                                                        'path: '
+                                                                        '200000 '
+                                                                        '4 5 6 '
+                                                                        'I',
+                                                             'bgp-path-attributes': {'attr-as-path-effective': {'aspath-effective-string': 'AS '
+                                                                                                                                           'path:',
+                                                                                                                'attr-value': '200000 '
+                                                                                                                              '4 '
+                                                                                                                              '5 '
+                                                                                                                              '6 '
+                                                                                                                              'I'}},
+                                                             'bgp-rt-flag': 'Accepted',
+                                                             'local-preference': '100',
+                                                             'nh': {'to': '4.4.4.4'}},
+                                                'rt-entry-count': {'#text': '1'},
+                                                'rt-prefix-length': '24'},
+                                               {'active-tag': '* ',
+                                                'rt-announced-count': '1',
+                                                'rt-destination': '200.20.0.0',
+                                                'rt-entry': {'as-path': 'AS '
+                                                                        'path: '
+                                                                        '200000 '
+                                                                        '4 7 8 '
+                                                                        'I',
+                                                             'bgp-path-attributes': {'attr-as-path-effective': {'aspath-effective-string': 'AS '
+                                                                                                                                           'path:',
+                                                                                                                'attr-value': '200000 '
+                                                                                                                              '4 '
+                                                                                                                              '7 '
+                                                                                                                              '8 '
+                                                                                                                              'I'}},
+                                                             'bgp-rt-flag': 'Accepted',
+                                                             'local-preference': '100',
+                                                             'nh': {'to': '4.4.4.4'}},
+                                                'rt-entry-count': {'#text': '1'},
+                                                'rt-prefix-length': '24'},
+                                               {'active-tag': '* ',
+                                                'rt-announced-count': '1',
+                                                'rt-destination': '200.30.0.0',
+                                                'rt-entry': {'as-path': 'AS '
+                                                                        'path: '
+                                                                        '200000 '
+                                                                        '4 '
+                                                                        '100000 '
+                                                                        '8 I',
+                                                             'bgp-path-attributes': {'attr-as-path-effective': {'aspath-effective-string': 'AS '
+                                                                                                                                           'path:',
+                                                                                                                'attr-value': '200000 '
+                                                                                                                              '4 '
+                                                                                                                              '100000 '
+                                                                                                                              '8 '
+                                                                                                                              'I'}},
+                                                             'bgp-rt-flag': 'Accepted',
+                                                             'local-preference': '100',
+                                                             'nh': {'to': '4.4.4.4'}},
+                                                'rt-entry-count': {'#text': '1'},
+                                                'rt-prefix-length': '24'}],
+                                        'table-name': 'inet.0',
+                                        'total-route-count': '19'},
+                                       {'active-route-count': '18',
+                                        'destination-count': '18',
+                                        'hidden-route-count': '0',
+                                        'holddown-route-count': '0',
+                                        'table-name': 'inet6.0',
+                                        'total-route-count': '20'}]}}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRouteReceiveProtocolPeerAddressExtensive(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(
+                peer_address=None)
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowRouteReceiveProtocolPeerAddressExtensive(device=self.device)
+        parsed_output = obj.parse(peer_address='4.4.4.4')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 if __name__ == '__main__':
