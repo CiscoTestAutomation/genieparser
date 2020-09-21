@@ -284,6 +284,8 @@ class FileBasedTest(aetest.Testcase):
                         f"{folder_root}/{user_test}_arguments.json"
                     )
 
+                print(user_test, f"{folder_root}/{user_test}_arguments.json", arguments, os.path.exists(f"{folder_root}/{user_test}_arguments.json"))
+
                 device = Mock(**empty_output)
                 obj = local_class(device=device)
                 try:
