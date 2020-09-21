@@ -1,129 +1,129 @@
 
-R1#show bgp all detail 
-For address family: IPv4 Unicast
+        R1#show bgp all detail 
+        For address family: IPv4 Unicast
 
-BGP routing table entry for 10.4.1.1/32, version 4
-Paths: (1 available, best #1, table default, RIB-failure(17))
-Advertised to update-groups:
-   3         
-Refresh Epoch 1
-Local
-  0.0.0.0 from 0.0.0.0 (10.1.1.1)
-    Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
-    rx pathid: 0, tx pathid: 0x0
-BGP routing table entry for 10.16.2.2/32, version 2
-Paths: (1 available, best #1, table default)
-Not advertised to any peer
-Refresh Epoch 1
-Local
-  10.1.1.2 from 10.1.1.2 (10.1.1.2)
-    Origin incomplete, metric 0, localpref 100, valid, internal, best
-    rx pathid: 0, tx pathid: 0x0
-BGP routing table entry for 10.1.1.0/24, version 5
-Paths: (2 available, best #1, table default)
-Advertised to update-groups:
-   3         
-Refresh Epoch 1
-Local
-  0.0.0.0 from 0.0.0.0 (10.1.1.1)
-    Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
-    rx pathid: 0, tx pathid: 0x0
-Refresh Epoch 1
-Local
-  10.1.1.2 from 10.1.1.2 (10.1.1.2)
-    Origin incomplete, metric 0, localpref 100, valid, internal
-    rx pathid: 0, tx pathid: 0
+        BGP routing table entry for 10.4.1.1/32, version 4
+        Paths: (1 available, best #1, table default, RIB-failure(17))
+        Advertised to update-groups:
+           3         
+        Refresh Epoch 1
+        Local
+          0.0.0.0 from 0.0.0.0 (10.1.1.1)
+            Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
+            rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 10.16.2.2/32, version 2
+        Paths: (1 available, best #1, table default)
+        Not advertised to any peer
+        Refresh Epoch 1
+        Local
+          10.1.1.2 from 10.1.1.2 (10.1.1.2)
+            Origin incomplete, metric 0, localpref 100, valid, internal, best
+            rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 10.1.1.0/24, version 5
+        Paths: (2 available, best #1, table default)
+        Advertised to update-groups:
+           3         
+        Refresh Epoch 1
+        Local
+          0.0.0.0 from 0.0.0.0 (10.1.1.1)
+            Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
+            rx pathid: 0, tx pathid: 0x0
+        Refresh Epoch 1
+        Local
+          10.1.1.2 from 10.1.1.2 (10.1.1.2)
+            Origin incomplete, metric 0, localpref 100, valid, internal
+            rx pathid: 0, tx pathid: 0
 
-For address family: IPv6 Unicast
+        For address family: IPv6 Unicast
 
-BGP routing table entry for 2001:1:1:1::1/128, version 4
-Paths: (1 available, best #1, table default)
-Advertised to update-groups:
-   1         
-Refresh Epoch 1
-Local
-  :: from 0.0.0.0 (10.1.1.1)
-    Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
-    rx pathid: 0, tx pathid: 0x0
-BGP routing table entry for 2001:2:2:2::2/128, version 2
-Paths: (2 available, best #1, table default)
-Not advertised to any peer
-Refresh Epoch 1
-Local
-  2001:DB8:1:1::2 from 2001:DB8:1:1::2 (10.1.1.2)
-    Origin incomplete, metric 0, localpref 100, valid, internal, best
-    rx pathid: 0, tx pathid: 0x0
-Refresh Epoch 1
-Local
-  ::FFFF:10.1.1.2 (inaccessible) from 10.1.1.2 (10.1.1.2)
-    Origin incomplete, metric 0, localpref 100, valid, internal
-    rx pathid: 0, tx pathid: 0
-BGP routing table entry for 2001:DB8:1:1::/64, version 5
-Paths: (3 available, best #1, table default)
-Advertised to update-groups:
-   1         
-Refresh Epoch 1
-Local
-  :: from 0.0.0.0 (10.1.1.1)
-    Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
-    rx pathid: 0, tx pathid: 0x0
-Refresh Epoch 1
-Local
-  2001:DB8:1:1::2 from 2001:DB8:1:1::2 (10.1.1.2)
-    Origin incomplete, metric 0, localpref 100, valid, internal
-    rx pathid: 0, tx pathid: 0
-Refresh Epoch 1
-Local
-  ::FFFF:10.1.1.2 (inaccessible) from 10.1.1.2 (10.1.1.2)
-    Origin incomplete, metric 0, localpref 100, valid, internal
-    rx pathid: 0, tx pathid: 0
+        BGP routing table entry for 2001:1:1:1::1/128, version 4
+        Paths: (1 available, best #1, table default)
+        Advertised to update-groups:
+           1         
+        Refresh Epoch 1
+        Local
+          :: from 0.0.0.0 (10.1.1.1)
+            Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
+            rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 2001:2:2:2::2/128, version 2
+        Paths: (2 available, best #1, table default)
+        Not advertised to any peer
+        Refresh Epoch 1
+        Local
+          2001:DB8:1:1::2 from 2001:DB8:1:1::2 (10.1.1.2)
+            Origin incomplete, metric 0, localpref 100, valid, internal, best
+            rx pathid: 0, tx pathid: 0x0
+        Refresh Epoch 1
+        Local
+          ::FFFF:10.1.1.2 (inaccessible) from 10.1.1.2 (10.1.1.2)
+            Origin incomplete, metric 0, localpref 100, valid, internal
+            rx pathid: 0, tx pathid: 0
+        BGP routing table entry for 2001:DB8:1:1::/64, version 5
+        Paths: (3 available, best #1, table default)
+        Advertised to update-groups:
+           1         
+        Refresh Epoch 1
+        Local
+          :: from 0.0.0.0 (10.1.1.1)
+            Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
+            rx pathid: 0, tx pathid: 0x0
+        Refresh Epoch 1
+        Local
+          2001:DB8:1:1::2 from 2001:DB8:1:1::2 (10.1.1.2)
+            Origin incomplete, metric 0, localpref 100, valid, internal
+            rx pathid: 0, tx pathid: 0
+        Refresh Epoch 1
+        Local
+          ::FFFF:10.1.1.2 (inaccessible) from 10.1.1.2 (10.1.1.2)
+            Origin incomplete, metric 0, localpref 100, valid, internal
+            rx pathid: 0, tx pathid: 0
 
-For address family: VPNv4 Unicast
-
-
-Route Distinguisher: 100:100 (default for vrf VRF1)
-BGP routing table entry for 100:100:10.229.11.11/32, version 2
-Paths: (1 available, best #1, table VRF1)
-Not advertised to any peer
-Refresh Epoch 1
-Local
-  0.0.0.0 (via vrf VRF1) from 0.0.0.0 (10.1.1.1)
-    Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
-    rx pathid: 0, tx pathid: 0x0
-
-For address family: VPNv6 Unicast
+        For address family: VPNv4 Unicast
 
 
-Route Distinguisher: 100:100 (default for vrf VRF1)
-BGP routing table entry for [100:100]2001:11:11::11/128, version 2
-Paths: (1 available, best #1, table VRF1)
-Not advertised to any peer
-Refresh Epoch 1
-Local
-  :: (via vrf VRF1) from 0.0.0.0 (10.1.1.1)
-    Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
-    rx pathid: 0, tx pathid: 0x0
+        Route Distinguisher: 100:100 (default for vrf VRF1)
+        BGP routing table entry for 100:100:10.229.11.11/32, version 2
+        Paths: (1 available, best #1, table VRF1)
+        Not advertised to any peer
+        Refresh Epoch 1
+        Local
+          0.0.0.0 (via vrf VRF1) from 0.0.0.0 (10.1.1.1)
+            Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
+            rx pathid: 0, tx pathid: 0x0
 
-For address family: IPv4 Multicast
-
-
-For address family: L2VPN E-VPN
+        For address family: VPNv6 Unicast
 
 
-For address family: VPNv4 Multicast
+        Route Distinguisher: 100:100 (default for vrf VRF1)
+        BGP routing table entry for [100:100]2001:11:11::11/128, version 2
+        Paths: (1 available, best #1, table VRF1)
+        Not advertised to any peer
+        Refresh Epoch 1
+        Local
+          :: (via vrf VRF1) from 0.0.0.0 (10.1.1.1)
+            Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
+            rx pathid: 0, tx pathid: 0x0
+
+        For address family: IPv4 Multicast
+
+
+        For address family: L2VPN E-VPN
+
+
+        For address family: VPNv4 Multicast
                 
 
-For address family: MVPNv4 Unicast
+        For address family: MVPNv4 Unicast
 
 
-For address family: MVPNv6 Unicast
+        For address family: MVPNv6 Unicast
 
 
-For address family: VPNv6 Multicast
+        For address family: VPNv6 Multicast
 
 
-For address family: VPNv4 Flowspec
+        For address family: VPNv4 Flowspec
 
 
-For address family: VPNv6 Flowspec
+        For address family: VPNv6 Flowspec
         

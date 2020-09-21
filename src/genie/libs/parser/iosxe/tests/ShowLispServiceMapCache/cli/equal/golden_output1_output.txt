@@ -10,3 +10,4 @@ LISP IPv4 Mapping Cache for EID-table vrf red (IID 101), 2 entries
 192.168.9.0/24, uptime: 00:04:02, expires: 23:55:57, via map-reply, complete
   Locator  Uptime    State      Pri/Wgt     Encap-IID
   10.1.8.8 00:04:02  up          50/50        -
+        

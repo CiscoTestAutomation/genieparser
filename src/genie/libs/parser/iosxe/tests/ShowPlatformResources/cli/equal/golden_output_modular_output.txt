@@ -1,0 +1,36 @@
+                Resource                 Usage                 Max             Warning         Critical        State
+        ----------------------------------------------------------------------------------------------------
+        RP0 (ok, active)                                                                               H    
+        Control Processor       0.25%                 100%            80%             90%             H    
+        DRAM                   3388MB(44%)           7557MB          88%             93%             H    
+        bootflash              1443MB(19%)           7281MB          88%             93%             H    
+        harddisk               69916MB(74%)          93836MB         88%             93%             H    
+        RP1 (ok, standby)                                                                              H    
+        Control Processor       0.20%                 100%            80%             90%             H    
+        DRAM                   3331MB(44%)           7557MB          88%             93%             H    
+        bootflash              2162MB(31%)           6840MB          88%             93%             H    
+        harddisk               48619MB(51%)          93836MB         88%             93%             H    
+        ESP0(ok, active)                                                                               H    
+        Control Processor       1.40%                 100%            80%             90%             H    
+        DRAM                   1057MB(6%)            15911MB         88%             93%             H    
+        QFP                                                                                           H    
+        TCAM                   16cells(0%)           1048576cells    65%             85%             H    
+        DRAM                   238906KB(5%)          4194304KB       85%             95%             H    
+        IRAM                   13014KB(9%)           131072KB        85%             95%             H    
+        CPU Utilization        0.00%                 100%            90%             95%             H    
+        Pkt Buf Mem (0)        67KB(0%)              524288KB        85%             95%             H    
+        Pkt Buf Mem (1)        67KB(0%)              524288KB        85%             95%             H    
+        ESP1(ok, standby)                                                                              H    
+        Control Processor       2.23%                 100%            80%             90%             H    
+        DRAM                   1055MB(6%)            15911MB         88%             93%             H    
+        QFP                                                                                           H    
+        TCAM                   16cells(0%)           1048576cells    65%             85%             H    
+        DRAM                   238906KB(5%)          4194304KB       85%             95%             H    
+        IRAM                   13014KB(9%)           131072KB        85%             95%             H    
+        CPU Utilization        0.00%                 100%            90%             95%             H    
+        Pkt Buf Mem (0)        67KB(0%)              524288KB        85%             95%             H    
+        Pkt Buf Mem (1)        67KB(0%)              524288KB        85%             95%             H    
+        SIP0                                                                                           H    
+        Control Processor       13.32%                100%            80%             90%             H    
+        DRAM                   703MB(35%)            1955MB          88%             93%             H      
+    

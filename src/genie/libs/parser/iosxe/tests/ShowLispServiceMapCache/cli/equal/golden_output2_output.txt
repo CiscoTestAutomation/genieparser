@@ -16,3 +16,4 @@ LISP IPv6 Mapping Cache for EID-table vrf red (IID 101), 2 entries
   172.16.156.134              00:00:00  up           1/50
   192.168.65.94               00:00:00  up           1/50
   2001:DB8:BBED:2829::80DF:9C86  00:00:00  up           2/100
+        
