@@ -1724,13 +1724,21 @@ class ShowRouteReceiveProtocolSchema(MetaParser):
 class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
     """ Parser for:
             * show route receive-protocol {protocol} {peer}
+            * show route receive-protocol {protocol} {peer} {target}
     """
 
-    cli_command = 'show route receive-protocol {protocol} {peer}'
-    def cli(self, protocol, peer, output=None):
+    cli_command = ['show route receive-protocol {protocol} {peer}',
+                   'show route receive-protocol {protocol} {peer} {target}']
+    def cli(self, protocol, peer, target=None, output=None):
         if not output:
-            cmd = self.cli_command.format(protocol=protocol,
-                    peer=peer)
+            if target:
+                cmd = self.cli_command[1].format(
+                            protocol=protocol,
+                            peer=peer,
+                            target=target)
+            else:
+                cmd = self.cli_command[0].format(protocol=protocol,
+                        peer=peer)
             out = self.device.execute(cmd)
         else:
             out = output
