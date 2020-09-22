@@ -1251,7 +1251,7 @@ class test_show_module(unittest.TestCase):
         self.device1 = Mock(**self.empty_output)
         module_obj = ShowModule(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = module_obj.parse()
+            parsed_output = module_obj.parse()       
 
 class test_dir(unittest.TestCase):
     device = Device(name='aDevice')

@@ -25,11 +25,17 @@ class ShowLogFilename(ShowLogFilenameSchema):
     """ Parser for:
             * show log {filename}
     """
-    cli_command = 'show log {filename}'
+    cli_command = ['show log {filename}',
+        'show log {filename} | match {match}']
 
-    def cli(self, output=None, filename=None):
+    def cli(self, output=None, filename=None, match=None):
         if not output:
-            out = self.device.execute(self.cli_command.format(filename=filename))
+            if match:
+                out = self.device.execute(self.cli_command[1].format(
+                    filename=filename,
+                    match=match))
+            else:
+                out = self.device.execute(self.cli_command[0].format(filename=filename))
         else:
             out = output
 

@@ -6204,6 +6204,7 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
 # =======================================================================
 # Parser for 'show platform hardware qfp active feature appqoe stats all'
 # =======================================================================
+# =======================================================================
 class ShowPlatformHardwareQfpActiveFeatureAppqoeSchema(MetaParser):
     schema = {
         'feature': {
@@ -6213,15 +6214,37 @@ class ShowPlatformHardwareQfpActiveFeatureAppqoeSchema(MetaParser):
                     'not_enabled': int,
                     'cft_handle_pkt': int,
                     'sdvt_divert_req_fail': int,
-                    'syn_policer_rate': int,
+                    Optional('syn_policer_rate'): int,
+                    Optional('sn_data_pkts_processed'): int,
                     'sdvt_global_stats': {
-                        'appnav_registration': int,
+                        Optional('appnav_registration'): int,
+                        Optional('control_decaps_could_not_find_flow_from_tuple'): int,
                         'within_sdvt_syn_policer_limit': int
                     }
                 },
                 'sn_index': {
                     Any(): {
+                        Optional('ip'): str,
+                        Optional('oce_id'): int,
+                        Optional('del'): int,
+                        Optional('key'): str,
+                        Optional('id'): int,
+                        Optional('ver'): int,
+                        Optional('status'): int,
+                        Optional('type'): int,
+                        Optional('sng'): int,
+                        Optional('appnav_stats'): {
+                            Optional('to_sn'): {
+                                'packets': int,
+                                'bytes': int
+                            },
+                            Optional('from_sn'): {
+                                'packets': int,
+                                'bytes': int
+                            }
+                        },
                         'sdvt_count_stats': {
+                            Optional('active_connections'): int,
                             Optional('decaps'): int,
                             Optional('encaps'): int,
                             Optional('packets_unmarked_in_ingress'): int,
@@ -6297,6 +6320,15 @@ class ShowPlatformHardwareQfpActiveFeatureAppqoe(ShowPlatformHardwareQfpActiveFe
         # syn_policer_rate: 800
         p8 = re.compile(r'^(?P<key>[\s\S]+): +(?P<value>\d+)$')
 
+        # SN Index [0 (Green)], IP: 119.0.1.250, oce_id: 1243618816
+        p9 = re.compile(r'^SN +Index +\[(?P<index>[\s\S]+)\], +IP: +(?P<ip>[\s\S]+), +oce_id: +(?P<oce_id>[\s\S]+)$')
+
+        # del 0, key 0x0301, id 1, ver 1, status 1, type 3, sng 0
+        p10 = re.compile(r'^del +(?P<del>[\s\S]+), key +(?P<key>[\s\S]+), id +(?P<id>[\s\S]+), ver +(?P<ver>[\s\S]+), status +(?P<status>[\s\S]+), type +(?P<type>[\s\S]+), sng +(?P<sng>[\s\S]+)$')
+
+        # APPNAV STATS: toSN 2662751642/2206742552009, fromSN 2715505607/2260448392656
+        p11 = re.compile(r'^APPNAV STATS: +(?P<to_sn>[\S]+) +(?P<tosn_packets>[\d]+)\/(?P<tosn_bytes>\d+), +(?P<from_sn>[\S]+) +(?P<frmsn_packets>[\d]+)\/(?P<frmsn_bytes>\d+)$')
+
         ret_dict = {}
 
         for line in output.splitlines():
@@ -6342,6 +6374,51 @@ class ShowPlatformHardwareQfpActiveFeatureAppqoe(ShowPlatformHardwareQfpActiveFe
             if m:
                 groups = m.groupdict()
                 index_dict = feature_dict.setdefault('sn_index', {}).setdefault(groups['index'], {})
+
+                last_dict_ptr = index_dict
+                continue
+
+            # SN Index [0 (Green)], IP: 119.0.1.250, oce_id: 1243618816
+            m = p9.match(line)
+            if m:
+                groups = m.groupdict()
+                index_dict = feature_dict.setdefault('sn_index', {}).setdefault(groups['index'], {})
+                index_dict.update({'ip': groups['ip']})
+                index_dict.update({'oce_id': int(groups['oce_id'])})
+
+                last_dict_ptr = index_dict
+                continue
+
+            # del 0, key 0x0301, id 1, ver 1, status 1, type 3, sng 0
+            m = p10.match(line)
+            if m:
+                groups = m.groupdict()
+                index_dict.update({'del': int(groups['del'])})
+                index_dict.update({'key': groups['key']})
+                index_dict.update({'id': int(groups['id'])})
+                index_dict.update({'ver': int(groups['ver'])})
+                index_dict.update({'status': int(groups['status'])})
+                index_dict.update({'type': int(groups['type'])})
+                index_dict.update({'sng': int(groups['sng'])})
+
+                last_dict_ptr = index_dict
+                continue
+
+            # APPNAV STATS: toSN 2662751642/2206742552009, fromSN 2715505607/2260448392656
+            m = p11.match(line)
+            if m:
+                groups = m.groupdict()
+                appnav_stats_dict = index_dict.setdefault('appnav_stats', {})
+                to_sn_dict = appnav_stats_dict.setdefault('to_sn', {})
+                to_sn_dict.update({
+                    'packets': int(groups['tosn_packets']),
+                    'bytes': int(groups['tosn_bytes'])
+                    })
+                from_sn_dict = appnav_stats_dict.setdefault('from_sn', {})
+                from_sn_dict.update({
+                    'packets': int(groups['frmsn_packets']),
+                    'bytes': int(groups['frmsn_bytes'])
+                    })
 
                 last_dict_ptr = index_dict
                 continue
