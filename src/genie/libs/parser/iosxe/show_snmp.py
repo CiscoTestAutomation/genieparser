@@ -86,7 +86,7 @@ class ShowSnmpMib(ShowSnmpMibSchema):
 # ==========================
 class ShowSnmpSchema(MetaParser):
 
-    ''' Schema for "show snmp mib" '''
+    ''' Schema for "show snmp" '''
 
     schema = {
         "chassis": str,
@@ -137,6 +137,8 @@ class ShowSnmpSchema(MetaParser):
 class ShowSnmp(ShowSnmpSchema):
 
     ''' Parser for "show snmp" '''
+
+    exclude = ["buffer"]
 
     cli_command = 'show snmp'
 
