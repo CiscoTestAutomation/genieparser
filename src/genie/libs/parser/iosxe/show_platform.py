@@ -2784,7 +2784,7 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
         # -----------------------------------------------------------
         # *1       Active   689c.e2ff.b9d9     3      V04     Ready
         #  2       Standby  689c.e2ff.b9d9     14             Ready
-        #  3       Member   bbcc.fc7f.fb80     15     0       V-Mismatch
+        #  3       Member   bbcc.fcff.7b00     15     0       V-Mismatch
         p3_0 = re.compile(r'^Switch#\s+Role\s+Mac\sAddress\s+Priority\s+Version\s+State$')
 
         p3_1 = re.compile(r'^\*?(?P<switch>\d+) +(?P<role>\w+) +'
@@ -6320,7 +6320,7 @@ class ShowPlatformHardwareQfpActiveFeatureAppqoe(ShowPlatformHardwareQfpActiveFe
         # syn_policer_rate: 800
         p8 = re.compile(r'^(?P<key>[\s\S]+): +(?P<value>\d+)$')
 
-        # SN Index [0 (Green)], IP: 119.0.1.250, oce_id: 1243618816
+        # SN Index [0 (Green)], IP: 10.136.1.250, oce_id: 1243618816
         p9 = re.compile(r'^SN +Index +\[(?P<index>[\s\S]+)\], +IP: +(?P<ip>[\s\S]+), +oce_id: +(?P<oce_id>[\s\S]+)$')
 
         # del 0, key 0x0301, id 1, ver 1, status 1, type 3, sng 0
@@ -6378,7 +6378,7 @@ class ShowPlatformHardwareQfpActiveFeatureAppqoe(ShowPlatformHardwareQfpActiveFe
                 last_dict_ptr = index_dict
                 continue
 
-            # SN Index [0 (Green)], IP: 119.0.1.250, oce_id: 1243618816
+            # SN Index [0 (Green)], IP: 10.136.1.250, oce_id: 1243618816
             m = p9.match(line)
             if m:
                 groups = m.groupdict()

@@ -146,7 +146,7 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
                 continue
 
             # Incoming interface: Null, RPF nbr: 0.0.0.0 
-            # Incoming interface: Ethernet1/9, RPF nbr: 41.1.1.2, internal.
+            # Incoming interface: Ethernet1/9, RPF nbr: 10.234.1.2, internal.
             p3 = re.compile(r'^\s*Incoming +interface:'
                              ' +(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+),'
                              ' +RPF +nbr: +(?P<rpf_nbr>[0-9\.]+)(, *(?P<internal>internal)\.?)?$')
