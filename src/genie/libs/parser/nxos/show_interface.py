@@ -204,6 +204,8 @@ class ShowInterface(ShowInterfaceSchema):
         # Ethernet2/2 is up
         # Ethernet1/10 is down (Link not connected)
         # Ethernet1/1 is down (DCX-No ACK in 100 PDUs)
+        # Ethernet1/2 is down (SFP validation failed)
+        # Ethernet1/4 is down (SFP not inserted)
         p1 = re.compile(r'^(?P<interface>\S+)\s*is\s*(?P<link_state>(down|up))?'
                         r'(administratively\s+(?P<admin_1>(down|up)))?\s*'
                         r'(\(Administratively\s*(?P<admin_2>(down|up))\))?'
@@ -211,6 +213,7 @@ class ShowInterface(ShowInterfaceSchema):
                         r'(,\s*line\s+protocol\s+is\s+(?P<line_protocol>\w+))?'
                         r'(,\s+autostate\s+(?P<autostate>\S+))?'
                         r'(\(Link\s+not\s+connected\))?'
+                        r'(\(SFP\s+validation\s+failed\))?'
                         r'(\(SFP\s+not\s+inserted\))?'
                         r'(\(suspended\(.*\)\))?'
                         r'(\(\S+ErrDisabled\))?'
@@ -221,10 +224,10 @@ class ShowInterface(ShowInterfaceSchema):
         # admin state is up, Dedicated Interface
         # admin state is up, Dedicated Interface, [parent interface is Ethernet2/1]
         p2 = re.compile(r'^admin +state +is'
-                            ' +(?P<admin_state>([a-zA-Z0-9\/\.]+))(?:,)?'
-                            '(?: +(?P<dedicated_intf>(Dedicated Interface)))?'
-                            '(?:, +\[parent +interface +is'
-                            ' +(?P<parent_intf>(\S+))\])?$')
+                        r' +(?P<admin_state>([a-zA-Z0-9\/\.]+))(?:,)?'
+                        r'(?: +(?P<dedicated_intf>(Dedicated Interface)))?'
+                        r'(?:, +\[parent +interface +is'
+                        r' +(?P<parent_intf>(\S+))\])?$')
 
         # Dedicated Interface
         p2_1 = re.compile(r'^Dedicated Interface$')
@@ -234,17 +237,17 @@ class ShowInterface(ShowInterfaceSchema):
 
         # Hardware: Ethernet, address: 5254.00ff.9c38 (bia 5254.00ff.9c38)
         p3 = re.compile(r'^Hardware: *(?P<types>[a-zA-Z0-9\/\s]+),'
-                        ' *address: *(?P<mac_address>[a-z0-9\.]+)'
-                        ' *\(bia *(?P<phys_address>[a-z0-9\.]+)\)$')
+                        r' *address: *(?P<mac_address>[a-z0-9\.]+)'
+                        r' *\(bia *(?P<phys_address>[a-z0-9\.]+)\)$')
 
         #Description: desc
         p4 = re.compile(r'^Description: *(?P<description>.*)$')
 
         #Internet Address is 10.4.4.4/24 secondary tag 10
         p5 = re.compile(r'^Internet *Address *is *(?P<ip>[0-9\.]+)'
-                            '\/(?P<prefix_length>[0-9]+)'
-                            '(?: *(?P<secondary>(secondary)))?(?: *tag'
-                            ' *(?P<route_tag>[0-9]+))?$')
+                        r'\/(?P<prefix_length>[0-9]+)'
+                        r'(?: *(?P<secondary>(secondary)))?(?: *tag'
+                        r' *(?P<route_tag>[0-9]+))?$')
 
         # MTU 1600 bytes, BW 768 Kbit, DLY 3330 usec
         # MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
@@ -256,28 +259,28 @@ class ShowInterface(ShowInterfaceSchema):
 
         # MTU 1500 bytes,  BW 40000000 Kbit,, BW 40000000 Kbit, DLY 10 usec
         p6_1 = re.compile(r'^MTU *(?P<mtu>[0-9]+) *bytes, *BW'
-                            ' *(?P<bandwidth>[0-9]+) *Kbit, *,? *BW'
-                            ' *([0-9]+) *Kbit, *DLY'
-                            ' *(?P<delay>[0-9]+) *usec$')   
+                          r' *(?P<bandwidth>[0-9]+) *Kbit, *,? *BW'
+                          r' *([0-9]+) *Kbit, *DLY'
+                          r' *(?P<delay>[0-9]+) *usec$')   
 
         # reliability 255/255, txload 1/255, rxload 1/255
         p7 = re.compile(r'^reliability *(?P<reliability>[0-9\/]+),'
-                            ' *txload *(?P<txload>[0-9\/]+),'
-                            ' *rxload *(?P<rxload>[0-9\/]+)$')   
+                        r' *txload *(?P<txload>[0-9\/]+),'
+                        r' *rxload *(?P<rxload>[0-9\/]+)$')   
 
         #Encapsulation 802.1Q Virtual LAN, Vlan ID 10, medium is broadcast
         #Encapsulation 802.1Q Virtual LAN, Vlan ID 20, medium is p2p
         #Encapsulation ARPA, medium is broadcast
         p8 = re.compile(r'^Encapsulation *(?P<encapsulation>[a-zA-Z0-9\.\s]+),'
-                            ' *medium *is *(?P<medium>[a-zA-Z]+)$')   
+                        r' *medium *is *(?P<medium>[a-zA-Z]+)$')   
 
         p8_1 = re.compile(r'^Encapsulation *(?P<encapsulation>[a-zA-Z0-9\.\s]+),'
-                            ' *Vlan *ID *(?P<first_dot1q>[0-9]+),'
-                            ' *medium *is *(?P<medium>[a-z0-9]+)$') 
+                          r' *Vlan *ID *(?P<first_dot1q>[0-9]+),'
+                          r' *medium *is *(?P<medium>[a-z0-9]+)$') 
 
         # Encapsulation ARPA, loopback not set
         p8_2 = re.compile(r'^Encapsulation *(?P<encapsulation>[a-zA-Z0-9\.\s]+),'
-                            ' *([\w\s]+)$') 
+                          r' *([\w\s]+)$') 
 
         #Port mode is routed
         p9 = re.compile(r'^Port *mode *is *(?P<port_mode>[a-z]+)$')
@@ -290,26 +293,26 @@ class ShowInterface(ShowInterfaceSchema):
         # full-duplex, 1000 Mb/s, media type is 1G
         # auto-duplex, auto-speed, media type is 10G
         p10 = re.compile(r'^(?P<duplex_mode>[a-z]+)-duplex, *(?P<port_speed>[a-z0-9\-]+)(?: '
-                            '*[G|M]b/s)?(?:, +media +type +is (?P<media_type>\w+))?$')
+                         r'*[G|M]b/s)?(?:, +media +type +is (?P<media_type>\w+))?$')
 
         #Beacon is turned off
         p11 = re.compile(r'^Beacon *is *turned *(?P<beacon>[a-z]+)$')
 
         #Auto-Negotiation is turned off
         p12 = re.compile(r'^Auto-Negotiation *is *turned'
-                            ' *(?P<auto_negotiate>(off))$')
+                         r' *(?P<auto_negotiate>(off))$')
 
         #Auto-Negotiation is turned on
         p12_1 = re.compile(r'^Auto-Negotiation *is *turned'
-                            ' *(?P<auto_negotiate>(on))$')
+                           r' *(?P<auto_negotiate>(on))$')
 
         #Input flow-control is off, output flow-control is off
         p13 = re.compile(r'^Input *flow-control *is *(?P<receive>(off)+),'
-                            ' *output *flow-control *is *(?P<send>(off)+)$')
+                         r' *output *flow-control *is *(?P<send>(off)+)$')
 
         #Input flow-control is off, output flow-control is on
         p13_1 = re.compile(r'^Input *flow-control *is *(?P<receive>(on)+),'
-                            ' *output *flow-control *is *(?P<send>(on)+)$')
+                           r' *output *flow-control *is *(?P<send>(on)+)$')
 
         #Auto-mdix is turned off
         p14 = re.compile(r'^Auto-mdix *is *turned *(?P<auto_mdix>[a-z]+)$')
@@ -323,46 +326,46 @@ class ShowInterface(ShowInterfaceSchema):
         # Members in this channel: Eth1/15, Eth1/16
         # Members in this channel: Eth1/28
         p38 = re.compile(r'^Members +in +this +channel *: *'
-                            '(?P<port_channel_member_intfs>[\w\/\.\-\,\s]+)$')
+                         r'(?P<port_channel_member_intfs>[\w\/\.\-\,\s]+)$')
 
         #EEE (efficient-ethernet) : n/a
         p17 = re.compile(r'^EEE *\(efficient-ethernet\) *:'
-                            ' *(?P<efficient_ethernet>[A-Za-z\/]+)$')
+                         r' *(?P<efficient_ethernet>[A-Za-z\/]+)$')
 
         #Last link flapped 00:07:28
         p18 = re.compile(r'^Last *link *flapped'
-                            ' *(?P<last_link_flapped>[a-z0-9\:]+)$')
+                         r' *(?P<last_link_flapped>[a-z0-9\:]+)$')
 
         # Last clearing of "show interface" counters never
         p19 = re.compile(r'^Last *clearing *of *\"show *interface\"'
-                            ' *counters *(?P<last_clear>[a-z0-9\:]+)$')
+                         r' *counters *(?P<last_clear>[a-z0-9\:]+)$')
 
         # Last clearing of "" counters 00:15:42
         p19_1 = re.compile(r'^Last *clearing *of *\" *\"'
-                            ' *counters *(?P<last_clear>[a-z0-9\:]+)$')
+                           r' *counters *(?P<last_clear>[a-z0-9\:]+)$')
 
         #1 interface resets
         p20 = re.compile(r'^(?P<interface_reset>[0-9]+) *interface'
-                            ' *resets$')
+                         r' *resets$')
 
         # 1 minute input rate 0 bits/sec, 0 packets/sec  
         p21 = re.compile(r'^(?P<load_interval>[0-9\#]+)'
-                            ' *(minute|second|minutes|seconds) *input *rate'
-                            ' *(?P<in_rate>[0-9]+) *bits/sec,'
-                            ' *(?P<in_rate_pkts>[0-9]+) *packets/sec$')
+                         r' *(minute|second|minutes|seconds) *input *rate'
+                         r' *(?P<in_rate>[0-9]+) *bits/sec,'
+                         r' *(?P<in_rate_pkts>[0-9]+) *packets/sec$')
 
         #1 minute output rate 24 bits/sec, 0 packets/sec
         p22 = re.compile(r'^(?P<load_interval>[0-9\#]+)'
-                            ' *(minute|second|minutes|seconds) *output'
-                            ' *rate *(?P<out_rate>[0-9]+)'
-                            ' *bits/sec, *(?P<out_rate_pkts>[0-9]+)'
-                            ' *packets/sec$')
+                         r' *(minute|second|minutes|seconds) *output'
+                         r' *rate *(?P<out_rate>[0-9]+)'
+                         r' *bits/sec, *(?P<out_rate_pkts>[0-9]+)'
+                         r' *packets/sec$')
 
         #input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
         p23 = re.compile(r'^input *rate *(?P<in_rate_bps>[0-9]+) *bps,'
-                            ' *(?P<in_rate_pps>[0-9]+) *pps; *output *rate'
-                            ' *(?P<out_rate_bps>[0-9]+) *bps,'
-                            ' *(?P<out_rate_pps>[0-9]+) *pps$')
+                         r' *(?P<in_rate_pps>[0-9]+) *pps; *output *rate'
+                         r' *(?P<out_rate_bps>[0-9]+) *bps,'
+                         r' *(?P<out_rate_pps>[0-9]+) *pps$')
 
         # RX
         # Rx
@@ -370,43 +373,43 @@ class ShowInterface(ShowInterfaceSchema):
 
         #0 unicast packets  0 multicast packets  0 broadcast packets
         p24 = re.compile(r'^(?P<in_unicast_pkts>[0-9]+) +unicast +packets'
-                            ' +(?P<in_multicast_pkts>[0-9]+) +multicast +packets'
-                            ' +(?P<in_broadcast_pkts>[0-9]+) +broadcast +packets$')
+                         r' +(?P<in_multicast_pkts>[0-9]+) +multicast +packets'
+                         r' +(?P<in_broadcast_pkts>[0-9]+) +broadcast +packets$')
 
         # 0 input packets  0 bytes
         # 607382344 input packets 445986207 unicast packets 132485585 multicast packets
         p25 = re.compile(r'^(?P<in_pkts>[0-9]+) +input +packets(?: '
-                          '+(?P<in_octets>[0-9]+) +bytes)?(?: +(?P<in_unicast_pkts>[0-9]+) '
-                          '+unicast +packets +(?P<in_multicast_pkts>[0-9]+) +multicast +packets)?$')
+                         r'+(?P<in_octets>[0-9]+) +bytes)?(?: +(?P<in_unicast_pkts>[0-9]+) '
+                         r'+unicast +packets +(?P<in_multicast_pkts>[0-9]+) +multicast +packets)?$')
 
         #0 jumbo packets  0 storm suppression packets
         p26 = re.compile(r'^(?P<in_jumbo_packets>[0-9]+) +jumbo +packets'
-                            ' *(?P<in_storm_suppression_packets>[0-9]+)'
-                            ' *storm *suppression *packets$')
+                         r' *(?P<in_storm_suppression_packets>[0-9]+)'
+                         r' *storm *suppression *packets$')
 
         #0 runts  0 giants  0 CRC/FCS  0 no buffer
         #0 runts  0 giants  0 CRC  0 no buffer
         p27 = re.compile(r'^(?P<in_runts>[0-9]+) *runts'
-                            ' *(?P<in_oversize_frame>[0-9]+) *giants'
-                            ' *(?P<in_crc_errors>[0-9]+) *CRC(/FCS)?'
-                            ' *(?P<in_no_buffer>[0-9]+) *no *buffer$')
+                         r' *(?P<in_oversize_frame>[0-9]+) *giants'
+                         r' *(?P<in_crc_errors>[0-9]+) *CRC(/FCS)?'
+                         r' *(?P<in_no_buffer>[0-9]+) *no *buffer$')
 
         #0 input error  0 short frame  0 overrun   0 underrun  0 ignored
         p28 = re.compile(r'^(?P<in_errors>[0-9]+) *input *error'
-                            ' *(?P<in_short_frame>[0-9]+) *short *frame'
-                            ' *(?P<in_overrun>[0-9]+) *overrun *(?P<in_underrun>[0-9]+)'
-                            ' *underrun *(?P<in_ignored>[0-9]+) *ignored$')
+                         r' *(?P<in_short_frame>[0-9]+) *short *frame'
+                         r' *(?P<in_overrun>[0-9]+) *overrun *(?P<in_underrun>[0-9]+)'
+                         r' *underrun *(?P<in_ignored>[0-9]+) *ignored$')
 
         #0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
         p29 = re.compile(r'^(?P<in_watchdog>[0-9]+) *watchdog'
-                            ' *(?P<in_bad_etype_drop>[0-9]+)'
-                            ' *bad *etype *drop *(?P<in_unknown_protos>[0-9]+)'
-                            ' *bad *proto'
-                            ' *drop *(?P<in_if_down_drop>[0-9]+) *if *down *drop$')
+                         r' *(?P<in_bad_etype_drop>[0-9]+)'
+                         r' *bad *etype *drop *(?P<in_unknown_protos>[0-9]+)'
+                         r' *bad *proto'
+                         r' *drop *(?P<in_if_down_drop>[0-9]+) *if *down *drop$')
 
         # 0 input with dribble  0 input discard
         p30 = re.compile(r'^(?P<in_with_dribble>[0-9]+) *input *with'
-                            ' *dribble *(?P<in_discard>[0-9]+) *input *discard$')
+                         r' *dribble *(?P<in_discard>[0-9]+) *input *discard$')
 
         # 0 Rx pause
         p31 = re.compile(r'^(?P<in_mac_pause_frames>[0-9]+) *Rx *pause$')
@@ -416,28 +419,28 @@ class ShowInterface(ShowInterfaceSchema):
 
         #0 unicast packets  0 multicast packets  0 broadcast packets
         p32 = re.compile(r'^(?P<out_unicast_pkts>[0-9]+) *unicast *packets'
-                            ' *(?P<out_multicast_pkts>[0-9]+) *multicast *packets'
-                            ' *(?P<out_broadcast_pkts>[0-9]+) *broadcast *packets$')
+                         r' *(?P<out_multicast_pkts>[0-9]+) *multicast *packets'
+                         r' *(?P<out_broadcast_pkts>[0-9]+) *broadcast *packets$')
 
         #0 output packets  0 bytes
         p33 = re.compile(r'^(?P<out_pkts>[0-9]+) *output *packets'
-                            ' *(?P<out_octets>[0-9]+) *bytes$')
+                         r' *(?P<out_octets>[0-9]+) *bytes$')
 
         #0 jumbo packets
         p34 = re.compile(r'^(?P<out_jumbo_packets>[0-9]+) *jumbo *packets$')
 
         #0 output error  0 collision  0 deferred  0 late collision
         p35 = re.compile(r'^(?P<out_errors>[0-9]+) *output *error'
-                            ' *(?P<out_collision>[0-9]+) *collision'
-                            ' *(?P<out_deferred>[0-9]+) *deferred'
-                            ' *(?P<out_late_collision>[0-9]+)'
-                            ' *late *collision$')
+                         r' *(?P<out_collision>[0-9]+) *collision'
+                         r' *(?P<out_deferred>[0-9]+) *deferred'
+                         r' *(?P<out_late_collision>[0-9]+)'
+                         r' *late *collision$')
 
         #0 lost carrier  0 no carrier  0 babble  0 output discard
         p36 = re.compile(r'^(?P<out_lost_carrier>[0-9]+) *lost *carrier'
-                            ' *(?P<out_no_carrier>[0-9]+) *no *carrier'
-                            ' *(?P<out_babble>[0-9]+) *babble'
-                            ' *(?P<out_discard>[0-9]+) *output *discard$')
+                         r' *(?P<out_no_carrier>[0-9]+) *no *carrier'
+                         r' *(?P<out_babble>[0-9]+) *babble'
+                         r' *(?P<out_discard>[0-9]+) *output *discard$')
 
         #0 Tx pause
         p37 = re.compile(r'^(?P<out_mac_pause_frames>[0-9]+) *Tx *pause$')
@@ -445,7 +448,7 @@ class ShowInterface(ShowInterfaceSchema):
         # Members in this channel: Eth1/15, Eth1/16
         # Members in this channel: Eth1/28
         p38 = re.compile(r'^Members +in +this +channel *: *'
-                          '(?P<port_channel_member_intfs>[\w\/\.\-\,\s]+)$')
+                         r'(?P<port_channel_member_intfs>[\w\/\.\-\,\s]+)$')
 
         # 28910552 broadcast packets 63295517997 bytes
         p39 = re.compile(r'^(?P<in_broadcast_pkts>[0-9]+) +broadcast +packets +(?P<in_octets>[0-9]+) +bytes$')
