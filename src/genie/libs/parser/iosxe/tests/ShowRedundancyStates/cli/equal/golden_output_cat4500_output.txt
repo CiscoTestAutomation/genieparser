@@ -1,0 +1,19 @@
+my state = 13 -ACTIVE
+       peer state =  8 -STANDBY HOT 
+             Mode = Duplex
+             Unit = Primary
+          Unit ID = 1
+
+  Redundancy Mode (Operational) = Stateful Switchover
+   Redundancy Mode (Configured) = Stateful Switchover
+               Redundancy State = Stateful Switchover
+                      Manual Swact = enabled
+
+   Communications = Up
+
+     client count = 85
+   client_notification_TMR = 240000 milliseconds
+            keep_alive TMR = 9000 milliseconds
+          keep_alive count = 0 
+      keep_alive threshold = 9 
+             RF debug mask = 0
