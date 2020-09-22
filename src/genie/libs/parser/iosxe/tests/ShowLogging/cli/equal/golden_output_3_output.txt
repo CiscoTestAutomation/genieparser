@@ -39,7 +39,3 @@ No active filter modules.
         Vlan200
 
 Log Buffer (32000 bytes):
-
-
-https://wwwin-pisces.cisco.com:8444/source?sourceCode=&pv=16.12.2s&pn=IOS-XE&rp=vob%2Fss.comp1%2Fsystem-infra%2Fmgmt%2Flogger%2Fsrc%2Flogger_chain.c&spv%5B2303%5D.project.name=IOS-XE&spv%5B2303%5D.name=16.12.2s&query=%22Message+Discriminator%22&metadataType%5B0%5D=&type=keyword&lang=all&numResultsPerPage=10
-https://cdetsng.cisco.com/summary/#/defect/CSCsc94202/file?fileName=Log.txt

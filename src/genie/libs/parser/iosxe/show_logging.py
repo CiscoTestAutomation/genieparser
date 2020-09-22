@@ -27,131 +27,131 @@ class ShowLoggingSchema(MetaParser):
 
 
     schema={
-    'logs': list,
-    Optional('syslog_logging'): {
-        Any(): { # enabled
-            'counters': {
-                'messages_dropped': int,
-                'messages_rate_limited': int,
-                'flushes': int,
-                'overruns': int,
-                'xml': str, # 'disabled'
-                'filtering': str, # 'disabled'
+        Optional('logs'): list,
+        Optional('syslog_logging'): {
+            Any(): { # enabled
+                'counters': {
+                    'messages_dropped': int,
+                    'messages_rate_limited': int,
+                    'flushes': int,
+                    'overruns': int,
+                    'xml': str, # 'disabled'
+                    'filtering': str, # 'disabled'
+                }
             }
-        }
-    },
-    Optional('message_discriminator'): {
-        Optional(Any()): { # 'Active'|'Inactive'
-            Optional('md_name'): {
-                Optional(Any()): { # 'C'
-                    Optional('severity_group'): {
-                        'flag': str, # 'includes'|'drops'
-                        'str': str, # '5'
-                    },
-                    Optional('facility'): {
-                        'flag': str, # 'includes'|'drops'
-                        'regexp_str': str, # 'SYS'
-                    },
-                    Optional('mnemonics'): {
-                        'flag': str, # 'include'|'drops'
-                        'regexp_str': str, # 'UPDOWN'
-                    },
-                    Optional('msg_body'): {
-                        'flag': str, # 'include'|'drops'
-                        'regexp_str': str, # link
-                    },
-                    Optional('rate_limit_not_to_exceed'): {
-                        'rate_limit': int, # 100
+        },
+        Optional('message_discriminator'): {
+            Optional(Any()): { # 'Active'|'Inactive'
+                Optional('md_name'): {
+                    Optional(Any()): { # 'C'
+                        Optional('severity_group'): {
+                            'flag': str, # 'includes'|'drops'
+                            'str': str, # '5'
+                        },
+                        Optional('facility'): {
+                            'flag': str, # 'includes'|'drops'
+                            'regexp_str': str, # 'SYS'
+                        },
+                        Optional('mnemonics'): {
+                            'flag': str, # 'include'|'drops'
+                            'regexp_str': str, # 'UPDOWN'
+                        },
+                        Optional('msg_body'): {
+                            'flag': str, # 'include'|'drops'
+                            'regexp_str': str, # link
+                        },
+                        Optional('rate_limit_not_to_exceed'): {
+                            'rate_limit': int, # 100
+                        }
                     }
                 }
             }
-        }
-    },
-    Optional('logging'): {
-        'console': {
-            'status': str, # 'enabled'|'disabled'
-            Optional('level'): str,
-            Optional('messages_logged'): int,
-            Optional('xml'): str,
-            Optional('filtering'): str,
         },
-        'monitor': {
-            Optional('status'): str, # 'enabled'|'disabled'
-            'level': str,
-            'messages_logged': int,
-            'xml': str,
-            'filtering': str,
-            Optional('discriminator'): str,
-            Optional('messages_rate_limited'): int,
-            Optional('messages_dropped_by_md'): int,
-            Optional('logging_to'): {
-                Any(): { # '10.4.29.222'
-                    Or('vty','tty'): int,
+        Optional('logging'): {
+            'console': {
+                'status': str, # 'enabled'|'disabled'
+                Optional('level'): str,
+                Optional('messages_logged'): int,
+                Optional('xml'): str,
+                Optional('filtering'): str,
+            },
+            'monitor': {
+                Optional('status'): str, # 'enabled'|'disabled'
+                'level': str,
+                'messages_logged': int,
+                'xml': str,
+                'filtering': str,
+                Optional('discriminator'): str,
+                Optional('messages_rate_limited'): int,
+                Optional('messages_dropped_by_md'): int,
+                Optional('logging_to'): {
+                    Any(): { # '10.4.29.222'
+                        Or('vty','tty'): int,
+                    }
                 }
-            }
-        },
-        'buffer': {
-            Optional('status'): str, # 'enabled'|'disabled'
-            'level': str,
-            'messages_logged': int,
-            'xml': str, # 'enabled'|'disabled'
-            Optional('xml_buffer_count'): int,
-            'filtering': str, # 'enabled'|'disabled'
-            Optional('buffer_count'): int, 
-            Optional('discriminator'): str,
-            Optional('messages_rate_limited'): int,
-            Optional('messages_dropped_by_md'): int
-        },
-        'exception': {
-            Optional('status'): str, # 'enabled'|'disabled'
-            'size_bytes': int, # 4096
-        },
-        'persistent': {
-            Optional('status'): str, # 'enabled'|'disabled'
-            Optional('url'): str,
-            Optional('disk_space_bytes'): int,
-            Optional('file_size_bytes'): int,
-            Optional('batch_size_bytes'): int,
-        },
-        Optional('file'): {
-            Optional('status'): str, # 'enabled'|'disabled'
-            Optional('file_name'): str,
-            Optional('max_size'): int,
-            Optional('min_size'): int,
-            Optional('level'): str,
-            Optional('messages_logged'): int,
-        },
-        Optional('count_and_time_stamp_logging_messages'): str, # 'enabled'|'disabled'
-        'trap': {
-            Optional('status'): str, # 'enabled'|'disabled'
-            'level': str, # 'informational'
-            'message_lines_logged': int, # 70
-            Optional('logging_to'): {
-                Any(): { # '10.4.29.222'
-                    'protocol': str, # 'tcp'|'udp'|'unknown'
-                    'port': int, # 1470
-                    'audit': str, # 'disabled'|'enabled'
-                    'link': str, # 'up'|'down'
-                    'message_lines_logged': int,
-                    'message_lines_rate_limited': int,
-                    'message_lines_dropped_by_md': int,
-                    'xml': str, # 'enabled'|'disabled'
-                    'sequence_number': str, # 'enabled'|'disabled'
-                    'filtering': str, # 'enabled'|'disabled'
-                    Optional('logging_source_interface'): {
-                        Any(): str, # 'Vlan200': <vrf>
+            },
+            'buffer': {
+                Optional('status'): str, # 'enabled'|'disabled'
+                'level': str,
+                'messages_logged': int,
+                'xml': str, # 'enabled'|'disabled'
+                Optional('xml_buffer_count'): int,
+                'filtering': str, # 'enabled'|'disabled'
+                Optional('buffer_count'): int, 
+                Optional('discriminator'): str,
+                Optional('messages_rate_limited'): int,
+                Optional('messages_dropped_by_md'): int
+            },
+            'exception': {
+                Optional('status'): str, # 'enabled'|'disabled'
+                'size_bytes': int, # 4096
+            },
+            'persistent': {
+                Optional('status'): str, # 'enabled'|'disabled'
+                Optional('url'): str,
+                Optional('disk_space_bytes'): int,
+                Optional('file_size_bytes'): int,
+                Optional('batch_size_bytes'): int,
+            },
+            Optional('file'): {
+                Optional('status'): str, # 'enabled'|'disabled'
+                Optional('file_name'): str,
+                Optional('max_size'): int,
+                Optional('min_size'): int,
+                Optional('level'): str,
+                Optional('messages_logged'): int,
+            },
+            Optional('count_and_time_stamp_logging_messages'): str, # 'enabled'|'disabled'
+            'trap': {
+                Optional('status'): str, # 'enabled'|'disabled'
+                'level': str, # 'informational'
+                'message_lines_logged': int, # 70
+                Optional('logging_to'): {
+                    Any(): { # '10.4.29.222'
+                        'protocol': str, # 'tcp'|'udp'|'unknown'
+                        'port': int, # 1470
+                        'audit': str, # 'disabled'|'enabled'
+                        'link': str, # 'up'|'down'
+                        'message_lines_logged': int,
+                        'message_lines_rate_limited': int,
+                        'message_lines_dropped_by_md': int,
+                        'xml': str, # 'enabled'|'disabled'
+                        'sequence_number': str, # 'enabled'|'disabled'
+                        'filtering': str, # 'enabled'|'disabled'
+                        Optional('logging_source_interface'): {
+                            Any(): str, # 'Vlan200': <vrf>
+                        }
                     }
                 }
             }
-        }
-    },
-    Optional('filter_modules'): {
-        Any(): { # url
-            'cli_args': str,
-            'invalid': bool, # True|False
-        }
-    },
-    Optional('log_buffer_bytes'): int, # 32000
+        },
+        Optional('filter_modules'): {
+            Any(): { # url
+                'cli_args': str,
+                'invalid': bool, # True|False
+            }
+        },
+        Optional('log_buffer_bytes'): int, # 32000
         }
 
 
@@ -189,7 +189,7 @@ class ShowLogging(ShowLoggingSchema):
         p1 = re.compile(r'Syslog +logging: +(?P<enable_disable>\S+) +\(+(?P<messages_dropped>\d+) '
                         r'+messages +dropped, +(?P<messages_rate_limited>\d+) +messages +rate-limited, '
                         r'+(?P<flushes>\d+) +flushes, +(?P<overruns>\d+) +overruns, +xml +(?P<xml>\S+), '
-                        r'filtering +(?P<filtering>\S+)$')
+                        r'filtering +(?P<filtering>\S+)\)$')
         
         #Console logging: disabled
         p2 = re.compile(r'(?P<tag>Console) +logging: +(?P<status>\S+)$')
@@ -226,7 +226,7 @@ class ShowLogging(ShowLoggingSchema):
                          r'+message +lines +logged$')
 
         #Logging to 192.168.1.3  (tcp port 1514, audit disabled,
-        p11 = re.compile(r'Logging +to (?P<logging_to>[\d\.]+) +(?P<protocol>\S+) '
+        p11 = re.compile(r'Logging +to (?P<logging_to>[\d\.]+) +\((?P<protocol>\S+) '
                         r'+port +(?P<port>\d+), +audit +(?P<audit>\S+),$')
 
         #link down),
@@ -250,13 +250,14 @@ class ShowLogging(ShowLoggingSchema):
         p17 = re.compile(r'Logging Source-Interface: +VRF +Name:$')
 
         #Vlan200
-        p18 = re.compile(r'(?P<vrf>\S+)$')
+        p18 = re.compile(r'(?P<interface>\S+)+(?P<vrf>\S+)?$')
 
         #Log Buffer (32000 bytes):
         p19 = re.compile(r'Log +Buffer +\((?P<vrf>\d+) +bytes+\):$')
                          
         ret_dict = {}
-
+        read_logs_in_list = False
+        logging_source_interface = False
         for line in out.splitlines():
 
             line = line.strip()
@@ -269,7 +270,8 @@ class ShowLogging(ShowLoggingSchema):
                 logging_entry = ret_dict.setdefault("logging", {})
                 filter_modules_entry = ret_dict.setdefault("syslog_logging", {})
                 log_buffer_bytes_entry = ret_dict.setdefault("log_buffer_bytes", {})
-                logging_source_interface = False
+                
+                
 
                 outer_logging_dict = {}
                 inner_key = group['enable_disable']
@@ -448,11 +450,15 @@ class ShowLogging(ShowLoggingSchema):
                 continue
 
             #Vlan200
+            #Vlan200                         VRF-A
             m = p18.match(line)
             if m:
                 group = m.groupdict()
                 logging_source_dict = {}
-                logging_source_dict['vrf'] = group['vrf']
+                if group['vrf']:
+                    logging_source_dict['logging_configuration'] = group['interface'] + ':' +group['vrf']
+                else:
+                    logging_source_dict['logging_configuration'] = group['interface']
 
                 logging_dict['logging_source_interface'] = logging_source_dict
                 continue
@@ -462,11 +468,15 @@ class ShowLogging(ShowLoggingSchema):
             if m:
                 group = m.groupdict()
                 ret_dict['log_buffer_bytes'] = int(group['vrf'])
-                continue
-            
-            if line:
-                log_lines.append(line)
-                ret_dict['logs'] = log_lines
+
                 continue
 
+            if line:
+                if line.lower().startswith('no active') or line.lower().startswith('no inactive'):
+                    continue
+                else:
+                    log_lines.append(line)
+                    ret_dict['logs'] = log_lines
+                    continue
+        import pdb;pdb.set_trace()
         return ret_dict
