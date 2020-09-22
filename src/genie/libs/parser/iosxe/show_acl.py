@@ -387,10 +387,8 @@ class ShowAccessLists(ShowAccessListsSchema):
             m = p_ip_acl_standard.match(line)
 
             if m:
-                #import pdb;pdb.set_trace()
                 group = m.groupdict()
                 
-                #seq = int(sorted(acl_dict.get('aces', {'0': 'dummy'}).keys())[-1]) + 10
                 seq = group['seq']
                 if seq == None:
                     seq = int(sorted(acl_dict.get('aces', {'0': 'dummy'}).keys())[-1]) + 10
@@ -678,7 +676,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                 left = left.strip()
                 if left:
                     l2_dict['ether_type'] = left
-        #import pdb;pdb.set_trace()
+                    
         return ret_dict
 
 
