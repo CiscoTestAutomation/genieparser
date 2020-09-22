@@ -1,0 +1,8 @@
+
+The Transceiver in slot 0 subslot 1 port 0 is enabled.
+  Module temperature                        = +28.750 C
+  Transceiver Tx supply voltage             = 3252.5 mVolts
+  Transceiver Tx bias current               = 6706 uAmps
+  Transceiver Tx power                      = -2.7 dBm
+  Transceiver Rx optical power              = -2.1 dBm
+    

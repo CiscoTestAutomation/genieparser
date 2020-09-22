@@ -13,6 +13,7 @@ JunOS parsers for the following show commands:
     - 'show system users'
     - 'show system storage'
     - 'show system storage no-forwarding'
+    - 'show system connections'
 """
 
 # python
@@ -4992,6 +4993,105 @@ class ShowSystemInformation(ShowSystemInformationSchema):
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace("_", "-")
                     entry[entry_key] = group_value
+                continue
+
+        return ret_dict
+
+class ShowSystemConnectionsSchema(MetaParser):
+    """ Schema for:
+            * show system connections
+    """
+    """ schema = {
+        "output": {
+            "connections-table": [
+                {
+                    "proto": str,
+                    "recv-q": str,
+                    "send-q": str,
+                    "local-address": str,
+                    "foreign-address": str,
+                    "state": str,
+                }
+            ]
+        }
+    } """
+    def validate_system_connections_list(value):
+        if not isinstance(value, list):
+            raise SchemaError('connections-table is not a list')
+        connections_schema = Schema({
+            "proto": str,
+            "recv-q": str,
+            "send-q": str,
+            "local-address": str,
+            "foreign-address": str,
+            "state": str,
+        })
+        for item in value:
+            connections_schema.validate(item)
+        return value
+
+    schema = {
+        "output": {
+            "connections-table": Use(validate_system_connections_list)
+        }
+    }
+
+
+class ShowSystemConnections(ShowSystemConnectionsSchema):
+    """ Parser for:
+            * show system connections
+    """
+    cli_command = 'show system connections'
+
+    def cli(self, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Active Internet connections (including servers)
+        p1 = re.compile(r'^Active +Internet +connections +\(including servers\) *$')
+
+        # Proto Recv-Q Send-Q  Local Address                                 Foreign Address                               (state)
+        p2 = re.compile(r'^Proto +Recv-Q +Send-Q +Local +Address +Foreign +Address +\(state\) *$')
+
+        # tcp4       0      0  1.0.0.192.22                                  1.0.0.1.56714                                 ESTABLISHED
+        p3 = re.compile(r'^(?P<proto>\S+) +(?P<recv_q>\S+) +(?P<send_q>\S+) +'
+                        r'(?P<local_address>\S+) +(?P<foreign_address>\S+) +(?P<state>.*)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Active Internet connections (including servers)
+            m = p1.match(line)
+            if m:
+                continue
+
+            # Proto Recv-Q Send-Q  Local Address
+            m = p2.match(line)
+            if m:
+                continue
+
+            # tcp4       0      0  1.0.0.192.22                                  1.0.0.1.56714                                 ESTABLISHED
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict = {}
+                connections_table_entry_list = ret_dict.setdefault('output', {}).\
+                    setdefault('connections-table', [])
+
+                entry_dict["proto"] = group["proto"]
+                entry_dict["recv-q"] = group["recv_q"]
+                entry_dict["send-q"] = group["send_q"]
+                entry_dict["local-address"] = group["local_address"]
+                entry_dict["foreign-address"] = group["foreign_address"]
+                entry_dict["state"] = group["state"]
+
+                connections_table_entry_list.append(entry_dict)
+
                 continue
 
         return ret_dict

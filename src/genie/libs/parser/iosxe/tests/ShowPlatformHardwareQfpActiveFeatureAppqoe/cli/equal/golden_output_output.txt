@@ -1,33 +1,36 @@
-
 show platform hardware qfp active feature appqoe stats all
 APPQOE Feature Statistics:
 Global:
-       ip-non-tcp-pkts: 0
-       not-enabled: 0
-       cft_handle_pkt: 0
-       sdvt_divert_req_fail: 0
-       syn_policer_rate: 800
-   SDVT Global stats:
-     AppNAV registration: 1
-     within SDVT syn policer limit: 266004
-SN Index [0 (Green)]
-   SDVT Count stats:
-     decaps: 679143
-     encaps: 743013
-     packets unmarked in ingress: 502868
-     Expired Connections: 64609
-     Idle timed-out persistent Connections: 50409
-     decaps: Processed control messages from SN: 14200
-     decaps: delete requests received total: 14200
-       decaps: delete - protocol decision: 14200
-   SDVT Packet stats:
-     Divert packets/bytes: 743013/43313261
-     Reinject packets/bytes: 679010/503129551
-   SDVT Drop Cause stats:
-   SDVT Errors stats:
+        ip-non-tcp-pkts: 0
+        not-enabled: 0
+        cft_handle_pkt:  0
+        sdvt_divert_req_fail:  139
+        sn_data_pkts_processed:  0
+SDVT Global stats:
+    AppNAV registration: 64
+    Control Decaps: Could not find flow from tuple: 2
+    within SDVT syn policer limit: 33131
+SN Index [0 (Green)], IP: 119.0.2.250, oce_id: 1092284384
+        del 0, key 0x0301, id 1, ver 1, status 1, type 3, sng 0
+        APPNAV STATS: toSN 23357718/18288051565, fromSN 21249179/18466919498
+SDVT Count stats:
+    Active Connections: 1328
+    decaps: 21222127
+    encaps: 23357729
+    Expired Connections: 28546
+    Idle timed-out persistent Connections: 1603
+    decaps: Processed control messages from SN: 26991
+    decaps: delete requests received total: 26991
+    decaps: delete - protocol decision: 26991
+SDVT Packet stats:
+    Divert packets/bytes: 23357734/17166890183
+    Reinject packets/bytes: 21221637/17063783593
+SDVT Drop Cause stats:
+SDVT Errors stats:
 SN Index [Default]
-   SDVT Count stats:
-   SDVT Packet stats:
-   SDVT Drop Cause stats:
-   SDVT Errors stats:
-        
+SDVT Count stats:
+    decaps: 27
+    packets unmarked in ingress: 139
+SDVT Packet stats:
+SDVT Drop Cause stats:
+SDVT Errors stats:
