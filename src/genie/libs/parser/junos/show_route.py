@@ -283,6 +283,7 @@ class ShowRouteSchema(MetaParser):
                         Optional("last-active"): str,
                         Optional("learned-from"): str,
                         Optional("local-preference"): str,
+                        Optional("peer-id"): str,
                         Optional("med"): str,
                         Optional("metric"): str,
                         Optional("metric2"): str,
@@ -780,6 +781,7 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
                     Optional("rt-entry-state"): str,
                     Optional("rt-ospf-area"): str,
                     Optional("rt-tag"): str,
+                    Optional("peer-id"): str,
                     Optional("task-name"): str,
                     Optional("validation-state"): str
                 })
@@ -1041,6 +1043,9 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
 
         # Cluster list:  2.2.2.2 4.4.4.4
         p36 = re.compile(r'^Cluster +list: +(?P<cluster_list>[\S\s]+)$')
+
+        # Router ID: 2.2.2.2
+        p37 = re.compile(r'^Router +ID: +(?P<peer_id>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1487,6 +1492,14 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 if rt_dict.get('rt-entry', None):
                     rt_entry_dict.update({'cluster-list': group['cluster_list']})
                 continue
+            
+            # Router ID: 2.2.2.2 
+            m = p37.match(line)
+            if m:
+                group = m.groupdict()
+                rt_entry_dict.update({'peer-id': group['peer_id']})
+                continue
+        
 
         return ret_dict
     
@@ -1949,6 +1962,7 @@ class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
+
                 rt_list = route_table_dict.setdefault('rt', [])
                 rt_dict = {'rt-destination': group['rt_destination']}
                 rt_entry_dict = rt_dict.setdefault('rt-entry', {})
@@ -3240,6 +3254,7 @@ class ShowRouteReceiveProtocolExtensiveSchema(MetaParser):
                     Optional("@junos:style"): str,
                     "rt-announced-count": str,
                     "rt-destination": str,
+                    Optional("active-tag"): str,
                     Optional("rt-entry"): {
                         Optional("as-path"): str,
                         Optional("bgp-rt-flag"): str,
@@ -3300,7 +3315,9 @@ class ShowRouteReceiveProtocolExtensive(ShowRouteReceiveProtocolExtensiveSchema)
                         r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
 
         # 0.0.0.0/0 (1 entry, 1 announced)
-        p2 = re.compile(r'^(?P<rt_destination>[0-9.]+)(\/(?P<rt_prefix_length>\d+))? +'
+        # * 100.50.1.0/24 (1 entry, 1 announced)
+        # * 2001:500::/64 (1 entry, 1 announced)
+        p2 = re.compile(r'^(?P<active_tag>\*)? *(?P<rt_destination>[\w.:]+)(\/(?P<rt_prefix_length>\d+))? +'
                         r'\((?P<format>(?P<text>\d+) +(entry|entries)), +(?P<rt_announced_count>\d+) +announced\)$')        
 
         # Accepted
@@ -3331,14 +3348,15 @@ class ShowRouteReceiveProtocolExtensive(ShowRouteReceiveProtocolExtensiveSchema)
                 continue
 
             # 0.0.0.0/0 (1 entry, 1 announced)
+            # * 100.50.1.0/24 (1 entry, 1 announced)
             m = p2.match(line)
             if m:
                 group = m.groupdict()                
                 rt_dict = route_table_dict.setdefault('rt', {})
 
-                rt_dict['rt-announced-count'] = group['rt_announced_count']
-                rt_dict['rt-destination'] = group['rt_destination']
-                rt_dict['rt-prefix-length'] = group['rt_prefix_length']
+                for k in ['active_tag', 'rt_destination', 'rt_prefix_length', 'rt_announced_count']:
+                    if group[k]:
+                        rt_dict[k.replace('_', '-')] = group[k]
 
                 rt_entry_count_dict = rt_dict.setdefault('rt-entry-count', {})
                 rt_entry_count_dict['#text'] = group['text']

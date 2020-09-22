@@ -1,0 +1,11 @@
+Router# show ethernet service instance detail
+
+Service Instance ID: 400
+Associated Interface: Ethernet1/3
+Associated EVC: 50
+CE-Vlans: 30
+State: AdminDown
+EFP Statistics:
+   Pkts In   Bytes In   Pkts Out  Bytes Out
+         0          0          0          0
+    

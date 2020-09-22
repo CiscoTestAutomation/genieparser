@@ -1,0 +1,21 @@
+RIP process "one", port 521, multicast-group FF02::9, pid 55
+	Administrative distance is 25. Maximum paths is 4
+	Updates every 30 seconds, expire after 180
+	Holddown lasts 0 seconds, garbage collect after 120
+	Split horizon is on; poison reverse is off
+	Default routes are not generated
+	Periodic updates 8883, trigger updates 2
+ Interfaces:
+	Ethernet2
+ Redistribution:
+RIP process "two", port 521, multicast-group FF02::9, pid 61
+	Administrative distance is 120. Maximum paths is 4
+	Updates every 30 seconds, expire after 180
+	Holddown lasts 0 seconds, garbage collect after 120
+	Split horizon is on; poison reverse is off
+	Default routes are not generated
+	Periodic updates 8883, trigger updates 0
+ Interfaces:
+	None
+ Redistribution:
+    

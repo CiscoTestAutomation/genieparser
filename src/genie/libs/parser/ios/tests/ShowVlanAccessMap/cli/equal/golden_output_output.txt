@@ -1,0 +1,29 @@
+
+Vlan access-map "ed"  20
+  Match clauses:
+  Action:
+    drop
+Vlan access-map "fg"  10
+  Match clauses:
+  Action:
+    forward
+Vlan access-map "takashi"  10
+  Match clauses:
+  Action:
+    drop
+Vlan access-map "mordred"  10
+  Match clauses:
+  Action:
+    forward
+Vlan access-map "karim"  10
+  Match clauses:
+  Action:
+    forward
+Vlan access-map "vlan"  10
+  Match clauses:
+  Action:
+    forward
+Vlan access-map "kari3"  10
+  Match clauses:
+  Action:
+    forward

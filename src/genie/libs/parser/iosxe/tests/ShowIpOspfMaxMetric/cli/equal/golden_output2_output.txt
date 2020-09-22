@@ -1,0 +1,10 @@
+
+show ip ospf max-metric
+Load for five secs: 3%/0%; one minute: 3%; five minutes: 1%
+Time source is NTP, *07:52:19.838 EST Tue Jun 18 2019
+OSPF Router with ID (10.4.1.1) (Process ID 1111)
+Base Topology (MTID 0)
+Start time: 00:02:24.554, Time elapsed: 00:01:04.061
+Originating router-LSAs with maximum metric, Time remaining: 00:03:55
+Condition: on startup for 300 seconds, State: active
+        

@@ -1,0 +1,5 @@
+{
+    "vrf": "blue",
+    "route": "10.0.0.0",
+    "address_family": "vpnv4"
+}
