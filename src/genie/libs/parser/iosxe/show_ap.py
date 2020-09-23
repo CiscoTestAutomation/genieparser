@@ -4,6 +4,119 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 
 
+# ====================
+# Schema for:
+#  * 'show ap summary'
+# ====================
+class ShowApSummarySchema(MetaParser):
+    """Schema for show ap summary."""
+
+    schema = {
+        "ap_neighbor_count": int,
+        "ap_name": {
+            str: {
+                "slots_count": int,
+                "ap_model": str,
+                "ethernet_mac": str,
+                "radio_mac": str,
+                "location": str,
+                "ap_ip_address": str,
+                "state": str
+            }
+        }
+    }
+
+# ====================
+# Parser for:
+#  * 'show ap summary'
+# ====================
+class ShowApSummary(ShowApSummarySchema):
+    """Parser for show ap summary"""
+
+    cli_command = 'show ap summary'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        ap_summary_dict = {}
+        # Number of APs: 149
+        #
+        # AP Name                            Slots    AP Model  Ethernet MAC    Radio MAC       Location                          Country     IP Address                                 State
+        # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        # a121-cap22                       2      9130AXI   a4b2.32ff.2db9  2c57.41ff.b979  Fab A  UK          10.6.33.106                               Registered
+        # a132-cap15                       2      9130AXI   a4b2.32ff.b3d5  2c57.41ff.f2c0  Fab A  UK          10.6.32.146                               Registered
+        # a111-cap27                       2      9130AXI   a4b2.32ff.b3ed  2c57.41ff.f380  Fab A  UK          10.6.32.118.                              Registered
+        # a112-cap11                       2      9130AXI   a4b2.32ff.b362  2c57.41ff.f720  Fab A  UK          10.6.33.160                               Registered
+        # a112-cap10                       2      9130AXI   a4b2.32ff.b5b1  2c57.41ff.d1a0  Fab A  UK          10.6.33.102                               Registered
+        # a112-cap17                       2      9130AXI   a4b2.32ff.b5c5  2c57.41ff.d240  Fab A  UK          10.6.32.203                               Registered
+        # a112-cap14                       2      9130AXI   a4b2.32ff.b5c9  2c57.41ff.d260  Fab A  UK          10.6.32.202                               Registered
+        # a122-cap09                       2      9130AXI   a4b2.32ff.b5e1  2c57.41ff.d320  Fab A  UK          10.6.33.133                               Registered
+        # a131-cap43                       2      9130AXI   a4b2.32ff.b5e5  2c57.41ff.d340  Fab A  UK          10.6.33.93                                Registered
+        # a122-cap08                       2      9130AXI   a4b2.32ff.b5e9  2c57.41ff.d360  Fab A  UK          10.6.32.166                               Registered
+
+        # Number of APs: 149
+        ap_neighbor_count_capture = re.compile(r"^Number\s+of\s+APs:\s+(?P<ap_neighbor_count>\d+)")
+        # a121-cap22                       2      9130AXI   a4b2.32ff.2db9  2c57.41ff.b979  Fab A  UK          10.6.33.106                               Registered
+        ap_neighbor_info_capture = re.compile(
+            r"^(?P<ap_name>\S+)\s+(?P<slots_count>\d+)\s+(?P<ap_model>\S+)\s+(?P<ethernet_mac>\S+)\s+(?P<radio_mac>\S+)(?P<location>.*)\s+(?P<ap_ip_address>\d+\.\d+\.\d+\.\d+)\s+(?P<state>(Registered))")
+
+        remove_lines = ('AP Name', '----')
+
+        # Remove unwanted lines from raw text
+        def filter_lines(raw_output, remove_lines):
+            # Remove empty lines
+            clean_lines = list(filter(None, raw_output.splitlines()))
+            rendered_lines = []
+            for clean_line in clean_lines:
+                clean_line_strip = clean_line.strip()
+                # Remove lines unwanted lines from list of "remove_lines"
+                if not clean_line_strip.startswith(remove_lines):
+                    rendered_lines.append(clean_line_strip)
+            return rendered_lines
+
+        out_filter = filter_lines(raw_output=out, remove_lines=remove_lines)
+
+        ap_summary_data = {}
+
+        for line in out_filter:
+            # Number of APs: 149
+            if ap_neighbor_count_capture.match(line):
+                ap_neighbor_count_match = ap_neighbor_count_capture.match(line)
+                groups = ap_neighbor_count_match.groupdict()
+                ap_neighbor_count = int(groups['ap_neighbor_count'])
+                ap_summary_dict['ap_neighbor_count'] = ap_neighbor_count
+            # a121-cap22                       2      9130AXI   a4b2.32ff.2db9  2c57.41ff.b979  Fab A  UK          10.6.33.106                               Registered
+            elif ap_neighbor_info_capture.match(line):
+                ap_neighbor_info_match = ap_neighbor_info_capture.match(line)
+                groups = ap_neighbor_info_match.groupdict()
+                # ap name is the key to place all the ap neighbor info
+                ap_name = ''
+                # Loop over all regex matches found
+                for k, v in groups.items():
+                    # If the key value is ap_name, update the outer ap_name variable with the ap_name regex match
+                    if k == 'ap_name':
+                        ap_name = v
+                    else:
+                        # ap_model can sometimes be a digit e.g., '4800'. This needs to be a string.
+                        if k != 'ap_model' and v.isdigit():
+                            v = int(v)
+                        elif str(v):
+                            # The location value can be any value as a string but need to strip the whitespace
+                            v = v.strip()
+                        if not ap_summary_dict.get("ap_name", {}):
+                            ap_summary_dict["ap_name"] = {}
+                        ap_summary_dict['ap_name'][ap_name] = {}
+                        ap_summary_data.update({k: v})
+                ap_summary_dict['ap_name'][ap_name].update(ap_summary_data)
+                ap_summary_data = {}
+                continue
+
+        return ap_summary_dict
+
+
 # ===============================
 # Schema for:
 #  * 'show ap rf-profile summary'
@@ -72,7 +185,6 @@ class ShowApRfProfileSummary(ShowApRfProfileSummarySchema):
         # RF Profile Name                  Band     Description                          State
         # ------------------------------------------------------------------------------------
 
-
         rf_profile_data = {}
 
         for line in out.splitlines():
@@ -119,17 +231,19 @@ class ShowApDot11DualBandSummarySchema(MetaParser):
 
     schema = {
         "ap_dot11_dual-band_summary": {
-            int: {
-                "ap_name": str,
-                "ap_mac_address": str,
-                "slot_id": int,
-                "admin_state": str,
-                "oper_state": str,
-                "width": int,
-                "tx_pwr": str,
-                "mode": str,
-                "subband": str,
-                "channel": str
+            "index": {
+                int: {
+                    "ap_name": str,
+                    "ap_mac_address": str,
+                    "slot_id": int,
+                    "admin_state": str,
+                    "oper_state": str,
+                    "width": int,
+                    "tx_pwr": str,
+                    "mode": str,
+                    "subband": str,
+                    "channel": str
+                }
             }
         }
     }
@@ -150,7 +264,7 @@ class ShowApDot11DualBandSummary(ShowApDot11DualBandSummarySchema):
 
         ret_dict = {}
 
-        # aa-test-4800                 64d8.14ec.1120  0     Enabled       Down           20     *1/8 (23 dBm)   Local   All        (6)*
+        # aa-test-4800                 64d8.14ff.fd0d  0     Enabled       Down           20     *1/8 (23 dBm)   Local   All        (6)*
         ap_info_capture = re.compile(
             r"^(?P<ap_name>\S+)\s+(?P<ap_mac_address>\S+)\s+(?P<slot_id>\d+)\s+(?P<admin_state>(Enabled|Disabled))\s+(?P<oper_state>\S+)\s+(?P<width>\d+)\s+(?P<tx_pwr>(N\/A|\*.*m\)))\s+(?P<mode>\S+)\s+(?P<subband>\S+)\s+(?P<channel>\S+)$")
 
@@ -159,16 +273,15 @@ class ShowApDot11DualBandSummary(ShowApDot11DualBandSummarySchema):
         for line in output.splitlines():
             line = line.strip()
 
-            # aa-test-4800                 64d8.14ec.1120  0     Enabled       Down           20     *1/8 (23 dBm)   Local   All        (6)*
+            # aa-test-4800                 64d8.14ff.fd0d  0     Enabled       Down           20     *1/8 (23 dBm)   Local   All        (6)*
             m = ap_info_capture.match(line)
             if m:
                 groups = m.groupdict()
                 ap_index += 1
 
-                ap_index_dict = ret_dict.setdefault('ap_dot11_dual-band_summary', {}).\
-                    setdefault('index', {}).setdefault(ap_index, {})
-
-                ap_index_dict.update({
+                if not ret_dict.get('ap_dot11_dual-band_summary'):
+                    ret_dict['ap_dot11_dual-band_summary'] = {"index": {}}
+                ret_dict['ap_dot11_dual-band_summary']["index"][ap_index]  = {
                     'ap_name': groups['ap_name'],
                     'ap_mac_address': groups['ap_mac_address'],
                     'slot_id': int(groups['slot_id']),
@@ -179,6 +292,6 @@ class ShowApDot11DualBandSummary(ShowApDot11DualBandSummarySchema):
                     'mode': groups['mode'],
                     'subband': groups['subband'],
                     'channel': groups['channel']
-                })
+                }
 
         return ret_dict

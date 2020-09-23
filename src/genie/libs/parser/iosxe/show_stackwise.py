@@ -8,7 +8,7 @@ from genie.metaparser.util.schemaengine import Any, Optional
 # Schema for:
 #  * 'show_stackwise_virtual_dual_active_detection'
 # =================================================
-class Show_Stackwise_Virtual_Dual_Active_DetectionSchema(MetaParser):
+class ShowStackwiseVirtualDualActiveDetectionSchema(MetaParser):
     """Schema for show_stackwise_virtual_dual_active_detection."""
 
     schema = {
@@ -28,7 +28,7 @@ class Show_Stackwise_Virtual_Dual_Active_DetectionSchema(MetaParser):
 # Parser for:
 #  * 'show_stackwise_virtual_dual_active_detection'
 # =================================================
-class Show_Stackwise_Virtual_Dual_Active_Detection(Show_Stackwise_Virtual_Dual_Active_DetectionSchema):
+class ShowStackwiseVirtualDualActiveDetection(ShowStackwiseVirtualDualActiveDetectionSchema):
     """Parser for show stackwise-virtual dual-active-detection"""
 
     cli_command = 'show stackwise-virtual dual-active-detection'

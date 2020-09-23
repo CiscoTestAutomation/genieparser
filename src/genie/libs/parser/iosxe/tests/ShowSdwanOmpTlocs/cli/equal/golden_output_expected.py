@@ -1,0 +1,130 @@
+expected_output = {
+    "tloc_data": {
+        "10.220.100.10": {
+            "tloc": {
+                "default": {
+                    "transport": "ipsec",
+                    "received_from": {
+                        "peer": "0.0.0.0",
+                        "status": ["C", "Red", "R"],
+                        "loss_reason": "not_set",
+                        "lost_to_peer": "not_set",
+                        "lost_to_path_id": "not_set",
+                        "attributes": {
+                            "attribute_type": "installed",
+                            "encap_key": "not_set",
+                            "encap_proto": 0,
+                            "encap_spi": 365,
+                            "encap_auth": ["sha1-hmac", "ah-sha1-hmac"],
+                            "encap_encrypt": "aes256",
+                            "public_ip": "::",
+                            "public_port": 0,
+                            "private_ip": "::",
+                            "private_port": 0,
+                            "bfd_status": "up",
+                            "site_id": 101,
+                            "preference": 0,
+                            "tag": "not_set",
+                            "stale": "not_set",
+                            "weight": 1,
+                            "version": 3,
+                            "gen_id": "0x80000003",
+                            "carrier": "default",
+                            "restrict": 0,
+                            "on_demand": 0,
+                            "groups": [0],
+                            "bandwidth": 0,
+                            "qos_group": "default_group",
+                            "border": "not_set",
+                            "unknown_attr_len": "not_set",
+                        },
+                    },
+                }
+            }
+        },
+        "10.220.100.20": {
+            "tloc": {
+                "default": {
+                    "transport": "ipsec",
+                    "received_from": {
+                        "peer": "10.220.100.3",
+                        "status": ["C", "I", "R"],
+                        "loss_reason": "not_set",
+                        "lost_to_peer": "not_set",
+                        "lost_to_path_id": "not_set",
+                        "attributes": {
+                            "attribute_type": "installed",
+                            "encap_key": "not_set",
+                            "encap_proto": 0,
+                            "encap_spi": 355,
+                            "encap_auth": ["sha1-hmac", "ah-sha1-hmac"],
+                            "encap_encrypt": "aes256",
+                            "public_ip": "::",
+                            "public_port": 0,
+                            "private_ip": "::",
+                            "private_port": 0,
+                            "bfd_status": "up",
+                            "site_id": 102,
+                            "preference": 0,
+                            "tag": "not_set",
+                            "stale": "not_set",
+                            "weight": 1,
+                            "version": 3,
+                            "gen_id": "0x80000011",
+                            "carrier": "default",
+                            "restrict": 0,
+                            "on_demand": 0,
+                            "groups": [0],
+                            "bandwidth": 0,
+                            "qos_group": "default_group",
+                            "border": "not_set",
+                            "unknown_attr_len": "not_set",
+                        },
+                    },
+                }
+            }
+        },
+        "10.220.100.30": {
+            "tloc": {
+                "default": {
+                    "transport": "ipsec",
+                    "received_from": {
+                        "peer": "10.220.100.3",
+                        "status": ["C", "I", "R"],
+                        "loss_reason": "not_set",
+                        "lost_to_peer": "not_set",
+                        "lost_to_path_id": "not_set",
+                        "attributes": {
+                            "attribute_type": "installed",
+                            "encap_key": "not_set",
+                            "encap_proto": 0,
+                            "encap_spi": 359,
+                            "encap_auth": ["sha1-hmac", "ah-sha1-hmac"],
+                            "encap_encrypt": "aes256",
+                            "public_ip": "::",
+                            "public_port": 0,
+                            "private_ip": "::",
+                            "private_port": 0,
+                            "bfd_status": "up",
+                            "site_id": 103,
+                            "preference": 0,
+                            "tag": "not_set",
+                            "stale": "not_set",
+                            "weight": 1,
+                            "version": 3,
+                            "gen_id": "0x80000022",
+                            "carrier": "default",
+                            "restrict": 0,
+                            "on_demand": 0,
+                            "groups": [0],
+                            "bandwidth": 0,
+                            "qos_group": "default_group",
+                            "border": "not_set",
+                            "unknown_attr_len": "not_set",
+                        },
+                    },
+                }
+            }
+        },
+    }
+}
