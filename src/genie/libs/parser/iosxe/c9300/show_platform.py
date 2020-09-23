@@ -170,7 +170,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         # Switch   FAN     Speed   State
         # ----------------------------------
         # 1        1       14240     OK
-        p1_2 = re.compile(r'^(?P<switch>\d+) +(?P<fan>\d+) +(?P<speed>\d+) +(?P<state>[\w\s]+)$')
+        p1_2 = re.compile(r'^(?P<switch>\d+)\s+(?P<fan>\d+)\s+(?P<speed>\d+)\s+(?P<state>[\w\s]+)$')
 
         # FAN PS-1 is OK
         p2 = re.compile(r'^FAN +PS\-(?P<ps>\d+) +is +(?P<state>[\w\s]+)$')
