@@ -3241,7 +3241,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
 
     golden_output_1 = {"execute.return_value":"""
         show bgp neighbor 
-        Peer: 20.0.0.3+64180 AS 30000  Local: 20.0.0.1+179 AS 1    
+        Peer: 10.145.0.3+64180 AS 30000  Local: 10.145.0.1+179 AS 1    
         Type: External    State: Established    Flags: <ImportEval Sync>
         Last State: OpenConfirm   Last Event: RecvKeepAlive
         Last Error: None
@@ -3249,7 +3249,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Options: <Preference PeerAS Refresh>
         Holdtime: 90 Preference: 170
         Number of flaps: 0
-        Peer ID: 2.2.2.2         Local ID: 1.1.1.1           Active Holdtime: 90
+        Peer ID: 10.16.2.2         Local ID: 10.4.1.1           Active Holdtime: 90
         Keepalive Interval: 30         Peer index: 0   
         BFD: disabled, down
         Local Interface: ge-0/0/1.0                       
@@ -3277,7 +3277,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Output messages: Total 10     Updates 2       Refreshes 0     Octets 315
         Output Queue[0]: 0
 
-        Peer: 30.0.0.2+55323 AS 2      Local: 30.0.0.1+179 AS 1    
+        Peer: 10.135.0.2+55323 AS 2      Local: 10.135.0.1+179 AS 1    
         Type: External    State: Established    Flags: <ImportEval Sync>
         Last State: OpenConfirm   Last Event: RecvKeepAlive
         Last Error: None
@@ -3285,7 +3285,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Options: <Preference PeerAS Refresh>
         Holdtime: 90 Preference: 170
         Number of flaps: 0
-        Peer ID: 3.3.3.3         Local ID: 1.1.1.1           Active Holdtime: 90
+        Peer ID: 10.36.3.3         Local ID: 10.4.1.1           Active Holdtime: 90
         Keepalive Interval: 30         Peer index: 0   
         BFD: disabled, down
         Local Interface: ge-0/0/2.0                       
@@ -3321,7 +3321,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Options: <Preference PeerAS Refresh>
         Holdtime: 90 Preference: 170
         Number of flaps: 0
-        Peer ID: 2.2.2.2         Local ID: 1.1.1.1           Active Holdtime: 90
+        Peer ID: 10.16.2.2         Local ID: 10.4.1.1           Active Holdtime: 90
         Keepalive Interval: 30         Peer index: 0   
         BFD: disabled, down
         Local Interface: ge-0/0/1.0                       
@@ -3357,7 +3357,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
         Options: <Preference PeerAS Refresh>
         Holdtime: 90 Preference: 170
         Number of flaps: 0
-        Peer ID: 3.3.3.3         Local ID: 1.1.1.1           Active Holdtime: 90
+        Peer ID: 10.36.3.3         Local ID: 10.4.1.1           Active Holdtime: 90
         Keepalive Interval: 30         Peer index: 0   
         BFD: disabled, down
         Local Interface: ge-0/0/2.0                       
@@ -3426,9 +3426,9 @@ class TestShowBgpNeighbor(unittest.TestCase):
                 'last-received': '6',
                 'last-sent': '1',
                 'last-state': 'OpenConfirm',
-                'local-address': '20.0.0.1+179',
+                'local-address': '10.145.0.1+179',
                 'local-as': '1',
-                'local-id': '1.1.1.1',
+                'local-id': '10.4.1.1',
                 'nlri-type-peer': 'inet-unicast',
                 'nlri-type-session': 'inet-unicast',
                 'output-messages': '10',
@@ -3437,12 +3437,12 @@ class TestShowBgpNeighbor(unittest.TestCase):
                 'output-updates': '2',
                 'peer-4byte-as-capability-advertised': '30000',
                 'peer-addpath-not-supported': True,
-                'peer-address': '20.0.0.3+64180',
+                'peer-address': '10.145.0.3+64180',
                 'peer-as': '30000',
                 'peer-end-of-rib-received': 'inet-unicast',
                 'peer-end-of-rib-sent': 'inet-unicast',
                 'peer-flags': 'ImportEval Sync',
-                'peer-id': '2.2.2.2',
+                'peer-id': '10.16.2.2',
                 'peer-no-restart': True,
                 'peer-refresh-capability': '2',
                 'peer-restart-nlri-configured': 'inet-unicast',
@@ -3488,9 +3488,9 @@ class TestShowBgpNeighbor(unittest.TestCase):
                 'last-received': '18',
                 'last-sent': '12',
                 'last-state': 'OpenConfirm',
-                'local-address': '30.0.0.1+179',
+                'local-address': '10.135.0.1+179',
                 'local-as': '1',
-                'local-id': '1.1.1.1',
+                'local-id': '10.4.1.1',
                 'nlri-type-peer': 'inet-unicast',
                 'nlri-type-session': 'inet-unicast',
                 'output-messages': '9',
@@ -3499,12 +3499,12 @@ class TestShowBgpNeighbor(unittest.TestCase):
                 'output-updates': '2',
                 'peer-4byte-as-capability-advertised': '2',
                 'peer-addpath-not-supported': True,
-                'peer-address': '30.0.0.2+55323',
+                'peer-address': '10.135.0.2+55323',
                 'peer-as': '2',
                 'peer-end-of-rib-received': 'inet-unicast',
                 'peer-end-of-rib-sent': 'inet-unicast',
                 'peer-flags': 'ImportEval Sync',
-                'peer-id': '3.3.3.3',
+                'peer-id': '10.36.3.3',
                 'peer-no-restart': True,
                 'peer-refresh-capability': '2',
                 'peer-restart-nlri-configured': 'inet-unicast',
@@ -3551,7 +3551,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     'last-state': 'OpenConfirm',
                     'local-address': '2001:20::1+62643',
                     'local-as': '1',
-                    'local-id': '1.1.1.1',
+                    'local-id': '10.4.1.1',
                     'nlri-type-peer': 'inet6-unicast',
                     'nlri-type-session': 'inet6-unicast',
                     'output-messages': '9',
@@ -3565,7 +3565,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                     'peer-end-of-rib-received': 'inet6-unicast',
                     'peer-end-of-rib-sent': 'inet6-unicast',
                     'peer-flags': 'ImportEval Sync',
-                    'peer-id': '2.2.2.2',
+                    'peer-id': '10.16.2.2',
                     'peer-no-restart': True,
                     'peer-refresh-capability': '2',
                     'peer-restart-nlri-configured': 'inet6-unicast',
@@ -3613,7 +3613,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         'last-state': 'OpenConfirm',
                         'local-address': '2001:30::1+61370',
                         'local-as': '1',
-                        'local-id': '1.1.1.1',
+                        'local-id': '10.4.1.1',
                         'nlri-type-peer': 'inet6-unicast',
                         'nlri-type-session': 'inet6-unicast',
                         'output-messages': '9',
@@ -3627,7 +3627,7 @@ class TestShowBgpNeighbor(unittest.TestCase):
                         'peer-end-of-rib-received': 'inet6-unicast',
                         'peer-end-of-rib-sent': 'inet6-unicast',
                         'peer-flags': 'ImportEval Sync',
-                        'peer-id': '3.3.3.3',
+                        'peer-id': '10.36.3.3',
                         'peer-no-restart': True,
                         'peer-refresh-capability': '2',
                         'peer-restart-nlri-configured': 'inet6-unicast',

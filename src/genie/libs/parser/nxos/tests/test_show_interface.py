@@ -1211,7 +1211,7 @@ class TestShowInterface(unittest.TestCase):
         Ethernet1/1 is down (SFP validation failed)
          Dedicated Interface
 
-          Hardware: 1000/10000 Ethernet, address: 8c60.4f87.6308 (bia 8c60.4f87.6308)
+          Hardware: 1000/10000 Ethernet, address: 8c60.4fff.ea8f (bia 8c60.4fff.ea8f)
           MTU 1500 bytes,  BW 10000000 Kbit,, BW 10000000 Kbit, DLY 10 usec
           reliability 255/255, txload 1/255, rxload 1/255
           Encapsulation ARPA, medium is broadcast
@@ -1317,12 +1317,12 @@ class TestShowInterface(unittest.TestCase):
             'interface_reset': 0,
             'last_link_flapped': 'never',
             'link_state': 'down',
-            'mac_address': '8c60.4f87.6308',
+            'mac_address': '8c60.4fff.ea8f',
             'media_type': '1G',
             'medium': 'broadcast',
             'mtu': 1500,
             'oper_status': 'down',
-            'phys_address': '8c60.4f87.6308',
+            'phys_address': '8c60.4fff.ea8f',
             'port_channel': {
                 'port_channel_member': False,
             },
