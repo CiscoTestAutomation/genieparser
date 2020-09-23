@@ -61274,6 +61274,46 @@ class TestShowRouteReceiveProtocol(unittest.TestCase):
         
     }
 
+    golden_output_3 = {'execute.return_value': '''
+        show route receive-protocol bgp 4.4.4.4 200.40.0.0 
+
+
+
+        inet.0: 850018 destinations, 850021 routes (850018 active, 0 holddown, 0 hidden)
+
+        Prefix		  Nexthop	       MED     Lclpref    AS path
+
+        * 200.40.0.0/24           4.4.4.4                      100        200000 4 5 6 I
+        
+    '''}
+
+    golden_parsed_output_3 = {
+        'route-information': {
+            'route-table': [{
+                'active-route-count': '850018', 
+                'destination-count': '850018', 
+                'hidden-route-count': '0', 
+                'holddown-route-count': '0', 
+                'rt': [{
+                    'rt-destination': '200.40.0.0/24', 
+                    'rt-entry': {
+                        'active-tag': '*', 
+                        'as-path': '4 5 6 I', 
+                        'local-preference': 
+                        '200000', 'med': '100', 
+                        'nh': {
+                            'to': '4.4.4.4'
+                            }, 
+                            'protocol-name': 'BGP'
+                            }
+                        }
+                    ], 
+                'table-name': 'inet.0', 
+                'total-route-count': 
+                '850021'}],
+        },
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteReceiveProtocol(device=self.device)
@@ -61291,6 +61331,15 @@ class TestShowRouteReceiveProtocol(unittest.TestCase):
         obj = ShowRouteReceiveProtocol(device=self.device)
         parsed_output = obj.parse(protocol='bgp', peer='2001:268:ff00::4')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowRouteReceiveProtocol(device=self.device)
+        parsed_output = obj.parse(
+            protocol='bgp', 
+            peer='4.4.4.4',
+            target='200.40.0.0')
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)        
 
 
 '''
