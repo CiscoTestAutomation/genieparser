@@ -1,5 +1,5 @@
 expected_output = {
-    "rbp_policies": {
+    "indexes": {
         1: {
             "policy_name": "default",
             "action_policy": "Permit",
@@ -32,14 +32,7 @@ expected_output = {
             "src_grp_name": "Tech",
             "dst_group_id": 6,
             "dst_group_name": "Trusted",
-            "policy_groups": {
-                1: {
-                    "policy_group": "NFS-08"
-                },
-                2: {
-                    "policy_group": "ACCESS-01"
-                }
-            },
+            "policy_groups": ["NFS-08", "ACCESS-01"],
             "action_policy": "Deny",
             "action_policy_group": "IP-00"
         },
@@ -56,14 +49,7 @@ expected_output = {
             "src_grp_name": "Technicolor",
             "dst_group_id": 9,
             "dst_group_name": "Printers",
-            "policy_groups": {
-                1: {
-                    "policy_group": "PRINTING-10"
-                },
-                2: {
-                    "policy_group": "GENERIC-14"
-                }
-            },
+            "policy_groups": ["PRINTING-10", "GENERIC-14"],
             "action_policy": "Deny",
             "action_policy_group": "IP-00"
         },
@@ -72,14 +58,7 @@ expected_output = {
             "src_grp_name": "Moon",
             "dst_group_id": 6,
             "dst_group_name": "Printers",
-            "policy_groups": {
-                1: {
-                    "policy_group": "ICMP-01"
-                },
-                2: {
-                    "policy_group": "PRINTING-10"
-                }
-            },
+            "policy_groups": ["ICMP-01", "PRINTING-10"],
             "action_policy": "Deny",
             "action_policy_group": "IP-00"
         },

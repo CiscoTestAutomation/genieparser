@@ -493,7 +493,7 @@ class ShowCtsEnvironmentDataSchema(MetaParser):
                     Optional("sec_group_name"): str
               }
           },
-          Optional("env_data_lifetime_secs"): str,
+          Optional("env_data_lifetime_secs"): int,
           Optional("last_update"): {
                 Optional("date"): str,
                 Optional("time"): str,
@@ -711,7 +711,7 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
                     cts_env_dict['cts_env']['env_data'] = env_data
                 else:
                     env_data_lifetime_secs = groups['env_data_lifetime_secs']
-                    cts_env_dict['cts_env']['env_data_lifetime_secs'] = env_data_lifetime_secs
+                    cts_env_dict['cts_env']['env_data_lifetime_secs'] = int(env_data_lifetime_secs)
                 continue
             # Last update time = 20:04:42 PDT Tue Jul 21 2020
             last_update_match = last_update_capture.match(line)
@@ -944,7 +944,7 @@ class ShowCtsRoleBasedPermissionsSchema(MetaParser):
     """Schema for show cts role-based permissions."""
 
     schema = {
-        "rbp_policies": {
+        "indexes": {
             int: {
                 Optional("policy_name"): str,
                 "action_policy": str,
@@ -954,11 +954,7 @@ class ShowCtsRoleBasedPermissionsSchema(MetaParser):
                 Optional("unknown_group"): str,
                 Optional("dst_group_id"): int,
                 Optional("dst_group_name"): str,
-                Optional("policy_groups"): {
-                    Optional(int): {
-                        Optional("policy_group"): str
-                    }
-                }
+                Optional("policy_groups"): list
             },
             "monitor_dynamic": bool,
             "monitor_configured": bool
@@ -1000,22 +996,18 @@ class ShowCtsRoleBasedPermissions(ShowCtsRoleBasedPermissionsSchema):
         monitor_configured_capture = re.compile(
             r"^RBACL\s+Monitor\s+All\s+for\s+Configured\s+Policies\s+:\s+(?P<monitor_configured>(TRUE|FALSE))")
 
-        remove_lines = ()
-
         # Remove unwanted lines from raw text
-        def filter_lines(raw_output, remove_lines):
+        def filter_lines(raw_output):
             # Remove empty lines
             clean_lines = list(filter(None, raw_output.splitlines()))
             rendered_lines = []
             for clean_line in clean_lines:
                 clean_line_strip = clean_line.strip()
                 # print(clean_line)
-                # Remove lines unwanted lines from list of "remove_lines"
-                if not clean_line_strip.startswith(remove_lines):
-                    rendered_lines.append(clean_line_strip)
+                rendered_lines.append(clean_line_strip)
             return rendered_lines
 
-        out = filter_lines(raw_output=out, remove_lines=remove_lines)
+        out = filter_lines(raw_output=out)
 
         # Index value for each policy which will increment as it matches a new policy
         policy_index = 1
@@ -1032,8 +1024,8 @@ class ShowCtsRoleBasedPermissions(ShowCtsRoleBasedPermissionsSchema):
                 groups = rb_default_match.groupdict()
                 default_group = groups['default_group']
                 policy_data = {'policy_name': default_group}
-                if not cts_rb_permissions_dict.get('rbp_policies', {}):
-                    cts_rb_permissions_dict['rbp_policies'] = {}
+                if not cts_rb_permissions_dict.get('indexes', {}):
+                    cts_rb_permissions_dict['indexes'] = {}
                 continue
             # IPv4 Role-based permissions from group 42:Untrusted to group Unknown:
             elif rb_permissions_capture.match(line):
@@ -1041,8 +1033,8 @@ class ShowCtsRoleBasedPermissions(ShowCtsRoleBasedPermissionsSchema):
                 rb_permissions_match = rb_permissions_capture.match(line)
                 groups = rb_permissions_match.groupdict()
                 policy_data = {}
-                if not cts_rb_permissions_dict.get('rbp_policies', {}):
-                    cts_rb_permissions_dict['rbp_policies'] = {}
+                if not cts_rb_permissions_dict.get('indexes', {}):
+                    cts_rb_permissions_dict['indexes'] = {}
                 for k, v in groups.items():
                     if v:
                         if v.isdigit():
@@ -1054,12 +1046,9 @@ class ShowCtsRoleBasedPermissions(ShowCtsRoleBasedPermissionsSchema):
                 policy_group_match = policy_group_capture.match(line)
                 groups = policy_group_match.groupdict()
                 policy_group = groups['policy_group']
-                if not policy_data.get('policy_groups', {}):
-                    policy_data['policy_groups'] = {}
-                if not policy_data['policy_groups'].get(policy_group_index, {}):
-                    policy_data['policy_groups'][policy_group_index] = {}
-                policy_data['policy_groups'][policy_group_index]['policy_group'] = policy_group
-                policy_group_index = policy_group_index + 1
+                if not policy_data.get('policy_groups', []):
+                    policy_data['policy_groups'] = []
+                policy_data['policy_groups'].append(policy_group)
                 continue
             #         Deny IP-00
             elif policy_action_capture.match(line):
@@ -1069,7 +1058,7 @@ class ShowCtsRoleBasedPermissions(ShowCtsRoleBasedPermissionsSchema):
                 action_policy_group = groups['action_policy_group']
                 for k, v in groups.items():
                     policy_data.update({k: v})
-                cts_rb_permissions_dict['rbp_policies'][policy_index] = policy_data
+                cts_rb_permissions_dict['indexes'][policy_index] = policy_data
                 policy_index = policy_index + 1
                 continue
             # RBACL Monitor All for Dynamic Policies : FALSE
@@ -1081,7 +1070,7 @@ class ShowCtsRoleBasedPermissions(ShowCtsRoleBasedPermissionsSchema):
                     monitor_dynamic = False
                 else:
                     monitor_dynamic = True
-                cts_rb_permissions_dict['rbp_policies']['monitor_dynamic'] = monitor_dynamic
+                cts_rb_permissions_dict['indexes']['monitor_dynamic'] = monitor_dynamic
                 continue
             # RBACL Monitor All for Configured Policies : FALSE
             elif monitor_configured_capture.match(line):
@@ -1092,7 +1081,7 @@ class ShowCtsRoleBasedPermissions(ShowCtsRoleBasedPermissionsSchema):
                     monitor_configured = False
                 else:
                     monitor_configured = True
-                cts_rb_permissions_dict['rbp_policies']['monitor_configured'] = monitor_configured
+                cts_rb_permissions_dict['indexes']['monitor_configured'] = monitor_configured
                 continue
 
         return cts_rb_permissions_dict
