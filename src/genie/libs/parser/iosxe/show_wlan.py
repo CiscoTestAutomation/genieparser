@@ -18,8 +18,8 @@ class ShowWlanSummarySchema(MetaParser):
                 int: {
                     "profile_name": str,
                     "ssid": str,
-                    "wlan_status": str,
-                    "status_security": str
+                    "status": str,
+                    "security": str
                 }
             }
         }
@@ -98,8 +98,8 @@ class ShowWlanSummary(ShowWlanSummarySchema):
                 wlan_summary_dict['wlan_summary']['wlan_id'][wlan_id] = {}
                 wlan_summary_dict['wlan_summary']['wlan_id'][wlan_id].update({'profile_name': profile_name})
                 wlan_summary_dict['wlan_summary']['wlan_id'][wlan_id].update({'ssid': ssid})
-                wlan_summary_dict['wlan_summary']['wlan_id'][wlan_id].update({'wlan_status': wlan_status})
-                wlan_summary_dict['wlan_summary']['wlan_id'][wlan_id].update({'status_security': status_security})
+                wlan_summary_dict['wlan_summary']['wlan_id'][wlan_id].update({'status': wlan_status})
+                wlan_summary_dict['wlan_summary']['wlan_id'][wlan_id].update({'security': status_security})
                 continue
 
         return wlan_summary_dict
