@@ -84,10 +84,10 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
         _capture = re.compile(r"^0040:Cga\s+authenticated\s+0080:Cert\s+authenticated\s+0100:Statically\s+assigned$")
         #     Network Layer Address                   Link Layer Address Interface  vlan  prlvl age    state     Time left
         device_info_header_capture = re.compile(
-            r"^\s+Network\s+Layer\s+Address\s+Link\s+Layer\s+Address\s+Interface\s+vlan\s+prlvl\s+age\s+state\s+Time\s+left$")
+            r"^Network\s+Layer\s+Address\s+Link\s+Layer\s+Address\s+Interface\s+vlan\s+prlvl\s+age\s+state\s+Time\s+left$")
         # L   10.22.66.10                            7081.0535.b60b     Vl230      230   0100  10194mn REACHABLE
         device_info_capture = re.compile(
-            r"^(?P<dev_code>\S+)\s+(?P<network_layer_address>\d+\.\d+\.\d+\.\d+)\s+(?P<link_layer_address>\S+)\s+(?P<interface>\S+)\s+(?P<vlan_id>\d+)\s+(?P<pref_level_code>\d+)\s+(?P<age>\S+)\s+(?P<state>\S+)$")
+            r"^(?P<dev_code>\S+)\s+(?P<network_layer_address>\S+)\s+(?P<link_layer_address>\S+)\s+(?P<interface>\S+)\s+(?P<vlan_id>\d+)\s+(?P<pref_level_code>\d+)\s+(?P<age>\S+)\s+(?P<state>\S+)$")
 
         device_index = 0
 
