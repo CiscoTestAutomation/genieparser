@@ -1,4 +1,4 @@
-{
+expected_output = {
   "client_count": 85,
   "client_notification_tmr_msec": 240000,
   "communications": "Up",

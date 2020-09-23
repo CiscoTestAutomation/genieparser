@@ -1,4 +1,4 @@
-{
+expected_output = {
   "red_sys_info": {
     "available_system_uptime": "5 years, 5 weeks, 5 days, 15 hours, 37 minutes",
     "communications": "Up",
