@@ -89,10 +89,11 @@ class Ping(PingSchema):
     cli_command = [
         'ping {addr}',
         'ping {addr} count {count}',
-        'ping {addr} ttl {ttl} count {count} wait {wait}'
+        'ping {addr} ttl {ttl} count {count} wait {wait}',
+        'ping {addr} source {source} count {count}'
     ]
 
-    def cli(self, addr, count=None, ttl=None, wait=None, output=None):
+    def cli(self, addr, count=None, ttl=None, wait=None, source=None, output=None):
 
         if not output:
             if count and ttl and wait:
@@ -101,6 +102,10 @@ class Ping(PingSchema):
                     count=count,
                     ttl=ttl,
                     wait=wait)
+            elif count and source:
+                cmd = self.cli_command[3].format(addr=addr, 
+                        source=source,
+                        count=count)
             elif count:
                 cmd = self.cli_command[1].format(addr=addr, count=count)
             else:
