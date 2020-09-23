@@ -664,12 +664,6 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
         return show_ap_dot11_5ghz_channel_dict
 
 
-import re
-
-from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
-
-
 # ===============================
 # Schema for:
 #  * 'show ap dot11 5ghz summary'
@@ -742,7 +736,8 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
             r"^---------------------------------------------------------------------------------------------------------------------------------$")
         # ab22-cap10                    5c50.1504.8be0  1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
         ap_info_capture = re.compile(
-            r"^(?P<ap_name>\S+)\s+(?P<mac_address>\S+)\s+(?P<slot>\d+)\s+(?P<admin_state>(Enabled|Disabled))\s+(?P<oper_state>\S+)\s+(?P<width>\d+)\s+(?P<tx_pwr>\*.*dBm\))\s+(?P<channel>\S+)$")
+            r"^(?P<ap_name>\S+)\s+(?P<mac_address>\S+)\s+(?P<slot>\d+)\s+(?P<admin_state>(Enabled|Disabled)) \
+                        \s+(?P<oper_state>\S+)\s+(?P<width>\d+)\s+(?P<tx_pwr>\*.*dBm\))\s+(?P<channel>\S+)$")
 
         for line in out.splitlines():
             line = line.strip()
