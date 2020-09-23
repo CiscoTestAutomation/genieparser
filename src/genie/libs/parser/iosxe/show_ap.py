@@ -307,27 +307,33 @@ class ShowApDot115GhzChannelSchema(MetaParser):
     schema = {
         "channel_assignment": {
             "chan_assn_mode": str,
-            "chan_upd_int": int,
+            "chan_upd_int": str,
             "anchor_time_hour": int,
-            "channel_noise": "Enable",
-            "channel_interference": str,
-            "channel_load": str,
-            "device_aware": str,
+            "channel_update_contribution": {
+                "channel_noise": "Enable",
+                "channel_interference": str,
+                "channel_load": str,
+                "device_aware": str,
+            },
             "clean_air": str,
             "wlc_leader_name": str,
             "wlc_leader_ip": str,
             "last_run_seconds": int,
             "dca_level": str,
             "dca_db": int,
-            "chan_width": str,
-            "max_chan_width": int,
+            "chan_width_mhz": int,
+            "max_chan_width_mhz": int,
             "dca_min_energy_dbm": float,
-            "chan_energy_min_dbm": float,
-            "chan_energy_average_dbm": float,
-            "chan_energy_max_dbm": float,
-            "chan_dwell_minimum": str,
-            "chan_dwell_average": str,
-            "chan_dwell_max": str,
+            "channel_energy_levels" : {
+                "min_dbm": float,
+                "average_dbm": float,
+                "max_dbm": float,               
+            },
+            "channel_dwell_times": {
+                "minimum": str,
+                "average": str,
+                "max": str,
+            },
             "allowed_channel_list": str,
             "unused_channel_list": str
         }
@@ -383,66 +389,66 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
 
         lead_auto_chan_assn_capture = re.compile(r"^Leader\s+Automatic\s+Channel\s+Assignment$")
         #   Channel Assignment Mode                    : AUTO
-        chan_assn_mode_capture = re.compile(r"^\s+Channel\s+Assignment\s+Mode\s+:\s+(?P<chan_assn_mode>\S+)")
+        chan_assn_mode_capture = re.compile(r"^Channel\s+Assignment\s+Mode\s+:\s+(?P<chan_assn_mode>\S+)")
         #   Channel Update Interval                    : 12 Hours
-        chan_update_int_capture = re.compile(r"^\s+Channel\s+Update\s+Interval\s+:\s+(?P<chan_upd_int>\d+)\s+Hours$")
+        chan_update_int_capture = re.compile(r"^Channel\s+Update\s+Interval\s+:\s+(?P<chan_upd_int>.*)$")
         #   Anchor time (Hour of the day)              : 7
         anchor_time_capture = re.compile(
-            r"^\s+Anchor\s+time\s+\(Hour\s+of\s+the\s+day\)\s+:\s+(?P<anchor_time_hour>\d+)$")
+            r"^Anchor\s+time\s+\(Hour\s+of\s+the\s+day\)\s+:\s+(?P<anchor_time_hour>\d+)$")
         #   Channel Update Contribution
-        chan_upd_cont_capture = re.compile(r"^\s+Channel\s+Update\s+Contribution$")
+        chan_upd_cont_capture = re.compile(r"^Channel\s+Update\s+Contribution$")
         #     Noise                                    : Enable
-        channel_noise_capture = re.compile(r"^\s+Noise\s+:\s+(?P<channel_noise>(Enable|Disable))$")
+        channel_noise_capture = re.compile(r"^Noise\s+:\s+(?P<channel_noise>(Enable|Disable))$")
         #     Interference                             : Enable
-        channel_interference_capture = re.compile(r"^\s+Interference\s+:\s+(?P<channel_interference>(Enable|Disable))$")
+        channel_interference_capture = re.compile(r"^Interference\s+:\s+(?P<channel_interference>(Enable|Disable))$")
         #     Load                                     : Disable
-        channel_load_capture = re.compile(r"^\s+Load\s+:\s+(?P<channel_load>(Enable|Disable))$")
+        channel_load_capture = re.compile(r"^Load\s+:\s+(?P<channel_load>(Enable|Disable))$")
         #     Device Aware                             : Disable
-        device_aware_capture = re.compile(r"^\s+Device\s+Aware\s+:\s+(?P<device_aware>(Enable|Disable))$")
+        device_aware_capture = re.compile(r"^Device\s+Aware\s+:\s+(?P<device_aware>(Enable|Disable))$")
         #   CleanAir Event-driven RRM option           : Disabled
         clean_air_capture = re.compile(
-            r"^\s+CleanAir\s+Event-driven\s+RRM\s+option\s+:\s+(?P<clean_air>(Enabled|Disabled))$")
+            r"^CleanAir\s+Event-driven\s+RRM\s+option\s+:\s+(?P<clean_air>(Enabled|Disabled))$")
         #   Channel Assignment Leader                  : sj-00a-ewlc1 (10.7.5.133)
         chan_assn_leader_capture = re.compile(
-            r"^\s+Channel\s+Assignment\s+Leader\s+:\s+(?P<wlc_leader_name>\S+)\s+(?P<wlc_leader_ip>\(\d+\.\d+\.\d+\.\d+\))$")
+            r"^Channel\s+Assignment\s+Leader\s+:\s+(?P<wlc_leader_name>\S+)\s+(?P<wlc_leader_ip>\(\d+\.\d+\.\d+\.\d+\))$")
         #   Last Run                                   : 15995 seconds ago
-        last_run_capture = re.compile(r"^\s+Last\s+Run\s+:\s+(?P<last_run_seconds>\d+)\s+seconds\s+ago$")
+        last_run_capture = re.compile(r"^Last\s+Run\s+:\s+(?P<last_run_seconds>\d+)\s+seconds\s+ago$")
         #   DCA Sensitivity Level                      : MEDIUM : 15 dB
         dca_sensitivity_capture = re.compile(
-            r"^\s+DCA\s+Sensitivity\s+Level\s+:\s+(?P<dca_level>\S+)\s+:\s+(?P<dca_db>\d+)\s+dB$")
+            r"^DCA\s+Sensitivity\s+Level\s+:\s+(?P<dca_level>\S+)\s+:\s+(?P<dca_db>\d+)\s+dB$")
         #   DCA 802.11n/ac Channel Width               : 80 MHz
-        dca_chan_width_capture = re.compile(r"^\s+DCA\s+802.11n/ac\s+Channel\s+Width\s+:\s+(?P<chan_width>.*)$")
+        dca_chan_width_capture = re.compile(r"^DCA\s+802\.11n\/ac\s+Channel\s+Width\s+:\s+(?P<chan_width>\d+)\s+MHz$")
         #   DBS Max Channel Width                      : 80 MHz
         dbs_max_chan_width_capture = re.compile(
-            r"^\s+DBS\s+Max\s+Channel\s+Width\s+:\s+(?P<max_chan_width>\d+)\s+MHz$")
+            r"^DBS\s+Max\s+Channel\s+Width\s+:\s+(?P<max_chan_width>\d+)\s+MHz$")
         #   DCA Minimum Energy Limit                   : -95 dBm
         dca_min_energy_capture = re.compile(
-            r"^\s+DCA\s+Minimum\s+Energy\s+Limit\s+:\s+(?P<dca_min_energy_dbm>\S+)\s+dBm$")
+            r"^DCA\s+Minimum\s+Energy\s+Limit\s+:\s+(?P<dca_min_energy_dbm>\S+)\s+dBm$")
         #   Channel Energy Levels
-        chan_energy_levels_capture = re.compile(r"^\s+Channel\s+Energy\s+Levels$")
+        chan_energy_levels_capture = re.compile(r"^Channel\s+Energy\s+Levels$")
         #     Minimum                                  : -94 dBm
-        chan_energy_min_capture = re.compile(r"^\s+Minimum\s+:\s+(?P<chan_energy_min_dbm>\S+)\s+dBm")
+        chan_energy_min_capture = re.compile(r"^Minimum\s+:\s+(?P<chan_energy_min_dbm>\S+)\s+dBm")
         #     Average                                  : -82 dBm
-        chan_energy_average_capture = re.compile(r"^\s+Average\s+:\s+(?P<chan_energy_average_dbm>\S+)\s+dBm")
+        chan_energy_average_capture = re.compile(r"^Average\s+:\s+(?P<chan_energy_average_dbm>\S+)\s+dBm")
         #     Maximum                                  : -81 dBm
-        chan_energy_max_capture = re.compile(r"^\s+Maximum\s+:\s+(?P<chan_energy_max_dbm>\S+)\s+dBm")
+        chan_energy_max_capture = re.compile(r"^Maximum\s+:\s+(?P<chan_energy_max_dbm>\S+)\s+dBm")
         #   Channel Dwell Times
-        chan_dwell_times_capture = re.compile(r"^\s+Channel\s+Dwell\s+Times$")
+        chan_dwell_times_capture = re.compile(r"^Channel\s+Dwell\s+Times$")
         #     Minimum                                  : 4 hours 9 minutes 54 seconds
         chan_dwell_minimum_capture = re.compile(
-            r"^\s+Minimum\s+:\s+(?P<chan_dwell_min_hours>\d+)\s+hours\s+(?P<chan_dwell_min_minutes>\d+)\s+minutes\s+(?P<chan_dwell_min_seconds>\d+)\s+seconds$")
+            r"^Minimum\s+:\s+(?P<chan_dwell_min_hours>\d+)\s+hours\s+(?P<chan_dwell_min_minutes>\d+)\s+minutes\s+(?P<chan_dwell_min_seconds>\d+)\s+seconds$")
         #     Average                                  : 4 hours 24 minutes 54 seconds
         chan_dwell_average_capture = re.compile(
-            r"^\s+Average\s+:\s+(?P<chan_dwell_average_hours>\d+)\s+hours\s+(?P<chan_dwell_average_minutes>\d+)\s+minutes\s+(?P<chan_dwell_average_second>\d+)\s+seconds$")
+            r"^Average\s+:\s+(?P<chan_dwell_average_hours>\d+)\s+hours\s+(?P<chan_dwell_average_minutes>\d+)\s+minutes\s+(?P<chan_dwell_average_second>\d+)\s+seconds$")
         #     Maximum                                  : 4 hours 26 minutes 35 seconds
         chan_dwell_max_capture = re.compile(
-            r"^\s+Maximum\s+:\s+(?P<chan_dwell_max_hours>\d+)\s+hours\s+(?P<chan_dwell_max_minutes>\d+)\s+minutes\s+(?P<chan_dwell_max_seconds>\d+)\s+seconds$")
+            r"^Maximum\s+:\s+(?P<chan_dwell_max_hours>\d+)\s+hours\s+(?P<chan_dwell_max_minutes>\d+)\s+minutes\s+(?P<chan_dwell_max_seconds>\d+)\s+seconds$")
         #   802.11a 5 GHz Auto-RF Channel List
-        channel_list_capture = re.compile(r"^\s+802.11a\s+5\s+GHz\s+Auto-RF\s+Channel\s+List$")
+        channel_list_capture = re.compile(r"^802.11a\s+5\s+GHz\s+Auto-RF\s+Channel\s+List$")
         #     Allowed Channel List                     : 36,40,44,48,52,56,60,64,100,104,108,112,116,120,124,128,132,136,140,144,149,153,157,161
-        allowed_channel_list_capture = re.compile(r"^\s+Allowed\s+Channel\s+List\s+:\s+(?P<allowed_channel_list>\S+)$")
+        allowed_channel_list_capture = re.compile(r"^Allowed\s+Channel\s+List\s+:\s+(?P<allowed_channel_list>\S+)$")
         #     Unused Channel List                      : 165
-        unused_channel_list_capture = re.compile(r"^\s+Unused\s+Channel\s+List\s+:\s+(?P<unused_channel_list>\d+)$")
+        unused_channel_list_capture = re.compile(r"^Unused\s+Channel\s+List\s+:\s+(?P<unused_channel_list>\d+)$")
 
 
         def change_data_type(value):
@@ -458,7 +464,8 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
                     pass
             return value
 
-        for line in out:
+        for line in out.splitlines():
+            line = line.strip()
             # Leader Automatic Channel Assignment
             if lead_auto_chan_assn_capture.match(line):
                 lead_auto_chan_assn_capture_match = lead_auto_chan_assn_capture.match(line)
@@ -491,20 +498,22 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
             elif chan_upd_cont_capture.match(line):
                 chan_upd_cont_capture_match = chan_upd_cont_capture.match(line)
                 groups = chan_upd_cont_capture_match.groupdict()
+                if not show_ap_dot11_5ghz_channel_dict["channel_assignment"].get("channel_update_contribution", {}):
+                    show_ap_dot11_5ghz_channel_dict["channel_assignment"].update({"channel_update_contribution" : {} })
                 continue
             #     Noise                                    : Enable
             elif channel_noise_capture.match(line):
                 channel_noise_capture_match = channel_noise_capture.match(line)
                 groups = channel_noise_capture_match.groupdict()
                 channel_noise = groups['channel_noise']
-                show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'channel_noise': channel_noise})
+                show_ap_dot11_5ghz_channel_dict['channel_assignment']["channel_update_contribution"].update({'channel_noise': channel_noise})
                 continue
             #     Interference                             : Enable
             elif channel_interference_capture.match(line):
                 channel_interference_capture_match = channel_interference_capture.match(line)
                 groups = channel_interference_capture_match.groupdict()
                 channel_interference = groups['channel_interference']
-                show_ap_dot11_5ghz_channel_dict['channel_assignment'].update(
+                show_ap_dot11_5ghz_channel_dict['channel_assignment']["channel_update_contribution"].update(
                     {'channel_interference': channel_interference})
                 continue
                 #     Load                                     : Disable
@@ -512,14 +521,14 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
                 channel_load_capture_match = channel_load_capture.match(line)
                 groups = channel_load_capture_match.groupdict()
                 channel_load = groups['channel_load']
-                show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'channel_load': channel_load})
+                show_ap_dot11_5ghz_channel_dict['channel_assignment']["channel_update_contribution"].update({'channel_load': channel_load})
                 continue
             #     Device Aware                             : Disable
             elif device_aware_capture.match(line):
                 device_aware_capture_match = device_aware_capture.match(line)
                 groups = device_aware_capture_match.groupdict()
                 device_aware = groups['device_aware']
-                show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'device_aware': device_aware})
+                show_ap_dot11_5ghz_channel_dict['channel_assignment']["channel_update_contribution"].update({'device_aware': device_aware})
                 continue
             #   CleanAir Event-driven RRM option           : Disabled
             elif clean_air_capture.match(line):
@@ -558,15 +567,15 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
             elif dca_chan_width_capture.match(line):
                 dca_chan_width_capture_match = dca_chan_width_capture.match(line)
                 groups = dca_chan_width_capture_match.groupdict()
-                chan_width = groups['chan_width']
-                show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'chan_width': chan_width})
+                chan_width = change_data_type(groups['chan_width'])
+                show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'chan_width_mhz': chan_width})
                 continue
             #   DBS Max Channel Width                      : 80 MHz
             elif dbs_max_chan_width_capture.match(line):
                 dbs_max_chan_width_capture_match = dbs_max_chan_width_capture.match(line)
                 groups = dbs_max_chan_width_capture_match.groupdict()
                 max_chan_width = change_data_type(groups['max_chan_width'])
-                show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'max_chan_width': max_chan_width})
+                show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'max_chan_width_mhz': max_chan_width})
                 continue
             #   DCA Minimum Energy Limit                   : -95 dBm
             elif dca_min_energy_capture.match(line):
@@ -579,45 +588,50 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
             elif chan_energy_levels_capture.match(line):
                 chan_energy_levels_capture_match = chan_energy_levels_capture.match(line)
                 groups = chan_energy_levels_capture_match.groupdict()
+                if not show_ap_dot11_5ghz_channel_dict["channel_assignment"].get("channel_energy_levels", {}):
+                    show_ap_dot11_5ghz_channel_dict["channel_assignment"].update({"channel_energy_levels" : {}})
                 continue
             #     Minimum                                  : -94 dBm
             elif chan_energy_min_capture.match(line):
                 chan_energy_min_capture_match = chan_energy_min_capture.match(line)
                 groups = chan_energy_min_capture_match.groupdict()
                 chan_energy_min_dbm = change_data_type(groups['chan_energy_min_dbm'])
-                show_ap_dot11_5ghz_channel_dict['channel_assignment'].update(
-                    {'chan_energy_min_dbm': chan_energy_min_dbm})
+                show_ap_dot11_5ghz_channel_dict['channel_assignment']["channel_energy_levels"].update(
+                    {'min_dbm': chan_energy_min_dbm})
                 continue
             #     Average                                  : -82 dBm
             elif chan_energy_average_capture.match(line):
                 chan_energy_average_capture_match = chan_energy_average_capture.match(line)
                 groups = chan_energy_average_capture_match.groupdict()
                 chan_energy_average_dbm = change_data_type(groups['chan_energy_average_dbm'])
-                show_ap_dot11_5ghz_channel_dict['channel_assignment'].update(
-                    {'chan_energy_average_dbm': chan_energy_average_dbm})
+                show_ap_dot11_5ghz_channel_dict['channel_assignment']["channel_energy_levels"].update(
+                    {'average_dbm': chan_energy_average_dbm})
                 continue
             #     Maximum                                  : -81 dBm
             elif chan_energy_max_capture.match(line):
                 chan_energy_max_capture_match = chan_energy_max_capture.match(line)
                 groups = chan_energy_max_capture_match.groupdict()
                 chan_energy_max_dbm = change_data_type(groups['chan_energy_max_dbm'])
-                show_ap_dot11_5ghz_channel_dict['channel_assignment'].update(
-                    {'chan_energy_max_dbm': chan_energy_max_dbm})
+                show_ap_dot11_5ghz_channel_dict['channel_assignment']["channel_energy_levels"].update(
+                    {'max_dbm': chan_energy_max_dbm})
                 continue
             #   Channel Dwell Times
             elif chan_dwell_times_capture.match(line):
                 chan_dwell_times_capture_match = chan_dwell_times_capture.match(line)
                 groups = chan_dwell_times_capture_match.groupdict()
+                if not show_ap_dot11_5ghz_channel_dict["channel_assignment"].get("channel_dwell_times", {}):
+                    show_ap_dot11_5ghz_channel_dict["channel_assignment"].update({ "channel_dwell_times" : {} })
                 continue
             #     Minimum                                  : 4 hours 9 minutes 54 seconds
             elif chan_dwell_minimum_capture.match(line):
+                print(line)
                 chan_dwell_minimum_capture_match = chan_dwell_minimum_capture.match(line)
                 groups = chan_dwell_minimum_capture_match.groupdict()
                 chan_dwell_min_hours = groups['chan_dwell_min_hours']
                 chan_dwell_min_minutes = groups['chan_dwell_min_minutes']
                 chan_dwell_min_seconds = groups['chan_dwell_min_seconds']
                 chan_dwell_minimum = chan_dwell_min_hours + ' hours ' + chan_dwell_min_minutes + ' minutes ' + chan_dwell_min_seconds + ' seconds'
-                show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'chan_dwell_minimum': chan_dwell_minimum})
+                show_ap_dot11_5ghz_channel_dict['channel_assignment']["channel_dwell_times"].update({'minimum': chan_dwell_minimum})
                 continue
             #     Average                                  : 4 hours 24 minutes 54 seconds
             elif chan_dwell_average_capture.match(line):
@@ -627,7 +641,7 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
                 chan_dwell_average_minutes = groups['chan_dwell_average_minutes']
                 chan_dwell_average_seconds = groups['chan_dwell_average_second']
                 chan_dwell_average = chan_dwell_average_hours + ' hours ' + chan_dwell_average_minutes + ' minutes ' + chan_dwell_average_seconds + ' seconds'
-                show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'chan_dwell_average': chan_dwell_average})
+                show_ap_dot11_5ghz_channel_dict['channel_assignment']["channel_dwell_times"].update({'average': chan_dwell_average})
                 continue
             #     Maximum                                  : 4 hours 26 minutes 35 seconds
             elif chan_dwell_max_capture.match(line):
@@ -637,7 +651,7 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
                 chan_dwell_max_minutes = groups['chan_dwell_max_minutes']
                 chan_dwell_max_seconds = groups['chan_dwell_max_seconds']
                 chan_dwell_max = chan_dwell_max_hours + ' hours ' + chan_dwell_max_minutes + ' minutes ' + chan_dwell_max_seconds + ' seconds'
-                show_ap_dot11_5ghz_channel_dict['channel_assignment'].update({'chan_dwell_max': chan_dwell_max})
+                show_ap_dot11_5ghz_channel_dict['channel_assignment']["channel_dwell_times"].update({'max': chan_dwell_max})
                 continue
             #   802.11a 5 GHz Auto-RF Channel List
             elif channel_list_capture.match(line):
@@ -660,5 +674,5 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
                 show_ap_dot11_5ghz_channel_dict['channel_assignment'].update(
                     {'unused_channel_list': unused_channel_list})
                 continue
-
+            
         return show_ap_dot11_5ghz_channel_dict
