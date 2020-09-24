@@ -102,7 +102,6 @@ class ShowSnmpGroupSchema(MetaParser):
                 Optional("access_list"): str
             }
         }
-
         
     }
 
@@ -145,19 +144,29 @@ class ShowSnmpGroup(ShowSnmpGroupSchema):
 
         # contextname: <no context specified>         storage-type: permanent
         p_context_none = re.compile(r"^contextname:\s+<no context specified>\s+storage-type:\s+(?P<storage>\S+)$")
+
+        # contextname: Alfa         storage-type: permanent
         p_context = re.compile(r"^contextname:\s+(?P<context>\S+)\s+storage-type:\s+(?P<storage>\S+)$")
 
         # readview : <no readview specified>          writeview: <no writeview specified>   
         p_rw_none = re.compile(r"^readview :\s+<no readview specified>\s+writeview:\s+<no writeview specified>$")
+
+        # readview : v1default                        writeview: <no writeview specified>
         p_r_wnone = re.compile(r"^readview :\s+(?P<read>\S+)\s+writeview:\s+<no writeview specified>$")
+
+        # readview : v1default                        writeview: v1default
         p_rw = re.compile(r"^readview :\s+(?P<read>\S+)\s+writeview:\s+(?P<write>\S+)$")
 
         # notifyview: <no notifyview specified>
         p_notify_none = re.compile(r"^notifyview: <no notifyview specified>$")
+
+        # notifyview: *tv.FFFF58bf.eaFF58bf.eaFFFFFF.F
         p_notify = re.compile(r"^notifyview:\s+(?P<notify>\S+)$")
 
         # row status: active	access-list: 90
         p_row = re.compile(r"^row\s+status:\s+active$")
+
+        # row status: active	access-list: 90
         p_row_ac = re.compile(r"^row\s+status:\s+active\s+access-list:\s+(?P<access>\S+)$")
 
 
