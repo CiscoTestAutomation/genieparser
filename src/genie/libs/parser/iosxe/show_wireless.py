@@ -29,11 +29,11 @@ class ShowWirelessMobilityApListSchema(MetaParser):
 class ShowWirelessMobilityApList(ShowWirelessMobilityApListSchema):
     """Parser for show wireless mobility ap-list"""
 
-    cli_command = ["show wireless mobility ap-list"]
+    cli_command = "show wireless mobility ap-list"
 
     def cli(self, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command[0])
+            output = self.device.execute(self.cli_command)
         else:
             output = output
 
