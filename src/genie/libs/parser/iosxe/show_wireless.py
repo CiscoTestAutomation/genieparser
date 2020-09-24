@@ -44,11 +44,11 @@ class ShowWirelessMobilitySummarySchema(MetaParser):
 class ShowWirelessMobilitySummary(ShowWirelessMobilitySummarySchema):
     """Parser for show wireless mobility summary"""
 
-    cli_command = ["show wireless mobility summary"]
+    cli_command = "show wireless mobility summary"
 
     def cli(self, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command[0])
+            output = self.device.execute(self.cli_command)
 
         else:
             output = output
