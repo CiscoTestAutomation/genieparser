@@ -5,6 +5,7 @@ JunOS parsers for the following show commands:
     * ping {addr} count {count} 
     * ping mpls rsvp {rsvp}
     * ping {addr} ttl {ttl} count {count} wait {wait}
+    * ping {addr} source {source} count {count}
 """
 # Python
 import re
