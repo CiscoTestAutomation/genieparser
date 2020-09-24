@@ -21,11 +21,11 @@ class ShowWlanIdClientStatsSchema(MetaParser):
 class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
     """Parser for show wlan id client stats"""
 
-    cli_command = ["show wlan id client stats"]
+    cli_command = "show wlan id client stats"
 
     def cli(self, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command[0])
+            output = self.device.execute(self.cli_command)
 
         else:
             output = output
