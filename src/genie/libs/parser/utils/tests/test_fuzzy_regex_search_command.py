@@ -349,10 +349,10 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
         self.assertEqual(_fuzzy_search_command('swp .* wx', False), [])
 
     def test_regex_escaped_arguments(self):
-        result = _fuzzy_search_command('sh bridge-domain 1.1.1.1.1', False)
+        result = _fuzzy_search_command('sh bridge-domain 10.4.1.1.1', False)
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0][0], 'show bridge-domain {bd_id}')
-        self.assertEqual(result[0][2], {'bd_id': '1.1.1.1.1'})
+        self.assertEqual(result[0][2], {'bd_id': '10.4.1.1.1'})
 
         result = _fuzzy_search_command(r'sh bridge\-domain 1\.1\.1\.1\.1', True)
         self.assertEqual(len(result), 1)
@@ -384,14 +384,14 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
                                 'switch active R0 monitor | inc Mem :|Swap:')
         
         result = _fuzzy_search_command(re.escape('vs -c "show plat internal' + 
-                    ' hal policy red group_id id id src_ip 1.1.1.1 dst_ip ' + 
+                    ' hal policy red group_id id id src_ip 10.4.1.1 dst_ip ' + 
                     'dst protocol prt"'), True)
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0][0], 'vsh_lc -c "show platform internal hal' +
                     ' policy redirdst group_id {group_id} {address_family}' +
                     ' src_ip {src_ip} dst_ip {dst_ip} protocol {protocol}"')
         self.assertEqual(result[0][2], {'group_id': 'id', 'address_family': 
-                'id', 'src_ip': '1.1.1.1', 'dst_ip': 'dst', 'protocol': 'prt'})
+                'id', 'src_ip': '10.4.1.1', 'dst_ip': 'dst', 'protocol': 'prt'})
 
     def test_ambiguous_search(self):
         with self.assertRaises(Exception):
