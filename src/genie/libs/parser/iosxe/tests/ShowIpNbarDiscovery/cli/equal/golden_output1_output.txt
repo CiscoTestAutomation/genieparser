@@ -1,0 +1,77 @@
+unknown                      3544                     15                      
+                              816340                   1122                    
+                              4000                     0                       
+                              9000                     0                       
+ ssh                          192                      189                     
+                              14401                    29074                   
+                              0                        0                       
+                              3000                     3000                    
+ dns                          627                      0                       
+                              138547                   0                       
+                              0                        0                       
+                              4000                     0                       
+ sunrpc                       32                       0                       
+                              6525                     0                       
+                              0                        0                       
+                              1000                     0                       
+ ldp                          727                      728                     
+                              55252                    55328                   
+                              0                        0                       
+                              0                        0                       
+ eigrp                        703                      702                     
+                              52022                    51948                   
+                              0                        0                       
+                              0                        0                       
+ ospf                         342                      343                     
+                              37620                    37730                   
+                              0                        0                       
+                              0                        0                       
+ netbios-ns                   94                       0                       
+                              8792                     0                       
+                              0                        0                       
+                              0                        0                       
+ dhcp                         12                       0                       
+                              4206                     0                       
+                              0                        0                       
+                              0                        0                       
+ Total                        6273                     1977                    
+                              1133705                  175202                  
+                              4000                     0                       
+                              17000                    3000                    
+
+ GigabitEthernet2 
+
+ Last clearing of "show ip nbar protocol-discovery" counters 00:00:55
+
+
+                              Input                    Output                  
+                              -----                    ------                  
+ Protocol                     Packet Count             Packet Count            
+                              Byte Count               Byte Count              
+                              5min Bit Rate (bps)      5min Bit Rate (bps)     
+                              5min Max Bit Rate (bps)  5min Max Bit Rate (bps) 
+ ---------------------------- ------------------------ ------------------------
+ unknown                      47                       0                       
+                              12720                    0                       
+                              4000                     0                       
+                              4000                     0                       
+ dns                          7                        0                       
+                              1839                     0                       
+                              0                        0                       
+                              0                        0                       
+ ldp                          12                       12                      
+                              912                      912                     
+                              0                        0                       
+                              0                        0                       
+ eigrp                        10                       10                      
+                              740                      740                     
+                              0                        0                       
+                              0                        0                       
+ ospf                         5                        5                       
+                              550                      550                     
+                              0                        0                       
+                              0                        0                       
+ Total                        81                       27                      
+                              16761                    2202                    
+                              4000                     0                       
+                              4000                     0    
