@@ -1,0 +1,7 @@
+--------------------------------------------------------------------------------
+                                Fix
+--------------------------------------------------------------------------------
+* JUNOS
+    * Modified ShowRouteReceiveProtocol
+        * Updated regex p2 to support more outputs.
+        * Added 'show route receive-protocol {protocol} {peer} {target}' in cli_command
