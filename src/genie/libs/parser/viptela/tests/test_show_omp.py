@@ -111,28 +111,28 @@ class TestShowOmpTlocPath(unittest.TestCase):
     empty_output = {'execute.return_value' : ''}
     golden_output = {'execute.return_value': '''
     show omp tloc-paths
-    tloc-paths entries 100.100.100.10 default ipsec
-    tloc-paths entries 100.100.100.20 default ipsec
-    tloc-paths entries 100.100.100.30 default ipsec
+    tloc-paths entries 10.220.100.10 default ipsec
+    tloc-paths entries 10.220.100.20 default ipsec
+    tloc-paths entries 10.220.100.30 default ipsec
     '''}
 
     golden_parsed_output = {
         'tloc_path': {
-            '100.100.100.10': {
+            '10.220.100.10': {
             'tloc': {
                 'default': {
                     'transport': 'ipsec'
                 }
             }
             },
-            '100.100.100.20': {
+            '10.220.100.20': {
             'tloc': {
                 'default': {
                     'transport': 'ipsec'
                 }
             }
             },
-            '100.100.100.30': {
+            '10.220.100.30': {
             'tloc': {
                 'default': {
                     'transport': 'ipsec'
@@ -166,10 +166,10 @@ class TestShowOmpPeers(unittest.TestCase):
     DOMAIN OVERLAY SITE
     PEER TYPE ID ID ID STATE UPTIME R/I/S
     ------------------------------------------------------------------------------------------
-    1.1.1.4 vsmart 1 1 4 up 6:13:57:28 4/0/4
-    55.55.55.5 vedge 1 1 55 up 0:01:24:29 1/0/1
-    105.105.105.6 vedge 1 1 6 up 6:13:58:46 1/0/1
-    177.177.175.170 vedge 1 1 170 up 6:13:58:47 0/0/2
+    10.4.1.4 vsmart 1 1 4 up 6:13:57:28 4/0/4
+    10.115.55.5 vedge 1 1 55 up 0:01:24:29 1/0/1
+    10.240.105.6 vedge 1 1 6 up 6:13:58:46 1/0/1
+    172.16.106.170 vedge 1 1 170 up 6:13:58:47 0/0/2
     192.168.254.100 vedge 1 1 100 up 0:09:28:48 0/0/0
     192.168.254.101 vedge 1 1 101 up 0:09:27:33 0/0/0
     192.168.254.102 vedge 1 1 102 up 0:09:29:00 0/0/0
@@ -178,7 +178,7 @@ class TestShowOmpPeers(unittest.TestCase):
 
     golden_parsed_output = {
         'peer': {
-            '1.1.1.4': {
+            '10.4.1.4': {
                 'type': 'vsmart',
                 'domain_id': 1,
                 'overlay_id': 1,
@@ -191,7 +191,7 @@ class TestShowOmpPeers(unittest.TestCase):
                     'sent': 4
                 }
             },
-            '55.55.55.5': {
+            '10.115.55.5': {
                 'type': 'vedge',
                 'domain_id': 1,
                 'overlay_id': 1,
@@ -204,7 +204,7 @@ class TestShowOmpPeers(unittest.TestCase):
                     'sent': 1
                 }
             },
-            '105.105.105.6': {
+            '10.240.105.6': {
                 'type': 'vedge',
                 'domain_id': 1,
                 'overlay_id': 1,
@@ -217,7 +217,7 @@ class TestShowOmpPeers(unittest.TestCase):
                     'sent': 1
                 }
             },
-            '177.177.175.170': {
+            '172.16.106.170': {
                 'type': 'vedge',
                 'domain_id': 1,
                 'overlay_id': 1,
@@ -305,7 +305,7 @@ class TestShowOmpTlocs(unittest.TestCase):
     empty_output = {'execute.return_value' : ''}
     golden_output = {'execute.return_value': '''
         ---------------------------------------------------
-        tloc entries for 100.100.100.10
+        tloc entries for 10.220.100.10
                         default
                         ipsec
         ---------------------------------------------------
@@ -322,9 +322,9 @@ class TestShowOmpTlocs(unittest.TestCase):
             encap-spi         365
             encap-auth        sha1-hmac,ah-sha1-hmac
             encap-encrypt     aes256
-            public-ip         12.12.12.2
+            public-ip         10.66.12.2
             public-port       12426
-            private-ip        12.12.12.2
+            private-ip        10.66.12.2
             private-port      12426
             public-ip         ::
             public-port       0
@@ -350,12 +350,12 @@ class TestShowOmpTlocs(unittest.TestCase):
             unknown-attr-len  not set
 
         ---------------------------------------------------
-        tloc entries for 100.100.100.20
+        tloc entries for 10.220.100.20
                         default
                         ipsec
         ---------------------------------------------------
                     RECEIVED FROM:                   
-        peer            100.100.100.3
+        peer            10.220.100.3
         status          C,I,R
         loss-reason     not set
         lost-to-peer    not set
@@ -367,9 +367,9 @@ class TestShowOmpTlocs(unittest.TestCase):
             encap-spi         355
             encap-auth        sha1-hmac,ah-sha1-hmac
             encap-encrypt     aes256
-            public-ip         12.12.13.2
+            public-ip         10.66.13.2
             public-port       12426
-            private-ip        12.12.13.2
+            private-ip        10.66.13.2
             private-port      12426
             public-ip         ::
             public-port       0
@@ -395,12 +395,12 @@ class TestShowOmpTlocs(unittest.TestCase):
             unknown-attr-len  not set
 
         ---------------------------------------------------
-        tloc entries for 100.100.100.30
+        tloc entries for 10.220.100.30
                         default
                         ipsec
         ---------------------------------------------------
                     RECEIVED FROM:                   
-        peer            100.100.100.3
+        peer            10.220.100.3
         status          C,I,R
         loss-reason     not set
         lost-to-peer    not set
@@ -412,9 +412,9 @@ class TestShowOmpTlocs(unittest.TestCase):
             encap-spi         359
             encap-auth        sha1-hmac,ah-sha1-hmac
             encap-encrypt     aes256
-            public-ip         11.11.11.10
+            public-ip         10.229.11.10
             public-port       12426
-            private-ip        11.11.11.10
+            private-ip        10.229.11.10
             private-port      12426
             public-ip         ::
             public-port       0
@@ -442,7 +442,7 @@ class TestShowOmpTlocs(unittest.TestCase):
      
     golden_parsed_output = {
         'tloc_data': {
-            '100.100.100.10': {
+            '10.220.100.10': {
             'tloc': {
                 'default': {
                 'transport': 'ipsec',
@@ -484,12 +484,12 @@ class TestShowOmpTlocs(unittest.TestCase):
                 }
             }
             },
-            '100.100.100.20': {
+            '10.220.100.20': {
             'tloc': {
                 'default': {
                 'transport': 'ipsec',
                 'received_from': {
-                    'peer': '100.100.100.3',
+                    'peer': '10.220.100.3',
                     'status': ['C', 'I', 'R'],
                     'loss_reason': 'not_set',
                     'lost_to_peer': 'not_set',
@@ -526,12 +526,12 @@ class TestShowOmpTlocs(unittest.TestCase):
                 }
             }
             },
-            '100.100.100.30': {
+            '10.220.100.30': {
             'tloc': {
                 'default': {
                 'transport': 'ipsec',
                 'received_from': {
-                    'peer': '100.100.100.3',
+                    'peer': '10.220.100.3',
                     'status': ['C', 'I', 'R'],
                     'loss_reason': 'not_set',
                     'lost_to_peer': 'not_set',

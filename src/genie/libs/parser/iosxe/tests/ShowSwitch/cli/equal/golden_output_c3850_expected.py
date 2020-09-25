@@ -27,7 +27,7 @@ expected_output = {
                 "hw_ver": "0",
                 "state": "v-mismatch",
                 "priority": "15",
-                "mac_address": "00cc.fc7f.fb80",
+                "mac_address": "00cc.fcff.7b00",
             },
         },
         "mac_address": "689c.e2ff.b9d9",

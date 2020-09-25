@@ -1340,7 +1340,7 @@ class TestShowChassisRoutingEngine(unittest.TestCase):
             Idle                      82 percent
             Model                          RE-S-1800x4
             Serial ID                      9009237267
-            Start time                     2020-07-16 13:36:25 JST
+            Start time                     2020-07-16 13:36:25 EST
             Uptime                         5 days, 3 hours, 24 minutes, 13 seconds
             Last reboot reason             Router rebooted after a normal shutdown.
             Load averages:                 1 minute   5 minute  15 minute
@@ -1361,7 +1361,7 @@ class TestShowChassisRoutingEngine(unittest.TestCase):
             Idle                      99 percent
             Model                          RE-S-1800x4
             Serial ID                      9009237474
-            Start time                     2020-07-16 13:36:22 JST
+            Start time                     2020-07-16 13:36:22 EST
             Uptime                         5 days, 3 hours, 23 minutes, 59 seconds
             Last reboot reason             Router rebooted after a normal shutdown.
             Load averages:                 1 minute   5 minute  15 minute
@@ -1390,7 +1390,7 @@ class TestShowChassisRoutingEngine(unittest.TestCase):
                     "serial-number": "9009237267",
                     "slot": "0",
                     "start-time": {
-                        "#text": "2020-07-16 13:36:25 JST"
+                        "#text": "2020-07-16 13:36:25 EST"
                     },
                     "temperature": {
                         "#text": "42 degrees C / 107 degrees F"
@@ -1418,7 +1418,7 @@ class TestShowChassisRoutingEngine(unittest.TestCase):
                     "serial-number": "9009237474",
                     "slot": "1",
                     "start-time": {
-                        "#text": "2020-07-16 13:36:22 JST"
+                        "#text": "2020-07-16 13:36:22 EST"
                     },
                     "temperature": {
                         "#text": "39 degrees C / 102 degrees F"

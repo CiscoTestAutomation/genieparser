@@ -251,8 +251,8 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
 
     golden_output3 = {'execute.return_value': '''
     IP Multicast Routing Table for VRF "default"
-    (12.1.1.1/32, 123.1.1.1/32), uptime: 1d22h, ip pim mrib
-    Incoming interface: Ethernet1/9, RPF nbr: 12.1.1.1, internal
+    (10.169.1.1/32, 10.76.1.1/32), uptime: 1d22h, ip pim mrib
+    Incoming interface: Ethernet1/9, RPF nbr: 10.169.1.1, internal
     Outgoing interface list: (count: 4)
         port-channel12, uptime: 01:24:28, pim
         Vlan200, uptime: 01:25:19, mrib, pim.                 
@@ -266,14 +266,14 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
                 'address_family': {
                     'ipv4': {
                         'multicast_group': {
-                            '123.1.1.1/32': {
+                            '10.76.1.1/32': {
                                 'source_address': {
-                                    '12.1.1.1/32': {
+                                    '10.169.1.1/32': {
                                         'flags': 'ip mrib pim',
                                         'incoming_interface_list': {
                                             'Ethernet1/9': {
                                                 'internal': True,
-                                                'rpf_nbr': '12.1.1.1'
+                                                'rpf_nbr': '10.169.1.1'
                                                 }
                                             },
                                         'oil_count': 4,
@@ -308,8 +308,8 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
 
     golden_output4 = {'execute.return_value': '''
     IP Multicast Routing Table for VRF "default"
-    (41.1.1.2/32, 225.1.0.1/32), uptime: 00:22:11, ip pim mrib
-    Incoming interface: Ethernet1/9, RPF nbr: 41.1.1.2,internal
+    (10.234.1.2/32, 225.1.0.1/32), uptime: 00:22:11, ip pim mrib
+    Incoming interface: Ethernet1/9, RPF nbr: 10.234.1.2,internal
     Outgoing interface list: (count: 3)
         port-channel12, uptime: 00:10:13, pim
         Vlan30, uptime: 00:21:53, mrib
@@ -327,12 +327,12 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
                     "multicast_group":{
                        "225.1.0.1/32":{
                           "source_address":{
-                             "41.1.1.2/32":{
+                             "10.234.1.2/32":{
                                 "uptime":"00:22:11",
                                 "flags":"ip mrib pim",
                                 "incoming_interface_list":{
                                    "Ethernet1/9":{
-                                      "rpf_nbr":"41.1.1.2",
+                                      "rpf_nbr":"10.234.1.2",
                                       "internal":True
                                    }
                                 },

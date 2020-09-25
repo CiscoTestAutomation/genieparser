@@ -11700,7 +11700,7 @@ class TestShowInterfacesExtensive(unittest.TestCase):
         Schedulers     : 0
         Hold-times     : Up 0 ms, Down 0 ms
         Damping        : half-life: 0 sec, max-suppress: 0 sec, reuse: 0, suppress: 0, state: unsuppressed
-        Current address: 00:50:56:8d:c7:98, Hardware address: 00:50:56:8d:c7:98
+        Current address: 00:50:56:ff:55:26, Hardware address: 00:50:56:ff:55:26
         Last flapped   : 2020-08-05 02:58:37 UTC (03:17:16 ago)
         Statistics last cleared: 2020-08-05 06:15:50 UTC (00:00:03 ago)
         Traffic statistics:
@@ -11812,7 +11812,7 @@ class TestShowInterfacesExtensive(unittest.TestCase):
             Generation: 82967, Route table: 0
             Flags: Sendbcast-pkt-to-re
             Addresses, Flags: Is-Preferred Is-Primary
-                Destination: 20.0.0/24, Local: 20.0.0.1, Broadcast: 20.0.0.255, Generation: 172354
+                Destination: 20.0.0/24, Local: 10.145.0.1, Broadcast: 10.145.0.255, Generation: 172354
             Protocol inet6, MTU: 1500
             Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 0, Curr new hold cnt: 0, NH drop cnt: 0
             Generation: 82968, Route table: 0
@@ -11821,7 +11821,7 @@ class TestShowInterfacesExtensive(unittest.TestCase):
                 Destination: 2001:20::/64, Local: 2001:20::1
             Generation: 172356
             Addresses, Flags: Is-Preferred
-                Destination: fe80::/64, Local: fe80::250:56ff:fe8d:c798
+                Destination: fe80::/64, Local: fe80::250:56ff:feff:5526
             Protocol multiservice, MTU: Unlimited, Generation: 172358
             Generation: 82969, Route table: 0
             Flags: Is-Primary
@@ -11866,8 +11866,8 @@ class TestShowInterfacesExtensive(unittest.TestCase):
                 'physical-interface-cos-hw-max-queues': '8',
                 'physical-interface-cos-use-max-queues': '8'
             },
-            'current-physical-address': '00:50:56:8d:c7:98',
-            'hardware-physical-address': '00:50:56:8d:c7:98',
+            'current-physical-address': '00:50:56:ff:55:26',
+            'hardware-physical-address': '00:50:56:ff:55:26',
             'interface-flapped': {
                 '#text': '2020-08-05 02:58:37 UTC (03:17:16 ago)'
             },
@@ -12071,7 +12071,7 @@ class TestShowInterfacesExtensive(unittest.TestCase):
                     'ifaf-is-preferred': True
                     },
                     'ifa-destination': 'fe80::/64',
-                    'ifa-local': 'fe80::250:56ff:fe8d:c798'
+                    'ifa-local': 'fe80::250:56ff:feff:5526'
                 }]
                 }, {
                 'address-family-name': 'multiservice',
