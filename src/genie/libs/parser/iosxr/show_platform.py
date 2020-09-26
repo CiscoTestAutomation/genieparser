@@ -1567,3 +1567,69 @@ class Dir(DirSchema):
         return dir_dict
 
 # vim: ft=python et sw=4
+
+
+class ShowProcessesMemorySchema(MetaParser):
+    """Schema for show processes memory
+                  show processes memory | include <WORD>
+    """
+
+    schema = {
+        'jid': {
+            Any(): {
+                'jid': int,
+                'text': int,
+                'data': int,
+                'stack': int,
+                'dynamic': int,
+                'process': str,
+            }
+        }
+    }
+
+
+class ShowProcessesMemory(ShowProcessesMemorySchema):
+    """Schema for show processes memory
+                  show processes memory | include <WORD>
+    """
+
+    cli_command = [
+        'show processes memory', 'show processes memory | include {include}'
+    ]
+
+    def cli(self, include=None, output=None):
+
+        ret_dict = {}
+        pid_index = {}
+
+        if not output:
+            if include:
+                cmd = self.cli_command[1].format(include=include)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        #  8178  45387776  4294967295  1029939200  ffc31360/ffc311a0  bgp
+        p1 = re.compile(
+            r'^(\s+)?(?P<jid>\d+)\s+(?P<text>\d+)\s+(?P<data>\d+)\s+(?P<stack>\d+)\s+(?P<dynamic>\S+)\s+(?P<process>\S+)'
+        )
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #  8178  45387776  4294967295  1029939200  ffc31360/ffc311a0  bgp
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                jid = int(group['jid'])
+                jid_dict = ret_dict.setdefault('jid', {}). \
+                    setdefault(jid, {})
+
+                jid_dict.update({
+                    k: int(v) if v.isdigit() else v
+                    for k, v in group.items() if v is not None
+                })
+
+        return ret_dict
