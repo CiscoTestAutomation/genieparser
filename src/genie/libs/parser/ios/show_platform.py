@@ -600,22 +600,6 @@ class ShowSwitchDetail(ShowSwitchDetail_iosxe):
     pass
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class ShowProcessesMemorySchema(MetaParser):
     schema = {
         'processor_pool': {
