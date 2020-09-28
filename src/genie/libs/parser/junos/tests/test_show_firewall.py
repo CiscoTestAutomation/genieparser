@@ -400,9 +400,9 @@ class TestShowFirewallLog(unittest.TestCase):
         show firewall log
         Log :
         Time      Filter    Action Interface     Protocol        Src Addr                         Dest Addr
-        10:28:22  pfe       D      ge-0/0/0.0    TCP             40.0.0.2                         40.0.0.1
-        10:15:22  pfe       D      ge-0/0/0.0    TCP             40.0.0.2                         40.0.0.1
-        10:15:19  pfe       D      ge-0/0/0.0    TCP             40.0.0.2                         40.0.0.1
+        10:28:22  pfe       D      ge-0/0/0.0    TCP             10.70.0.2                         10.70.0.1
+        10:15:22  pfe       D      ge-0/0/0.0    TCP             10.70.0.2                         10.70.0.1
+        10:15:19  pfe       D      ge-0/0/0.0    TCP             10.70.0.2                         10.70.0.1
     '''}
 
     golden_parsed_output = {
@@ -410,29 +410,29 @@ class TestShowFirewallLog(unittest.TestCase):
             "log-information": [
                 {
                     "action-name": "D",
-                    "destination-address": "40.0.0.1",
+                    "destination-address": "10.70.0.1",
                     "filter-name": "pfe",
                     "interface-name": "ge-0/0/0.0",
                     "protocol-name": "TCP",
-                    "source-address": "40.0.0.2",
+                    "source-address": "10.70.0.2",
                     "time": "10:28:22"
                 },
                 {
                     "action-name": "D",
-                    "destination-address": "40.0.0.1",
+                    "destination-address": "10.70.0.1",
                     "filter-name": "pfe",
                     "interface-name": "ge-0/0/0.0",
                     "protocol-name": "TCP",
-                    "source-address": "40.0.0.2",
+                    "source-address": "10.70.0.2",
                     "time": "10:15:22"
                 },
                 {
                     "action-name": "D",
-                    "destination-address": "40.0.0.1",
+                    "destination-address": "10.70.0.1",
                     "filter-name": "pfe",
                     "interface-name": "ge-0/0/0.0",
                     "protocol-name": "TCP",
-                    "source-address": "40.0.0.2",
+                    "source-address": "10.70.0.2",
                     "time": "10:15:19"
                 }
             ]

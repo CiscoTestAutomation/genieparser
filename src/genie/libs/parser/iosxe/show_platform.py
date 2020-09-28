@@ -5661,7 +5661,6 @@ class ShowProcessesMemorySchema(MetaParser):
 
 
 class ShowProcessesMemory(ShowProcessesMemorySchema):
-
     cli_command = [
         'show processes memory',
         'show processes memory | include {include}'

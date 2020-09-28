@@ -1755,7 +1755,7 @@ class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
         # 10.220.0.0/16           10.189.5.253         12003   120        (65151 65000) I
         # * 10.4.1.1/32              Self                                    I
         # * 10.36.3.3/32              Self                                    2 I     
-        # * 200.40.0.0/24           4.4.4.4                      100        200000 4 5 6 I   
+        # * 192.168.225.0/24           10.64.4.4                      100        200000 4 5 6 I   
         p2 = re.compile(r'^((?P<active_tag>\*) +)?(?P<rt_destination>[\d\.\:\/]+) '
                         r'+(?P<to>\S+)( +(?P<med>\d+)? +(?P<local_preference>\d+))? '
                         r'+(?P<as_path>(\(([\S\s]+\)) +\w+)|([\d\s]+?\w))$')

@@ -60459,7 +60459,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
 
                         Validation State: unverified 
 
-                        Task: BGP_3.10.64.4.4
+                        Task: BGP_10.169.64.4.4
 
                         Announcement bits (3): 0-KRT 5-BGP_RT_Background 6-Resolve tree 1 
 
@@ -60570,7 +60570,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     }
                                 ],
                                 "rt-entry-state": "Active Int Ext",
-                                "task-name": "BGP_3.10.64.4.4",
+                                "task-name": "BGP_10.169.64.4.4",
                                 "validation-state": "unverified"
                             },
                             "rt-entry-count": {
@@ -61275,7 +61275,7 @@ class TestShowRouteReceiveProtocol(unittest.TestCase):
     }
 
     golden_output_3 = {'execute.return_value': '''
-        show route receive-protocol bgp 4.4.4.4 200.40.0.0 
+        show route receive-protocol bgp 10.64.4.4 192.168.225.0 
 
 
 
@@ -61283,7 +61283,7 @@ class TestShowRouteReceiveProtocol(unittest.TestCase):
 
         Prefix		  Nexthop	       MED     Lclpref    AS path
 
-        * 200.40.0.0/24           4.4.4.4                      100        200000 4 5 6 I
+        * 192.168.225.0/24           10.64.4.4                      100        200000 4 5 6 I
         
     '''}
 
@@ -61295,14 +61295,14 @@ class TestShowRouteReceiveProtocol(unittest.TestCase):
                 'hidden-route-count': '0', 
                 'holddown-route-count': '0', 
                 'rt': [{
-                    'rt-destination': '200.40.0.0/24', 
+                    'rt-destination': '192.168.225.0/24', 
                     'rt-entry': {
                         'active-tag': '*', 
                         'as-path': '4 5 6 I', 
                         'local-preference': 
                         '200000', 'med': '100', 
                         'nh': {
-                            'to': '4.4.4.4'
+                            'to': '10.64.4.4'
                             }, 
                             'protocol-name': 'BGP'
                             }
@@ -61337,8 +61337,8 @@ class TestShowRouteReceiveProtocol(unittest.TestCase):
         obj = ShowRouteReceiveProtocol(device=self.device)
         parsed_output = obj.parse(
             protocol='bgp', 
-            peer='4.4.4.4',
-            target='200.40.0.0')
+            peer='10.64.4.4',
+            target='192.168.225.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_3)        
 
 
@@ -62679,7 +62679,7 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                             Local AS:     1 Peer AS:     2
                             Age: 4:32 
                             Validation State: unverified 
-                            Task: BGP_2.10.30.0.2
+                            Task: BGP_10.144.30.0.2
                             Announcement bits (2): 0-KRT 1-BGP_RT_Background 
                             AS path: 2 I 
                             Accepted
@@ -62732,7 +62732,7 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                         "preference2": "101",
                         "protocol-name": "BGP",
                         "rt-entry-state": "Active Ext",
-                        "task-name": "BGP_2.10.30.0.2",
+                        "task-name": "BGP_10.144.30.0.2",
                         "validation-state": "unverified"
                     },
                     "rt-entry-count": {
