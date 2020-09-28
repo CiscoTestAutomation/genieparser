@@ -470,7 +470,6 @@ class ShowLogging(ShowLoggingSchema):
                         logging_source_dict['logging_configuration'] = group['interface'] + ':' +group['vrf']
                     else:
                         logging_source_dict['logging_configuration'] = group['interface']
-                    import pdb;pdb.set_trace()
                     logging_dict['logging_source_interface'] = logging_source_dict
                     continue
 
@@ -491,5 +490,4 @@ class ShowLogging(ShowLoggingSchema):
                     no_logs_read = False
                     continue
         
-        import pdb;pdb.set_trace()
         return ret_dict

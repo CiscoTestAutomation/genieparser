@@ -1043,7 +1043,7 @@ class ShowIsisStatisticsSchema(MetaParser):
                 },
                 'upd': {
                     'max_queue_size': int,
-                    'queue_size': int,
+                    Optional('queue_size'): int,
                 },
                 'snp': {
                     'dropped': int
@@ -1161,19 +1161,19 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
 
         # Fast PSNP cache (hits/tries): 21/118
         r2 = re.compile(r'Fast\s+PSNP\s+cache\s*\(hits/tries\): '
-                         '(?P<psnp_cach_hits>\d+)/(?P<psnp_cach_tries>\d+)')
+                        r'(?P<psnp_cach_hits>\d+)/(?P<psnp_cach_tries>\d+)')
 
         # Fast CSNP cache (hits/tries): 1398/1501
         r3 = re.compile(r'Fast\s+CSNP\s+cache\s*\(hits/tries\): '
-                         '(?P<csnp_cach_hits>\d+)/(?P<csnp_cach_tries>\d+)')
+                        r'(?P<csnp_cach_hits>\d+)/(?P<csnp_cach_tries>\d+)')
 
         # Fast CSNP cache updates: 204
         r4 = re.compile(r'Fast\s+CSNP\s+cache\s+updates\s*:\s*'
-                         '(?P<csnp_cache_updates>\d+)')
+                        r'(?P<csnp_cache_updates>\d+)')
 
         # LSP checksum errors received: 0
         r5 = re.compile(r'LSP\s+checksum\s+errors\s+received\s*:\s*'
-                         '(?P<lsp_checksum_errors_received>\d+)')
+                        r'(?P<lsp_checksum_errors_received>\d+)')
 
         # LSP Dropped: 0
         r6 = re.compile(r'LSP\s+Dropped\s*:\s*(?P<lsp_dropped>\d+)')
@@ -1183,7 +1183,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
 
         # UPD Max Queue size: 3
         r8 = re.compile(r'UPD\s+Max\s+Queue\s+size\s*:\s*'
-                         '(?P<upd_max_queue_size>\d+)')
+                        r'(?P<upd_max_queue_size>\d+)')
 
         # UPD Queue size: 0
         r9 = re.compile(r'UPD\s+Queue\s+size\s*:\s*(?P<upd_queue_size>\d+)')
@@ -1196,19 +1196,19 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
 
         # Hello:          0 s,      66473 ns,         15/s
         r12 = re.compile(r'Hello\s*:\s+(?P<time_s>\d+)\s*\w+\,\s+'
-                          '(?P<time_ns>\d+)\s*\w+\,\s+(?P<rate>\d+)/\w+')
+                         r'(?P<time_ns>\d+)\s*\w+\,\s+(?P<rate>\d+)/\w+')
 
         # CSNP:           0 s,      26914 ns,          1/s
         r13 = re.compile(r'CSNP\s*:\s+(?P<time_s>\d+)\s*\w+\,\s+'
-                          '(?P<time_ns>\d+)\s*\w+\,\s+(?P<rate>\d+)/\w+')
+                         r'(?P<time_ns>\d+)\s*\w+\,\s+(?P<rate>\d+)/\w+')
 
         # PSNP:           0 s,       4113 ns,          0/s
         r14 = re.compile(r'PSNP\s*:\s+(?P<time_s>\d+)\s*\w+\,\s+'
-                          '(?P<time_ns>\d+)\s*\w+\,\s+(?P<rate>\d+)/\w+')
+                         r'(?P<time_ns>\d+)\s*\w+\,\s+(?P<rate>\d+)/\w+')
 
         # LSP:            0 s,      52706 ns,          0/s
         r15 = re.compile(r'LSP\s*:\s+(?P<time_s>\d+)\s*\w+\,\s+(?P<time_ns>'
-                          '\d+)\s*\w+\,\s+(?P<rate>\d+)/\w+')
+                         r'\d+)\s*\w+\,\s+(?P<rate>\d+)/\w+')
 
         # Level-1:
         r16 = re.compile(r'Level\-(?P<level>\d+):')
@@ -1216,7 +1216,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
         # LSPs sourced (new/refresh): 11/15
         # LSPs sourced (new/refresh): 13/11
         r17 = re.compile(r'LSPs\s+sourced\s*\(new/refresh\)\s*:\s*'
-                          '(?P<lsp_source_new>\d+)\/(?P<lsp_source_refresh>\d+)')
+                         r'(?P<lsp_source_new>\d+)\/(?P<lsp_source_refresh>\d+)')
 
         # IPv4 Unicast
         # IPv6 Unicast
@@ -1224,27 +1224,27 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
 
         # Total SPF calculations     : 23
         r19 = re.compile(r'Total\s+SPF\s+calculations\s*:\s*'
-                          '(?P<total_spf_calculation>\d+)')
+                         r'(?P<total_spf_calculation>\d+)')
 
         # Full SPF calculations      : 16
         r20 = re.compile(r'Full\s+SPF\s+calculations\s*:\s*'
-                          '(?P<full_spf_calculation>\d+)')
+                         r'(?P<full_spf_calculation>\d+)')
 
         # ISPF calculations          : 0
         r21 = re.compile(r'ISPF\s+calculations\s*:\s*'
-                          '(?P<ispf_calculation>\d+)')
+                         r'(?P<ispf_calculation>\d+)')
 
         # Next Hop Calculations      : 0
         r22 = re.compile(r'Next\s+Hop\s+Calculations\s*:\s*'
-                          '(?P<next_hop_calculation>\d+)')
+                         r'(?P<next_hop_calculation>\d+)')
 
         # Partial Route Calculations : 2
         r23 = re.compile(r'Partial\s+Route\s+Calculations\s*:\s*'
-                          '(?P<partial_route_calculation>\d+)')
+                         r'(?P<partial_route_calculation>\d+)')
 
         # Periodic SPF calculations  : 3
         r24 = re.compile(r'Periodic\s+SPF\s+calculations\s*:\s*'
-                          '(?P<periodic_spf_calculation>\d+)')
+                         r'(?P<periodic_spf_calculation>\d+)')
 
         # Interface Loopback0:
         # Interface GigabitEthernet0/0/0/1:
@@ -1253,34 +1253,34 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
         # Level-1 LSPs (sent/rcvd)  : 0/0
         # Level-2 LSPs (sent/rcvd)  : 0/0
         r26 = re.compile(r'Level\-(?P<level>\d+)\s+LSPs\s+\(sent\/rcvd\)\s*:'
-                          '\s*(?P<lsp_sent>\d+)/(?P<lsp_received>\d+)')
+                         r'\s*(?P<lsp_sent>\d+)/(?P<lsp_received>\d+)')
 
         # Level-2 CSNPs (sent/rcvd) : 0/0
         # Level-1 CSNPs (sent/rcvd) : 339/0
         r27 = re.compile(r'Level\-(?P<level>\d+)\s+CSNPs\s+\(sent\/rcvd\)\s*:'
-                          '\s*(?P<csnp_sent>\d+)/(?P<csnp_received>\d+)')
+                         r'\s*(?P<csnp_sent>\d+)/(?P<csnp_received>\d+)')
 
         # Level-1 PSNPs (sent/rcvd) : 0/0
         r28 = re.compile(r'Level\-(?P<level>\d+)\s+PSNPs\s+\(sent/rcvd\)\s*:'
-                          '\s*(?P<psnp_sent>\d+)\/(?P<psnp_received>\d+)')
+                         r'\s*(?P<psnp_sent>\d+)\/(?P<psnp_received>\d+)')
 
         # Level-1 LSP Flooding Duplicates     : 51
         r29 = re.compile(r'Level-(?P<level>\d+)\s+LSP\s+Flooding\s+Duplicates'
-                          '\s*:\s*(?P<lsp_flooding_duplicates>\d+)')
+                         r'\s*:\s*(?P<lsp_flooding_duplicates>\d+)')
 
         # Level-1 LSPs Arrival Time Throttled : 0
         # Level-2 LSPs Arrival Time Throttled : 0
         r30 = re.compile(r'Level-(?P<level>\d+)\s+LSPs\s+Arrival\s+Time\s+'
-                          'Throttled\s*:\s*(?P<lsp_arrival_time_throttled>\d+)')
+                         r'Throttled\s*:\s*(?P<lsp_arrival_time_throttled>\d+)')
 
         # Level-1 Hellos (sent/rcvd): 594/593
         r31 = re.compile(r'Level-(?P<level>\d+)\s+Hellos\s+\(sent/rcvd\)\s*:'
-                          '\s*(?P<hello_sent>\d+)/(?P<hello_received>\d+)')
+                         r'\s*(?P<hello_sent>\d+)/(?P<hello_received>\d+)')
 
         # Level-1 DR Elections      : 3
         # Level-2 DR Elections      : 3
         r32 = re.compile(r'Level-(?P<level>\d+)\s+DR\s+Elections\s*:'
-                          '\s*(?P<dr_elections>\d+)')
+                         r'\s*(?P<dr_elections>\d+)')
 
         parsed_dict = {}
         vrf = 'default'

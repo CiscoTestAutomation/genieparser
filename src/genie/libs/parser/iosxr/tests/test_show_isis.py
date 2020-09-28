@@ -1890,9 +1890,6 @@ class TestShowIsisStatistics(unittest.TestCase):
             }
         }
     }
-
-
-
     golden_output_1 = {'execute.return_value': '''
         IS-IS test statistics:
             Fast PSNP cache (hits/tries): 21/118
@@ -2018,6 +2015,206 @@ class TestShowIsisStatistics(unittest.TestCase):
             Level-2 LSPs Arrival Time Throttled : 0
     '''}
 
+    parsed_output_2 = {
+        'isis': {
+            'COEUR': {
+                'csnp_cache': {
+                    'hits': 0,
+                    'tries': 49,
+                    'updates': 66,
+                },
+                'interface': {
+                    'Bundle-Ether10': {
+                        'level': {
+                            1: {
+                                'csnp': {
+                                    'received': 24,
+                                    'sent': 24,
+                                },
+                                'lsps_sourced': {
+                                    'arrival_time_throttled': 0,
+                                    'flooding_duplicates': 162,
+                                    'received': 57776373,
+                                    'sent': 2218410,
+                                },
+                                'psnp': {
+                                    'received': 1576294,
+                                    'sent': 33297781,
+                                },
+                            },
+                        },
+                    },
+                    'Bundle-Ether11': {
+                        'level': {
+                            1: {
+                                'csnp': {
+                                    'received': 36,
+                                    'sent': 25,
+                                },
+                                'lsps_sourced': {
+                                    'arrival_time_throttled': 0,
+                                    'flooding_duplicates': 15,
+                                    'received': 57701052,
+                                    'sent': 2724240,
+                                },
+                                'psnp': {
+                                    'received': 1761310,
+                                    'sent': 33274400,
+                                },
+                            },
+                        },
+                    },
+                    'Loopback0': {
+                    },
+                    'Loopback6': {
+                    },
+                },
+                'level': {
+                    1: {
+                        'address_family': {
+                            'IPv4 Unicast': {
+                                'full_spf_calculation': 331056,
+                                'ispf_calculation': 0,
+                                'next_hop_calculation': 4,
+                                'partial_route_calculation': 891257,
+                                'periodic_spf_calculation': 39298,
+                                'total_spf_calculation': 1222317,
+                            },
+                            'IPv6 Unicast': {
+                                'full_spf_calculation': 177541,
+                                'ispf_calculation': 0,
+                                'next_hop_calculation': 4,
+                                'partial_route_calculation': 57170,
+                                'periodic_spf_calculation': 43596,
+                                'total_spf_calculation': 234715,
+                            },
+                        },
+                        'lsp': {
+                            'new': 9140,
+                            'refresh': 117187,
+                        },
+                    },
+                },
+                'lsp': {
+                    'checksum_errors_received': 0,
+                    'dropped': 0,
+                },
+                'process_time': {
+                    'csnp': {
+                        'average_process_time_nsec': 1249805,
+                        'average_process_time_sec': 0,
+                        'rate_per_sec': 0,
+                    },
+                    'hello': {
+                        'average_process_time_nsec': 999833,
+                        'average_process_time_sec': 0,
+                        'rate_per_sec': 0,
+                    },
+                    'lsp': {
+                        'average_process_time_nsec': 999840,
+                        'average_process_time_sec': 0,
+                        'rate_per_sec': 0,
+                    },
+                    'psnp': {
+                        'average_process_time_nsec': 999835,
+                        'average_process_time_sec': 0,
+                        'rate_per_sec': 0,
+                    },
+                },
+                'psnp_cache': {
+                    'hits': 57508538,
+                    'tries': 115477425,
+                },
+                'snp': {
+                    'dropped': 0,
+                },
+                'transmit_time': {
+                    'csnp': {
+                        'average_transmit_time_nsec': 0,
+                        'average_transmit_time_sec': 0,
+                        'rate_per_sec': 0,
+                    },
+                    'hello': {
+                        'average_transmit_time_nsec': 999840,
+                        'average_transmit_time_sec': 0,
+                        'rate_per_sec': 0,
+                    },
+                    'lsp': {
+                        'average_transmit_time_nsec': 999840,
+                        'average_transmit_time_sec': 0,
+                        'rate_per_sec': 0,
+                    },
+                    'psnp': {
+                        'average_transmit_time_nsec': 999836,
+                        'average_transmit_time_sec': 0,
+                        'rate_per_sec': 0,
+                    },
+                },
+                'upd': {
+                    'max_queue_size': 20,
+                },
+            },
+        },
+    }
+    golden_output_2 = {'execute.return_value': '''
+        RP/0/RSP0/CPU0:XXXX#sh isis stat
+        Fri Sep 25 18:17:07.477 FRANCE
+
+        IS-IS COEUR statistics:
+            Fast PSNP cache (hits/tries): 57508538/115477425
+            Fast CSNP cache (hits/tries): 0/49
+            Fast CSNP cache updates: 66
+            LSP checksum errors received: 0
+            LSP Dropped: 0
+            SNP Dropped: 0
+            UPD Max Queue size: 20
+            Average transmit times and rate:
+              Hello:          0 s,     999840 ns,          0/s
+              CSNP:           0 s,          0 ns,          0/s
+              PSNP:           0 s,     999836 ns,          0/s
+              LSP:            0 s,     999840 ns,          0/s
+            Average process times and rate:
+              Hello:          0 s,     999833 ns,          0/s
+              CSNP:           0 s,    1249805 ns,          0/s
+              PSNP:           0 s,     999835 ns,          0/s
+              LSP:            0 s,     999840 ns,          0/s
+            Level-1:
+              LSPs sourced (new/refresh): 9140/117187
+              IPv4 Unicast
+                Total SPF calculations     : 1222317
+                Full SPF calculations      : 331056
+                ISPF calculations          : 0
+                Next Hop Calculations      : 4
+                Partial Route Calculations : 891257
+                Periodic SPF calculations  : 39298
+              IPv6 Unicast
+                Total SPF calculations     : 234715
+                Full SPF calculations      : 177541
+                ISPF calculations          : 0
+                Next Hop Calculations      : 4
+                Partial Route Calculations : 57170
+                Periodic SPF calculations  : 43596
+          Interface Bundle-Ether10:
+            PTP Hellos (sent/rcvd)    : 26609054/5327323
+            LSP Retransmissions       : 11
+            Level-1 LSPs (sent/rcvd)  : 2218410/57776373
+          Level-1 CSNPs (sent/rcvd) : 24/24
+            Level-1 PSNPs (sent/rcvd) : 33297781/1576294
+            Level-1 LSP Flooding Duplicates     : 162
+            Level-1 LSPs Arrival Time Throttled : 0
+          Interface Bundle-Ether11:
+            PTP Hellos (sent/rcvd)    : 26608031/5327345
+            LSP Retransmissions       : 15
+            Level-1 LSPs (sent/rcvd)  : 2724240/57701052
+            Level-1 CSNPs (sent/rcvd) : 25/36
+            Level-1 PSNPs (sent/rcvd) : 33274400/1761310
+            Level-1 LSP Flooding Duplicates     : 15
+            Level-1 LSPs Arrival Time Throttled : 0
+          Interface Loopback0:
+          Interface Loopback6:
+        RP/0/RSP0/CPU0:XXXX#
+    '''}
+
     def test_empty_output(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIsisStatistics(device=self.device)
@@ -2029,6 +2226,12 @@ class TestShowIsisStatistics(unittest.TestCase):
         obj = ShowIsisStatistics(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.parsed_output_1)
+
+    def test_golden_output_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIsisStatistics(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output_2)
 
 
 class TestShowIsisProtocol(unittest.TestCase):
