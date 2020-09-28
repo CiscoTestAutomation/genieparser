@@ -601,42 +601,6 @@ class ShowSwitchDetail(ShowSwitchDetail_iosxe):
     pass
 
 
-class ShowProcessesMemorySchema(MetaParser):
-    schema = {
-        'processor_pool': {
-            'total': int,
-            'used': int,
-            'free': int,
-        },
-        Optional('reserve_p_pool'): {
-            'total': int,
-            'used': int,
-            'free': int,
-        },
-        Optional('lsmi_io_pool'): {
-            'total': int,
-            'used': int,
-            'free': int,
-        },
-        Optional('pid'): {
-            Any(): {
-                'index': {
-                    Any(): {
-                        'pid': int,
-                        'tty': int,
-                        'allocated': int,
-                        'freed': int,
-                        'holding': int,
-                        'getbufs': int,
-                        'retbufs': int,
-                        'process': str,
-                    }
-                }
-            }
-        }
-    }
-
-
 class ShowProcessesMemory(ShowProcessesMemory_iosxe):
 
     cli_command = [
