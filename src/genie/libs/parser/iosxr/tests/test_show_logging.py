@@ -24,13 +24,13 @@ class TestShowLogging(unittest.TestCase):
 
     expected_output = {
         "syslog_logging": {
-        "enabled": {
-            "counters": {
-                "flushes": 0,
-                "messages_dropped": 0,
-                "overruns": 0
+            "enabled": {
+                "counters": {
+                    "flushes": 0,
+                    "messages_dropped": 0,
+                    "overruns": 0
+                }
             }
-        }
     },
         "logging": {
             "buffer": {
