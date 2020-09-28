@@ -28,7 +28,7 @@ No active filter modules.
               0 message lines dropped-by-MD,
               xml disabled, sequence number disabled
               filtering disabled
-        Logging to 1.22.33.4  (udp port 888, audit disabled,
+        Logging to 10.19.33.4  (udp port 888, audit disabled,
               link down),
               0 message lines logged,
               0 message lines rate-limited,
