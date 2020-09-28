@@ -3,7 +3,8 @@ import unittest
 from unittest.mock import Mock
 
 # Parser
-from genie.libs.parser.iosxr.show_processes import ShowProcesses
+from genie.libs.parser.iosxr.show_processes import (ShowProcesses,
+                                                    ShowProcessesCpu)
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
@@ -862,6 +863,72 @@ class TestShowProcesses(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
+class TestShowProcessesCpu(unittest.TestCase):
+    ''' Unit tests for commands:
+        * show processes cpu
+    '''
+
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = \
+        {
+            'location': {
+                'node0_RP0_CPU0': {
+                    'one_min_cpu': 0,
+                    'five_min_cpu': 0,
+                    'fifteen_min_cpu': 0,
+                    'index': {
+                        1: {
+                            'pid': 1,
+                            'one_min_cpu': 0,
+                            'five_min_cpu': 0,
+                            'fifteen_min_cpu': 0,
+                            'process': 'init'
+                        },
+                        2: {
+                            'pid': 1763,
+                            'one_min_cpu': 0,
+                            'five_min_cpu': 0,
+                            'fifteen_min_cpu': 0,
+                            'process': 'bash'
+                        },
+                        3: {
+                            'pid': 1789,
+                            'one_min_cpu': 0,
+                            'five_min_cpu': 0,
+                            'fifteen_min_cpu': 0,
+                            'process': 'sh'
+                        }
+                    }
+                }
+            }
+        }
+
+    golden_output = {'execute.return_value': '''
+Mon Sep 28 11:54:48.352 UTC
+---- node0_RP0_CPU0 ----
+
+CPU utilization for one minute: 0%; five minutes: 0%; fifteen minutes: 0%
+
+PID    1Min    5Min    15Min Process
+1        0%      0%       0% init
+1763     0%      0%       0% bash
+1789     0%      0%       0% sh
+    '''}
+
+    def test_empty_output(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowProcessesCpu(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_parsed_output(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowProcessesCpu(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()

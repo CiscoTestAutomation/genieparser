@@ -1724,13 +1724,21 @@ class ShowRouteReceiveProtocolSchema(MetaParser):
 class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
     """ Parser for:
             * show route receive-protocol {protocol} {peer}
+            * show route receive-protocol {protocol} {peer} {target}
     """
 
-    cli_command = 'show route receive-protocol {protocol} {peer}'
-    def cli(self, protocol, peer, output=None):
+    cli_command = ['show route receive-protocol {protocol} {peer}',
+                   'show route receive-protocol {protocol} {peer} {target}']
+    def cli(self, protocol, peer, target=None, output=None):
         if not output:
-            cmd = self.cli_command.format(protocol=protocol,
-                    peer=peer)
+            if target:
+                cmd = self.cli_command[1].format(
+                            protocol=protocol,
+                            peer=peer,
+                            target=target)
+            else:
+                cmd = self.cli_command[0].format(protocol=protocol,
+                        peer=peer)
             out = self.device.execute(cmd)
         else:
             out = output
@@ -1746,10 +1754,11 @@ class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
         # * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
         # 10.220.0.0/16           10.189.5.253         12003   120        (65151 65000) I
         # * 10.4.1.1/32              Self                                    I
-        # * 10.36.3.3/32              Self                                    2 I        
+        # * 10.36.3.3/32              Self                                    2 I     
+        # * 200.40.0.0/24           4.4.4.4                      100        200000 4 5 6 I   
         p2 = re.compile(r'^((?P<active_tag>\*) +)?(?P<rt_destination>[\d\.\:\/]+) '
                         r'+(?P<to>\S+)( +(?P<med>\d+)? +(?P<local_preference>\d+))? '
-                        r'+(?P<as_path>(\(([\S\s]+\)) +\w+)|((\d\s)?\w))$')
+                        r'+(?P<as_path>(\(([\S\s]+\)) +\w+)|([\d\s]+?\w))$')
 
         # 2001:db8:7fc5:ca45::1
         p3 = re.compile(r'^(?P<rt_destination>[\d\:\w\/]+)$')
