@@ -1,6 +1,7 @@
 '''
 IOSXR parsers for the following commands:
     * show processes isis
+    * show processes cpu
 '''
 
 # Python
@@ -41,7 +42,7 @@ class ShowProcessesSchema(MetaParser):
                     'user': float,
                     'kernel': float,
                     'total': float,
-                },                
+                },
                 Optional('tid'): {
                     Any(): {
                         'stack': str,
@@ -50,7 +51,7 @@ class ShowProcessesSchema(MetaParser):
                         'name': str,
                         'rt_pri': int,
                     }
-                }            
+                }
             }
         }
     }
@@ -61,7 +62,7 @@ class ShowProcesses(ShowProcessesSchema):
         * 'show processes {process}'
     '''
 
-    cli_command = ['show processes {process}', 
+    cli_command = ['show processes {process}',
                    'show processes']
 
     def cli(self, process=None, output=None):
@@ -192,7 +193,7 @@ class ShowProcesses(ShowProcessesSchema):
 
                 continue
 
-            # Instance #: 1            
+            # Instance #: 1
             result = r5.match(line)
             if result:
                 group = result.groupdict()
@@ -201,7 +202,7 @@ class ShowProcesses(ShowProcessesSchema):
 
                 continue
 
-            # Version ID: 00.00.0000            
+            # Version ID: 00.00.0000
             result = r6.match(line)
             if result:
                 group = result.groupdict()
@@ -228,7 +229,7 @@ class ShowProcesses(ShowProcessesSchema):
 
                 continue
 
-            # Last started: Wed Jan 30 20:43:04 2019            
+            # Last started: Wed Jan 30 20:43:04 2019
             result = r9.match(line)
             if result:
                 group = result.groupdict()
@@ -246,7 +247,7 @@ class ShowProcesses(ShowProcessesSchema):
 
                 continue
 
-            # Package state: Normal            
+            # Package state: Normal
             result = r11.match(line)
             if result:
                 group = result.groupdict()
@@ -255,7 +256,7 @@ class ShowProcesses(ShowProcessesSchema):
 
                 continue
 
-            # Started on config: cfg/gl/isis/instance/test/ord_A/running            
+            # Started on config: cfg/gl/isis/instance/test/ord_A/running
             result = r12.match(line)
             if result:
                 group = result.groupdict()
@@ -273,7 +274,7 @@ class ShowProcesses(ShowProcessesSchema):
 
                 continue
 
-            # core: COPY            
+            # core: COPY
             result = r14.match(line)
             if result:
                 group = result.groupdict()
@@ -282,7 +283,7 @@ class ShowProcesses(ShowProcessesSchema):
 
                 continue
 
-            # Max. core: 0            
+            # Max. core: 0
             result = r15.match(line)
             if result:
                 group = result.groupdict()
@@ -300,7 +301,7 @@ class ShowProcesses(ShowProcessesSchema):
 
                 continue
 
-            # startup_path: /opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/startup/isis.startup            
+            # startup_path: /opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/startup/isis.startup
             result = r17.match(line)
             if result:
                 group = result.groupdict()
@@ -309,7 +310,7 @@ class ShowProcesses(ShowProcessesSchema):
 
                 continue
 
-            # Ready: 1.804s            
+            # Ready: 1.804s
             result = r18.match(line)
             if result:
                 group = result.groupdict()
@@ -318,7 +319,7 @@ class ShowProcesses(ShowProcessesSchema):
 
                 continue
 
-            # Available: 1.892s            
+            # Available: 1.892s
             result = r19.match(line)
             if result:
                 group = result.groupdict()
@@ -382,3 +383,80 @@ class ShowProcesses(ShowProcessesSchema):
                 continue
 
         return parsed_output
+
+class ShowProcessesCpuSchema(MetaParser):
+    """
+    Schema for show processes cpu
+    """
+    schema = {
+        'location': {
+            Any(): {
+                Optional('one_min_cpu'): int,
+                Optional('five_min_cpu'): int,
+                Optional('fifteen_min_cpu'): int,
+                Optional('index'): {
+                    Any(): {
+                        'one_min_cpu': int,
+                        'five_min_cpu': int,
+                        'fifteen_min_cpu': int,
+                        'pid': int,
+                        'process': str
+                    }
+                }
+            }
+        }
+    }
+
+class ShowProcessesCpu(ShowProcessesCpuSchema):
+    """
+    Parser for show processes cpu
+    """
+
+    cli_command = ['show processes cpu']
+    exclude = ['one_min_cpu', 'five_min_cpu', 'fifteen_min_cpu', 'index']
+
+    def cli(self, output=None):
+
+        out = self.device.execute(
+            self.cli_command) if output is None else output
+        # initial return dictionary
+        ret_dict = {}
+        index = 0
+
+        # ---- node0_RP0_CPU0 ----
+        p1 = re.compile(r'^----\s+(?P<location>\S+)\s+----$')
+
+        # CPU utilization for one minute: 0%; five minutes: 0%; fifteen minutes: 0%
+        p2 = re.compile(r'^CPU\s+utilization\s+for\s+one\s+minute:\s+(?P<one_min_cpu>\d+)\%;\s+five\s+minutes:\s+(?P<five_min_cpu>\d+)\%;\s+fifteen\s+minutes:\s+(?P<fifteen_min_cpu>\d+)%$')
+
+        # 1        0%      0%       0% init
+        p3 = re.compile(r'^(?P<pid>\d+)\s+(?P<one_min_cpu>\d+)%\s+(?P<five_min_cpu>\d+)%\s+(?P<fifteen_min_cpu>\d+)%\s+(?P<process>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # ---- node0_RP0_CPU0 ----
+            m = p1.match(line)
+            if m:
+                location = m.groupdict()['location']
+                ret_dict.setdefault('location', {}).setdefault(location, {})
+                continue
+
+            # CPU utilization for one minute: 0%; five minutes: 0%; fifteen minutes: 0%
+            m = p2.match(line)
+            if m:
+                ret_dict['location'][location].update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # 1        0%      0%       0% init
+            m = p3.match(line)
+            if m:
+                index += 1
+                for k, v in m.groupdict().items():
+                    if k in ['pid', 'one_min_cpu', 'five_min_cpu', 'fifteen_min_cpu']:
+                        ret_dict['location'][location].setdefault('index', {}).setdefault(index, {}).update({k: int(v)})
+                    else:
+                        ret_dict['location'][location].setdefault('index', {}).setdefault(index, {}).update({k: v})
+                continue
+
+        return ret_dict
