@@ -10,7 +10,7 @@ SDVT Global stats:
     AppNAV registration: 64
     Control Decaps: Could not find flow from tuple: 2
     within SDVT syn policer limit: 33131
-SN Index [0 (Green)], IP: 119.0.2.250, oce_id: 1092284384
+SN Index [0 (Green)], IP: 10.136.2.250, oce_id: 1092284384
         del 0, key 0x0301, id 1, ver 1, status 1, type 3, sng 0
         APPNAV STATS: toSN 23357718/18288051565, fromSN 21249179/18466919498
 SDVT Count stats:
