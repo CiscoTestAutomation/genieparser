@@ -13,7 +13,7 @@ from genie.libs.parser.iosxr.show_logging import ShowLogging
 
 
 # ===========================================
-#  Unit test for 'show l2route topology'
+#  Unit test for 'show logging'
 # ===========================================
 class TestShowLogging(unittest.TestCase):
     """Unit test for 'show logging'"""
@@ -22,24 +22,25 @@ class TestShowLogging(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    expected_output = {"log_buffer_bytes": 2097152,
-    "logging": {
-        "buffer": {
-            "level": "debugging",
-            "messages_logged": 114
+    expected_output = {
+        "log_buffer_bytes": 2097152,
+        "logging": {
+            "buffer": {
+                "level": "debugging",
+                "messages_logged": 114
+            },
+            "console": {
+                "status": "Disabled"
+            },
+            "monitor": {
+                "level": "debugging",
+                "messages_logged": 0
+            },
+            "trap": {
+                "level": "informational",
+                "messages_logged": 0
+            }
         },
-        "console": {
-            "status": "Disabled"
-        },
-        "monitor": {
-            "level": "debugging",
-            "messages_logged": 0
-        },
-        "trap": {
-            "level": "informational",
-            "messages_logged": 0
-        }
-    },
     "logs": [
         "RP/0/RP0/CPU0:Sep 25 23:24:28.852 UTC: spp[113]: Initialized socket RX node",
         "RP/0/RP0/CPU0:Sep 25 23:24:28.852 UTC: spp[113]: Initialized socket TX node",
