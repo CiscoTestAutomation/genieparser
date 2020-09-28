@@ -428,3 +428,40 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
             # NACK IFID mismatch                                              : 0
             r"\s+NACK IFID mismatch\s+:\s+(?P<nack_ifid_mismatch>\d+)\n+"
         )
+
+        capture = client_delete_capture
+        info_search = re.search(capture, output, re.MULTILINE)
+        info_group = info_search.groupdict()
+
+        wlan_obj = {}
+
+        dict_keys = [
+            "anchor",
+            "ap",
+            "apinit",
+            "conn",
+            "dot11",
+            "dot11v",
+            "dot11x",
+            "eap",
+            "eogre",
+            "invalid",
+            "mac",
+            "mobility",
+            "no",
+            "policy",
+            "qos",
+            "wired",
+            "wrong",
+        ]
+
+        for dict_key in dict_keys:
+            rendered_dict = {dict_key: {}}
+            for group in info_group:
+                # if dict_key plus _ matches the first part in the key
+                if f"{dict_key}_" in group:
+                    # strip the first part of the key because now it's in a dict
+                    group_dict = {group.strip(f"{dict_key}_"): info_group[group]}
+                    rendered_dict[dict_key].update(group_dict)
+
+            wlan_obj.update(rendered_dict)
