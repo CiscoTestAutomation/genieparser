@@ -357,12 +357,12 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
         result = _fuzzy_search_command(r'sh bridge\-domain 1\.1\.1\.1\.1', True)
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0][0], 'show bridge-domain {bd_id}')
-        self.assertEqual(result[0][2], {'bd_id': '10.4.1.1.1'})
+        self.assertEqual(result[0][2], {'bd_id': '1.1.1.1.1'})
 
         result = _fuzzy_search_command(r'sh b.*-.*n 1\.1\.1\.1\.1', True)
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0][0], 'show bridge-domain {bd_id}')
-        self.assertEqual(result[0][2], {'bd_id': '10.4.1.1.1'})
+        self.assertEqual(result[0][2], {'bd_id': '1.1.1.1.1'})
 
     def test_escaped_characters(self):
         result = _fuzzy_search_command(r'sh ll en \*', True)
