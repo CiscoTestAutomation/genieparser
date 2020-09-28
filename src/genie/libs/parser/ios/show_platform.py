@@ -602,25 +602,6 @@ class ShowSwitchDetail(ShowSwitchDetail_iosxe):
 
 
 class ShowProcessesMemory(ShowProcessesMemory_iosxe):
+    """Parser for show switch detail"""
 
-    cli_command = [
-        'show processes memory',
-        'show processes memory | include {include}'
-    ]
-
-    def cli(self, include=None, output=None):
-
-        ret_dict = {}
-        pid_index = {}
-
-        if not output:
-            if include:
-                cmd = self.cli_command[1].format(include=include)
-            else:
-                cmd = self.cli_command[0]
-            out = self.device.execute(cmd)
-        else:
-            out = output
-
-        ret_dict = super().cli(self,output=out)
-        return ret_dict
+    pass
