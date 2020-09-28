@@ -10,8 +10,9 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any, 
-        Optional, Use, SchemaTypeError, Schema, Or)
+        Optional, Use, Schema, Or)
 
 class ShowFirewallSchema(MetaParser):
 
@@ -44,7 +45,7 @@ class ShowFirewallSchema(MetaParser):
     def validate_counter_list(value):
         # Pass firmware list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('counter is not a list')
+            raise SchemaError('counter is not a list')
         counter_inner_schema = Schema(
                         {
                             "byte-count": str,
@@ -62,7 +63,7 @@ class ShowFirewallSchema(MetaParser):
     
     def validate_filter_information_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('filter-information is not a list')
+            raise SchemaError('filter-information is not a list')
         filter_schema = Schema({
                 Optional("counter"): Use(ShowFirewall.validate_counter_list),
                 "filter-name": str,
@@ -98,135 +99,55 @@ class ShowFirewall(ShowFirewallSchema):
         else:
             out = output
 
-        #Filter: catch_all
+        # Filter: catch_all
         p1 = re.compile(r'^Filter: +(?P<filter_name>\S+)$')
 
-        #cflow_counter_v4                              28553344730            151730215
+        # cflow_counter_v4                              28553344730            151730215
         p2 = re.compile(r'^(?P<counter_name>\S+) +(?P<byte_count>\d+) +(?P<packet_count>\d+)$')
 
-        #Policers:
-        p3 = re.compile(r'^(?P<filter_name>\APolicers:)$')
+        # Policers:
+        p3 = re.compile(r'^Policers:$')
+
+        # Counters:
+        p4 = re.compile(r'^Counters:$')
         
         ret_dict = {}
+        pol_coun = None
 
         for line in out.splitlines():
             line = line.strip()
 
-            #Filter: catch_all
+            # Filter: catch_all
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                filter_name = ""
-                if(group["filter_name"] == "catch_all"):
-                    filter_information_list = ret_dict.setdefault("firewall-information", {})\
-                        .setdefault("filter-information", [])
+                filter_list = ret_dict.setdefault("firewall-information", {}) \
+                    .setdefault("filter-information", [])
+                filter_dict = {"filter-name": group['filter_name']}
+                filter_list.append(filter_dict)
 
-                if(group["filter_name"] == "__default_bpdu_filter__"):
-                    outter_dict = {}
-                    outter_dict["filter-name"] = group["filter_name"]
-                    filter_information_list.append(outter_dict)
-
-                
-                inner_filter_list = []
-                outter_filter_dict = {}
-                outter_filter_dict["filter-name"] = group["filter_name"]
-                filter_name = group["filter_name"]
-
-                continue
-
-            #cflow_counter_v4                              28553344730            151730215
+            # cflow_counter_v4                              28553344730            151730215
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                
-                if(filter_name == "catch_all"):
-                    inner_filter_dict = {}
-                    inner_list = []
-                    for group_key, group_value in group.items():
-                        entry_key = group_key.replace('_','-')
-                        inner_filter_dict[entry_key] = group_value
-                    inner_list.append(inner_filter_dict)
-                    outter_filter_dict["counter"] = inner_list
-                    filter_information_list.append(outter_filter_dict)
+                if pol_coun == 'counter':
+                    counter_list = filter_dict.setdefault('counter', [])
+                    counter_dict = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                    counter_list.append(counter_dict)
+                elif pol_coun == 'policer':
+                    policer_dict = filter_dict.setdefault('policer', {})
+                    policer_dict.update({"policer-name": group.pop("counter_name")})
+                    policer_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
 
-                elif(filter_name == "local-access-control"):
-                    inner_filter_dict = {}
-                    for group_key, group_value in group.items():
-                        entry_key = group_key.replace('_','-')
-                        inner_filter_dict[entry_key] = group_value
-                    inner_filter_list.append(inner_filter_dict)
-                    if(group["counter_name"] == "traceroute-udp-deny-count"):
-                        outter_filter_dict["counter"] = inner_filter_list
-                
-                elif(filter_name == "MINIMUM-RATE-POLICER"):
-                    policer_dict = {}
-                    policer_dict["policer-name"] = group["counter_name"]
-                    policer_dict["byte-count"] = group["byte_count"]
-                    policer_dict["packet-count"] = group["packet_count"]
-                    outter_filter_dict["policer"] = policer_dict
-
-                    filter_information_list.append(outter_filter_dict)
-
-                elif(filter_name == "v4_EXT_inbound"):
-                    inner_filter_dict = {}
-                    for group_key, group_value in group.items():
-                        entry_key = group_key.replace('_','-')
-                        inner_filter_dict[entry_key] = group_value
-                    inner_filter_list.append(inner_filter_dict)
-                    if(group["counter_name"] == "deny-src-in"):
-                        outter_filter_dict["counter"] = inner_filter_list
-                        filter_information_list.append(outter_filter_dict)
-
-                elif(filter_name == "v4_toIPVPN_inbound"):
-                    inner_filter_dict = {}
-                    for group_key, group_value in group.items():
-                        entry_key = group_key.replace('_','-')
-                        inner_filter_dict[entry_key] = group_value
-                    inner_filter_list.append(inner_filter_dict)
-                    if(group["counter_name"] == "deny-rsvp-in"):
-                        outter_filter_dict["counter"] = inner_filter_list
-                        filter_information_list.append(outter_filter_dict)
-
-                elif(filter_name == "v6_catch_all"):
-                    inner_filter_dict = {}
-                    for group_key, group_value in group.items():
-                        entry_key = group_key.replace('_','-')
-                        inner_filter_dict[entry_key] = group_value
-                    inner_filter_list.append(inner_filter_dict)
-
-                    outter_filter_dict["counter"] = inner_filter_list
-                    filter_information_list.append(outter_filter_dict)
-                    
-                elif(filter_name == "v6_local-access-control"):
-                    inner_filter_dict = {}
-                    for group_key, group_value in group.items():
-                        entry_key = group_key.replace('_','-')
-                        inner_filter_dict[entry_key] = group_value
-                    inner_filter_list.append(inner_filter_dict)
-                    if(group["counter_name"] == "v6_last_policer"):
-                        outter_filter_dict["counter"] = inner_filter_list
-
-                elif(filter_name == "MINIMUM-RATE-POLICER"):
-                    
-                    if(prev_filter_name == "v6_local-access-control"):
-                        policer_dict = {}
-                        policer_dict["policer-name"] = group["counter_name"]
-                        policer_dict["byte-count"] = group["byte_count"]
-                        policer_dict["packet-count"] = group["packet_count"]
-                        outter_filter_dict["policer"] = policer_dict
-
-                        filter_information_list.append(outter_filter_dict)
-                
-                continue
-
-            #Policers:
+            # Policers:
             m = p3.match(line)
             if m:
-                group = m.groupdict()
-                prev_filter_name = filter_name
-                filter_name = "MINIMUM-RATE-POLICER"
+                pol_coun = 'policer'
 
-                continue
+            # Counters:
+            m = p4.match(line)
+            if m:
+                pol_coun = 'counter'
 
         return ret_dict
 
@@ -255,13 +176,22 @@ class ShowFirewallCounterFilterSchema(MetaParser):
 class ShowFirewallCounterFilter(ShowFirewallCounterFilterSchema):
     """ Parser for:
             * show firewall counter filter v6_local-access-control v6_last_policer
+            * show firewall counter filter ICMP_ACL_filter block
     """
 
-    cli_command = 'show firewall counter filter v6_local-access-control v6_last_policer'
+    cli_command = [
+        'show firewall counter filter v6_local-access-control v6_last_policer',
+        'show firewall counter filter {filter} block'
+        ]
 
-    def cli(self, output=None):
+    def cli(self, filter=None, output=None):
         if not output:
-            out = self.device.execute(self.cli_command)
+            if filter:
+                out = self.device.execute(self.cli_command[1].format(
+                    filter=filter
+                ))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 

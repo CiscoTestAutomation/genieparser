@@ -1,0 +1,16 @@
+show run policy-map L3VPN-0_in
+Building configuration...
+
+Current configuration : 56 bytes
+!
+policy-map L3VPN-0_in
+class HEY_in
+police cir 365 pir 235 conform-action transmit  exceed-action drop
+class OSPF
+police cir 543 pir 876 conform-action transmit  exceed-action drop
+class class-default
+police cir 2565 bc 4234 conform-action transmit  exceed-action drop
+service-policy child
+!
+end
+    

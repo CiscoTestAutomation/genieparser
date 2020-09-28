@@ -936,8 +936,9 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # Route Distinguisher: 100:100 (default for vrf VRF1)
         # Route Distinguisher: 65535:1 (default for vrf evpn1)
         # Route Distinguisher: 65109:3051
+        # Route Distinguisher: 9.1.1.1:3014 (default for vrf vrf1)
         p2_1 = re.compile(r'^Route +Distinguisher:'
-                          r' +(?P<route_distinguisher>[0-9\:]+)'
+                          r' +(?P<route_distinguisher>[0-9.\:]+)'
                           r'(?: +\(default +for +vrf +(?P<vrf_id>(\S+))\))?$')
 
         # BGP routing table entry for 10.4.1.1/32, version 4
@@ -946,19 +947,19 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # BGP routing table entry for 2001:DB8:1:1::/64, version 5
         # BGP routing table entry for 2001:2:2:2::2/128, version 2
         # BGP routing table entry for [5][65535:1][0][24][10.36.3.0]/17, version 3
-        p3_1 = re.compile(r'^BGP +routing +table +entry +for +'
-                          r'(\[[0-9]+\])?((?P<route_distinguisher>((\[[0-9]+'
-                          r'[\:][0-9]+\])|([0-9]+[\:][0-9]+[\:]))))?(\['
-                          r'[0-9]+\])?(\[[0-9]+\])?(?P<router_id>((\[[0-9]+'
-                          r'[\.][0-9]+[\.][0-9]+[\.][0-9]+\][\/][0-9]+)|'
-                          r'([0-9]+[\.][0-9]+[\.][0-9]+[\.][0-9]+[\/][0-9]+)'
-                          r'|([a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+'
-                          r'[\:][\:][a-zA-Z0-9]+[\/][0-9]+)|([a-zA-Z0-9]+'
-                          r'[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]'
-                          r'+[\:][\:][\/][0-9]+)|([a-zA-Z0-9]+[\:]'
-                          r'[a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
-                          r'[\:][0-9]+[\/][0-9]+)))\, +version +'
-                          r'(?P<prefix_table_version>[0-9]+)$')
+        # BGP routing table entry for 9.1.1.1:3014:0.0.0.0/0, version 74438
+        p3_1 = re.compile(r'^BGP +routing +table +entry +for +(\[[0-9]+\])?'
+                        r'((?P<route_distinguisher>((\[[0-9]+[\:][0-9]+\])'
+                        r'|[0-9]+])|([0-9.]+[:][0-9]+[:])))?(\[[0-9]+\])?'
+                        r'(\[[0-9]+\])?(?P<router_id>((\[[0-9]+[\.][0-9]+[\.]'
+                        r'[0-9]+[\.][0-9]+\][\/][0-9]+)|([0-9]+[\.][0-9]+[\.]'
+                        r'[0-9]+[\.][0-9]+[\/][0-9]+)|([a-zA-Z0-9]+[\:]'
+                        r'[a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][\:][a-zA-Z0-9]+'
+                        r'[\/][0-9]+)|([a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
+                        r'[a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][\:][\/][0-9]+)|'
+                        r'([a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
+                        r'[a-zA-Z0-9]+[\:][\:][0-9]+[\/][0-9]+)))\, +version '
+                        r'+(?P<prefix_table_version>[0-9]+)$')
 
         # BGP routing table entry for 65109:3051:VEID-1:Blk-1/136, version 2
         p3_2 = re.compile(r'^BGP +routing +table +entry +for'
@@ -1185,6 +1186,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
 
             # Route Distinguisher: 100:100 (default for vrf VRF1)
             # Route Distinguisher: 65535:1 (default for vrf evpn1)
+            # Route Distinguisher: 9.1.1.1:3014 (default for vrf vrf1)
             m = p2_1.match(line)
             if m:
                 route_distinguisher = m.groupdict()['route_distinguisher']
@@ -1208,6 +1210,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             # BGP routing table entry for 2001:DB8:1:1::/64, version 5
             # BGP routing table entry for 2001:2:2:2::2/128, version 2
             # BGP routing table entry for [5][65535:1][0][24][10.36.3.0]/17, version 3
+            # BGP routing table entry for 9.1.1.1:3014:0.0.0.0/0, version 74438
             m = p3_1.match(line)
             if m:
                 update_group = 0
@@ -1963,7 +1966,7 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
         # 192.168.111.1       4          100       0       0        1    0    0 01:07:38 Idle
         # 192.168.4.1       4          100       0       0        1    0    0 never    Idle
         # 192.168.51.1       4          100       0       0        1    0    0 01:07:38 Idle
-        p9 = re.compile(r'^(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<version>[0-9]+)'
+        p9 = re.compile(r'^ *(?P<our_entry>\*)?(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<version>[0-9]+)'
                          ' +(?P<as>[0-9]+) +(?P<msg_rcvd>[0-9]+)'
                          ' +(?P<msg_sent>[0-9]+) +(?P<tbl_ver>[0-9]+)'
                          ' +(?P<inq>[0-9]+) +(?P<outq>[0-9]+)'
@@ -6391,9 +6394,13 @@ class ShowBgpAllNeighborsPolicy(ShowBgpAllNeighborsPolicySchema):
         else:
             out = output
 
-        p1 = re.compile(r'^\s*Neighbor: +(?P<neighbor>[a-zA-Z0-9\.\:]+),'
-                            ' +Address-Family: +(?P<address_family>[a-zA-Z0-9\s\-\_]+)'
-                            '( +\((?P<vrf>[a-zA-Z0-9]+)\))?$')
+        # Neighbor: 10.4.6.6, Address-Family: VPNv4 Unicast (VRF1)
+        # Neighbor: 10.251.15.5, Address-Family: VPNv4 Unicast (LABDR_HoC_AZS_Transit)
+        p1 = re.compile(r'^\s*Neighbor: +(?P<neighbor>[\S]+),'
+                        r' +Address-Family: +(?P<address_family>[\w\s\-\_]+)'
+                        r'( +\((?P<vrf>[\S]+)\))?$')
+
+        # route-map test in
         p2 = re.compile(r'^\s*route-map +(?P<route_map_name>\S+)'
                             ' +(?P<route_map_direction>[a-zA-Z]+)$')
 
@@ -6422,29 +6429,14 @@ class ShowBgpAllNeighborsPolicy(ShowBgpAllNeighborsPolicySchema):
                 route_map_direction = str(m.groupdict()['route_map_direction'])
 
                 # Init dict
-                if 'vrf' not in policy_dict:
-                    policy_dict['vrf'] = {}
-                if vrf not in policy_dict['vrf']:
-                    policy_dict['vrf'][vrf] = {}
-                if 'neighbor' not in policy_dict['vrf'][vrf]:
-                    policy_dict['vrf'][vrf]['neighbor'] = {}
-                if neighbor_id not in policy_dict['vrf'][vrf]['neighbor']:
-                    policy_dict['vrf'][vrf]['neighbor'][neighbor_id] = {}
-                if 'address_family' not in policy_dict['vrf'][vrf]['neighbor']\
-                    [neighbor_id]:
-                    policy_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'] = {}
-                if address_family not in policy_dict['vrf'][vrf]['neighbor']\
-                    [neighbor_id]['address_family']:
-                    policy_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'][address_family] = {}
+                sub_dict = policy_dict.setdefault('vrf', {}).setdefault(vrf, {}).\
+                    setdefault('neighbor', {}).setdefault(neighbor_id, {}).\
+                    setdefault('address_family', {}).setdefault(address_family, {})
 
                 if route_map_direction == 'in':
-                    policy_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'][address_family]['nbr_af_route_map_name_in'] = route_map_name
+                    sub_dict['nbr_af_route_map_name_in'] = route_map_name
                 else:
-                    policy_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'][address_family]['nbr_af_route_map_name_out'] = route_map_name
+                    sub_dict['nbr_af_route_map_name_out'] = route_map_name
 
                 continue
 

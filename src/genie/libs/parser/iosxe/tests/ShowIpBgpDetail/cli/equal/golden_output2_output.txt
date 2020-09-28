@@ -1,0 +1,437 @@
+
+        Router#show ip bgp vpnv4 vrf L3VPN-0050 detail
+        Load for five secs: 23%/0%; one minute: 25%; five minutes: 17%
+        Time source is NTP, 18:03:04.054 EST Sun Jun 6 2016
+
+
+        Route Distinguisher: 5918:50 (default for vrf L3VPN-0050)
+        BGP routing table entry for 5918:50:10.4.1.0/24, version 16933597
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2467/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:10.44.105.0/24, version 16933498
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 6620/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.2/32, version 16933598
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Not advertised to any peer
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Community: 62000:2
+              Extended Community: RT:5918:50
+              mpls labels in/out 2468/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.3/32, version 16933535
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 5463/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.4/32, version 16933534
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 5462/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.5/32, version 16933533
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 5461/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.6/32, version 16933532
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 5460/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.7/32, version 16933531
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 5459/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.8/32, version 16933543
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2906/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.9/32, version 16933542
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2905/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.10/32, version 16933541
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2904/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.11/32, version 16933540
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2903/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.12/32, version 16933539
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2901/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.13/32, version 16933538
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 5466/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.14/32, version 16933537
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 5465/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.15/32, version 16933536
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 5464/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.16/32, version 16933551
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2914/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.17/32, version 16933550
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2913/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.18/32, version 16933549
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2912/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.19/32, version 16933548
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2911/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.20/32, version 16933547
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2910/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.21/32, version 16933546
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2909/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.22/32, version 16933545
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2908/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.23/32, version 16933544
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2907/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.24/32, version 16933559
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2923/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.25/32, version 16933558
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2922/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.26/32, version 16933557
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2920/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.27/32, version 16933556
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2919/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.28/32, version 16933555
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2918/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.29/32, version 16933554
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2917/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.30/32, version 16933553
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2916/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.31/32, version 16933552
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 2915/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.32/32, version 16933506
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 6630/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.33/32, version 16933505
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 6629/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.34/32, version 16933504
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 6627/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.35/32, version 16933503
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 6626/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.36/32, version 16933502
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 6625/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.37/32, version 16933501
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 6624/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.38/32, version 16933500
+          Paths: (1 available, best #1, table L3VPN-0050)
+          Advertised to update-groups:
+             724       
+          Refresh Epoch 1
+          62000
+            192.168.10.253 (via vrf L3VPN-0050) from 192.168.10.253 (192.168.10.253)
+              Origin incomplete, metric 0, localpref 100, valid, external, best
+              Extended Community: RT:5918:50
+              mpls labels in/out 6623/nolabel
+              rx pathid: 0, tx pathid: 0x0
+        

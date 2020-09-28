@@ -21,7 +21,7 @@ class TestShowVersionDetail(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
         show version detail
-        Hostname: sr_hktGCS001
+        Hostname: sr_hktGDS201
         Model: vmx
         Junos: 19.2R1.8
         JUNOS OS Kernel 64-bit  [20190517.f0321c3_builder_stable_11]
@@ -285,9 +285,9 @@ class TestShowVersionDetail(unittest.TestCase):
     '''}
 
     golden_parsed_output = {
-        
+
     "software-information": {
-        "host-name": "sr_hktGCS001",
+        "host-name": "sr_hktGDS201",
         "junos-version": "19.2R1.8",
         "output": [
             "JLAUNCHD release 19.2R1.8 built by builder on 2019-06-21 17:47:00 UTC",
@@ -1726,8 +1726,8 @@ class TestShowVersionDetailNoForwarding(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
-    show version detail no-forwarding | no-more 
-    Hostname: sr_hktGCS001
+    show version detail no-forwarding | no-more
+    Hostname: sr_hktGDS201
     Model: vmx
     Junos: 19.2R1.8
     JUNOS OS Kernel 64-bit  [20190517.f0321c3_builder_stable_11]
@@ -1988,12 +1988,12 @@ class TestShowVersionDetailNoForwarding(unittest.TestCase):
     url-filterd-actions-dd release 19.2R1.8 built by builder on 2019-06-21 16:07:38 UTC
     virtualchassis-actions-dd release 19.2R1.8 built by builder on 2019-06-21 16:07:38 UTC
     vlans-ng-actions-dd release 19.2R1.8 built by builder on 2019-06-21 16:07:31 UTC
-        
+
     '''}
 
     golden_parsed_output = {
         "software-information": {
-        "host-name": "sr_hktGCS001",
+        "host-name": "sr_hktGDS201",
         "junos-version": "19.2R1.8",
         "output": [
             "JLAUNCHD release 19.2R1.8 built by builder on 2019-06-21 17:47:00 UTC",
@@ -3432,10 +3432,10 @@ class TestShowVersionInvokeOnAllRoutingEngines(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
-    show version invoke-on all-routing-engines | no-more 
+    show version invoke-on all-routing-engines | no-more
     re0:
     --------------------------------------------------------------------------
-    Hostname: sr_hktGCS001
+    Hostname: sr_hktGDS201
     Model: vmx
     Junos: 19.2R1.8
     JUNOS OS Kernel 64-bit  [20190517.f0321c3_builder_stable_11]
@@ -3503,8 +3503,8 @@ class TestShowVersionInvokeOnAllRoutingEngines(unittest.TestCase):
     JUNOS J-Insight [20190621.152752_builder_junos_192_r1]
     JUNOS Online Documentation [20190621.152752_builder_junos_192_r1]
     JUNOS jail runtime [20190517.f0321c3_builder_stable_11]
-    
-        
+
+
     '''}
 
     golden_parsed_output = {
@@ -3512,7 +3512,7 @@ class TestShowVersionInvokeOnAllRoutingEngines(unittest.TestCase):
             "multi-routing-engine-item": {
                 "re-name": "re0",
                 "software-information": {
-                    "host-name": "sr_hktGCS001",
+                    "host-name": "sr_hktGDS201",
                     "junos-version": "19.2R1.8",
                     "package-information": [
                         {
@@ -3781,8 +3781,8 @@ class TestShowVersionInvokeOnAllRoutingEngines(unittest.TestCase):
                 }
             }
         }
-        
-        
+
+
         }
 
     def test_empty(self):

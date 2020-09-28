@@ -34,4 +34,5 @@ jobs:
         make develop
         cd tests
         python -m unittest
+        python ci_folder_parsing.py
     

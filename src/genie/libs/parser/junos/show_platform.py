@@ -12,7 +12,7 @@ import re
 # Genie
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, \
-                    Optional, Use, SchemaTypeError
+                    Optional, Use
 
 
 # ===========================
@@ -139,7 +139,7 @@ class ShowVersionSchema(MetaParser):
 
     def validate_package_info_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('package infomation is not a list')
+            raise Exception('package infomation is not a list')
         package_info_schema = Schema(
             {
                 "comment": str,
@@ -260,7 +260,7 @@ class FileListDetailSchema(MetaParser):
     def validate_file_information_list(value):
         # Pass file-information of dict in value
         if not isinstance(value, list):
-            raise SchemaTypeError('file-information is not a list')
+            raise Exception('file-information is not a list')
         # Create protocols Schema
         file_information_schema = Schema({
             "file-date": {

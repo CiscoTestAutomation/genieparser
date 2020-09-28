@@ -1,0 +1,5 @@
+Router# show users
+    Line        User       Host(s)              Idle       Location
+ *  0 con 0                idle                 01:58
+   10 vty 0                Virtual-Access2        0        1212321
+    

@@ -1,0 +1,8 @@
+BOOT variable = disk0:s72033-adventerprisek9-mz.122-33.SRE0a-ssr-nxos-76k-1,12;
+CONFIG_FILE variable = 
+BOOTLDR variable = 
+Configuration register is 0x2012
+
+Standby not ready to show bootvar
+
+    

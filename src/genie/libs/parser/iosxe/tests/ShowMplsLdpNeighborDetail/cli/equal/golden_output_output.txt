@@ -1,0 +1,49 @@
+Router#show mpls ldp neighbor detail
+Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
+Time source is NTP, 16:10:10.569 EST Tue Nov 8 2016
+    Peer LDP Ident: 10.169.197.252:0; Local LDP Ident 10.169.197.254:0
+        TCP connection: 10.169.197.252.646 - 10.169.197.254.44315
+        Password: not required, none, in use
+        State: Oper; Msgs sent/rcvd: 9981/10004; Downstream; Last TIB rev sent 4103
+        Up time: 3d21h; UID: 4; Peer Id 0
+        LDP discovery sources:
+          GigabitEthernet0/0/0; Src IP addr: 10.169.197.93
+            holdtime: 15000 ms, hello interval: 5000 ms
+        Addresses bound to peer LDP Ident:
+          10.169.197.252 192.168.36.49  10.120.202.49    192.168.36.57
+          10.169.197.101 10.169.197.93  10.69.111.2   10.16.190.254
+        Peer holdtime: 180000 ms; KA interval: 60000 ms; Peer state: estab
+        NSR: Not Ready
+        Capabilities Sent:
+          [ICCP (type 0x0405) MajVer 1 MinVer 0]
+          [Dynamic Announcement (0x0506)]
+          [mLDP Point-to-Multipoint (0x0508)]
+          [mLDP Multipoint-to-Multipoint (0x0509)]
+          [Typed Wildcard (0x050B)]
+        Capabilities Received:
+          [ICCP (type 0x0405) MajVer 1 MinVer 0]
+          [Dynamic Announcement (0x0506)]
+          [mLDP Point-to-Multipoint (0x0508)]
+          [mLDP Multipoint-to-Multipoint (0x0509)]
+          [Typed Wildcard (0x050B)]
+    Peer LDP Ident: 10.169.197.253:0; Local LDP Ident 10.169.197.254:0
+        TCP connection: 10.169.197.253.646 - 10.169.197.254.34904
+        Password: not required, none, in use
+        State: Oper; Msgs sent/rcvd: 9966/9153; Downstream; Last TIB rev sent 4103
+        Up time: 3d21h; UID: 5; Peer Id 1
+        LDP discovery sources:
+          GigabitEthernet0/0/2; Src IP addr: 10.169.197.97
+            holdtime: 15000 ms, hello interval: 5000 ms
+        Addresses bound to peer LDP Ident:
+          10.120.202.57    10.169.197.97
+        Peer holdtime: 180000 ms; KA interval: 60000 ms; Peer state: estab
+        NSR: Not Ready
+        Capabilities Sent:
+          [ICCP (type 0x0405) MajVer 1 MinVer 0]
+          [Dynamic Announcement (0x0506)]
+          [mLDP Point-to-Multipoint (0x0508)]
+          [mLDP Multipoint-to-Multipoint (0x0509)]
+          [Typed Wildcard (0x050B)]
+        Capabilities Received:
+          [None]
+        

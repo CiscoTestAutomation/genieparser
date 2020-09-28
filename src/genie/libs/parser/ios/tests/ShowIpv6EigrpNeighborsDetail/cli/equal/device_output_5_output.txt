@@ -1,0 +1,20 @@
+
+#show ipv6 eigrp neighbors detail 
+EIGRP-IPv6 VR(test) Address-Family Neighbors for AS(100)
+H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq
+                                                   (sec)         (ms)       Cnt Num
+1   Link-local address:     Gi0/2.90                 11 01:42:01  739  4434  0  7
+    FE80::F816:3EFF:FE39:94CB
+   Version 3.3/2.0, Retrans: 0, Retries: 0, Prefixes: 4
+   Topology-ids from peer - 0
+   Topologies advertised to peer:   base
+
+0   Link-local address:     Gi0/3.90                 11 01:44:53  993  5000  0  11
+    FE80::5C00:80FF:FE01:7
+   Version 8.0/1.2, Retrans: 0, Retries: 0, Prefixes: 4
+   Topology-ids from peer - 0
+   Topologies advertised to peer:   base
+
+Max Nbrs: 0, Current Nbrs: 0
+
+    

@@ -29,7 +29,9 @@ from genie.libs.parser.junos.show_ospf import (
     ShowOspfDatabaseLsaidDetail,
     ShowOspfRouteBrief,
     ShowOspfRouteDetail,
-    ShowOspfRouteNetworkExtensive
+    ShowOspfRouteNetworkExtensive,
+    ShowOspfDatabaseAdvertisingRouterExtensive,
+    ShowOspfNeighborInstanceAll,
 )
 
 class TestShowOspfDatabaseOpaqueArea(unittest.TestCase):
@@ -5860,7 +5862,27 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
         Last changed 2w6d 18:58:13 ago, Change count: 75
     """
     }
-
+    golden_output_1 = {
+        "execute.return_value": """
+        show ospf database advertising-router 10.34.2.250 extensive
+            OSPF database, Area 0.0.0.8
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+        Router   10.34.2.250     10.34.2.250     0x80000003  1107  0x22 0x29f7  60
+        bits 0x0, link count 3
+        id 10.169.14.240, data 10.169.14.158, Type PointToPoint (1)
+            Topology count: 0, Default metric: 1
+        id 10.169.14.156, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 1
+        id 10.34.2.250, data 255.255.255.255, Type Stub (3)
+            Topology count: 0, Default metric: 0
+        Topology default (ID 0)
+            Type: PointToPoint, Node ID: 10.169.14.240
+            Metric: 1, Bidirectional
+        Aging timer 00:41:32
+        Installed 00:18:24 ago, expires in 00:41:33
+        Last changed 00:18:53 ago, Change count: 2
+        """
+    }
     golden_parsed_output = {
         "ospf-database-information": {
             "ospf-area-header": {"ospf-area": "0.0.0.8"},
@@ -10652,6 +10674,1038 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
             ],
         }
     }
+    golden_parsed_output_1 = {
+        "ospf-database-information": {
+            "ospf-area-header": {"ospf-area": "0.0.0.8"},
+            "ospf-database": [
+                {
+                    "advertising-router": "10.34.2.250",
+                    "age": "1107",
+                    "checksum": "0x29f7",
+                    "lsa-id": "10.34.2.250",
+                    "lsa-length": "60",
+                    "lsa-type": "Router",
+                    "options": "0x22",
+                    "ospf-database-extensive": {
+                        "aging-timer": {"#text": "00:41:32"},
+                        "expiration-time": {"#text": "00:41:33"},
+                        "installation-time": {"#text": "00:18:24"},
+                        "lsa-change-count": "2",
+                        "lsa-changed-time": {"#text": "00:18:53"},
+                    },
+                    "ospf-router-lsa": {
+                        "bits": "0x0",
+                        "link-count": "3",
+                        "ospf-link": [
+                            {
+                                "link-data": "10.169.14.158",
+                                "link-id": "10.169.14.240",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "10.169.14.158",
+                                "link-id": "10.169.14.240",
+                                "link-type-name": "PointToPoint",
+                                "link-type-value": "1",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.169.14.156",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.252",
+                                "link-id": "10.169.14.156",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "1",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "10.34.2.250",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "0",
+                                "ospf-topology-count": "0",
+                            },
+                            {
+                                "link-data": "255.255.255.255",
+                                "link-id": "10.34.2.250",
+                                "link-type-name": "Stub",
+                                "link-type-value": "3",
+                                "metric": "0",
+                                "ospf-topology-count": "0",
+                            },
+                        ],
+                        "ospf-lsa-topology": {
+                            "ospf-lsa-topology-link": [
+                                {
+                                    "link-type-name": "PointToPoint",
+                                    "ospf-lsa-topology-link-metric": "1",
+                                    "ospf-lsa-topology-link-node-id": "10.169.14.240",
+                                    "ospf-lsa-topology-link-state": "Bidirectional",
+                                }
+                            ],
+                            "ospf-topology-id": "0",
+                            "ospf-topology-name": "default",
+                        },
+                    },
+                    "sequence-number": "0x80000003",
+                },
+            ],
+        }
+    }
+
+
+    golden_output_2={
+        "execute.return_value": """
+        show ospf database extensive 
+            OSPF database, Area 0.0.0.0
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len 
+        Router   1.1.1.1          1.1.1.1          0x80000005    14  0x22 0x9f32  48
+        bits 0x2, link count 2
+        id 30.0.0.2, data 30.0.0.1, Type Transit (2)
+            Topology count: 0, Default metric: 1
+        id 1.1.1.1, data 255.255.255.255, Type Stub (3)
+            Topology count: 0, Default metric: 0
+        Topology default (ID 0)
+            Type: Transit, Node ID: 30.0.0.2
+            Metric: 1, Bidirectional
+        Aging timer 00:59:46
+        Installed 00:00:11 ago, expires in 00:59:46
+        Last changed 00:00:11 ago, Change count: 3
+        Router  *3.3.3.3          3.3.3.3          0x80000003    99  0x22 0xb705  48
+        bits 0x0, link count 2
+        id 30.0.0.2, data 30.0.0.2, Type Transit (2)
+            Topology count: 0, Default metric: 1
+        id 3.3.3.3, data 255.255.255.255, Type Stub (3)
+            Topology count: 0, Default metric: 0
+        Topology default (ID 0)
+            Type: Transit, Node ID: 30.0.0.2
+            Metric: 1, Bidirectional
+        Gen timer 00:48:21
+        Aging timer 00:58:21
+        Installed 00:01:39 ago, expires in 00:58:21, sent 00:01:37 ago
+        Last changed 00:01:39 ago, Change count: 2, Ours
+        Network *30.0.0.2         3.3.3.3          0x80000001   104  0x22 0x42bb  32
+        mask 255.255.255.0
+        attached router 3.3.3.3
+        attached router 1.1.1.1
+        Topology default (ID 0)
+            Type: Transit, Node ID: 1.1.1.1
+            Metric: 0, Bidirectional
+            Type: Transit, Node ID: 3.3.3.3
+            Metric: 0, Bidirectional
+        Gen timer 00:48:16
+        Aging timer 00:58:16
+        Installed 00:01:44 ago, expires in 00:58:16, sent 00:01:42 ago
+        Last changed 00:01:44 ago, Change count: 1, Ours
+            OSPF AS SCOPE link state database
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len 
+        Extern   11.11.11.11      1.1.1.1          0x80000001    14  0x22 0xe69b  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 2, Metric: 0, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:59:46
+        Installed 00:00:11 ago, expires in 00:59:46
+        Last changed 00:00:11 ago, Change count: 1
+  """
+    }
+
+    golden_parsed_output_2 = {
+        "ospf-database-information": {
+        "ospf-area-header": {
+            "ospf-area": "0.0.0.0"
+        },
+        "ospf-database": [
+            {
+                "advertising-router": "1.1.1.1",
+                "age": "14",
+                "checksum": "0x9f32",
+                "lsa-id": "1.1.1.1",
+                "lsa-length": "48",
+                "lsa-type": "Router",
+                "options": "0x22",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:59:46"
+                    },
+                    "expiration-time": {
+                        "#text": "00:59:46"
+                    },
+                    "installation-time": {
+                        "#text": "00:00:11"
+                    },
+                    "lsa-change-count": "3",
+                    "lsa-changed-time": {
+                        "#text": "00:00:11"
+                    }
+                },
+                "ospf-router-lsa": {
+                    "bits": "0x2",
+                    "link-count": "2",
+                    "ospf-link": [
+                        {
+                            "link-data": "30.0.0.1",
+                            "link-id": "30.0.0.2",
+                            "link-type-name": "Transit",
+                            "link-type-value": "2",
+                            "metric": "1",
+                            "ospf-topology-count": "0"
+                        },
+                        {
+                            "link-data": "30.0.0.1",
+                            "link-id": "30.0.0.2",
+                            "link-type-name": "Transit",
+                            "link-type-value": "2",
+                            "metric": "1",
+                            "ospf-topology-count": "0"
+                        },
+                        {
+                            "link-data": "255.255.255.255",
+                            "link-id": "1.1.1.1",
+                            "link-type-name": "Stub",
+                            "link-type-value": "3",
+                            "metric": "0",
+                            "ospf-topology-count": "0"
+                        },
+                        {
+                            "link-data": "255.255.255.255",
+                            "link-id": "1.1.1.1",
+                            "link-type-name": "Stub",
+                            "link-type-value": "3",
+                            "metric": "0",
+                            "ospf-topology-count": "0"
+                        }
+                    ],
+                    "ospf-lsa-topology": {
+                        "ospf-lsa-topology-link": [
+                            {
+                                "link-type-name": "Transit",
+                                "ospf-lsa-topology-link-metric": "1",
+                                "ospf-lsa-topology-link-node-id": "30.0.0.2",
+                                "ospf-lsa-topology-link-state": "Bidirectional"
+                            }
+                        ],
+                        "ospf-topology-id": "0",
+                        "ospf-topology-name": "default"
+                    }
+                },
+                "sequence-number": "0x80000005"
+            },
+            {
+                "advertising-router": "3.3.3.3",
+                "age": "99",
+                "checksum": "0xb705",
+                "lsa-id": "3.3.3.3",
+                "lsa-length": "48",
+                "lsa-type": "Router",
+                "options": "0x22",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:58:21"
+                    },
+                    "expiration-time": {
+                        "#text": "00:58:21"
+                    },
+                    "generation-timer": {
+                        "#text": "00:48:21"
+                    },
+                    "installation-time": {
+                        "#text": "00:01:39"
+                    },
+                    "send-time": {
+                        "#text": "00:01:37"
+                    }
+                },
+                "ospf-router-lsa": {
+                    "bits": "0x0",
+                    "link-count": "2",
+                    "ospf-link": [
+                        {
+                            "link-data": "30.0.0.2",
+                            "link-id": "30.0.0.2",
+                            "link-type-name": "Transit",
+                            "link-type-value": "2",
+                            "metric": "1",
+                            "ospf-topology-count": "0"
+                        },
+                        {
+                            "link-data": "30.0.0.2",
+                            "link-id": "30.0.0.2",
+                            "link-type-name": "Transit",
+                            "link-type-value": "2",
+                            "metric": "1",
+                            "ospf-topology-count": "0"
+                        },
+                        {
+                            "link-data": "255.255.255.255",
+                            "link-id": "3.3.3.3",
+                            "link-type-name": "Stub",
+                            "link-type-value": "3",
+                            "metric": "0",
+                            "ospf-topology-count": "0"
+                        },
+                        {
+                            "link-data": "255.255.255.255",
+                            "link-id": "3.3.3.3",
+                            "link-type-name": "Stub",
+                            "link-type-value": "3",
+                            "metric": "0",
+                            "ospf-topology-count": "0"
+                        }
+                    ],
+                    "ospf-lsa-topology": {
+                        "ospf-lsa-topology-link": [
+                            {
+                                "link-type-name": "Transit",
+                                "ospf-lsa-topology-link-metric": "1",
+                                "ospf-lsa-topology-link-node-id": "30.0.0.2",
+                                "ospf-lsa-topology-link-state": "Bidirectional"
+                            }
+                        ],
+                        "ospf-topology-id": "0",
+                        "ospf-topology-name": "default"
+                    }
+                },
+                "our-entry": True,
+                "sequence-number": "0x80000003"
+            },
+            {
+                "advertising-router": "3.3.3.3",
+                "age": "104",
+                "checksum": "0x42bb",
+                "lsa-id": "30.0.0.2",
+                "lsa-length": "32",
+                "lsa-type": "Network",
+                "options": "0x22",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:58:16"
+                    },
+                    "expiration-time": {
+                        "#text": "00:58:16"
+                    },
+                    "generation-timer": {
+                        "#text": "00:48:16"
+                    },
+                    "installation-time": {
+                        "#text": "00:01:44"
+                    },
+                    "send-time": {
+                        "#text": "00:01:42"
+                    }
+                },
+                "ospf-network-lsa": {
+                    "address-mask": "255.255.255.0",
+                    "attached-router": [
+                        "3.3.3.3",
+                        "1.1.1.1"
+                    ],
+                    "ospf-lsa-topology": {
+                        "ospf-lsa-topology-link": [
+                            {
+                                "link-type-name": "Transit",
+                                "ospf-lsa-topology-link-metric": "0",
+                                "ospf-lsa-topology-link-node-id": "1.1.1.1",
+                                "ospf-lsa-topology-link-state": "Bidirectional"
+                            },
+                            {
+                                "link-type-name": "Transit",
+                                "ospf-lsa-topology-link-metric": "0",
+                                "ospf-lsa-topology-link-node-id": "3.3.3.3",
+                                "ospf-lsa-topology-link-state": "Bidirectional"
+                            }
+                        ],
+                        "ospf-topology-id": "0",
+                        "ospf-topology-name": "default"
+                    }
+                },
+                "our-entry": True,
+                "sequence-number": "0x80000001"
+            },
+            {
+                "advertising-router": "1.1.1.1",
+                "age": "14",
+                "checksum": "0xe69b",
+                "lsa-id": "11.11.11.11",
+                "lsa-length": "36",
+                "lsa-type": "Extern",
+                "options": "0x22",
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": "00:59:46"
+                    },
+                    "expiration-time": {
+                        "#text": "00:59:46"
+                    },
+                    "installation-time": {
+                        "#text": "00:00:11"
+                    },
+                    "lsa-change-count": "1",
+                    "lsa-changed-time": {
+                        "#text": "00:00:11"
+                    }
+                },
+                "ospf-external-lsa": {
+                    "address-mask": "255.255.255.255",
+                    "ospf-external-lsa-topology": {
+                        "forward-address": "0.0.0.0",
+                        "ospf-topology-id": "0",
+                        "ospf-topology-metric": "0",
+                        "ospf-topology-name": "default",
+                        "tag": "0.0.0.0",
+                        "type-value": "2"
+                    }
+                },
+                "sequence-number": "0x80000001"
+            }
+        ]
+    }
+    }
+
+
+    golden_output_3 = {"execute.return_value": """
+        show ospf database netsummary extensive
+
+            OSPF database, Area 0.0.0.0
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+        Summary *1.2.0.0          1.1.1.1          0x80000005  2388  0x22 0x48e8  28
+        mask 255.255.255.0
+        Topology default (ID 0) -> Metric: 1
+        Gen timer 00:10:10
+        Aging timer 00:20:12
+        Installed 00:39:48 ago, expires in 00:20:12
+        Last changed 02:12:22 ago, Change count: 1, Ours
+        Summary *2.2.2.2          1.1.1.1          0x80000003  1890  0x22 0x1519  28
+        mask 255.255.255.255
+        Topology default (ID 0) -> Metric: 1
+        Gen timer 00:18:30
+        Aging timer 00:28:30
+        Installed 00:31:30 ago, expires in 00:28:30
+        Last changed 02:11:30 ago, Change count: 1, Ours
+
+            OSPF database, Area 0.0.0.1
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+        Summary *1.1.1.1          1.1.1.1          0x80000005  1389  0x22 0x35fb  28
+        mask 255.255.255.255
+        Topology default (ID 0) -> Metric: 0
+        Gen timer 00:26:50
+        Aging timer 00:36:50
+        Installed 00:23:09 ago, expires in 00:36:51, sent 00:23:07 ago
+        Last changed 02:12:22 ago, Change count: 1, Ours
+        Summary *11.11.11.11      1.1.1.1          0x80000005   890  0x22 0x67a1  28
+        mask 255.255.255.255
+        Topology default (ID 0) -> Metric: 0
+        Gen timer 00:35:10
+        Aging timer 00:45:10
+        Installed 00:14:50 ago, expires in 00:45:10, sent 00:14:47 ago
+        Last changed 02:12:22 ago, Change count: 1, Ours
+    """}
+
+    golden_parsed_output_3 = {
+        'ospf-database-information': {
+            'ospf-area-header': {
+            'ospf-area': '0.0.0.1'
+            },
+            'ospf-database': [{
+            'lsa-type': 'Summary',
+            'lsa-id': '1.2.0.0',
+            'advertising-router': '1.1.1.1',
+            'sequence-number': '0x80000005',
+            'age': '2388',
+            'options': '0x22',
+            'checksum': '0x48e8',
+            'lsa-length': '28',
+            'our-entry': True,
+            'ospf-summary-lsa': {
+                'address-mask': '255.255.255.0',
+                'ospf-summary-lsa-topology': {
+                'ospf-topology-name': 'default',
+                'ospf-topology-id': '0',
+                'ospf-topology-metric': '1'
+                }
+            },
+            'ospf-database-extensive': {
+                'generation-timer': {
+                '#text': '00:10:10'
+                },
+                'aging-timer': {
+                '#text': '00:20:12'
+                },
+                'installation-time': {
+                    '#text': '00:39:48'
+                },
+                'expiration-time': {
+                    '#text': '00:20:12'
+                }
+            }
+            }, {
+            'lsa-type': 'Summary',
+            'lsa-id': '2.2.2.2',
+            'advertising-router': '1.1.1.1',
+            'sequence-number': '0x80000003',
+            'age': '1890',
+            'options': '0x22',
+            'checksum': '0x1519',
+            'lsa-length': '28',
+            'our-entry': True,
+            'ospf-summary-lsa': {
+                'address-mask': '255.255.255.255',
+                'ospf-summary-lsa-topology': {
+                'ospf-topology-name': 'default',
+                'ospf-topology-id': '0',
+                'ospf-topology-metric': '1'
+                }
+            },
+            'ospf-database-extensive': {
+                'generation-timer': {
+                '#text': '00:18:30'
+                },
+                'aging-timer': {
+                '#text': '00:28:30'
+                },
+                'generation-timer': {
+                    '#text': '00:18:30'
+                },
+                'installation-time': {
+                    '#text': '00:31:30'
+                },
+                'expiration-time': {
+                    '#text': '00:28:30'
+                }
+            }
+            }, {
+            'lsa-type': 'Summary',
+            'lsa-id': '1.1.1.1',
+            'advertising-router': '1.1.1.1',
+            'sequence-number': '0x80000005',
+            'age': '1389',
+            'options': '0x22',
+            'checksum': '0x35fb',
+            'lsa-length': '28',
+            'our-entry': True,
+            'ospf-summary-lsa': {
+                'address-mask': '255.255.255.255',
+                'ospf-summary-lsa-topology': {
+                'ospf-topology-name': 'default',
+                'ospf-topology-id': '0',
+                'ospf-topology-metric': '0'
+                }
+            },
+            'ospf-database-extensive': {
+                'generation-timer': {
+                '#text': '00:26:50'
+                },
+                'aging-timer': {
+                '#text': '00:36:50'
+                },
+                'expiration-time': {
+                '#text': '00:36:51'
+                },
+                'installation-time': {
+                '#text': '00:23:09'
+                },
+                'send-time': {
+                '#text': '00:23:07'
+                }
+            }
+            }, {
+            'lsa-type': 'Summary',
+            'lsa-id': '11.11.11.11',
+            'advertising-router': '1.1.1.1',
+            'sequence-number': '0x80000005',
+            'age': '890',
+            'options': '0x22',
+            'checksum': '0x67a1',
+            'lsa-length': '28',
+            'our-entry': True,
+            'ospf-summary-lsa': {
+                'address-mask': '255.255.255.255',
+                'ospf-summary-lsa-topology': {
+                'ospf-topology-name': 'default',
+                'ospf-topology-id': '0',
+                'ospf-topology-metric': '0'
+                }
+            },
+            'ospf-database-extensive': {
+                'generation-timer': {
+                '#text': '00:35:10'
+                },
+                'aging-timer': {
+                '#text': '00:45:10'
+                },
+                'expiration-time': {
+                '#text': '00:45:10'
+                },
+                'installation-time': {
+                '#text': '00:14:50'
+                },
+                'send-time': {
+                '#text': '00:14:47'
+                }
+            }
+            }]
+        }
+        }
+
+    golden_output_4 = {"execute.return_value": """
+        show ospf database extensive
+
+            OSPF database, Area 0.0.0.0
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+        Router  *1.1.1.1          1.1.1.1          0x80000005   271  0x22 0xb233  48
+        bits 0x1, link count 2
+        id 1.1.1.1, data 255.255.255.255, Type Stub (3)
+            Topology count: 0, Default metric: 0
+        id 11.11.11.11, data 255.255.255.255, Type Stub (3)
+            Topology count: 0, Default metric: 0
+        Gen timer 00:45:29
+        Aging timer 00:55:29
+        Installed 00:04:31 ago, expires in 00:55:29
+        Last changed 02:10:28 ago, Change count: 1, Ours
+        Summary *1.2.0.0          1.1.1.1          0x80000005  2269  0x22 0x48e8  28
+        mask 255.255.255.0
+        Topology default (ID 0) -> Metric: 1
+        Gen timer 00:12:08
+        Aging timer 00:22:10
+        Installed 00:37:49 ago, expires in 00:22:11
+        Last changed 02:10:23 ago, Change count: 1, Ours
+        Summary *2.2.2.2          1.1.1.1          0x80000003  1771  0x22 0x1519  28
+        mask 255.255.255.255
+        Topology default (ID 0) -> Metric: 1
+        Gen timer 00:20:28
+        Aging timer 00:30:28
+        Installed 00:29:31 ago, expires in 00:30:29
+        Last changed 02:09:31 ago, Change count: 1, Ours
+
+            OSPF database, Area 0.0.0.1
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+        Router  *1.1.1.1          1.1.1.1          0x80000006  2768  0x22 0xf427  36
+        bits 0x1, link count 1
+        id 1.2.0.2, data 1.2.0.1, Type Transit (2)
+            Topology count: 0, Default metric: 1
+        Topology default (ID 0)
+            Type: Transit, Node ID: 1.2.0.2
+            Metric: 1, Bidirectional
+        Gen timer 00:03:48
+        Aging timer 00:13:52
+        Installed 00:46:08 ago, expires in 00:13:52, sent 00:46:06 ago
+        Last changed 02:09:36 ago, Change count: 2, Ours
+        Router   2.2.2.2          2.2.2.2          0x80000005  1777  0x22 0xc933  48
+        bits 0x0, link count 2
+        id 1.2.0.2, data 1.2.0.2, Type Transit (2)
+            Topology count: 0, Default metric: 1
+        id 2.2.2.2, data 255.255.255.255, Type Stub (3)
+            Topology count: 0, Default metric: 0
+        Topology default (ID 0)
+            Type: Transit, Node ID: 1.2.0.2
+            Metric: 1, Bidirectional
+        Aging timer 00:30:22
+        Installed 00:29:34 ago, expires in 00:30:23
+        Last changed 02:09:34 ago, Change count: 2
+        Network  1.2.0.2          2.2.2.2          0x80000003  1782  0x22 0x9c82  32
+        mask 255.255.255.0
+        attached router 2.2.2.2
+        attached router 1.1.1.1
+        Topology default (ID 0)
+            Type: Transit, Node ID: 1.1.1.1
+            Metric: 0, Bidirectional
+            Type: Transit, Node ID: 2.2.2.2
+            Metric: 0, Bidirectional
+        Aging timer 00:30:17
+        Installed 00:29:39 ago, expires in 00:30:18
+        Last changed 02:09:39 ago, Change count: 1
+        Summary *1.1.1.1          1.1.1.1          0x80000005  1270  0x22 0x35fb  28
+        mask 255.255.255.255
+        Topology default (ID 0) -> Metric: 0
+        Gen timer 00:28:48
+        Aging timer 00:38:49
+        Installed 00:21:10 ago, expires in 00:38:50, sent 00:21:08 ago
+        Last changed 02:10:23 ago, Change count: 1, Ours
+        Summary *11.11.11.11      1.1.1.1          0x80000005   771  0x22 0x67a1  28
+        mask 255.255.255.255
+        Topology default (ID 0) -> Metric: 0
+        Gen timer 00:37:08
+        Aging timer 00:47:09
+        Installed 00:12:51 ago, expires in 00:47:09, sent 00:12:48 ago
+        Last changed 02:10:23 ago, Change count: 1, Ours
+    """}
+
+    golden_parsed_output_4 = {
+        'ospf-database-information': {
+            'ospf-area-header': {
+            'ospf-area': '0.0.0.1'
+            },
+            'ospf-database': [{
+            'lsa-type': 'Router',
+            'lsa-id': '1.1.1.1',
+            'advertising-router': '1.1.1.1',
+            'sequence-number': '0x80000005',
+            'age': '271',
+            'options': '0x22',
+            'checksum': '0xb233',
+            'lsa-length': '48',
+            'our-entry': True,
+            'ospf-router-lsa': {
+                'bits': '0x1',
+                'link-count': '2',
+                'ospf-link': [{
+                'link-id': '1.1.1.1',
+                'link-data': '255.255.255.255',
+                'link-type-name': 'Stub',
+                'link-type-value': '3',
+                'ospf-topology-count': '0',
+                'metric': '0'
+                }, {
+                'link-id': '1.1.1.1',
+                'link-data': '255.255.255.255',
+                'link-type-name': 'Stub',
+                'link-type-value': '3',
+                'ospf-topology-count': '0',
+                'metric': '0'
+                }, {
+                'link-id': '11.11.11.11',
+                'link-data': '255.255.255.255',
+                'link-type-name': 'Stub',
+                'link-type-value': '3',
+                'ospf-topology-count': '0',
+                'metric': '0'
+                }, {
+                'link-id': '11.11.11.11',
+                'link-data': '255.255.255.255',
+                'link-type-name': 'Stub',
+                'link-type-value': '3',
+                'ospf-topology-count': '0',
+                'metric': '0'
+                }]
+            },
+            'ospf-database-extensive': {
+                'generation-timer': {
+                '#text': '00:45:29'
+                },
+                'aging-timer': {
+                '#text': '00:55:29'
+                },
+                'expiration-time': {
+                    '#text': '00:55:29'
+                },
+                'installation-time': {
+                    '#text': '00:04:31'
+                }
+            }
+            }, {
+            'lsa-type': 'Summary',
+            'lsa-id': '1.2.0.0',
+            'advertising-router': '1.1.1.1',
+            'sequence-number': '0x80000005',
+            'age': '2269',
+            'options': '0x22',
+            'checksum': '0x48e8',
+            'lsa-length': '28',
+            'our-entry': True,
+            'ospf-summary-lsa': {
+                'address-mask': '255.255.255.0',
+                'ospf-summary-lsa-topology': {
+                'ospf-topology-name': 'default',
+                'ospf-topology-id': '0',
+                'ospf-topology-metric': '1'
+                }
+            },
+            'ospf-database-extensive': {
+                'generation-timer': {
+                '#text': '00:12:08'
+                },
+                'aging-timer': {
+                '#text': '00:22:10'
+                },
+                'expiration-time': {
+                    '#text': '00:22:11'
+                },
+                'installation-time': {
+                    '#text': '00:37:49'
+                },
+            }
+            }, {
+            'lsa-type': 'Summary',
+            'lsa-id': '2.2.2.2',
+            'advertising-router': '1.1.1.1',
+            'sequence-number': '0x80000003',
+            'age': '1771',
+            'options': '0x22',
+            'checksum': '0x1519',
+            'lsa-length': '28',
+            'our-entry': True,
+            'ospf-summary-lsa': {
+                'address-mask': '255.255.255.255',
+                'ospf-summary-lsa-topology': {
+                'ospf-topology-name': 'default',
+                'ospf-topology-id': '0',
+                'ospf-topology-metric': '1'
+                }
+            },
+            'ospf-database-extensive': {
+                'generation-timer': {
+                '#text': '00:20:28'
+                },
+                'aging-timer': {
+                '#text': '00:30:28'
+                },
+                'expiration-time': {
+                    '#text': '00:30:29'
+                },
+                'installation-time': {
+                    '#text': '00:29:31'
+                },
+            }
+            }, {
+            'lsa-type': 'Router',
+            'lsa-id': '1.1.1.1',
+            'advertising-router': '1.1.1.1',
+            'sequence-number': '0x80000006',
+            'age': '2768',
+            'options': '0x22',
+            'checksum': '0xf427',
+            'lsa-length': '36',
+            'our-entry': True,
+            'ospf-router-lsa': {
+                'bits': '0x1',
+                'link-count': '1',
+                'ospf-link': [{
+                'link-id': '1.2.0.2',
+                'link-data': '1.2.0.1',
+                'link-type-name': 'Transit',
+                'link-type-value': '2',
+                'ospf-topology-count': '0',
+                'metric': '1'
+                }, {
+                'link-id': '1.2.0.2',
+                'link-data': '1.2.0.1',
+                'link-type-name': 'Transit',
+                'link-type-value': '2',
+                'ospf-topology-count': '0',
+                'metric': '1'
+                }],
+                'ospf-lsa-topology': {
+                'ospf-topology-name': 'default',
+                'ospf-topology-id': '0',
+                'ospf-lsa-topology-link': [{
+                    'link-type-name': 'Transit',
+                    'ospf-lsa-topology-link-node-id': '1.2.0.2',
+                    'ospf-lsa-topology-link-metric': '1',
+                    'ospf-lsa-topology-link-state': 'Bidirectional'
+                }]
+                }
+            },
+            'ospf-database-extensive': {
+                'generation-timer': {
+                '#text': '00:03:48'
+                },
+                'aging-timer': {
+                '#text': '00:13:52'
+                },
+                'expiration-time': {
+                '#text': '00:13:52'
+                },
+                'installation-time': {
+                '#text': '00:46:08'
+                },
+                'send-time': {
+                '#text': '00:46:06'
+                }
+            }
+            }, {
+            'lsa-type': 'Router',
+            'lsa-id': '2.2.2.2',
+            'advertising-router': '2.2.2.2',
+            'sequence-number': '0x80000005',
+            'age': '1777',
+            'options': '0x22',
+            'checksum': '0xc933',
+            'lsa-length': '48',
+            'ospf-router-lsa': {
+                'bits': '0x0',
+                'link-count': '2',
+                'ospf-link': [{
+                'link-id': '1.2.0.2',
+                'link-data': '1.2.0.2',
+                'link-type-name': 'Transit',
+                'link-type-value': '2',
+                'ospf-topology-count': '0',
+                'metric': '1'
+                }, {
+                'link-id': '1.2.0.2',
+                'link-data': '1.2.0.2',
+                'link-type-name': 'Transit',
+                'link-type-value': '2',
+                'ospf-topology-count': '0',
+                'metric': '1'
+                }, {
+                'link-id': '2.2.2.2',
+                'link-data': '255.255.255.255',
+                'link-type-name': 'Stub',
+                'link-type-value': '3',
+                'ospf-topology-count': '0',
+                'metric': '0'
+                }, {
+                'link-id': '2.2.2.2',
+                'link-data': '255.255.255.255',
+                'link-type-name': 'Stub',
+                'link-type-value': '3',
+                'ospf-topology-count': '0',
+                'metric': '0'
+                }],
+                'ospf-lsa-topology': {
+                'ospf-topology-name': 'default',
+                'ospf-topology-id': '0',
+                'ospf-lsa-topology-link': [{
+                    'link-type-name': 'Transit',
+                    'ospf-lsa-topology-link-node-id': '1.2.0.2',
+                    'ospf-lsa-topology-link-metric': '1',
+                    'ospf-lsa-topology-link-state': 'Bidirectional'
+                }]
+                }
+            },
+            'ospf-database-extensive': {
+                'aging-timer': {
+                '#text': '00:30:22'
+                },
+                'lsa-changed-time': {
+                '#text': '02:09:34'
+                },
+                'expiration-time': {
+                    '#text': '00:30:23'
+                },
+                'installation-time': {
+                    '#text': '00:29:34'
+                },
+                'lsa-change-count': '2'
+            }
+            }, {
+            'lsa-type': 'Network',
+            'lsa-id': '1.2.0.2',
+            'advertising-router': '2.2.2.2',
+            'sequence-number': '0x80000003',
+            'age': '1782',
+            'options': '0x22',
+            'checksum': '0x9c82',
+            'lsa-length': '32',
+            'ospf-network-lsa': {
+                'address-mask': '255.255.255.0',
+                'attached-router': ['2.2.2.2', '1.1.1.1'],
+                'ospf-lsa-topology': {
+                'ospf-topology-name': 'default',
+                'ospf-topology-id': '0',
+                'ospf-lsa-topology-link': [{
+                    'link-type-name': 'Transit',
+                    'ospf-lsa-topology-link-node-id': '1.1.1.1',
+                    'ospf-lsa-topology-link-metric': '0',
+                    'ospf-lsa-topology-link-state': 'Bidirectional'
+                }, {
+                    'link-type-name': 'Transit',
+                    'ospf-lsa-topology-link-node-id': '2.2.2.2',
+                    'ospf-lsa-topology-link-metric': '0',
+                    'ospf-lsa-topology-link-state': 'Bidirectional'
+                }]
+                }
+            },
+            'ospf-database-extensive': {
+                'aging-timer': {
+                '#text': '00:30:17'
+                },
+                'lsa-changed-time': {
+                '#text': '02:09:39'
+                },
+                'expiration-time': {
+                    '#text': '00:30:18'
+                },
+                'installation-time': {
+                    '#text': '00:29:39'
+                },
+                'lsa-change-count': '1'
+            }
+            }, {
+            'lsa-type': 'Summary',
+            'lsa-id': '1.1.1.1',
+            'advertising-router': '1.1.1.1',
+            'sequence-number': '0x80000005',
+            'age': '1270',
+            'options': '0x22',
+            'checksum': '0x35fb',
+            'lsa-length': '28',
+            'our-entry': True,
+            'ospf-summary-lsa': {
+                'address-mask': '255.255.255.255',
+                'ospf-summary-lsa-topology': {
+                'ospf-topology-name': 'default',
+                'ospf-topology-id': '0',
+                'ospf-topology-metric': '0'
+                }
+            },
+            'ospf-database-extensive': {
+                'generation-timer': {
+                '#text': '00:28:48'
+                },
+                'aging-timer': {
+                '#text': '00:38:49'
+                },
+                'expiration-time': {
+                '#text': '00:38:50'
+                },
+                'installation-time': {
+                '#text': '00:21:10'
+                },
+                'send-time': {
+                '#text': '00:21:08'
+                }
+            }
+            }, {
+            'lsa-type': 'Summary',
+            'lsa-id': '11.11.11.11',
+            'advertising-router': '1.1.1.1',
+            'sequence-number': '0x80000005',
+            'age': '771',
+            'options': '0x22',
+            'checksum': '0x67a1',
+            'lsa-length': '28',
+            'our-entry': True,
+            'ospf-summary-lsa': {
+                'address-mask': '255.255.255.255',
+                'ospf-summary-lsa-topology': {
+                'ospf-topology-name': 'default',
+                'ospf-topology-id': '0',
+                'ospf-topology-metric': '0'
+                }
+            },
+            'ospf-database-extensive': {
+                'generation-timer': {
+                '#text': '00:37:08'
+                },
+                'aging-timer': {
+                '#text': '00:47:09'
+                },
+                'expiration-time': {
+                '#text': '00:47:09'
+                },
+                'installation-time': {
+                '#text': '00:12:51'
+                },
+                'send-time': {
+                '#text': '00:12:48'
+                }
+            }
+            }]
+        }
+        }
 
     def test_empty(self):
         pass
@@ -10666,6 +11720,30 @@ class TestShowOspfDatabaseExtensive(unittest.TestCase):
         obj = ShowOspfDatabaseExtensive(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowOspfDatabaseAdvertisingRouterExtensive(device=self.device)
+        parsed_output = obj.parse(ipaddress='10.34.2.250')
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowOspfDatabaseExtensive(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowOspfDatabaseExtensive(device=self.device)
+        parsed_output = obj.parse(data_type='netsummary')
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+    def test_golden_4(self):
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowOspfDatabaseExtensive(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 
 class TestShowOspfNeighborExtensive(unittest.TestCase):
@@ -14110,6 +15188,73 @@ class TestShowOspfRouteNetworkExtensive(unittest.TestCase):
     def test_show_ospf_route_network_extensive(self):
         self.device = Mock(**self.golden_output)
         obj = ShowOspfRouteNetworkExtensive(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class TestShowOspfNeighborInstanceAll(unittest.TestCase):
+    """ Unit tests for:
+            * show ospf neighbor instance all
+    """
+
+    device = Device(name="aDevice")
+
+    empty_output = {"execute.return_value": ""}
+
+    golden_output = {
+        "execute.return_value": """
+        show ospf neighbor instance all
+        Instance: master
+        Address          Interface              State     ID               Pri  Dead
+        10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    32
+        10.169.14.121   ge-0/0/1.0             Full      10.169.14.240   128    33
+        10.19.198.26     ge-0/0/2.0             Full      10.19.198.239      1    33
+        """
+    }
+
+    golden_parsed_output = {
+        "ospf-neighbor-information-all": { 'ospf-instance-neighbor':
+            {
+                "ospf-instance-name": "master",
+                "ospf-neighbor": [
+                {
+                    "neighbor-address": "10.189.5.94",
+                    "interface-name": "ge-0/0/0.0",
+                    "ospf-neighbor-state": "Full",
+                    "neighbor-id": "10.189.5.253",
+                    "neighbor-priority": "128",
+                    "activity-timer": "32",
+                },
+                {
+                    "neighbor-address": "10.169.14.121",
+                    "interface-name": "ge-0/0/1.0",
+                    "ospf-neighbor-state": "Full",
+                    "neighbor-id": "10.169.14.240",
+                    "neighbor-priority": "128",
+                    "activity-timer": "33",
+                },
+                {
+                    "neighbor-address": "10.19.198.26",
+                    "interface-name": "ge-0/0/2.0",
+                    "ospf-neighbor-state": "Full",
+                    "neighbor-id": "10.19.198.239",
+                    "neighbor-priority": "1",
+                    "activity-timer": "33",
+                },
+            ]
+            }
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfNeighborInstanceAll(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspfNeighborInstanceAll(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
