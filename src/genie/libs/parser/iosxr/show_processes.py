@@ -384,6 +384,7 @@ class ShowProcesses(ShowProcessesSchema):
 
         return parsed_output
 
+
 class ShowProcessesCpuSchema(MetaParser):
     """
     Schema for show processes cpu
@@ -407,6 +408,7 @@ class ShowProcessesCpuSchema(MetaParser):
         }
     }
 
+
 class ShowProcessesCpu(ShowProcessesCpuSchema):
     """
     Parser for show processes cpu
@@ -427,10 +429,14 @@ class ShowProcessesCpu(ShowProcessesCpuSchema):
         p1 = re.compile(r'^----\s+(?P<location>\S+)\s+----$')
 
         # CPU utilization for one minute: 0%; five minutes: 0%; fifteen minutes: 0%
-        p2 = re.compile(r'^CPU\s+utilization\s+for\s+one\s+minute:\s+(?P<one_min_cpu>\d+)\%;\s+five\s+minutes:\s+(?P<five_min_cpu>\d+)\%;\s+fifteen\s+minutes:\s+(?P<fifteen_min_cpu>\d+)%$')
+        p2 = re.compile(
+            r'^CPU\s+utilization\s+for\s+one\s+minute:\s+(?P<one_min_cpu>\d+)\%;\s+five\s+minutes:\s+(?P<five_min_cpu>\d+)\%;\s+fifteen\s+minutes:\s+(?P<fifteen_min_cpu>\d+)%$'
+        )
 
         # 1        0%      0%       0% init
-        p3 = re.compile(r'^(?P<pid>\d+)\s+(?P<one_min_cpu>\d+)%\s+(?P<five_min_cpu>\d+)%\s+(?P<fifteen_min_cpu>\d+)%\s+(?P<process>\S+)$')
+        p3 = re.compile(
+            r'^(?P<pid>\d+)\s+(?P<one_min_cpu>\d+)%\s+(?P<five_min_cpu>\d+)%\s+(?P<fifteen_min_cpu>\d+)%\s+(?P<process>\S+)$'
+        )
 
         for line in out.splitlines():
             line = line.strip()
@@ -445,7 +451,9 @@ class ShowProcessesCpu(ShowProcessesCpuSchema):
             # CPU utilization for one minute: 0%; five minutes: 0%; fifteen minutes: 0%
             m = p2.match(line)
             if m:
-                ret_dict['location'][location].update({k: int(v) for k, v in m.groupdict().items()})
+                ret_dict['location'][location].update(
+                    {k: int(v)
+                     for k, v in m.groupdict().items()})
                 continue
 
             # 1        0%      0%       0% init
@@ -453,10 +461,16 @@ class ShowProcessesCpu(ShowProcessesCpuSchema):
             if m:
                 index += 1
                 for k, v in m.groupdict().items():
-                    if k in ['pid', 'one_min_cpu', 'five_min_cpu', 'fifteen_min_cpu']:
-                        ret_dict['location'][location].setdefault('index', {}).setdefault(index, {}).update({k: int(v)})
+                    if k in [
+                            'pid', 'one_min_cpu', 'five_min_cpu',
+                            'fifteen_min_cpu'
+                    ]:
+                        ret_dict['location'][location].setdefault(
+                            'index', {}).setdefault(index,
+                                                    {}).update({k: int(v)})
                     else:
-                        ret_dict['location'][location].setdefault('index', {}).setdefault(index, {}).update({k: v})
+                        ret_dict['location'][location].setdefault(
+                            'index', {}).setdefault(index, {}).update({k: v})
                 continue
 
         return ret_dict
