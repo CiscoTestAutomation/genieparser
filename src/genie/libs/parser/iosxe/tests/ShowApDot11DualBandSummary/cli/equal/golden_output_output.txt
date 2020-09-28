@@ -1,4 +1,4 @@
 AP Name                           Mac Address     Slot  Admin State   Oper State     Width  Txpwr           Mode    Subband    channel 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
-aa-test-4800                 64d8.14ec.1120  0     Enabled       Down           20     *1/8 (23 dBm)   Local   All        (6)*
-aa-test-4800                 64d8.14ec.1120  2     Enabled       Down           20     N/A             Monitor All        N/A
+aa-test-4800                 64d8.14ff.fd0d  0     Enabled       Down           20     *1/8 (23 dBm)   Local   All        (6)*
+aa-test-4800                 64d8.14ff.fd0d  2     Enabled       Down           20     N/A             Monitor All        N/A

@@ -1,7 +1,7 @@
 
-#show sdwan ipsec local-sa 78.78.0.9
+#show sdwan ipsec local-sa 10.111.0.9
                                           SOURCE           SOURCE                                  SOURCE            
 TLOC ADDRESS     TLOC COLOR       SPI     IPv4             IPv6                                    PORT    KEY HASH  
 ----------------------------------------------------------------------------------------------------------------------
-78.78.0.9        biz-internet     259     77.27.8.2        ::                                      12346   *****8d95 
-78.78.0.9        biz-internet     260     77.27.8.2        ::                                      12346   *****4447
+10.111.0.9        biz-internet     259     10.106.8.2        ::                                      12346   *****8d95 
+10.111.0.9        biz-internet     260     10.106.8.2        ::                                      12346   *****4447
