@@ -51,7 +51,8 @@ from genie.libs.parser.iosxe.show_platform import \
     ShowModule as ShowModule_iosxe, \
     ShowSwitch as ShowSwitch_iosxe, \
     ShowSwitchDetail as ShowSwitchDetail_iosxe, \
-    ShowBootvar as ShowBootvar_iosxe
+    ShowBootvar as ShowBootvar_iosxe, \
+    ShowProcessesMemory as ShowProcessesMemory_iosxe
 
 
 class ShowVersion(ShowVersion_iosxe):
@@ -636,7 +637,7 @@ class ShowProcessesMemorySchema(MetaParser):
     }
 
 
-class ShowProcessesMemory(ShowProcessesMemorySchema):
+class ShowProcessesMemory(ShowProcessesMemory_iosxe):
 
     cli_command = [
         'show processes memory',
@@ -657,64 +658,5 @@ class ShowProcessesMemory(ShowProcessesMemorySchema):
         else:
             out = output
 
-        # Processor Pool Total: 10147887840 Used:  485435960 Free: 9662451880
-        p1 = re.compile(r'^Processor +Pool +Total: +(?P<total>\d+) +'
-                        r'Used: +(?P<used>\d+) +Free: +(?P<free>\d+)$')
-
-        # reserve P Pool Total:     102404 Used:         88 Free:     102316
-        p2 = re.compile(r'^reserve +P +Pool +Total: +(?P<total>\d+) +'
-                        r'Used: +(?P<used>\d+) +Free: +(?P<free>\d+)$')
-
-        # lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
-        p3 = re.compile(r'^lsmpi_io +Pool +Total: +(?P<total>\d+) +'
-                        r'Used: +(?P<used>\d+) +Free: +(?P<free>\d+)$')
-
-        # 0   0  678985440  347855496  304892096        428    2134314 *Init*
-        # 1   0    3415536     879912    2565568          0          0 Chunk Manager
-        p4 = re.compile(r'^(?P<pid>\d+) +(?P<tty>\d+) +(?P<allocated>\d+) +'
-                        r'(?P<freed>\d+) +(?P<holding>\d+) +(?P<getbufs>\d+) +'
-                        r'(?P<retbufs>\d+) +(?P<process>[\S ]+)$')
-
-        for line in out.splitlines():
-            line = line.strip()
-
-            # Processor Pool Total: 10147887840 Used:  485435960 Free: 9662451880
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                processor_pool_dict = ret_dict.setdefault('processor_pool', {})
-                processor_pool_dict.update({k: int(v) for k, v in group.items() if v is not None})
-                continue
-
-            # reserve P Pool Total:     102404 Used:         88 Free:     102316
-            m = p2.match(line)
-            if m:
-                group = m.groupdict()
-                processor_pool_dict = ret_dict.setdefault('reserve_p_pool', {})
-                processor_pool_dict.update({k: int(v) for k, v in group.items() if v is not None})
-                continue
-
-            # lsmpi_io Pool Total:    6295128 Used:    6294296 Free:        832
-            m = p3.match(line)
-            if m:
-                group = m.groupdict()
-                processor_pool_dict = ret_dict.setdefault('lsmi_io_pool', {})
-                processor_pool_dict.update({k: int(v) for k, v in group.items() if v is not None})
-                continue
-
-            # 0   0  678985440  347855496  304892096        428    2134314 *Init*
-            # 1   0    3415536     879912    2565568          0          0 Chunk Manager
-            m = p4.match(line)
-            if m:
-                group = m.groupdict()
-                pid = int(group['pid'])
-                index = pid_index.get(pid, 0) + 1
-                pid_dict = ret_dict.setdefault('pid', {}). \
-                    setdefault(pid, {}). \
-                    setdefault('index', {}). \
-                    setdefault(index, {})
-                pid_index.update({pid: index})
-                pid_dict.update({k: int(v) if v.isdigit() else v for k, v in group.items() if v is not None})
-                continue
-
+        ret_dict = super().cli(self,output=out)
         return ret_dict
