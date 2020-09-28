@@ -1577,12 +1577,16 @@ class ShowProcessesMemorySchema(MetaParser):
     schema = {
         'jid': {
             Any(): {
-                'jid': int,
-                'text': int,
-                'data': int,
-                'stack': int,
-                'dynamic': int,
-                'process': str,
+                'index':{
+                    Any():{
+                        'jid': int,
+                        'text': int,
+                        'data': int,
+                        'stack': int,
+                        'dynamic': int,
+                        'process': str,
+                    }
+                }
             }
         }
     }
@@ -1600,7 +1604,7 @@ class ShowProcessesMemory(ShowProcessesMemorySchema):
     def cli(self, include=None, output=None):
 
         ret_dict = {}
-        pid_index = {}
+        jid_index = {}
 
         if not output:
             if include:
@@ -1624,12 +1628,17 @@ class ShowProcessesMemory(ShowProcessesMemorySchema):
             if m:
                 group = m.groupdict()
                 jid = int(group['jid'])
+                index = jid_index.get(jid, 0) + 1
                 jid_dict = ret_dict.setdefault('jid', {}). \
-                    setdefault(jid, {})
+                    setdefault(jid, {}). \
+                    setdefault('index', {}). \
+                    setdefault(index, {})
+
+                jid_index.update({jid: index})
 
                 jid_dict.update({
                     k: int(v) if v.isdigit() else v
                     for k, v in group.items() if v is not None
                 })
-
+                
         return ret_dict
