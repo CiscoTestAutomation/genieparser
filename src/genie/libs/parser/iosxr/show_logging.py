@@ -269,9 +269,10 @@ class ShowLogging(ShowLoggingSchema):
             if m:
                 group = m.groupdict()
                 sys_log_entry = ret_dict.setdefault("syslog_logging", {})
-                logging_entry = ret_dict.setdefault("logging", {})
-                filter_modules_entry = ret_dict.setdefault("syslog_logging", {})
+                
+                #filter_modules_entry = ret_dict.setdefault("syslog_logging", {})
                 log_buffer_bytes_entry = ret_dict.setdefault("log_buffer_bytes", {})
+                logging_entry = ret_dict.setdefault("logging", {})
                 
                 
 
@@ -489,5 +490,6 @@ class ShowLogging(ShowLoggingSchema):
                     ret_dict['logs'] = log_lines
                     no_logs_read = False
                     continue
-
+        
+        import pdb;pdb.set_trace()
         return ret_dict
