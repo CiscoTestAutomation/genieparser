@@ -71,7 +71,8 @@ class ShowChassis(ShowChassisSchema):
         p_delimiter = re.compile(r"^-------------------------------------------------------------------------------------$")
 
         # *1       Active   58bf.eacc.0c00     2      V02     Ready                169.254.130.6
-        p_chassis_count = re.compile(r"^(?P<slot>\S+)\s+(?P<role>\S+)\s+(?P<mac>\S+)\s+(?P<priority>\d+)\s+(?P<hw_version>\S+)\s+(?P<state>\S+)\s+(?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$")
+        p_chassis_count = re.compile(
+        r"^(?P<slot>\S+)\s+(?P<role>\S+)\s+(?P<mac>\S+)\s+(?P<priority>\d+)\s+(?P<hw_version>\S+)\s+(?P<state>\S+)\s+(?P<ip>\S+)$")
 
         chassis_obj = {}
 
@@ -110,7 +111,18 @@ class ShowChassis(ShowChassisSchema):
                     chassis_obj.update({"chassis_index" : {}})
                 group = match.groupdict()
                 slot = int(group["slot"].replace("*", " ").strip())
-                chassis_obj["chassis_index"].update({ int(slot) : {"role" : group["role"], "mac_address" : group["mac"], "priority" : int(group["priority"]), 
-                                                                    "hw_version" : group["hw_version"], "current_state" : group["state"], "ip_address" : group["ip"]}})
+                role = group["role"]
+                mac_addres = group["mac"]
+                priority = int(group["priority"])
+                hw_version = group["hw_version"]
+                current_state = group["state"]
+                ip_address = group["ip"]
+                chassis_obj["chassis_index"].update({ slot: {} })
+                chassis_obj["chassis_index"][slot].update({ "role" : role })
+                chassis_obj["chassis_index"][slot].update({ "mac_address" : mac_addres })
+                chassis_obj["chassis_index"][slot].update({ "priority" : priority })
+                chassis_obj["chassis_index"][slot].update({ "hw_version" : hw_version })
+                chassis_obj["chassis_index"][slot].update({ "current_state" : current_state })
+                chassis_obj["chassis_index"][slot].update({ "ip_address" : ip_address })
 
         return chassis_obj
