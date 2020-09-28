@@ -41,8 +41,6 @@ class TestShowLogging(unittest.TestCase):
         }
     },
     "logs": [
-        "show logging",
-        "Fri Sep 25 23:34:26.169 UTC",
         "RP/0/RP0/CPU0:Sep 25 23:24:28.852 UTC: spp[113]: Initialized socket RX node",
         "RP/0/RP0/CPU0:Sep 25 23:24:28.852 UTC: spp[113]: Initialized socket TX node",
         "RP/0/RP0/CPU0:Sep 25 23:24:28.852 UTC: spp[113]: Registered socket plugin",

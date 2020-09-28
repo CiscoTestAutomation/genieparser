@@ -2,5 +2,4 @@
                                 New
 --------------------------------------------------------------------------------
 * iosxr
-    * Added ShowLoggingSchema
     * Added ShowLogging

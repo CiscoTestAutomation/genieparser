@@ -24,7 +24,6 @@ class ShowLoggingSchema(MetaParser):
     '''
 
     schema={
-        Optional('logs'): list,
         Optional('syslog_logging'): {
             Any(): { # enabled
                 'counters': {
@@ -150,6 +149,7 @@ class ShowLoggingSchema(MetaParser):
             }
         },
         Optional('log_buffer_bytes'): int, # 32000
+        Optional('logs'): list
         }
 
 
@@ -288,13 +288,6 @@ class ShowLogging(ShowLoggingSchema):
                         else:
                             counter_dict[group_key] = group_value
 
-                # counter_dict['messages_dropped'] = int(group['messages_dropped'])
-                # counter_dict['messages_rate_limited'] = int(group['messages_rate_limited'])
-                # counter_dict['flushes'] = int(group['flushes'])
-                # counter_dict['overruns'] = int(group['overruns'])
-                # counter_dict['xml'] = group['xml']
-                # counter_dict['filtering'] = group['filtering']
-
                 parent_dict['counters'] = counter_dict
                 sys_log_entry[inner_key] = parent_dict
                 continue
@@ -322,10 +315,6 @@ class ShowLogging(ShowLoggingSchema):
                             monitor_dict[group_key] = int(group_value)
                         else:
                             monitor_dict[group_key] = group_value
-
-                # monitor_dict['level'] = group['level']
-                # monitor_dict['messages_logged'] = int(group['messages_logged'])
-                # monitor_dict['xml'] = group['xml']
 
                 logging_entry['monitor'] = monitor_dict
                 continue
@@ -357,10 +346,6 @@ class ShowLogging(ShowLoggingSchema):
                             buffer_dict[group_key] = int(group_value)
                         else:
                             buffer_dict[group_key] = group_value
-
-                # buffer_dict['level'] = group['level']
-                # buffer_dict['messages_logged'] = int(group['messages_logged'])
-                # buffer_dict['xml'] = group['xml']
 
                 logging_entry['buffer'] = buffer_dict
                 continue
@@ -413,9 +398,6 @@ class ShowLogging(ShowLoggingSchema):
                         else:
                             trap_dict[group_key] = group_value
 
-                #trap_dict['level'] = group['level']
-                #trap_dict['message_lines_logged'] = int(group['message_lines_logged'])
-
                 logging_entry['trap'] = trap_dict
                 continue
             
@@ -427,11 +409,7 @@ class ShowLogging(ShowLoggingSchema):
                 
                 logging_dict['protocol'] = group['protocol']
                 logging_dict['port'] = int(group['port'])
-                logging_dict['audit'] = group['audit']
-                
-                
-                #outer_logging_dict[group['logging_to']] = logging_dict
-                
+                logging_dict['audit'] = group['audit']                
 
                 outer_logging_dict.update({group['logging_to']: logging_dict})
                 trap_dict['logging_to'] = outer_logging_dict
@@ -500,10 +478,10 @@ class ShowLogging(ShowLoggingSchema):
             if m:
                 group = m.groupdict()
                 ret_dict['log_buffer_bytes'] = int(group['vrf'])
-
+                read_logs_in_list = True
                 continue
 
-            if line:
+            if line and read_logs_in_list:
                 if line.lower().startswith('no active') or line.lower().startswith('no inactive'):
                     continue
                 else:
@@ -511,9 +489,5 @@ class ShowLogging(ShowLoggingSchema):
                     ret_dict['logs'] = log_lines
                     no_logs_read = False
                     continue
-        import json
-        json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
-        f = open("dictlate.txt","w")
-        f.write(json_data)
-        f.close()
+
         return ret_dict
