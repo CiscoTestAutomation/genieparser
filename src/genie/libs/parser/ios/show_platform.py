@@ -51,7 +51,8 @@ from genie.libs.parser.iosxe.show_platform import \
     ShowModule as ShowModule_iosxe, \
     ShowSwitch as ShowSwitch_iosxe, \
     ShowSwitchDetail as ShowSwitchDetail_iosxe, \
-    ShowBootvar as ShowBootvar_iosxe
+    ShowBootvar as ShowBootvar_iosxe, \
+    ShowProcessesMemory as ShowProcessesMemory_iosxe
 
 
 class ShowVersion(ShowVersion_iosxe):
@@ -597,4 +598,10 @@ class ShowSwitch(ShowSwitch_iosxe):
 
 class ShowSwitchDetail(ShowSwitchDetail_iosxe):
     """Parser for show switch detail"""
+    pass
+
+
+class ShowProcessesMemory(ShowProcessesMemory_iosxe):
+    """Parser for show switch detail"""
+
     pass
