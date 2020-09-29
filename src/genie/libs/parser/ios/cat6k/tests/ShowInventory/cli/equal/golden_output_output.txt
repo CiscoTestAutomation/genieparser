@@ -1,0 +1,29 @@
+NAME: "WS-C6503-E", DESCR: "Cisco Systems Catalyst 6500 3-slot Chassis System"
+PID: WS-C6503-E        , VID: V03, SN: FXS1821Q2H9
+
+NAME: "CLK-7600 1", DESCR: "OSR-7600 Clock FRU 1"
+PID: CLK-7600          , VID:    , SN: FXS181101V4
+
+NAME: "CLK-7600 2", DESCR: "OSR-7600 Clock FRU 2"
+PID: CLK-7600          , VID:    , SN: FXS181101V4
+
+NAME: "1", DESCR: "WS-SUP720-3BXL 2 ports Supervisor Engine 720 Rev. 5.6"
+PID: WS-SUP720-3BXL    , VID: V05, SN: SAL11434P2C
+
+NAME: "msfc sub-module of 1", DESCR: "WS-SUP720 MSFC3 Daughterboard Rev. 3.1"
+PID: WS-SUP720         , VID:    , SN: SAL11434N9G
+
+NAME: "switching engine sub-module of 1", DESCR: "WS-F6K-PFC3BXL Policy Feature Card 3 Rev. 1.8"
+PID: WS-F6K-PFC3BXL    , VID: V01, SN: SAL11434LYG
+
+NAME: "2", DESCR: "WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 2.6"
+PID: WS-X6748-GE-TX    , VID: V02, SN: SAL1128UPQ9
+
+NAME: "switching engine sub-module of 2", DESCR: "WS-F6700-DFC3CXL Distributed Forwarding Card 3 Rev. 1.1"
+PID: WS-F6700-DFC3CXL  , VID: V01, SN: SAL1214LAG5
+
+NAME: "WS-C6503-E-FAN 1", DESCR: "Enhanced 3-slot Fan Tray 1"
+PID: WS-C6503-E-FAN    , VID: V02, SN: DCH183500KW
+
+NAME: "PS 1 PWR-1400-AC", DESCR: "AC power supply, 1400 watt 1"
+PID: PWR-1400-AC       , VID: V01, SN: ABC0830J127

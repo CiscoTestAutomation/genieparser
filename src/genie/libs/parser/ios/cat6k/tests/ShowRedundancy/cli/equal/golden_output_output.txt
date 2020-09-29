@@ -1,0 +1,29 @@
+Redundant System Information :
+------------------------------
+    Available system uptime = 21 weeks, 5 days, 1 hour, 3 minutes
+Switchovers system experienced = 0
+            Standby failures = 0
+        Last switchover reason = none
+
+                Hardware Mode = Simplex
+    Configured Redundancy Mode = sso
+    Operating Redundancy Mode = sso
+            Maintenance Mode = Disabled
+                Communications = Down      Reason: Simplex mode
+
+Current Processor Information :
+-------------------------------
+            Active Location = slot 1
+        Current Software state = ACTIVE
+    Uptime in current state = 21 weeks, 5 days, 1 hour, 2 minutes
+                Image Version = Cisco Internetwork Operating System Software 
+IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2006 by cisco Systems, Inc.
+Compiled Thu 23-Nov-06 06:26 by kellythw
+                        BOOT = 
+                CONFIG_FILE = 
+                    BOOTLDR = 
+        Configuration register = 0x2102
+
+Peer (slot: unavailable) information is not available because it is in 'DISABLED' state

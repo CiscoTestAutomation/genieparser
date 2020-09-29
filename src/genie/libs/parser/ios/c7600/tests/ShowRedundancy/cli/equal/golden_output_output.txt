@@ -1,0 +1,40 @@
+Redundant System Information :
+------------------------------
+    Available system uptime = 24 weeks, 6 days, 23 hours, 14 minutes
+Switchovers system experienced = 0
+            Standby failures = 0
+        Last switchover reason = none
+
+                Hardware Mode = Duplex
+    Configured Redundancy Mode = sso
+    Operating Redundancy Mode = sso
+            Maintenance Mode = Disabled
+                Communications = Up
+
+Current Processor Information :
+-------------------------------
+            Active Location = slot 6
+        Current Software state = ACTIVE
+    Uptime in current state = 24 weeks, 6 days, 23 hours, 13 minutes
+                Image Version = Cisco IOS Software, s72033_rp Software (s72033_rp-ADVENTERPRISEK9_DBG-M), Version 15.4(0.10)S, EARLY DEPLOYMENT ENGINEERING WEEKLY BUILD, synced to  BLD_DARLING_122S_040709_1301
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2013 by Cisco Systems, Inc.
+Compiled Wed 26-Jun-13 02:21 by alnguyen
+                        BOOT = disk0:s72033-adventerprisek9_dbg-mz.154-0.10.S-ipcore-ssr-uut2,12;
+                CONFIG_FILE =
+                    BOOTLDR =
+        Configuration register = 0x2
+
+Peer Processor Information :
+----------------------------
+            Standby Location = slot 5
+        Current Software state = STANDBY HOT
+    Uptime in current state = 4 weeks, 1 day, 22 hours, 47 minutes
+                Image Version = Cisco IOS Software, s72033_rp Software (s72033_rp-ADVENTERPRISEK9_DBG-M), Version 15.4(0.10)S, EARLY DEPLOYMENT ENGINEERING WEEKLY BUILD, synced to  BLD_DARLING_122S_040709_1301
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2013 by Cisco Systems, Inc.
+Compiled Wed 26-Jun-13 02:21 by alnguyen
+                        BOOT = disk0:s72033-adventerprisek9_dbg-mz.154-0.10.S-ipcore-ssr-uut2,12;
+                CONFIG_FILE =
+                    BOOTLDR =
+        Configuration register = 0x2

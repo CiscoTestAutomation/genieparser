@@ -1,0 +1,9 @@
+Directory of disk0:/
+
+    1  -rw-    82524740  Oct 28 2009 19:07:04 +00:00  s72033-adventerprisek9_wan-mz.122-18.SXF7
+    2  -rw-   200200276   Feb 3 2010 22:27:04 +00:00  s72033-adventerprisek9_wan_dbg-vz.CARSON_INTEG_100202
+    3  -rw-   201459508   Feb 3 2010 23:18:40 +00:00  s72033-adventerprisek9_wan_dbg-vz.SIERRA_INTEG_100202
+    4  -rw-        4485  Jul 21 2015 14:11:10 +00:00  cat6k_tb1-confg
+    5  -rw-        4734  Nov 27 2017 21:32:46 +00:00  config_cat6k_tb1_native
+
+512065536 bytes total (27852800 bytes free)

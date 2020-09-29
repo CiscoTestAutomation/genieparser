@@ -1,0 +1,44 @@
+NAME: "CISCO7606", DESCR: "Cisco Systems Cisco 7600 6-slot Chassis System"
+PID: CISCO7606         , VID:    , SN: FOX11140RN8
+
+NAME: "CLK-7600 1", DESCR: "OSR-7600 Clock FRU 1"
+PID: CLK-7600          , VID:    , SN: NWG1112014W
+
+NAME: "CLK-7600 2", DESCR: "OSR-7600 Clock FRU 2"
+PID: CLK-7600          , VID:    , SN: NWG1112014W
+
+NAME: "module 1", DESCR: "WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 2.7"
+PID: WS-X6748-GE-TX    , VID: V02, SN: SAL1209HMW3
+
+NAME: "switching engine sub-module of 1", DESCR: "WS-F6700-CFC Centralized Forwarding Card Rev. 4.0"
+PID: WS-F6700-CFC      , VID: V05, SN: SAL1207G5V1
+
+NAME: "module 2", DESCR: "2 port adapter Enhanced FlexWAN Rev. 2.1"
+PID: WS-X6582-2PA      , VID: V06, SN: JAE0939LYNQ
+
+NAME: "module 2/1", DESCR: "Serial Port Adapter"
+PID: PA-4T+            , VID:    , SN: 32861325
+
+NAME: "module 5", DESCR: "WS-SUP720-3BXL 2 ports Supervisor Engine 720 Rev. 4.1"
+PID: WS-SUP720-3BXL    , VID: V11, SN: SAD09020BF8
+
+NAME: "msfc sub-module of 5", DESCR: "WS-SUP720 MSFC3 Daughterboard Rev. 2.2"
+PID: WS-SUP720         , VID:    , SN: SAD090105M6
+
+NAME: "switching engine sub-module of 5", DESCR: "WS-F6K-PFC3BXL Policy Feature Card 3 Rev. 1.4"
+PID: WS-F6K-PFC3BXL    , VID:    , SN: SAD090301K6
+
+NAME: "module 6", DESCR: "WS-SUP720-3BXL 2 ports Supervisor Engine 720 Rev. 5.12"
+PID: WS-SUP720-3BXL    , VID: V11, SN: SAL15129MRC
+
+NAME: "msfc sub-module of 6", DESCR: "WS-SUP720 MSFC3 Daughterboard Rev. 5.1"
+PID: WS-SUP720         , VID:    , SN: SAL15045PYS
+
+NAME: "switching engine sub-module of 6", DESCR: "WS-F6K-PFC3BXL Policy Feature Card 3 Rev. 1.11"
+PID: WS-F6K-PFC3BXL    , VID: V02, SN: SAL15129KW4
+
+NAME: "PS 1 PWR-1900-AC/6", DESCR: "AC_6 power supply, 1900 watt 1"
+PID: PWR-1900-AC/6     , VID: V02, SN: DCA1104401B
+
+NAME: "PS 2 PWR-1900-AC/6", DESCR: "AC_6 power supply, 1900 watt 2"
+PID: PWR-1900-AC/6     , VID: V02, SN: DCA11044011

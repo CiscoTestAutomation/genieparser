@@ -1,0 +1,3 @@
+Sensor List:  Environmental Monitoring 
+    Temp1            P6                Normal            40 Celsius
+    Temp: FC PWM1    P6                Fan Speed 45%     25 Celsius

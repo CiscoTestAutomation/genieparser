@@ -1,0 +1,50 @@
+Switch   FAN     Speed   State
+---------------------------------------------------
+    1       1     14240     OK
+    1       2     14240     OK
+    1       3     14240     OK
+FAN PS-1 is OK
+FAN PS-2 is NOT PRESENT
+Switch   FAN     Speed   State
+---------------------------------------------------
+    2       1     14240     OK
+    2       2     14240     OK
+    2       3     14240     OK
+FAN PS-1 is OK
+FAN PS-2 is NOT PRESENT
+Switch 1: SYSTEM TEMPERATURE is OK
+Inlet Temperature Value: 21 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 46 Degree Celsius
+Red Threshold    : 56 Degree Celsius
+
+Outlet Temperature Value: 32 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 105 Degree Celsius
+Red Threshold    : 125 Degree Celsius
+
+Hotspot Temperature Value: 49 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 105 Degree Celsius
+Red Threshold    : 125 Degree Celsius
+Switch 2: SYSTEM TEMPERATURE is OK
+Inlet Temperature Value: 21 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 46 Degree Celsius
+Red Threshold    : 56 Degree Celsius
+
+Outlet Temperature Value: 31 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 105 Degree Celsius
+Red Threshold    : 125 Degree Celsius
+
+Hotspot Temperature Value: 52 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 105 Degree Celsius
+Red Threshold    : 125 Degree Celsius
+SW  PID                 Serial#     Status           Sys Pwr  PoE Pwr  Watts
+--  ------------------  ----------  ---------------  -------  -------  -----
+1A  PWR-C1-350WAC-P     DCC2337B0K5  OK              Good     n/a      350
+1B  Not Present
+2A  PWR-C1-350WAC-P     DCC2337B0HT  OK              Good     n/a      350
+2B  Not Present

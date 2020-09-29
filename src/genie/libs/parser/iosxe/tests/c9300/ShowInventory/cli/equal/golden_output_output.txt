@@ -1,0 +1,32 @@
+NAME: "Switch 1", DESCR: "C9300-48UXM"
+PID: C9300-48UXM       , VID: V02  , SN: FCW2242G114
+
+NAME: "StackPort1/1", DESCR: "StackPort1/1"
+PID: STACK-T1-1M       , VID: V01  , SN: MOC2236A6JM
+
+NAME: "StackPort1/2", DESCR: "StackPort1/2"
+PID: STACK-T1-1M       , VID: V01  , SN: MOC2240A2JM
+
+NAME: "Switch 1 - Power Supply A", DESCR: "Switch 1 - Power Supply A"
+PID: PWR-C1-1100WAC    , VID: V02  , SN: DTN2236V68C
+
+NAME: "Switch 1 FRU Uplink Module 1", DESCR: "8x10G Uplink Module"
+PID: C9300-NM-8X       , VID: V02  , SN: FOC22423G0U
+
+NAME: "Te1/1/1", DESCR: "SFP-10GBase-SR"
+PID: SFP-10G-SR          , VID: V03  , SN: AVD223594E6
+
+NAME: "Switch 2", DESCR: "C9300-48UXM"
+PID: C9300-48UXM       , VID: V02  , SN: FCW2242G0V3
+
+NAME: "StackPort2/1", DESCR: "StackPort2/1"
+PID: STACK-T1-1M       , VID: V01  , SN: MOC2240A2JM
+
+NAME: "StackPort2/2", DESCR: "StackPort2/2"
+PID: STACK-T1-1M       , VID: V01  , SN: MOC2236A6JM
+
+NAME: "Switch 2 - Power Supply A", DESCR: "Switch 2 - Power Supply A"
+PID: PWR-C1-1100WAC    , VID: V02  , SN: DTN2236V6DL
+
+NAME: "Switch 2 FRU Uplink Module 1", DESCR: "8x10G Uplink Module"
+PID: C9300-NM-8X       , VID: V02  , SN: FOC22423FF4
