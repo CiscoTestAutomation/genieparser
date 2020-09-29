@@ -73,11 +73,14 @@
     * Added ShowFirewallLog
         * show firewall log
 
+<<<<<<< HEAD
 * IOSXR
     * Added ShowProcessesMemoryDetail
         * show processes memory detail
         * show processes memory detail | include {WORD}
 
+=======
+>>>>>>> merge changelog
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
@@ -142,10 +145,13 @@
         * Added new schema
     * Modified ShowLogging:
         * Added regex patterns to capture data in new schema
+<<<<<<< HEAD
     * Updated ShowRedundancy
         * Modified regex to support different output
     * Updated ShowRedundancyStates
         * Modified regex to support different output
+=======
+>>>>>>> merge changelog
 
 * NXOS
     * Modified ShowInterface:
