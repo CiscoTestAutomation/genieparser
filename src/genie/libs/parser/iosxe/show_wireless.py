@@ -29,7 +29,7 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
         else:
             output = output
 
-        ap_number_capture = re.compile(r"^Number of APs:\s+(?P<ap_number>\d+)$")
+        ap_count_capture = re.compile(r"^Number of APs:\s+(?P<ap_count>\d+)$")
 
         ap_join_capture = re.compile(
             r"^"
@@ -47,12 +47,12 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
         for line in output.splitlines():
             line = line.strip()
 
-            if ap_number_capture.match(line):
-                ap_number_match = ap_number_capture.match(line)
+            if ap_count_capture.match(line):
+                ap_count_match = ap_count_capture.match(line)
 
                 # only grab the first entry from output
-                if not wireless_info_obj.get("ap_number"):
-                    group = ap_number_match.groupdict()
+                if not wireless_info_obj.get("ap_count"):
+                    group = ap_count_match.groupdict()
                     wireless_info_obj.update(group)
 
             if ap_join_capture.match(line):
