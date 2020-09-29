@@ -1,5 +1,5 @@
 expected_output = {
-    "ap_count": "61",
+    "ap_count": 61,
     "base_mac": {
         "0042.5a0a.1fb0": {
             "ap_name": "visitors-1815i",
