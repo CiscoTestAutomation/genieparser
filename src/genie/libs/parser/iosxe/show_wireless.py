@@ -38,8 +38,8 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
             r"(?P<ap_name>\S+)\s+(?P<ip_address>[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\s+"
             r"(?P<status>Not Joined|Joined)\s+"
             r"(?P<failure_phase>\S+)\s+"
-            # r"(?P<disconnect_reason>(\S+\s)+)\s+"
-            # r"$"
+            r"(?P<disconnect_reason>.*)"
+            r"$"
         )
 
         wireless_info_obj = {}
