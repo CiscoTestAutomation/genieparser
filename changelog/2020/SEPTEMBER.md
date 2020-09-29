@@ -1,5 +1,8 @@
 --------------------------------------------------------------------------------
-                                NEW
+                                Fix
 --------------------------------------------------------------------------------
-* ASA
-    * Created Show Traffic ASA
+* IOSXE
+    * Updated ShowRedundancy
+        * Modified regex to support different output
+    * Updated ShowRedundancyStates
+        * Modified regex to support different output
