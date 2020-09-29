@@ -34,6 +34,7 @@
         * show utd engine standard status
     * Added c9300 ShowEnvironmentAll:
         * for command 'show environment all'
+    
 
 * Viptela
     * Added ShowOmpTlocs
@@ -141,6 +142,10 @@
         * Added new schema
     * Modified ShowLogging:
         * Added regex patterns to capture data in new schema
+    * Updated ShowRedundancy
+        * Modified regex to support different output
+    * Updated ShowRedundancyStates
+        * Modified regex to support different output
 
 * NXOS
     * Modified ShowInterface:
