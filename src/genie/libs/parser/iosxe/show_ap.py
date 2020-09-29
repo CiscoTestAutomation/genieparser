@@ -676,7 +676,7 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
                 continue
 
         return show_ap_dot11_5ghz_channel_dict
-
+        
 
 # ===============================
 # Schema for:
@@ -750,8 +750,8 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
             r"^---------------------------------------------------------------------------------------------------------------------------------$")
         # ab22-cap10                    5c50.1504.8be0  1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
         ap_info_capture = re.compile(
-            r"^(?P<ap_name>\S+)\s+(?P<mac_address>\S+)\s+(?P<slot>\d+)\s+(?P<admin_state>(Enabled|Disabled)) \
-                        \s+(?P<oper_state>\S+)\s+(?P<width>\d+)\s+(?P<tx_pwr>\*.*dBm\))\s+(?P<channel>\S+)$")
+            r"^(?P<ap_name>\S+)\s+(?P<mac_address>\S+)\s+(?P<slot>\d+)\s+(?P<admin_state>(Enabled|Disabled))"
+                        r"\s+(?P<oper_state>\S+)\s+(?P<width>\d+)\s+(?P<tx_pwr>\*.*dBm\))\s+(?P<channel>\S+)$")
 
         for line in out.splitlines():
             line = line.strip()
@@ -767,6 +767,7 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
                     ap_dot11_5ghz_summ['ap_name'] = {}
                 ap_info_capture_match = ap_info_capture.match(line)
                 groups = ap_info_capture_match.groupdict()
+                print(groups)
                 ap_name = groups['ap_name']
                 mac_address = groups['mac_address']
                 slot = int(groups['slot'])
@@ -784,6 +785,7 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
                 ap_dot11_5ghz_summ['ap_name'][ap_name]['tx_pwr'] = tx_pwr
                 ap_dot11_5ghz_summ['ap_name'][ap_name]['channel'] = channel
                 continue
+            # print(ap_dot11_5ghz_summ)
 
         return ap_dot11_5ghz_summ
 
