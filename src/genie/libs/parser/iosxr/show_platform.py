@@ -13,6 +13,8 @@ IOSXR parsers for the following show commands:
     * 'show redundancy summary'
     * 'show redundancy'
     * 'dir'
+    * 'show processes memory detail'
+    * 'show processes memory detail | include <WORD>'
 '''
 
 # Python
