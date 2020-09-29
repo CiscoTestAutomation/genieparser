@@ -1,0 +1,37 @@
+Redundant System Information :
+
+------------------------------
+       Available system uptime = 5 years, 5 weeks, 5 days, 15 hours, 37 minutes
+Switchovers system experienced = 2
+              Standby failures = 2
+        Last switchover reason = active unit removed
+
+                 Hardware Mode = Duplex
+    Configured Redundancy Mode = Stateful Switchover
+     Operating Redundancy Mode = Stateful Switchover
+              Maintenance Mode = Disabled
+                Communications = Up
+
+Current Processor Information :
+------------------------------
+               Active Location = slot 1/1
+        Current Software state = ACTIVE
+       Uptime in current state = 4 years, 30 weeks, 6 days, 14 hours, 28 minutes
+                 Image Version = Cisco IOS Software, IOS-XE Software, Catalyst 4500 L3 Switch  Software (cat4500e-UNIVERSALK9-M), Version 03.06.01.E RELEASE SOFTWARE (fc3)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2014 by Cisco Systems, Inc.
+Compiled Tue 18-Nov-14 12:59 by prod
+               BOOT = bootflash:cat4500e-universalk9.SPA.03.06.01.E.152-2.E1.bin,1;
+        Configuration register = 0x2102
+
+Peer Processor Information :
+------------------------------
+              Standby Location = slot 2/1
+        Current Software state = STANDBY HOT
+       Uptime in current state = 36 weeks, 6 days, 18 hours, 2 minutes
+                 Image Version = Cisco IOS Software, IOS-XE Software, Catalyst 4500 L3 Switch  Software (cat4500e-UNIVERSALK9-M), Version 03.06.01.E RELEASE SOFTWARE (fc3)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2014 by Cisco Systems, Inc.
+Compiled Tue 18-Nov-14 12:59 by pr
+               BOOT = bootflash:cat4500e-universalk9.SPA.03.06.01.E.152-2.E1.bin,1;
+        Configuration register = 0x2102
