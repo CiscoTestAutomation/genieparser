@@ -7,13 +7,20 @@ from unittest.mock import Mock
 from pyats.topology import Device
 
 # Parser
-from genie.libs.parser.iosxr.show_platform import ShowRedundancy, ShowPlatformVm,\
-                                ShowPlatform, ShowSdrDetail,\
-                                ShowInstallActiveSummary, ShowInventory,\
-                                ShowRedundancySummary, AdminShowDiagChassis,\
-                                ShowVersion, Dir, ShowInstallInactiveSummary,\
-                                ShowInstallCommitSummary,\
-                                ShowProcessesMemory
+from genie.libs.parser.iosxr.show_platform import (ShowRedundancy,
+                                                   ShowPlatformVm,
+                                                   ShowPlatform,
+                                                   ShowSdrDetail,
+                                                   ShowInstallActiveSummary,
+                                                   ShowInventory,
+                                                   ShowRedundancySummary,
+                                                   AdminShowDiagChassis,
+                                                   ShowVersion,
+                                                   Dir,
+                                                   ShowInstallInactiveSummary,
+                                                   ShowInstallCommitSummary,
+                                                   ShowProcessesMemory,
+                                                   ShowProcessesMemoryDetail)
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
@@ -2085,7 +2092,7 @@ class TestShowInstallCommitSummary(unittest.TestCase):
 class TestShowProcessesMemory(unittest.TestCase):
     
     maxDiff = None
-    dev = Device(name='N9Kv')
+    dev = Device(name='ASR9K')
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
@@ -4439,6 +4446,66 @@ class TestShowProcessesMemory(unittest.TestCase):
         self.maxDiff = None
         self.dev = Mock(**self.golden_output)
         obj = ShowProcessesMemory(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+class TestShowProcessesMemoryDetail(unittest.TestCase):
+    
+    maxDiff = None
+    dev = Device(name='ASR9K')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'jid': {240: {'index': {1: {'data': '195M',
+                              'dyn_limit': 'unlimited',
+                              'dynamic': '275K',
+                              'jid': 240,
+                              'phy_tot': '6M',
+                              'process': 'bgp_policy_reg_agent',
+                              'shm_tot': '5M',
+                              'stack': '136K',
+                              'text': '28K'}}},
+          1078: {'index': {1: {'data': '1021M',
+                               'dyn_limit': '14894M',
+                               'dynamic': '39M',
+                               'jid': 1078,
+                               'phy_tot': '62M',
+                               'process': 'bgp',
+                               'shm_tot': '23M',
+                               'stack': '136K',
+                               'text': '2M'}}},
+          1257: {'index': {1: {'data': '261M',
+                               'dyn_limit': 'unlimited',
+                               'dynamic': '1M',
+                               'jid': 1257,
+                               'phy_tot': '9M',
+                               'process': 'bgp_epe',
+                               'shm_tot': '6M',
+                               'stack': '136K',
+                               'text': '60K'}}}}}
+
+    # show processes memory detail
+    golden_output = {
+        'execute.return_value':
+        '''\
+Tue Sep 29 08:11:12.207 UTC
+JID         Text       Data       Stack      Dynamic    Dyn-Limit  Shm-Tot    Phy-Tot               Process
+1078           2M      1021M       136K        39M     14894M        23M        62M bgp                           
+1257          60K       261M       136K         1M  unlimited         6M         9M bgp_epe                       
+240           28K       195M       136K       275K  unlimited         5M         6M bgp_policy_reg_agent 
+        '''
+    }
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowProcessesMemoryDetail(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsered_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowProcessesMemoryDetail(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
