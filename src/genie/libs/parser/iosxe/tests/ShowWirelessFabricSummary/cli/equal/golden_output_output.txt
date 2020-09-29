@@ -1,0 +1,18 @@
+Fabric Status      : Enabled
+
+
+Control-plane:
+Name                             IP-address        Key                              Status
+--------------------------------------------------------------------------------------------
+default-control-plane            10.10.90.16       099fff                           Up
+default-control-plane            10.10.90.22       099fff                           Up
+
+
+Fabric VNID Mapping:
+ Name               L2-VNID        L3-VNID        IP Address             Subnet        Control plane name
+----------------------------------------------------------------------------------------------------------------------
+ Data                8192           0                                  0.0.0.0            default-control-plane
+ Guest               8189           0                                  0.0.0.0            default-control-plane
+ Voice               8191           0                                  0.0.0.0            default-control-plane
+ Fabric_B_INFRA_VN     8188           4097           10.10.40.0          255.255.254.0      default-control-plane
+ Physical_Security     8190           0                                  0.0.0.0            default-control-plane
