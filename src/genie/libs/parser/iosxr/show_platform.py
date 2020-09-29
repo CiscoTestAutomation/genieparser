@@ -1712,6 +1712,7 @@ class ShowProcessesMemoryDetail(ShowProcessesMemoryDetailSchema):
                 group = m.groupdict()
                 jid = int(group['jid'])
                 index = jid_index.get(jid, 0) + 1
+                jid_index.update({jid: index})
                 jid_dict = ret_dict.setdefault('jid', {}). \
                     setdefault(jid, {}). \
                     setdefault('index', {}). \
