@@ -1,33 +1,33 @@
 
-Router#show bgp vpnv4 unicast all neighbors 192.168.36.119 advertised-routes
-Load for five secs: 1%/0%; one minute: 11%; five minutes: 8%
-Time source is NTP, 19:07:51.450 EST Fri Jun 4 2016
+        Router#show bgp vpnv4 unicast all neighbors 192.168.36.119 advertised-routes
+        Load for five secs: 1%/0%; one minute: 11%; five minutes: 8%
+        Time source is NTP, 19:07:51.450 EST Fri Jun 4 2016
 
-BGP table version is 16933183, local router ID is 10.169.197.254
-Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
-              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
-              x best-external, a additional-path, c RIB-compressed, 
-Origin codes: i - IGP, e - EGP, ? - incomplete
-RPKI validation codes: V valid, I invalid, N Not found
+        BGP table version is 16933183, local router ID is 10.169.197.254
+        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
+                      r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
+                      x best-external, a additional-path, c RIB-compressed, 
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        RPKI validation codes: V valid, I invalid, N Not found
 
-     Network          Next Hop            Metric LocPrf Weight Path
-Route Distinguisher: 5918:50 (default for vrf L3VPN-0050) VRF Router ID 192.168.10.254
- *>  10.4.1.0/24       192.168.10.253           0             0 62000 ?
- *>  10.44.105.0/24   192.168.10.253           0             0 62000 ?
- *>  172.16.100.1/32  192.168.10.253           0             0 62000 ?
- *>  172.16.100.2/32  192.168.10.253           0             0 62000 ?
- *>  172.16.100.3/32  192.168.10.253           0             0 62000 ?
- *>  172.16.100.4/32  192.168.10.253           0             0 62000 ?
- *>  172.16.100.5/32  192.168.10.253           0             0 62000 ?
- *>  172.16.100.6/32  192.168.10.253           0             0 62000 ?
- *>  172.16.100.100/32
-               192.168.10.253                  0             0 62000 ?
- *>  192.168.10.0     0.0.0.0                  0         32768 ?
-Route Distinguisher: 5918:51 (default for vrf L3VPN-0051) VRF Router ID 192.168.10.254
- *>  172.16.100.1/32  192.168.10.253                         0 65555 i
- *>  172.16.100.2/32  192.168.10.253                         0 65555 i
- *>  172.16.100.3/32  192.168.10.253                         0 65555 i
- *>  172.16.100.4/32  192.168.10.253                         0 65555 i
- *>  172.16.100.5/32  192.168.10.253                         0 65555 i
- *>  172.16.100.6/32  192.168.10.253                         0 65555 i
+             Network          Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 5918:50 (default for vrf L3VPN-0050) VRF Router ID 192.168.10.254
+         *>  10.4.1.0/24       192.168.10.253           0             0 62000 ?
+         *>  10.44.105.0/24   192.168.10.253           0             0 62000 ?
+         *>  172.16.100.1/32  192.168.10.253           0             0 62000 ?
+         *>  172.16.100.2/32  192.168.10.253           0             0 62000 ?
+         *>  172.16.100.3/32  192.168.10.253           0             0 62000 ?
+         *>  172.16.100.4/32  192.168.10.253           0             0 62000 ?
+         *>  172.16.100.5/32  192.168.10.253           0             0 62000 ?
+         *>  172.16.100.6/32  192.168.10.253           0             0 62000 ?
+         *>  172.16.100.100/32
+                       192.168.10.253                  0             0 62000 ?
+         *>  192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 5918:51 (default for vrf L3VPN-0051) VRF Router ID 192.168.10.254
+         *>  172.16.100.1/32  192.168.10.253                         0 65555 i
+         *>  172.16.100.2/32  192.168.10.253                         0 65555 i
+         *>  172.16.100.3/32  192.168.10.253                         0 65555 i
+         *>  172.16.100.4/32  192.168.10.253                         0 65555 i
+         *>  172.16.100.5/32  192.168.10.253                         0 65555 i
+         *>  172.16.100.6/32  192.168.10.253                         0 65555 i
         

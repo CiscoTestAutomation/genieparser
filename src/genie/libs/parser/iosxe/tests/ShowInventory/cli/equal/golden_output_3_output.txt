@@ -1,0 +1,95 @@
+NAME: "Switch1 System", DESCR: "Cisco Systems, Inc. WS-C4507R+E 7 slot switch "
+PID: WS-C4507R+E       , VID: V09  , SN: FXS1941Q20T
+
+NAME: "Switch1 Clock Module", DESCR: "Clock Module"
+PID: WS-X4K-CLOCK-E    , VID:      , SN: FXS193805C1
+
+NAME: "Switch1 Mux Buffer 1 ", DESCR: "Mux Buffers for Redundancy Logic"
+PID: WS-X4590-EX=      , VID:      , SN: FXS193800RL
+
+NAME: "Switch1 Mux Buffer 2 ", DESCR: "Mux Buffers for Redundancy Logic"
+PID: WS-X4590-EX=      , VID:      , SN: FXS193800RK
+
+NAME: "Switch1 Mux Buffer 5 ", DESCR: "Mux Buffers for Redundancy Logic"
+PID: WS-X4590-EX=      , VID:      , SN: FXS193900AF
+
+NAME: "Switch1 Mux Buffer 6 ", DESCR: "Mux Buffers for Redundancy Logic"
+PID: WS-X4590-EX=      , VID:      , SN: FXS193900AH
+
+NAME: "Switch1 Mux Buffer 7 ", DESCR: "Mux Buffers for Redundancy Logic"
+PID: WS-X4590-EX=      , VID:      , SN: FXS193800RG
+
+NAME: "Switch1 Linecard 1 (virtual slot 1)", DESCR: "10/100/1000BaseT (RJ45)+V E Series with 48 10/100/1000 baseT Premium PoE ports (Cisco/IEEE)"
+PID: WS-X4748-RJ45V+E  , VID: V05  , SN: CAT1948L2JF
+
+NAME: "Switch1 Linecard 2 (virtual slot 2)", DESCR: "10/100/1000BaseT (RJ45)+V E Series with 48 10/100/1000 baseT Premium PoE ports (Cisco/IEEE)"
+PID: WS-X4748-RJ45V+E  , VID: V05  , SN: CAT1948L2S1
+
+NAME: "Switch1 Supervisor 3 (virtual slot 3)", DESCR: "Sup 8-E 10GE (SFP+), 1000BaseX (SFP) with 8 SFP+ Ports"
+PID: WS-X45-SUP8-E     , VID: V05  , SN: CAT1947L6E4
+
+NAME: "TenGigabitEthernet1/3/1", DESCR: "SFP-10Gbase-LRM"
+PID: SFP-10G-LRM       , VID: V03  , SN: FNS1946164Q
+
+NAME: "TenGigabitEthernet1/3/2", DESCR: "SFP-10Gbase-LRM"
+PID: SFP-10G-LRM       , VID: V03  , SN: FNS1946169N
+
+NAME: "TenGigabitEthernet1/3/3", DESCR: "1000BaseSX"
+PID: Unspecified       , VID:      , SN: A58069025
+
+NAME: "TenGigabitEthernet1/3/4", DESCR: "1000BaseSX"
+PID: Unspecified       , VID:      , SN: A58072076
+
+NAME: "TenGigabitEthernet1/3/5", DESCR: "1000BaseSX"
+PID: Unspecified       , VID:      , SN: Z2005291
+
+NAME: "TenGigabitEthernet1/3/6", DESCR: "1000BaseSX"
+PID: Unspecified       , VID:      , SN: AGM1549L6SN
+
+NAME: "Switch1 Linecard 5 (virtual slot 5)", DESCR: "10/100/1000BaseT (RJ45)+V E Series with 48 10/100/1000 baseT Premium PoE ports (Cisco/IEEE)"
+PID: WS-X4748-RJ45V+E  , VID: V05  , SN: CAT1948L14U
+
+NAME: "Switch1 Linecard 7 (virtual slot 7)", DESCR: "10/100/1000BaseT (RJ45)+V E Series with 48 10/100/1000 baseT Premium PoE ports (Cisco/IEEE)"
+PID: WS-X4748-RJ45V+E  , VID: V05  , SN: CAT1948L1BT
+
+NAME: "Switch1 FanTray 1", DESCR: "FanTray"
+PID: WS-X4597+E        , VID: V04  , SN: FXS1941Q0K6
+
+NAME: "Switch1 Power Supply 1", DESCR: "Power Supply ( AC 2800W )"
+PID: PWR-C45-2800ACV   , VID: V07  , SN: SDG1940EA1T
+
+NAME: "Switch1 Power Supply 2", DESCR: "Power Supply ( AC 2800W )"
+PID: PWR-C45-2800ACV   , VID: V07  , SN: SDG1940EA0U
+
+NAME: "Switch2 System", DESCR: "Cisco Systems, Inc. WS-C4506-E 6 slot switch "
+PID: WS-C4506-E        , VID: V02  , SN: FOX1353G062
+
+NAME: "Switch2 Supervisor 1 (virtual slot 11)", DESCR: "Sup 8-E 10GE (SFP+), 1000BaseX (SFP) with 8 SFP+ Ports"
+PID: WS-X45-SUP8-E     , VID: V05  , SN: CAT1947L2JB
+
+NAME: "TenGigabitEthernet2/1/1", DESCR: "SFP-10Gbase-LRM"
+PID: SFP-10G-LRM       , VID: V03  , SN: AGD1944V1X0
+
+NAME: "TenGigabitEthernet2/1/2", DESCR: "SFP-10Gbase-LRM"
+PID: SFP-10G-LRM       , VID: V03  , SN: FNS19461646
+
+NAME: "TenGigabitEthernet2/1/3", DESCR: "1000BaseSX"
+PID: Unspecified       , VID:      , SN: A58069142
+
+NAME: "TenGigabitEthernet2/1/4", DESCR: "1000BaseSX"
+PID: Unspecified       , VID:      , SN: Z2005495
+
+NAME: "Switch2 Linecard 2 (virtual slot 12)", DESCR: "10/100/1000BaseT (RJ45)+V E Series with 48 10/100/1000 baseT Premium PoE ports (Cisco/IEEE)"
+PID: WS-X4648-RJ45V+E  , VID: V05  , SN: JAE140539YZ
+
+NAME: "Switch2 Linecard 3 (virtual slot 13)", DESCR: "10/100/1000BaseT (RJ45)+V E Series with 48 10/100/1000 baseT Premium PoE ports (Cisco/IEEE)"
+PID: WS-X4648-RJ45V+E  , VID: V05  , SN: JAE14053A0H
+
+NAME: "Switch2 FanTray 1", DESCR: "FanTray"
+PID: WS-X4596-E        , VID: V03  , SN: FOX1352H2X8
+
+NAME: "Switch2 Power Supply 1", DESCR: "Power Supply ( AC 2800W )"
+PID: PWR-C45-2800ACV   , VID: V07  , SN: SNI1937A7JL
+
+NAME: "Switch2 Power Supply 2", DESCR: "Power Supply ( AC 2800W )"
+PID: PWR-C45-2800ACV   , VID: V07  , SN: SNI1937A7EB

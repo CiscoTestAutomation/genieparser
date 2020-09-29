@@ -1,57 +1,57 @@
 
-R1_CE#show bgp all
-For address family: IPv4 Unicast
+        R1_CE#show bgp all
+        For address family: IPv4 Unicast
 
 
-For address family: IPv6 Unicast
+        For address family: IPv6 Unicast
 
 
-For address family: VPNv4 Unicast
+        For address family: VPNv4 Unicast
 
-BGP table version is 5, local router ID is 10.21.33.33
-Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
-              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
-              x best-external, a additional-path, c RIB-compressed,
-              t secondary path,
-Origin codes: i - IGP, e - EGP, ? - incomplete
-RPKI validation codes: V valid, I invalid, N Not found
+        BGP table version is 5, local router ID is 10.21.33.33
+        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+                      r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
+                      x best-external, a additional-path, c RIB-compressed,
+                      t secondary path,
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        RPKI validation codes: V valid, I invalid, N Not found
 
-     Network          Next Hop            Metric LocPrf Weight Path
-Route Distinguisher: 65535:1 (default for vrf evpn1)
-AF-Private Import to Address-Family: L2VPN E-VPN, Pfx Count/Limit: 2/1000
- *    10.36.3.0/24       10.36.3.254                0             0 65530 ?
- *>                    0.0.0.0                  0         32768 ?
- *>   10.1.1.0/24     0.0.0.0                  0         32768 ?
+             Network          Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 65535:1 (default for vrf evpn1)
+        AF-Private Import to Address-Family: L2VPN E-VPN, Pfx Count/Limit: 2/1000
+         *    10.36.3.0/24       10.36.3.254                0             0 65530 ?
+         *>                    0.0.0.0                  0         32768 ?
+         *>   10.1.1.0/24     0.0.0.0                  0         32768 ?
 
-For address family: IPv4 Multicast
+        For address family: IPv4 Multicast
 
-For address family: L2VPN E-VPN
+        For address family: L2VPN E-VPN
 
-BGP table version is 4, local router ID is 10.21.33.33
-Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
-              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
-              x best-external, a additional-path, c RIB-compressed,
-              t secondary path,
-Origin codes: i - IGP, e - EGP, ? - incomplete
-RPKI validation codes: V valid, I invalid, N Not found
+        BGP table version is 4, local router ID is 10.21.33.33
+        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+                      r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
+                      x best-external, a additional-path, c RIB-compressed,
+                      t secondary path,
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        RPKI validation codes: V valid, I invalid, N Not found
 
-     Network          Next Hop            Metric LocPrf Weight Path
-Route Distinguisher: 65535:1 (default for vrf evpn1)
- *>   [5][65535:1][0][24][10.36.3.0]/17
-                      0.0.0.0                  0         32768 ?
- *                     10.36.3.254                0             0 65530 ?
- *>   [5][65535:1][0][24][10.1.1.0]/17
-                      0.0.0.0                  0         32768 ?
-
-
-For address family: VPNv4 Multicast
+             Network          Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 65535:1 (default for vrf evpn1)
+         *>   [5][65535:1][0][24][10.36.3.0]/17
+                              0.0.0.0                  0         32768 ?
+         *                     10.36.3.254                0             0 65530 ?
+         *>   [5][65535:1][0][24][10.1.1.0]/17
+                              0.0.0.0                  0         32768 ?
 
 
-For address family: MVPNv4 Unicast
+        For address family: VPNv4 Multicast
 
 
-For address family: MVPNv6 Unicast
+        For address family: MVPNv4 Unicast
 
 
-For address family: VPNv4 Flowspec
+        For address family: MVPNv6 Unicast
+
+
+        For address family: VPNv4 Flowspec
         

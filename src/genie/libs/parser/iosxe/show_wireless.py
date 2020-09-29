@@ -162,6 +162,7 @@ class ShowWirelessFabricSummary(ShowWirelessFabricSummarySchema):
         print(show_wireless_fabric_summary_dict)
         return show_wireless_fabric_summary_dict
 
+
 # ===================================
 # Schema for:
 #  * 'show wireless mobility ap-list'
