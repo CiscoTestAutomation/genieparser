@@ -83,12 +83,16 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
             line = line.strip()
 
             if ap_count_capture.match(line):
-                ap_count_match = ap_count_capture.match(line)
 
                 # only grab the first entry from output
                 if not wireless_info_obj.get("ap_count"):
+                    ap_count_match = ap_count_capture.match(line)
                     group = ap_count_match.groupdict()
-                    wireless_info_obj.update(group)
+
+                    # convert value from str to int
+                    ap_count_dict = {"ap_count": int(group["ap_count"])}
+
+                    wireless_info_obj.update(ap_count_dict)
 
             if ap_join_capture.match(line):
                 ap_join_match = ap_join_capture.match(line)
