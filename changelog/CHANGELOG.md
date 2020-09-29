@@ -6,6 +6,7 @@
 * [June](2020/JUNE.md)
 * [July](2020/JULY.md)
 * [August](2020/AUGUST.md)
+* [September](2020/SEPTEMBER.md)
 
 
 # 2019
