@@ -1,0 +1,57 @@
+groupname: 2c                               security model:v1 
+contextname: <no context specified>         storage-type: volatile
+readview : <no readview specified>          writeview: <no writeview specified>        
+notifyview: *tv.FFFF58bf.eaFF58bf.eaFFFFFF.F
+row status: active
+
+groupname: 2c                               security model:v2c 
+contextname: <no context specified>         storage-type: volatile
+readview : <no readview specified>          writeview: <no writeview specified>        
+notifyview: *tv.FFFF58bf.eaFF58bf.eaFFFFFF.F
+row status: active
+
+groupname: ag-ro                           security model:v1 
+contextname: <no context specified>         storage-type: volatile
+readview : v1default                        writeview: <no writeview specified>        
+notifyview: *tv.FFFF58bf.eaFF58bf.eaFFFFFF.F
+row status: active
+
+groupname: ag-ro                           security model:v3 auth 
+contextname: <no context specified>         storage-type: nonvolatile
+readview : v1default                        writeview: <no writeview specified>        
+notifyview: <no notifyview specified>       
+row status: active
+
+groupname: ag-ro                           security model:v3 priv
+contextname: <no context specified>         storage-type: nonvolatile
+readview : v1default                        writeview: <no writeview specified>        
+notifyview: <no notifyview specified>       
+row status: active
+
+groupname: ag-rw                           security model:v2c 
+contextname: <no context specified>         storage-type: volatile
+readview : v1default                        writeview: v1default                       
+notifyview: <no notifyview specified>       
+row status: active	access-list: snmp-servers
+
+groupname: IMI                             security model:v2c 
+contextname: <no context specified>         storage-type: permanent
+readview : *ilmi                            writeview: *ilmi                           
+notifyview: <no notifyview specified>       
+row status: active
+
+groupname: AlfaV                    security model:v2c 
+contextname: <no context specified>         storage-type: permanent
+readview : v1default                        writeview: <no writeview specified>        
+notifyview: <no notifyview specified>       
+row status: active	access-list: 90
+
+groupname: ag-rw                           security model:v1 
+readview : v1default                        writeview: v1default                       
+notifyview: <no notifyview specified>       
+row status: active	access-list: snmp-servers
+
+groupname: 2c                               security model:v2c 
+readview : <no readview specified>          writeview: <no writeview specified>        
+notifyview: *tv.FFFF58bf.eaFF58bf.eaFFFFFF.F
+row status: active
