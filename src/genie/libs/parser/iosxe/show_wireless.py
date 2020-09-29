@@ -98,7 +98,7 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
                 ap_join_match = ap_join_capture.match(line)
                 group = ap_join_match.groupdict()
 
-                # pull the base_mac to use as keys then pop it from the dict
+                # pull the base_mac to use as key then pop it from the dict
                 ap_info_dict = {group["base_mac"]: {}}
                 ap_info_dict[group["base_mac"]].update(group)
                 ap_info_dict[group["base_mac"]].pop("base_mac")
