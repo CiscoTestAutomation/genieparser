@@ -343,6 +343,8 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
                 show_wireless_fabric_client_summary_dict['mac_address'].update({mac_address : {'ap_name' : ap_name, 'wlan' : wlan, 'state' : state, 'protocol' : protocol, 'method' : method}})
 
         return show_wireless_fabric_client_summary_dict
+
+
 # ===================================
 # Schema for:
 #  * 'show wireless mobility summary'
