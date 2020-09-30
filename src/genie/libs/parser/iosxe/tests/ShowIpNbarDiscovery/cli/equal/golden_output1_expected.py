@@ -1,192 +1,152 @@
 expected_output = {
-        'interface': {
-                'GigabitEthernet1': {
-                        'protocol': {
-                                'unknown': {
-                                        'IN Packet Count': 4978,
-                                        'OUT Packet Count': 15,
-                                        'IN Byte Count': 9000,
-                                        'OUT Byte Count': 0,
-                                        'IN 5min Bit Rate (bps)': 9000,
-                                        'OUT 5min Bit Rate (bps)': 0,
-                                        'IN 5min Max Bit Rate (bps)': 9000,
-                                        'OUT 5min Max Bit Rate (bps)': 0
-                                },
-                                'ssh': {
-                                        'IN Packet Count': 376,
-                                        'OUT Packet Count': 381,
-                                        'IN Byte Count': 3000,
-                                        'OUT Byte Count': 3000,
-                                        'IN 5min Bit Rate (bps)': 3000,
-                                        'OUT 5min Bit Rate (bps)': 3000,
-                                        'IN 5min Max Bit Rate (bps)': 3000,
-                                        'OUT 5min Max Bit Rate (bps)': 3000
-                                },
-                                'dns': {
-                                        'IN Packet Count': 779,
-                                        'OUT Packet Count': 0,
-                                        'IN Byte Count': 4000,
-                                        'OUT Byte Count': 0,
-                                        'IN 5min Bit Rate (bps)': 4000,
-                                        'OUT 5min Bit Rate (bps)': 0,
-                                        'IN 5min Max Bit Rate (bps)': 4000,
-                                        'OUT 5min Max Bit Rate (bps)': 0
-                                },
-                                'sunrpc': {
-                                        'IN Packet Count': 32,
-                                        'OUT Packet Count': 0,
-                                        'IN Byte Count': 1000,
-                                        'OUT Byte Count': 0,
-                                        'IN 5min Bit Rate (bps)': 1000,
-                                        'OUT 5min Bit Rate (bps)': 0,
-                                        'IN 5min Max Bit Rate (bps)': 1000,
-                                        'OUT 5min Max Bit Rate (bps)': 0
-                                },
-                                'ldp': {
-                                        'IN Packet Count': 1033,
-                                        'OUT Packet Count': 1034,
-                                        'IN Byte Count': 0,
-                                        'OUT Byte Count': 0,
-                                        'IN 5min Bit Rate (bps)': 0,
-                                        'OUT 5min Bit Rate (bps)': 0,
-                                        'IN 5min Max Bit Rate (bps)': 0,
-                                        'OUT 5min Max Bit Rate (bps)': 0
-                                },
-                                'eigrp': {
-                                        'IN Packet Count': 992,
-                                        'OUT Packet Count': 992,
-                                        'IN Byte Count': 0,
-                                        'OUT Byte Count': 0,
-                                        'IN 5min Bit Rate (bps)': 0,
-                                        'OUT 5min Bit Rate (bps)': 0,
-                                        'IN 5min Max Bit Rate (bps)': 0,
-                                        'OUT 5min Max Bit Rate (bps)': 0
-                                },
-                                'ospf': {
-                                        'IN Packet Count': 483,
-                                        'OUT Packet Count': 484,
-                                        'IN Byte Count': 0,
-                                        'OUT Byte Count': 0,
-                                        'IN 5min Bit Rate (bps)': 0,
-                                        'OUT 5min Bit Rate (bps)': 0,
-                                        'IN 5min Max Bit Rate (bps)': 0,
-                                        'OUT 5min Max Bit Rate (bps)': 0
-                                },
-                                'netbios-ns': {
-                                        'IN Packet Count': 99,
-                                        'OUT Packet Count': 0,
-                                        'IN Byte Count': 0,
-                                        'OUT Byte Count': 0,
-                                        'IN 5min Bit Rate (bps)': 0,
-                                        'OUT 5min Bit Rate (bps)': 0,
-                                        'IN 5min Max Bit Rate (bps)': 0,
-                                        'OUT 5min Max Bit Rate (bps)': 0
-                                },
-                                'dhcp': {
-                                        'IN Packet Count': 14,
-                                        'OUT Packet Count': 0,
-                                        'IN Byte Count': 0,
-                                        'OUT Byte Count': 0,
-                                        'IN 5min Bit Rate (bps)': 0,
-                                        'OUT 5min Bit Rate (bps)': 0,
-                                        'IN 5min Max Bit Rate (bps)': 0,
-                                        'OUT 5min Max Bit Rate (bps)': 0
-                                },
-                                'Total': {
-                                        'IN Packet Count': 8786,
-                                        'OUT Packet Count': 2906,
-                                        'IN Byte Count': 17000,
-                                        'OUT Byte Count': 3000,
-                                        'IN 5min Bit Rate (bps)': 17000,
-                                        'OUT 5min Bit Rate (bps)': 3000,
-                                        'IN 5min Max Bit Rate (bps)': 17000,
-                                        'OUT 5min Max Bit Rate (bps)': 3000
-                                }
-                        }
+    'interface': {
+        'GigabitEthernet1': {
+            'protocol': {
+                'ssh': {
+                    'in_packet_count': 422,
+                    'out_packet_count': 451,
+                    'in_byte_count': 3000,
+                    'out_byte_count': 4000,
+                    'in_5min_bit_rate_bps': 3000,
+                    'out_5min_bit_rate_bps': 4000,
+                    'in_5min_max_bit_rate_bps': 3000,
+                    'out_5min_max_bit_rate_bps': 4000
                 },
-                'GigabitEthernet2': {
-                        'protocol': {
-                                'unknown': {
-                                        'IN Packet Count': 1481,
-                                        'OUT Packet Count': 0,
-                                        'IN Byte Count': 6000,
-                                        'OUT Byte Count': 0,
-                                        'IN 5min Bit Rate (bps)': 6000,
-                                        'OUT 5min Bit Rate (bps)': 0,
-                                        'IN 5min Max Bit Rate (bps)': 6000,
-                                        'OUT 5min Max Bit Rate (bps)': 0
-                                },
-                                'dns': {
-                                        'IN Packet Count': 159,
-                                        'OUT Packet Count': 0,
-                                        'IN Byte Count': 1000,
-                                        'OUT Byte Count': 0,
-                                        'IN 5min Bit Rate (bps)': 1000,
-                                        'OUT 5min Bit Rate (bps)': 0,
-                                        'IN 5min Max Bit Rate (bps)': 1000,
-                                        'OUT 5min Max Bit Rate (bps)': 0
-                                },
-                                'ldp': {
-                                        'IN Packet Count': 318,
-                                        'OUT Packet Count': 318,
-                                        'IN Byte Count': 0,
-                                        'OUT Byte Count': 0,
-                                        'IN 5min Bit Rate (bps)': 0,
-                                        'OUT 5min Bit Rate (bps)': 0,
-                                        'IN 5min Max Bit Rate (bps)': 0,
-                                        'OUT 5min Max Bit Rate (bps)': 0
-                                },
-                                'eigrp': {
-                                        'IN Packet Count': 300,
-                                        'OUT Packet Count': 299,
-                                        'IN Byte Count': 0,
-                                        'OUT Byte Count': 0,
-                                        'IN 5min Bit Rate (bps)': 0,
-                                        'OUT 5min Bit Rate (bps)': 0,
-                                        'IN 5min Max Bit Rate (bps)': 0,
-                                        'OUT 5min Max Bit Rate (bps)': 0
-                                },
-                                'ospf': {
-                                        'IN Packet Count': 146,
-                                        'OUT Packet Count': 146,
-                                        'IN Byte Count': 0,
-                                        'OUT Byte Count': 0,
-                                        'IN 5min Bit Rate (bps)': 0,
-                                        'OUT 5min Bit Rate (bps)': 0,
-                                        'IN 5min Max Bit Rate (bps)': 0,
-                                        'OUT 5min Max Bit Rate (bps)': 0
-                                },
-                                'dhcp': {
-                                        'IN Packet Count': 2,
-                                        'OUT Packet Count': 0,
-                                        'IN Byte Count': 0,
-                                        'OUT Byte Count': 0,
-                                        'IN 5min Bit Rate (bps)': 0,
-                                        'OUT 5min Bit Rate (bps)': 0,
-                                        'IN 5min Max Bit Rate (bps)': 0,
-                                        'OUT 5min Max Bit Rate (bps)': 0
-                                },
-                                'netbios-ns': {
-                                        'IN Packet Count': 5,
-                                        'OUT Packet Count': 0,
-                                        'IN Byte Count': 0,
-                                        'OUT Byte Count': 0,
-                                        'IN 5min Bit Rate (bps)': 0,
-                                        'OUT 5min Bit Rate (bps)': 0,
-                                        'IN 5min Max Bit Rate (bps)': 0,
-                                        'OUT 5min Max Bit Rate (bps)': 0
-                                },
-                                'Total': {
-                                        'IN Packet Count': 2411,
-                                        'OUT Packet Count': 763,
-                                        'IN Byte Count': 7000,
-                                        'OUT Byte Count': 0,
-                                        'IN 5min Bit Rate (bps)': 7000,
-                                        'OUT 5min Bit Rate (bps)': 0,
-                                        'IN 5min Max Bit Rate (bps)': 7000,
-                                        'OUT 5min Max Bit Rate (bps)': 0
-                                }
-                        }
+                'unknown': {
+                    'in_packet_count': 215,
+                    'out_packet_count': 8,
+                    'in_byte_count': 3000,
+                    'out_byte_count': 0,
+                    'in_5min_bit_rate_bps': 3000,
+                    'out_5min_bit_rate_bps': 0,
+                    'in_5min_max_bit_rate_bps': 3000,
+                    'out_5min_max_bit_rate_bps': 0
+                },
+                'dns': {
+                    'in_packet_count': 42,
+                    'out_packet_count': 0,
+                    'in_byte_count': 2000,
+                    'out_byte_count': 0,
+                    'in_5min_bit_rate_bps': 2000,
+                    'out_5min_bit_rate_bps': 0,
+                    'in_5min_max_bit_rate_bps': 2000,
+                    'out_5min_max_bit_rate_bps': 0
+                },
+                'ldp': {
+                    'in_packet_count': 83,
+                    'out_packet_count': 81,
+                    'in_byte_count': 0,
+                    'out_byte_count': 0,
+                    'in_5min_bit_rate_bps': 0,
+                    'out_5min_bit_rate_bps': 0,
+                    'in_5min_max_bit_rate_bps': 0,
+                    'out_5min_max_bit_rate_bps': 0
+                },
+                'eigrp': {
+                    'in_packet_count': 84,
+                    'out_packet_count': 84,
+                    'in_byte_count': 0,
+                    'out_byte_count': 0,
+                    'in_5min_bit_rate_bps': 0,
+                    'out_5min_bit_rate_bps': 0,
+                    'in_5min_max_bit_rate_bps': 0,
+                    'out_5min_max_bit_rate_bps': 0
+                },
+                'ospf': {
+                    'in_packet_count': 42,
+                    'out_packet_count': 42,
+                    'in_byte_count': 0,
+                    'out_byte_count': 0,
+                    'in_5min_bit_rate_bps': 0,
+                    'out_5min_bit_rate_bps': 0,
+                    'in_5min_max_bit_rate_bps': 0,
+                    'out_5min_max_bit_rate_bps': 0
+                },
+                'ping': {
+                    'in_packet_count': 9,
+                    'out_packet_count': 9,
+                    'in_byte_count': 0,
+                    'out_byte_count': 0,
+                    'in_5min_bit_rate_bps': 0,
+                    'out_5min_bit_rate_bps': 0,
+                    'in_5min_max_bit_rate_bps': 0,
+                    'out_5min_max_bit_rate_bps': 0
+                },
+                'Total': {
+                    'in_packet_count': 897,
+                    'out_packet_count': 675,
+                    'in_byte_count': 8000,
+                    'out_byte_count': 4000,
+                    'in_5min_bit_rate_bps': 8000,
+                    'out_5min_bit_rate_bps': 4000,
+                    'in_5min_max_bit_rate_bps': 8000,
+                    'out_5min_max_bit_rate_bps': 4000
                 }
+            }
+        },
+        'GigabitEthernet2': {
+            'protocol': {
+                'unknown': {
+                    'in_packet_count': 213,
+                    'out_packet_count': 7,
+                    'in_byte_count': 3000,
+                    'out_byte_count': 0,
+                    'in_5min_bit_rate_bps': 3000,
+                    'out_5min_bit_rate_bps': 0,
+                    'in_5min_max_bit_rate_bps': 3000,
+                    'out_5min_max_bit_rate_bps': 0
+                },
+                'dns': {
+                    'in_packet_count': 42,
+                    'out_packet_count': 0,
+                    'in_byte_count': 2000,
+                    'out_byte_count': 0,
+                    'in_5min_bit_rate_bps': 2000,
+                    'out_5min_bit_rate_bps': 0,
+                    'in_5min_max_bit_rate_bps': 2000,
+                    'out_5min_max_bit_rate_bps': 0
+                },
+                'ldp': {
+                    'in_packet_count': 81,
+                    'out_packet_count': 83,
+                    'in_byte_count': 0,
+                    'out_byte_count': 0,
+                    'in_5min_bit_rate_bps': 0,
+                    'out_5min_bit_rate_bps': 0,
+                    'in_5min_max_bit_rate_bps': 0,
+                    'out_5min_max_bit_rate_bps': 0
+                },
+                'eigrp': {
+                    'in_packet_count': 84,
+                    'out_packet_count': 84,
+                    'in_byte_count': 0,
+                    'out_byte_count': 0,
+                    'in_5min_bit_rate_bps': 0,
+                    'out_5min_bit_rate_bps': 0,
+                    'in_5min_max_bit_rate_bps': 0,
+                    'out_5min_max_bit_rate_bps': 0
+                },
+                'ospf': {
+                    'in_packet_count': 42,
+                    'out_packet_count': 42,
+                    'in_byte_count': 0,
+                    'out_byte_count': 0,
+                    'in_5min_bit_rate_bps': 0,
+                    'out_5min_bit_rate_bps': 0,
+                    'in_5min_max_bit_rate_bps': 0,
+                    'out_5min_max_bit_rate_bps': 0
+                },
+                'Total': {
+                    'in_packet_count': 462,
+                    'out_packet_count': 216,
+                    'in_byte_count': 5000,
+                    'out_byte_count': 0,
+                    'in_5min_bit_rate_bps': 5000,
+                    'out_5min_bit_rate_bps': 0,
+                    'in_5min_max_bit_rate_bps': 5000,
+                    'out_5min_max_bit_rate_bps': 0
+                }
+            }
         }
+    }
 }
