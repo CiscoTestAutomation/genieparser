@@ -9,7 +9,10 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Optional, Any, ListOf
+from genie.metaparser.util.schemaengine import Optional, Any, Use, Schema
+
+# pyATS
+from pyats.utils.exceptions import SchemaTypeError
 
 class ShowNetconfSessionSchema(MetaParser):
     '''Schema for:
@@ -30,7 +33,7 @@ class ShowNetconfSession(ShowNetconfSessionSchema):
 
     def cli(self, output=None):
         if output is None:
-            out = self.device.execute(cli_command)
+            out = self.device.execute(self.cli_command)
         else:
             out = output
 
@@ -58,6 +61,27 @@ class ShowNetconfYangSessionsSchema(MetaParser):
         * show netconf-yang sessions
     '''
 
+    def validate_sessions_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('Session is not a list')
+    
+        sessions_list = Schema({
+            'session-id': int,
+            'transport': str,
+            'username': str,
+            'source-host': str,
+            'global-lock': str,
+            Optional('login-time'): str,
+            Optional('in-rpcs'): str,
+            Optional('in-bad-rpcs'): str,
+            Optional('out-rpc-errors'): str,
+            Optional('out-notifications'): str,
+        })
+    
+        for item in value:
+            sessions_list.validate(item)
+        return value
+
     schema = {
         'datastores': {
             Any(): {
@@ -66,13 +90,7 @@ class ShowNetconfYangSessionsSchema(MetaParser):
             }
         },
         'session-count': int,
-        'sessions': ListOf({
-            'session-id': int,
-            'transport': str,
-            'username': str,
-            'source-host': str,
-            'global-lock': str,
-        })
+        'sessions': Use(validate_sessions_list)
     }
 
 class ShowNetconfYangSessions(ShowNetconfYangSessionsSchema):
@@ -115,12 +133,14 @@ class ShowNetconfYangSessions(ShowNetconfYangSessionsSchema):
                 char = datastores.setdefault(group.get('char'), {})
                 char['lock'] = group.get('lock')
                 char['name'] = group.get('name')
+                continue
 
             # Number of sessions : 1
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['session-count'] = group.get('session_count')
+                ret_dict['session-count'] = int(group.get('session_count'))
+                continue
 
             # 24          netconf-ssh  admin                5.28.35.35             None
             m = p3.match(line)
@@ -136,5 +156,96 @@ class ShowNetconfYangSessions(ShowNetconfYangSessionsSchema):
                     'global-lock': group['global_lock'],
                 })
                 sessions_list.append(session)
+                continue
+
+        return ret_dict
+
+class ShowNetconfYangSessionsDetail(ShowNetconfYangSessionsSchema):
+    '''parser for:
+        * show netconf-yang sessions detail
+    '''
+
+    cli_command = 'show netconf-yang sessions detail'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # R: Global-lock on running datastore
+        # C: Global-lock on candidate datastore
+        # S: Global-lock on startup datastore
+        p1 = re.compile(r'^(?P<char>\S+): +(?P<lock>\S+) +on +(?P<name>\S+) +datastore$')
+
+        # Number of sessions : 1
+        p2 = re.compile(r'^Number +of +sessions *: +(?P<session_count>\d+)$')
+
+        # session-id             : 24
+        p3 = re.compile(r'^session-id *: +(?P<session_id>\d+)$')
+
+        # transport : netconf-ssh
+        # username : admin
+        # source-host : 5.28.35.35
+        # login-time : 2020-09-29T15:19:54+00:00
+        # in-rpcs : 1
+        # in-bad-rpcs : 0
+        # out-rpc-errors : 0
+        # out-notifications : 0
+        # global-lock : None  
+        p4 = re.compile(r'^(?P<key>\S+) *: +(?P<data>\S+)$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # R: Global-lock on running datastore
+            # C: Global-lock on candidate datastore
+            # S: Global-lock on startup datastore
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                datastores = ret_dict.setdefault('datastores', {})
+                char = datastores.setdefault(group.get('char'), {})
+                char['lock'] = group.get('lock')
+                char['name'] = group.get('name')
+                continue
+
+            # Number of sessions : 1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['session-count'] = int(group.get('session_count'))
+                continue
+
+            # session-id             : 24
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                sessions_list = ret_dict.setdefault('sessions', [])
+                session = dict()
+                session.update({
+                    'session-id': int(group['session_id']),
+                })
+                sessions_list.append(session)
+                continue
+
+            # transport : netconf-ssh
+            # username : admin
+            # source-host : 5.28.35.35
+            # login-time : 2020-09-29T15:19:54+00:00
+            # in-rpcs : 1
+            # in-bad-rpcs : 0
+            # out-rpc-errors : 0
+            # out-notifications : 0
+            # global-lock : None  
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                session.update({
+                    group['key']: group['data']
+                })
+                continue
 
         return ret_dict
