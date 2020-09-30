@@ -1,0 +1,51 @@
+Local Mode CTS Configuration
+
+Policy Profile Name               SGACL Enforcement     Inline-Tagging   Default-Sgt      
+----------------------------------------------------------------------------------------
+wip-b60                        DISABLED              DISABLED         0                
+wip-b70                        DISABLED              DISABLED         0                
+wip-b80                        DISABLED              DISABLED         0                
+lizzard_b60                    DISABLED              DISABLED         0                
+lizzard_b70                    DISABLED              DISABLED         0                
+lizzard_b80                    DISABLED              DISABLED         0                
+internet-b60                    DISABLED              DISABLED         0                
+internet-b70                    DISABLED              DISABLED         0                
+internet-b80                    DISABLED              DISABLED         0                
+lizzard_b70_1                  DISABLED              DISABLED         0                
+lizzard_b70_6                  DISABLED              DISABLED         0                
+lizzard_b70_8                  DISABLED              DISABLED         0                
+lizzard_b80_0                  DISABLED              DISABLED         0                
+lizzard_b80_1                  DISABLED              DISABLED         0                
+lizzard_b80_2                  DISABLED              DISABLED         0                
+lizzard_b80_3                  DISABLED              DISABLED         0                
+lizzard_b80_4                  DISABLED              DISABLED         0                
+lizzard_b80_5                  DISABLED              DISABLED         0                
+lizzard_b80_6                  DISABLED              DISABLED         0                
+lizzard_b80_7                  DISABLED              DISABLED         0                
+lizzard_b80_8                  DISABLED              DISABLED         0                
+lizzard_b60_1_2                DISABLED              DISABLED         0                
+lizzard_b70_3_4                DISABLED              DISABLED         0                
+lizzard_b70_5_6                DISABLED              DISABLED         0                
+lizzard_b70_7_8                DISABLED              DISABLED         0                
+
+
+Flex Mode CTS Configuration
+
+Flex Profile Name                 SGACL Enforcement     Inline-Tagging   
+-----------------------------------------------------------------------
+default-flex-profile              DISABLED              DISABLED         
+
+
+Local Mode CTS Configuration
+
+Policy Profile Name               SGACL Enforcement     Inline-Tagging   Default-Sgt      
+----------------------------------------------------------------------------------------
+lizzard_b60_3_4_5              DISABLED              DISABLED         0                
+default-policy-profile            DISABLED              DISABLED         0                
+lizzard_b60_cafeteria          DISABLED              DISABLED         0                
+lizzard_b70_cafeteria          DISABLED              DISABLED         0                
+internet-b70-launchpad          DISABLED              DISABLED         0                
+lizzard_b70_eventcenter        DISABLED              DISABLED         0                
+
+
+Flex Mode CTS Configuration
