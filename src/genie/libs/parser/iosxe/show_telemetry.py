@@ -25,7 +25,6 @@ from genie.metaparser.util.schemaengine import Optional, Any, Use, Schema
 from pyats.utils.exceptions import SchemaTypeError
 
 
-<<<<<<< HEAD
 class ShowTelemetryIETFSubscriptionSchema(MetaParser):
     '''schema for:
         * show telemetry ietf subscription {sub_id}
@@ -35,15 +34,6 @@ class ShowTelemetryIETFSubscriptionSchema(MetaParser):
     schema = {
         'id':{
             int: {
-=======
-class ShowTelemetryIETFSubscriptionDynamicSchema(MetaParser):
-    '''schema for:
-        * show telemetry ietf subscription dynamic
-    '''
-
-    schema = {
-        int: {
->>>>>>> Added parsers
             Optional('type'): str,
             'state': str,
             Optional('stream'): str,
@@ -67,20 +57,13 @@ class ShowTelemetryIETFSubscriptionDynamicSchema(MetaParser):
                     'port': int,
                     'protocol': str,
                     Optional('protocol_profile'): str,
-<<<<<<< HEAD
                     }
-=======
->>>>>>> Added parsers
                 }
             }
         }
     }
 
-<<<<<<< HEAD
 class ShowTelemetryIETFSubscription(ShowTelemetryIETFSubscriptionSchema):
-=======
-class ShowTelemetryIETFSubscriptionDynamic(ShowTelemetryIETFSubscriptionDynamicSchema):
->>>>>>> Added parsers
     '''parser for:
         * show telemetry ietf subscription {sub_id}
     '''
@@ -107,12 +90,8 @@ class ShowTelemetryIETFSubscriptionDynamic(ShowTelemetryIETFSubscriptionDynamicS
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-<<<<<<< HEAD
                 sub = ret_dict.setdefault('id', {})
                 subscription = sub.setdefault(int(group['id']), {})
-=======
-                subscription = ret_dict.setdefault(int(group['id']), {})
->>>>>>> Added parsers
                 subscription.update({
                     'type': group['type'],
                     'state': group['state'],
@@ -121,11 +100,7 @@ class ShowTelemetryIETFSubscriptionDynamic(ShowTelemetryIETFSubscriptionDynamicS
 
         return ret_dict
 
-<<<<<<< HEAD
 class ShowTelemetryIETFSubscriptionDetail(ShowTelemetryIETFSubscriptionSchema):
-=======
-class ShowTelemetryIETFSubscriptionDynamicDetail(ShowTelemetryIETFSubscriptionDynamicSchema):
->>>>>>> Added parsers
     '''parser for:
         * show telemetry ietf subscription {sub_id} detail
     '''
@@ -150,21 +125,13 @@ class ShowTelemetryIETFSubscriptionDynamicDetail(ShowTelemetryIETFSubscriptionDy
         p3 = re.compile(r'^Stream: +(?P<stream>\S+)$')
 
         #     Filter type: xpath
-<<<<<<< HEAD
         p4 = re.compile(r'^Filter +type: +(?P<filter>[\S\s]+)$')
-=======
-        p4 = re.compile(r'^Filter +type: +(?P<filter>\S+)$')
->>>>>>> Added parsers
 
         #     XPath: /if:interfaces-state/interface/oper-status
         p5 = re.compile(r'^XPath: +(?P<xpath>\S+)$')
 
         #     Update Trigger: periodic
-<<<<<<< HEAD
         p6 = re.compile(r'^Update +Trigger: +(?P<trigger>[\S\s]+)$')
-=======
-        p6 = re.compile(r'^Update +Trigger: +(?P<trigger>\S+)$')
->>>>>>> Added parsers
 
         #     Period: 1000
         p7 = re.compile(r'^Period: +(?P<period>\d+)$')
@@ -200,12 +167,8 @@ class ShowTelemetryIETFSubscriptionDynamicDetail(ShowTelemetryIETFSubscriptionDy
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-<<<<<<< HEAD
                 sub = ret_dict.setdefault('id', {})
                 subscription = sub.setdefault(int(group['id']), {})
-=======
-                subscription = ret_dict.setdefault(int(group['id']), {})
->>>>>>> Added parsers
                 continue
 
             # State: Valid
@@ -323,7 +286,6 @@ class ShowTelemetryIETFSubscriptionReceiverSchema(MetaParser):
     '''
 
     schema = {
-<<<<<<< HEAD
         'id':{
             int: {
                 'address': str,
@@ -334,16 +296,6 @@ class ShowTelemetryIETFSubscriptionReceiverSchema(MetaParser):
                 'state': str,
                 Optional('explanation'): str,
             }
-=======
-        int: {
-            'address': str,
-            'port': int,
-            'protocol': str,
-            Optional('profile'): str,
-            'connection': int,
-            'state': str,
-            Optional('explanation'): str,
->>>>>>> Added parsers
         }
     }
 
@@ -403,12 +355,8 @@ class ShowTelemetryIETFSubscriptionReceiver(ShowTelemetryIETFSubscriptionReceive
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-<<<<<<< HEAD
                 sub = ret_dict.setdefault('id', {})
                 subscription = sub.setdefault(int(group['id']), {})
-=======
-                subscription = ret_dict.setdefault(int(group['id']), {})
->>>>>>> Added parsers
                 continue
 
             # Address: 5.28.35.35
