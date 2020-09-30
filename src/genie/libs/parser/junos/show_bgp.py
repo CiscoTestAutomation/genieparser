@@ -7,6 +7,8 @@ JunOs parsers for the following show commands:
     * show bgp group detail | no-more
     * show bgp group summary
     * show bgp summary
+    * show bgp neighbor
+    * show bgp neighbor {neighbor_address}
 """
 
 # Python
@@ -1286,12 +1288,19 @@ class ShowBgpNeighborSchema(MetaParser):
 class ShowBgpNeighbor(ShowBgpNeighborSchema):
     """ Parser for:
             * show bgp neighbor
+            * show bgp neighbor {neighbor_address}
     """
-    cli_command = 'show bgp neighbor'
+    cli_command = ['show bgp neighbor',
+        'show bgp neighbor {neighbor_address}']
 
-    def cli(self, output=None):
+    def cli(self, neighbor_address=None, output=None):
         if not output:
-            out = self.device.execute(self.cli_command)
+            if neighbor_address:
+                out = self.device.execute(self.cli_command[1].format(
+                    neighbor_address=neighbor_address
+                ))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -1323,6 +1332,17 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
         p8 = re.compile(
             r'^Export: +\[ +(?P<export_policy>\S+) +\] +Import: +\[ +(?P<import_policy>\S+) +\]$'
         )
+
+        # Export: [ v4_pyats_NO-DEFAULT ]
+        p8_1 = re.compile(
+            r'^Export: +\[ +(?P<export_policy>\S+) +\]$'
+        )
+
+        # Import: [ as-path-limit ]
+        p8_2 = re.compile(
+            r'^Import: +\[ +(?P<import_policy>\S+) +\]$'
+        )
+
         # Options: <Preference LocalAddress HoldTime LogUpDown Cluster PeerAS Refresh Confed>
         # Options: <GracefulShutdownRcv>
         p9 = re.compile(r'^Options: +<(?P<options>[\S\s]+)>$')
@@ -1393,8 +1413,9 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
         p28 = re.compile(
             r'^Peer +does +not +support +Restarter +functionality$')
         # Restart flag received from the peer: Notification
+        # Restart flag received from the peer: Restarting Notification
         p29 = re.compile(
-            r'^Restart +flag +received +from +the +peer: +(?P<peer_restart_flags_received>\S+)$'
+            r'^Restart +flag +received +from +the +peer: +(?P<peer_restart_flags_received>[\S\s]+)$'
         )
         # NLRI that restart is negotiated for: inet-unicast inet-labeled-unicast
         p30 = re.compile(
@@ -1557,6 +1578,28 @@ class ShowBgpNeighbor(ShowBgpNeighborSchema):
 
             # Export: [ v4_pyats_NO-DEFAULT ] Import: [ 11 ]
             m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict["bgp-information"]["bgp-peer"][-1]
+                entry = entry.setdefault("bgp-option-information", {})
+                for key, value in group.items():
+                    key = key.replace('_', '-')
+                    entry[key] = value
+                continue
+
+            # Export: [ v4_pyats_NO-DEFAULT ]
+            m = p8_1.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict["bgp-information"]["bgp-peer"][-1]
+                entry = entry.setdefault("bgp-option-information", {})
+                for key, value in group.items():
+                    key = key.replace('_', '-')
+                    entry[key] = value
+                continue
+
+            # Import: [ as-path-limit ]
+            m = p8_2.match(line)
             if m:
                 group = m.groupdict()
                 entry = ret_dict["bgp-information"]["bgp-peer"][-1]

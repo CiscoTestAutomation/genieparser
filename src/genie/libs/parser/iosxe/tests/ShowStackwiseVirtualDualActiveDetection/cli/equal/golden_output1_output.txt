@@ -1,0 +1,10 @@
+
+Dual-Active-Detection Configuration:
+-------------------------------------
+Switch  Dad port                        Status
+------  ------------                    ---------
+1       FortyGigabitEthernet1/0/3       up
+        FortyGigabitEthernet1/0/4       up
+2       FortyGigabitEthernet2/0/3       up
+        FortyGigabitEthernet2/0/4       up   
+    

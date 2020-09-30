@@ -1,98 +1,98 @@
 
-R4_iosv#show ip bgp all dampening parameters
-For address family: IPv4 Unicast
+    R4_iosv#show ip bgp all dampening parameters
+    For address family: IPv4 Unicast
 
- dampening 35 200 200 70
-  Half-life time      : 35 mins       Decay Time       : 4200 secs
-  Max suppress penalty:   800         Max suppress time: 70 mins
-  Suppress penalty    :   200         Reuse penalty    : 200
-
-
-For address family: IPv6 Unicast
-
- dampening 36 201 201 71
-  Half-life time      : 36 mins       Decay Time       : 4235 secs
-  Max suppress penalty:   788         Max suppress time: 71 mins
-  Suppress penalty    :   201         Reuse penalty    : 201
+     dampening 35 200 200 70
+      Half-life time      : 35 mins       Decay Time       : 4200 secs
+      Max suppress penalty:   800         Max suppress time: 70 mins
+      Suppress penalty    :   200         Reuse penalty    : 200
 
 
-For address family: VPNv4 Unicast
+    For address family: IPv6 Unicast
 
-% dampening not enabled for base
+     dampening 36 201 201 71
+      Half-life time      : 36 mins       Decay Time       : 4235 secs
+      Max suppress penalty:   788         Max suppress time: 71 mins
+      Suppress penalty    :   201         Reuse penalty    : 201
 
-For vrf: VRF1
 
-% dampening not enabled for vrf VRF1
+    For address family: VPNv4 Unicast
 
-For vrf: VRF2
+    % dampening not enabled for base
 
-% dampening not enabled for vrf VRF2
+    For vrf: VRF1
 
-For address family: VPNv6 Unicast
+    % dampening not enabled for vrf VRF1
 
-% dampening not enabled for base
+    For vrf: VRF2
 
-For vrf: VRF1
+    % dampening not enabled for vrf VRF2
 
-% dampening not enabled for vrf VRF1
+    For address family: VPNv6 Unicast
 
-For vrf: VRF2
+    % dampening not enabled for base
 
-% dampening not enabled for vrf VRF2
+    For vrf: VRF1
 
-For address family: IPv4 Multicast
+    % dampening not enabled for vrf VRF1
 
-% dampening not enabled for base
+    For vrf: VRF2
 
-For address family: L2VPN E-VPN
+    % dampening not enabled for vrf VRF2
 
-% dampening not enabled for base
+    For address family: IPv4 Multicast
 
-For address family: VPNv4 Multicast
+    % dampening not enabled for base
 
-% dampening not enabled for base
+    For address family: L2VPN E-VPN
 
-For vrf: VRF1
+    % dampening not enabled for base
 
-% dampening not enabled for vrf VRF1
+    For address family: VPNv4 Multicast
 
-For vrf: VRF2
+    % dampening not enabled for base
 
-% dampening not enabled for vrf VRF2
+    For vrf: VRF1
 
-For address family: MVPNv4 Unicast
+    % dampening not enabled for vrf VRF1
 
-% dampening not enabled for base
+    For vrf: VRF2
 
-For vrf: VRF1
+    % dampening not enabled for vrf VRF2
 
-% dampening not enabled for vrf VRF1
+    For address family: MVPNv4 Unicast
 
-For vrf: VRF2
+    % dampening not enabled for base
 
-% dampening not enabled for vrf VRF2
+    For vrf: VRF1
 
-For address family: MVPNv6 Unicast
+    % dampening not enabled for vrf VRF1
 
-% dampening not enabled for base
+    For vrf: VRF2
 
-For vrf: VRF1
+    % dampening not enabled for vrf VRF2
 
-% dampening not enabled for vrf VRF1
+    For address family: MVPNv6 Unicast
 
-For vrf: VRF2
+    % dampening not enabled for base
 
-% dampening not enabled for vrf VRF2
+    For vrf: VRF1
 
-For address family: VPNv6 Multicast
+    % dampening not enabled for vrf VRF1
 
-% dampening not enabled for base
+    For vrf: VRF2
 
-For vrf: VRF1
+    % dampening not enabled for vrf VRF2
 
-% dampening not enabled for vrf VRF1
+    For address family: VPNv6 Multicast
 
-For vrf: VRF2
+    % dampening not enabled for base
 
-% dampening not enabled for vrf VRF2
+    For vrf: VRF1
+
+    % dampening not enabled for vrf VRF1
+
+    For vrf: VRF2
+
+    % dampening not enabled for vrf VRF2
                     

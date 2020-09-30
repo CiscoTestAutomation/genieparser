@@ -688,15 +688,17 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         # L    2001:2:2:2::2/128 is directly connected,
         # i L2 2001:0:10:204:0:33::/126
         # i L1 2001:21:21:21::21/128
-        p2 = re.compile(r'^((?P<code1>[\w](\*)*) +(?P<code2>\S+)? '
+        # i*L2 ::/0
+        # a*   ::/0
+        p2 = re.compile(r'^((?P<code1>[\w](\*)*)(\s*)?(?P<code2>\w+)? '
                         r'+(?P<network>\S+))?( +is +directly +connected\,)?$')
 
         # [1/0] via 2001:20:1:2::1, 01:52:23, GigabitEthernet0/0/0/0
         # [200/0] via 2001:13:13:13::13, 00:53:22
         # [0/0] via ::, 5w2d
         p3 = re.compile(r'^\[(?P<route_preference>\d+)\/(?P<metric>\d+)\] +'
-                'via +(?P<next_hop>\S+)( +\(nexthop +in +vrf +\w+\))?,'
-                '( +(?P<date>[\w:]+))?,?( +(?P<interface>[\w\/\.\-]+))?$')
+                r'via +(?P<next_hop>\S+)( +\(nexthop +in +vrf +\w+\))?,'
+                r'( +(?P<date>[\w:]+))?,?( +(?P<interface>[\w\/\.\-]+))?$')
 
         # 01:52:24, Loopback0
         p5 = re.compile(r'^(?P<date>[\w+:]+), +(?P<interface>\S+)$')
@@ -711,9 +713,9 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         # Known via "eigrp 1", distance 130, metric 10880, type internal
         # Known via "bgp 65161", distance 20, metric 0, candidate default path
         p7 = re.compile(r'^Known +via +\"(?P<known_via>[\w ]+)\", +'
-                'distance +(?P<distance>\d+), +metric +(?P<metric>\d+)'
-                '( \(connected\))?(, +type +(?P<type>\S+))?(, +candidate +'
-                'default +path)?$')
+                r'distance +(?P<distance>\d+), +metric +(?P<metric>\d+)'
+                r'( \(connected\))?(, +type +(?P<type>\S+))?(, +candidate +'
+                r'default +path)?$')
 
         # * directly connected, via GigabitEthernet1.120
         p8 = re.compile(r'^(\* +)?directly +connected, via +(?P<interface>\S+)$')
@@ -752,7 +754,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
 
         for line in out.splitlines():
             line = line.strip()
-            
+
             # R2_xrv#show route ipv6
             # Routing Descriptor Blocks
             # No advertising protos.
@@ -771,11 +773,13 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
             # L    2001:2:2:2::2/128 is directly connected,
             # i L2 2001:0:10:204:0:33::/126
             # i L1 2001:21:21:21::21/128
+            # i*L2 ::/0
+            # a*   ::/0
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 code1 = group['code1']
-                source_protocol_code = re.split('\*|\(\!\)|\(\>\)', code1)[0].strip()
+                source_protocol_code = re.split(r'\*|\(\!\)|\(\>\)', code1)[0].strip()
                 for key,val in self.source_protocol_dict.items():
                     if source_protocol_code in val:
                         source_protocol = key
@@ -888,7 +892,6 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 network = group.get('network', None)
                 updated = group.get('date', None)
                 interface = group.get('interface', None)
-
                 if network:
                     route_dict = ret_dict.setdefault('vrf', {}). \
                         setdefault(vrf, {}). \
@@ -901,7 +904,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                     route_dict.update({'active': True})
                 
                 if code1:
-                    source_protocol_code = re.split('\*|\(\!\)|\(\>\)', code1)[0].strip()
+                    source_protocol_code = re.split(r'\*|\(\!\)|\(\>\)', code1)[0].strip()
                     for key,val in self.source_protocol_dict.items():
                         if source_protocol_code in val:
                             source_protocol = key
@@ -988,5 +991,5 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                     gw_dict.update({'to_network' : group['to_network']})
                 
                 continue
-            
+
         return ret_dict

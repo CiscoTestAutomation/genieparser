@@ -1,0 +1,24 @@
+
+        PE1#show bgp vpnv4 unicast all neighbors 192.168.36.119 advertised-routes
+        Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
+        Time source is NTP, 04:55:00.149 EST Wed May 22 2019
+
+        BGP table version is 334, local router ID is 10.169.197.254
+        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+                      r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
+                      x best-external, a additional-path, c RIB-compressed,
+                      t secondary path, L long-lived-stale,
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        RPKI validation codes: V valid, I invalid, N Not found
+
+             Network          Next Hop            Metric LocPrf Weight Path
+        
+        Route Distinguisher: 1234:150 (default for vrf VRF) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 1234:4093 (default for vrf VRF2) VRF Router ID 192.168.10.254
+         *>   10.229.11.11/32   192.168.10.253           0             0 1234 65555 ?
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+
+        Total number of prefixes 64
+
+    

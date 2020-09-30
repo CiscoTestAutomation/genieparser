@@ -373,3 +373,4 @@ class ShowWirelessMobilitySummary(ShowWirelessMobilitySummarySchema):
                 mobility_info_obj[key] = info_group
 
         return mobility_info_obj
+

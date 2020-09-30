@@ -542,7 +542,14 @@ class TestShowPlatform(unittest.TestCase):
                     'full_slot': '0/RSP1/CPU0',
                     'name': 'A9K-RSP440-TR',
                     'redundancy_state': 'Standby',
-                    'state': 'IOS XR RUN'}}}}
+                    'state': 'IOS XR RUN'}},
+            'oc': {
+                '0/PT0': {
+                    'name': 'A9K-DC-PEM',
+                    'full_slot': '0/PT0',
+                    'state': 'OPERATIONAL',
+                    'config_state': 'NSHUT'
+                }}}}
 
     golden_output5 = {'execute.return_value': '''
         Node            Type                      State            Config State
@@ -553,6 +560,7 @@ class TestShowPlatform(unittest.TestCase):
         0/0/1           A9K-MQA-20X2GE            OK               PWR,NSHUT,MON
         0/0/2           A9K-MRA-20X3GE            OK               PWR,NSHUT,MON
         0/0/CPU0        A9K-MOD80-SE              IOS XR RUN       PWR,NSHUT,MON
+        0/PT0           A9K-DC-PEM                OPERATIONAL      NSHUT
         '''}
 
     def test_show_platform_golden1(self):
@@ -1332,6 +1340,28 @@ class TestAdminShowDiagChassis(unittest.TestCase):
         'vid': 'V01'
     }
 
+    golden_output4 = {'execute.return_value': '''
+        Rack 0-IDPROM Info
+            PID                      : ASR-9901
+            Version Identifier       : V01
+            Top Assy. Part Number    : 00-0000-00
+            Chassis Serial Number    : FOC2202PFWL
+            CLEI Code                : INM4710ARA
+    '''
+    }
+
+    golden_parsed_output4 = {
+        'rack_num': 0,
+        'pid': 'ASR-9901',
+        'vid': 'V01',
+        'top_assembly_block': {
+            'part_number': '00-0000-00'
+        },
+        'sn': 'FOC2202PFWL',
+        'clei': 'INM4710ARA'
+    }
+
+
     def test_show_inventory_empty(self):
         self.device = Mock(**self.empty_output)
         diag_chassis_obj = AdminShowDiagChassis(device=self.device)
@@ -1365,6 +1395,13 @@ class TestAdminShowDiagChassis(unittest.TestCase):
         obj = AdminShowDiagChassis(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+    def test_admin_show_diag_chassis_golden4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output4)
+        obj = AdminShowDiagChassis(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
 
 # ========================================
 #  Unit test for 'show redundancy summary'       
