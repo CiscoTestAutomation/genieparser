@@ -269,3 +269,45 @@ class ShowWirelessProfilePolicySummary(ShowWirelessProfilePolicySummarySchema):
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command[0])
+        else:
+            output = output
+
+        policy_count_capture = re.compile(r"^Number of Policy Profiles:\s+(?P<policy_count>\d+)$")
+
+        policy_info_capture = re.compile(
+            r"^(?P<policy_name>\S+)\s+"
+            r"(?P<description>Not required|default policy profile|\S+)\s+"
+            r"(?P<status>ENABLED|DISABLED)$"
+        )
+
+        policy_info_obj = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            if policy_count_capture.match(line):
+                policy_count_match = policy_count_capture.match(line)
+
+                # only grab the first entry from output
+                if not policy_info_obj.get("policy_count"):
+                    group = policy_count_match.groupdict()
+
+                    # convert value from str to int
+                    policy_count_dict = {"policy_count": int(group["policy_count"])}
+
+                    policy_info_obj.update(policy_count_dict)
+
+            if policy_info_capture.match(line):
+                policy_info_match = policy_info_capture.match(line)
+                group = policy_info_match.groupdict()
+
+                policy_info_dict = {group["policy_name"]: {}}
+                policy_info_dict[group["policy_name"]].update(group)
+                policy_info_dict[group["policy_name"]].pop("policy_name")
+
+                if not policy_info_obj.get("policy_name"):
+                    policy_info_obj["policy_name"] = {}
+
+                policy_info_obj["policy_name"].update(policy_info_dict)
+
+        return policy_info_obj
