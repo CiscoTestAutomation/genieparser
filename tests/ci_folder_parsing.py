@@ -171,6 +171,10 @@ def get_operating_systems():
     #        operating_system.append(folder)
     # return operating_system
 
+# The get_tokens function dynamically finds tokens by leveraging globs. This
+# works based on the deterministic folder structure. Within a given OS root folder one can
+# determine that a sub folder is in fact a token, if there is a "tests" directory. Upon removing
+# the .py via [-2], there is now a list of files to import from.
 def get_tokens(folder):
     tokens = []
     for path in glob.glob(f"{folder}/*/tests"):
@@ -195,8 +199,9 @@ class FileBasedTest(aetest.Testcase):
     def check_os_folder(self, steps, operating_system):
         """Loop through OS's and run appropriate tests."""
         base_folder = f"../src/genie/libs/parser/{operating_system}"
+        # Please refer to get_tokens comments for the how, the what is a genie token, such as
+        # "asr1k" or "c3850" to provide namespaced parsing.
         tokens = get_tokens(base_folder)
-        #print(tokens)
 
         parse_files = []
         parse_files.extend(get_files(base_folder))
@@ -218,14 +223,25 @@ class FileBasedTest(aetest.Testcase):
             _module = importlib.machinery.SourceFileLoader(module_name, parse_file).load_module()
 
             for name, local_class in inspect.getmembers(_module):
+                # The following methods determin when a test is not warranted, further detail will be provided for each method.
+
+                # If there is a token and the "class" was found to be a known whitelist (mainly since there was not existing tests),
+                # skip. Whitelisted items should be cleaned up over time, and this removed to enforce testing always happens.
                 if token and CLASS_SKIP.get(operating_system, {}).get(token, {}).get(name):
                     continue
+                # Same as previous, but in cases without tokens (which is the majority.)
                 elif not token and CLASS_SKIP.get(operating_system, {}).get(name):
                     continue
+                # This is used in conjunction with the arguments that are run at command line, to skip over all tests you are
+                # not concerned with. Basically, it allows a user to not have to wait for 100s of tests to run, to run their
+                # one test.
                 if _token and _token != token:
                     continue
+                # Same as previous, however, for class
                 if _class and _class != name:
                     continue
+                # Each "globals()" is checked to see if it has a cli attribute, if so, assumed to be a parser. The _osxe, is
+                # since the ios module often refers to the iosxe parser, leveraging this naming convention.
                 if hasattr(local_class, "cli") and not name.endswith("_iosxe"):
                     #if name == 'SomeClassName':
                     #    start = True
