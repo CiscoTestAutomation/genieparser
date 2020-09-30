@@ -13,14 +13,14 @@ class ShowIpNbarDiscoverySchema(MetaParser):
             Any(): {
                 'protocol': {
                     Any(): {
-                        'IN Packet Count': int,
-                        'OUT Packet Count': int,
-                        'IN Byte Count': int,
-                        'OUT Byte Count': int,
-                        'IN 5min Bit Rate (bps)': int,
-                        'OUT 5min Bit Rate (bps)': int,
-                        'IN 5min Max Bit Rate (bps)': int,
-                        'OUT 5min Max Bit Rate (bps)': int,
+                        'in_packet_count': int,
+                        'out_packet_count': int,
+                        'in_byte_count': int,
+                        'out_byte_count': int,
+                        'in_5min_bit_rate_bps': int,
+                        'out_5min_bit_rate_bps': int,
+                        'in_5min_max_bit_rate_bps': int,
+                        'out_5min_max_bit_rate_bps': int,
                     }
                 }
             }
@@ -61,10 +61,8 @@ class ShowIpNbarDiscovery(ShowIpNbarDiscoverySchema):
         
 
         for line in out.splitlines():
-            #import pdb; pdb.set_trace()
             if line:
                 line = line.strip()
-                # print(line)
             else:
                 continue
 
@@ -83,16 +81,16 @@ class ShowIpNbarDiscovery(ShowIpNbarDiscoverySchema):
                 group = m.groupdict()
                 protocol=group['protocol']
                 result_dict[interface]['protocol'][protocol]={}
-                result_dict[interface]['protocol'][protocol].update({'IN Packet Count': int(group['In_Packet_Count'])})
-                result_dict[interface]['protocol'][protocol].update({'OUT Packet Count': int(group['Out_Packet_Count'])})
+                result_dict[interface]['protocol'][protocol].update({'in_packet_count': int(group['In_Packet_Count'])})
+                result_dict[interface]['protocol'][protocol].update({'out_packet_count': int(group['Out_Packet_Count'])})
                 continue
             
             m = p3.match(line)
             
             if m:
                 group = m.groupdict()
-                result_dict[interface]['protocol'][protocol].update({'IN Byte Count': int(group['In_Byte_Count'])})
-                result_dict[interface]['protocol'][protocol].update({'OUT Byte Count': int(group['Out_Byte_Count'])})
+                result_dict[interface]['protocol'][protocol].update({'in_byte_count': int(group['In_Byte_Count'])})
+                result_dict[interface]['protocol'][protocol].update({'out_byte_count': int(group['Out_Byte_Count'])})
                 
     
                    
@@ -101,8 +99,8 @@ class ShowIpNbarDiscovery(ShowIpNbarDiscoverySchema):
             if m:
                 
                 group = m.groupdict()
-                result_dict[interface]['protocol'][protocol].update({'IN 5min Bit Rate (bps)': int(group['In_Bitrate'])})
-                result_dict[interface]['protocol'][protocol].update({'OUT 5min Bit Rate (bps)': int(group['Out_Bitrate'])})
+                result_dict[interface]['protocol'][protocol].update({'in_5min_bit_rate_bps': int(group['In_Bitrate'])})
+                result_dict[interface]['protocol'][protocol].update({'out_5min_bit_rate_bps': int(group['Out_Bitrate'])})
                 
                 
             
@@ -110,8 +108,8 @@ class ShowIpNbarDiscovery(ShowIpNbarDiscoverySchema):
             
             if m:
                 group = m.groupdict()
-                result_dict[interface]['protocol'][protocol].update({'IN 5min Max Bit Rate (bps)': int(group['In_Bitrate_Max'])})
-                result_dict[interface]['protocol'][protocol].update({'OUT 5min Max Bit Rate (bps)': int(group['Out_Bitrate_Max'])})
+                result_dict[interface]['protocol'][protocol].update({'in_5min_max_bit_rate_bps': int(group['In_Bitrate_Max'])})
+                result_dict[interface]['protocol'][protocol].update({'out_5min_max_bit_rate_bps': int(group['Out_Bitrate_Max'])})
                 
 
         
