@@ -1,40 +1,39 @@
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
-
+from genie.metaparser.util.schemaengine import Optional
 
 # ===================================
 # Schema for:
 #  * 'show_cts_sxp_connections_brief'
 # ===================================
-class Show_Cts_Sxp_Connections_BriefSchema(MetaParser):
+class ShowCtsSxpConnectionsBriefSchema(MetaParser):
     """Schema for show_cts_sxp_connections_brief."""
 
     schema = {
-    "sxp_connections": {
-        "total_sxp_connections": int,
-        "status": {
-            "sxp_status": str,
-            "highest_version": int,
-            "default_pw": str,
-            Optional("key_chain"): str,
-            Optional("key_chain_name"): str,
-            "source_ip": str,
-            "conn_retry": int,
-            "reconcile_secs": int,
-            "retry_timer": str,
-            "peer_sequence_traverse_limit_for_export": str,
-            "peer_sequence_traverse_limit_for_import":str
-        },
-        Optional("sxp_peers"): {
-            str: {
+        "sxp_connections": {
+            "total_sxp_connections": int,
+            "status": {
+                "sxp_status": str,
+                "highest_version": int,
+                "default_pw": str,
+                Optional("key_chain"): str,
+                Optional("key_chain_name"): str,
                 "source_ip": str,
-                "conn_status": str,
-                "duration": str
+                "conn_retry": int,
+                "reconcile_secs": int,
+                "retry_timer": str,
+                "peer_sequence_traverse_limit_for_export": str,
+                "peer_sequence_traverse_limit_for_import":str
+            },
+            Optional("sxp_peers"): {
+                str: {
+                    "source_ip": str,
+                    "conn_status": str,
+                    "duration": str
+                }
             }
         }
-    }
     }
 
 
@@ -43,7 +42,7 @@ class Show_Cts_Sxp_Connections_BriefSchema(MetaParser):
 #  * 'show cts sxp connections brief'
 #  * 'Parser for show cts sxp connections vrf {vrf} brief'
 # ===================================
-class Show_Cts_Sxp_Connections_Brief(Show_Cts_Sxp_Connections_BriefSchema):
+class ShowCtsSxpConnectionsBrief(ShowCtsSxpConnectionsBriefSchema):
     """Parser for show cts sxp connections brief"""
     """Parser for show cts sxp connections vrf {vrf} brief"""
 
@@ -367,3 +366,94 @@ class ShowCtsPacs(ShowCtsPacsSchema):
                 continue
         return cts_pacs_dict
 
+
+
+# =================================
+# Schema for:
+#  * 'show cts role-based counters'
+# =================================
+class ShowCtsRoleBasedCountersSchema(MetaParser):
+    """Schema for show cts role-based counters."""
+
+    schema = {
+        "cts_rb_count": {
+            int: {
+                "src_group": str,
+                "dst_group": str,
+                "sw_denied_count": int,
+                "hw_denied_count": int,
+                "sw_permit_count": int,
+                "hw_permit_count": int,
+                "sw_monitor_count": int,
+                "hw_monitor_count": int
+            }
+        }
+    }
+
+
+# =================================
+# Parser for:
+#  * 'show cts role-based counters'
+# =================================
+class ShowCtsRoleBasedCounters(ShowCtsRoleBasedCountersSchema):
+    """Parser for show cts role-based counters"""
+
+    cli_command = 'show cts role-based counters'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        cts_rb_count_dict = {}
+        # Role-based IPv4 counters
+        # From    To      SW-Denied  HW-Denied  SW-Permitt HW-Permitt SW-Monitor HW-Monitor
+        # *       *       0          0          2          30802626587 0          0
+        # 2       0       0          4794060    0          0          0          0
+        # 7       0       0          0          0          0          0          0
+        # 99      0       0          0          0          0          0          0
+
+        rb_counters_capture = re.compile(r"^(?P<src_group>(\d+|\*))\s+(?P<dst_group>(\d+|\*))\s+"
+                                         r"(?P<sw_denied_count>\d+)\s+(?P<hw_denied_count>\d+)\s+"
+                                         r"(?P<sw_permit_count>\d+)\s+(?P<hw_permit_count>\d+)\s+"
+                                         r"(?P<sw_monitor_count>\d+)\s+(?P<hw_monitor_count>\d+)")
+
+        remove_lines = ('Role-based IPv4 counters', 'From')
+
+        # Remove unwanted lines from raw text
+        def filter_lines(raw_output, remove_lines):
+            # Remove empty lines
+            clean_lines = list(filter(None, raw_output.splitlines()))
+            rendered_lines = []
+            for clean_line in clean_lines:
+                clean_line_strip = clean_line.strip()
+                # print(clean_line)
+                # Remove lines unwanted lines from list of "remove_lines"
+                if not clean_line_strip.startswith(remove_lines):
+                    rendered_lines.append(clean_line_strip)
+            return rendered_lines
+
+        out = filter_lines(raw_output=out, remove_lines=remove_lines)
+
+        rb_count_index = 1
+        rb_count_data = {}
+
+        for line in out:
+            # *       *       0          0          2          30802626587 0          0
+            if rb_counters_capture.match(line):
+                rb_counters_match = rb_counters_capture.match(line)
+                groups = rb_counters_match.groupdict()
+                if not cts_rb_count_dict.get('cts_rb_count', {}):
+                    cts_rb_count_dict['cts_rb_count'] = {}
+                if not cts_rb_count_dict['cts_rb_count'].get(rb_count_index, {}):
+                    cts_rb_count_dict['cts_rb_count'][rb_count_index] = {}
+                for k, v in groups.items():
+                    if v.isdigit() and k not in ['src_group', 'dst_group']:
+                        v = int(v)
+                    rb_count_data.update({k: v})
+                cts_rb_count_dict['cts_rb_count'][rb_count_index].update(rb_count_data)
+                rb_count_index = rb_count_index + 1
+                continue
+
+        return cts_rb_count_dict

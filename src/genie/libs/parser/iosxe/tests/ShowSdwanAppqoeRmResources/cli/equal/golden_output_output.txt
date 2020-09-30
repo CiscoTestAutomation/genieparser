@@ -1,0 +1,23 @@
+
+==========================================================
+            RM Resources 
+==========================================================
+RM Global Resources :
+Max Services Memory (KB)    : 6410098
+Available System Memory(KB) : 12820196
+Used Services Memory (KB)   : 0
+Used Services Memory (%)    : 0
+System Memory Status        : GREEN
+Num sessions Status         : GREEN
+Overall HTX health Status   : GREEN
+
+Registered Service Resources :
+TCP Resources:
+Max Sessions                : 11000
+Used Sessions               : 0
+Memory Per Session          : 128
+SSL Resources:
+Max Sessions                : 11000
+Used Sessions               : 0
+Memory Per Session          : 50
+        

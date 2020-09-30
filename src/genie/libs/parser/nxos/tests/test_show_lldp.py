@@ -14,7 +14,6 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 from genie.libs.parser.nxos.show_lldp import ShowLldpAll, ShowLldpTimers, \
     ShowLldpTlvSelect, ShowLldpNeighborsDetail, ShowLldpTraffic
 
-
 # =================================
 # Unit test for 'show lldp all'
 # =================================
@@ -84,6 +83,29 @@ class TestShowLldpTimers(unittest.TestCase):
                          '''
                      }
 
+    golden_output_1 = {'execute.return_value': '''
+        show lldp timers
+
+        LLDP Timers:
+
+            Holdtime in seconds: 120
+            Reinit-time in seconds: 2
+            Transmit interval in seconds: 30
+            Transmit delay in seconds: 2
+            Hold multiplier in seconds: 4
+            Notification interval in seconds: 5
+    '''
+    }
+
+    golden_parsed_output_1 = {
+        'hello_timer': 30,
+        'hold_multiplier': 4,
+        'hold_timer': 120,
+        'notification_interval': 5,
+        'reinit_timer': 2,
+        'transmit_delay': 2
+    }
+
     def test_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -98,6 +120,12 @@ class TestShowLldpTimers(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowLldpTimers(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 # =================================
 # Unit test for 'show lldp tlv-select'
@@ -130,7 +158,6 @@ class TestShowLldpTlvSelect(unittest.TestCase):
            dcbxp
         '''}
 
-
     def test_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -143,7 +170,6 @@ class TestShowLldpTlvSelect(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowLldpTlvSelect(device=self.device)
         parsed_output = obj.parse()
-
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
@@ -647,6 +673,7 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
         },
         'total_entries': 1
     }
+
 
     def test_empty(self):
         self.maxDiff = None
