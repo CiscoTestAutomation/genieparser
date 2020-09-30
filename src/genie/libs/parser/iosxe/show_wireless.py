@@ -253,7 +253,10 @@ class ShowWirelessProfilePolicySummarySchema(MetaParser):
     """Schema for show wireless profile policy summary."""
 
     schema = {
-        
+        "policy_count": int,
+        "policy_name": {
+            Any(): {"description": str, "status": str},
+        },
     }
 
 
@@ -272,11 +275,31 @@ class ShowWirelessProfilePolicySummary(ShowWirelessProfilePolicySummarySchema):
         else:
             output = output
 
+        # Number of Policy Profiles: 31
+
+        # Policy Profile Name               Description                             Status           
+        # -----------------------------------------------------------------------------------------
+        # wip-b60                        b60-voice                             ENABLED          
+        # wip-b70                        b70-voice                             ENABLED          
+        # wip-b80                        b80-voice                             ENABLED          
+        # lizzard_b60                    b60-lizzard/legacy                   ENABLED          
+        # lizzard_b70                    b70-lizzard/legacy                   ENABLED          
+        # lizzard_b80                    b80-lizzard/legacy                   ENABLED          
+        # internet-b60                    b60-guest                             ENABLED          
+        # internet-b70                    b70-guest                             ENABLED          
+        # internet-b80                    b80-guest                             ENABLED          
+        # lizzard_b70_1                  Not required                            ENABLED          
+
+        # Number of Policy Profiles: 31
         policy_count_capture = re.compile(r"^Number of Policy Profiles:\s+(?P<policy_count>\d+)$")
 
+        # wip-b60                        b60-voice                             ENABLED          
         policy_info_capture = re.compile(
+            # wip-b60
             r"^(?P<policy_name>\S+)\s+"
+            # b60-voice 
             r"(?P<description>Not required|default policy profile|\S+)\s+"
+            # ENABLED
             r"(?P<status>ENABLED|DISABLED)$"
         )
 
