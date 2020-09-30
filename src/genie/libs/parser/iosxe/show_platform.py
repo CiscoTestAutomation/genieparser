@@ -1485,7 +1485,7 @@ class ShowRedundancy(ShowRedundancySchema):
                 continue
 
             # conf_red_mode
-            p6 = re.compile(r'\s*[Cc]onfigured +[Rr]edundancy +[Mm]ode +\= +(?P<conf_red_mode>\S+)$')
+            p6 = re.compile(r'\s*[Cc]onfigured +[Rr]edundancy +[Mm]ode +\= +(?P<conf_red_mode>[\s\S]+)$')
             m = p6.match(line)
             if m:
                 redundancy_dict['red_sys_info']['conf_red_mode'] = \
@@ -1655,11 +1655,11 @@ class ShowRedundancyStates(ShowRedundancyStatesSchema):
 
         # Redundancy Mode (Operational) = sso
         p6 = re.compile(r'^Redundancy +Mode +\(Operational\) += +'
-                        '(?P<redundancy_mode_operational>[\S]+)$')
+                        '(?P<redundancy_mode_operational>[\s\S]+)$')
 
         # Redundancy Mode (Configured)  = sso
         p7 = re.compile(r'^Redundancy +Mode +\(Configured\) += +'
-                        '(?P<redundancy_mode_configured>[\S]+)$')
+                        '(?P<redundancy_mode_configured>[\s\S]+)$')
 
         # Redundancy State              = sso
         p8 = re.compile(r'^Redundancy +State += +(?P<redundancy_state>[\s\S]+)$')
@@ -5636,7 +5636,7 @@ class ShowProcessesMemorySchema(MetaParser):
             'used': int,
             'free': int,
         },
-        'lsmi_io_pool': {
+        Optional('lsmi_io_pool'): {
             'total': int,
             'used': int,
             'free': int,
@@ -5661,7 +5661,6 @@ class ShowProcessesMemorySchema(MetaParser):
 
 
 class ShowProcessesMemory(ShowProcessesMemorySchema):
-
     cli_command = [
         'show processes memory',
         'show processes memory | include {include}'

@@ -1,0 +1,123 @@
+NAME: "Chassis", DESCR: "Cisco Catalyst 9500 Series Chassis"
+
+PID: C9500-32QC        , VID: V01  , SN: CAT2242L6CG
+
+
+
+NAME: "Power Supply Module 0", DESCR: "Cisco Catalyst 9500 Series 650W AC Power Supply"
+
+PID: C9K-PWR-650WAC-R  , VID: V01  , SN: ART2216F3XV
+
+
+
+NAME: "Fan Tray 0", DESCR: "Cisco Catalyst 9500 Series Fan Tray"
+
+PID: C9K-T1-FANTRAY    , VID:      , SN:            
+
+
+
+NAME: "Fan Tray 1", DESCR: "Cisco Catalyst 9500 Series Fan Tray"
+
+PID: C9K-T1-FANTRAY    , VID:      , SN:            
+
+
+
+NAME: "Slot 1 Supervisor", DESCR: "Cisco Catalyst 9500 Series Router"
+
+PID: C9500-32QC        , VID: V01  , SN: CAT2242L6CG
+
+
+
+NAME: "FortyGigabitEthernet1/0/4", DESCR: "QSFP 40GE CU3M"
+
+PID: QSFP-H40G-CU3M      , VID: V03  , SN: TED2122K3A4-B   
+
+
+
+NAME: "FortyGigabitEthernet1/0/8", DESCR: "QSFP 40GE AOC3M"
+
+PID: QSFP-H40G-AOC3M     , VID: V02  , SN: FIW231301C6-B   
+
+
+
+NAME: "FortyGigabitEthernet1/0/14", DESCR: "QSFP 40GE AOC3M"
+
+PID: QSFP-H40G-AOC3M     , VID: V02  , SN: FIW231301BQ-B   
+
+
+
+NAME: "FortyGigabitEthernet1/0/16", DESCR: "QSFP 40GE AOC3M"
+
+PID: QSFP-H40G-AOC3M     , VID: V02  , SN: FIW2311023W-A   
+
+
+
+NAME: "FortyGigabitEthernet1/0/20", DESCR: "QSFP 40GE AOC3M"
+
+PID: QSFP-H40G-AOC3M     , VID: V02  , SN: FIW231301CF-B   
+
+
+
+NAME: "HundredGigE1/0/33", DESCR: "QSFP 100GE SR"
+
+PID: QSFP-100G-SR4-S     , VID: V03  , SN: INL23092488     
+
+
+
+NAME: "HundredGigE1/0/35", DESCR: "QSFP 100GE SR"
+
+PID: QSFP-100G-SR4-S     , VID: V03  , SN: AVF2243S0ZT     
+
+
+
+NAME: "HundredGigE1/0/37", DESCR: "QSFP 100GE SR"
+
+PID: QSFP-100G-SR4-S     , VID: V03  , SN: INL23092508     
+
+
+
+NAME: "HundredGigE1/0/38", DESCR: "QSFP 100GE AOC3M"
+
+PID: QSFP-100G-AOC3M     , VID: V02  , SN: FIW231000BV-A   
+
+
+
+NAME: "HundredGigE1/0/41", DESCR: "QSFP 100GE AOC1M"
+
+PID: QSFP-100G-AOC1M     , VID: V03  , SN: INL23100481-B   
+
+
+
+NAME: "HundredGigE1/0/43", DESCR: "QSFP 100GE CU2M"
+
+PID: QSFP-100G-CU2M      , VID:      , SN: APF23030058-B   
+
+
+
+NAME: "HundredGigE1/0/44", DESCR: "QSFP 100GE AOC3M"
+
+PID: QSFP-100G-AOC3M     , VID: V02  , SN: FIW23080391-B   
+
+
+
+NAME: "HundredGigE1/0/45", DESCR: "QSFP 100GE CU5M"
+
+PID: QSFP-100G-CU5M      , VID:      , SN: LCC2229G2JT-A   
+
+
+
+NAME: "HundredGigE1/0/46", DESCR: "QSFP 100GE AOC3M"
+
+PID: QSFP-100G-AOC3M     , VID: V02  , SN: FIW230802M4-B   
+
+
+
+NAME: "HundredGigE1/0/47", DESCR: "QSFP 100GE CU2M"
+
+PID: QSFP-100G-CU2M      , VID:      , SN: LCC2250H9M1-B   
+
+
+
+NAME: "HundredGigE1/0/48", DESCR: "QSFP 100GE SR"
+
+PID: QSFP-100G-SR4-S     , VID: V03  , SN: AVF2243S10A   

@@ -1,0 +1,28 @@
+Mod Ports Card Type                              Model              Serial No.
+--- ----- -------------------------------------- ------------------ -----------
+1   48  CEF720 48 port 10/100/1000mb Ethernet  WS-X6748-GE-TX     SAL1209HMW3
+2    0  2 port adapter Enhanced FlexWAN        WS-X6582-2PA       JAE0939LYNQ
+5    2  Supervisor Engine 720 (Hot)            WS-SUP720-3BXL     SAD09020BF8
+6    2  Supervisor Engine 720 (Active)         WS-SUP720-3BXL     SAL15129MRC
+
+Mod MAC addresses                       Hw   Fw            Sw           Status
+--- ---------------------------------- ----- ------------- ------------ -------
+1  001e.4aff.ee89 to 001e.4aff.eeb8  2.7   12.2(14r)S    15.4(0.10)   Ok
+2  0015.2bff.e884 to 0015.2bff.e8c3  2.1   15.4(0.10)S   15.4(0.10)S  Ok
+5  0011.21ff.441a to 0011.21ff.441d  4.1   8.1(3         15.4(0.10)   Ok
+6  0022.55ff.039b to 0022.55ff.039e  5.12  8.5(4         15.4(0.10)   Ok
+
+Mod  Sub-Module                  Model              Serial       Hw     Status
+---- --------------------------- ------------------ ----------- ------- -------
+1  Centralized Forwarding Card WS-F6700-CFC       SAL1207G5V1  4.0    Ok
+5  Policy Feature Card 3       WS-F6K-PFC3BXL     SAD090301K6  1.4    Ok
+5  MSFC3 Daughterboard         WS-SUP720          SAD090105M6  2.2    Ok
+6  Policy Feature Card 3       WS-F6K-PFC3BXL     SAL15129KW4  1.11   Ok
+6  MSFC3 Daughterboard         WS-SUP720          SAL15045PYS  5.1    Ok
+
+Mod  Online Diag Status
+---- -------------------
+1  Pass
+2  Pass
+5  Pass
+6  Pass
