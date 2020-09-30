@@ -243,3 +243,29 @@ class ShowWirelessMobilityApList(ShowWirelessMobilityApListSchema):
                 ap_info_obj["ap_name"].update(ap_name_dict)
 
         return ap_info_obj
+
+
+# =========================================
+# Schema for:
+#  * 'show wireless profile policy summary'
+# =========================================
+class ShowWirelessProfilePolicySummarySchema(MetaParser):
+    """Schema for show wireless profile policy summary."""
+
+    schema = {
+        
+    }
+
+
+# =========================================
+# Parser for:
+#  * 'show wireless profile policy summary'
+# =========================================
+class ShowWirelessProfilePolicySummary(ShowWirelessProfilePolicySummarySchema):
+    """Parser for show wireless profile policy summary"""
+
+    cli_command = ['show wireless profile policy summary']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
