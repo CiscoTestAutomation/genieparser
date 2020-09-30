@@ -110,6 +110,8 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
 
         return wireless_info_obj
 
+# testing CI
+
 # =================================
 # Schema for:
 #  * 'show wireless fabric summary'
