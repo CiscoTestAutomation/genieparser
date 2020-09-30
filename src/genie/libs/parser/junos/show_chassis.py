@@ -1509,6 +1509,7 @@ class ShowChassisFpcSchema(MetaParser):
                 Optional("memory-buffer-utilization"): str,
                 Optional("memory-dram-size"): str,
                 Optional("memory-heap-utilization"): str,
+                Optional("comment"): str,
                 "slot": str,
                 "state": str,
                 Optional("temperature"): {
@@ -1551,13 +1552,15 @@ class ShowChassisFpc(ShowChassisFpcSchema):
 
         #2  Empty
         p2 = re.compile(r'^(?P<slot>\d+) +(?P<state>\S+)$')
-
+        
+        # 0  Offline         ---Offlined by cli command---
+        p3 = re.compile(r'^(?P<slot>\d+)\s+(?P<state>\S+)\s+---(?P<comment>Offlined\s+by\s+cli\s+command)---$')
 
         ret_dict = {}
 
         for line in out.splitlines():
             line = line.strip()
-
+            
             #0  Online           Testing   3         0        2      2      2    511        31          0
             m = p1.match(line)
             if m:
@@ -1592,10 +1595,26 @@ class ShowChassisFpc(ShowChassisFpcSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
+                fpc_chassis_list = ret_dict.setdefault("fpc-information", {})\
+                    .setdefault("fpc", [])
+
                 fpc_entry_dict = {}
                 fpc_entry_dict["slot"] = group["slot"]
                 fpc_entry_dict["state"] = group["state"]
 
+                fpc_chassis_list.append(fpc_entry_dict)
+                continue
+            
+            # 0  Offline         ---Offlined by cli command---
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                fpc_chassis_list = ret_dict.setdefault("fpc-information", {})\
+                    .setdefault("fpc", [])
+                fpc_entry_dict = {}
+                fpc_entry_dict["slot"] = group["slot"]
+                fpc_entry_dict["state"] = group["state"]
+                fpc_entry_dict["comment"] = group["comment"]
                 fpc_chassis_list.append(fpc_entry_dict)
                 continue
 
