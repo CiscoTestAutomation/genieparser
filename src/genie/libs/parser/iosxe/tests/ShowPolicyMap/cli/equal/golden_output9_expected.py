@@ -7,7 +7,7 @@ expected_output = {
                         "bandwidth_percent": 10,
                         "exponential_weight": 9,
                         "class_val": {
-                            "0": {
+                            "default (0)": {
                                 "min_threshold": "-",
                                 "max_threshold": "-",
                                 "mark_probability": "1/10",

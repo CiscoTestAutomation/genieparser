@@ -1982,7 +1982,7 @@ class TestShowControllersNpuInterfaceInstanceLocation(unittest.TestCase):
                 'interface': {
                     'GigabitEthernet0/0/0/0': {
                         'flow_base': 5384,
-                        'interface_handle_hex': 108,
+                        'interface_handle_hex': '108',
                         'npu_core': 0,
                         'npu_number': 0,
                         'port_speed': '1G',
@@ -1991,6 +1991,16 @@ class TestShowControllersNpuInterfaceInstanceLocation(unittest.TestCase):
                         'voq_base': 1024,
                         'voq_port_type': 'local',
                     },
+                    'TenGigabitEthernet0/0/0/2': {
+                        'flow_base': 11368,
+                        'interface_handle_hex': 'a0',
+                        'npu_core': 0,
+                        'npu_number': 0,
+                        'port_speed': '10G',
+                        'pp_port': 20,
+                        'sys_port': 20,
+                        'voq_base': 1120,
+                        'voq_port_type': 'local'},
                 },
             },
         },
@@ -2007,6 +2017,7 @@ class TestShowControllersNpuInterfaceInstanceLocation(unittest.TestCase):
                     (hex)                                     type
         ----------------------------------------------------------------------
         Gi0/0/0/0    108       0   0   33    33   1024   5384 local     1G
+        Te0/0/0/2    a0        0   0   20    20   1120  11368 local    10G
         Not supported on this location 0/RP0/CPU0 or Data not found
         '''}
 

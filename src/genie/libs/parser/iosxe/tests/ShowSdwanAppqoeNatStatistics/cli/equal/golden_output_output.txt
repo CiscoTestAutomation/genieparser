@@ -1,0 +1,13 @@
+
+==========================================================
+            NAT Statistics
+==========================================================
+Insert Success      : 518181
+Delete Success      : 518181
+Duplicate Entries   : 5
+Allocation Failures : 0
+Port Alloc Success  : 0
+Port Alloc Failures : 0
+Port Free Success   : 0
+Port Free Failures  : 0
+        

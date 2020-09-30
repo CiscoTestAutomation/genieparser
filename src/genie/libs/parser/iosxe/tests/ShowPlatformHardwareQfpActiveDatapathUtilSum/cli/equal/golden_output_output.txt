@@ -1,0 +1,8 @@
+Router#show platform hardware qfp active datapath utilization summary
+   CPP 0:                     5 secs        1 min        5 min       60 min
+    Input:     Total (pps)            2            2            1            0
+                    (bps)         2928         1856         1056           88
+    Output:    Total (pps)          593          596          494           41
+                    (bps)      1190056      1206976       921624        76792
+    Processing: Load (pct)            0            0            0            0      
+    

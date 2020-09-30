@@ -1,0 +1,61 @@
+expected_output = {
+    "instance": {
+        "default": {
+            "vrf": {
+                "vrf1": {
+                    "address_family": {
+                        "": {
+                            "default_vrf": "vrf1",
+                            "prefixes": {
+                                "0.0.0.0/0": {
+                                    "available_path": "2",
+                                    "best_path": "1",
+                                    "index": {
+                                        1: {
+                                            "community": "163:43242 2002:8 2002:35 2002:53 2002:100 2002:1000",
+                                            "ext_community": "RT:65002:3014",
+                                            "gateway": "9.2.2.2",
+                                            "localpref": 950,
+                                            "next_hop": "9.2.2.2",
+                                            "next_hop_via": "vrf vrf1",
+                                            "origin_codes": "i",
+                                            "originator": "9.207.128.21",
+                                            "recipient_pathid": "0",
+                                            "refresh_epoch": 2,
+                                            "route_info": "304        13",
+                                            "status_codes": "*>",
+                                            "transfer_pathid": "0x0",
+                                            "update_group": 64624,
+                                        },
+                                        2: {
+                                            "community": "163:43242 2002:8 2002:35 2002:53 2002:100 2002:1000",
+                                            "ext_community": "RT:65002:3014",
+                                            "gateway": "9.91.117.38",
+                                            "imported_path_from": "9.91.117.38:3014:0.0.0.0/0 (global)",
+                                            "localpref": 950,
+                                            "metric": 0,
+                                            "next_hop": "9.91.117.38",
+                                            "next_hop_igp_metric": "11",
+                                            "next_hop_via": "default",
+                                            "origin_codes": "i",
+                                            "originator": "9.91.117.38",
+                                            "recipient_pathid": "0",
+                                            "refresh_epoch": 17,
+                                            "route_info": "64624",
+                                            "status_codes": "* i",
+                                            "transfer_pathid": "0",
+                                            "update_group": 64624,
+                                        },
+                                    },
+                                    "paths": "2 available, best #1, table vrf1",
+                                    "table_version": "74438",
+                                }
+                            },
+                            "route_distinguisher": "9.1.1.1:3014",
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -410,7 +410,8 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
 
         # Class-map: Ping_Class (match-all)
         # Class-map:TEST (match-all)
-        p2 = re.compile(r'^[Cc]lass-map *:+(?P<class_map>([\s\w\-]+)) +(?P<match_all>(.*))$')
+        # Class-map: TEST-OTTAWA_CANADA#PYATS (match-any)
+        p2 = re.compile(r'^[Cc]lass-map *:( +)?(?P<class_map>\S+) +(?P<match_all>(.*))$')
 
         # queue stats for all priority classes:
         p2_1 = re.compile(r'^queue +stats +for +all +priority +classes:$')
@@ -432,7 +433,8 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         p4_2 = re.compile(r'^(?P<interval>(\d+)) +second +offered +rate +(?P<offered_rate>(\d+)) bps, +drop +rate +(?P<drop_rate>(\d+)) bps$')
 
         # Match: access-group name Ping_Option
-        p5 = re.compile(r'^[Mm]atch *:+(?P<match>([\(\w\-\s\)]+))$')
+        # Match: access-group name PYATS-MARKING_IN#CUSTOM__ACL
+        p5 = re.compile(r'^[Mm]atch:( +)?(?P<match>([\S\s]+))$')
 
         # police:
         p6 = re.compile(r'^police:+$')
@@ -682,6 +684,8 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 continue
 
             # Class-map: Ping_Class (match-all)
+            # Class-map:TEST (match-all)
+            # Class-map: TEST-OTTAWA_CANADA#PYATS (match-any)
             m = p2.match(line)
             if m:
                 match_list = []
@@ -748,6 +752,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 continue
 
             # Match: access-group name Ping_Option
+            # Match: access-group name PYATS-MARKING_IN#CUSTOM__ACL
             m = p5.match(line)
             if m:
                 match_list.append(m.groupdict()['match'].lstrip())
@@ -1436,7 +1441,7 @@ class ShowPolicyMapSchema(MetaParser):
     schema = {
         'policy_map': {
             Any(): {
-                'class': {
+                Optional('class'): {
                     Any(): {
                         Optional('priority_level'): {
                             Any(): {
@@ -1457,6 +1462,7 @@ class ShowPolicyMapSchema(MetaParser):
                             Optional('pir_be_bytes'): int,
                             Optional('peak_burst'): int,
                             Optional('cir_percent'): int,
+                            Optional('rate_percent'): int,
                             Optional('bc_ms'): int,
                             Optional('pir_percent'): int,
                             Optional('be_ms'): int,
@@ -1579,6 +1585,9 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # police rate 2000 pps
         p2_3 = re.compile(r'^police +rate +(?P<rate_pps>\d+) +pps$')
 
+        # police rate percent 10
+        p2_4 = re.compile(r'^police +rate +percent +(?P<rate_percent>\d+)$')
+
         # police cir 445500 bc 83619
         p3 = re.compile(r'^police +cir +(?P<cir_bps>(\d+)) +bc +(?P<cir_bc_bytes>(\d+))$')
 
@@ -1645,8 +1654,9 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         # 6        -                -                1/10
         # 7        -                -                1/10
         # rsvp     -                -                1/10
+        # default (0)   -                -                1/10
 
-        p8_3 = re.compile(r'^(?P<class_val>(\w+)) +(?P<min_threshold>([\w\-]+)) +(?P<max_threshold>([\w\-]+)) '
+        p8_3 = re.compile(r'^(?P<class_val>(\w+(\s+\(\d+\))?)) +(?P<min_threshold>([\w\-]+)) +(?P<max_threshold>([\w\-]+)) '
                            '+(?P<mark_probability>([0-9]+)/([0-9]+))$')
 
         # cir 30% bc 10 (msec) be 10 (msec)
@@ -1660,7 +1670,8 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         p10_1 = re.compile(r'^priority +level +(?P<priority_levels>(\d+))$')
 
         # Set cos 5
-        p11 = re.compile(r'^Set +(?P<set>([\w\s]+))$')
+        # set dscp cs1
+        p11 = re.compile(r'^[sS]et +(?P<set>([\w\s]+))$')
 
         # Shape average 30m
         p12 = re.compile(r'^Shape +average +(?P<shape_average_min>(\d+))m$')
@@ -1763,6 +1774,17 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 violate_list = []
                 police_dict = class_map_dict.setdefault('police', {})
                 police_dict['rate_pps'] = int(m.groupdict()['rate_pps'])
+                continue
+
+            # police rate percent 10
+            m = p2_4.match(line)
+            if m:
+                police_line = 1
+                conform_list = []
+                exceed_list = []
+                violate_list = []
+                police_dict = class_map_dict.setdefault('police', {})
+                police_dict['rate_percent'] = int(m.groupdict()['rate_percent'])
                 continue
 
             # police cir 445500 bc 83619
@@ -1920,6 +1942,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             # 6        -                -                1/10
             # 7        -                -                1/10
             # rsvp     -                -                1/10
+            # default (0)   -                -                1/10
             m = p8_3.match(line)
             if m:
                 group = m.groupdict()
@@ -1962,7 +1985,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 continue
 
             # Set cos 5
-            # set cos 5
+            # set dscp cs1
             m = p11.match(line)
             if m:
                 class_map_dict['set'] = m.groupdict()['set']

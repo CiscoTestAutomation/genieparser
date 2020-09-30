@@ -1,0 +1,23 @@
+
+        Configuration
+        -------------
+        CA Cert Bundle                 : /bootflash/vmanage-admin/sslProxyDefaultCAbundle.pem
+        CA TP Label                    : PROXY-SIGNING-CA
+        Cert Lifetime                  : 730
+        EC Key type                    : P256
+        RSA Key Modulus                : 2048
+        Cert Revocation                : NONE
+        Expired Cert                   : drop
+        Untrusted Cert                 : drop
+        Unknown Status                 : drop
+        Unsupported Protocol Ver       : drop
+        Unsupported Cipher Suites      : drop
+        Failure Mode Action            : close
+        Min TLS Ver                    : TLS Version 1.1
+
+        Status
+        ------
+        SSL Proxy Operational State    : RUNNING
+        TCP Proxy Operational State    : RUNNING
+        Clear Mode                     : FALSE
+        

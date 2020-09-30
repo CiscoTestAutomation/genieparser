@@ -29,6 +29,6 @@ expected_output = {
             "switchport_access_vlan": "70",
             "switchport_mode": "access",
             "switchport_nonegotiate": "nonegotiate",
-        },
-    },
+        }
+    }
 }

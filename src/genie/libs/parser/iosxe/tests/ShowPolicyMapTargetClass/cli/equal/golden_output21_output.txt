@@ -1,0 +1,90 @@
+
+      GigabitEthernet4.1
+      
+        Service-policy output: parent-policy
+      
+          Class-map: class-default (match-any)
+            0 packets, 0 bytes
+            5 minute offered rate 0000 bps, drop rate 0000 bps
+            Match: any
+            Queueing
+            queue limit 34 packets
+            (queue depth/total drops/no-buffer drops) 0/0/0
+            (pkts output/bytes output) 0/0
+            shape (average) cir 1000000000, bc 21000000, be 21000000
+            target shape rate 3000000000
+      
+            Service-policy : child-policy
+      
+              queue stats for all priority classes:
+                Queueing
+                queue limit 512 packets
+                (queue depth/total drops/no-buffer drops) 0/0/0
+                (pkts output/bytes output) 0/0
+      
+              Class-map: high-priority (match-all)
+                0 packets, 0 bytes
+                5 minute offered rate 0000 bps, drop rate 0000 bps
+                Match: none
+                Priority: 1000000 kbps, burst bytes 25000000, b/w exceed drops: 0
+      
+      
+              Class-map: low-priority (match-all)
+                0 packets, 0 bytes
+                5 minute offered rate 0000 bps, drop rate 0000 bps
+                Match: none
+                Priority: 1000000 kbps, burst bytes 25000000, b/w exceed drops: 0
+      
+      
+              Class-map: band-policy (match-all)
+                0 packets, 0 bytes
+                5 minute offered rate 0000 bps, drop rate 0000 bps
+                Match: none
+                Queueing
+                queue limit 64 packets
+                (queue depth/total drops/no-buffer drops) 0/0/0
+                (pkts output/bytes output) 0/0
+                bandwidth 110000 kbps
+      
+              Class-map: test-cir (match-all)
+                0 packets, 0 bytes
+                5 minute offered rate 0000 bps, drop rate 0000 bps
+                Match: none
+                Queueing
+                queue limit 64 packets
+                (queue depth/total drops/no-buffer drops) 0/0/0
+                (pkts output/bytes output) 0/0
+                bandwidth 600000 kbps
+      
+              Class-map: class-default (match-any)
+                0 packets, 0 bytes
+                5 minute offered rate 0000 bps, drop rate 0000 bps
+                Match: any
+      
+                queue limit 100 packets
+                (queue depth/total drops/no-buffer drops) 0/0/0
+                (pkts output/bytes output) 0/0
+                  Exp-weight-constant: 4 (1/16)
+                  Mean queue depth: 0 packets
+                  class       Transmitted         Random drop      Tail drop          
+                  Minimum        Maximum     Mark
+                          pkts/bytes            pkts/bytes       pkts/bytes          
+                          thresh         thresh     prob
+      
+                  0               0/0               0/0              0/0                 
+                  25            50  1/10
+                  1               0/0               0/0              0/0                 
+                  50            70  1/10
+                  2               0/0               0/0              0/0                 
+                  80           100  1/10
+                  3               0/0               0/0              0/0                 
+                  80           100  1/10
+                  4               0/0               0/0              0/0                 
+                  80           100  1/10
+                  5               0/0               0/0              0/0                 
+                  80           100  1/10
+                  6               0/0               0/0              0/0                 
+                  80           100  1/10
+                  7               0/0               0/0              0/0                 
+                  25            50  1/10
+    
