@@ -7037,7 +7037,7 @@ class ShowPlatformSoftwareYangManagementProcessSchema(MetaParser):
     '''
 
     schema = {
-        Any(): str
+        str: str
     }
 
 class ShowPlatformSoftwareYangManagementProcess(ShowPlatformSoftwareYangManagementProcessSchema):
@@ -7079,27 +7079,18 @@ class ShowPlatformSoftwareYangManagementProcessMonitorSchema(MetaParser):
         * show platform software yang-management process monitor
     '''
 
-    def validate_process_list(value):
-        if not isinstance(value, list):
-            raise SchemaTypeError('Process is not a list')
-    
-        process_list = Schema({
-            'command': str,
-            'pid': int,
-            's': str,
-            'vsz': int,
-            'rss': int,
-            'cpu': float,
-            'mem': float,
-            'elapsed': str,
-        })
-    
-        for item in value:
-            process_list.validate(item)
-        return value
-
     schema = {
-        'processes': Use(validate_process_list)
+        'processes': {
+            str: {
+                'pid': int,
+                'state': str,
+                'vsz': int,
+                'rss': int,
+                'cpu': float,
+                'mem': float,
+                'elapsed': str,
+            }
+        }
     }
 
 class ShowPlatformSoftwareYangManagementProcessMonitor(ShowPlatformSoftwareYangManagementProcessMonitorSchema):
@@ -7130,19 +7121,17 @@ class ShowPlatformSoftwareYangManagementProcessMonitor(ShowPlatformSoftwareYangM
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                commands = ret_dict.setdefault('processes', [])
-                command = dict()
+                commands = ret_dict.setdefault('processes', {})
+                command = commands.setdefault(group['command'], {})
                 command.update({
-                    'command': group['command'],
                     'pid': int(group['pid']),
-                    's': group['s'],
+                    'state': group['s'],
                     'vsz': int(group['vsz']),
                     'rss': int(group['rss']),
                     'cpu': float(group['cpu']),
                     'mem': float(group['mem']),
                     'elapsed': group['elapsed'],
                 })
-                commands.append(command)
                 continue
 
         return ret_dict
@@ -7153,24 +7142,15 @@ class ShowPlatformSoftwareYangManagementProcessStateSchema(MetaParser):
         * show platform software yang-management process state
     '''
 
-    def validate_process_list(value):
-        if not isinstance(value, list):
-            raise SchemaTypeError('Process is not a list')
-    
-        process_list = Schema({
-            'process': str,
-            'status': str,
-            'state': str,
-        })
-    
-        for item in value:
-            process_list.validate(item)
-        return value
-
     schema = {
         'confd-status': str,
-        'processes': Use(validate_process_list)
-    }
+        'processes': {
+            str: {
+                'status': str,
+                'state': str,
+                },
+            }
+        }
 
 class ShowPlatformSoftwareYangManagementProcessState(ShowPlatformSoftwareYangManagementProcessStateSchema):
     '''parser for
@@ -7185,8 +7165,11 @@ class ShowPlatformSoftwareYangManagementProcessState(ShowPlatformSoftwareYangMan
         else:
             out = output
 
+        # Confd Status: Started
         p1 = re.compile(r'^Confd +Status: +(?P<status>\S+)$')
 
+        # pubd                 Running             Active
+        # gnmib                Not Running         Not Applicable
         p2 = re.compile(r'^(?P<process>\S+) +(?P<status>(Running|Not +Running)) +'
                         r'(?P<state>(Active|Not +Active|Not +Applicable))$')
 
@@ -7195,23 +7178,24 @@ class ShowPlatformSoftwareYangManagementProcessState(ShowPlatformSoftwareYangMan
         for line in out.splitlines():
             line = line.strip()
 
+            # Confd Status: Started
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['confd-status'] = group['status']
                 continue
 
+            # pubd                 Running             Active
+            # gnmib                Not Running         Not Applicable
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                commands = ret_dict.setdefault('processes', [])
-                command = dict()
+                commands = ret_dict.setdefault('processes', {})
+                command = commands.setdefault(group['process'], {})
                 command.update({
-                    'process': group['process'],
                     'status': group['status'],
                     'state': group['state'],
                 })
-                commands.append(command)
                 continue
 
         return ret_dict
