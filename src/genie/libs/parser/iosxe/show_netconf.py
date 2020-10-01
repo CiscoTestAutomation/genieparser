@@ -61,36 +61,21 @@ class ShowNetconfYangSessionsSchema(MetaParser):
         * show netconf-yang sessions
     '''
 
-    def validate_sessions_list(value):
-        if not isinstance(value, list):
-            raise SchemaTypeError('Session is not a list')
-    
-        sessions_list = Schema({
-            'session_id': int,
-            'transport': str,
-            'username': str,
-            'source_host': str,
-            'global_lock': str,
-            Optional('login_time'): str,
-            Optional('in_rpcs'): str,
-            Optional('in_bad_rpcs'): str,
-            Optional('out_rpc_errors'): str,
-            Optional('out_notifications'): str,
-        })
-    
-        for item in value:
-            sessions_list.validate(item)
-        return value
-
     schema = {
-        'datastores': {
-            Any(): {
-                'lock': str,
-                'name': str,
-            }
-        },
         'session_count': int,
-        'sessions': Use(validate_sessions_list)
+        'session_id': {
+            int: {
+                'transport': str,
+                'username': str,
+                'source_host': str,
+                'global_lock': str,
+                Optional('login_time'): str,
+                Optional('in_rpcs'): str,
+                Optional('in_bad_rpcs'): str,
+                Optional('out_rpc_errors'): str,
+                Optional('out_notifications'): str,
+            }
+        }
     }
 
 class ShowNetconfYangSessions(ShowNetconfYangSessionsSchema):
@@ -106,16 +91,12 @@ class ShowNetconfYangSessions(ShowNetconfYangSessionsSchema):
         else:
             out = output
 
-        # R: Global-lock on running datastore
-        # C: Global-lock on candidate datastore
-        # S: Global-lock on startup datastore
-        p1 = re.compile(r'^(?P<char>\S+): +(?P<lock>\S+) +on +(?P<name>\S+) +datastore$')
 
         # Number of sessions : 1
-        p2 = re.compile(r'^Number +of +sessions *: +(?P<session_count>\d+)$')
+        p1 = re.compile(r'^Number +of +sessions *: +(?P<session_count>\d+)$')
 
         # 24          netconf-ssh  admin                5.28.35.35             None
-        p3 = re.compile(r'^(?P<session_id>\d+) +(?P<transport>\S+) +(?P<username>\S+) +'
+        p2 = re.compile(r'^(?P<session_id>\d+) +(?P<transport>\S+) +(?P<username>\S+) +'
                         r'(?P<source_host>\S+) +(?P<global_lock>\S+)$')
 
         ret_dict = {}
@@ -123,39 +104,26 @@ class ShowNetconfYangSessions(ShowNetconfYangSessionsSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # R: Global-lock on running datastore
-            # C: Global-lock on candidate datastore
-            # S: Global-lock on startup datastore
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                datastores = ret_dict.setdefault('datastores', {})
-                char = datastores.setdefault(group.get('char'), {})
-                char['lock'] = group.get('lock')
-                char['name'] = group.get('name')
-                continue
-
+            
             # Number of sessions : 1
-            m = p2.match(line)
+            m = p1.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['session_count'] = int(group.get('session_count'))
                 continue
 
             # 24          netconf-ssh  admin                5.28.35.35             None
-            m = p3.match(line)
+            m = p2.match(line)
             if m:
                 group = m.groupdict()
-                sessions_list = ret_dict.setdefault('sessions', [])
-                session = dict()
-                session.update({
-                    'session_id': int(group['session_id']),
+                session_ids = ret_dict.setdefault('session_id', {})
+                session_id = session_ids.setdefault(int(group['session_id']), {})
+                session_id.update({
                     'transport': group['transport'],
                     'username': group['username'],
                     'source_host': group['source_host'],
                     'global_lock': group['global_lock'],
                 })
-                sessions_list.append(session)
                 continue
 
         return ret_dict
@@ -173,16 +141,12 @@ class ShowNetconfYangSessionsDetail(ShowNetconfYangSessionsSchema):
         else:
             out = output
 
-        # R: Global-lock on running datastore
-        # C: Global-lock on candidate datastore
-        # S: Global-lock on startup datastore
-        p1 = re.compile(r'^(?P<char>\S+): +(?P<lock>\S+) +on +(?P<name>\S+) +datastore$')
 
         # Number of sessions : 1
-        p2 = re.compile(r'^Number +of +sessions *: +(?P<session_count>\d+)$')
+        p1 = re.compile(r'^Number +of +sessions *: +(?P<session_count>\d+)$')
 
         # session-id             : 24
-        p3 = re.compile(r'^session-id *: +(?P<session_id>\d+)$')
+        p2 = re.compile(r'^session-id *: +(?P<session_id>\d+)$')
 
         # transport : netconf-ssh
         # username : admin
@@ -193,42 +157,27 @@ class ShowNetconfYangSessionsDetail(ShowNetconfYangSessionsSchema):
         # out-rpc-errors : 0
         # out-notifications : 0
         # global-lock : None  
-        p4 = re.compile(r'^(?P<key>\S+) *: +(?P<data>\S+)$')
+        p3 = re.compile(r'^(?P<key>\S+) *: +(?P<data>\S+)$')
 
         ret_dict = {}
 
         for line in out.splitlines():
             line = line.strip()
-
-            # R: Global-lock on running datastore
-            # C: Global-lock on candidate datastore
-            # S: Global-lock on startup datastore
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                datastores = ret_dict.setdefault('datastores', {})
-                char = datastores.setdefault(group.get('char'), {})
-                char['lock'] = group.get('lock')
-                char['name'] = group.get('name')
-                continue
+            
 
             # Number of sessions : 1
-            m = p2.match(line)
+            m = p1.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['session_count'] = int(group.get('session_count'))
                 continue
 
             # session-id             : 24
-            m = p3.match(line)
+            m = p2.match(line)
             if m:
                 group = m.groupdict()
-                sessions_list = ret_dict.setdefault('sessions', [])
-                session = dict()
-                session.update({
-                    'session_id': int(group['session_id']),
-                })
-                sessions_list.append(session)
+                session_ids = ret_dict.setdefault('session_id', {})
+                session_id = session_ids.setdefault(int(group['session_id']), {})
                 continue
 
             # transport : netconf-ssh
@@ -240,11 +189,11 @@ class ShowNetconfYangSessionsDetail(ShowNetconfYangSessionsSchema):
             # out-rpc-errors : 0
             # out-notifications : 0
             # global-lock : None  
-            m = p4.match(line)
+            m = p3.match(line)
             if m:
                 group = m.groupdict()
-                session.update({
-                    group['key']: group['data']
+                session_id.update({
+                    group['key'].replace('-', '_'): group['data']
                 })
                 continue
 
