@@ -2,9 +2,9 @@
                                 New
 --------------------------------------------------------------------------------
 * IOSXE
-    * ShowNetconfSession
+    * Added ShowNetconfSession
         * show netconf session
-    * ShowNetconfYangSessions
+    * Added ShowNetconfYangSessions
         * show netconf-yang sessions
-    * ShowNetconfYangSessionsDetail
+    * Added ShowNetconfYangSessionsDetail
         * show netconf-yang sessions detail
