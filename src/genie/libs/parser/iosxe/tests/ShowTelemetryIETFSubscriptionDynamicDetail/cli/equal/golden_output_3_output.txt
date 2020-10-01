@@ -1,0 +1,42 @@
+Telemetry subscription detail:
+
+  Subscription ID: 2147483659
+  Type: Dynamic
+  State: Valid
+  Stream: yang-push
+  Filter:
+    Filter type: xpath
+    XPath: /if:interfaces-state/interface/oper-status
+  Update policy:
+    Update Trigger: periodic
+    Period: 1000
+  Encoding: encode-xml
+  Source VRF:
+  Source Address:
+  Notes:
+
+  Legacy Receivers:
+    Address                                    Port     Protocol         Protocol Profile
+    -----------------------------------------------------------------------------------------
+    5.28.35.35                                 45128    netconf
+
+  Subscription ID: 4294967295
+  Type: Permanent
+  State: Invalid
+  Stream: rfc5277
+  Filter:
+    Filter type: xpath
+    XPath: /ios-events-ios-xe-oper:bgp-peer-state-change
+  Update policy:
+    Update Trigger: on-change
+    Synch on start: No
+    Dampening period: 0
+  Encoding: encode-xml
+  Source VRF:
+  Source Address:
+  Notes: Stream not supported
+
+  Legacy Receivers:
+    Address                                    Port     Protocol         Protocol Profile
+    -----------------------------------------------------------------------------------------
+    0.0.0.0                                    0        rfc5277
