@@ -1,14 +1,29 @@
-expected_output = {'datastores': {'C': {'lock': 'Global-lock', 'name': 'candidate'},
-                'R': {'lock': 'Global-lock', 'name': 'running'},
-                'S': {'lock': 'Global-lock', 'name': 'startup'}},
- 'session-count': 1,
- 'sessions': [{'global-lock': 'None',
-               'in-bad-rpcs': '0',
-               'in-rpcs': '1',
-               'login-time': '2020-09-29T15:19:54+00:00',
-               'out-notifications': '0',
-               'out-rpc-errors': '0',
-               'session-id': 24,
-               'source-host': '5.28.35.35',
-               'transport': 'netconf-ssh',
-               'username': 'admin'}]}
+expected_output = {
+  'datastores': {
+    'C': {
+      'lock': 'Global-lock',
+      'name': 'candidate'
+    },
+    'R': {
+      'lock': 'Global-lock',
+      'name': 'running'
+    },
+    'S': {
+      'lock': 'Global-lock',
+      'name': 'startup'
+    }
+  },
+  'session-count': 1,
+  'sessions': [{
+    'global-lock': 'None',
+    'in-bad-rpcs': '0',
+    'in-rpcs': '1',
+    'login-time': '2020-09-29T15:19:54+00:00',
+    'out-notifications': '0',
+    'out-rpc-errors': '0',
+    'session-id': 24,
+    'source-host': '5.28.35.35',
+    'transport': 'netconf-ssh',
+    'username': 'admin'
+  }]
+}
