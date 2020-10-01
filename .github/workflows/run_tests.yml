@@ -28,6 +28,7 @@ jobs:
         pip install pyats[full]
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         pip uninstall genie.libs.parser -y
+
     - name: Test Unit Tests
       run: |
         make develop
