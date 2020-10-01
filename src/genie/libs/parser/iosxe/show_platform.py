@@ -29,13 +29,16 @@ from xml.dom import minidom
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use
 from genie.libs.parser.utils.common import Common
 # genie.parsergen
 try:
     import genie.parsergen
 except (ImportError, OSError):
     pass
+
+# pyATS
+from pyats.utils.exceptions import SchemaTypeError
 
 log = logging.getLogger(__name__)
 
@@ -7026,3 +7029,189 @@ class ShowPlatformResources(ShowPlatformResourcesSchema):
                 continue
 
         return(ret_dict)
+
+
+class ShowPlatformSoftwareYangManagementProcessSchema(MetaParser):
+    '''schema for
+        * show platform software yang-management process
+    '''
+
+    schema = {
+        Any(): str
+    }
+
+class ShowPlatformSoftwareYangManagementProcess(ShowPlatformSoftwareYangManagementProcessSchema):
+    '''parser for
+        * show platform software yang-management process
+    '''
+
+    cli_command = "show platform software yang-management process"
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # confd            : Running
+        # pubd             : Running
+        # gnmib            : Not Running
+        p1 = re.compile(r'^(?P<key>\S+) *: +(?P<data>(Running|Not +Running))$')
+
+        ret_dict = dict()
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({
+                    group['key']: group['data']
+                })
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformSoftwareYangManagementProcessMonitorSchema(MetaParser):
+    '''schema for
+        * show platform software yang-management process monitor
+    '''
+
+    def validate_process_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('Process is not a list')
+    
+        process_list = Schema({
+            'command': str,
+            'pid': int,
+            's': str,
+            'vsz': int,
+            'rss': int,
+            'cpu': float,
+            'mem': float,
+            'elapsed': str,
+        })
+    
+        for item in value:
+            process_list.validate(item)
+        return value
+
+    schema = {
+        'processes': Use(validate_process_list)
+    }
+
+class ShowPlatformSoftwareYangManagementProcessMonitor(ShowPlatformSoftwareYangManagementProcessMonitorSchema):
+    '''parser for
+        * show platform software yang-management process monitor
+    '''
+
+    cli_command = "show platform software yang-management process monitor"
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # dmiauthd          551 S 376940 49600  0.0  0.6    21:44:33
+        # ncsshd           1503 S 301344 17592  0.0  0.2    21:44:32
+        p1 = re.compile(r'^(?P<command>\S+) +(?P<pid>\d+) +(?P<s>\S+) +(?P<vsz>\d+) +'
+                        r'(?P<rss>\d+) +(?P<cpu>\S+) +(?P<mem>\S+) +(?P<elapsed>\S+)$')
+
+        ret_dict = dict()
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # dmiauthd          551 S 376940 49600  0.0  0.6    21:44:33
+            # ncsshd           1503 S 301344 17592  0.0  0.2    21:44:32
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                commands = ret_dict.setdefault('processes', [])
+                command = dict()
+                command.update({
+                    'command': group['command'],
+                    'pid': int(group['pid']),
+                    's': group['s'],
+                    'vsz': int(group['vsz']),
+                    'rss': int(group['rss']),
+                    'cpu': float(group['cpu']),
+                    'mem': float(group['mem']),
+                    'elapsed': group['elapsed'],
+                })
+                commands.append(command)
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformSoftwareYangManagementProcessStateSchema(MetaParser):
+    '''schema for
+        * show platform software yang-management process state
+    '''
+
+    def validate_process_list(value):
+        if not isinstance(value, list):
+            raise SchemaTypeError('Process is not a list')
+    
+        process_list = Schema({
+            'process': str,
+            'status': str,
+            'state': str,
+        })
+    
+        for item in value:
+            process_list.validate(item)
+        return value
+
+    schema = {
+        'confd-status': str,
+        'processes': Use(validate_process_list)
+    }
+
+class ShowPlatformSoftwareYangManagementProcessState(ShowPlatformSoftwareYangManagementProcessStateSchema):
+    '''parser for
+        * show platform software yang-management process state
+    '''
+
+    cli_command = "show platform software yang-management process state"
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        p1 = re.compile(r'^Confd +Status: +(?P<status>\S+)$')
+
+        p2 = re.compile(r'^(?P<process>\S+) +(?P<status>(Running|Not +Running)) +'
+                        r'(?P<state>(Active|Not +Active|Not +Applicable))$')
+
+        ret_dict = dict()
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['confd-status'] = group['status']
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                commands = ret_dict.setdefault('processes', [])
+                command = dict()
+                command.update({
+                    'process': group['process'],
+                    'status': group['status'],
+                    'state': group['state'],
+                })
+                commands.append(command)
+                continue
+
+        return ret_dict
