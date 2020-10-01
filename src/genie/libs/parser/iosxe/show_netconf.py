@@ -66,16 +66,16 @@ class ShowNetconfYangSessionsSchema(MetaParser):
             raise SchemaTypeError('Session is not a list')
     
         sessions_list = Schema({
-            'session-id': int,
+            'session_id': int,
             'transport': str,
             'username': str,
-            'source-host': str,
-            'global-lock': str,
-            Optional('login-time'): str,
-            Optional('in-rpcs'): str,
-            Optional('in-bad-rpcs'): str,
-            Optional('out-rpc-errors'): str,
-            Optional('out-notifications'): str,
+            'source_host': str,
+            'global_lock': str,
+            Optional('login_time'): str,
+            Optional('in_rpcs'): str,
+            Optional('in_bad_rpcs'): str,
+            Optional('out_rpc_errors'): str,
+            Optional('out_notifications'): str,
         })
     
         for item in value:
@@ -89,7 +89,7 @@ class ShowNetconfYangSessionsSchema(MetaParser):
                 'name': str,
             }
         },
-        'session-count': int,
+        'session_count': int,
         'sessions': Use(validate_sessions_list)
     }
 
@@ -139,7 +139,7 @@ class ShowNetconfYangSessions(ShowNetconfYangSessionsSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['session-count'] = int(group.get('session_count'))
+                ret_dict['session_count'] = int(group.get('session_count'))
                 continue
 
             # 24          netconf-ssh  admin                5.28.35.35             None
@@ -149,11 +149,11 @@ class ShowNetconfYangSessions(ShowNetconfYangSessionsSchema):
                 sessions_list = ret_dict.setdefault('sessions', [])
                 session = dict()
                 session.update({
-                    'session-id': int(group['session_id']),
+                    'session_id': int(group['session_id']),
                     'transport': group['transport'],
                     'username': group['username'],
-                    'source-host': group['source_host'],
-                    'global-lock': group['global_lock'],
+                    'source_host': group['source_host'],
+                    'global_lock': group['global_lock'],
                 })
                 sessions_list.append(session)
                 continue
@@ -216,7 +216,7 @@ class ShowNetconfYangSessionsDetail(ShowNetconfYangSessionsSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['session-count'] = int(group.get('session_count'))
+                ret_dict['session_count'] = int(group.get('session_count'))
                 continue
 
             # session-id             : 24
@@ -226,7 +226,7 @@ class ShowNetconfYangSessionsDetail(ShowNetconfYangSessionsSchema):
                 sessions_list = ret_dict.setdefault('sessions', [])
                 session = dict()
                 session.update({
-                    'session-id': int(group['session_id']),
+                    'session_id': int(group['session_id']),
                 })
                 sessions_list.append(session)
                 continue
