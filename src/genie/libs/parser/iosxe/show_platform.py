@@ -18,6 +18,9 @@ IOSXE parsers for the following show commands:
     * 'show platform hardware qfp active datapath utilization summary'
     * 'show platform resources'
     * 'show platform hardware qfp active tcam resource-manager usage'
+    * 'show platform software yang-management process'
+    * 'show platform software yang-management process monitor'
+    * 'show platform software yang-management process state'
 '''
 
 # Python
