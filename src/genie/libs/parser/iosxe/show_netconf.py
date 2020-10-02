@@ -2,6 +2,8 @@
 IOSXE parsers for the following commands
 
     * 'show netconf session'
+    * 'show netconf-yang sessions'
+    * 'show netconf-yang sessions detail'
 '''
 
 # Python
