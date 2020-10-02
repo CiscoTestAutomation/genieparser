@@ -25,9 +25,10 @@ from genie.metaparser.util.schemaengine import Optional, Any, Use, Schema
 from pyats.utils.exceptions import SchemaTypeError
 
 
-class ShowTelemetryIETFSubscriptionDynamicSchema(MetaParser):
+class ShowTelemetryIETFSubscriptionSchema(MetaParser):
     '''schema for:
-        * show telemetry ietf subscription dynamic
+        * show telemetry ietf subscription {sub_id}
+        * show telemetry ietf subscription {sub_id} detail
     '''
 
     schema = {
@@ -60,7 +61,7 @@ class ShowTelemetryIETFSubscriptionDynamicSchema(MetaParser):
         }
     }
 
-class ShowTelemetryIETFSubscriptionDynamic(ShowTelemetryIETFSubscriptionDynamicSchema):
+class ShowTelemetryIETFSubscription(ShowTelemetryIETFSubscriptionSchema):
     '''parser for:
         * show telemetry ietf subscription {sub_id}
     '''
@@ -96,7 +97,7 @@ class ShowTelemetryIETFSubscriptionDynamic(ShowTelemetryIETFSubscriptionDynamicS
 
         return ret_dict
 
-class ShowTelemetryIETFSubscriptionDynamicDetail(ShowTelemetryIETFSubscriptionDynamicSchema):
+class ShowTelemetryIETFSubscriptionDetail(ShowTelemetryIETFSubscriptionSchema):
     '''parser for:
         * show telemetry ietf subscription {sub_id} detail
     '''
