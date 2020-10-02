@@ -125,13 +125,13 @@ class ShowTelemetryIETFSubscriptionDetail(ShowTelemetryIETFSubscriptionSchema):
         p3 = re.compile(r'^Stream: +(?P<stream>\S+)$')
 
         #     Filter type: xpath
-        p4 = re.compile(r'^Filter +type: +(?P<filter>\S+)$')
+        p4 = re.compile(r'^Filter +type: +(?P<filter>[\S\s]+)$')
 
         #     XPath: /if:interfaces-state/interface/oper-status
         p5 = re.compile(r'^XPath: +(?P<xpath>\S+)$')
 
         #     Update Trigger: periodic
-        p6 = re.compile(r'^Update +Trigger: +(?P<trigger>\S+)$')
+        p6 = re.compile(r'^Update +Trigger: +(?P<trigger>[\S\s]+)$')
 
         #     Period: 1000
         p7 = re.compile(r'^Period: +(?P<period>\d+)$')
