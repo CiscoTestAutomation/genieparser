@@ -292,7 +292,7 @@ class ShowFirewallLog(ShowFirewallLogSchema):
         else:
             out = output
 
-        #10:28:22  pfe       D      ge-0/0/0.0    TCP             40.0.0.2                         40.0.0.1
+        #10:28:22  pfe       D      ge-0/0/0.0    TCP             10.70.0.2                         10.70.0.1
         p1 = re.compile(r'^(?P<time>[\d\:]+) +(?P<filter_name>\S+) '
                         r'+(?P<action_name>\S+) +(?P<interface_name>\S+) '
                         r'+(?P<protocol_name>\S+) +(?P<source_address>\S+) '
@@ -303,7 +303,7 @@ class ShowFirewallLog(ShowFirewallLogSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            #10:28:22  pfe       D      ge-0/0/0.0    TCP             40.0.0.2                         40.0.0.1
+            #10:28:22  pfe       D      ge-0/0/0.0    TCP             10.70.0.2                         10.70.0.1
             m = p1.match(line)
             if m:
                 group = m.groupdict()

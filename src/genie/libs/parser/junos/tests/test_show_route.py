@@ -60459,7 +60459,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
 
                         Validation State: unverified 
 
-                        Task: BGP_3.10.64.4.4
+                        Task: BGP_10.169.64.4.4
 
                         Announcement bits (3): 0-KRT 5-BGP_RT_Background 6-Resolve tree 1 
 
@@ -60570,7 +60570,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     }
                                 ],
                                 "rt-entry-state": "Active Int Ext",
-                                "task-name": "BGP_3.10.64.4.4",
+                                "task-name": "BGP_10.169.64.4.4",
                                 "validation-state": "unverified"
                             },
                             "rt-entry-count": {
@@ -61274,6 +61274,46 @@ class TestShowRouteReceiveProtocol(unittest.TestCase):
         
     }
 
+    golden_output_3 = {'execute.return_value': '''
+        show route receive-protocol bgp 10.64.4.4 192.168.225.0 
+
+
+
+        inet.0: 850018 destinations, 850021 routes (850018 active, 0 holddown, 0 hidden)
+
+        Prefix		  Nexthop	       MED     Lclpref    AS path
+
+        * 192.168.225.0/24           10.64.4.4                      100        200000 4 5 6 I
+        
+    '''}
+
+    golden_parsed_output_3 = {
+        'route-information': {
+            'route-table': [{
+                'active-route-count': '850018', 
+                'destination-count': '850018', 
+                'hidden-route-count': '0', 
+                'holddown-route-count': '0', 
+                'rt': [{
+                    'rt-destination': '192.168.225.0/24', 
+                    'rt-entry': {
+                        'active-tag': '*', 
+                        'as-path': '4 5 6 I', 
+                        'local-preference': 
+                        '200000', 'med': '100', 
+                        'nh': {
+                            'to': '10.64.4.4'
+                            }, 
+                            'protocol-name': 'BGP'
+                            }
+                        }
+                    ], 
+                'table-name': 'inet.0', 
+                'total-route-count': 
+                '850021'}],
+        },
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteReceiveProtocol(device=self.device)
@@ -61291,6 +61331,15 @@ class TestShowRouteReceiveProtocol(unittest.TestCase):
         obj = ShowRouteReceiveProtocol(device=self.device)
         parsed_output = obj.parse(protocol='bgp', peer='2001:db8:7fc5:ca45::4')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowRouteReceiveProtocol(device=self.device)
+        parsed_output = obj.parse(
+            protocol='bgp', 
+            peer='10.64.4.4',
+            target='192.168.225.0')
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)        
 
 
 '''
@@ -62630,7 +62679,7 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                             Local AS:     1 Peer AS:     2
                             Age: 4:32 
                             Validation State: unverified 
-                            Task: BGP_2.10.30.0.2
+                            Task: BGP_10.144.30.0.2
                             Announcement bits (2): 0-KRT 1-BGP_RT_Background 
                             AS path: 2 I 
                             Accepted
@@ -62683,7 +62732,7 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                         "preference2": "101",
                         "protocol-name": "BGP",
                         "rt-entry-state": "Active Ext",
-                        "task-name": "BGP_2.10.30.0.2",
+                        "task-name": "BGP_10.144.30.0.2",
                         "validation-state": "unverified"
                     },
                     "rt-entry-count": {

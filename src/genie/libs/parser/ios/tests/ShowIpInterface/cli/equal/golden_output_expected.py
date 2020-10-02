@@ -55,11 +55,10 @@ expected_output = {
     "Tunnel0": {
         "ip_cef_switching": True,
         "ipv4": {
-            "192.168.154.1/24": {
+            "192.168.154.1": {
                 "ip": "192.168.154.1",
                 "secondary": False,
                 "broadcast_address": "255.255.255.255",
-                "prefix_length": "24",
             }
         },
         "mtu": 1472,
