@@ -74,3 +74,52 @@ class ShowMemoryStatistics(ShowMemoryStatisticsSchema):
                 continue
         return ret_dict
         
+
+class ShowMemoryDebugLeaksSchema(MetaParser):
+    '''schema for
+        * show memory debug leaks
+    '''
+
+    schema = {
+        'tracekey': str,
+        'memory': {
+            str: {
+                str: {
+                    'size': int,
+                    'pid': int,
+                    'alloc_proc': str,
+                    'name': str,
+                    'alloc_pc': str,
+                }
+            }
+        }
+    }
+
+class ShowMemoryDebugLeaks(ShowMemoryDebugLeaksSchema):
+    '''parser for
+        * show memory debug leaks
+    '''
+
+    cli_command = 'show memory debug leaks'
+
+    def cli(self, output=output):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Tracekey : 1#50bb0560a294e78d5c720c4dd666d9f5
+        p = re.compile(r'^Tracekey *: +(?P<tracekey>\S+)$')
+
+        # Processor memory
+        # reserve Processor memory
+        # lsmpi_io memory
+        p = re.compile(r'')
+
+        # Address        Size  PID   Alloc-Proc        Name               Alloc_pc
+        p = re.compile(r'')
+
+        ret_dict = dict()
+
+        for line in out.splitlines():
+            line = line.strip()
