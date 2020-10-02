@@ -1,127 +1,127 @@
 expected_output = {
-  'processes': {
-    'confd': {
+  'pid': {
+    2357: {
       'cpu': 0.4,
       'elapsed': '21:44:31',
       'mem': 2.8,
-      'pid': 2357,
+      'command': 'confd',
       'rss': 224620,
       'state': 'S',
       'vsz': 1969908
     },
-    'confd-startup.s': {
+    2361: {
       'cpu': 0.0,
       'elapsed': '21:44:31',
       'mem': 0.0,
-      'pid': 2361,
+      'command': 'confd-startup.s',
       'rss': 4268,
       'state': 'S',
       'vsz': 6180
     },
-    'confd-startup.s': {
+    2383: {
       'cpu': 0.0,
       'elapsed': '21:44:31',
       'mem': 0.0,
-      'pid': 2383,
+      'command': 'confd-startup.s',
       'rss': 3900,
       'state': 'S',
       'vsz': 6180
     },
-    'confd-startup.s': {
+    32428: {
       'cpu': 0.0,
       'elapsed': '21:44:33',
       'mem': 0.0,
-      'pid': 32428,
+      'command': 'confd-startup.s',
       'rss': 5652,
       'state': 'S',
       'vsz': 6180
     },
-    'dmiauthd': {
+    551: {
       'cpu': 0.0,
       'elapsed': '21:44:33',
       'mem': 0.6,
-      'pid': 551,
+      'command': 'dmiauthd',
       'rss': 49600,
       'state': 'S',
       'vsz': 376940
     },
-    'ncsshd': {
+    1503: {
       'cpu': 0.0,
       'elapsed': '21:44:32',
       'mem': 0.2,
-      'pid': 1503,
+      'command': 'ncsshd',
       'rss': 17592,
       'state': 'S',
       'vsz': 301344
     },
-    'ncsshd': {
+    7890: {
       'cpu': 0.0,
       'elapsed': '24:11',
       'mem': 0.2,
-      'pid': 7890,
+      'command': 'ncsshd',
       'rss': 16492,
       'state': 'S',
       'vsz': 301344
     },
-    'ncsshd': {
+    7934: {
       'cpu': 0.0,
       'elapsed': '24:11',
       'mem': 0.1,
-      'pid': 7934,
+      'command': 'ncsshd',
       'rss': 8392,
       'state': 'S',
       'vsz': 301344
     },
-    'ncsshd_bp': {
+    1013: {
       'cpu': 0.0,
       'elapsed': '21:44:32',
       'mem': 0.1,
-      'pid': 1013,
+      'command': 'ncsshd_bp',
       'rss': 15240,
       'state': 'S',
       'vsz': 173748
     },
-    'ndbmand': {
+    32652: {
       'cpu': 0.2,
       'elapsed': '21:44:33',
       'mem': 2.4,
-      'pid': 32652,
+      'command': 'ndbmand',
       'rss': 188488,
       'state': 'S',
       'vsz': 1552136
     },
-    'nginx': {
+    8050: {
       'cpu': 0.0,
       'elapsed': '1-01:47:38',
       'mem': 0.1,
-      'pid': 8050,
+      'command': 'nginx',
       'rss': 13412,
       'state': 'S',
       'vsz': 106280
     },
-    'nginx': {
+    8060: {
       'cpu': 0.0,
       'elapsed': '1-01:47:38',
       'mem': 0.0,
-      'pid': 8060,
+      'command': 'nginx',
       'rss': 6980,
       'state': 'S',
       'vsz': 106796
     },
-    'nginx': {
+    8061: {
       'cpu': 0.0,
       'elapsed': '1-01:47:38',
       'mem': 0.0,
-      'pid': 8061,
+      'command': 'nginx',
       'rss': 6444,
       'state': 'S',
       'vsz': 57556
     },
-    'pubd': {
+    30464: {
       'cpu': 0.0,
       'elapsed': '1-01:48:15',
       'mem': 2.6,
-      'pid': 30464,
+      'command': 'pubd',
       'rss': 208436,
       'state': 'S',
       'vsz': 1976156

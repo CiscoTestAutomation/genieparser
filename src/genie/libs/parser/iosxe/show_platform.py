@@ -7080,9 +7080,9 @@ class ShowPlatformSoftwareYangManagementProcessMonitorSchema(MetaParser):
     '''
 
     schema = {
-        'processes': {
-            str: {
-                'pid': int,
+        'pid': {
+            int: {
+                'command': str,
                 'state': str,
                 'vsz': int,
                 'rss': int,
@@ -7121,10 +7121,10 @@ class ShowPlatformSoftwareYangManagementProcessMonitor(ShowPlatformSoftwareYangM
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                commands = ret_dict.setdefault('processes', {})
-                command = commands.setdefault(group['command'], {})
+                commands = ret_dict.setdefault('pid', {})
+                command = commands.setdefault(int(group['pid']), {})
                 command.update({
-                    'pid': int(group['pid']),
+                    'command': group['command'],
                     'state': group['s'],
                     'vsz': int(group['vsz']),
                     'rss': int(group['rss']),
