@@ -295,61 +295,6 @@ class test_show_traffic_stats(unittest.TestCase):
         parsed_output = obj.parse(group="group 1")
         self.assertEqual(parsed_output,self.golden_parsed_output_group)
 
-# ============================================
-# Test for 'show service-insertion type appqoe service-node-group'
-# ============================================
-class TestShowServiceInsertionTypeAppqoeServiceNodeGroup(unittest.TestCase):
-    device = Device(name='aDevice')
-    maxDiff = None 
-    empty_output = {'execute.return_value' : ''}
-    golden_output = {'execute.return_value': '''
-    Service Node Group name         : SNG-APPQOE
-        Service Context             : appqoe/1
-        Member Service Node count   : 1
-
-    Service Node (SN)                   : 192.168.2.2
-    Auto discovered                     : No
-    SN belongs to SNG                   : SNG-APPQOE
-    Current status of SN                : Alive
-    System IP                           : 100.100.100.45
-    Site ID                             : 45
-    Time current status was reached               : Sat Sep 12 23:26:53 2020
-
-    Cluster protocol VPATH version                : 1 (Bitmap recvd: 1)
-    Cluster protocol incarnation number           : 1
-    Cluster protocol last sent sequence number    : 1601058097
-    Cluster protocol last received sequence number: 1098390
-    Cluster protocol last received ack number     : 1601058096'''
-        }
-    golden_parsed_output = {
-        'service_node_group_name': 'SNG-APPQOE',
-        'service_context': 'appqoe/1',
-        'member_service_node_count': 1,
-        'service_node_sn': '192.168.2.2',
-        'auto_discovered': 'No',
-        'sn_belongs_to_sng': 'SNG-APPQOE',
-        'current_status_of_sn': 'Alive',
-        'system_ip': '100.100.100.45',
-        'site_id': 45,
-        'time_current_status_was_reached': 'Sat Sep 12 23:26:53 2020',
-        'cluster_protocol_vpath_version': '1 (Bitmap recvd: 1)',
-        'cluster_protocol_incarnation_number': 1,
-        'cluster_protocol_last_sent_sequence_number': 1601058097,
-        'cluster_protocol_last_received_sequence_number':1098390,
-        'cluster_protocol_last_received_ack_number': 1601058096
-        }
-    
-    def test_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowServiceInsertionTypeAppqoeServiceNodeGroup(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-    
-    def test_golden(self):
-        self.device = Mock(**self.golden_output)
-        obj = ShowServiceInsertionTypeAppqoeServiceNodeGroup(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()
