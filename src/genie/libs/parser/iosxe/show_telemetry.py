@@ -32,7 +32,8 @@ class ShowTelemetryIETFSubscriptionSchema(MetaParser):
     '''
 
     schema = {
-        int: {
+        'id':{
+            int: {
             Optional('type'): str,
             'state': str,
             Optional('stream'): str,
@@ -56,6 +57,7 @@ class ShowTelemetryIETFSubscriptionSchema(MetaParser):
                     'port': int,
                     'protocol': str,
                     Optional('protocol_profile'): str,
+                    }
                 }
             }
         }
@@ -88,7 +90,8 @@ class ShowTelemetryIETFSubscription(ShowTelemetryIETFSubscriptionSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                subscription = ret_dict.setdefault(int(group['id']), {})
+                sub = ret_dict.setdefault('id', {})
+                subscription = sub.setdefault(int(group['id']), {})
                 subscription.update({
                     'type': group['type'],
                     'state': group['state'],
@@ -164,7 +167,8 @@ class ShowTelemetryIETFSubscriptionDetail(ShowTelemetryIETFSubscriptionSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                subscription = ret_dict.setdefault(int(group['id']), {})
+                sub = ret_dict.setdefault('id', {})
+                subscription = sub.setdefault(int(group['id']), {})
                 continue
 
             # State: Valid
@@ -282,14 +286,16 @@ class ShowTelemetryIETFSubscriptionReceiverSchema(MetaParser):
     '''
 
     schema = {
-        int: {
-            'address': str,
-            'port': int,
-            'protocol': str,
-            Optional('profile'): str,
-            'connection': int,
-            'state': str,
-            Optional('explanation'): str,
+        'id':{
+            int: {
+                'address': str,
+                'port': int,
+                'protocol': str,
+                Optional('profile'): str,
+                'connection': int,
+                'state': str,
+                Optional('explanation'): str,
+            }
         }
     }
 
@@ -349,7 +355,8 @@ class ShowTelemetryIETFSubscriptionReceiver(ShowTelemetryIETFSubscriptionReceive
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                subscription = ret_dict.setdefault(int(group['id']), {})
+                sub = ret_dict.setdefault('id', {})
+                subscription = sub.setdefault(int(group['id']), {})
                 continue
 
             # Address: 5.28.35.35
