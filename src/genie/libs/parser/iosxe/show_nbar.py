@@ -69,9 +69,9 @@ class ShowIpNbarDiscovery(ShowIpNbarDiscoverySchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                interface=group['interface']
-                result_dict[interface]={}
-                result_dict[interface]['protocol']={}
+                interfaces = result_dict.setdefault('interface', {})
+                interface = interfaces.setdefault(group['interface'], {})
+                interface['protocol']={}
                 continue
                 
             
@@ -80,17 +80,17 @@ class ShowIpNbarDiscovery(ShowIpNbarDiscoverySchema):
             if m:
                 group = m.groupdict()
                 protocol=group['protocol']
-                result_dict[interface]['protocol'][protocol]={}
-                result_dict[interface]['protocol'][protocol].update({'in_packet_count': int(group['In_Packet_Count'])})
-                result_dict[interface]['protocol'][protocol].update({'out_packet_count': int(group['Out_Packet_Count'])})
+                interface['protocol'][protocol]={}
+                interface['protocol'][protocol].update({'in_packet_count': int(group['In_Packet_Count'])})
+                interface['protocol'][protocol].update({'out_packet_count': int(group['Out_Packet_Count'])})
                 continue
             
             m = p3.match(line)
             
             if m:
                 group = m.groupdict()
-                result_dict[interface]['protocol'][protocol].update({'in_byte_count': int(group['In_Byte_Count'])})
-                result_dict[interface]['protocol'][protocol].update({'out_byte_count': int(group['Out_Byte_Count'])})
+                interface['protocol'][protocol].update({'in_byte_count': int(group['In_Byte_Count'])})
+                interface['protocol'][protocol].update({'out_byte_count': int(group['Out_Byte_Count'])})
                 
     
                    
@@ -99,8 +99,8 @@ class ShowIpNbarDiscovery(ShowIpNbarDiscoverySchema):
             if m:
                 
                 group = m.groupdict()
-                result_dict[interface]['protocol'][protocol].update({'in_5min_bit_rate_bps': int(group['In_Bitrate'])})
-                result_dict[interface]['protocol'][protocol].update({'out_5min_bit_rate_bps': int(group['Out_Bitrate'])})
+                interface['protocol'][protocol].update({'in_5min_bit_rate_bps': int(group['In_Bitrate'])})
+                interface['protocol'][protocol].update({'out_5min_bit_rate_bps': int(group['Out_Bitrate'])})
                 
                 
             
@@ -108,11 +108,10 @@ class ShowIpNbarDiscovery(ShowIpNbarDiscoverySchema):
             
             if m:
                 group = m.groupdict()
-                result_dict[interface]['protocol'][protocol].update({'in_5min_max_bit_rate_bps': int(group['In_Bitrate_Max'])})
-                result_dict[interface]['protocol'][protocol].update({'out_5min_max_bit_rate_bps': int(group['Out_Bitrate_Max'])})
+                interface['protocol'][protocol].update({'in_5min_max_bit_rate_bps': int(group['In_Bitrate_Max'])})
+                interface['protocol'][protocol].update({'out_5min_max_bit_rate_bps': int(group['Out_Bitrate_Max'])})
                 
 
         
 
-        result_dict = {'interface': result_dict}  
         return result_dict
