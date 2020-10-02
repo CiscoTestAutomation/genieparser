@@ -288,9 +288,12 @@ class ShowServiceGroupTrafficStats(ShowServiceGroupTrafficStatsSchema):
 class ShowServiceInsertionTypeAppqoeServiceNodeGroupSchema(MetaParser):
     """ Schema for show service-insertion type appqoe service-node-group """
     schema = {
-        'service_node_group_name': str,
-        'service_context': str,
-        'member_service_node_count': int,
+        'service_node_group_name': {
+			str: {
+				'service_context': str,
+				'member_service_node_count': int,
+			}
+		},
 		'service_node_sn': str,
         'auto_discovered': str,
         'sn_belongs_to_sng': str,
@@ -321,8 +324,12 @@ class ShowServiceInsertionTypeAppqoeServiceNodeGroup(ShowServiceInsertionTypeApp
             out = output
 
 		# Service Node Group name         : SNG-APPQOE
+        p0 = re.compile(r'^Service +Node +Group +name *: +(?P<name>\S+)$')
 		#     Service Context             : appqoe/1
+        p0_1 = re.compile(r'^Service +Context *: +(?P<context>\S+)$')
 		#     Member Service Node count   : 1
+        p0_2 = re.compile(r'^Member +Service +Node +count *: +(?P<count>\d+)$')
+
 		# Service Node (SN)                   : 192.168.2.2
 		# Auto discovered                     : No
 		# SN belongs to SNG                   : SNG-APPQOE
@@ -343,6 +350,43 @@ class ShowServiceInsertionTypeAppqoeServiceNodeGroup(ShowServiceInsertionTypeApp
 
         for line in out.splitlines():
             line = line.strip()
+
+			# Service Node Group name         : SNG-APPQOE
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                service_nodes = parsed_dict.setdefault('service_node_group_name', {})
+                service_node = service_nodes.setdefault(group['name'], {})
+                continue
+
+
+			# 	Service Context             : appqoe/1
+            m = p0_1.match(line)
+            if m:
+                group = m.groupdict()
+                service_node['service_context'] = group['context']
+                continue
+
+
+			# 	Member Service Node count   : 1
+            m = p0_2.match(line)
+            if m:
+                group = m.groupdict()
+                service_node['member_service_node_count'] = group['count']
+                continue
+
+
+			# Service Node (SN)                   : 192.168.2.2
+			# Auto discovered                     : No
+			# SN belongs to SNG                   : SNG-APPQOE
+			# Current status of SN                : Alive
+			# System IP                           : 100.100.100.6
+			# Site ID                             : 30
+			# Time current status was reached               : Tue Sep 15 18:22:11 2020
+			# Cluster protocol VPATH version                : 1 (Bitmap recvd: 1)
+			# Cluster protocol incarnation number           : 5
+			# Cluster protocol last sent sequence number    : 1600512340
+			# Cluster protocol last received ack number     : 1600512339
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -354,6 +398,7 @@ class ShowServiceInsertionTypeAppqoeServiceNodeGroup(ShowServiceInsertionTypeApp
                 parsed_dict.update({key: value})
                 continue
 
+     	    # Cluster protocol last received sequence number: 311442
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
