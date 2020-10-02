@@ -1,11 +1,3 @@
-<<<<<<< HEAD
 Sensor List:  Environmental Monitoring 
     Temp1            P6                Normal            40 Celsius
     Temp: FC PWM1    P6                Fan Speed 45%     25 Celsius
-=======
-Router#### FAN 7 OUT ###show env all | include Sensor | P6 | P7
-Sensor List:  Environmental Monitoring 
- Temp1            P6                Normal            40 Celsius
- Temp: FC PWM1    P6                Fan Speed 45%     25 Celsius
-    
->>>>>>> 17601e0f39749dead696ac035e340e4c6dad598d
