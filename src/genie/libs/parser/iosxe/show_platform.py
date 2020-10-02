@@ -400,9 +400,10 @@ class ShowVersion(ShowVersionSchema):
         # cisco WS-C3750X-24P (PowerPC405) processor (revision W0) with 262144K bytes of memory.
         # cisco ISR4451-X/K9 (2RU) processor with 1795979K/6147K bytes of memory.
         # cisco WS-C4507R+E (MPC8572) processor (revision 10) with 2097152K/20480K bytes of memory.
+        # Cisco CISCO1941/K9 (revision 1.0) with 491520K/32768K bytes of memory.
         p18 = re.compile(r'^(C|c)isco +(?P<chassis>[a-zA-Z0-9\-\/\+]+) '
-                         r'+\((?P<processor_type>.+)\) +((processor.*)|with) '
-                         r'+with +(?P<main_mem>[0-9]+)[kK](\/[0-9]+[kK])?')
+                         r'+\((?P<processor_type>[^)]*)\) +(.*?)with '
+                         r'+(?P<main_mem>[0-9]+)[kK](\/[0-9]+[kK])?')
 
         # Cisco CISCO3945-CHASSIS (revision 1.0) with C3900-SPE150/K9 with 1835264K/261888K bytes of memory.
         p18_2 = re.compile(r'^(C|c)isco +(?P<chassis>[a-zA-Z0-9\-\/\+]+) +.* '
