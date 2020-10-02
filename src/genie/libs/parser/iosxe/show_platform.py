@@ -18,6 +18,9 @@ IOSXE parsers for the following show commands:
     * 'show platform hardware qfp active datapath utilization summary'
     * 'show platform resources'
     * 'show platform hardware qfp active tcam resource-manager usage'
+    * 'show platform software yang-management process'
+    * 'show platform software yang-management process monitor'
+    * 'show platform software yang-management process state'
 '''
 
 # Python
@@ -29,13 +32,16 @@ from xml.dom import minidom
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use
 from genie.libs.parser.utils.common import Common
 # genie.parsergen
 try:
     import genie.parsergen
 except (ImportError, OSError):
     pass
+
+# pyATS
+from pyats.utils.exceptions import SchemaTypeError
 
 log = logging.getLogger(__name__)
 
@@ -7026,3 +7032,173 @@ class ShowPlatformResources(ShowPlatformResourcesSchema):
                 continue
 
         return(ret_dict)
+
+
+class ShowPlatformSoftwareYangManagementProcessSchema(MetaParser):
+    '''schema for
+        * show platform software yang-management process
+    '''
+
+    schema = {
+        str: str
+    }
+
+class ShowPlatformSoftwareYangManagementProcess(ShowPlatformSoftwareYangManagementProcessSchema):
+    '''parser for
+        * show platform software yang-management process
+    '''
+
+    cli_command = "show platform software yang-management process"
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # confd            : Running
+        # pubd             : Running
+        # gnmib            : Not Running
+        p1 = re.compile(r'^(?P<key>\S+) *: +(?P<data>(Running|Not +Running))$')
+
+        ret_dict = dict()
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({
+                    group['key']: group['data']
+                })
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformSoftwareYangManagementProcessMonitorSchema(MetaParser):
+    '''schema for
+        * show platform software yang-management process monitor
+    '''
+
+    schema = {
+        'pid': {
+            int: {
+                'command': str,
+                'state': str,
+                'vsz': int,
+                'rss': int,
+                'cpu': float,
+                'mem': float,
+                'elapsed': str,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareYangManagementProcessMonitor(ShowPlatformSoftwareYangManagementProcessMonitorSchema):
+    '''parser for
+        * show platform software yang-management process monitor
+    '''
+
+    cli_command = "show platform software yang-management process monitor"
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # dmiauthd          551 S 376940 49600  0.0  0.6    21:44:33
+        # ncsshd           1503 S 301344 17592  0.0  0.2    21:44:32
+        p1 = re.compile(r'^(?P<command>\S+) +(?P<pid>\d+) +(?P<s>\S+) +(?P<vsz>\d+) +'
+                        r'(?P<rss>\d+) +(?P<cpu>\S+) +(?P<mem>\S+) +(?P<elapsed>\S+)$')
+
+        ret_dict = dict()
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # dmiauthd          551 S 376940 49600  0.0  0.6    21:44:33
+            # ncsshd           1503 S 301344 17592  0.0  0.2    21:44:32
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                commands = ret_dict.setdefault('pid', {})
+                command = commands.setdefault(int(group['pid']), {})
+                command.update({
+                    'command': group['command'],
+                    'state': group['s'],
+                    'vsz': int(group['vsz']),
+                    'rss': int(group['rss']),
+                    'cpu': float(group['cpu']),
+                    'mem': float(group['mem']),
+                    'elapsed': group['elapsed'],
+                })
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformSoftwareYangManagementProcessStateSchema(MetaParser):
+    '''schema for
+        * show platform software yang-management process state
+    '''
+
+    schema = {
+        'confd-status': str,
+        'processes': {
+            str: {
+                'status': str,
+                'state': str,
+                },
+            }
+        }
+
+class ShowPlatformSoftwareYangManagementProcessState(ShowPlatformSoftwareYangManagementProcessStateSchema):
+    '''parser for
+        * show platform software yang-management process state
+    '''
+
+    cli_command = "show platform software yang-management process state"
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Confd Status: Started
+        p1 = re.compile(r'^Confd +Status: +(?P<status>\S+)$')
+
+        # pubd                 Running             Active
+        # gnmib                Not Running         Not Applicable
+        p2 = re.compile(r'^(?P<process>\S+) +(?P<status>(Running|Not +Running)) +'
+                        r'(?P<state>(Active|Not +Active|Not +Applicable))$')
+
+        ret_dict = dict()
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Confd Status: Started
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['confd-status'] = group['status']
+                continue
+
+            # pubd                 Running             Active
+            # gnmib                Not Running         Not Applicable
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                commands = ret_dict.setdefault('processes', {})
+                command = commands.setdefault(group['process'], {})
+                command.update({
+                    'status': group['status'],
+                    'state': group['state'],
+                })
+                continue
+
+        return ret_dict
