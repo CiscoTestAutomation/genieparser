@@ -3,24 +3,21 @@
 IOSXE parsers for the following show commands:
     * show logging
     * show logging | include {include}
+    * show logging | exclude {exclude}
 '''
 # Python
 import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or
+from genie.metaparser.util.schemaengine import Any, Optional, Or
 
 
-# ==============================================
-# Schema for:
-#   * 'show logging'
-#   * 'show logging | include {include}'
-# ==============================================
 class ShowLoggingSchema(MetaParser):
     '''Schema for:
         * 'show logging'
         * 'show logging | include {include}'
+        * 'show logging | exclude {exclude}'
     '''
 
     schema={
@@ -152,28 +149,27 @@ class ShowLoggingSchema(MetaParser):
         }
 
 
-# ==============================================
-# Parser for:
-#   * 'show logging'
-#   * 'show logging | include {include}'
-# ==============================================
 class ShowLogging(ShowLoggingSchema):
     '''Parser for:
         * 'show logging'
         * 'show logging | include {include}'
+        * 'show logging | exclude {exclude}'
     '''
 
-    cli_command = ['show logging | include {include}',
-                   'show logging',]
+    cli_command = ['show logging | exclude {exclude}',
+                   'show logging | include {include}',
+                   'show logging']
 
-    def cli(self, include='', output=None):
+    def cli(self, exclude='', include='', output=None):
 
         if output is None:
             # Build the command
-            if include:
-                cmd = self.cli_command[0].format(include=include)
+            if exclude:
+                cmd = self.cli_command[0].format(exclude=exclude)
+            elif include:
+                cmd = self.cli_command[1].format(include=include)
             else:
-                cmd = self.cli_command[1]
+                cmd = self.cli_command[2]
             # Execute the command
             out = self.device.execute(cmd)
         else:
