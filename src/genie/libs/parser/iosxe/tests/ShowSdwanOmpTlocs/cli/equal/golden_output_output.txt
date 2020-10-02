@@ -1,6 +1,6 @@
 
         ---------------------------------------------------
-        tloc entries for 100.100.100.10
+        tloc entries for 10.220.100.10
                         default
                         ipsec
         ---------------------------------------------------
@@ -17,9 +17,9 @@
             encap-spi         365
             encap-auth        sha1-hmac,ah-sha1-hmac
             encap-encrypt     aes256
-            public-ip         12.12.12.2
+            public-ip         10.66.12.2
             public-port       12426
-            private-ip        12.12.12.2
+            private-ip        10.66.12.2
             private-port      12426
             public-ip         ::
             public-port       0
@@ -45,12 +45,12 @@
             unknown-attr-len  not set
 
         ---------------------------------------------------
-        tloc entries for 100.100.100.20
+        tloc entries for 10.220.100.20
                         default
                         ipsec
         ---------------------------------------------------
                     RECEIVED FROM:                   
-        peer            100.100.100.3
+        peer            10.220.100.3
         status          C,I,R
         loss-reason     not set
         lost-to-peer    not set
@@ -62,9 +62,9 @@
             encap-spi         355
             encap-auth        sha1-hmac,ah-sha1-hmac
             encap-encrypt     aes256
-            public-ip         12.12.13.2
+            public-ip         10.66.13.2
             public-port       12426
-            private-ip        12.12.13.2
+            private-ip        10.66.13.2
             private-port      12426
             public-ip         ::
             public-port       0
@@ -90,12 +90,12 @@
             unknown-attr-len  not set
 
         ---------------------------------------------------
-        tloc entries for 100.100.100.30
+        tloc entries for 10.220.100.30
                         default
                         ipsec
         ---------------------------------------------------
                     RECEIVED FROM:                   
-        peer            100.100.100.3
+        peer            10.220.100.3
         status          C,I,R
         loss-reason     not set
         lost-to-peer    not set
@@ -107,9 +107,9 @@
             encap-spi         359
             encap-auth        sha1-hmac,ah-sha1-hmac
             encap-encrypt     aes256
-            public-ip         11.11.11.10
+            public-ip         10.229.11.10
             public-port       12426
-            private-ip        11.11.11.10
+            private-ip        10.229.11.10
             private-port      12426
             public-ip         ::
             public-port       0

@@ -3,7 +3,7 @@ expected_output = {
         "index": {
             1: {
                 "ap_name": "aa-test-4800",
-                "ap_mac_address": "64d8.14ec.1120",
+                "ap_mac_address": "64d8.14ff.fd0d",
                 "slot_id": 0,
                 "admin_state": "Enabled",
                 "oper_state": "Down",
@@ -15,7 +15,7 @@ expected_output = {
             },
             2: {
                 "ap_name": "aa-test-4800",
-                "ap_mac_address": "64d8.14ec.1120",
+                "ap_mac_address": "64d8.14ff.fd0d",
                 "slot_id": 2,
                 "admin_state": "Enabled",
                 "oper_state": "Down",

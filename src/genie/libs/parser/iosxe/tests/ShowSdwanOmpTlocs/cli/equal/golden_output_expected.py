@@ -1,6 +1,6 @@
 expected_output = {
     "tloc_data": {
-        "100.100.100.10": {
+        "10.220.100.10": {
             "tloc": {
                 "default": {
                     "transport": "ipsec",
@@ -42,12 +42,12 @@ expected_output = {
                 }
             }
         },
-        "100.100.100.20": {
+        "10.220.100.20": {
             "tloc": {
                 "default": {
                     "transport": "ipsec",
                     "received_from": {
-                        "peer": "100.100.100.3",
+                        "peer": "10.220.100.3",
                         "status": ["C", "I", "R"],
                         "loss_reason": "not_set",
                         "lost_to_peer": "not_set",
@@ -84,12 +84,12 @@ expected_output = {
                 }
             }
         },
-        "100.100.100.30": {
+        "10.220.100.30": {
             "tloc": {
                 "default": {
                     "transport": "ipsec",
                     "received_from": {
-                        "peer": "100.100.100.3",
+                        "peer": "10.220.100.3",
                         "status": ["C", "I", "R"],
                         "loss_reason": "not_set",
                         "lost_to_peer": "not_set",
